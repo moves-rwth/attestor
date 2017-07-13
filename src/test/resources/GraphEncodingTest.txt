@@ -1,0 +1,36 @@
+{
+	"nodes":[
+		{
+			"type":"",
+			"number":3
+		}
+	],
+	"externals":[0,2],
+	"variables":[
+		{
+			"name":"x",
+			"target":0
+		},
+				{
+			"name":"y",
+			"target":1
+		}
+	],
+	"selectors":[
+		{
+			"label":"next",
+			"origin":0,
+			"target":1
+		},{
+			"label":"prev",
+			"origin":1,
+			"target":2
+		}
+	],
+	"hyperedges":[
+		{
+			"label":"Hyperedge",
+			"tentacles":[0,1,2]
+		}
+	]
+}
