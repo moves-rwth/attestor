@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
 
-@Ignore
 public class ProofStructureTest extends StateSpace {
 	
 	public ProofStructureTest(){

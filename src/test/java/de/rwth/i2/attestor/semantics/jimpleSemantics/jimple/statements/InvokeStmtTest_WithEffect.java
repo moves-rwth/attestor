@@ -60,7 +60,6 @@ public class InvokeStmtTest_WithEffect {
 	}
 
 	@Test
-	@Ignore
 	public void testComputeSuccessors() {
 		try {
 			Set<ProgramState> resStates = stmt.computeSuccessors( testInput );
@@ -70,7 +69,6 @@ public class InvokeStmtTest_WithEffect {
 			e.printStackTrace();
 			fail( "unexpected exception");
 		}
-		
 	}
 
 	@Test
