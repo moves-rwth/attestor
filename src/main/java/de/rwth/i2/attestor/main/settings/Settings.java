@@ -5,7 +5,7 @@ package de.rwth.i2.attestor.main.settings;
  * The settings themselves are grouped into multiple classes within
  * the same package.
  *
- * @author Christoph
+ * @author Christoph, Christina
  */
 public class Settings {
 
@@ -46,6 +46,11 @@ public class Settings {
      */
 	private final GrammarSettings grammarSettings;
 
+	/**
+	 * Settings customizing whether and how model checking is performed.
+	 */
+	private final ModelCheckingSettings mcSettings;
+
     /**
      * Initializes with default settings.
      */
@@ -55,6 +60,7 @@ public class Settings {
 		outputSettings = new OutputSettings();
 		factorySettings = new FactorySettings();
 		grammarSettings = new GrammarSettings();
+		mcSettings = new ModelCheckingSettings();
 	}
 
     /**
@@ -91,4 +97,9 @@ public class Settings {
 	public GrammarSettings grammar() {
 	    return grammarSettings;
 	}
+
+	/**
+	 * @return The collection of settings specifying the model checking behaviour.
+	 */
+	public ModelCheckingSettings modelChecking() {return mcSettings; }
 }

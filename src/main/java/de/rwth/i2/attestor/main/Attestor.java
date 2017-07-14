@@ -64,6 +64,7 @@ public class Attestor {
 			commandLineReader.getInputSettings(  settings );
 			commandLineReader.getOptionSettings( settings );
 			commandLineReader.getOutputSettings( settings );
+			commandLineReader.getMCSettings( settings );
 			
 			logger.log(PROGRESS, "Analyzing '"
                     + settings.input().getClasspath()
