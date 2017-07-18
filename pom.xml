@@ -101,6 +101,10 @@
                           <include>log4j2.xml</include>
                   </includes>
             </resource>
+            <resource>
+                  <directory>src/main/assets</directory>
+                  <targetPath>${project.build.directory}/classes</targetPath>
+            </resource>
         </resources> 
 	<plugins>
         <plugin>

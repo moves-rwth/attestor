@@ -93,14 +93,25 @@ public class SettingsFileReader {
 			logger.error("You must define a default path or a path for grammar");
 		}
 		input.setGrammarName( grammarSettings.getString( "file" ) );
-		
-		JSONObject initialSettings = jsonInput.getJSONObject( "initialState" );
-		if( initialSettings.has( "path" ) ){
-			input.setPathToInput( initialSettings.getString( "path" ) );
-		}else if( !jsonInput.has( "defaultPath" )){
-			logger.error("You must define a default path or a path for the initial state");
+
+		if(jsonInput.has("initialState")){
+			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
+			if( initialSettings.has( "path" ) ){
+				input.setPathToInput( initialSettings.getString( "path" ) );
+			}else if( !jsonInput.has( "defaultPath" )){
+				logger.error("You must define a default path or a path for the initial state");
+			}
+			input.setInputName( initialSettings.getString( "file" ) );
+		// Set default: empty HC
+		} else {
+			if(ClassLoader.getSystemClassLoader().getResource("initialStates") == null){
+				logger.entry("Default initial states location not found!");
+			} else {
+				input.setPathToInput(ClassLoader.getSystemClassLoader().getResource("initialStates").getPath());
+				input.setInputName("emptyInput.json");
+			}
 		}
-		input.setInputName( initialSettings.getString( "file" ) );
+
 		
 		return input;
 	}

@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 /**
  * Parses the provided command line options in order to populate
@@ -381,6 +383,13 @@ public class CommandLineReader {
 		} 
 		if( cmd.hasOption("i")){
 			inputSettings.setInputName(cmd.getOptionValue("i"));
+		} else {
+			if(ClassLoader.getSystemClassLoader().getResource("initialStates") == null){
+				logger.entry("Default initial states location not found!");
+			} else {
+				inputSettings.setInputName("emptyInput.json");
+				inputSettings.setPathToInput(ClassLoader.getSystemClassLoader().getResource("initialStates").getPath());
+			}
 		}
 		
 		return inputSettings;
@@ -423,7 +432,10 @@ public class CommandLineReader {
 			return  cmd.hasOption( "sf" )
 					|| 
 					( cmd.hasOption("p") && cmd.hasOption("c") && cmd.hasOption("m")
-					&& cmd.hasOption("g") && cmd.hasOption("i") );
+					&& cmd.hasOption("g")
+							// Initial HC no longer necessary, default: empty HC
+							//&& cmd.hasOption("i")
+					);
 		
 	}
 
