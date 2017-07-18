@@ -2,8 +2,13 @@ package de.rwth.i2.attestor.main.settings;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.generated.lexer.LexerException;
+import de.rwth.i2.attestor.generated.parser.ParserException;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -13,7 +18,7 @@ import de.rwth.i2.attestor.util.DebugMode;
 /**
  * Populates {@link Settings} from a settings file.
  *
- * @author Hannah Arndt, Christoph
+ * @author Hannah Arndt, Christoph, Christina
  */
 public class SettingsFileReader {
 
@@ -201,6 +206,33 @@ public class SettingsFileReader {
 		}
 		
 		return output;
+	}
+
+	/**
+	 * Populates the model checking settings with the input from the parsed settings file.
+	 * @param settings all settings
+	 * @return the populated model checking settings
+	 */
+	public ModelCheckingSettings getMCSettings(Settings settings){
+		JSONObject jsonMC = jsonSettings.getJSONObject( "modelChecking" );
+		ModelCheckingSettings mc = settings.modelChecking();
+
+		if( jsonMC.has( "enabled" )){
+			mc.setModelCheckingEnabled(jsonMC.getBoolean("enabled"));
+		}
+		if( jsonMC.has("formulae")){
+			String formulaeString = jsonMC.getString("formulae");
+			for(String formula : formulaeString.split(",")){
+				try {
+					mc.addFormula(new LTLFormula(formula));
+				} catch (Exception e) {
+					logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
+
+				}
+			}
+		}
+
+		return mc;
 	}
 	
 }

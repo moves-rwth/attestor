@@ -401,10 +401,10 @@ public class CommandLineReader {
 				LTLFormula ltlFormula = null;
 				try {
 					ltlFormula = new LTLFormula(formula);
+					mcSettings.addFormula(ltlFormula);
 				} catch (Exception e) {
 					logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
 				}
-				mcSettings.addFormula(ltlFormula);
 			}
 		}
 

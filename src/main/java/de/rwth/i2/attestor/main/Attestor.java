@@ -60,6 +60,7 @@ public class Attestor {
 				settingsReader.getInputSettings( settings );
 				settingsReader.getOptionSettings( settings );
 				settingsReader.getOutputSettings( settings );
+				settingsReader.getMCSettings( settings );
 			}
 			commandLineReader.getInputSettings(  settings );
 			commandLineReader.getOptionSettings( settings );
