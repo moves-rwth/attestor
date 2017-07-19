@@ -30,7 +30,7 @@ public class testDefaultTask{
 		try {
 
             final String examplesDirectory = "src" + File.separator + "test" + File.separator + "resources";
-			Settings.getInstance().grammar().loadGrammar(examplesDirectory + File.separator + "grammarEncodingTest.txt" );
+			Settings.getInstance().grammar().loadGrammarFromFile(examplesDirectory + File.separator + "grammarEncodingTest.txt", null );
 
 			builder.loadInput( examplesDirectory + File.separator + "GraphEncodingTest.txt" );
 
