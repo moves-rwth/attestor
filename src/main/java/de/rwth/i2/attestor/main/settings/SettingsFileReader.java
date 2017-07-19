@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import de.rwth.i2.attestor.LTLFormula;
@@ -11,6 +10,7 @@ import de.rwth.i2.attestor.generated.parser.ParserException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.rwth.i2.attestor.util.DebugMode;
@@ -94,6 +94,24 @@ public class SettingsFileReader {
 		}
 		input.setGrammarName( grammarSettings.getString( "file" ) );
 
+		// Add requested predefined grammars
+		JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( "predefinedGrammars" );
+		for(int i = 0; i < predefinedGrammarSettings.length(); i++){
+			JSONObject predefinedGrammarSetting = predefinedGrammarSettings.getJSONObject(i);
+			String grammarType = predefinedGrammarSetting.getString("type");
+
+			// Check if corresponding grammar exists
+			//File grammarFile = new File(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + grammarType + ".json").getPath());
+			if(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
+					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);
+					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
+			} else {
+				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type") + " available. Skipping it.");
+			}
+
+
+		}
+
 		if(jsonInput.has("initialState")){
 			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
 			if( initialSettings.has( "path" ) ){
@@ -116,7 +134,43 @@ public class SettingsFileReader {
 		return input;
 	}
 
-    /**
+	private HashMap<String,String> extractMapping(JSONObject predefinedGrammarSetting) {
+
+		HashMap<String, String> rename = null;
+		// Read in the type and field name mapping
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(predefinedGrammarSetting.getString("definition")));
+			String definitionsLine = null;
+			rename = new HashMap<String, String>();
+			try {
+				definitionsLine = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			while(definitionsLine != null){
+				if(definitionsLine.startsWith("@Rename")){
+					String[] map = definitionsLine.replace("@Rename", "").split("->");
+					assert map.length == 2;
+
+					rename.put(map[0], map[1]);
+				}
+
+				try {
+					definitionsLine = br.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		} catch (FileNotFoundException e) {
+			logger.warn("File " + predefinedGrammarSetting.getString("definition") + " not found. Skipping predefined grammar "
+					+ predefinedGrammarSetting.getString("type") + ".");
+		}
+
+		return rename;
+	}
+
+	/**
      * Populates all option settings from the parsed settings file.
      * @param settings All settings.
      * @return The populated option settings.

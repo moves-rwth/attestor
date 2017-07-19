@@ -1,11 +1,14 @@
 package de.rwth.i2.attestor.main.settings;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * All global settings regarding input files.
  *
- * @author Christoph
+ * @author Christoph, Christina
  */
 public class InputSettings {
 
@@ -33,6 +36,12 @@ public class InputSettings {
      * The name of the file of the graph grammar underlying the analysis.
      */
 	private String grammarName;
+
+	// The list of predefined grammars used by the current analysis
+	private ArrayList<String> usedPredefinedGrammars;
+
+	// The mapping from predefined grammars to their rename mapping
+	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 
     /**
      * The path to the file specifying the initial state.
@@ -154,6 +163,29 @@ public class InputSettings {
 				&& pathToGrammar != null && grammarName != null
 				&& pathToInput != null && inputName != null;
 	}
-	
 
+	/**
+	 * Adds a new predefined grammar (including its field maps) to the list of utilised grammars.
+	 * If no predefined grammar is set so far, the necessary list and map is created.
+	 * @param name, the name of the predefined grammar
+	 * @param correspondences, the map from fields of the predefined grammar to those of the analysed data structure.
+	 */
+	public void addPredefinedGrammar(String name, HashMap<String, String> correspondences){
+		if(this.usedPredefinedGrammars == null){
+			this.usedPredefinedGrammars = new ArrayList<String>();
+			this.grammar2RenameMap = new HashMap<>();
+		}
+
+		this.usedPredefinedGrammars.add(name);
+		this.grammar2RenameMap.put(name, correspondences);
+	}
+
+	public ArrayList<String> getUsedPredefinedGrammars() {
+		return usedPredefinedGrammars;
+	}
+
+
+	public HashMap<String,String> getRenaming(String predefinedGrammar) {
+		return this.grammar2RenameMap.get(predefinedGrammar);
+	}
 }

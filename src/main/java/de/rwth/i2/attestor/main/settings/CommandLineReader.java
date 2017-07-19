@@ -97,7 +97,7 @@ public class CommandLineReader {
 				.longOpt("initial")
 				.hasArg()
 				.argName("file")
-				.desc("name of file containing initial state in json-format")
+				.desc("(optional) name of file containing initial state in json-format")
 				.build()
 				);
 

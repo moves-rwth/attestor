@@ -21,7 +21,7 @@ import de.rwth.i2.attestor.util.FileReader;
  *
  * Stores all settings related to the graph grammar underlying the current analysis.
  *
- * @author Christoph
+ * @author Christoph, Christina
  */
 public class GrammarSettings {
 
@@ -34,6 +34,8 @@ public class GrammarSettings {
      * The graph grammar that is used by the currently loaded analysis.
      */
     private Grammar grammar = null;
+
+
 
     /**
      * Prevents creating objects of this class outside this package.
@@ -66,7 +68,7 @@ public class GrammarSettings {
      * Loads a graph grammar from a file and sets it as the graph grammar underlying the current analysis.
      * @param filename The file storing the graph grammar.
      */
-    public void loadGrammar(String filename) {
+    public void loadGrammarFromFile(String filename, HashMap<String, String> rename) {
 
         if(grammar != null)  {
             logger.warn("Overwriting previously set grammar.");
@@ -74,15 +76,24 @@ public class GrammarSettings {
 
         try {
             String str = FileReader.read(filename);
+
+            // Modify grammar (replace all keys in rename by its values)
+            // TODO
+            if(rename != null){
+
+            }
+
+            // TODO: adapt such that grammars are not overwritten but extended!
             JSONArray array = new JSONArray(str);
             GrammarBuilder grammarBuilder = Grammar.builder();
             grammarBuilder.addRules(parseRules(array));
             grammar = grammarBuilder.build();
-            exportGrammar();
+
+
         } catch (FileNotFoundException e) {
-            grammar = null;
-            logger.error("Could not parse grammar at location " + filename);
+            logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
+
     }
 
     /**
@@ -103,7 +114,7 @@ public class GrammarSettings {
     /**
      * Exports the grammar to a file.
      */
-    private void exportGrammar() {
+    public void exportGrammar() {
 
         if( Settings.getInstance().output().isExportGrammar() ) {
 

@@ -10,6 +10,10 @@ import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.util.DebugMode;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Map.*;
 
 /**
  * The main class to run Attestor.
@@ -91,7 +95,16 @@ public class Attestor {
             logger.log(PROGRESS, "Parsing grammar..." );
         }
 
-        settings.grammar().loadGrammar( settings.input().getGrammarLocation() );
+        // Load the user-defined grammar
+        settings.grammar().loadGrammarFromFile( settings.input().getGrammarLocation(), null );
+
+        // Load the requested predefined grammars
+		for(String predefinedGrammar : settings.input().getUsedPredefinedGrammars()){
+			HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
+			settings.grammar().loadGrammarFromFile(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json").getPath() , renamingMap);
+		}
+
+		settings.grammar().exportGrammar();
     }
 
     /**
