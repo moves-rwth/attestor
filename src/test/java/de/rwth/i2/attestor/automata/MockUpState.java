@@ -1,14 +1,16 @@
 package de.rwth.i2.attestor.automata;
 
 /**
- * Created by cmath on 7/19/17.
+ * Simple example of a heap automaton (state) that checks whether selector edges exist.
+ *
+ * @author Christoph
  */
-public class MockupState implements HeapAutomatonState {
+public class MockUpState implements HeapAutomatonState {
 
     private int state;
     private boolean finalState;
 
-    public MockupState(int state, boolean finalState) {
+    public MockUpState(int state, boolean finalState) {
         this.state = state;
         this.finalState = finalState;
     }
@@ -23,8 +25,8 @@ public class MockupState implements HeapAutomatonState {
     }
 
     public boolean equals(Object o) {
-        if(o instanceof MockupState) {
-            MockupState s = (MockupState) o;
+        if(o instanceof MockUpState) {
+            MockUpState s = (MockUpState) o;
             return s.state == state && s.finalState == finalState;
         }
         return false;

@@ -18,7 +18,9 @@ import java.util.Set;
 import static junit.framework.TestCase.*;
 
 /**
- * Created by cmath on 7/19/17.
+ * Test grammar refinement and property checks for heap configurations using a heap automaton.
+ *
+ * @author Christoph
  */
 public class HeapAutomatonTest {
 
@@ -29,7 +31,7 @@ public class HeapAutomatonTest {
 
     @Before
     public void setup() {
-        automaton = new HeapAutomaton(new MockupTransition());
+        automaton = new HeapAutomaton(new MockUpTransition());
         hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
         type = Settings.getInstance().factory().getType("type");
         nt = Settings.getInstance().factory().createNonterminal("X", 3, new boolean[]{false,false,false});
@@ -57,13 +59,14 @@ public class HeapAutomatonTest {
             automaton.move(hc);
             fail("Provided HeapConfiguration contains nonterminals without valid heap automaton states.");
         } catch(IllegalStateException ex) {
+            // intended
         }
     }
 
     @Test
     public void testInductiveCase() {
 
-        StateAnnotatedNonterminal ntWithState = new StateAnnotatedNonterminal(nt, new MockupState(1, true));
+        StateAnnotatedNonterminal ntWithState = new StateAnnotatedNonterminal(nt, new MockUpState(1, true));
         TIntArrayList nodes = new TIntArrayList();
         hc.builder()
                 .addNodes(type, 3, nodes)
@@ -77,7 +80,6 @@ public class HeapAutomatonTest {
     public void testGrammarRefinementSimple() {
 
         Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
-
         TIntArrayList nodes = new TIntArrayList();
         hc.builder()
                 .addNodes(type, 3, nodes)
@@ -88,15 +90,16 @@ public class HeapAutomatonTest {
         Set<HeapConfiguration> rhs = new HashSet<>();
         rhs.add(hc);
         rules.put(nt, rhs);
-
         Grammar grammar = new Grammar(rules);
 
         Grammar result = automaton.refine(grammar);
-
         assertEquals(1, result.getAllLeftHandSides().size());
 
         Nonterminal n = result.getAllLeftHandSides().iterator().next();
         assert(n instanceof StateAnnotatedNonterminal);
         StateAnnotatedNonterminal sn = (StateAnnotatedNonterminal) n;
+        MockUpState state = (MockUpState) sn.getState();
+        assertEquals(0, state.getState());
+        assertEquals(nt.getRank(), sn.getRank());
     }
 }

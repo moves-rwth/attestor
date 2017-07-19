@@ -1,18 +1,18 @@
 package de.rwth.i2.attestor.automata;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Created by cmath on 7/19/17.
+ * Simple example of a heap automaton transition relation that checks whether selector edges exist.
+ *
+ * @author Christoph
  */
-public class MockupTransition implements HeapAutomatonTransition {
+public class MockUpTransition implements HeapAutomatonTransition {
 
     private final static Set<HeapAutomatonState> supportedStates = new HashSet<>();
 
@@ -23,8 +23,8 @@ public class MockupTransition implements HeapAutomatonTransition {
         int newState = 0;
 
         for(HeapAutomatonState s : ntAssignment) {
-            if(s instanceof MockupState) {
-                newState += ((MockupState) s).getState();
+            if(s instanceof MockUpState) {
+                newState += ((MockUpState) s).getState();
             }
         }
 
@@ -35,9 +35,9 @@ public class MockupTransition implements HeapAutomatonTransition {
         }
 
         if(newState == 0) {
-            return new MockupState(0, false);
+            return new MockUpState(0, false);
         } else {
-            return new MockupState(1, true);
+            return new MockUpState(1, true);
         }
     }
 
@@ -45,8 +45,8 @@ public class MockupTransition implements HeapAutomatonTransition {
     public Set<HeapAutomatonState> getSupportedStates() {
 
         if(supportedStates.isEmpty()) {
-            supportedStates.add( new MockupState(0, false) );
-            supportedStates.add( new MockupState(1, true) );
+            supportedStates.add( new MockUpState(0, false) );
+            supportedStates.add( new MockUpState(1, true) );
         }
 
         return supportedStates;

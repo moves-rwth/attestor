@@ -3,9 +3,14 @@ package de.rwth.i2.attestor.automata;
 import java.util.List;
 
 /**
- * Created by cmath on 7/18/17.
+ * A state of a heap automaton.
+ *
+ * @author Christoph
  */
 public interface HeapAutomatonState {
 
+    /**
+     * @return True if and only if this state is a final state.
+     */
     boolean isFinal();
 }

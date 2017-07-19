@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by cmath on 7/18/17.
+ * Interface for the transition relation of a heap automaton.
+ *
+ * @author Christoph
  */
 public interface HeapAutomatonTransition {
 

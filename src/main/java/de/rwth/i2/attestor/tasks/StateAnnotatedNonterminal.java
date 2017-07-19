@@ -1,16 +1,24 @@
 package de.rwth.i2.attestor.tasks;
 
-import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.automata.HeapAutomatonState;
 import de.rwth.i2.attestor.automata.StateAnnotatedSymbol;
 import de.rwth.i2.attestor.graph.Nonterminal;
 
 /**
- * Created by cmath on 7/19/17.
+ * A nonterminal symbol that is additionally annotated with a state of a heap automaton.
+ *
+ * @author Christoph
  */
 public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSymbol {
 
+    /**
+     * The actual nonterminal symbol.
+     */
     private Nonterminal nonterminal;
+
+    /**
+     * The state the nonterminal is annotated with.
+     */
     private HeapAutomatonState state;
 
     public StateAnnotatedNonterminal(Nonterminal nonterminal, HeapAutomatonState state) {
@@ -62,7 +70,13 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
 
     @Override
     public int compareTo(Nonterminal nonterminal) {
-        // TODO this might not be correct
-        return nonterminal.compareTo(nonterminal);
+
+        if(nonterminal instanceof StateAnnotatedNonterminal) {
+            StateAnnotatedNonterminal sn = (StateAnnotatedNonterminal) nonterminal;
+            if(sn.getState().equals(state) && sn.nonterminal.equals(nonterminal)) {
+                return 0;
+            }
+        }
+        return 1;
     }
 }
