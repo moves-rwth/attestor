@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.graph;
 
+import de.rwth.i2.attestor.automata.HeapAutomatonState;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 
 /**

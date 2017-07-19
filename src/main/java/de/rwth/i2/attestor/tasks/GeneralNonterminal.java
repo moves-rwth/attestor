@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.tasks;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.automata.HeapAutomatonState;
+import de.rwth.i2.attestor.automata.StateAnnotatedSymbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -138,5 +140,5 @@ public class GeneralNonterminal implements Nonterminal {
 	public boolean labelMatches(Nonterminal nonterminal) {
 		return this.equals(nonterminal);
 	}
-	
+
 }
