@@ -64,29 +64,40 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 		ignoreUniqueSuccessorStatements = enabled;
 	}
 
+	/**
+	 * Performs the actual grammar based abstraction of a given program state.
+	 * @param state The program state that should be abstracted.
+	 * @param strongCanonicalization if true, the abstraction will ignore the minDereferenceDepthOption
+	 * @return The set of abstracted program states.
+	 */
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		IndexedState indexedState = ((IndexedState) state).clone();
+		IndexedState conf = ((IndexedState) state).clone();
 
-		if(! semantics.permitsCanonicalization() ) {
+		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
-			return SingleElementUtil.createSet(indexedState);
+			return SingleElementUtil.createSet( conf );
 		}
-		annotationMaintainer.maintainAnnotations(indexedState);
+		annotationMaintainer.maintainAnnotations( conf );
 
-		if( indexedState.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
+		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
 			if( DebugMode.ENABLED ){
 				logger.trace( "Using aggressive canonization" );
 			}
-			return performStrongCanonization( indexedState );
-		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() && semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt ){
-			return performStrongCanonization( indexedState );
+			return performCanonicalization( conf, true );
+		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() 
+				&& 
+				(semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt) ){
+			return performCanonicalization( conf, true );
 		}
-		return performCanonization(indexedState);
+		
+		return performCanonicalization(conf, false);
 	}
 
-	private Set<ProgramState> performCanonization(IndexedState state) {
+	
+
+	private Set<ProgramState> performCanonicalization(IndexedState state, boolean strongCanonicalization) {
 
 		Set<ProgramState> result = new HashSet<>();
 
@@ -100,16 +111,17 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
 
-				if(!checkNext) { break; }
+				if( !checkNext ) { break; }
 
 				stackCanonizer.canonizeStack( state.getHeap() );
-
-				AbstractMatchingChecker checker = state.getHeap().getEmbeddingsOf(pattern);
-
-				StackSymbol lastSymb = nonterminal.getLastStackSymbol();
-				if( lastSymb instanceof StackVariable ){
-					( (StackVariable) lastSymb ).resetInstantiation();
+				
+				AbstractMatchingChecker checker;
+				if( strongCanonicalization ){
+					checker = new EmbeddingChecker(pattern, state.getHeap() );
+				}else{
+					checker = state.getHeap().getEmbeddingsOf(pattern);
 				}
+				
 				while(checker.hasNext() && checkNext) {
 
 					checkNext = !isConfluent; 
@@ -120,35 +132,12 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 					}
 
 					Matching embedding = checker.getNext();
-					boolean indexMatch = true;
-
-					TIntIterator ntEdgeIter = pattern.nonterminalEdges().iterator();
-
-					while(ntEdgeIter.hasNext()) {
-
-						int edge = ntEdgeIter.next();
-
-						IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
-						IndexedNonterminal targetNt =  (IndexedNonterminal) abstracted.getHeap().labelOf( embedding.match( edge ) );
-						indexMatch = targetNt.matchStack( patternNt );
-						if( ! indexMatch ){
-							break;
-						}	
-					}
+					resetInstantiation(nonterminal);
+					boolean indexMatch = checkIndexMatching(pattern, abstracted, embedding);
 					if( indexMatch ){
 
-						HeapConfigurationBuilder builder = abstracted.getHeap().builder();
-						builder.replaceMatching( embedding , nonterminal );
-
-						TIntIterator iter = abstracted.getHeap().nonterminalEdges().iterator();
-						while(iter.hasNext()) {
-							int edge = iter.next();
-							IndexedNonterminal label = (IndexedNonterminal) abstracted.getHeap().labelOf(edge);
-							builder.replaceNonterminal(edge, label.getWithInstantiation() );
-						}
-						builder.build();
-						stackCanonizer.canonizeStack( abstracted.getHeap() );
-						result.addAll( performCanonization( abstracted ) );
+						replaceEmbeddingBy(abstracted, embedding, nonterminal);
+						result.addAll( performCanonicalization( abstracted, strongCanonicalization ) );
 					}else{
 						checkNext = true;
 					}
@@ -164,86 +153,44 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 		return result;
 	}
-
-	private Set<ProgramState> performStrongCanonization(IndexedState conf) {
-
-		Set<ProgramState> result = new HashSet<>();
-
-		boolean checkNext = true;
-
-		for( Nonterminal nt : grammar.getAllLeftHandSides() ) {
-
-			IndexedNonterminal nonterminal = (IndexedNonterminal) nt;
-
-			if(!checkNext) { break; }
-
-			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
-
-				if(!checkNext) { break; }
-
-				stackCanonizer.canonizeStack( conf.getHeap() );
-
-				AbstractMatchingChecker checker = new EmbeddingChecker(pattern, conf.getHeap() );
-
-				StackSymbol lastSymb = nonterminal.getLastStackSymbol();
-				if( lastSymb instanceof StackVariable ){
-					( (StackVariable) lastSymb ).resetInstantiation();
-				}
-				while(checker.hasNext() && checkNext) {
-
-					checkNext = !isConfluent; 
-
-					IndexedState abstracted  = conf;
-					if( checkNext ) {
-						abstracted = conf.clone();
-					}
-
-					Matching embedding = checker.getNext();
-					boolean indexMatch = true;
-
-					TIntIterator ntIter = pattern.nonterminalEdges().iterator();
-					while(ntIter.hasNext()) {
-
-						int edge = ntIter.next();
-
-						IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
-
-						int matchingEdge = embedding.match(edge);
-						IndexedNonterminal targetNt = (IndexedNonterminal) abstracted.getHeap().labelOf(matchingEdge);
-						indexMatch = targetNt.matchStack( patternNt );
-						if( ! indexMatch ){
-							break;
-						}	
-					}
-					if( indexMatch ){
-
-						HeapConfigurationBuilder builder = abstracted.getHeap().builder();
-						builder.replaceMatching( embedding , nonterminal );
-
-						TIntIterator iter = abstracted.getHeap().nonterminalEdges().iterator();
-						while(iter.hasNext()) {
-							int edge = iter.next();
-							IndexedNonterminal label = (IndexedNonterminal) abstracted.getHeap().labelOf(edge);
-							builder.replaceNonterminal(edge, label.getWithInstantiation() );
-						}
-
-						builder.build();
-						stackCanonizer.canonizeStack( abstracted.getHeap() );
-						result.addAll( performStrongCanonization( abstracted ) );
-					}else{
-						checkNext = true;
-					}
-				}
-
-			}
+	
+	private void resetInstantiation(IndexedNonterminal nonterminal) {
+		StackSymbol lastSymb = nonterminal.getLastStackSymbol();
+		if( lastSymb instanceof StackVariable ){
+			( (StackVariable) lastSymb ).resetInstantiation();
 		}
+	}
 
-		if(result.isEmpty()) {	
+	private void replaceEmbeddingBy(IndexedState abstracted, Matching embedding, IndexedNonterminal nonterminal) {
+		HeapConfigurationBuilder builder = abstracted.getHeap().builder();
+		builder.replaceMatching( embedding , nonterminal );
 
-			result.add(conf);
+		TIntIterator iter = abstracted.getHeap().nonterminalEdges().iterator();
+		while(iter.hasNext()) {
+			int edge = iter.next();
+			IndexedNonterminal label = (IndexedNonterminal) abstracted.getHeap().labelOf(edge);
+			builder.replaceNonterminal(edge, label.getWithInstantiation() );
 		}
+		builder.build();
+		stackCanonizer.canonizeStack( abstracted.getHeap() );
+	}
 
-		return result;
+	private boolean checkIndexMatching(HeapConfiguration pattern, IndexedState abstracted, Matching embedding) {
+		boolean indexMatch = true;
+		
+		TIntIterator ntEdgeIter = pattern.nonterminalEdges().iterator();
+		while(ntEdgeIter.hasNext()) {
+
+			int edge = ntEdgeIter.next();
+
+			IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
+			IndexedNonterminal targetNt =  (IndexedNonterminal) abstracted.getHeap().labelOf( embedding.match( edge ) );
+			indexMatch = targetNt.matchStack( patternNt );
+			if( ! indexMatch ){
+				break;
+			}	
+		}
+		return indexMatch;
 	}
 
 }
