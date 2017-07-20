@@ -5,7 +5,7 @@ package de.rwth.i2.attestor.automata;
  *
  * @author Christoph
  */
-public class MockUpState implements HeapAutomatonState {
+public class MockUpState implements AutomatonState {
 
     private int state;
     private boolean finalState;

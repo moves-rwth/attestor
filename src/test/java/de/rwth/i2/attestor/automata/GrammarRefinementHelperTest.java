@@ -45,7 +45,7 @@ public class GrammarRefinementHelperTest {
     @Test
     public void testRefinement() {
 
-        HeapAutomatonTransition transitions = new MockUpTransition();
+        TransitionRelation transitions = new MockUpTransitionRelation();
         Grammar grammar = createGrammar();
 
         GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, transitions);

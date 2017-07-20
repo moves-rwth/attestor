@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.tasks;
 
-import de.rwth.i2.attestor.automata.HeapAutomatonState;
+import de.rwth.i2.attestor.automata.AutomatonState;
 import de.rwth.i2.attestor.automata.StateAnnotatedSymbol;
 import de.rwth.i2.attestor.graph.Nonterminal;
 
@@ -19,21 +19,21 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
     /**
      * The state the nonterminal is annotated with.
      */
-    private HeapAutomatonState state;
+    private AutomatonState state;
 
-    public StateAnnotatedNonterminal(Nonterminal nonterminal, HeapAutomatonState state) {
+    public StateAnnotatedNonterminal(Nonterminal nonterminal, AutomatonState state) {
        this.nonterminal = nonterminal;
        this.state = state;
     }
 
     @Override
-    public HeapAutomatonState getState() {
+    public AutomatonState getState() {
 
         return state;
     }
 
     @Override
-    public StateAnnotatedSymbol withState(HeapAutomatonState state) {
+    public StateAnnotatedSymbol withState(AutomatonState state) {
 
         return new StateAnnotatedNonterminal(nonterminal, state);
     }

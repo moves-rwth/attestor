@@ -12,17 +12,17 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public class MockUpTransition implements HeapAutomatonTransition {
+public class MockUpTransitionRelation implements TransitionRelation {
 
-    private final static Set<HeapAutomatonState> supportedStates = new HashSet<>();
+    private final static Set<AutomatonState> supportedStates = new HashSet<>();
 
     @Override
-    public HeapAutomatonState move(List<HeapAutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
+    public AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
         assert(heapConfiguration != null);
 
         int newState = 0;
 
-        for(HeapAutomatonState s : ntAssignment) {
+        for(AutomatonState s : ntAssignment) {
             if(s instanceof MockUpState) {
                 newState += ((MockUpState) s).getState();
             }
@@ -42,7 +42,7 @@ public class MockUpTransition implements HeapAutomatonTransition {
     }
 
     @Override
-    public Set<HeapAutomatonState> getSupportedStates() {
+    public Set<AutomatonState> getSupportedStates() {
 
         if(supportedStates.isEmpty()) {
             supportedStates.add( new MockUpState(0, false) );
