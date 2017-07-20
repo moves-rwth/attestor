@@ -73,7 +73,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		DefaultState conf = (DefaultState) state;
+		DefaultState conf = (DefaultState) state.clone();
 
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
