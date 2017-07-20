@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.materialization.GrammarBuilder;
+import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToGrammar;

@@ -12,7 +12,14 @@ import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
 
-
+/**
+ * Computes and caches the rules for resolving a given violation point
+ * for {@link IndexedNonterminal}s in addition to all {@link Nonterminal}s
+ * handled by {@link DefaultMaterializationRuleManager}.
+ * 
+ * @author Hannah
+ *
+ */
 public class IndexedMaterializationRuleManager extends DefaultMaterializationRuleManager {
 
 	private ViolationPointResolver violationPointResolver;

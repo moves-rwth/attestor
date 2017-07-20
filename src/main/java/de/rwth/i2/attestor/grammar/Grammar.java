@@ -2,10 +2,15 @@ package de.rwth.i2.attestor.grammar;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.grammar.materialization.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Immutable data-object storing all the rules (lhs -> rhs).
+ * For construction use a {@link GrammarBuilder}
+ * @author Hannah
+ *
+ */
 public class Grammar {
 	
 	public static GrammarBuilder builder(){
@@ -14,7 +19,7 @@ public class Grammar {
 
 	Map<Nonterminal, Set<HeapConfiguration>> rules;
 	
-	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+	protected Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
 		this.rules = rules;
 	}
 
@@ -39,6 +44,5 @@ public class Grammar {
 	public Set<Nonterminal> getAllLeftHandSides() {
 		return Collections.unmodifiableSet( rules.keySet() );
 	}
-
 
 }

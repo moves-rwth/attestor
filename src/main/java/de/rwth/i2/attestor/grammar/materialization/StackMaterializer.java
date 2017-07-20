@@ -11,6 +11,16 @@ import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
 
+/**
+ * Responsible for applying the materialization rules to the stacks of the nonterminals
+ * in the graph.
+ * 
+ * For input rule X -> ssZ it replaces the stacksymbol X in all nonterminals where it occures
+ * by ssZ.
+ * 
+ * @author Hannah
+ *
+ */
 public class StackMaterializer {
 
 	/**

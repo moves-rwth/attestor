@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.communication;
 
 /**
  * This Exception is thrown if the GrammarResponse

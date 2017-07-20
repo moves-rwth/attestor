@@ -2,6 +2,12 @@ package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Responsible for replacing a NonterminalEdge by a rule graph
+ *  
+ * @author Hannah
+ *
+ */
 public class GraphMaterializer {
 
 

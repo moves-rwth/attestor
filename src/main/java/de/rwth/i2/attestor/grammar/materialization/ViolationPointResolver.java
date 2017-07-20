@@ -8,6 +8,13 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Responsible for computing and caching the rules (lhs -> rhs) in the grammar which resolve a certain
+ * violation point.
+ * 
+ * @author Hannah
+ *
+ */
 public class ViolationPointResolver {
 
 	private Grammar grammar;

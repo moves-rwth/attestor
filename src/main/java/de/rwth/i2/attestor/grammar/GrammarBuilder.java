@@ -1,11 +1,15 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Used to construct a grammar
+ * @author Hannah
+ *
+ */
 public class GrammarBuilder {
 	
 	Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
