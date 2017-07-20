@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public interface HeapAutomatonState {
+public interface AutomatonState {
 
     /**
      * @return True if and only if this state is a final state.

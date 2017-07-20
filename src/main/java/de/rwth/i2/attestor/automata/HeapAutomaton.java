@@ -19,9 +19,9 @@ import java.util.*;
  */
 public class HeapAutomaton {
 
-    private HeapAutomatonTransition transitions;
+    private TransitionRelation transitions;
 
-    public HeapAutomaton(HeapAutomatonTransition transitions) {
+    public HeapAutomaton(TransitionRelation transitions) {
         this.transitions = transitions;
     }
 
@@ -31,7 +31,7 @@ public class HeapAutomaton {
      *                          automaton.
      * @return The state reached after one transition step.
      */
-    public HeapAutomatonState move(HeapConfiguration heapConfiguration) {
+    public AutomatonState move(HeapConfiguration heapConfiguration) {
 
         return transitions.move(
                 extractStateAssignment(heapConfiguration),
@@ -45,9 +45,9 @@ public class HeapAutomaton {
      * @param heapConfiguration A heap configuration whose automaton states should be determined.
      * @return A list of the automaton states assigned to each nonterminal edge.
      */
-    private List<HeapAutomatonState> extractStateAssignment(HeapConfiguration heapConfiguration) {
+    private List<AutomatonState> extractStateAssignment(HeapConfiguration heapConfiguration) {
 
-        List<HeapAutomatonState> stateAssignments = new ArrayList<>(heapConfiguration.countNonterminalEdges());
+        List<AutomatonState> stateAssignments = new ArrayList<>(heapConfiguration.countNonterminalEdges());
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
         while(iter.hasNext()) {
             int edge = iter.next();
@@ -63,9 +63,9 @@ public class HeapAutomaton {
      * @param nt The nonterminal.
      * @return The automaton state corresponding to the nonterminal.
      */
-    private HeapAutomatonState extractState(Nonterminal nt) {
+    private AutomatonState extractState(Nonterminal nt) {
         if(nt instanceof StateAnnotatedSymbol) {
-            HeapAutomatonState res = ((StateAnnotatedSymbol) nt).getState();
+            AutomatonState res = ((StateAnnotatedSymbol) nt).getState();
             if(res != null) {
                 return res;
             }

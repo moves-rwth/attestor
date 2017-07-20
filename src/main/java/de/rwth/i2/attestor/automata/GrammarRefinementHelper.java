@@ -25,7 +25,7 @@ class GrammarRefinementHelper {
     /**
      * The transition relation of the heap automaton used for refinement.
      */
-    private HeapAutomatonTransition transitions;
+    private TransitionRelation transitions;
 
     /**
      * This flag is set to false as long as no new rules have been added to the refined grammar within
@@ -38,7 +38,7 @@ class GrammarRefinementHelper {
      * Stores all pairs of nonterminal symbols and assigned heap automaton states as a mapping from
      * nonterminals to a list of states (in the order in which states have been detected).
      */
-    private Map<Nonterminal, List<HeapAutomatonState>> foundStates;
+    private Map<Nonterminal, List<AutomatonState>> foundStates;
 
     /**
      * The rules of the refined grammar constructed so far.
@@ -50,7 +50,7 @@ class GrammarRefinementHelper {
      * @param grammar The grammar that should be refined.
      * @param transitions The transition relation of a heap automaton guiding the refinement.
      */
-    public GrammarRefinementHelper(Grammar grammar, HeapAutomatonTransition transitions) {
+    public GrammarRefinementHelper(Grammar grammar, TransitionRelation transitions) {
 
         this.grammar = grammar;
         this.transitions = transitions;
@@ -124,9 +124,9 @@ class GrammarRefinementHelper {
      */
     private void findRefinementsOfRuleWithNts(Nonterminal lhs, HeapConfiguration rhs) {
 
-        AssignmentIterator<HeapAutomatonState> choices = new AssignmentIterator<>(getPossibleStateChoices(rhs));
+        AssignmentIterator<AutomatonState> choices = new AssignmentIterator<>(getPossibleStateChoices(rhs));
         while(choices.hasNext()) {
-            List<HeapAutomatonState> ntAssignment = choices.next();
+            List<AutomatonState> ntAssignment = choices.next();
             attemptAddRefinedRule(lhs, ntAssignment, rhs);
         }
     }
@@ -137,8 +137,8 @@ class GrammarRefinementHelper {
      * @param ntAssignment The assignment of automaton states to nonterminal edges of the rule's right-hand side.
      * @param rhs The right-hand side of the original rule.
      */
-    private void attemptAddRefinedRule(Nonterminal lhs, List<HeapAutomatonState> ntAssignment, HeapConfiguration rhs) {
-        HeapAutomatonState state = transitions.move(ntAssignment, rhs);
+    private void attemptAddRefinedRule(Nonterminal lhs, List<AutomatonState> ntAssignment, HeapConfiguration rhs) {
+        AutomatonState state = transitions.move(ntAssignment, rhs);
 
         Nonterminal refinedLhs = createRefinedLhs(lhs, state);
         HeapConfiguration refinedRhs = createRefinedRhs(ntAssignment, rhs);
@@ -150,7 +150,7 @@ class GrammarRefinementHelper {
         }
     }
 
-    private List<HeapAutomatonState> getFoundStates(Nonterminal nt) {
+    private List<AutomatonState> getFoundStates(Nonterminal nt) {
 
         if(!foundStates.containsKey(nt)) {
             foundStates.put(nt, new ArrayList<>());
@@ -165,9 +165,9 @@ class GrammarRefinementHelper {
      * @param rhs The heap configuration whose nonterminals shall be considered.
      * @return A list assigning a list of states to every nonterminal edge of rhs.
      */
-    private List<List<HeapAutomatonState>> getPossibleStateChoices(HeapConfiguration rhs) {
+    private List<List<AutomatonState>> getPossibleStateChoices(HeapConfiguration rhs) {
 
-        List<List<HeapAutomatonState>> result = new ArrayList<>();
+        List<List<AutomatonState>> result = new ArrayList<>();
         TIntIterator ntIterator = rhs.nonterminalEdges().iterator();
         while(ntIterator.hasNext()) {
             int edge = ntIterator.next();
@@ -183,10 +183,10 @@ class GrammarRefinementHelper {
      * @param state The state of a heap automaton used for refinement.
      * @return The refined nonterminal.
      */
-    private Nonterminal createRefinedLhs(Nonterminal lhs, HeapAutomatonState state) {
+    private Nonterminal createRefinedLhs(Nonterminal lhs, AutomatonState state) {
 
         StateAnnotatedNonterminal newLhs = new StateAnnotatedNonterminal(lhs, state);
-        List<HeapAutomatonState> lhsFoundStates = getFoundStates(lhs);
+        List<AutomatonState> lhsFoundStates = getFoundStates(lhs);
         if(!lhsFoundStates.contains(state)) {
             lhsFoundStates.add(state);
         }
@@ -200,14 +200,14 @@ class GrammarRefinementHelper {
      * @param rhs A heap configuration corresponding to the original right-hand side of rule.
      * @return The refined right-hand side of a rule.
      */
-    private HeapConfiguration createRefinedRhs(List<HeapAutomatonState> ntAssignment, HeapConfiguration rhs) {
+    private HeapConfiguration createRefinedRhs(List<AutomatonState> ntAssignment, HeapConfiguration rhs) {
 
         rhs = rhs.clone();
         HeapConfigurationBuilder builder = rhs.builder();
         TIntArrayList ntEdges = rhs.nonterminalEdges();
         for(int i=0; i < ntEdges.size(); i++) {
             int edge = ntEdges.get(i);
-            HeapAutomatonState assignedState = ntAssignment.get(i);
+            AutomatonState assignedState = ntAssignment.get(i);
             Nonterminal label = rhs.labelOf(edge);
             Nonterminal newLabel = new StateAnnotatedNonterminal(label, assignedState);
             builder.replaceNonterminal(edge, newLabel);

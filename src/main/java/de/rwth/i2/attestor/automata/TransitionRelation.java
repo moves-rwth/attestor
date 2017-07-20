@@ -10,7 +10,7 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public interface HeapAutomatonTransition {
+public interface TransitionRelation {
 
     /**
      * Applies the transition relation to a heap configuration.
@@ -22,10 +22,10 @@ public interface HeapAutomatonTransition {
      * @param heapConfiguration A heap configuration without nonterminal edges.
      * @return The state obtained for the given heap configuration.
      */
-    HeapAutomatonState move(List<HeapAutomatonState> ntAssignment, HeapConfiguration heapConfiguration);
+    AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration);
 
     /**
      * @return The set of all automaton states that can be dealt with by this transition relation.
      */
-    Set<HeapAutomatonState> getSupportedStates();
+    Set<AutomatonState> getSupportedStates();
 }
