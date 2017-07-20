@@ -1,15 +1,13 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
 
-import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.tasks.GeneralProgramState;
+import de.rwth.i2.attestor.tasks.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.DebugMode;
 

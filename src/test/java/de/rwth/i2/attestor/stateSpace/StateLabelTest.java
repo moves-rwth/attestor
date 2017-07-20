@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.stateSpace;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.*;
+import org.junit.Test;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 

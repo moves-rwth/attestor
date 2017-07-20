@@ -3,12 +3,7 @@ package de.rwth.i2.attestor.semantics;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * Terminal Statements are used to model the exit point of a method. They return

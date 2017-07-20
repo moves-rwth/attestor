@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
@@ -17,8 +16,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 
 public class MaterializationTest {
 	

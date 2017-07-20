@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.abstraction;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 public class MockupAbortStrategy implements AbortStrategy {
 	

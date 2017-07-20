@@ -1,35 +1,16 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.generated.node.AAndStateform;
-import de.rwth.i2.attestor.generated.node.AAtomicpropTerm;
-import de.rwth.i2.attestor.generated.node.AFalseTerm;
-import de.rwth.i2.attestor.generated.node.ANextLtlform;
-import de.rwth.i2.attestor.generated.node.AReleaseLtlform;
-import de.rwth.i2.attestor.generated.node.ANegStateform;
-import de.rwth.i2.attestor.generated.node.AStateformLtlform;
-import de.rwth.i2.attestor.generated.node.ATermLtlform;
-import de.rwth.i2.attestor.generated.node.ATrueTerm;
-import de.rwth.i2.attestor.generated.node.AUntilLtlform;
-import de.rwth.i2.attestor.generated.node.Node;
-import de.rwth.i2.attestor.generated.node.TAnd;
-import de.rwth.i2.attestor.generated.node.TAtomicprop;
-import de.rwth.i2.attestor.generated.node.TFalse;
-import de.rwth.i2.attestor.generated.node.TLparen;
-import de.rwth.i2.attestor.generated.node.TNeg;
-import de.rwth.i2.attestor.generated.node.TRelease;
-import de.rwth.i2.attestor.generated.node.TRparen;
-import de.rwth.i2.attestor.generated.node.TTrue;
-import de.rwth.i2.attestor.generated.node.TUntil;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
-
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
 import org.junit.Test;
+
+import de.rwth.i2.attestor.generated.node.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
 
 public class TableauRulesSwitchTest {
 	

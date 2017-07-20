@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import static org.junit.Assert.fail;
-
-import org.junit.*;
 import static org.junit.Assert.*;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;

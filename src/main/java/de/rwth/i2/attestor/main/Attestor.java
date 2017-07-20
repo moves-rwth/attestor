@@ -1,15 +1,11 @@
 package de.rwth.i2.attestor.main;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
-import de.rwth.i2.attestor.util.DebugMode;
-
 import java.io.FileNotFoundException;
+
+import org.apache.logging.log4j.*;
+
+import de.rwth.i2.attestor.main.settings.*;
+import de.rwth.i2.attestor.util.DebugMode;
 
 /**
  * The main class to run Attestor.

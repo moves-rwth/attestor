@@ -1,10 +1,9 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import gnu.trove.list.array.TIntArrayList;
-
 import java.util.List;
 
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * 

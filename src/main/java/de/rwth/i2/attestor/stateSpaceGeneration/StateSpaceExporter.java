@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-
 /**
  * A general method to export a StateSpace into one or more files.
  * The exact format has to be specified by an implementation.

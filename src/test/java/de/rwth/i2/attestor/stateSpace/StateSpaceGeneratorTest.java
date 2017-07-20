@@ -5,12 +5,12 @@ import static org.junit.Assert.assertFalse;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.main.AnalysisTask;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupTaskBuilder;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.AnalysisTask;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupTaskBuilder;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;

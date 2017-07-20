@@ -6,8 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import java.util.*;
 
 import org.junit.Before;
@@ -18,11 +16,12 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.*;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
-import sun.java2d.loops.FillRect.General;
 
 public class DefaultGrammarResponseApplierTest {
 

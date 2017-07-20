@@ -4,7 +4,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import java.util.*;
 
 import org.junit.Before;
@@ -17,6 +16,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.*;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;

@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
- * Responsible for computing and caching the rules (lhs -> rhs) in the grammar which resolve a certain
+ * Responsible for computing and caching the rules (lhs &#8594; rhs) in the grammar which resolve a certain
  * violation point.
  * 
  * @author Hannah

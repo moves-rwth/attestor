@@ -2,13 +2,13 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 
 public class IndexedNonterminal implements Nonterminal{
 

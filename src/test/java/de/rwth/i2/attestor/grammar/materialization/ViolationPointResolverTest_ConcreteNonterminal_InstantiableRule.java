@@ -3,25 +3,22 @@ package de.rwth.i2.attestor.grammar.materialization;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
+import java.util.*;
+
+import org.junit.Test;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
+import de.rwth.i2.attestor.indexedGrammars.stack.*;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import org.junit.Test;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 

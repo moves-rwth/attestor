@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.main;
 
+import java.io.FileNotFoundException;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-
-import java.io.FileNotFoundException;
 
 /**
  * A builder class to comfortably create and customize a program analysis task from files or already created objects.

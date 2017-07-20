@@ -1,24 +1,15 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;

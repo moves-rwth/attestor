@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.abstraction;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -17,12 +19,10 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.SootInitializer;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
 import soot.*;
 import soot.options.Options;
-
-import java.io.File;
 
 public class ComplexTest {
 	private static final Logger logger = LogManager.getLogger( "ComplexTest" );

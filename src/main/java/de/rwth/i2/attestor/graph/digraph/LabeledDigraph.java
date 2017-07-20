@@ -1,13 +1,11 @@
 package de.rwth.i2.attestor.graph.digraph;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.graph.heap.Variable;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 
 /**

@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
- * Immutable data-object storing all the rules (lhs -> rhs).
+ * Immutable data-object storing all the rules (lhs &#8594; rhs).
  * For construction use a {@link GrammarBuilder}
  * @author Hannah
  *
@@ -24,8 +24,9 @@ public class Grammar {
 	}
 
 	/**
+	 * Gets all rule graphs of rules with the specified left hand side.
 	 * 
-	 * @param nonterminal
+	 * @param nonterminal The left hand side 
 	 * @return an unmodifiable view of the rules' set
 	 */
 	public Set<HeapConfiguration> getRightHandSidesFor( Nonterminal nonterminal ) {

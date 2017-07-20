@@ -1,9 +1,8 @@
 /**
  * 
- * Types for graph grammars that are applied to program analysis.
- * 
- * @author 
+ * This package contains the classes storing the actual grammar-data.
+ * Any logic building using this data can be found in its sub-packages 
  *
+ * @author Hannah
  */
-// TODO API documentation
 package de.rwth.i2.attestor.grammar;
