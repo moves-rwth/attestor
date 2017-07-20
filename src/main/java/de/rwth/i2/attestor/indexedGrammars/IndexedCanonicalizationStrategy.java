@@ -23,9 +23,15 @@ import gnu.trove.iterator.TIntIterator;
 public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy {
 	private static final Logger logger = LogManager.getLogger( "IndexedCanonicalizationStrategy" );
 	
+	/**
+	 * The grammar that guides abstraction.
+	 */
 	private Grammar grammar;
 
-
+    /**
+     * A flag that determines whether the grammar is backward confluent.
+     * If this is the case, it suffices to consider a single sequence of inverse derivations.
+     */
 	private final boolean isConfluent;
 
 	private final StackCanonizationStrategy stackCanonizer;

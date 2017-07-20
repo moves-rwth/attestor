@@ -28,10 +28,10 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
      * A flag that determines whether the grammar is backward confluent.
      * If this is the case, it suffices to consider a single sequence of inverse derivations.
      */
-	private boolean isConfluent;
+	private final boolean isConfluent;
 
     /**
-     * A flat that prevents abstraction of program states whose corresponding program location
+     * A flag that prevents abstraction of program states whose corresponding program location
      * has at most one successor.
      */
 	private boolean ignoreUniqueSuccessorStatements;
@@ -55,14 +55,6 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 		ignoreUniqueSuccessorStatements = enabled;
 	}
 
-    /**
-     * Marks the underlying grammar as confluent.
-     */
-	public void setConfluent() {
-		
-		this.isConfluent = true;
-	}
-	
 	
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState conf) {
