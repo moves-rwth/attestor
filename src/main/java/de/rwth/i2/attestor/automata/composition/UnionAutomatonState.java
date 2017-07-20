@@ -2,6 +2,11 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+/**
+ * State of a heap automaton that realizes the union of two heap automata.
+ *
+ * @author Christoph
+ */
 public class UnionAutomatonState implements AutomatonState {
 
     private AutomatonState firstState;
