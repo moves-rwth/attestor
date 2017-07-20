@@ -19,104 +19,104 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
  */
 public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy {
 
-    /**
-     * The grammar that guides abstraction.
-     */
+	/**
+	 * The grammar that guides abstraction.
+	 */
 	private Grammar grammar;
 
-    /**
-     * A flag that determines whether the grammar is backward confluent.
-     * If this is the case, it suffices to consider a single sequence of inverse derivations.
-     */
+	/**
+	 * A flag that determines whether the grammar is backward confluent.
+	 * If this is the case, it suffices to consider a single sequence of inverse derivations.
+	 */
 	private final boolean isConfluent;
 
-    /**
-     * A flag that prevents abstraction of program states whose corresponding program location
-     * has at most one successor.
-     */
+	/**
+	 * A flag that prevents abstraction of program states whose corresponding program location
+	 * has at most one successor.
+	 */
 	private boolean ignoreUniqueSuccessorStatements;
 
-    /**
-     * Initializes the strategy.
-     * @param grammar The grammar that guides abstraction.
-     * @param isConfluent True if and only if the grammar is backward confluent.
-     */
+	/**
+	 * Initializes the strategy.
+	 * @param grammar The grammar that guides abstraction.
+	 * @param isConfluent True if and only if the grammar is backward confluent.
+	 */
 	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent) {	
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
 		this.ignoreUniqueSuccessorStatements = false;
 	}
 
-    /**
-     * Sets a flag to prevent abstraction of program states with at most one successor.
-     * @param enabled True if and only if program states with at most one successor are not abstracted.
-     */
+	/**
+	 * Sets a flag to prevent abstraction of program states with at most one successor.
+	 * @param enabled True if and only if program states with at most one successor are not abstracted.
+	 */
 	public void setIgnoreUniqueSuccessorStatements(boolean enabled) {
 		ignoreUniqueSuccessorStatements = enabled;
 	}
 
-	
+
 	@Override
-	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState conf) {
-		
-		DefaultState state = (DefaultState) conf;
-		
-		state = state.clone();
-		
+	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
+
+		DefaultState defaultState = (DefaultState) state;
+
+		defaultState = defaultState.clone();
+
 		if(ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization()) {
-			
-			return SingleElementUtil.createSet( state );
+
+			return SingleElementUtil.createSet( defaultState );
 		}
-		
-		return performCanonization(state);
+
+		return performCanonization(defaultState);
 	}
 
-    /**
-     * Performs the actual grammar based abstraction of a given program state.
-     * @param state The program state that should be abstracted.
-     * @return The set of abstracted program states.
-     */
+	/**
+	 * Performs the actual grammar based abstraction of a given program state.
+	 * @param state The program state that should be abstracted.
+	 * @return The set of abstracted program states.
+	 */
 	private Set<ProgramState> performCanonization(DefaultState state) {
 
 		Set<ProgramState> result = new HashSet<>();
-		
+
 		boolean checkNext = true;
-		
+
 		for(Nonterminal nonterminal : grammar.getAllLeftHandSides() ) {
-			
+
 			if(!checkNext) { break; }
-			
+
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
-			
+
 				if(!checkNext) { break; }
-				
+
 				AbstractMatchingChecker checker = state.getHeap().getEmbeddingsOf(pattern);
 
 				while(checker.hasNext() && checkNext) {
-					
+
 					checkNext = !isConfluent; 
-					
-				    DefaultState abstracted  = state;
+
+					DefaultState abstracted  = state;
 					if(checkNext) {
 						abstracted = state.clone();
 					}
-					
+
 					Matching embedding = checker.getNext();
-					
+
 					abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
 					result.addAll( performCanonization( abstracted ) );
 				}
-				
+
 			}
 		}
-		
+
 		if(result.isEmpty()) {	
-			
+
 			result.add(state);
 		}
-		
+
 		return result;
 	}
-	
-	
+
+
 }

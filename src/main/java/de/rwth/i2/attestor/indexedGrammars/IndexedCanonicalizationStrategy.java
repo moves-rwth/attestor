@@ -22,51 +22,71 @@ import gnu.trove.iterator.TIntIterator;
 
 public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy {
 	private static final Logger logger = LogManager.getLogger( "IndexedCanonicalizationStrategy" );
-	
+
 	/**
 	 * The grammar that guides abstraction.
 	 */
 	private Grammar grammar;
 
-    /**
-     * A flag that determines whether the grammar is backward confluent.
-     * If this is the case, it suffices to consider a single sequence of inverse derivations.
-     */
+	/**
+	 * A flag that determines whether the grammar is backward confluent.
+	 * If this is the case, it suffices to consider a single sequence of inverse derivations.
+	 */
 	private final boolean isConfluent;
+
+	/**
+	 * A flag that prevents abstraction of program states whose corresponding program location
+	 * has at most one successor.
+	 */
+	private boolean ignoreUniqueSuccessorStatements;
 
 	private final StackCanonizationStrategy stackCanonizer;
 	private final AnnotationsMaintainingStrategy annotationMaintainer;
 
+	/**
+	 * Initializes the strategy.
+	 * @param grammar The grammar that guides abstraction.
+	 * @param isConfluent True if and only if the grammar is backward confluent.
+	 */
 	public IndexedCanonicalizationStrategy(Grammar grammar, boolean isConfluent) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
+		this.ignoreUniqueSuccessorStatements = false;
 		this.stackCanonizer = new AVLStackCanonizationStrategy();
 		this.annotationMaintainer = new AVLAnnotationMaintainingStrategy();
+	}
+
+	/**
+	 * Sets a flag to prevent abstraction of program states with at most one successor.
+	 * @param enabled True if and only if program states with at most one successor are not abstracted.
+	 */
+	public void setIgnoreUniqueSuccessorStatements(boolean enabled) {
+		ignoreUniqueSuccessorStatements = enabled;
 	}
 
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		IndexedState conf = ((IndexedState) state).clone();
+		IndexedState indexedState = ((IndexedState) state).clone();
 
 		if(! semantics.permitsCanonicalization() ) {
 
-			return SingleElementUtil.createSet(conf);
+			return SingleElementUtil.createSet(indexedState);
 		}
-		annotationMaintainer.maintainAnnotations(conf);
+		annotationMaintainer.maintainAnnotations(indexedState);
 
-		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
+		if( indexedState.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
 			if( DebugMode.ENABLED ){
 				logger.trace( "Using aggressive canonization" );
 			}
-			return performStrongCanonization( conf );
+			return performStrongCanonization( indexedState );
 		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() && semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt ){
-			return performStrongCanonization( conf );
+			return performStrongCanonization( indexedState );
 		}
-		return performCanonization(conf);
+		return performCanonization(indexedState);
 	}
 
-	private Set<ProgramState> performCanonization(IndexedState conf) {
+	private Set<ProgramState> performCanonization(IndexedState state) {
 
 		Set<ProgramState> result = new HashSet<>();
 
@@ -75,16 +95,16 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 		for( Nonterminal nt : grammar.getAllLeftHandSides() ) {
 
 			IndexedNonterminal nonterminal = (IndexedNonterminal) nt;
-			
+
 			if(!checkNext) { break; }
 
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
 
 				if(!checkNext) { break; }
 
-				stackCanonizer.canonizeStack( conf.getHeap() );
+				stackCanonizer.canonizeStack( state.getHeap() );
 
-				AbstractMatchingChecker checker = conf.getHeap().getEmbeddingsOf(pattern);
+				AbstractMatchingChecker checker = state.getHeap().getEmbeddingsOf(pattern);
 
 				StackSymbol lastSymb = nonterminal.getLastStackSymbol();
 				if( lastSymb instanceof StackVariable ){
@@ -94,18 +114,18 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 					checkNext = !isConfluent; 
 
-					IndexedState abstracted  = conf;
+					IndexedState abstracted  = state;
 					if( checkNext ) {
-						abstracted = conf.clone();
+						abstracted = state.clone();
 					}
 
 					Matching embedding = checker.getNext();
 					boolean indexMatch = true;
-					
+
 					TIntIterator ntEdgeIter = pattern.nonterminalEdges().iterator();
-					
+
 					while(ntEdgeIter.hasNext()) {
-						
+
 						int edge = ntEdgeIter.next();
 
 						IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
@@ -119,7 +139,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 						HeapConfigurationBuilder builder = abstracted.getHeap().builder();
 						builder.replaceMatching( embedding , nonterminal );
-						
+
 						TIntIterator iter = abstracted.getHeap().nonterminalEdges().iterator();
 						while(iter.hasNext()) {
 							int edge = iter.next();
@@ -139,7 +159,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 		if(result.isEmpty()) {	
 
-			result.add(conf);
+			result.add(state);
 		}
 
 		return result;
@@ -154,7 +174,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 		for( Nonterminal nt : grammar.getAllLeftHandSides() ) {
 
 			IndexedNonterminal nonterminal = (IndexedNonterminal) nt;
-			
+
 			if(!checkNext) { break; }
 
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
@@ -180,14 +200,14 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 					Matching embedding = checker.getNext();
 					boolean indexMatch = true;
-					
+
 					TIntIterator ntIter = pattern.nonterminalEdges().iterator();
 					while(ntIter.hasNext()) {
-						
+
 						int edge = ntIter.next();
 
 						IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
-						
+
 						int matchingEdge = embedding.match(edge);
 						IndexedNonterminal targetNt = (IndexedNonterminal) abstracted.getHeap().labelOf(matchingEdge);
 						indexMatch = targetNt.matchStack( patternNt );
@@ -199,14 +219,14 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 						HeapConfigurationBuilder builder = abstracted.getHeap().builder();
 						builder.replaceMatching( embedding , nonterminal );
-						
+
 						TIntIterator iter = abstracted.getHeap().nonterminalEdges().iterator();
 						while(iter.hasNext()) {
 							int edge = iter.next();
 							IndexedNonterminal label = (IndexedNonterminal) abstracted.getHeap().labelOf(edge);
 							builder.replaceNonterminal(edge, label.getWithInstantiation() );
 						}
-						
+
 						builder.build();
 						stackCanonizer.canonizeStack( abstracted.getHeap() );
 						result.addAll( performStrongCanonization( abstracted ) );
@@ -225,5 +245,5 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 		return result;
 	}
-	
+
 }
