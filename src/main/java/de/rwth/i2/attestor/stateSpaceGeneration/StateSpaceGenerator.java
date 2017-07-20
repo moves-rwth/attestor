@@ -6,12 +6,12 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
- * state space from it. <br/>
+ * state space from it. <br>
  * Initialization of a StateSpaceGenerator has to be performed
- * by calling the static method StateSpaceGenerator.<T>builder().
+ * by calling the static method StateSpaceGenerator.builder().
  * This yields a builder object to configure the analysis used during
  * state space generation.
- * <br/>
+ * <br>
  *  The generation of a StateSpace itself is started by invoking generate().
  *  
  * @author christoph

@@ -54,7 +54,7 @@ public interface AnalysisTaskBuilder {
 
     /**
      * Sets the initial scope depth of the analysis.
-     * @param depth The scope depth (=> 0).
+     * @param depth The scope depth (=&#62; 0).
      * @return The builder.
      */
     AnalysisTaskBuilder setScopeDepth(int depth);

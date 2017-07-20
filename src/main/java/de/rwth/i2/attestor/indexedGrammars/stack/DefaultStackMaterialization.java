@@ -13,10 +13,10 @@ import gnu.trove.list.array.TIntArrayList;
  * A StackMaterializationStrategy that uses a fixed right-regular string grammar 
  * given by the following rules:
  * <ul>
- *     <li>X -> sX</li>
- *     <li>X -> Z</li>
- *     <li>Y -> sY</li>
- *     <li>Y -> C</li>
+ *     <li>X &#8594; sX</li>
+ *     <li>X &#8594; Z</li>
+ *     <li>Y &#8594; sY</li>
+ *     <li>Y &#8594; C</li>
  * </ul>
  *
  * @author Hannah, Christoph

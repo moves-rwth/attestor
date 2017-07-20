@@ -15,7 +15,7 @@ import gnu.trove.iterator.TIntIterator;
  * Responsible for applying the materialization rules to the stacks of the nonterminals
  * in the graph.
  * 
- * For input rule X -> ssZ it replaces the stacksymbol X in all nonterminals where it occures
+ * For input rule X &#8594; ssZ it replaces the stacksymbol X in all nonterminals where it occures
  * by ssZ.
  * 
  * @author Hannah
@@ -24,7 +24,7 @@ import gnu.trove.iterator.TIntIterator;
 public class StackMaterializer {
 
 	/**
-	 * Applies the given materialization ( e.g. X -> ssX ) to all indexed nonterminals to a 
+	 * Applies the given materialization ( e.g. X &#8594; ssX ) to all indexed nonterminals to a 
 	 * copy of the graph.
 	 * 
 	 * @param inputGraph the graph to materialize
@@ -32,7 +32,7 @@ public class StackMaterializer {
 	 * @param inputMaterializationPostfix the sequence of stack symbols for materialization
 	 * @return a materialized copy of the graph if the mateterialization is non empty.
 	 * The graph itself otherwise.
-	 * @throws CannotMaterializeException
+	 * @throws CannotMaterializeException if a nonterminal unexpectedly has a concrete stack
 	 */
 	public HeapConfiguration getMaterializedCloneWith(HeapConfiguration inputGraph,
 			AbstractStackSymbol symbolToMaterialize, List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {

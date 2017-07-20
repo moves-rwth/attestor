@@ -3,12 +3,12 @@ package de.rwth.i2.attestor.io.htmlExport;
 import java.io.*;
 import java.util.*;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
@@ -140,8 +140,8 @@ public class StateSpaceHtmlExporter implements StateSpaceExporter {
 
 	/**
 	 * do not use from outside! Public only for testing.
-	 * @param stateSpace
-	 * @return
+	 * @param stateSpace the state space to encode
+	 * @return a string encoding the json-object
 	 */
 	public static String stateSpaceToJson( StateSpace stateSpace ) {
 

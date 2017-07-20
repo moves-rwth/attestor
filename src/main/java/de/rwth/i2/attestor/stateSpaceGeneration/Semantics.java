@@ -27,7 +27,7 @@ public interface Semantics {
      * Checks whether execution of a single step of the abstract program semantics on the given program state
      * requires materialization first.
      * @param programState The program state on which the semantics should be
-     * @return
+     * @return true, if the semantics statement requires materialization
      */
     boolean needsMaterialization(ProgramState programState);
 
@@ -57,4 +57,12 @@ public interface Semantics {
      * @param permitted True if and only if canonicalization may be performed after execution of this program statement.
      */
     void setPermitCanonicalization(boolean permitted);
+    
+    /**
+     * A string representing the semantics statement both for display and
+     * for identification.
+     * @return the string representation of the semantics
+     */
+    @Override
+    String toString();
 }

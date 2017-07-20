@@ -98,8 +98,8 @@ public class IndexedNonterminal implements Nonterminal{
 	/**
 	 * removes the last symbol (stackVariable () or abstractStackSymbol) and
 	 * adds all elements in postfix
-	 * @param postfix
-	 * @return
+	 * @param postfix a list of stack symbols representing the postfix
+	 * @return a new IndexedNonterminal with the prolonged stack
 	 */
 	public IndexedNonterminal getWithProlongedStack( List<StackSymbol> postfix ){
 		assert( this.stackSize() > 0 );
@@ -183,8 +183,8 @@ public class IndexedNonterminal implements Nonterminal{
 
 	/**
 	 * returns true if the stacks are elementwise equal. 
-	 * @param other
-	 * @return
+	 * @param other the nonterminal with which to compare
+	 * @return true, if the stacks of the two nonterminals are elementwise equal
 	 */
 	public boolean matchStack( IndexedNonterminal other ){
 		List<StackSymbol> otherStack = other.stack;
