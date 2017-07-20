@@ -55,36 +55,22 @@ public class UnionTransitionRelation implements TransitionRelation {
     @Override
     public AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
 
-        List<AutomatonState> assignment = new ArrayList<>(ntAssignment.size());
-        int relationToUse = 0; // -1 = first, 1 = second, 0 = unknown
+        List<AutomatonState> firstAssignment = new ArrayList<>(ntAssignment.size());
+        List<AutomatonState> secondAssignment = new ArrayList<>(ntAssignment.size());
 
         for(AutomatonState state : ntAssignment) {
-            if(state instanceof UnionAutomatonState) {
-                UnionAutomatonState unionState = (UnionAutomatonState) state;
-                AutomatonState first = unionState.first();
-                AutomatonState second = unionState.second();
-                if(relationToUse != 1 && first != null && second == null) {
-                    relationToUse = -1;
-                    assignment.add(first);
-                } else if (relationToUse != -1 && first == null && second != null) {
-                    relationToUse = 1;
-                    assignment.add(second);
-                } else {
-                    throw new IllegalArgumentException("Nonterminal assignment contains invalid states.");
-                }
-            } else {
+            if(!(state instanceof UnionAutomatonState)) {
                 throw new IllegalArgumentException("Nonterminal assignment contains invalid states.");
             }
+            UnionAutomatonState u = (UnionAutomatonState) state;
+            firstAssignment.add(u.first());
+            secondAssignment.add(u.second());
         }
 
-        switch(relationToUse) {
-            case -1:
-                return firstRelation.move(assignment, heapConfiguration);
-            case 1:
-                return secondRelation.move(assignment, heapConfiguration);
-            default:
-                throw new IllegalArgumentException("Nonterminal assignment contains invalid states.");
-        }
+        AutomatonState first = firstRelation.move(firstAssignment, heapConfiguration);
+        AutomatonState second = secondRelation.move(firstAssignment, heapConfiguration);
+
+        return new UnionAutomatonState(first, second);
     }
 
     @Override
