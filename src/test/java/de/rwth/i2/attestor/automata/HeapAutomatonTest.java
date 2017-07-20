@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.tasks.StateAnnotatedNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +35,12 @@ public class HeapAutomatonTest {
         automaton = new HeapAutomaton(new MockUpTransition());
         hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
         type = Settings.getInstance().factory().getType("type");
-        nt = Settings.getInstance().factory().createNonterminal("X", 3, new boolean[]{false,false,false});
+        nt = Settings.getInstance().factory().createNonterminal("HAX", 3, new boolean[]{false,false,false});
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        Settings.getInstance().resetAllSettings();
     }
 
     @Test

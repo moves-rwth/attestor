@@ -70,19 +70,29 @@ public class AssignmentIterator<E> {
     public List<E> next() {
 
         List<E> result = extractChoice();
+        update();
+        return result;
+
+    }
+
+    private void update() {
+
+        if(!hasNext()) {
+            return;
+        }
 
         int inc = currentAssignment.get(position) + 1;
         int max = assignmentSizes.get(position);
+
         if(inc < max) {
+            currentAssignment.set(position, inc);
             resetUpToPosition();
         } else {
             ++position;
-            if(hasNext()) {
-                resetUpToPosition();
-            }
+            update();
         }
 
-        return result;
+
     }
 
     /**

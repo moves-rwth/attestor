@@ -24,38 +24,45 @@ public class Settings {
     /**
      * Settings regarding input files.
      */
-	private final InputSettings inputSettings;
+	private InputSettings inputSettings;
 
     /**
      * Settings customizing the analysis that is executed.
      */
-	private final OptionSettings optionSettings;
+	private OptionSettings optionSettings;
 
     /**
      * Settings customizing how state space are exported.
      */
-	private final OutputSettings outputSettings;
+	private OutputSettings outputSettings;
 
     /**
      * Settings regarding the creation of objects.
      */
-	private final FactorySettings factorySettings;
+	private FactorySettings factorySettings;
 
     /**
      * Settings regarding the graph grammars underlying the analysis.
      */
-	private final GrammarSettings grammarSettings;
+	private GrammarSettings grammarSettings;
 
     /**
      * Initializes with default settings.
      */
 	private Settings(){
-		inputSettings = new InputSettings();
-		optionSettings = new OptionSettings();
-		outputSettings = new OutputSettings();
-		factorySettings = new FactorySettings();
-		grammarSettings = new GrammarSettings();
+	    resetAllSettings();
 	}
+
+    /**
+     * Resets all settings to their original default value.
+     */
+	public void resetAllSettings() {
+        inputSettings = new InputSettings();
+        optionSettings = new OptionSettings();
+        outputSettings = new OutputSettings();
+        factorySettings = new FactorySettings();
+        grammarSettings = new GrammarSettings();
+    }
 
     /**
      * @return All settings regarding input files.

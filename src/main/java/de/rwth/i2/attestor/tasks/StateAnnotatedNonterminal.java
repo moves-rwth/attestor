@@ -79,4 +79,18 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
         }
         return 1;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof StateAnnotatedNonterminal) {
+           StateAnnotatedNonterminal n = (StateAnnotatedNonterminal) o;
+           return n.getState().equals(state) && n.nonterminal.equals(nonterminal);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return nonterminal.hashCode();
+    }
 }

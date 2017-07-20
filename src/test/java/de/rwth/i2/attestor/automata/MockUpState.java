@@ -35,4 +35,8 @@ public class MockUpState implements HeapAutomatonState {
     public int hashCode() {
         return state;
     }
+
+    public String toString() {
+        return String.valueOf(state);
+    }
 }
