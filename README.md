@@ -36,7 +36,7 @@ The following software has to be installed prior to the installation of Attestor
 There is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
 Each benchmark can be executed individually using maven.
 
-## Documentation
+## Documentation and Publications
 
 The API document is available as part of this repository [here][1].
 Furthermore, the theoretical foundations underlying Attestor are described in the following research papers:
