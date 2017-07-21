@@ -21,6 +21,8 @@ developers twofold:
 
 ## System Requirements
 
+The following software has to be installed prior to the installation of Attestor:
+
 - [Java JDK 1.8 or higher][3]
 - [Apache Maven][4]
 
