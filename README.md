@@ -1,5 +1,15 @@
 # Attestor
-A Shape Analysis Tool based on Graph Grammars
+
+Many software bugs can be traced back to the erroneous use of pointers,
+i.e., references to memory addresses. They constitute an essential
+concept in modern programming languages, and are used for implementing
+dynamic data structures like lists, trees etc. Due to the resulting
+unbounded state spaces, pointer errors are hard to detect in sequential
+programs.
+
+Attestor is a [shape analysis][11] tool that attempts to discover precise
+invariants about the data structures employed by a Java program.
+It is based on various notions of [graph grammars][12] as a formal underpinning.
 
 ## System Requirements
 
@@ -40,3 +50,5 @@ Each benchmark can be executed individually using maven.
 [8]: http://www.sciencedirect.com/science/article/pii/S0167642313002967
 [9]: https://link.springer.com/chapter/10.1007/978-3-319-26529-2_6
 [10]: https://link.springer.com/chapter/10.1007/978-3-319-09108-2_4
+[11]: https://en.wikipedia.org/wiki/Shape_analysis_(program_analysis)
+[12]: https://en.wikipedia.org/wiki/Graph_rewriting
