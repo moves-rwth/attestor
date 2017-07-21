@@ -29,6 +29,11 @@ developers twofold:
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
 
+## Examples and Benchmarks
+
+There is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
+Each benchmark can be executed individually using maven.
+
 ## Documentation
 
 The API document is available as part of this repository [here][1].
@@ -42,11 +47,6 @@ Furthermore, the theoretical foundations underlying Attestor are described in th
 - Christina Jansen, Thomas Noll: [Generating Abstract Graph-Based Procedure Summaries for Pointer Programs][10]. ICGT 2014: 49-64
 
 
-
-## Examples and Benchmarks
-
-There is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
-Each benchmark can be executed individually using maven.
 
 [1]: https://moves-rwth.github.io/attestor/doc/
 [2]: https://github.com/moves-rwth/attestor-examples
