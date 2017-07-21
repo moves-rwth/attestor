@@ -1,15 +1,23 @@
 # Attestor
 
+Attestor is a [shape analysis][11] tool that attempts to discover precise
+invariants about the data structures employed by a Java program.
+It is based on various notions of [graph grammars][12] as a formal underpinning.
+
+## Why Shape Analysis?
+
 Many software bugs can be traced back to the erroneous use of pointers,
 i.e., references to memory addresses. They constitute an essential
 concept in modern programming languages, and are used for implementing
 dynamic data structures like lists, trees etc. Due to the resulting
 unbounded state spaces, pointer errors are hard to detect in sequential
-programs.
+programs. A shape analysis, such as the one implemented by Attestor, supports
+developers twofold:
 
-Attestor is a [shape analysis][11] tool that attempts to discover precise
-invariants about the data structures employed by a Java program.
-It is based on various notions of [graph grammars][12] as a formal underpinning.
+1. It supports automatic verification of the absence of (certain) pointer-related
+   errors.
+2. It provides useful debugging information in case errors have been detected.
+
 
 ## System Requirements
 
