@@ -111,7 +111,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	}
 
 	private AbstractStackSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
-		StackSymbol lastSymbol = toReplace.getLastStackSymbol();
+		StackSymbol lastSymbol = toReplace.getStack().getLastStackSymbol();
 		if( lastSymbol instanceof AbstractStackSymbol ){
 			return (AbstractStackSymbol) lastSymbol;
 		}else{
@@ -207,7 +207,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 				int e = edgeIter.next();
 				
 				IndexedNonterminal label = (IndexedNonterminal) uninstantiatedRhs.labelOf(e);
-				if( ! label.hasConcreteStack() ){
+				if( ! label.getStack().hasConcreteStack() ){
 					builder.replaceNonterminal(e, label.getWithProlongedStack( necessaryInstantiation ));
 				}
 			}

@@ -59,7 +59,7 @@ public class AVLAnnotationMaintainingStrategy implements AnnotationsMaintainingS
 			if(nt.getLabel().equals(btLabel.getLabel())) {
 
 				int sourceNode = hc.attachedNodesOf(ntEdge).get(4);
-				heights.put(sourceNode, nt.stackSize() -1 );//assume stacks of form s*Z if something is linked to null and s*X otherwise
+				heights.put(sourceNode, nt.getStack().size() -1 );//assume stacks of form s*Z if something is linked to null and s*X otherwise
 				
 				addParentToQueue(hc, sourceNode, queue, visited );
 				visited.add( sourceNode );

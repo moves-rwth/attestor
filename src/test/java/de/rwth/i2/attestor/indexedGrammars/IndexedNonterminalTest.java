@@ -44,7 +44,7 @@ public class IndexedNonterminalTest {
 		List<StackSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
 		prefix.add( s );
-		assertTrue( testNonterminal.stackStartsWith( prefix ) );
+		assertTrue( testNonterminal.getStack().startsWith( prefix ) );
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class IndexedNonterminalTest {
 		prefix.add( s );
 		prefix.add( s );
 		prefix.add( bottom );
-		assertTrue( testNonterminal.stackStartsWith( prefix ) );
+		assertTrue( testNonterminal.getStack().startsWith( prefix ) );
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class IndexedNonterminalTest {
 		prefix.add( s );
 		prefix.add( s2 );
 		prefix.add( s );
-		assertFalse( testNonterminal.stackStartsWith( prefix ) );
+		assertFalse( testNonterminal.getStack().startsWith( prefix ) );
 	}
 	
 	@Test
@@ -75,54 +75,54 @@ public class IndexedNonterminalTest {
 		prefix.add( s );
 		prefix.add( bottom );
 		prefix.add( bottom );
-		assertFalse( testNonterminal.stackStartsWith( prefix ) );
+		assertFalse( testNonterminal.getStack().startsWith( prefix ) );
 	}
 
 	@Test
 	public void testStackEndsWith() {
-		assertTrue( testNonterminal.stackEndsWith( bottom ) );
-		assertFalse( testNonterminal.stackEndsWith( s ));
+		assertTrue( testNonterminal.getStack().stackEndsWith( bottom ) );
+		assertFalse( testNonterminal.getStack().stackEndsWith( s ));
 		
 	}
 	
 	@Test
 	public void testGetWithShortendedStack(){
 		IndexedNonterminal res = testNonterminal.getWithShortenedStack();
-		assertTrue(testNonterminal.stackEndsWith(bottom));
-		assertTrue(res.stackEndsWith(s));
+		assertTrue(testNonterminal.getStack().stackEndsWith(bottom));
+		assertTrue(res.getStack().stackEndsWith(s));
 		List<StackSymbol> expectedPrefix = new ArrayList<>();
 		expectedPrefix.add( s );
 		expectedPrefix.add( s );
 		expectedPrefix.add( s );
-		assertTrue( res.stackStartsWith( expectedPrefix ) );
-		assertEquals( 3, res.stackSize());
+		assertTrue( res.getStack().startsWith( expectedPrefix ) );
+		assertEquals( 3, res.getStack().size());
 	}
 	
 	@Test
 	public void testGetWithProlongedStack(){
 		IndexedNonterminal res = testNonterminal.getWithProlongedStack( s );
-		assertTrue(testNonterminal.stackEndsWith(bottom));
-		assertTrue(res.stackEndsWith(s));
+		assertTrue(testNonterminal.getStack().stackEndsWith(bottom));
+		assertTrue(res.getStack().stackEndsWith(s));
 		List<StackSymbol> expectedPrefix = new ArrayList<>();
 		expectedPrefix.add( s );
 		expectedPrefix.add( s );
 		expectedPrefix.add( s );
 		expectedPrefix.add(bottom);
 		expectedPrefix.add(s);
-		assertTrue( res.stackStartsWith( expectedPrefix ) );
-		assertEquals( 5, res.stackSize());
+		assertTrue( res.getStack().startsWith(expectedPrefix) );
+		assertEquals( 5, res.getStack().size());
 	}
 
 
 	@Test
 	public void testHasConcreteStack() {
-		assertTrue( testNonterminal.hasConcreteStack() );
+		assertTrue( testNonterminal.getStack().hasConcreteStack() );
 		IndexedNonterminal res = testNonterminal.getWithShortenedStack();
-		assertFalse( res.hasConcreteStack() );
+		assertFalse( res.getStack().hasConcreteStack() );
 	}
 
 	@Test
 	public void testStackSize() {
-		assertEquals( 4, testNonterminal.stackSize() );
+		assertEquals( 4, testNonterminal.getStack().size() );
 	}
 }

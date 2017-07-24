@@ -82,7 +82,7 @@ public class StackMaterializer {
 			Nonterminal nonterminal = inputGraph.labelOf( indexOfNonterminal );
 			if( nonterminal instanceof IndexedNonterminal ){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getLastStackSymbol().equals( symbolToMaterialize ) ) {
+				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( symbolToMaterialize ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							computeMaterializedCopyOf(nonterminalToMaterialize, inputMaterializationPostfix);
@@ -110,7 +110,7 @@ public class StackMaterializer {
 			List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
-		if( nonterminalToMaterialize.hasConcreteStack() ){
+		if( nonterminalToMaterialize.getStack().hasConcreteStack() ){
 			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
 		}
 

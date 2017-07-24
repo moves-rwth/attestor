@@ -44,20 +44,11 @@ public class IndexedNonterminal implements Nonterminal{
 	    this.stack = stack;
     }
 
-    //might be useless
-	public boolean stackStartsWith( Iterable<StackSymbol> prefix ){
-	    return stack.startsWith(prefix);
-	}
+    public Stack getStack() {
+	    return stack;
+    }
 
-	public boolean stackEndsWith( StackSymbol symbol ){
-	    return stack.stackEndsWith(symbol);
-	}
-
-	public StackSymbol getLastStackSymbol(){
-	    return stack.getLastStackSymbol();
-	}
-
-	public IndexedNonterminal getWithShortenedStack(){
+    public IndexedNonterminal getWithShortenedStack(){
 	    return new IndexedNonterminal(generalNonterminal, stack.getWithShortenedStack());
 	}
 
@@ -78,15 +69,6 @@ public class IndexedNonterminal implements Nonterminal{
 	public IndexedNonterminal getWithProlongedStack( List<StackSymbol> postfix ){
         return new IndexedNonterminal(generalNonterminal, stack.getWithProlongedStack(postfix));
 	}
-
-	public boolean hasConcreteStack(){
-	    return stack.hasConcreteStack();
-	}
-
-	public int stackSize(){
-	    return stack.size();
-	}
-
 
 	/**
 	 * returns true if the stacks are elementwise equal. 

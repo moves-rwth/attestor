@@ -80,7 +80,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 				AbstractMatchingChecker checker = conf.getHeap().getEmbeddingsOf(pattern);
 
-				StackSymbol lastSymb = nonterminal.getLastStackSymbol();
+				StackSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
 				if( lastSymb instanceof StackVariable ){
 					( (StackVariable) lastSymb ).resetInstantiation();
 				}
@@ -159,7 +159,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 				AbstractMatchingChecker checker = new EmbeddingChecker(pattern, conf.getHeap() );
 
-				StackSymbol lastSymb = nonterminal.getLastStackSymbol();
+				StackSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
 				if( lastSymb instanceof StackVariable ){
 					( (StackVariable) lastSymb ).resetInstantiation();
 				}

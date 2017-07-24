@@ -79,13 +79,13 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
      */
     private boolean isAbstractionPossible(IndexedNonterminal edgeLabel, String stackLabel) {
 
-	    String endEdge = edgeLabel.getLastStackSymbol().toString();
+	    String endEdge = edgeLabel.getStack().getLastStackSymbol().toString();
 
 	    return (
                 (stackLabel.equals("Z") && !endEdge.equals("X"))
                 || (stackLabel.equals("C") && !endEdge.equals("Y"))
-                || (stackLabel.equals("X") && !endEdge.equals("Z") && (!endEdge.equals("X") || edgeLabel.stackSize() > 1))
-                || (stackLabel.equals("Y") && !endEdge.equals("C") && (!endEdge.equals("Y") || edgeLabel.stackSize() > 1))
+                || (stackLabel.equals("X") && !endEdge.equals("Z") && (!endEdge.equals("X") || edgeLabel.getStack().size() > 1))
+                || (stackLabel.equals("Y") && !endEdge.equals("C") && (!endEdge.equals("Y") || edgeLabel.getStack().size() > 1))
         );
     }
 
@@ -97,8 +97,8 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
      */
     private boolean isAbstractionApplicable(IndexedNonterminal edgeLabel, String stackLabel) {
 
-	    return edgeLabel.getLastStackSymbol().toString().equals(stackLabel)
-                && (stackLabel.equals("Z") || stackLabel.equals("C") || edgeLabel.stackSize() > 1);
+	    return edgeLabel.getStack().getLastStackSymbol().toString().equals(stackLabel)
+                && (stackLabel.equals("Z") || stackLabel.equals("C") || edgeLabel.getStack().size() > 1);
     }
 
     /**
@@ -133,7 +133,7 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
      */
     private IndexedNonterminal updateNonterminal(IndexedNonterminal originalNonterminal) {
 
-	    String last = originalNonterminal.getLastStackSymbol().toString();
+	    String last = originalNonterminal.getStack().getLastStackSymbol().toString();
 
 	    if(last.equals("Z")) {
 	        return originalNonterminal

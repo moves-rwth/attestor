@@ -92,7 +92,7 @@ public class GrammarTest_Indexed {
 		 while( ntIterator.hasNext() ){
 			 int ntId = ntIterator.next();
 			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", nt.hasConcreteStack() );
+			 assertTrue("leftLeafRule not instantiatied", nt.getStack().hasConcreteStack() );
 		 }
 		 assertTrue( result.contains( BalancedTreeGrammar.createRightLeafRule()) );
 		 }
