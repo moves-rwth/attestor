@@ -131,11 +131,6 @@ public class GeneralNonterminal implements Nonterminal {
 		isReductionTentacle[tentacle] = false;
 	}
 
-	@Override
-	public int compareTo( Nonterminal other ){
-		return this.toString().compareTo( other.toString() );
-	}
-	
 	public String toString(){
 		return this.label;
 	}

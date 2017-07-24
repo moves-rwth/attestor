@@ -123,14 +123,6 @@ public class IndexedNonterminal implements Nonterminal{
 	}
 
 	@Override
-	public int compareTo(Nonterminal o) {
-		if( this.equals(o) ){
-			return 0;
-		}
-		return -1;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

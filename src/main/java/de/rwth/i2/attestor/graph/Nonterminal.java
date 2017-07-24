@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.graph.digraph.NodeLabel;
  * @author Christoph
  *
  */
-public interface Nonterminal extends Comparable<Nonterminal>, NodeLabel{
+public interface Nonterminal extends NodeLabel{
 
 	/**
 	 * @return The number of nodes that has to be attached to this nonterminal.

@@ -69,18 +69,6 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
     }
 
     @Override
-    public int compareTo(Nonterminal nonterminal) {
-
-        if(nonterminal instanceof StateAnnotatedNonterminal) {
-            StateAnnotatedNonterminal sn = (StateAnnotatedNonterminal) nonterminal;
-            if(sn.getState().equals(state) && sn.nonterminal.equals(nonterminal)) {
-                return 0;
-            }
-        }
-        return 1;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if(o instanceof StateAnnotatedNonterminal) {
            StateAnnotatedNonterminal n = (StateAnnotatedNonterminal) o;
