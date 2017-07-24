@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+import java.util.Set;
+
 /**
  * State of a heap automaton realizing the intersection of two heap automata.
  *
@@ -32,5 +34,11 @@ public class IntersectionAutomatonState implements AutomatonState {
     public boolean isFinal() {
 
         return firstState.isFinal() && secondState.isFinal();
+    }
+
+    @Override
+    public Set<String> getAtomicPropositions() {
+
+        return null;
     }
 }

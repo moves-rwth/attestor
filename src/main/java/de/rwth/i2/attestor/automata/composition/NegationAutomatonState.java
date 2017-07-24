@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+import java.util.Set;
+
 /**
  * State of a heap automaton realizing the negation of another <b>deterministic</b> heap automaton.
  *
@@ -22,5 +24,11 @@ public class NegationAutomatonState implements AutomatonState {
     public boolean isFinal() {
 
         return !state.isFinal();
+    }
+
+    @Override
+    public Set<String> getAtomicPropositions() {
+
+        return null;
     }
 }

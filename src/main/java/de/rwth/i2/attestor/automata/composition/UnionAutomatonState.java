@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+import java.util.Set;
+
 /**
  * State of a heap automaton that realizes the union of two heap automata.
  *
@@ -33,5 +35,11 @@ public class UnionAutomatonState implements AutomatonState {
 
         return (firstState.isFinal() && secondState == null)
                 || (firstState == null && secondState.isFinal());
+    }
+
+    @Override
+    public Set<String> getAtomicPropositions() {
+
+        return null;
     }
 }

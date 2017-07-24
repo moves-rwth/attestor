@@ -19,7 +19,7 @@ public class MockupTaskBuilder extends GeneralAnalysisTaskBuilder {
 
         StateSpaceGenerator stateSpaceGenerator = StateSpaceGenerator.builder()
                 .setProgram(program)
-                .setInitialState(setupInitialState())
+                .addInitialState(setupInitialState())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())

@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.automata;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Simple example of a heap automaton (state) that checks whether selector edges exist.
  *
@@ -18,6 +21,14 @@ public class MockUpState implements AutomatonState {
     @Override
     public boolean isFinal() {
         return finalState;
+    }
+
+    @Override
+    public Set<String> getAtomicPropositions() {
+
+        Set<String> res = new HashSet<>();
+        res.add(String.valueOf(state));
+        return res;
     }
 
     public int getState() {
