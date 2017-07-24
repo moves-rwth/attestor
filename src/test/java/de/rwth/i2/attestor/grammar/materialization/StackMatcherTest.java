@@ -7,7 +7,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
@@ -26,7 +28,14 @@ public class StackMatcherTest {
 	static final StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 	
 	StackMatcher stackMatcher;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		StackMaterializationStrategy stackGrammar = new StackGrammarForTests();

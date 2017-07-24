@@ -4,10 +4,12 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import java.util.*;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
@@ -29,6 +31,13 @@ public class IndexedGrammarResponseApplierTest {
 	private static final int RANK = 2;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false};
 	private static final AbstractStackSymbol symbolToMaterialize = AbstractStackSymbol.get("X");
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 
 	@Before
 	public void setUp() throws Exception {

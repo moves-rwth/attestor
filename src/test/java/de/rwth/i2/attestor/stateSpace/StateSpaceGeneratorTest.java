@@ -5,8 +5,10 @@ import static org.junit.Assert.assertFalse;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.main.AnalysisTask;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupTaskBuilder;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -20,7 +22,14 @@ import de.rwth.i2.attestor.types.TypeFactory;
 
 public class StateSpaceGeneratorTest {
 	//private static final Logger logger = LogManager.getLogger( "StateSpaceGeneratorTest" );
-	
+
+
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Test
 	public void testGenerate1() {
 	

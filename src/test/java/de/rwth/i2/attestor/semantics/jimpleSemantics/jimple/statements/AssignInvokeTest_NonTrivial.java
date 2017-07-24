@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -25,7 +26,13 @@ public class AssignInvokeTest_NonTrivial {
 	private AssignInvoke stmt;
 	private HeapConfiguration inputGraph;
 	private DefaultState inputState;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void setUp() throws Exception{
 		Type type = TypeFactory.getInstance().getType( "node" );

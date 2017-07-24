@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -27,7 +29,12 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesIT {
 
 	private GeneralMaterializationStrategy materializer;
-	
+
+	@BeforeClass
+	public static void init() {
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();

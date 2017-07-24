@@ -2,10 +2,20 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestAVLAnnotationMaintaining {
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 
 	@Before
 	public void setUp() throws Exception {

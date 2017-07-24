@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +24,9 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 public class AssignStmtTest {
 
 	@BeforeClass
-	public static void init(){
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
 		Settings.getInstance().options().setRemoveDeadVariables(false);
 	}
 

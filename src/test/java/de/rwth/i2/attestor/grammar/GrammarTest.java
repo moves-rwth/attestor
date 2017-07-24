@@ -4,9 +4,11 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import java.util.*;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -35,6 +37,14 @@ public class GrammarTest {
 			BalancedTreeGrammar.createUnbalancedRuleRight();
 	public static final Set<HeapConfiguration> RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL = 
 			constructRhsForInstantiableIndexedNonterminal();
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 
 	@Test
 	public void testGrammarOnDefaultNonterminal(){

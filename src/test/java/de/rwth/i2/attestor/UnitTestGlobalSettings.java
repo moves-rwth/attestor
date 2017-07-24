@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor;
 
+import de.rwth.i2.attestor.main.settings.Settings;
+
 import java.io.File;
 
 /**
@@ -8,6 +10,11 @@ import java.io.File;
  * @author Christoph
  */
 public final class UnitTestGlobalSettings {
+
+    public static void reset() {
+
+        Settings.getInstance().resetAllSettings();
+    }
 
     public static String getExportPath(String filename) {
 

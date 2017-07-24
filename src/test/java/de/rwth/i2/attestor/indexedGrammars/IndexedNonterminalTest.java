@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
@@ -17,7 +19,14 @@ public class IndexedNonterminalTest {
 	private IndexedNonterminal testNonterminal;
 	private ConcreteStackSymbol s;
 	private ConcreteStackSymbol bottom;
-	
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void testIndexedNonterminal() {
 		s = ConcreteStackSymbol.getStackSymbol( "s", false );

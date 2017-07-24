@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -9,6 +10,7 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -30,17 +32,18 @@ public class HeapAutomatonTest {
     private Type type;
     private Nonterminal nt;
 
+
+    @BeforeClass
+    public static void init() {
+        UnitTestGlobalSettings.reset();
+    }
+
     @Before
     public void setup() {
         automaton = new HeapAutomaton(new MockUpTransitionRelation());
         hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
         type = Settings.getInstance().factory().getType("type");
         nt = Settings.getInstance().factory().createNonterminal("HAX", 3, new boolean[]{false,false,false});
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        Settings.getInstance().resetAllSettings();
     }
 
     @Test

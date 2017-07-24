@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
@@ -45,6 +47,11 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	AbstractStackSymbol oneAbstractSymbol;
 	AbstractStackSymbol otherAbstractSymbol;
 	private static final String VIOLATION_POINT_SELECTOR = "next";
+
+	@BeforeClass
+	public static void init() {
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() {

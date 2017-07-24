@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -19,6 +21,13 @@ import soot.util.Chain;
 
 public class testDefaultTask{
 	//private static final Logger logger = LogManager.getLogger( "testDefaultTask" );
+
+
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Test
 	public void testLoad() {

@@ -23,6 +23,8 @@ public class TestEmbeddings {
 	
 	@BeforeClass
 	public static void init(){
+
+		UnitTestGlobalSettings.reset();
 		
 
 		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel("left", "0");

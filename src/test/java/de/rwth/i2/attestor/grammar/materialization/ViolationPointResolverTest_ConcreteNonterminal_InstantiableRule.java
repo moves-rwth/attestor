@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
@@ -42,6 +45,13 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	private static final String SELECTOR_NEXT_NAME = "next";
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_NOT_CREATING_NEXT = 1;
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 
 
 	@Test

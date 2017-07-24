@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.materialization;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,7 +26,8 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		
+
+		UnitTestGlobalSettings.reset();
 		materializer = new GeneralMaterializationStrategy( null, null );
 	}
 

@@ -2,7 +2,9 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -11,9 +13,15 @@ import de.rwth.i2.attestor.indexedGrammars.stack.*;
 public class TestAVLStackCanoization {
 
 	private AVLStackCanonizationStrategy canonizer;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
-	public void init(){
+	public void setup(){
 		canonizer = new AVLStackCanonizationStrategy();
 	}
 	

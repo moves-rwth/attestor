@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,9 +16,9 @@ import static org.junit.Assert.assertNotEquals;
 
 public class AssignmentIteratorTest {
 
-    @AfterClass
-    public static void tearDownClass() {
-        Settings.getInstance().resetAllSettings();
+    @BeforeClass
+    public static void init() {
+        UnitTestGlobalSettings.reset();
     }
 
     @Test

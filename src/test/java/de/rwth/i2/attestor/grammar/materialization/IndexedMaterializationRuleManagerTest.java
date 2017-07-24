@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
@@ -26,8 +28,14 @@ public class IndexedMaterializationRuleManagerTest {
 	public static final boolean[] REDUCTION_TENTACLES = new boolean[]{false,false};
 	
 	IndexedNonterminal requestNonterminal = createRequestNonterminal();
-	
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Test
 	public void checkOnRhsWithoutNonterminals(){
 		

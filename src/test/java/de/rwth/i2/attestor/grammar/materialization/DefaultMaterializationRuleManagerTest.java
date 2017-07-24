@@ -5,15 +5,24 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DefaultMaterializationRuleManagerTest {
+
+
+	@BeforeClass
+	public static void init() {
+
+        UnitTestGlobalSettings.reset();
+    }
 
 
 	@Test

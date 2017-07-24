@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.json.JSONArray;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -13,6 +15,13 @@ import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
 
 public class TestJsonToIndexedGrammar {
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Test
 	public void testParseForwardGrammar() {

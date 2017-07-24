@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import org.junit.*;
@@ -19,8 +20,13 @@ public class FieldTest {
 	private Local local;
 	private HeapConfiguration testGraph;
 	private GeneralSelectorLabel sel;
-	
-	
+
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		

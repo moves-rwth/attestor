@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.modelChecking;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.generated.node.AAndStateform;
 import de.rwth.i2.attestor.generated.node.AAtomicpropTerm;
@@ -29,10 +30,18 @@ import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TableauRulesSwitchTest {
-	
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Test
 	public void caseAAtomicpropTerm(){
 		

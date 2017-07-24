@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.materialization;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -16,6 +17,8 @@ import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class StackMaterializerTest {
@@ -23,6 +26,13 @@ public class StackMaterializerTest {
 	private static final String UNIQUE_NT_LABEL = "StackMaterializerTest";
 	private static final int RANK = 3;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false,true};
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test

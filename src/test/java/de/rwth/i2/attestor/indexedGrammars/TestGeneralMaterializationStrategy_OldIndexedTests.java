@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -19,10 +20,15 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
 	
 	private MaterializationStrategy materializer;
 	ViolationPoints inputVioPoints;
-	
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
-	public void init(){
+	public void setup(){
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver violationPointResolver = new ViolationPointResolver(grammar);
 		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );

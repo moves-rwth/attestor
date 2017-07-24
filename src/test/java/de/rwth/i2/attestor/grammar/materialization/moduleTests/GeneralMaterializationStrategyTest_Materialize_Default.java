@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
+
+		UnitTestGlobalSettings.reset();
+
 		GeneralNonterminal listLabel = GeneralNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		

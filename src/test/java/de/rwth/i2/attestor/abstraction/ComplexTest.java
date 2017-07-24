@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.abstraction;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
@@ -31,6 +32,8 @@ public class ComplexTest {
 	
 	@BeforeClass
 	public static void init() {
+
+		UnitTestGlobalSettings.reset();
 		
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
 		grammar = Grammar.builder()

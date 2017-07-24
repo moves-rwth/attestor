@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -26,10 +28,16 @@ public class CanonicalizationStrategyTest {
 	private static final Logger logger = LogManager.getLogger( "CanonicalizationStrategyTest" );
 	
 	private DefaultCanonicalizationStrategy canonicalizationStrategy;
+
+	@BeforeClass
+    public static void init() {
+	   UnitTestGlobalSettings.reset();
+    }
 	
 	@Before
 	public void setUp() throws Exception {
-		
+
+
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()

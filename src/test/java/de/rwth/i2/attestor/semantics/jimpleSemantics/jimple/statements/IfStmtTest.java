@@ -9,6 +9,8 @@ import static org.junit.Assert.fail;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,7 +36,9 @@ public class IfStmtTest {
 	private Type listType;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
 	}
 
 	@Before

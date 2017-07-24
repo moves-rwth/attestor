@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
@@ -34,6 +37,12 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_WITH_NEXT = 0;
 	private static final int TENTACLE_NOT_CREATING_NEXT = 1;
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test

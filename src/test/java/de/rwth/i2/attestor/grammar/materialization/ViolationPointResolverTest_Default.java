@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -12,6 +13,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import java.util.Collection;
 import java.util.Map;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ViolationPointResolverTest_Default {
@@ -31,6 +34,12 @@ public class ViolationPointResolverTest_Default {
 			TestGraphs.getRuleGraph_creatingPrevAt1();
 	public static final HeapConfiguration RHS_CREATING_NO_SELECTOR = 
 			TestGraphs.getRuleGraph_creatingNoSelector();
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test

@@ -6,7 +6,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -29,7 +31,14 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 	private static final ConcreteStackSymbol STACK_SYMBOL_S = ConcreteStackSymbol.getStackSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	GeneralMaterializationStrategy materializer;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();

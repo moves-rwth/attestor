@@ -2,12 +2,19 @@ package de.rwth.i2.attestor.stateSpace;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 
 public class StateLabelTest {
-	
+
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Test
 	public void testAPHandling(){
 		StateLabel label1 = new StateLabel();

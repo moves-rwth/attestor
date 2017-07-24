@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -34,7 +36,14 @@ public class AssignInvokeTest_trivial {
 	private AssignInvoke stmt;
 	private HeapConfiguration inputGraph;
 	private DefaultState inputState;
-	
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void setUp() throws Exception{
 		Settings.getInstance().grammar().setGrammar( Grammar.builder().build() );

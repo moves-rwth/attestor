@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.*;
 import java.util.function.Predicate;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -14,6 +16,11 @@ import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 
 public class MatchingSelectorDistanceHelperTest {
 
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Test
 	public void testHasMatch_WithEquals() {

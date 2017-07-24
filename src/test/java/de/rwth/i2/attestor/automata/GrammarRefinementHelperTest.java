@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -10,6 +11,7 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -27,6 +29,11 @@ public class GrammarRefinementHelperTest {
     private HeapConfiguration emptyHc;
     private SelectorLabel sel;
     private Type type;
+
+    @BeforeClass
+    public static void init() {
+        UnitTestGlobalSettings.reset();
+    }
 
     @Before
     public void setup() {

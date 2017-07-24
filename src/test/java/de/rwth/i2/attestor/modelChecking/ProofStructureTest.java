@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.modelChecking;
 
 import static org.junit.Assert.fail;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -17,7 +18,13 @@ public class ProofStructureTest extends StateSpace {
 	public ProofStructureTest(){
 		super();
 	}
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Test
 	public void buildProofStructureTestAndStateform(){
 		
