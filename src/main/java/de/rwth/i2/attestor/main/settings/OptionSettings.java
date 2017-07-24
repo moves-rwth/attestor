@@ -63,6 +63,12 @@ public class OptionSettings {
 	private boolean indexedMode = false;
 
 	/**
+	 * Enabling this option leads to using a program analysis that applies heap automata additionally to
+     * hyperedge replacement grammars.
+	 */
+	private boolean heapAutomataMode = false;
+
+	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
 	 */
 	public int getMaxStateSpaceSize() {
@@ -184,5 +190,16 @@ public class OptionSettings {
 	public void setIndexedMode(boolean indexedMode) {
 		this.indexedMode = indexedMode;
 	}
+
+    /**
+     * @return True if and only if a program analysis should use heap automata for refinement.
+     */
+    public boolean isHeapAutomataMode() {
+        return heapAutomataMode;
+    }
+
+    public void setHeapAutomataMode(boolean heapAutomataMode) {
+        this.heapAutomataMode = heapAutomataMode;
+    }
 	
 }

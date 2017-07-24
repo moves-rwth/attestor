@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.graph.Nonterminal;
+
 /**
  * A symbol that is annotated with a heap automaton state.
  *
  * @author Christoph
  */
-public interface StateAnnotatedSymbol {
+public interface RefinedNonterminal extends Nonterminal {
 
     /**
      * @return The heap automaton state the symbol is annotated with.
@@ -17,5 +19,5 @@ public interface StateAnnotatedSymbol {
      * @param state The new annotation.
      * @return An annotated symbol with the provided state. The symbol itself is the same as this object.
      */
-    StateAnnotatedSymbol withState(AutomatonState state);
+    RefinedNonterminal withState(AutomatonState state);
 }

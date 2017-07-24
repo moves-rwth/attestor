@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.tasks;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
-import de.rwth.i2.attestor.automata.StateAnnotatedSymbol;
+import de.rwth.i2.attestor.automata.RefinedNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 
 /**
@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
  *
  * @author Christoph
  */
-public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSymbol {
+public class RefinedNonterminalImpl implements RefinedNonterminal {
 
     /**
      * The actual nonterminal symbol.
@@ -21,7 +21,7 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
      */
     private AutomatonState state;
 
-    public StateAnnotatedNonterminal(Nonterminal nonterminal, AutomatonState state) {
+    public RefinedNonterminalImpl(Nonterminal nonterminal, AutomatonState state) {
        this.nonterminal = nonterminal;
        this.state = state;
     }
@@ -33,9 +33,9 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
     }
 
     @Override
-    public StateAnnotatedSymbol withState(AutomatonState state) {
+    public RefinedNonterminal withState(AutomatonState state) {
 
-        return new StateAnnotatedNonterminal(nonterminal, state);
+        return new RefinedNonterminalImpl(nonterminal, state);
     }
 
     @Override
@@ -70,15 +70,27 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof StateAnnotatedNonterminal) {
-           StateAnnotatedNonterminal n = (StateAnnotatedNonterminal) o;
-           return n.getState().equals(state) && n.nonterminal.equals(nonterminal);
+        if(o instanceof RefinedNonterminalImpl) {
+           RefinedNonterminalImpl n = (RefinedNonterminalImpl) o;
+           if(!nonterminal.equals(n.nonterminal)) {
+               return false;
+           }
+           if(state == null) {
+               if(n.getState() != null)
+                   return false;
+           } else {
+               return n.getState().equals(state);
+           }
+           return true;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return nonterminal.hashCode();
+
+        final int prime = 31;
+        return prime * ((nonterminal == null) ? 0 : nonterminal.hashCode())
+                + ((state == null) ? 0 : state.hashCode());
     }
 }

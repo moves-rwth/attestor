@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.tasks.StateAnnotatedNonterminal;
+import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -185,7 +185,7 @@ class GrammarRefinementHelper {
      */
     private Nonterminal createRefinedLhs(Nonterminal lhs, AutomatonState state) {
 
-        StateAnnotatedNonterminal newLhs = new StateAnnotatedNonterminal(lhs, state);
+        RefinedNonterminalImpl newLhs = new RefinedNonterminalImpl(lhs, state);
         List<AutomatonState> lhsFoundStates = getFoundStates(lhs);
         if(!lhsFoundStates.contains(state)) {
             lhsFoundStates.add(state);
@@ -209,7 +209,7 @@ class GrammarRefinementHelper {
             int edge = ntEdges.get(i);
             AutomatonState assignedState = ntAssignment.get(i);
             Nonterminal label = rhs.labelOf(edge);
-            Nonterminal newLabel = new StateAnnotatedNonterminal(label, assignedState);
+            Nonterminal newLabel = new RefinedNonterminalImpl(label, assignedState);
             builder.replaceNonterminal(edge, newLabel);
         }
         return builder.build();

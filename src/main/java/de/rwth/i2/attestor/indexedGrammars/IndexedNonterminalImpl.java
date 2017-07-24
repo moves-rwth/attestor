@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.indexedGrammars.stack.Stack;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 

@@ -5,10 +5,9 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.tasks.StateAnnotatedNonterminal;
+import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -75,7 +74,7 @@ public class HeapAutomatonTest {
     @Test
     public void testInductiveCase() {
 
-        StateAnnotatedNonterminal ntWithState = new StateAnnotatedNonterminal(nt, new MockUpState(1, true));
+        RefinedNonterminalImpl ntWithState = new RefinedNonterminalImpl(nt, new MockUpState(1, true));
         TIntArrayList nodes = new TIntArrayList();
         hc.builder()
                 .addNodes(type, 3, nodes)
@@ -105,8 +104,8 @@ public class HeapAutomatonTest {
         assertEquals(1, result.getAllLeftHandSides().size());
 
         Nonterminal n = result.getAllLeftHandSides().iterator().next();
-        assert(n instanceof StateAnnotatedNonterminal);
-        StateAnnotatedNonterminal sn = (StateAnnotatedNonterminal) n;
+        assert(n instanceof RefinedNonterminalImpl);
+        RefinedNonterminalImpl sn = (RefinedNonterminalImpl) n;
         MockUpState state = (MockUpState) sn.getState();
         assertEquals(0, state.getState());
         assertEquals(nt.getRank(), sn.getRank());

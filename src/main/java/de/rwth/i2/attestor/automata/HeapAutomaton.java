@@ -64,8 +64,8 @@ public class HeapAutomaton {
      * @return The automaton state corresponding to the nonterminal.
      */
     private AutomatonState extractState(Nonterminal nt) {
-        if(nt instanceof StateAnnotatedSymbol) {
-            AutomatonState res = ((StateAnnotatedSymbol) nt).getState();
+        if(nt instanceof RefinedNonterminal) {
+            AutomatonState res = ((RefinedNonterminal) nt).getState();
             if(res != null) {
                 return res;
             }

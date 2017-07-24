@@ -131,6 +131,7 @@ public class GeneralNonterminal implements Nonterminal {
 		isReductionTentacle[tentacle] = false;
 	}
 
+	@Override
 	public String toString(){
 		return this.label;
 	}

@@ -13,12 +13,14 @@ import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
     import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
     import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-    import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
+import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
                import de.rwth.i2.attestor.tasks.GeneralNonterminal;
                import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
                import de.rwth.i2.attestor.tasks.GeneralType;
 import de.rwth.i2.attestor.tasks.indexedTask.IndexedAnalysisTask;
-               import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;
+import de.rwth.i2.attestor.types.Type;
 
                import java.util.ArrayList;
                import java.util.HashMap;
@@ -77,8 +79,12 @@ public class FactorySettings {
      */
     public Nonterminal getNonterminal(String label) {
 
-        if(requiresIndexedSymbols()) {
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            return new RefinedIndexedNonterminal(new IndexedNonterminalImpl(label, new ArrayList<>()), null);
+        } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedNonterminalImpl(GeneralNonterminal.getNonterminal(label), null);
         } else {
             return GeneralNonterminal.getNonterminal(label);
         }
@@ -88,8 +94,15 @@ public class FactorySettings {
      * @return true if and only if an indexed analysis is performed.
      */
     private boolean requiresIndexedSymbols() {
-                                           return Settings.getInstance().options().isIndexedMode();
-                                                                                                   }
+        return Settings.getInstance().options().isIndexedMode();
+    }
+
+    /**
+     *
+     */
+    private boolean requiresRefinedSymbols() {
+        return Settings.getInstance().options().isHeapAutomataMode();
+    }
 
     /**
      * Creates a Nonterminal symbol with the provided parameters.
@@ -103,8 +116,18 @@ public class FactorySettings {
      */
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
-        if(requiresIndexedSymbols()) {
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            return new RefinedIndexedNonterminal(
+                    new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>()),
+                    null
+            );
+        } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedNonterminalImpl(
+                    GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle),
+                    null
+            );
         } else {
             return GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle);
         }
