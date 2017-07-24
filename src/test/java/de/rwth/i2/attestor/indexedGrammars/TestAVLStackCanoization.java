@@ -48,11 +48,11 @@ public class TestAVLStackCanoization {
 		IndexedNonterminal leftNonterminalRes = getLabelOfVar(graph, "left");
 		assertEquals("left after abs", 2, leftNonterminalRes.getStack().size());
 		assertFalse("left after abs", leftNonterminalRes.getStack().hasConcreteStack());
-		assertEquals( leftNonterminalRes.getStackAt( 0 ), ConcreteStackSymbol.getStackSymbol( "s", false ));
-		assertEquals( leftNonterminalRes.getStackAt( 1 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals( leftNonterminalRes.getStack().get( 0 ), ConcreteStackSymbol.getStackSymbol( "s", false ));
+		assertEquals( leftNonterminalRes.getStack().get( 1 ), AbstractStackSymbol.get( "X" ) );
 		IndexedNonterminal rightNonterminalRes = getLabelOfVar(graph, "right");
 		assertEquals("right after abs", 1, rightNonterminalRes.getStack().size());
-		assertEquals( rightNonterminalRes.getStackAt( 0 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals( rightNonterminalRes.getStack().get( 0 ), AbstractStackSymbol.get( "X" ) );
 	}
 	
 	@Test

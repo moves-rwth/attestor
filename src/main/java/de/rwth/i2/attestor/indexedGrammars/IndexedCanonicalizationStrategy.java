@@ -104,7 +104,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 						IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
 						IndexedNonterminal targetNt =  (IndexedNonterminal) abstracted.getHeap().labelOf( embedding.match( edge ) );
-						indexMatch = targetNt.matchStack( patternNt );
+						indexMatch = targetNt.getStack().matchStack( patternNt.getStack() );
 						if( ! indexMatch ){
 							break;
 						}	
@@ -184,7 +184,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 						
 						int matchingEdge = embedding.match(edge);
 						IndexedNonterminal targetNt = (IndexedNonterminal) abstracted.getHeap().labelOf(matchingEdge);
-						indexMatch = targetNt.matchStack( patternNt );
+						indexMatch = targetNt.getStack().matchStack( patternNt.getStack() );
 						if( ! indexMatch ){
 							break;
 						}	

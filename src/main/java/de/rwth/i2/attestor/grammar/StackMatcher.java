@@ -175,7 +175,7 @@ public class StackMatcher {
 	private StackSymbol getNextSymbolForInstantiableNonterminal(IndexedNonterminal instantiableNonterminal, int i) {
 		StackSymbol s2;
 		if( i < instantiableNonterminal.getStack().size() ){
-		    s2 = instantiableNonterminal.getStackAt( i );
+		    s2 = instantiableNonterminal.getStack().get(i);
 		}else{
 			s2 = StackVariable.getGlobalInstance();
 		}
@@ -186,7 +186,7 @@ public class StackMatcher {
 			List<StackSymbol> necessaryMaterialization, int i) {
 		StackSymbol s1;
 		if( i < materializableNonterminal.getStack().size() ){
-		 s1 = materializableNonterminal.getStackAt( i );
+		 s1 = materializableNonterminal.getStack().get( i );
 		}else{
 		  /* 
 		   * +1 is added because the first symbol in the materialization

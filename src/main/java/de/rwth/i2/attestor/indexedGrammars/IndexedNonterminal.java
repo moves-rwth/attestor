@@ -70,19 +70,6 @@ public class IndexedNonterminal implements Nonterminal{
         return new IndexedNonterminal(generalNonterminal, stack.getWithProlongedStack(postfix));
 	}
 
-	/**
-	 * returns true if the stacks are elementwise equal. 
-	 * @param other Another indexed nonterminal
-	 * @return True if and only if the stacks match elementwise.
-	 */
-	public boolean matchStack( IndexedNonterminal other ){
-	    return stack.matchStack(other.stack);
-	}
-
-	public StackSymbol getStackAt( int pos ){
-		return stack.get( pos );
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
