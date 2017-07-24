@@ -73,45 +73,48 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		IndexedState conf = ((IndexedState) state).clone();
+		
 
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
-			return SingleElementUtil.createSet( conf );
+			return SingleElementUtil.createSet( state );
 		}
-		annotationMaintainer.maintainAnnotations( conf );
+		
+		IndexedState indexedState = ((IndexedState) state).clone();
+		annotationMaintainer.maintainAnnotations( indexedState );
+		state = indexedState;
 
-		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
+		if( state.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
 			if( DebugMode.ENABLED ){
 				logger.trace( "Using aggressive canonization" );
 			}
-			return performCanonicalization( conf, true );
+			return performCanonicalization( state, true );
 		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() 
 				&& 
 				(semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt) ){
-			return performCanonicalization( conf, true );
+			return performCanonicalization( state, true );
 		}
 		
-		return performCanonicalization(conf, false);
+		return performCanonicalization( state, false);
 	}
 
 	
 
-	private Set<ProgramState> performCanonicalization(IndexedState state, boolean strongCanonicalization) {
+	private Set<ProgramState> performCanonicalization(ProgramState state, boolean strongCanonicalization) {
 
 		Set<ProgramState> result = new HashSet<>();
 
-		boolean checkNext = true;
+		boolean success = false;
 
 		for( Nonterminal nt : grammar.getAllLeftHandSides() ) {
 
 			IndexedNonterminal nonterminal = (IndexedNonterminal) nt;
 
-			if(!checkNext) { break; }
+			if( success && isConfluent ) { break; }
 
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
 
-				if( !checkNext ) { break; }
+				if( success && isConfluent ) { break; }
 
 				stackCanonizer.canonizeStack( state.getHeap() );
 				
@@ -122,24 +125,17 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 					checker = state.getHeap().getEmbeddingsOf(pattern);
 				}
 				
-				while(checker.hasNext() && checkNext) {
+				
+				while(checker.hasNext() && ( !success || !isConfluent ) ) {
 
-					checkNext = !isConfluent; 
-
-					IndexedState abstracted  = state;
-					if( checkNext ) {
-						abstracted = state.clone();
-					}
-
+					ProgramState abstracted  = state;
+				
 					Matching embedding = checker.getNext();
 					resetInstantiation(nonterminal);
-					boolean indexMatch = checkIndexMatching(pattern, abstracted, embedding);
-					if( indexMatch ){
-
+					success = checkIndexMatching(pattern, abstracted, embedding);
+					if( success ){
 						replaceEmbeddingBy(abstracted, embedding, nonterminal);
 						result.addAll( performCanonicalization( abstracted, strongCanonicalization ) );
-					}else{
-						checkNext = true;
 					}
 				}
 
@@ -161,7 +157,9 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 		}
 	}
 
-	private void replaceEmbeddingBy(IndexedState abstracted, Matching embedding, IndexedNonterminal nonterminal) {
+	private void replaceEmbeddingBy(ProgramState abstracted, Matching embedding, IndexedNonterminal nonterminal) {
+		abstracted = abstracted.clone();
+		
 		HeapConfigurationBuilder builder = abstracted.getHeap().builder();
 		builder.replaceMatching( embedding , nonterminal );
 
@@ -175,7 +173,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 		stackCanonizer.canonizeStack( abstracted.getHeap() );
 	}
 
-	private boolean checkIndexMatching(HeapConfiguration pattern, IndexedState abstracted, Matching embedding) {
+	private boolean checkIndexMatching(HeapConfiguration pattern, ProgramState abstracted, Matching embedding) {
 		boolean indexMatch = true;
 		
 		TIntIterator ntEdgeIter = pattern.nonterminalEdges().iterator();

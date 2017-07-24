@@ -73,24 +73,22 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		DefaultState conf = (DefaultState) state.clone();
-
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
-			return SingleElementUtil.createSet( conf );
+			return SingleElementUtil.createSet( state );
 		}
-		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
+		if( state.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
 			if( DebugMode.ENABLED ){
 				logger.trace( "Using aggressive canonization" );
 			}
-			return performCanonicalization( conf, true );
+			return performCanonicalization( state, true );
 		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() 
 				&& 
 				( semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt ) ){
-			return performCanonicalization( conf, true );
+			return performCanonicalization( state, true );
 		}
 
-		return performCanonicalization(conf, false);
+		return performCanonicalization( state, false);
 	}
 
 	/**
@@ -99,19 +97,19 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 * @param strongCanonicalization if true, the abstraction will ignore the minDereferenceDepthOption
 	 * @return The set of abstracted program states.
 	 */
-	private Set<ProgramState> performCanonicalization(DefaultState state, boolean strongCanonicalization) {
+	private Set<ProgramState> performCanonicalization(ProgramState state, boolean strongCanonicalization) {
 
 		Set<ProgramState> result = new HashSet<>();
 
-		boolean checkNext = true;
+		boolean success = false;
 
 		for(Nonterminal nonterminal : grammar.getAllLeftHandSides() ) {
 
-			if(!checkNext) { break; }
+			if( success && isConfluent ) { break; }
 
 			for(HeapConfiguration pattern : grammar.getRightHandSidesFor(nonterminal) ) {
 
-				if(!checkNext) { break; }
+				if( success && isConfluent) { break; }
 
 				AbstractMatchingChecker checker;
 				if( strongCanonicalization ){
@@ -119,20 +117,19 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 				}else{
 					checker = state.getHeap().getEmbeddingsOf(pattern);
 				}
+				
+				
+				while(checker.hasNext() && ( !isConfluent || !success ) ) {
 
-				while(checker.hasNext() && checkNext) {
-
-					checkNext = !isConfluent; 
-
-					DefaultState abstracted  = state;
-					if(checkNext) {
-						abstracted = state.clone();
-					}
-
+					ProgramState toAbstract  = state;
+					
 					Matching embedding = checker.getNext();
 
-					replaceEmbeddingBy(abstracted, embedding, nonterminal);
-					result.addAll( performCanonicalization( abstracted, strongCanonicalization ) );
+					success = true;
+					if( success ){
+						ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, nonterminal);
+						result.addAll( performCanonicalization( abstracted, strongCanonicalization ) );
+					}
 				}
 
 			}
@@ -146,8 +143,18 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 		return result;
 	}
 
-	private void replaceEmbeddingBy(DefaultState abstracted, Matching embedding, Nonterminal nonterminal) {
+
+	/**
+	 * replaces the embedding in  abstracted by the given nonterminal
+	 * 
+	 * @param abstracted the outer graph.
+	 * @param embedding the embedding of the inner graph in the outer graph
+	 * @param nonterminal the nonterminal to replace the embedding
+	 */
+	private ProgramState replaceEmbeddingBy( ProgramState abstracted, Matching embedding, Nonterminal nonterminal) {
+		abstracted = abstracted.clone();
 		abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
+		return abstracted;
 	}
 
 	
