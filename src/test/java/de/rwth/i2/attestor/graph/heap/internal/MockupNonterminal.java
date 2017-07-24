@@ -49,9 +49,8 @@ public class MockupNonterminal implements Nonterminal {
 	}
 
 	@Override
-	public boolean labelMatches(Nonterminal nonterminal) {
-		// TODO Auto-generated method stub
-		return false;
+	public String getLabel() {
+		return label;
 	}
-	
+
 }

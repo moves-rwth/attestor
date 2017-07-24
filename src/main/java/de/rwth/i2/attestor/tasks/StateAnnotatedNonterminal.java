@@ -45,6 +45,12 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
     }
 
     @Override
+    public String getLabel() {
+
+        return nonterminal.getLabel();
+    }
+
+    @Override
     public boolean isReductionTentacle(int tentacle) {
 
         return nonterminal.isReductionTentacle(tentacle);
@@ -60,12 +66,6 @@ public class StateAnnotatedNonterminal implements Nonterminal, StateAnnotatedSym
     public void unsetReductionTentacle(int tentacle) {
 
         nonterminal.unsetReductionTentacle(tentacle);
-    }
-
-    @Override
-    public boolean labelMatches(Nonterminal nonterminal) {
-
-        return nonterminal.labelMatches(nonterminal);
     }
 
     @Override

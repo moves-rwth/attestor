@@ -109,6 +109,12 @@ public class GeneralNonterminal implements Nonterminal {
 	}
 
 	@Override
+	public String getLabel() {
+
+		return label;
+	}
+
+	@Override
 	public boolean isReductionTentacle( int tentacle ){
 		
 		return isReductionTentacle[tentacle];
@@ -132,11 +138,6 @@ public class GeneralNonterminal implements Nonterminal {
 	
 	public String toString(){
 		return this.label;
-	}
-
-	@Override
-	public boolean labelMatches(Nonterminal nonterminal) {
-		return this.equals(nonterminal);
 	}
 
 }

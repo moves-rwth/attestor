@@ -34,15 +34,6 @@ public interface Nonterminal extends Comparable<Nonterminal>, NodeLabel{
 	 */
 	void unsetReductionTentacle( int tentacle );
 
-	/**
-	 * checks whether the pure labels of the nonterminal (i.e. without stack or other
-	 * additional information) matches. 
-	 * E.g. B[ssZ], B[sX], B[s()], B[abc] would all be considered to have matching label
-	 * <br>
-	 * However, this does'nt match for nonterminals of different type, e.g. B and B[Z] should not
-	 * match.
-	 * @param nonterminal the nonterminal to check against
-	 * @return true if the label of this and nonterminl match.
-	 */
-	boolean labelMatches(Nonterminal nonterminal);
+	String getLabel();
+
 }
