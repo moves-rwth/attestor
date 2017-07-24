@@ -129,8 +129,8 @@ public class StackMatcher {
 		
 		Pair<IndexedNonterminal, IndexedNonterminal> requestPair =
 				new Pair<>(materializableNonterminal, instantiableNonterminal);
-		
-		if( ! materializableNonterminal.label().equals( instantiableNonterminal.label() ) ){
+
+		if( ! materializableNonterminal.getLabel().equals(instantiableNonterminal.getLabel() ) ) {
 			addNegativeResultToKnownMatches(requestPair);
 			return;
 		}

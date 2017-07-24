@@ -56,8 +56,8 @@ public class AVLAnnotationMaintainingStrategy implements AnnotationsMaintainingS
 			
 			int ntEdge = iter.next();
 			IndexedNonterminal nt = (IndexedNonterminal) hc.labelOf(ntEdge);
-			if(nt.label().equals( btLabel )) {
-				
+			if(nt.getLabel().equals(btLabel.getLabel())) {
+
 				int sourceNode = hc.attachedNodesOf(ntEdge).get(4);
 				heights.put(sourceNode, nt.stackSize() -1 );//assume stacks of form s*Z if something is linked to null and s*X otherwise
 				

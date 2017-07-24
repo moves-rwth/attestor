@@ -44,11 +44,7 @@ public class IndexedNonterminal implements Nonterminal{
 	    this.stack = stack;
     }
 
-	public GeneralNonterminal label(){
-		return this.generalNonterminal;
-	}
-
-	//might be useless
+    //might be useless
 	public boolean stackStartsWith( Iterable<StackSymbol> prefix ){
 	    return stack.startsWith(prefix);
 	}
@@ -177,13 +173,9 @@ public class IndexedNonterminal implements Nonterminal{
 		generalNonterminal.unsetReductionTentacle(tentacle);
 	}
 
-
+	@Override
 	public String toString(){
 		return generalNonterminal.toString() + this.stack.toString();
-	}
-
-	public IndexedNonterminal clone(){
-	    return new IndexedNonterminal(generalNonterminal, new Stack(stack));
 	}
 
 	@Override

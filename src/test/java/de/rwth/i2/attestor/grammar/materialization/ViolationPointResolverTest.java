@@ -22,10 +22,4 @@ public class ViolationPointResolverTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	@Ignore
-	public void test() {
-		fail("Not yet implemented");
-	}
-
 }
