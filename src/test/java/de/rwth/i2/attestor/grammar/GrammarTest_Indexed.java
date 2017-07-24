@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class GrammarTest_Indexed {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		nonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		 
 			MaterializationAndRuleResponse response = 
 					(MaterializationAndRuleResponse) 
@@ -75,7 +76,7 @@ public class GrammarTest_Indexed {
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
-		nonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		MaterializationAndRuleResponse response = 
 				(MaterializationAndRuleResponse) 

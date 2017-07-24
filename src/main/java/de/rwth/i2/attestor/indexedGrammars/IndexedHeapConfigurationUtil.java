@@ -11,7 +11,7 @@ public class IndexedHeapConfigurationUtil {
 		while( ntIterator.hasNext() ){
 			int ntId = ntIterator.next();
 			Nonterminal nt = hc.labelOf( ntId );
-			if( nt instanceof IndexedNonterminal ){
+			if( nt instanceof IndexedNonterminal){
 				IndexedNonterminal indexedNt = (IndexedNonterminal) nt ;
 				if( ! indexedNt.getStack().hasConcreteStack() ){
 					return false;

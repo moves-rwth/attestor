@@ -30,6 +30,10 @@ public class Stack {
        return !prefixIterator.hasNext();
    }
 
+   public void setStackSymbols(List<StackSymbol> stackSymbols) {
+       this.stackSymbols = stackSymbols;
+   }
+
 
     public boolean stackEndsWith( StackSymbol symbol ){
         return (! stackSymbols.isEmpty() ) && stackSymbols.get( stackSymbols.size() -1 ).equals(symbol);

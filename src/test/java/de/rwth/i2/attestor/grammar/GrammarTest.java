@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import java.util.*;
 
@@ -217,7 +218,7 @@ public class GrammarTest {
 		ConcreteStackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
-		IndexedNonterminal lhs = new IndexedNonterminal("B", 2, new boolean[]{false, true}, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
 		return lhs;
 	}
 
@@ -233,7 +234,7 @@ public class GrammarTest {
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s);
 		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminal("B", 2, new boolean[]{false, true}, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
 		return lhs;
 	}
 

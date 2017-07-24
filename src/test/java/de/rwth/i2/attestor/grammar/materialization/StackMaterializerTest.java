@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.CannotMateriali
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
@@ -362,7 +362,7 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -380,8 +380,8 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt1 = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
-		Nonterminal nt2 = new IndexedNonterminal(UNIQUE_NT_LABEL, stack2);
+		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -404,7 +404,7 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, 
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
 												 REDUCTION_TENTACLES, 
 												 stackForIndexedNonterminal);
 		GeneralNonterminal defaultNt = GeneralNonterminal.getNonterminal(UNIQUE_NT_LABEL,

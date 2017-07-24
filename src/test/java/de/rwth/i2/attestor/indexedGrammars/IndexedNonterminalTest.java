@@ -36,7 +36,7 @@ public class IndexedNonterminalTest {
 		stack.add( s );
 		stack.add( s );
 		stack.add( bottom );
-		testNonterminal = new IndexedNonterminal( "Test", 3, new boolean [] {false,false,false}, stack );
+		testNonterminal = new IndexedNonterminalImpl( "Test", 3, new boolean [] {false,false,false}, stack );
 	}
 
 	@Test

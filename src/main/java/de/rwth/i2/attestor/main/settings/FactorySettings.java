@@ -7,8 +7,8 @@ import de.rwth.i2.attestor.grammar.GrammarExporter;
     import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
     import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
                import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-               import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-    import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
     import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
@@ -78,7 +78,7 @@ public class FactorySettings {
     public Nonterminal getNonterminal(String label) {
 
         if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, new ArrayList<>());
+            return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else {
             return GeneralNonterminal.getNonterminal(label);
         }
@@ -104,7 +104,7 @@ public class FactorySettings {
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
         if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, rank, isReductionTentacle, new ArrayList<>());
+            return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else {
             return GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle);
         }

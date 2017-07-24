@@ -5,6 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import java.util.*;
 
@@ -17,7 +18,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.*;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -81,7 +81,7 @@ public class IndexedGrammarResponseApplierTest {
 		
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
 		Type type = TypeFactory.getInstance().getType("type");
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, 
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 												 RANK, 
 												 REDUCTION_TENTACLES,
 												 someStack );
@@ -125,7 +125,7 @@ public class IndexedGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = TypeFactory.getInstance().getType("type");
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, 
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 				 RANK, 
 				 REDUCTION_TENTACLES,
 				 someStack );

@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.util.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -199,7 +200,7 @@ public class IndexedMaterializationRuleManagerTest {
 		final String label = UNIQUE_NT_LABEL;
 		final int rank = RANK;
 		final boolean[] reductionTentacles = REDUCTION_TENTACLES;
-		IndexedNonterminal requestNonterminal = new IndexedNonterminal(label, rank, reductionTentacles, stack);
+		IndexedNonterminal requestNonterminal = new IndexedNonterminalImpl(label, rank, reductionTentacles, stack);
 		return requestNonterminal;
 	}
 	
@@ -214,12 +215,12 @@ public class IndexedMaterializationRuleManagerTest {
 		stack1.add(a);
 		stack1.add(s);
 		stack1.add(bottom1);
-		IndexedNonterminal nt1 = new IndexedNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
+		IndexedNonterminal nt1 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
 		
 		List<StackSymbol> stack2 = new ArrayList<>();
 		stack2.add(s);
 		stack2.add(var);
-		IndexedNonterminal nt2 = new IndexedNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack2);
+		IndexedNonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack2);
 		
 		Set<Nonterminal> result = new HashSet<>();
 		result.add( nt1 );
@@ -251,7 +252,7 @@ public class IndexedMaterializationRuleManagerTest {
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -338,8 +339,8 @@ public class IndexedMaterializationRuleManagerTest {
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
-		Nonterminal nt1 = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
-		Nonterminal nt2 = new IndexedNonterminal(UNIQUE_NT_LABEL, stack2);
+		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)

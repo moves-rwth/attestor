@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.io;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +64,8 @@ public class JsonToIndexedHC {
 			
 			List<StackSymbol> stack = parseStack( hyperedge.getJSONArray("stack") );
 			
-			IndexedNonterminal nt = new IndexedNonterminal( label, stack );
+			IndexedNonterminal nt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
+			nt.getStack().setStackSymbols(stack);
 			
 			TIntArrayList tentacles = new TIntArrayList(nt.getRank());
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){

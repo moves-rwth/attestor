@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONArray;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,6 +23,7 @@ public class TestJsonToIndexedGrammar {
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
+		Settings.getInstance().options().setIndexedMode(true);
 	}
 
 	@Test
@@ -89,10 +92,10 @@ public class TestJsonToIndexedGrammar {
 		List<StackSymbol> stack1 = new ArrayList<>();
 		stack1.add(s);
 		stack1.add(var);
-		IndexedNonterminal nt1 = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack1);
+		IndexedNonterminal nt1 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack1);
 		List<StackSymbol> stack2 = new ArrayList<>();
 		stack2.add(bottom);
-		IndexedNonterminal nt2 = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack2);
+		IndexedNonterminal nt2 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack2);
 		
 		assertTrue( grammar.getAllLeftHandSides().contains(nt1) );
 		assertTrue( grammar.getAllLeftHandSides().contains(nt2) );

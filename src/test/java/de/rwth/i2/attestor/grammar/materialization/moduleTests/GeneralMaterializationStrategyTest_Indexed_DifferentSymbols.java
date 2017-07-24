@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.IndexedState;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
@@ -165,7 +165,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private Nonterminal getNonterminalWithStack( List<StackSymbol> stack ) {
-		return new IndexedNonterminal(LABEL, RANK, REDUCTION_TENTACLEs, stack);
+		return new IndexedNonterminalImpl(LABEL, RANK, REDUCTION_TENTACLEs, stack);
 	}
 	
 	private HeapConfiguration someRhs() {

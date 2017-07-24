@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,6 +20,7 @@ public class TestJsonToIndexedHC {
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
+		Settings.getInstance().options().setIndexedMode(true);
 	}
 
 	@Before
