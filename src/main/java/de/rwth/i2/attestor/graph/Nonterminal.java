@@ -34,6 +34,9 @@ public interface Nonterminal extends NodeLabel{
 	 */
 	void unsetReductionTentacle( int tentacle );
 
+	/**
+	 * @return The label underlying this nonterminal symbol.
+	 */
 	String getLabel();
 
 }

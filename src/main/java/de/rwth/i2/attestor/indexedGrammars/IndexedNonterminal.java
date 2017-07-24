@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.indexedGrammars.stack.Stack;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,7 @@ public class IndexedNonterminal implements Nonterminal{
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "IndexedNonterminal" );
 
-	private final List<StackSymbol>  stack;
+	private Stack stack;
 	private final GeneralNonterminal generalNonterminal;
 
 	public IndexedNonterminal( String label, 
@@ -24,23 +25,24 @@ public class IndexedNonterminal implements Nonterminal{
 			List<StackSymbol> stack){
 
 		this.generalNonterminal = GeneralNonterminal.getNonterminal( label, rank, isReductionTentacle );
-		this.stack = stack;
+		this.stack = new Stack(stack);
 	}
 
 
 	public IndexedNonterminal( String label, List<StackSymbol> index ){
 		this.generalNonterminal = GeneralNonterminal.getNonterminal(label);
-		this.stack = index;
+		this.stack = new Stack(index);
 	}
 
 	private IndexedNonterminal(GeneralNonterminal generalNonterminal, List<StackSymbol> index ){
 		this.generalNonterminal = generalNonterminal;
-		this.stack = index;
+        this.stack = new Stack(index);
 	}
 
-	public Iterator<StackSymbol> getStackIterator(){
-		return this.stack.iterator();
-	}
+	private IndexedNonterminal(GeneralNonterminal generalNonterminal, Stack stack) {
+	    this.generalNonterminal = generalNonterminal;
+	    this.stack = stack;
+    }
 
 	public GeneralNonterminal label(){
 		return this.generalNonterminal;
@@ -48,51 +50,27 @@ public class IndexedNonterminal implements Nonterminal{
 
 	//might be useless
 	public boolean stackStartsWith( Iterable<StackSymbol> prefix ){
-
-		Iterator<StackSymbol> stackIterator = stack.iterator();
-		Iterator<StackSymbol> prefixIterator = prefix.iterator();
-
-		while( stackIterator.hasNext() && prefixIterator.hasNext() ){
-			if( ! stackIterator.next().equals( prefixIterator.next() ) ){
-				return false;
-			}
-		}
-
-		return !prefixIterator.hasNext();
+	    return stack.startsWith(prefix);
 	}
 
 	public boolean stackEndsWith( StackSymbol symbol ){
-		return (! stack.isEmpty() ) && stack.get( stack.size() -1 ).equals(symbol);
+	    return stack.stackEndsWith(symbol);
 	}
 
 	public StackSymbol getLastStackSymbol(){
-		assert( stack.size() > 0 );
-		return stack.get( stack.size() -1 );
+	    return stack.getLastStackSymbol();
 	}
 
 	public IndexedNonterminal getWithShortenedStack(){
-		assert( stack.size() > 0 );
-		ArrayList<StackSymbol> stackCopy = new ArrayList<>(stack);
-		stackCopy.remove(stackCopy.size() -1 );
-		return new IndexedNonterminal(generalNonterminal, stackCopy);
+	    return new IndexedNonterminal(generalNonterminal, stack.getWithShortenedStack());
 	}
 
 	public IndexedNonterminal getWithProlongedStack( StackSymbol s ){
-		List<StackSymbol> stackCopy = new ArrayList<>(stack);
-		stackCopy.add(s);
-		return new IndexedNonterminal(generalNonterminal, stackCopy);
+		return new IndexedNonterminal(generalNonterminal, stack.getWithProlongedStack(s));
 	}
 
-
-
 	public IndexedNonterminal getWithInstantiation(){
-		List<StackSymbol> stackCopy = new ArrayList<>(stack);
-		if( this.stackSize() > 0 && this.getLastStackSymbol() instanceof StackVariable ){
-			StackVariable lastSymbol = (StackVariable)stackCopy.get(stackCopy.size() - 1);
-			stackCopy.remove( stackCopy.size() - 1 );
-			lastSymbol.getInstantiation().forEach(stackCopy::add);
-		}
-		return new IndexedNonterminal(generalNonterminal, stackCopy);
+        return new IndexedNonterminal(generalNonterminal, stack.getWithInstantiation());
 	}
 
 	/**
@@ -102,24 +80,29 @@ public class IndexedNonterminal implements Nonterminal{
 	 * @return The nonterminal with prolonged stack
 	 */
 	public IndexedNonterminal getWithProlongedStack( List<StackSymbol> postfix ){
-		assert( this.stackSize() > 0 );
-		StackSymbol lastSymbol = this.getLastStackSymbol();
-		assert( !( lastSymbol instanceof ConcreteStackSymbol ) );
-
-		List<StackSymbol> stackCopy = new ArrayList<>(stack);
-		stackCopy.remove( stackCopy.size() - 1 );
-		stackCopy.addAll(postfix) ;
-
-		return new IndexedNonterminal(generalNonterminal, stackCopy);
+        return new IndexedNonterminal(generalNonterminal, stack.getWithProlongedStack(postfix));
 	}
 
-
 	public boolean hasConcreteStack(){
-		return (! stack.isEmpty() ) && this.stack.get( stack.size() -1 ).isBottom();
+	    return stack.hasConcreteStack();
 	}
 
 	public int stackSize(){
-		return stack.size();
+	    return stack.size();
+	}
+
+
+	/**
+	 * returns true if the stacks are elementwise equal. 
+	 * @param other Another indexed nonterminal
+	 * @return True if and only if the stacks match elementwise.
+	 */
+	public boolean matchStack( IndexedNonterminal other ){
+	    return stack.matchStack(other.stack);
+	}
+
+	public StackSymbol getStackAt( int pos ){
+		return stack.get( pos );
 	}
 
 	@Override
@@ -127,7 +110,8 @@ public class IndexedNonterminal implements Nonterminal{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((generalNonterminal == null) ? 0 : generalNonterminal.hashCode());
-		for( StackSymbol symb : stack ){
+		for(int i=0; i < stack.size(); i++) {
+		    StackSymbol symb = stack.get(i);
 			result = prime * symb.hashCode();
 		}
 		return result;
@@ -173,34 +157,6 @@ public class IndexedNonterminal implements Nonterminal{
 		return true;
 	}
 
-	/**
-	 * returns true if the stacks are elementwise equal. 
-	 * @param other Another indexed nonterminal
-	 * @return True if and only if the stacks match elementwise.
-	 */
-	public boolean matchStack( IndexedNonterminal other ){
-		List<StackSymbol> otherStack = other.stack;
-		for( int i = 0; i < this.stackSize() && i < otherStack.size(); i++ ){
-			StackSymbol s1 = this.getStackAt( i );
-			StackSymbol s2 = otherStack.get( i );
-			if( s1 instanceof StackVariable ){
-				return ( (StackVariable) s1 ).matchInstantiation( otherStack.subList( i, otherStack.size() ) );
-			}else if( s2 instanceof StackVariable ){
-				return ( (StackVariable) s2 ).matchInstantiation( this.stack.subList( i, stack.size() ) );
-			}
-			if( ! s1.equals( s2 )){
-				return false;
-			}
-		}
-
-		return otherStack.size() == this.stackSize();
-	}
-
-	public StackSymbol getStackAt( int pos ){
-		return stack.get( pos );
-	}
-
-
 	@Override
 	public int getRank() {
 		return generalNonterminal.getRank();
@@ -211,10 +167,12 @@ public class IndexedNonterminal implements Nonterminal{
 		return generalNonterminal.isReductionTentacle(tentacle);
 	}
 
+	@Override
 	public void setReductionTentacle( int tentacle ){
 		generalNonterminal.setReductionTentacle(tentacle);
 	}
 
+	@Override
 	public void unsetReductionTentacle( int tentacle ){
 		generalNonterminal.unsetReductionTentacle(tentacle);
 	}
@@ -225,8 +183,7 @@ public class IndexedNonterminal implements Nonterminal{
 	}
 
 	public IndexedNonterminal clone(){
-		List<StackSymbol> stackCopy = new ArrayList<>(stack);
-		return new IndexedNonterminal(generalNonterminal, stackCopy);
+	    return new IndexedNonterminal(generalNonterminal, new Stack(stack));
 	}
 
 	@Override
