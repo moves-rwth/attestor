@@ -65,8 +65,8 @@ public class JsonToIndexedHC {
 			List<StackSymbol> stack = parseStack( hyperedge.getJSONArray("stack") );
 			
 			IndexedNonterminal nt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
-			nt.getStack().setStackSymbols(stack);
-			
+			nt = nt.getWithStack(stack);
+
 			TIntArrayList tentacles = new TIntArrayList(nt.getRank());
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){
 				tentacles.add( nodes.get( hyperedge.getJSONArray( "tentacles" ).getInt( tentacleNr ) ) );

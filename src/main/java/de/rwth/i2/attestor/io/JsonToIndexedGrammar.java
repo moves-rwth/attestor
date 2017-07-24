@@ -41,7 +41,7 @@ public class JsonToIndexedGrammar {
 						.getInstance()
 						.factory()
 						.createNonterminal(label, rank, getReductionTentacles(grammarFragment));
-				nt.getStack().setStackSymbols(stack);
+				nt = nt.getWithStack(stack);
 
 			} else {
 
@@ -52,7 +52,7 @@ public class JsonToIndexedGrammar {
 						.getInstance()
 						.factory()
 						.createNonterminal(label, rank, rts);
-				nt.getStack().setStackSymbols(stack);
+				nt = nt.getWithStack(stack);
 
 				ntsWithoutReductionTentacles.add(nt);
 			}

@@ -23,4 +23,6 @@ public interface IndexedNonterminal extends Nonterminal {
      * @return The nonterminal with prolonged stack
      */
     IndexedNonterminal getWithProlongedStack(List<StackSymbol> postfix);
+
+    IndexedNonterminal getWithStack(List<StackSymbol> stack);
 }

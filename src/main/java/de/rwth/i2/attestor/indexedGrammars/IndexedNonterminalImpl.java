@@ -64,6 +64,11 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	}
 
 	@Override
+    public IndexedNonterminal getWithStack(List<StackSymbol> stack){
+        return new IndexedNonterminalImpl(generalNonterminal, stack);
+    }
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
