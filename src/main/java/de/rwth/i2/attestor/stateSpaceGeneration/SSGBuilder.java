@@ -51,8 +51,8 @@ public class SSGBuilder {
 
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
-			ProgramState initial = generator.getSubsumingStateInSSOrAddToSS(state);
-			generator.stateSpace.addInitialState( initial );
+			generator.stateSpace.addInitialState(state);
+			generator.unexploredConfigurations.add(state);
 		}
 
 		return generator;

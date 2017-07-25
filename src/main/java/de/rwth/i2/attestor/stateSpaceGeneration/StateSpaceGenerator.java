@@ -1,8 +1,13 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -27,6 +32,7 @@ public class StateSpaceGenerator {
 		return new SSGBuilder();
 	}	
 
+	private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
 
 	/**
 	 * Stores the state space generated upon instantiation of
@@ -38,7 +44,7 @@ public class StateSpaceGenerator {
 	 * Stores the program configurations that still have
 	 * to be executed by the state space generation
 	 */
-	private final Stack<ProgramState> unexploredConfigurations;
+	final Stack<ProgramState> unexploredConfigurations;
 
 	/**
 	 * The control flow of the program together with the
@@ -87,9 +93,7 @@ public class StateSpaceGenerator {
 		this.abortStrategy = null;
 		this.inclusionStrategy = null;
 		this.stateLabelingStrategy = null;
-
 		this.unexploredConfigurations = new Stack<>();
-
 		this.stateSpace = new StateSpace();
 	}
 
@@ -133,141 +137,148 @@ public class StateSpaceGenerator {
 	 * underlying analysis.
 	 * @return The generated StateSpace.
 	 */
-	public StateSpace generate(){
+	public StateSpace generate() {
 
 		while( hasUnexploredStates() ){
-
 			ProgramState state = unexploredConfigurations.pop();
-
-
-			Semantics stmt = program.getStatement(state.getProgramCounter());
-			
-			List<ProgramState> materialized = materializer.materialize(state, stmt.getPotentialViolationPoints());
-			
-			if(materialized.isEmpty()) {
-	
-				computeSuccessors(state);
-				
-			} else {
-				for( ProgramState mat : materialized ){
-
-					ProgramState matInSS = getSubsumingStateInSSOrAddToSS(mat);					
-					stateSpace.addMaterializedSuccessor(state, matInSS);
-				}
-			}
+            boolean isSufficientlyMaterialized = materializationPhase(state);
+            if(isSufficientlyMaterialized) {
+                Set<ProgramState> successorStates = executionPhase(state);
+                if(successorStates.isEmpty()) {
+                    stateSpace.setFinal(state);
+                } else {
+                    successorStates.forEach(s -> applySuccessorStatePhases(state, s));
+                }
+            }
 		}
 
 		return stateSpace;
 	}
 
-
 	/**
-	 * @return true iff further states can and should be generated.
-	 */
-	private boolean hasUnexploredStates(){
+     * @return true iff further states can and should be generated.
+     */
+    private boolean hasUnexploredStates(){
 
-		return !unexploredConfigurations.isEmpty() && abortStrategy.isAllowedToContinue( stateSpace );
-	}
-
+        return !unexploredConfigurations.isEmpty() && abortStrategy.isAllowedToContinue( stateSpace );
+    }
 
     /**
-     * First attempts to find a state in the already generated state space that subsumes the given state.
-     * If such a state cannot be found, the state is added to the state space instead.
-     * @param state A state that should be added to the state space if no subsuming state exists.
-     * @return A subsuming state already belonging to the state space or the state that has been added to
-     *         the state space.
+     * In the materialization phase violation points of the given state are removed until the current statement
+     * can be executed. The materialized states are immediately added to the state space as successors of the
+     * given state.
+     * @param state The program state that should be materialized.
+     * @return True if and only if no materialization is needed.
      */
-	ProgramState getSubsumingStateInSSOrAddToSS(ProgramState state) {
+    private boolean materializationPhase(ProgramState state) {
 
-		if(stateSpace.contains(state)) {
-			return state;
-		}
-		
-		ProgramState result = null;
+        Semantics semantics = program.getStatement(state.getProgramCounter());
+        List<ProgramState> materialized = materializer.materialize(state, semantics.getPotentialViolationPoints());
 
-		for(ProgramState candidate : stateSpace.getStates()) {
-
-			if(inclusionStrategy.isIncludedIn(state, candidate)) {
-				result = candidate;
-				break;
-
-			}
-		}
-
-		if(result == null) {
-
-			result = state;
-			stateSpace.addState(state);
-			unexploredConfigurations.add(state);
-		}
-
-		return result;
-	}
-
-	/**
-	 * Computes canonical successors of the given program state.
-	 * 
-	 * @param state The program state whose successor states shall be computed.
-	 */
-	private void computeSuccessors( ProgramState state ){
-
-		boolean finalState = true;
-
-		Semantics semantics = program.getStatement( state.getProgramCounter() );
-
-		try {
-
-			for( ProgramState succ : semantics.computeSuccessors( state )) {
-				
-				canonicalizeAndAddSuccessorStates(semantics, state, succ);
-				finalState = false;
-			}
-		} catch (NotSufficientlyMaterializedException e) {
-
-			e.printStackTrace();
-		}
-
-		if( finalState ){
-
-			stateSpace.setFinal( state );
-		}
-	}
+        materialized.forEach(stateSpace::addState);
+        materialized.forEach(mat -> stateSpace.addMaterializedSuccessor(state, mat));
+        return materialized.isEmpty();
+    }
 
     /**
-     * Adds a (control flow) transition from the given state to the given state that is labeled with the
-     * executed program statement. Prior to adding the edge, canonicalization may be performed. In this
-     * case the obtained abstracted states are used instead of the provided state to.
-     * @param semantics The program statement that has been executed and thus determines the label of the control
-     *                  flow transition that shall be added.
-     * @param from The source of the transition.
-     * @param to The target of the transition.
+     * Computes canonical successors of the given program state.
+     *
+     * @param state The program state whose successor states shall be computed.
      */
-	private void canonicalizeAndAddSuccessorStates(Semantics semantics, ProgramState from, ProgramState to ) {
+    private Set<ProgramState> executionPhase(ProgramState state ){
 
-		Set<ProgramState> canonized = canonicalizationStrategy.canonicalize(semantics, to);
-		String edgeLabel = semantics.toString();
-		
-		if(semantics.permitsCanonicalization()) {
+        Semantics semantics = program.getStatement( state.getProgramCounter() );
+        try {
+            return semantics.computeSuccessors(state);
+        } catch (NotSufficientlyMaterializedException e) {
+            logger.error("A state could not be sufficiently materialized.");
+            return new HashSet<>();
+        }
+    }
 
-			for(ProgramState c : canonized) {
+    /**
+     * The remaining phases for each successor state:
+     * <ol>
+     * <li>Refine the state to extract additional information that may be used to guide abstraction.</li>
+     * <li>Apply canonicalization to compute a (set of) more abstract states.</li>
+     * <li>Compute the atomic propositions for each resulting state.</li>
+     * <li>Apply an inclusion check to determine the resulting states that are not subsumed by
+     *     a state in the state space.</li>
+     * <li>Add the new states (that are not subsumed) to the state space and mark them as unexplored.</li>
+     * </ol>
+     * @param previousState The state whose successor is the given state.
+     * @param state The state to which all phases should be applied.
+     */
+	private void applySuccessorStatePhases(ProgramState previousState, ProgramState state) {
 
-				ProgramState subState = getSubsumingStateInSSOrAddToSS(c);
-				stateSpace.addControlFlowSuccessor(from, edgeLabel, subState);
-			}				
-		} else {
-			
-			for(ProgramState c : canonized) {
+	    ProgramState refinedState = refinementPhase(state);
+        Set<ProgramState> canonicalizationStates = canonicalizationPhase(refinedState);
+        canonicalizationStates.forEach(this::stateLabelingPhase);
+        canonicalizationStates.forEach(s -> addingPhase(previousState, s));
+    }
 
-				stateSpace.addState(c);
-				
-				unexploredConfigurations.add(c);
-				stateSpace.addControlFlowSuccessor(from, edgeLabel, c);				
-			}
-		}
-	}
+    /**
+     * @param state The state that is refined in place.
+     * @return The refined state.
+     */
+	private ProgramState refinementPhase(ProgramState state) {
+	    return state; // TODO this requires heap automata that have not been implemented yet.
+    }
+
+    /**
+     * @param state The state to canonicalize.
+     * @return The set of canoncialized states.
+     */
+    private Set<ProgramState> canonicalizationPhase(ProgramState state) {
+
+	    Semantics semantics = program.getStatement(state.getProgramCounter());
+        return canonicalizationStrategy.canonicalize(semantics, state);
+    }
+
+    /**
+     * Adds atomic propositions to a state.
+     * @param state The state whose atomic propositions should be computed.
+     */
+    private void stateLabelingPhase(ProgramState state) {
+	    // TODO modify heap in place
+    }
+
+    /**
+     * Adds a state as a successor of the given previous state to the state space
+     * provided to no subsuming state already exists.
+     * @param previousState The predecessor of the given state.
+     * @param state The state that should be added.
+     */
+    private void addingPhase(ProgramState previousState, ProgramState state) {
+
+        Semantics semantics = program.getStatement(previousState.getProgramCounter());
+        ProgramState subsumingState = (semantics.permitsCanonicalization()) ? findSubsumingState(state) : null;
+        if(subsumingState == null) {
+            stateSpace.addState(state);
+            unexploredConfigurations.add(state);
+            subsumingState = state;
+        }
+        stateSpace.addControlFlowSuccessor(previousState, semantics.toString(), subsumingState);
+    }
+
+    /**
+     * Find a state in the state space that semantically subsumes the given state.
+     * @param state The state that shall be subsumed.
+     * @return The subsuming state or null if no such state exists in the state space.
+     */
+    private ProgramState findSubsumingState(ProgramState state) {
+
+        for (ProgramState s : stateSpace.getStates()) {
+            if(inclusionStrategy.isIncludedIn(state, s)) {
+                return s;
+            }
+        }
+        return null;
+    }
 
     /**
      * @return The initial state of the generated state space.
+     * TODO extend to multiple initial states
      */
 	public ProgramState getInitialState() {
 		return stateSpace.getInitialStates().get(0);
