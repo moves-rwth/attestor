@@ -44,7 +44,7 @@ public class SSGBuilder {
 	public StateSpaceGenerator build() {
 		
 		if(initialStates.isEmpty()
-				|| generator.program == null || generator.materializer == null
+				|| generator.program == null || generator.materializationStrategy == null
 				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null) {
 			throw new IllegalStateException("StateSpaceGenerator not completely initialized");
 		}
@@ -82,7 +82,7 @@ public class SSGBuilder {
 	 * @return The builder.
 	 */
 	public SSGBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
-		generator.materializer = materializationStrategy;
+		generator.materializationStrategy = materializationStrategy;
 		return this;
 	}
 

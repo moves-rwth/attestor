@@ -57,7 +57,7 @@ public class StateSpaceGenerator {
 	 * This strategy is invoked whenever an abstract transfer
 	 * function cannot be executed.
 	 */
-	MaterializationStrategy materializer;
+	MaterializationStrategy materializationStrategy;
 
 	/**
 	 * Strategy guiding the canonicalization of states.
@@ -87,7 +87,7 @@ public class StateSpaceGenerator {
      * Initializes a state space generator with an empty state space.
 	 */
 	StateSpaceGenerator() {
-		this.materializer = null;
+		this.materializationStrategy = null;
 		this.canonicalizationStrategy = null;
 		this.program = null;
 		this.abortStrategy = null;
@@ -108,7 +108,7 @@ public class StateSpaceGenerator {
      * @return The strategy determining how materialization is performed.
      */
 	public MaterializationStrategy getMaterializationStrategy() {
-		return materializer;
+		return materializationStrategy;
 	}
 
     /**
@@ -173,7 +173,7 @@ public class StateSpaceGenerator {
     private boolean materializationPhase(ProgramState state) {
 
         Semantics semantics = program.getStatement(state.getProgramCounter());
-        List<ProgramState> materialized = materializer.materialize(state, semantics.getPotentialViolationPoints());
+        List<ProgramState> materialized = materializationStrategy.materialize(state, semantics.getPotentialViolationPoints());
 
         materialized.forEach(stateSpace::addState);
         materialized.forEach(mat -> stateSpace.addMaterializedSuccessor(state, mat));
@@ -250,6 +250,12 @@ public class StateSpaceGenerator {
      * @param state The state that should be added.
      */
     private void addingPhase(ProgramState previousState, ProgramState state) {
+
+        // this ensures that we never ever add further states if the abort strategy has triggered somewhere
+        // before hitting the top of the state space generation loop again.
+        if(!abortStrategy.isAllowedToContinue(stateSpace)) {
+            return;
+        }
 
         Semantics semantics = program.getStatement(previousState.getProgramCounter());
         ProgramState subsumingState = (semantics.permitsCanonicalization()) ? findSubsumingState(state) : null;
