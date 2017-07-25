@@ -31,6 +31,16 @@ public class CommandLineReader {
 
 		cliOptions = new Options();
 		
+		cliOptions.addOption(
+				Option.builder("rp")
+				.longOpt("root-path")
+				.hasArg()
+				.argName("path")
+				.desc( "defines a root path for the input. If specified, all other "
+						+ "paths are evaluated relative to this path." )
+				.build()
+				);
+		
 		cliOptions.addOption( 
 				Option.builder("sf")
 				.longOpt( "settings-file" )
@@ -40,7 +50,7 @@ public class CommandLineReader {
 						+ "Can be overwritten by additional command line settings" )
 				.build()
 				);
-
+		
 		cliOptions.addOption( 
 				Option.builder("p")
 				.longOpt("defaultpath")
@@ -49,7 +59,7 @@ public class CommandLineReader {
 				.desc("path to class and json files to be analyzed")
 				.build()
 				);
-
+		
 		cliOptions.addOption( 
 				Option.builder("c")
 				.longOpt("class")
