@@ -173,7 +173,10 @@ public class StateSpaceGenerator {
     private boolean materializationPhase(ProgramState state) {
 
         Semantics semantics = program.getStatement(state.getProgramCounter());
-        List<ProgramState> materialized = materializationStrategy.materialize(state, semantics.getPotentialViolationPoints());
+        List<ProgramState> materialized = materializationStrategy.materialize(
+                state,
+                semantics.getPotentialViolationPoints()
+        );
 
         materialized.forEach(stateSpace::addState);
         materialized.forEach(mat -> stateSpace.addMaterializedSuccessor(state, mat));
@@ -213,7 +216,7 @@ public class StateSpaceGenerator {
 
 	    ProgramState refinedState = refinementPhase(state);
         Set<ProgramState> canonicalizationStates = canonicalizationPhase(refinedState);
-        canonicalizationStates.forEach(this::stateLabelingPhase);
+        canonicalizationStates.forEach(s -> stateLabelingStrategy.computeAtomicPropositions(s));
         canonicalizationStates.forEach(s -> addingPhase(previousState, s));
     }
 
@@ -233,14 +236,6 @@ public class StateSpaceGenerator {
 
 	    Semantics semantics = program.getStatement(state.getProgramCounter());
         return canonicalizationStrategy.canonicalize(semantics, state);
-    }
-
-    /**
-     * Adds atomic propositions to a state.
-     * @param state The state whose atomic propositions should be computed.
-     */
-    private void stateLabelingPhase(ProgramState state) {
-	    // TODO modify heap in place
     }
 
     /**
