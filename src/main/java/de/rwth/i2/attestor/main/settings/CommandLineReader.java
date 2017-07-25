@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.main.settings;
 
+import java.io.File;
+
 import org.apache.commons.cli.*;
 
 import de.rwth.i2.attestor.util.DebugMode;
@@ -36,7 +38,7 @@ public class CommandLineReader {
 				.longOpt("root-path")
 				.hasArg()
 				.argName("path")
-				.desc( "defines a root path for the input. If specified, all other "
+				.desc( "(optional) defines a root path for the input. If specified, all other "
 						+ "paths are evaluated relative to this path." )
 				.build()
 				);
@@ -268,12 +270,29 @@ public class CommandLineReader {
 	public boolean hasSettingsFile(){
 		return cmd.hasOption( "sf" );
 	}
-
+	
     /**
      * @return The path to the settings file provided in the command line arguments.
      */
 	public String getPathToSettingsFile(){
+		if( hasRootPath() ){
+			return getRootPath() + File.separator + cmd.getOptionValue( "sf" );
+		}
 		return cmd.getOptionValue( "sf" );
+	}
+	
+	/**
+	 * @return true if and only if a root path has been provided
+	 */
+	public boolean hasRootPath(){
+		return cmd.hasOption("rp");
+	}
+	
+	/**
+	 * @return The specified root path
+	 */
+	public String getRootPath(){
+		return cmd.getOptionValue("rp");
 	}
 
     /**
