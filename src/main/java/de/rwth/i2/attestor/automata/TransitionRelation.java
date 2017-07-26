@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.automata;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Interface for the transition relation of a heap automaton.
@@ -24,8 +23,4 @@ public interface TransitionRelation {
      */
     AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration);
 
-    /**
-     * @return The set of all automaton states that can be dealt with by this transition relation.
-     */
-    Set<AutomatonState> getSupportedStates();
 }

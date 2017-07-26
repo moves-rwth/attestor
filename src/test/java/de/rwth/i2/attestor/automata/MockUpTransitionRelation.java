@@ -40,15 +40,4 @@ public class MockUpTransitionRelation implements TransitionRelation {
             return new MockUpState(1, true);
         }
     }
-
-    @Override
-    public Set<AutomatonState> getSupportedStates() {
-
-        if(supportedStates.isEmpty()) {
-            supportedStates.add( new MockUpState(0, false) );
-            supportedStates.add( new MockUpState(1, true) );
-        }
-
-        return supportedStates;
-    }
 }

@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.automata.TransitionRelation;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Transition relation of a heap automaton that realizes the negation of another
@@ -26,11 +25,5 @@ public class NegationTransitionRelation implements TransitionRelation {
     public AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
 
         return originalTransitionRelation.move(ntAssignment, heapConfiguration);
-    }
-
-    @Override
-    public Set<AutomatonState> getSupportedStates() {
-
-        return originalTransitionRelation.getSupportedStates();
     }
 }

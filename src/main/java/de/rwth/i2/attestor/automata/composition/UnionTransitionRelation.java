@@ -5,9 +5,7 @@ import de.rwth.i2.attestor.automata.TransitionRelation;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Transition relation realizing the union of two heap automata.
@@ -29,11 +27,6 @@ public class UnionTransitionRelation implements TransitionRelation {
     private TransitionRelation secondRelation;
 
     /**
-     * The (finite) set of all states supported by this transition relation.
-     */
-    private Set<AutomatonState> supportedStates;
-
-    /**
      * @param firstRelation The transition relation of the first automaton in the union.
      * @param secondRelation The transition relation of the second automaton in the union.
      */
@@ -41,14 +34,6 @@ public class UnionTransitionRelation implements TransitionRelation {
 
         this.firstRelation = firstRelation;
         this.secondRelation = secondRelation;
-
-        supportedStates = new HashSet<>();
-        for(AutomatonState first : firstRelation.getSupportedStates()) {
-            supportedStates.add(new UnionAutomatonState(first, null));
-        }
-        for(AutomatonState second : secondRelation.getSupportedStates()) {
-            supportedStates.add(new UnionAutomatonState(null, second));
-        }
     }
 
 
@@ -71,11 +56,5 @@ public class UnionTransitionRelation implements TransitionRelation {
         AutomatonState second = secondRelation.move(firstAssignment, heapConfiguration);
 
         return new UnionAutomatonState(first, second);
-    }
-
-    @Override
-    public Set<AutomatonState> getSupportedStates() {
-
-        return supportedStates;
     }
 }
