@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,8 +17,12 @@ public class NegationAutomatonState implements AutomatonState {
      */
     private AutomatonState state;
 
+    private Set<String> atomicPropositions;
+
     public NegationAutomatonState(AutomatonState state) {
         this.state = state;
+        atomicPropositions = new HashSet<>(state.getAllAtomicPropositions());
+        atomicPropositions.removeAll(state.getAtomicPropositions());
     }
 
     @Override
@@ -29,6 +34,12 @@ public class NegationAutomatonState implements AutomatonState {
     @Override
     public Set<String> getAtomicPropositions() {
 
-        return null;
+        return atomicPropositions;
+    }
+
+    @Override
+    public Set<String> getAllAtomicPropositions() {
+
+        return state.getAllAtomicPropositions();
     }
 }

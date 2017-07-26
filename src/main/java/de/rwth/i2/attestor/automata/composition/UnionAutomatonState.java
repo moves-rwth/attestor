@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.automata.composition;
 
 import de.rwth.i2.attestor.automata.AutomatonState;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -41,5 +42,13 @@ public class UnionAutomatonState implements AutomatonState {
     public Set<String> getAtomicPropositions() {
 
         return null;
+    }
+
+    @Override
+    public Set<String> getAllAtomicPropositions() {
+
+        Set<String> res = new HashSet<>(firstState.getAllAtomicPropositions());
+        res.addAll(secondState.getAllAtomicPropositions());
+        return res;
     }
 }

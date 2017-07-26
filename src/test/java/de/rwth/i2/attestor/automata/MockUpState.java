@@ -31,6 +31,15 @@ public class MockUpState implements AutomatonState {
         return res;
     }
 
+    @Override
+    public Set<String> getAllAtomicPropositions() {
+
+        Set<String> res = new HashSet<>();
+        res.add("0");
+        res.add("1");
+        return res;
+    }
+
     public int getState() {
         return state;
     }

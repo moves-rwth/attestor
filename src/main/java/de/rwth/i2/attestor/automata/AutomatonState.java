@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.automata;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,5 +17,7 @@ public interface AutomatonState {
     /**
      * @return Provides a representation of this state as a set of strings.
      */
-    public Set<String> getAtomicPropositions();
+    Set<String> getAtomicPropositions();
+
+    Set<String> getAllAtomicPropositions();
 }
