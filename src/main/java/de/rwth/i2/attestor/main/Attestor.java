@@ -60,6 +60,9 @@ public class Attestor {
 			commandLineReader.getInputSettings(  settings );
 			commandLineReader.getOptionSettings( settings );
 			commandLineReader.getOutputSettings( settings );
+			if( commandLineReader.hasRootPath() ){
+				settings.setRootPath( commandLineReader.getRootPath() );
+			}
 			
 			logger.log(PROGRESS, "Analyzing '"
                     + settings.input().getClasspath()
