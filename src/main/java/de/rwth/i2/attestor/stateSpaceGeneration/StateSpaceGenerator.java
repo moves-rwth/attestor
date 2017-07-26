@@ -178,8 +178,13 @@ public class StateSpaceGenerator {
                 semantics.getPotentialViolationPoints()
         );
 
-        materialized.forEach(stateSpace::addState);
-        materialized.forEach(mat -> stateSpace.addMaterializedSuccessor(state, mat));
+        for(ProgramState m : materialized) {
+            if(!stateSpace.contains(m)) {
+                stateSpace.addState(m);
+                stateSpace.addMaterializedSuccessor(state, m);
+                unexploredConfigurations.add(m);
+            }
+        }
         return materialized.isEmpty();
     }
 
@@ -253,11 +258,10 @@ public class StateSpaceGenerator {
         }
 
         Semantics semantics = program.getStatement(previousState.getProgramCounter());
-        ProgramState subsumingState = (semantics.permitsCanonicalization()) ? findSubsumingState(state) : null;
-        if(subsumingState == null) {
+        ProgramState subsumingState = findSubsumingState(state);
+        if(subsumingState == state) {
             stateSpace.addState(state);
             unexploredConfigurations.add(state);
-            subsumingState = state;
         }
         stateSpace.addControlFlowSuccessor(previousState, semantics.toString(), subsumingState);
     }
@@ -265,7 +269,7 @@ public class StateSpaceGenerator {
     /**
      * Find a state in the state space that semantically subsumes the given state.
      * @param state The state that shall be subsumed.
-     * @return The subsuming state or null if no such state exists in the state space.
+     * @return The subsuming state or state if no such state exists in the state space.
      */
     private ProgramState findSubsumingState(ProgramState state) {
 
@@ -274,7 +278,7 @@ public class StateSpaceGenerator {
                 return s;
             }
         }
-        return null;
+        return state;
     }
 
     /**
