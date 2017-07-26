@@ -7,7 +7,9 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ReachabilityTransitionRelation implements TransitionRelation {
 
@@ -44,6 +46,7 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
             int edge = ntEdges.get(i);
             heapConfiguration.builder().replaceNonterminalEdge(edge, rState.getKernel());
         }
+
         return heapConfiguration.builder().build();
     }
 
