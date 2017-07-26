@@ -87,12 +87,14 @@ public class SettingsFileReader {
 		input.setMethodName( programSettings.getString( "method" ) );
 		
 		JSONObject grammarSettings = jsonInput.getJSONObject( "grammar" );
-		if( grammarSettings.has( "path" )){
-			input.setPathToGrammar( grammarSettings.getString( "path" )  );
-		}else if( !jsonInput.has( "defaultPath" )){
-			logger.error("You must define a default path or a path for grammar");
+		if(grammarSettings.has("file")) {
+			if (grammarSettings.has("path")) {
+				input.setPathToGrammar(grammarSettings.getString("path"));
+			} else if (!jsonInput.has("defaultPath")) {
+				logger.error("You must define a default path or a path for grammar");
+			}
+			input.setGrammarName(grammarSettings.getString("file"));
 		}
-		input.setGrammarName( grammarSettings.getString( "file" ) );
 
 		// Add requested predefined grammars
 		JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( "predefinedGrammars" );
@@ -152,7 +154,7 @@ public class SettingsFileReader {
 					String[] map = definitionsLine.replace("@Rename", "").split("->");
 					assert map.length == 2;
 
-					rename.put(map[0], map[1]);
+					rename.put(map[0].trim(), map[1].trim());
 				}
 
 				try {

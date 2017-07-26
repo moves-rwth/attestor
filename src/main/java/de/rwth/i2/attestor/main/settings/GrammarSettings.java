@@ -35,6 +35,10 @@ public class GrammarSettings {
      */
     private Grammar grammar = null;
 
+    /**
+     * The grammar builder, that initially builds the (indexed) HRG.
+     */
+    private GrammarBuilder grammarBuilder = null;
 
 
     /**
@@ -65,34 +69,44 @@ public class GrammarSettings {
     }
 
     /**
-     * Loads a graph grammar from a file and sets it as the graph grammar underlying the current analysis.
+     * Loads a graph grammar from a file and sets it as the graph grammar underlying the current analysis or extends
+     * the previously loaded grammar (if present).
+     *
      * @param filename The file storing the graph grammar.
      */
     public void loadGrammarFromFile(String filename, HashMap<String, String> rename) {
 
         if(grammar != null)  {
-            logger.warn("Overwriting previously set grammar.");
+            logger.debug("Extending previously set grammar.");
+        }
+
+        // The first time a grammar file is loaded
+        if(grammarBuilder == null) {
+            this.grammarBuilder = Grammar.builder();
         }
 
         try {
             String str = FileReader.read(filename);
-
             // Modify grammar (replace all keys in rename by its values)
-            // TODO
             if(rename != null){
-
+                for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+                    str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
+                }
             }
 
-            // TODO: adapt such that grammars are not overwritten but extended!
+            logger.debug("Renamed grammar string: " + str);
+
             JSONArray array = new JSONArray(str);
-            GrammarBuilder grammarBuilder = Grammar.builder();
-            grammarBuilder.addRules(parseRules(array));
-            grammar = grammarBuilder.build();
+
+            this.grammarBuilder.addRules(parseRules(array));
 
 
         } catch (FileNotFoundException e) {
             logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
+
+        // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
 
     }
 
