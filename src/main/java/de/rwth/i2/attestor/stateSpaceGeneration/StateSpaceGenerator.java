@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a

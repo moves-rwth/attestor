@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
+
+import java.util.*;
 
 /**
  * A StateSpace is an edge-labeled transition system.
@@ -114,6 +114,10 @@ public class StateSpace {
      * @return The ID of the added state.
      */
 	protected int addState( ProgramState state ){
+
+		if(states.contains(state)) {
+			return states.indexOf(state);
+		}
 
 		int result = states.size();		
 		states.add( state );
