@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -31,7 +32,8 @@ public class EmbeddingStackCheckerTest {
 	@Before
 	public void setUp() throws Exception {
 		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
-		 checker = new EmbeddingStackChecker( stackMatcher );
+		StackMaterializer stackMaterializer = new StackMaterializer();
+		 checker = new EmbeddingStackChecker( stackMatcher, stackMaterializer );
 	}
 
 	/**
@@ -185,6 +187,8 @@ public class EmbeddingStackCheckerTest {
 	
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
+				.setExternal(nodes.get(0))
+				.setExternal(nodes.get(1))
 				.addSelector(nodes.get(0), label, nodes.get(1))
 				.addNonterminalEdge(nt)
 					.addTentacle( nodes.get(0) )
