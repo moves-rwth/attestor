@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.automata.implementations.NullAutomatonState;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -59,7 +60,7 @@ public class HeapAutomaton {
 
     /**
      * Determines the automaton state assigned to a given nonterminal.
-     * If no such state exists an IllegalStateException is thrown.
+     * If no such state exists a dummy state is created.
      * @param nt The nonterminal.
      * @return The automaton state corresponding to the nonterminal.
      */
@@ -71,7 +72,7 @@ public class HeapAutomaton {
             }
         }
 
-        throw new IllegalStateException("Provided nonterminal is not annotated with an automaton state.");
+        return new NullAutomatonState();
     }
 
     /**

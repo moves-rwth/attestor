@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.automata.implementations;
+package de.rwth.i2.attestor.automata.implementations.reachability;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 

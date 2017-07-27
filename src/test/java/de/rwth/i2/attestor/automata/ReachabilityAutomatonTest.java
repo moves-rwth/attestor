@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.automata;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.automata.implementations.ReachabilityAutomatonState;
-import de.rwth.i2.attestor.automata.implementations.ReachabilityHeapAutomaton;
+import de.rwth.i2.attestor.automata.implementations.reachability.ReachabilityAutomatonState;
+import de.rwth.i2.attestor.automata.implementations.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
