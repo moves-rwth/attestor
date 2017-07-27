@@ -18,9 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
@@ -70,10 +68,10 @@ public class ReachabilityAutomatonTest {
         ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
 
         assert(state.isFinal());
-        assert(state.getAtomicPropositions().contains("(0,0)"));
-        assert(state.getAtomicPropositions().contains("(1,1)"));
-        assert(state.getAtomicPropositions().contains("(2,2)"));
         assert(state.getAtomicPropositions().contains("(0,1)"));
+        assertFalse(state.getAtomicPropositions().contains("(0,0)"));
+        assertFalse(state.getAtomicPropositions().contains("(1,1)"));
+        assertFalse(state.getAtomicPropositions().contains("(2,2)"));
         assertFalse(state.getAtomicPropositions().contains("(0,2)"));
         assertFalse(state.getAtomicPropositions().contains("(1,0)"));
         assertFalse(state.getAtomicPropositions().contains("(1,2)"));
@@ -84,11 +82,11 @@ public class ReachabilityAutomatonTest {
     @Test
     public void testAbstractHC() {
 
-        Map<Integer, TIntSet> map = new HashMap<>();
+        List<TIntSet> map = new ArrayList<>();
         TIntSet set = new TIntHashSet();
         set.add(1);
-        map.put(0, set);
-        map.put(1, new TIntHashSet());
+        map.add(set);
+        map.add(new TIntHashSet());
         ReachabilityAutomatonState ntState = new ReachabilityAutomatonState(map, true);
 
         RefinedNonterminal nt = new RefinedNonterminalImpl(
@@ -119,9 +117,8 @@ public class ReachabilityAutomatonTest {
         ntAssignment.add(ntState);
 
         ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
+
         assert(state.isFinal());
-        assert(state.getAtomicPropositions().contains("(0,0)"));
-        assert(state.getAtomicPropositions().contains("(1,1)"));
         assert(state.getAtomicPropositions().contains("(0,1)"));
         assertFalse(state.getAtomicPropositions().contains("(1,0)"));
     }

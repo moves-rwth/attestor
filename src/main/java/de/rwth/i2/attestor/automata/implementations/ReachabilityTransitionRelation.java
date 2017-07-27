@@ -7,9 +7,8 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReachabilityTransitionRelation implements TransitionRelation {
 
@@ -30,7 +29,7 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
         assert(ntAssignment.size() == heapConfiguration.countNonterminalEdges());
 
         HeapConfiguration canonicalHc = computeCanonicalHeapConiguration(ntAssignment, heapConfiguration);
-        Map<Integer, TIntSet> reachabilityRelation = computeReachabilityRelation(canonicalHc);
+        List<TIntSet> reachabilityRelation = computeReachabilityRelation(canonicalHc);
         return new ReachabilityAutomatonState(reachabilityRelation, isFinal(reachabilityRelation));
     }
 
@@ -50,28 +49,30 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
         return heapConfiguration.builder().build();
     }
 
-    private Map<Integer, TIntSet> computeReachabilityRelation(HeapConfiguration canonicalHc) {
+    private List<TIntSet> computeReachabilityRelation(HeapConfiguration canonicalHc) {
 
-        Map<Integer, TIntSet> reachabilityRelation = new HashMap<>();
-        HeapConfigurationDistanceHelper helper = new HeapConfigurationDistanceHelper(canonicalHc);
+        List<TIntSet> reachabilityRelation = new ArrayList<>();
+        ReachabilityHelper helper = new ReachabilityHelper(canonicalHc);
+
         int size = canonicalHc.countExternalNodes();
-        for(int i=0; i < canonicalHc.countExternalNodes(); i++) {
+        for(int i=0; i < size; i++) {
             int ext1 = canonicalHc.externalNodeAt(i);
             TIntSet set = new TIntHashSet(size);
-            for(int j=0; j < canonicalHc.countExternalNodes(); j++) {
+            for(int j=0; j < size; j++) {
                 int ext2 = canonicalHc.externalNodeAt(j);
                 if(helper.isReachable(ext1, ext2)) {
                     set.add(j);
                 }
             }
-            reachabilityRelation.put(i, set);
+            reachabilityRelation.add(set);
         }
+
         return reachabilityRelation;
     }
 
-    private boolean isFinal(Map<Integer, TIntSet> reachabilityRelation) {
+    private boolean isFinal(List<TIntSet> reachabilityRelation) {
 
-        return reachabilityRelation.containsKey(from)
+        return from < reachabilityRelation.size()
                 && reachabilityRelation.get(from).contains(to);
     }
 

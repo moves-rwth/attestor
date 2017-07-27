@@ -10,7 +10,7 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 public class ReachabilityAutomatonState implements AutomatonState {
@@ -18,13 +18,13 @@ public class ReachabilityAutomatonState implements AutomatonState {
     private HeapConfiguration kernel;
     private boolean isFinal;
 
-    public ReachabilityAutomatonState(Map<Integer, TIntSet> reachabilityRelation, boolean isFinal) {
+    public ReachabilityAutomatonState(List<TIntSet> reachabilityRelation, boolean isFinal) {
 
         this.kernel = computeKernel(reachabilityRelation);
         this.isFinal = isFinal;
     }
 
-    private HeapConfiguration computeKernel(Map<Integer, TIntSet> reachabilityRelation) {
+    private HeapConfiguration computeKernel(List<TIntSet> reachabilityRelation) {
 
         FactorySettings factory = Settings.getInstance().factory();
 
