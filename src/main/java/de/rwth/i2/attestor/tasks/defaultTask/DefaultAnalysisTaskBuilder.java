@@ -49,13 +49,12 @@ public class DefaultAnalysisTaskBuilder extends GeneralAnalysisTaskBuilder {
         String str = FileReader.read(filename);
         JSONObject jsonObj = new JSONObject(str);
         HeapConfiguration inputGraph = JsonToDefaultHC.jsonToHC( jsonObj );
-
         return this.setInput( inputGraph );
     }
 
     @Override
     public AnalysisTaskBuilder loadProgram(String classpath, String filename, String entryPoint) {
-        JimpleParser programParser = new JimpleParser( new StandardAbstractSemantics() );
+        JimpleParser programParser = new JimpleParser(new StandardAbstractSemantics());
         return setProgram(programParser.parse(classpath, filename, entryPoint));
     }
 

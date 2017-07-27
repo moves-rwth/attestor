@@ -8,16 +8,19 @@ import de.rwth.i2.attestor.grammar.GrammarExporter;
     import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
                import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.indexedGrammars.IndexedState;
 import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
     import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
-    import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
                import de.rwth.i2.attestor.tasks.GeneralNonterminal;
                import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
                import de.rwth.i2.attestor.tasks.GeneralType;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.tasks.indexedTask.IndexedAnalysisTask;
 import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;
 import de.rwth.i2.attestor.types.Type;
@@ -224,5 +227,28 @@ public class FactorySettings {
      */
     public long getTotalNumberOfStates() {
         return totalNumberOfStates;
+    }
+
+    public ProgramState createProgramState(int programCounter, HeapConfiguration heapConfiguration, int scopeDepth) {
+
+        ProgramState result;
+
+        if(scopeDepth > 0)  {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration, scopeDepth);
+            } else {
+                result = new DefaultState(heapConfiguration, scopeDepth);
+            }
+        } else {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration);
+            } else {
+                result = new DefaultState(heapConfiguration);
+            }
+        }
+
+        result.setProgramCounter(programCounter);
+        result.prepareHeap();
+        return result;
     }
 }

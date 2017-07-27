@@ -74,6 +74,7 @@ public class JimpleParser implements ProgramParser {
 			if(DebugMode.ENABLED) {
 				e.printStackTrace();
 			}
+			// TODO push this to Attestor as System.exit(1) may lead to weird behavior in jmh
 			System.exit(1);
 		}
 
