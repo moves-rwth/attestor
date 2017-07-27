@@ -98,6 +98,40 @@ public class EmbeddingStackCheckerTest {
 					  res.getMaterializedToAbstract() );
 		assertEquals( getMatchingNonterminalWithStack(concreteStack), res.getInstantiatedLhs() );
 	}
+	
+	/**
+	 * still requires no instantiation, but uses embeds two nonterminals
+	 * which have different abstract symbols (ensures that they are materialized
+	 * independently)
+	 */
+	@Test
+	public void testMaterializationWithDifferentAbstractSymbols(){
+		List<StackSymbol> somePrefix = getStackPrefix();
+		List<StackSymbol> otherPrefix = getOtherStackPrefix();
+		
+		List<StackSymbol> toMatch1 = makeAbstract( somePrefix);
+		List<StackSymbol> reference1 = makeAbstract( otherPrefix );
+		
+		List<StackSymbol> toMatch2 = makeOtherAbstract( somePrefix );
+		List<StackSymbol> reference2 = makeOtherAbstract( otherPrefix );
+		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
+															reference1, reference2 );
+		
+		List<StackSymbol> concreteStack1 = makeConcrete( somePrefix );
+		List<StackSymbol> concreteStack2 = makeOtherConcrete( somePrefix );
+		HeapConfiguration pattern = getPatternWithStacks( concreteStack1, concreteStack2 );
+		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack1 );
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		
+		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		
+		assertTrue( res.canMatch() );
+		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeOtherConcrete( somePrefix ),
+										  makeConcrete( otherPrefix), makeOtherConcrete( otherPrefix ) ), 
+					  res.getMaterializedToAbstract() );
+		assertEquals( getMatchingNonterminalWithStack(concreteStack1), res.getInstantiatedLhs() );
+	}
+
 
 	private List<StackSymbol> getStackPrefix() {
 		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
@@ -119,13 +153,25 @@ public class EmbeddingStackCheckerTest {
 	
 	private List<StackSymbol> makeConcrete( List<StackSymbol> prefix ) {
 		StackSymbol bottom = DefaultStackMaterialization.SYMBOL_Z;
-		ArrayList<StackSymbol> stack = new ArrayList<>( prefix );
-		stack.add( bottom );
-		return stack;
+		return addSymbol( prefix,bottom );
+	}
+	
+	private List<StackSymbol> makeOtherConcrete(List<StackSymbol>  prefix) {
+		StackSymbol bottom = DefaultStackMaterialization.SYMBOL_C;
+		return addSymbol( prefix,bottom );
 	}
 	
 	private List<StackSymbol> makeAbstract(List<StackSymbol> prefix) {
 		AbstractStackSymbol abs = DefaultStackMaterialization.SYMBOL_X;
+		return addSymbol(prefix, abs);
+	}
+	
+	private List<StackSymbol> makeOtherAbstract(List<StackSymbol> prefix) {
+		AbstractStackSymbol abs = DefaultStackMaterialization.SYMBOL_Y;
+		return addSymbol(prefix, abs);
+	}
+
+	private List<StackSymbol> addSymbol(List<StackSymbol> prefix, StackSymbol abs) {
 		ArrayList<StackSymbol> stack = new ArrayList<>( prefix );
 		stack.add( abs );
 		return stack;
@@ -143,6 +189,14 @@ public class EmbeddingStackCheckerTest {
 
 	private Nonterminal getMatchingNonterminalWithStack(List<StackSymbol> stack) {
 		String label = "matching_EmbeddingStackChecker";
+		int rank = 2;
+		boolean[] isReductionTentacle = new boolean [rank];
+		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		return nt;
+	}
+	
+	private Nonterminal getOtherMatchingNonterminalWithStack(List<StackSymbol> stack) {
+		String label = "matching2_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
 		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
@@ -220,5 +274,73 @@ public class EmbeddingStackCheckerTest {
 					.build()
 				.build();
 	}
+	
+
+	private HeapConfiguration getInputWithStacks(
+			List<StackSymbol> toMatch1, List<StackSymbol> toMatch2,
+			List<StackSymbol> reference1, List<StackSymbol> reference2) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		
+		Type type = BalancedTreeGrammar.TYPE;
+		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		
+		Nonterminal matchingNt1 = getMatchingNonterminalWithStack( toMatch1 );
+		Nonterminal referenceNt1 = getReferenceNonterminalWithStack( reference1 );
+		
+		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithStack( toMatch2 );
+		Nonterminal referenceNt2 = getReferenceNonterminalWithStack( reference2 );
+
+	
+		TIntArrayList nodes = new TIntArrayList();
+		return hc.builder().addNodes(type, 4, nodes)
+				.addSelector(nodes.get(0), label, nodes.get(1))
+				.addNonterminalEdge( matchingNt1 )
+					.addTentacle( nodes.get(0) )
+					.addTentacle( nodes.get(1) )
+					.build()
+				.addNonterminalEdge( matchingNt2 )
+					.addTentacle( nodes.get(0) )
+					.addTentacle( nodes.get(1) )
+					.build()
+				.addNonterminalEdge(referenceNt1)
+					.addTentacle( nodes.get(2) )
+					.addTentacle( nodes.get(3) )
+					.build()
+				.addNonterminalEdge(referenceNt2)
+					.addTentacle( nodes.get(2) )
+					.addTentacle( nodes.get(3) )
+					.build()
+				.build();
+	}
+
+	private HeapConfiguration getPatternWithStacks(
+			List<StackSymbol> stack1, List<StackSymbol> stack2) 
+	{
+		
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		
+		Type type = BalancedTreeGrammar.TYPE;
+		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		
+		Nonterminal matchingNt1 = getMatchingNonterminalWithStack( stack1 );
+		
+		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithStack( stack2 );
+		
+		TIntArrayList nodes = new TIntArrayList();
+		return hc.builder().addNodes(type, 2, nodes)
+				.setExternal( nodes.get(0) )
+				.setExternal( nodes.get(1) )
+				.addSelector(nodes.get(0), label, nodes.get(1))
+				.addNonterminalEdge( matchingNt1 )
+					.addTentacle( nodes.get(0) )
+					.addTentacle( nodes.get(1) )
+					.build()
+				.addNonterminalEdge( matchingNt2 )
+					.addTentacle( nodes.get(0) )
+					.addTentacle( nodes.get(1) )
+					.build()
+				.build();
+	}
+
 
 }
