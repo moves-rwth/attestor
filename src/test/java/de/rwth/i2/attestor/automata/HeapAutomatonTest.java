@@ -63,12 +63,7 @@ public class HeapAutomatonTest {
                 .addNonterminalEdge(nt, nodes)
                 .build();
 
-        try {
-            automaton.move(hc);
-            fail("Provided HeapConfiguration contains nonterminals without valid heap automaton states.");
-        } catch(IllegalStateException ex) {
-            // intended
-        }
+        automaton.move(hc);
     }
 
     @Test
