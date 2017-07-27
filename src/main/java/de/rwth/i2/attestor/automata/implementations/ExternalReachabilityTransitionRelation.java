@@ -7,7 +7,7 @@ public class ExternalReachabilityTransitionRelation extends ReachabilityTransiti
     private int fromExternalNode;
     private int toExternalNode;
 
-    public ExternalReachabilityTransitionRelation(int fromExternalNode, int toExternalNode) {
+    ExternalReachabilityTransitionRelation(int fromExternalNode, int toExternalNode) {
 
         super();
         this.fromExternalNode = fromExternalNode;

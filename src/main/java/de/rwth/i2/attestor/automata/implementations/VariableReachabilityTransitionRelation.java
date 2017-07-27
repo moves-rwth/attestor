@@ -7,7 +7,7 @@ public class VariableReachabilityTransitionRelation extends ReachabilityTransiti
     private String fromVariableName;
     private String toVariableName;
 
-    public VariableReachabilityTransitionRelation(String fromVariableName, String toVariableName) {
+    VariableReachabilityTransitionRelation(String fromVariableName, String toVariableName) {
 
         this.fromVariableName = fromVariableName;
         this.toVariableName = toVariableName;
@@ -17,11 +17,16 @@ public class VariableReachabilityTransitionRelation extends ReachabilityTransiti
     @Override
     protected boolean isFinalState(HeapConfiguration canonicalHc, ReachabilityHelper helper) {
 
-        int fromNode = canonicalHc.variableWith(fromVariableName);
-        int toNode = canonicalHc.variableWith(toVariableName);
+        int from = canonicalHc.variableWith(fromVariableName);
+        int to = canonicalHc.variableWith(toVariableName);
+        if(from != HeapConfiguration.INVALID_ELEMENT && to != HeapConfiguration.INVALID_ELEMENT) {
+            int fromNode = canonicalHc.targetOf(from);
+            int toNode = canonicalHc.targetOf(to);
+            return fromNode != HeapConfiguration.INVALID_ELEMENT
+                    && toNode != HeapConfiguration.INVALID_ELEMENT
+                    && helper.isReachable(fromNode, toNode);
+        }
 
-        return fromNode != HeapConfiguration.INVALID_ELEMENT
-                && toNode != HeapConfiguration.INVALID_ELEMENT
-                && helper.isReachable(fromNode, toNode);
+        return false;
     }
 }

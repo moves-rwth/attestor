@@ -122,6 +122,54 @@ public class ReachabilityAutomatonTest {
         assert(state.isFinal());
         assert(state.getAtomicPropositions().contains("(0,1)"));
         assertFalse(state.getAtomicPropositions().contains("(1,0)"));
+
+        automaton = new ReachabilityHeapAutomaton("x", "y");
+        state = (ReachabilityAutomatonState) automaton.move(hc);
+        assertFalse(state.isFinal());
+    }
+
+    @Test
+    public void testVariableReachability() {
+
+        List<TIntSet> map = new ArrayList<>();
+        TIntSet set = new TIntHashSet();
+        set.add(1);
+        map.add(set);
+        map.add(new TIntHashSet());
+        ReachabilityAutomatonState ntState = new ReachabilityAutomatonState(map, true);
+
+        RefinedNonterminal nt = new RefinedNonterminalImpl(
+                GeneralNonterminal.getNonterminal("X", 2, new boolean[]{false, false}),
+                ntState
+        );
+
+        TIntArrayList nodes = new TIntArrayList();
+        hc.builder()
+                .addNodes(type, 6, nodes)
+                .setExternal(0)
+                .setExternal(1)
+                .addSelector(0, GeneralSelectorLabel.getSelectorLabel("a"), 2)
+                .addSelector(4, GeneralSelectorLabel.getSelectorLabel("a"), 5)
+                .addSelector(5, GeneralSelectorLabel.getSelectorLabel("a"), 1)
+                .addNonterminalEdge(nt)
+                    .addTentacle(2)
+                    .addTentacle(3)
+                    .build()
+                .addNonterminalEdge(nt)
+                    .addTentacle(3)
+                    .addTentacle(4)
+                    .build()
+                .addVariableEdge("x", 2)
+                .addVariableEdge("y", 4)
+                .build();
+
+        List<AutomatonState> ntAssignment = new ArrayList<>();
+        ntAssignment.add(ntState);
+        ntAssignment.add(ntState);
+
+        HeapAutomaton automaton = new ReachabilityHeapAutomaton("x", "y");
+        ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
+        assert(state.isFinal());
     }
 
 
