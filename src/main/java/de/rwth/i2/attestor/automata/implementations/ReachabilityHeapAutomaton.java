@@ -4,8 +4,13 @@ import de.rwth.i2.attestor.automata.HeapAutomaton;
 
 public class ReachabilityHeapAutomaton extends HeapAutomaton {
 
-    public ReachabilityHeapAutomaton(int fromExtNode, int toExtNode, int maxExtNodes) {
+    public ReachabilityHeapAutomaton(String fromVariableName, String toVariableName) {
 
-        super(new ReachabilityTransitionRelation(fromExtNode, toExtNode, maxExtNodes));
+        super(new VariableReachabilityTransitionRelation(fromVariableName, toVariableName));
+    }
+
+    public ReachabilityHeapAutomaton(int fromExtNode, int toExtNode) {
+
+        super(new ExternalReachabilityTransitionRelation(fromExtNode, toExtNode));
     }
 }

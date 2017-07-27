@@ -27,7 +27,6 @@ public class ReachabilityAutomatonTest {
 
     private HeapConfiguration hc;
     private Type type;
-    private ReachabilityHeapAutomaton automaton;
 
     @BeforeClass
     public static void init() {
@@ -39,12 +38,12 @@ public class ReachabilityAutomatonTest {
 
         hc = new InternalHeapConfiguration();
         type = GeneralType.getType("type");
-        automaton = new ReachabilityHeapAutomaton(0, 1, 3);
     }
 
     @Test
     public void testEmptyHc() {
 
+        HeapAutomaton automaton = new ReachabilityHeapAutomaton(0, 1);
         ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
 
         assertFalse(state.isFinal());
@@ -65,6 +64,7 @@ public class ReachabilityAutomatonTest {
                 .addSelector(4, GeneralSelectorLabel.getSelectorLabel("a"), 1)
                 .build();
 
+        HeapAutomaton automaton = new ReachabilityHeapAutomaton(0, 1);
         ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
 
         assert(state.isFinal());
@@ -116,11 +116,13 @@ public class ReachabilityAutomatonTest {
         ntAssignment.add(ntState);
         ntAssignment.add(ntState);
 
+        HeapAutomaton automaton = new ReachabilityHeapAutomaton(0, 1);
         ReachabilityAutomatonState state = (ReachabilityAutomatonState) automaton.move(hc);
 
         assert(state.isFinal());
         assert(state.getAtomicPropositions().contains("(0,1)"));
         assertFalse(state.getAtomicPropositions().contains("(1,0)"));
     }
+
 
 }

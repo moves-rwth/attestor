@@ -10,18 +10,7 @@ import gnu.trove.set.hash.TIntHashSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReachabilityTransitionRelation implements TransitionRelation {
-
-    private int from;
-    private int to;
-    private int maxRank;
-
-    public ReachabilityTransitionRelation(int from, int to, int maxRank) {
-
-        this.from = from;
-        this.to = to;
-        this.maxRank = maxRank;
-    }
+public abstract class ReachabilityTransitionRelation implements TransitionRelation {
 
     @Override
     public AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
@@ -29,9 +18,13 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
         assert(ntAssignment.size() == heapConfiguration.countNonterminalEdges());
 
         HeapConfiguration canonicalHc = computeCanonicalHeapConiguration(ntAssignment, heapConfiguration);
-        List<TIntSet> reachabilityRelation = computeReachabilityRelation(canonicalHc);
-        return new ReachabilityAutomatonState(reachabilityRelation, isFinal(reachabilityRelation));
+        ReachabilityHelper helper = new ReachabilityHelper(canonicalHc);
+        List<TIntSet> reachabilityRelation = reachableExternalNodes(canonicalHc, helper);
+        boolean finalState = isFinalState(canonicalHc, helper);
+        return new ReachabilityAutomatonState(reachabilityRelation, finalState);
     }
+
+    protected abstract boolean isFinalState(HeapConfiguration canonicalHc, ReachabilityHelper helper);
 
     private HeapConfiguration computeCanonicalHeapConiguration(List<AutomatonState> ntAssignment,
                                                                HeapConfiguration heapConfiguration) {
@@ -49,10 +42,9 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
         return heapConfiguration.builder().build();
     }
 
-    private List<TIntSet> computeReachabilityRelation(HeapConfiguration canonicalHc) {
+    private List<TIntSet> reachableExternalNodes(HeapConfiguration canonicalHc, ReachabilityHelper helper) {
 
         List<TIntSet> reachabilityRelation = new ArrayList<>();
-        ReachabilityHelper helper = new ReachabilityHelper(canonicalHc);
 
         int size = canonicalHc.countExternalNodes();
         for(int i=0; i < size; i++) {
@@ -70,10 +62,6 @@ public class ReachabilityTransitionRelation implements TransitionRelation {
         return reachabilityRelation;
     }
 
-    private boolean isFinal(List<TIntSet> reachabilityRelation) {
 
-        return from < reachabilityRelation.size()
-                && reachabilityRelation.get(from).contains(to);
-    }
 
 }
