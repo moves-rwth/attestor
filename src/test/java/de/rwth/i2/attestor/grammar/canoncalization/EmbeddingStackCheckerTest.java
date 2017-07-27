@@ -45,7 +45,7 @@ public class EmbeddingStackCheckerTest {
 		HeapConfiguration toAbstract = getSimpleInput();
 		HeapConfiguration pattern = getSimpleInput();
 		Nonterminal lhs = getInstantiableNonterminal();
-		Matching embedding = new EmbeddingChecker(toAbstract, pattern).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -63,7 +63,7 @@ public class EmbeddingStackCheckerTest {
 		HeapConfiguration toAbstract = getInputWithStack( concreteStack );
 		HeapConfiguration pattern = getInputWithStack( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
-		Matching embedding = new EmbeddingChecker( toAbstract, pattern ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -89,7 +89,7 @@ public class EmbeddingStackCheckerTest {
 		List<StackSymbol> concreteStack = makeConcrete( somePrefix );		
 		HeapConfiguration pattern = getInputWithStack( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
-		Matching embedding = new EmbeddingChecker(toAbstract, pattern).getNext();
+		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		

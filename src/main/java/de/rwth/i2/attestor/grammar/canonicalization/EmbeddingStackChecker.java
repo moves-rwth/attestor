@@ -98,6 +98,10 @@ public class EmbeddingStackChecker {
 			}
 
 		}
+		
+		if( !materializations.containsKey(materializedSymbol) ){
+			materializations.put(materializedSymbol, newMaterialization);
+		}
 
 	}
 

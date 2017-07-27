@@ -651,11 +651,13 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		final TIntArrayList nonterminalEdges = nonterminalEdges();
 		for( int i = 0; i < nonterminalEdges.size(); i++ ){
 			int ntId = nonterminalEdges.get(i);
-			ntListString.add( labelOf( ntId ).toString() );
+			ntListString.add( ntId + ":" + labelOf( ntId ).toString() );
+			ntListString.add( attachedNodesOf(ntId).toString() );
+			ntListString.add("\n");
 		
 		}
 		res.append( ntListString.toString() );
-		res.append( nonterminalEdges.toString() );
+		//res.append( nonterminalEdges.toString() );
 
 		res.append("\n\n");
 		return res.toString();
