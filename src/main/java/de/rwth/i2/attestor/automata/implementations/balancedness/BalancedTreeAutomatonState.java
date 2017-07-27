@@ -3,16 +3,40 @@ package de.rwth.i2.attestor.automata.implementations.balancedness;
 import de.rwth.i2.attestor.automata.AutomatonState;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-public class BalancedTreeAutomatonState implements AutomatonState {
+/**
+ * A heap automaton determining whether a binary tree is balanced has two possible states:
+ * 'balanced' and 'not balanced'
+ * All other information are directly encoded in heap configurations using selector edge
+ * annotations.
+ *
+ * @author Christoph
+ */
+class BalancedTreeAutomatonState implements AutomatonState {
 
+    /**
+     * Atomic proposition indicating a balanced tree.
+     */
     private final static String AP_BALANCED = "balanced";
+
+    /**
+     * Atomic proposition indicating that a heap configuration is not
+     * a balanced tree.
+     */
     private final static String AP_NOT_BALANCED = "not balanced";
 
+    /**
+     * True if and only if this state corresponds to a balanced binary tree
+     * and thus a final state.
+     */
     private boolean isFinalState;
 
-    public BalancedTreeAutomatonState(boolean isFinalState) {
+    /**
+     * @param isFinalState True if and only if this state shall represent balanced binary trees.
+     */
+    BalancedTreeAutomatonState(boolean isFinalState) {
 
         this.isFinalState = isFinalState;
     }
@@ -47,9 +71,12 @@ public class BalancedTreeAutomatonState implements AutomatonState {
     @Override
     public boolean equals(Object obj) {
 
-        if(obj instanceof BalancedTreeAutomatonState) {
-            return ((BalancedTreeAutomatonState) obj).isFinalState == isFinalState;
-        }
-        return false;
+        return obj instanceof BalancedTreeAutomatonState
+                && ((BalancedTreeAutomatonState) obj).isFinalState == isFinalState;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(isFinalState);
     }
 }

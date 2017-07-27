@@ -11,9 +11,14 @@ import gnu.trove.list.array.TIntArrayList;
 
 import java.util.*;
 
-public class BalancednessHelper {
+/**
+ * Auxiliary class annotate selectors pointing to children of a binary tree with balancedness information.
+ *
+ * @author Christoph
+ */
+class BalancednessHelper {
 
-	public static void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
+	static void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
 		
 		Map<Integer, Integer> heights = new HashMap<>();
 		Set<Integer> visited = new HashSet<>();
@@ -136,21 +141,17 @@ public class BalancednessHelper {
 					.build();
 	}
 
-	private static boolean addParentToQueue( HeapConfiguration hc, int node, Queue<Integer> queue, Set<Integer> visited){
+	private static void addParentToQueue(HeapConfiguration hc, int node, Queue<Integer> queue, Set<Integer> visited){
 
 		for(SelectorLabel sel : hc.selectorLabelsOf(node)) {
-
 			if(sel.hasLabel("parent")) {
-
 				int parentNode = hc.selectorTargetOf(node, sel);
 				if( !visited.contains( parentNode ) ){
 					queue.add( parentNode );
-					return true;
+					return;
 				}
 			}
 		}
-		return false;
-
 	}
 
 }

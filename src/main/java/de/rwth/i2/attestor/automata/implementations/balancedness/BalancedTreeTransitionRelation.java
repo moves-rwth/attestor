@@ -10,7 +10,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 import java.util.List;
 
-public class BalancedTreeTransitionRelation implements TransitionRelation {
+class BalancedTreeTransitionRelation implements TransitionRelation {
 
     @Override
     public AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
@@ -48,8 +48,7 @@ public class BalancedTreeTransitionRelation implements TransitionRelation {
         if(nullVariable == HeapConfiguration.INVALID_ELEMENT) {
             return nullVariable;
         }
-        int nullNode = heapConfiguration.targetOf(nullVariable);
-        return nullNode;
+        return heapConfiguration.targetOf(nullVariable);
     }
 
     private boolean isBalancedTree(HeapConfiguration heapConfiguration, TIntArrayList potentialRoots) {
