@@ -48,7 +48,7 @@ public class InputSettings {
      * Sets the default path to search for all possible input files.
      * @param path The default path.
      */
-	public void setDefaultPath( String path){
+	public void setDefaultPath( String path ){
 		classpath = path;
 		pathToGrammar = path;
 		pathToInput = path;
@@ -153,6 +153,12 @@ public class InputSettings {
 		return className != null && classpath != null && methodName != null
 				&& pathToGrammar != null && grammarName != null
 				&& pathToInput != null && inputName != null;
+	}
+
+	public void setRootPath(String rootPath) {
+		this.classpath = rootPath + File.separator +  this.classpath;
+		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
+		this.pathToInput = rootPath + File.separator + this.pathToInput;	
 	}
 	
 
