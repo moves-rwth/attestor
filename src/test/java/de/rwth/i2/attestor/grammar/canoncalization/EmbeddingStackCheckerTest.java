@@ -39,7 +39,7 @@ public class EmbeddingStackCheckerTest {
 		
 		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
 		EmbeddingStackChecker checker = new EmbeddingStackChecker( stackMatcher );
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( embedding, lhs );
+		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertTrue( res.canMatch() );
 		assertEquals( getSimpleInput(), res.getMaterializedToAbstract() );
