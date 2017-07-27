@@ -23,18 +23,20 @@ import java.io.FileNotFoundException;
  */
 public class Attestor {
 
+	static final String VERSION = "0.0.4";
     static final String ANSI_RESET = "\u001B[0m";
-    static final String ANSI_BLACK = "\u001B[30m";
     static final String ANSI_RED = "\u001B[31m";
-    static final String ANSI_GREEN = "\u001B[32m";
+	static final String ANSI_GREEN = "\u001B[32m";
+	static final String ANSI_YELLOW = "\u001B[33m";
     static final String ANSI_BLUE = "\u001B[34m";
 
 
 	/**
 	 * Individual log level to show the progress of the analysis even if errors are suppressed.
 	 */
-    private final static Level PHASE = Level.forName( "NEXT PHASE", 250);
-	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "PROGRESS" + ANSI_RESET, 50);
+    private final static Level PHASE = Level.forName( ANSI_YELLOW+ "PHASE" + ANSI_RESET, 200);
+	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "INFO" + ANSI_RESET, 50);
+	private final static Level DONE = Level.forName( ANSI_GREEN + "DONE" + ANSI_RESET, 50);
 
 
     /**
@@ -79,52 +81,54 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
+	    logger.log(PROGRESS, "Attestor " + VERSION);
+
 		if(!validationPhase(args)) {
-			logger.fatal( ANSI_RED + "Validation phase failed." + ANSI_RESET);
+			logger.fatal( "Validation phase failed.");
 			System.exit(1);
 		}
 
-		if(!loadPhase()) {
-			logger.fatal( ANSI_RED + "Load phase failed." + ANSI_RESET);
+		if(!parsingPhase()) {
+			logger.fatal( "Load phase failed.");
             System.exit(1);
 		}
 
-		logger.log(PROGRESS, ANSI_BLUE + "Analyzing '"
+		logger.log(PROGRESS, "Analyzing '"
 				+ settings.input().getClasspath()
 				+ "/"
 				+ settings.input().getClassName()
 				+ "."
 				+ settings.input().getMethodName()
-				+ "'..." + ANSI_RESET
+				+ "'..."
 		);
 
-		if(!setupPhase()) {
-			logger.fatal( ANSI_RED + "Setup phase failed." + ANSI_RESET);
+		if(!preprocessingPhase()) {
+			logger.fatal( "Preprocessing phase failed.");
             System.exit(1);
 		}
 
 		if(!stateSpaceGenerationPhase()) {
-			logger.fatal( ANSI_RED + "State space generation phase failed." + ANSI_RESET);
+			logger.fatal( "State space generation phase failed.");
             System.exit(1);
 		}
 
 		if(!modelCheckingPhase()) {
-			logger.fatal(ANSI_RED + "Model checking phase failed." + ANSI_RESET);
+			logger.fatal("Model checking phase failed.");
             System.exit(1);
 		}
 
 		if(!reportPhase()) {
-			logger.fatal(ANSI_RED + "Report phase failed." + ANSI_RESET);
+			logger.fatal("Report phase failed.");
             System.exit(1);
 		}
 
-        logger.log(PHASE, "\n" + ANSI_GREEN
-                + "+-------------------------------------------------------------------+\n"
-                + "|            analysis finished                                      |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET
-        );
-        logger.log(PROGRESS, ANSI_BLUE + "Analysis summary:" + ANSI_RESET + "\n"
+        logger.log(DONE, "Analysis summary: "
+				+ settings.input().getClasspath()
+				+ "/"
+				+ settings.input().getClassName()
+				+ "."
+				+ settings.input().getMethodName()
+				+ "\n"
                 + "+-----------+----------------------+-----------------------+--------+\n"
                 + "|           |  w/ procedure calls  |  w/o procedure calls  | final  |\n"
                 + "+-----------+----------------------+-----------------------+--------+\n"
@@ -140,22 +144,14 @@ public class Attestor {
 
 	private boolean validationPhase(String[] args) {
 
-		logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            validation                                             |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
+		logger.log(PHASE, "Validation...");
 
 		return commandLineReader.loadSettings(args);
 	}
 
-	private boolean loadPhase() {
+	private boolean parsingPhase() {
 
-        logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            load                                                   |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
+        logger.log(PHASE, "Parsing...");
 
 		if( commandLineReader.hasSettingsFile() ){
 			SettingsFileReader settingsReader =
@@ -199,14 +195,9 @@ public class Attestor {
 		}
 	}
 
-	private boolean setupPhase() {
+	private boolean preprocessingPhase() {
 
-        logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            setup                                                  |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
-
+        logger.log(PHASE, "Preprocessing...");
 
 		// refine grammar now.
 
@@ -218,11 +209,7 @@ public class Attestor {
 
 	private boolean stateSpaceGenerationPhase() {
 
-        logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            state space generation                                 |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
+        logger.log(PHASE, "State space generation...");
 
         task = taskBuilder.build();
         task.execute();
@@ -232,26 +219,20 @@ public class Attestor {
 
 	private boolean modelCheckingPhase() {
 
-        logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            model checking                                         |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
+        logger.log(PHASE, "Model-checking...");
 
 		return true;
 	}
 
 	private boolean reportPhase() {
 
-        logger.log(PHASE, ANSI_GREEN + "\n"
-                + "+-------------------------------------------------------------------+\n"
-                + "|            report                                                 |\n"
-                + "+-------------------------------------------------------------------+"
-                + ANSI_RESET);
+        logger.log(PHASE, "Report...");
 
 		if(Settings.getInstance().output().isExportStateSpace() ) {
-            logger.log(PROGRESS, ANSI_BLUE + "State space exported to '"
-                    + Settings.getInstance().output().getLocationForStateSpace() + ANSI_RESET);
+            logger.log(PROGRESS, "State space exported to '"
+                    + Settings.getInstance().output().getLocationForStateSpace()
+					+ "'"
+			);
             task.exportAllStates();
         }
 
