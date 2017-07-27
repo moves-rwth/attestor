@@ -26,34 +26,79 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class EmbeddingStackCheckerTest {
 
+	EmbeddingStackChecker checker;
+	
 	@Before
 	public void setUp() throws Exception {
+		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+		 checker = new EmbeddingStackChecker( stackMatcher );
 	}
 
+	/**
+	 * This test uses graphs without any nonterminals as inputs,
+	 * i.e. it doesn't test any logic.
+	 */
 	@Test
-	public void test() {
+	public void testSimple() {
 		HeapConfiguration toAbstract = getSimpleInput();
 		HeapConfiguration pattern = getSimpleInput();
-		Nonterminal lhs = getNonterminal();
+		Nonterminal lhs = getInstantiableNonterminal();
 		Matching embedding = new EmbeddingChecker(toAbstract, pattern).getNext();
 		
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
-		EmbeddingStackChecker checker = new EmbeddingStackChecker( stackMatcher );
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertTrue( res.canMatch() );
 		assertEquals( getSimpleInput(), res.getMaterializedToAbstract() );
-		assertEquals( getNonterminal(), res.getInstantiatedLhs() );
+		assertEquals( getInstantiableNonterminal(), res.getInstantiatedLhs() );
+	}
+	
+	/**
+	 * This tests verifies that the graphs are not modified, if the stacks match directly
+	 */
+	@Test
+	public void testWithIdenticalStacks(){
+		List<StackSymbol> concreteStack = getConcreteStack();
+		HeapConfiguration toAbstract = getInputWithStack( concreteStack );
+		HeapConfiguration pattern = getInputWithStack( concreteStack );
+		Nonterminal lhs = getNonterminalWithStack( concreteStack );
+		Matching embedding = new EmbeddingChecker( toAbstract, pattern ).getNext();
+		
+		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		
+		assertTrue( res.canMatch() );
+		assertEquals( getInputWithStack( concreteStack ), res.getMaterializedToAbstract() );
+		assertEquals( getNonterminalWithStack( concreteStack), res.getInstantiatedLhs() );
+		
 	}
 
-	private Nonterminal getNonterminal() {
+
+	private List<StackSymbol> getConcreteStack() {
+		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		StackSymbol bottom = DefaultStackMaterialization.SYMBOL_Z;
+		
+		ArrayList<StackSymbol> stack = new ArrayList<>();
+		stack.add( s );
+		stack.add( bottom );
+		return stack;
+	}
+
+	private Nonterminal getInstantiableNonterminal() {
+		List<StackSymbol> stack = getStackWithStackVariable();
+		return getNonterminalWithStack(stack);
+	}
+
+	private Nonterminal getNonterminalWithStack(List<StackSymbol> stack) {
 		String label = "EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		List<StackSymbol> stack = new ArrayList<>();
-		stack.add( StackVariable.getGlobalInstance() );
 		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
 		return nt;
+	}
+
+	private List<StackSymbol> getStackWithStackVariable() {
+		List<StackSymbol> stack = new ArrayList<>();
+		stack.add( StackVariable.getGlobalInstance() );
+		return stack;
 	}
 
 	private HeapConfiguration getSimpleInput() {
@@ -66,6 +111,25 @@ public class EmbeddingStackCheckerTest {
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
 				.addSelector(nodes.get(0), label, nodes.get(1))
+				.build();
+	}
+	
+	private HeapConfiguration getInputWithStack(List<StackSymbol> stack) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		
+		Type type = BalancedTreeGrammar.TYPE;
+		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		
+		Nonterminal nt = getNonterminalWithStack( stack );
+
+	
+		TIntArrayList nodes = new TIntArrayList();
+		return hc.builder().addNodes(type, 2, nodes)
+				.addSelector(nodes.get(0), label, nodes.get(1))
+				.addNonterminalEdge(nt)
+					.addTentacle( nodes.get(0) )
+					.addTentacle( nodes.get(1) )
+					.build()
 				.build();
 	}
 
