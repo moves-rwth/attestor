@@ -2,11 +2,27 @@ package de.rwth.i2.attestor.automata.implementations;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Specialized transition relation to check reachability between external nodes.
+ *
+ * @author Christoph
+ */
 public class ExternalReachabilityTransitionRelation extends ReachabilityTransitionRelation {
 
+    /**
+     * Position of the source external node.
+     */
     private int fromExternalNode;
+
+    /**
+     * Position of the target external node.
+     */
     private int toExternalNode;
 
+    /**
+     * @param fromExternalNode Position of the source external node in the sequence of external nodes.
+     * @param toExternalNode Position of the target external node in the sequence of external nodes.
+     */
     ExternalReachabilityTransitionRelation(int fromExternalNode, int toExternalNode) {
 
         super();

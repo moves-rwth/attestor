@@ -43,7 +43,7 @@ public class AssignmentIterator<E> {
      * Initializes the iterator.
      * @param availableAssignments All possible elements that can be assigned to each element of an assignment.
      */
-    public AssignmentIterator(List<List<E>> availableAssignments) {
+    AssignmentIterator(List<List<E>> availableAssignments) {
 
         this.size = availableAssignments.size();
         this.availableAssignments = availableAssignments;

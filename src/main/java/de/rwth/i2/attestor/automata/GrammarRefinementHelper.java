@@ -50,7 +50,7 @@ class GrammarRefinementHelper {
      * @param grammar The grammar that should be refined.
      * @param transitions The transition relation of a heap automaton guiding the refinement.
      */
-    public GrammarRefinementHelper(Grammar grammar, TransitionRelation transitions) {
+    GrammarRefinementHelper(Grammar grammar, TransitionRelation transitions) {
 
         this.grammar = grammar;
         this.transitions = transitions;
@@ -62,7 +62,7 @@ class GrammarRefinementHelper {
     /**
      * @return The refined grammar.
      */
-    public Grammar getRefinedGrammar() {
+    Grammar getRefinedGrammar() {
 
         return new Grammar(new HashMap<>(refinedGrammarRules));
     }

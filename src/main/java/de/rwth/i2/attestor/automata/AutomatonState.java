@@ -19,5 +19,9 @@ public interface AutomatonState {
      */
     Set<String> getAtomicPropositions();
 
+    /**
+     * @return The set of all atomic propositions supported by the underlying
+     *         heap automaton.
+     */
     Set<String> getAllAtomicPropositions();
 }
