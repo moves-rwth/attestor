@@ -32,7 +32,6 @@ public class Attestor {
     static final String ANSI_BLUE = "\u001B[34m";
 
     final Properties properties = new Properties();
-	private String version;
 
 
 	/**
@@ -76,17 +75,8 @@ public class Attestor {
 	public Attestor() {
 		settings.options().setRemoveDeadVariables(true);
 		commandLineReader.setupCLI();
-
-
-		try {
-			properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
-			version = properties.getProperty("artifactId") + " - version " + properties.getProperty("version");
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-
 	}
+
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -95,66 +85,79 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
-	    logger.log(PROGRESS, version);
+	    printVersion();
 
-		if(!validationPhase(args)) {
-			logger.fatal( "Validation phase failed.");
-			System.exit(1);
-		}
+		abortOnFail(validationPhase(args), "Validation phase failed.");
 
-		if(!parsingPhase()) {
-			logger.fatal( "Load phase failed.");
-            System.exit(1);
-		}
+		abortOnFail(parsingPhase(), "Parsing phase failed.");
 
-		logger.log(PROGRESS, "Analyzing '"
-				+ settings.input().getClasspath()
-				+ "/"
-				+ settings.input().getClassName()
-				+ "."
-				+ settings.input().getMethodName()
-				+ "'..."
-		);
+		printAnalyzedMethod();
 
-		if(!preprocessingPhase()) {
-			logger.fatal( "Preprocessing phase failed.");
-            System.exit(1);
-		}
+		abortOnFail(preprocessingPhase(), "Preprocessing phase failed.");
 
-		if(!stateSpaceGenerationPhase()) {
-			logger.fatal( "State space generation phase failed.");
-            System.exit(1);
-		}
+		abortOnFail(stateSpaceGenerationPhase(), "State space generation phase failed.");
 
-		if(!modelCheckingPhase()) {
-			logger.fatal("Model checking phase failed.");
-            System.exit(1);
-		}
+		abortOnFail(modelCheckingPhase(), "Model checking phase failed.");
 
-		if(!reportPhase()) {
-			logger.fatal("Report phase failed.");
-            System.exit(1);
-		}
+		abortOnFail(reportPhase(), "Report phase failed.");
 
-        logger.log(DONE, "Done. Analyzed method: "
-				+ settings.input().getClasspath()
-				+ "/"
-				+ settings.input().getClassName()
-				+ "."
-				+ settings.input().getMethodName()
-				+ "\n"
-                + "+-----------+----------------------+-----------------------+--------+\n"
-                + "|           |  w/ procedure calls  |  w/o procedure calls  | final  |\n"
-                + "+-----------+----------------------+-----------------------+--------+\n"
-                + "|  #states  "
-                + String.format("|  %18d  |  %19d  |  %5d |%n",
-                    Settings.getInstance().factory().getTotalNumberOfStates(),
-                    task.getStateSpace().getStates().size(),
-                    task.getStateSpace().getFinalStates().size()
-                  )
-                + "+-----------+----------------------+-----------------------+--------+"
-        );
+		printSummary();
 	}
+
+	private void printVersion() {
+
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
+            logger.log(PROGRESS, properties.getProperty("artifactId")
+                    + " - version " + properties.getProperty("version"));
+        } catch (IOException e) {
+            logger.fatal("Project version could not be found. Aborting.");
+            System.exit(1);
+        }
+    }
+
+	private void printAnalyzedMethod() {
+
+        logger.log(PROGRESS, "Analyzing '"
+                + settings.input().getClasspath()
+                + "/"
+                + settings.input().getClassName()
+                + "."
+                + settings.input().getMethodName()
+                + "'..."
+        );
+
+    }
+
+    private void printSummary() {
+
+	    logger.log(DONE, "Done. Analyzed method: "
+                        + settings.input().getClasspath()
+                        + "/"
+                        + settings.input().getClassName()
+                        + "."
+                        + settings.input().getMethodName()
+                        + "\n"
+                        + "+-----------+----------------------+-----------------------+--------+\n"
+                        + "|           |  w/ procedure calls  |  w/o procedure calls  | final  |\n"
+                        + "+-----------+----------------------+-----------------------+--------+\n"
+                        + "|  #states  "
+                        + String.format("|  %18d  |  %19d  |  %5d |%n",
+                            Settings.getInstance().factory().getTotalNumberOfStates(),
+                            task.getStateSpace().getStates().size(),
+                            task.getStateSpace().getFinalStates().size()
+                          )
+                        + "+-----------+----------------------+-----------------------+--------+"
+        );
+    }
+
+	public void abortOnFail(boolean executionSuccessfull, String errorMessage) {
+
+	    if(!executionSuccessfull) {
+	        logger.fatal(errorMessage);
+	        System.exit(1);
+        }
+    }
 
 	private boolean validationPhase(String[] args) {
 
