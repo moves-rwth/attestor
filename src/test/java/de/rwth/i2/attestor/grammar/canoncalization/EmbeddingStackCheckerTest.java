@@ -132,6 +132,26 @@ public class EmbeddingStackCheckerTest {
 					  res.getMaterializedToAbstract() );
 		assertEquals( getMatchingNonterminalWithStack(concreteStack1), res.getInstantiatedLhs() );
 	}
+	
+	@Test
+	public void testInstantiation(){
+		List<StackSymbol> somePrefix = getStackPrefix();
+		
+		List<StackSymbol> toMatch = makeConcrete( somePrefix );
+		HeapConfiguration toAbstract = getInputWithStack( toMatch );
+		
+		List<StackSymbol> matching = makeInstantiable( somePrefix );
+		HeapConfiguration pattern = getInputWithStack( matching );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		
+		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		
+		assertTrue( res.canMatch() );
+		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+					  res.getInstantiatedLhs() );
+	}
 
 
 	private List<StackSymbol> getStackPrefix() {
@@ -165,6 +185,11 @@ public class EmbeddingStackCheckerTest {
 	private List<StackSymbol> makeAbstract(List<StackSymbol> prefix) {
 		AbstractStackSymbol abs = DefaultStackMaterialization.SYMBOL_X;
 		return addSymbol(prefix, abs);
+	}
+	
+	private List<StackSymbol> makeInstantiable(List<StackSymbol> prefix) {
+		StackSymbol var = StackVariable.getGlobalInstance();
+		return addSymbol( prefix, var );
 	}
 	
 	private List<StackSymbol> makeOtherAbstract(List<StackSymbol> prefix) {
