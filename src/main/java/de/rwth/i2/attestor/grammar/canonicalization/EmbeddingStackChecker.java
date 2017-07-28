@@ -15,6 +15,7 @@ import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 
@@ -36,6 +37,7 @@ public class EmbeddingStackChecker {
 			Nonterminal lhs ) throws CannotMatchException{
 
 		Map<AbstractStackSymbol, List<StackSymbol>> materializations = new HashMap<>();
+		List<StackSymbol> instantiation = new ArrayList<>();
 
 		HeapConfiguration pattern = embedding.pattern();
 		TIntIterator iterator =  pattern.nonterminalEdges().iterator();
@@ -48,9 +50,9 @@ public class EmbeddingStackChecker {
 					&& targetLabel instanceof IndexedNonterminal ){
 
 				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-				applyCurrentMaterializationTo( materializations, materializable );
+				materializable = applyCurrentMaterializationTo( materializations, materializable );
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-				//applyInstantiationTo( instantiation, instantiable );
+				instantiable = applyInstantiationTo( instantiation, instantiable );
 
 				if(! stackMatcher.canMatch( materializable, instantiable ) ){
 					throw new CannotMatchException();
@@ -58,16 +60,25 @@ public class EmbeddingStackChecker {
 					Pair<AbstractStackSymbol, List<StackSymbol>> materializationRule = 
 							stackMatcher.getMaterializationRule(materializable, instantiable);
 
-					updateMaterializations( materializations, materializationRule );
+					if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
+						updateMaterializations( materializations, materializationRule );
+					}
+					if( stackMatcher.needsInstantiation(materializable, instantiable) ) {
+						updateInstantiation( instantiation, stackMatcher.getNecessaryInstantiation(materializable, instantiable) );
+					}
 				}
 			}
 
 		}
-		
+
 		toAbstract = applyMaterializationsTo(toAbstract, materializations);
 
 		return new StackEmbeddingResult( toAbstract, lhs );
 	}
+
+
+
+
 
 	/**
 	 * Applies all the materialization rules in materializations to the
@@ -94,11 +105,19 @@ public class EmbeddingStackChecker {
 			Pair<AbstractStackSymbol,List<StackSymbol>> newMaterializationRule) {
 
 		applyNewMaterialiationTo(materializations,  newMaterializationRule);
-		
+
 		if( !materializations.containsKey(newMaterializationRule.first()) ){
 			materializations.put(newMaterializationRule.first(), newMaterializationRule.second());
 		}
 
+	}
+	
+	private void updateInstantiation(List<StackSymbol> instantiation, List<StackSymbol> necessaryInstantiation) throws CannotMatchException {
+		
+		if( ! instantiation.isEmpty() ) {
+			throw new CannotMatchException();
+		}
+		else instantiation.addAll( necessaryInstantiation );
 	}
 
 	/**
@@ -118,8 +137,8 @@ public class EmbeddingStackChecker {
 	private void applyNewMaterialiationTo(
 			Map<AbstractStackSymbol, List<StackSymbol>> materializations,
 			Pair<AbstractStackSymbol,List<StackSymbol>> newMaterialization) 
-			{
-		
+	{
+
 		for( Entry<AbstractStackSymbol, List<StackSymbol>> materializationRule : materializations.entrySet() ){
 			List<StackSymbol> rhs = materializationRule.getValue();
 			materializeIn( rhs, newMaterialization.first(), newMaterialization.second() );
@@ -145,17 +164,17 @@ public class EmbeddingStackChecker {
 	 * @param rhs the sequence of stack symbols with which to materialize
 	 */
 	private void materializeIn(List<StackSymbol> stack, StackSymbol lhs, List<StackSymbol> rhs) {
-		
+
 		if( getLastSymbolOf(stack).equals(lhs) ){
 			stack.remove( stack.size() -1 );
 			stack.addAll( rhs );
 		}
 	}
 
-	private Nonterminal applyCurrentMaterializationTo( 
+	private IndexedNonterminal applyCurrentMaterializationTo( 
 			Map<AbstractStackSymbol, List<StackSymbol>> currentMaterializations,
 			IndexedNonterminal materializable ) 
-			{
+	{
 
 		StackSymbol lastStackSymbol = materializable.getLastStackSymbol();
 		if( lastStackSymbol instanceof AbstractStackSymbol ){
@@ -165,6 +184,17 @@ public class EmbeddingStackChecker {
 			}
 		}
 		return materializable;
+	}
+
+	private IndexedNonterminal applyInstantiationTo(List<StackSymbol> instantiation, IndexedNonterminal instantiable) {
+
+		StackSymbol lastSymbol = instantiable.getLastStackSymbol();
+		if( ! instantiation.isEmpty() && lastSymbol instanceof StackVariable ) {
+			return instantiable.getWithProlongedStack(instantiation);
+		}else {
+			return instantiable;
+		}
+
 	}
 
 }
