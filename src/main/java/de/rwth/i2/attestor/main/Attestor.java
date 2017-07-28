@@ -105,9 +105,11 @@ public class Attestor {
 		}
 
         // Load the requested predefined grammars
-		for(String predefinedGrammar : settings.input().getUsedPredefinedGrammars()){
-			HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-			settings.grammar().loadGrammarFromFile(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json").getPath() , renamingMap);
+		if(settings.input().getUsedPredefinedGrammars() != null) {
+			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
+				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
+				settings.grammar().loadGrammarFromFile(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json").getPath(), renamingMap);
+			}
 		}
 
 		settings.grammar().exportGrammar();

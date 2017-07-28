@@ -90,6 +90,7 @@ public class GrammarSettings {
             // Modify grammar (replace all keys in rename by its values)
             if(rename != null){
                 for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
                     str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
                 }
             }
