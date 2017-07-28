@@ -107,6 +107,7 @@ public class SettingsFileReader {
 			if(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);
 					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
+					logger.debug("Adding predefined grammar " + grammarType);
 			} else {
 				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type") + " available. Skipping it.");
 			}
@@ -114,23 +115,27 @@ public class SettingsFileReader {
 
 		}
 
-		if(jsonInput.has("initialState")){
+		//if(jsonInput.has("initialState")){
 			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
 			if( initialSettings.has( "path" ) ){
 				input.setPathToInput( initialSettings.getString( "path" ) );
-			}else if( !jsonInput.has( "defaultPath" )){
+			}else if( !jsonInput.has( "defaultPath" ) && initialSettings.has("file")){
 				logger.error("You must define a default path or a path for the initial state");
 			}
-			input.setInputName( initialSettings.getString( "file" ) );
-		// Set default: empty HC
-		} else {
-			if(ClassLoader.getSystemClassLoader().getResource("initialStates") == null){
-				logger.entry("Default initial states location not found!");
-			} else {
-				input.setPathToInput(ClassLoader.getSystemClassLoader().getResource("initialStates").getPath());
-				input.setInputName("emptyInput.json");
+			System.out.println(initialSettings.toString());
+			if(initialSettings.has("file")) {
+				input.setInputName(initialSettings.getString("file"));
+			} else if(input.getInputName() == null) {
+				// Set default: empty HC
+				//} else {
+				if (ClassLoader.getSystemClassLoader().getResource("initialStates") == null) {
+					logger.entry("Default initial states location not found!");
+				} else {
+					input.setPathToInput(ClassLoader.getSystemClassLoader().getResource("initialStates").getPath());
+					input.setInputName("emptyInput.json");
+				}
 			}
-		}
+		//}
 
 		
 		return input;

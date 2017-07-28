@@ -35,7 +35,7 @@ public class InputSettings {
     /**
      * The name of the file of the graph grammar underlying the analysis.
      */
-	private String grammarName;
+	private String grammarName = null;
 
 	// The list of predefined grammars used by the current analysis
 	private ArrayList<String> usedPredefinedGrammars;
@@ -48,7 +48,11 @@ public class InputSettings {
      */
 	private String pathToInput;
 
-    /**
+	public String getInputName() {
+		return inputName;
+	}
+
+	/**
      * The name of the file specifying the initial state.
      */
 	private String inputName;
@@ -117,9 +121,16 @@ public class InputSettings {
 	}
 
     /**
-     * Sets the name of the file containing the graph grammar underlying the analysis.
-     * @param grammarName The name of the file containing the graph grammar.
+     * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
      */
+	public String getGrammarName() {
+		return this.grammarName;
+	}
+
+	/**
+	 * Sets the name of the file containing the graph grammar underlying the analysis.
+	 * @param grammarName The name of the file containing the graph grammar.
+	 */
 	public void setGrammarName(String grammarName) {
 		this.grammarName = grammarName;
 	}

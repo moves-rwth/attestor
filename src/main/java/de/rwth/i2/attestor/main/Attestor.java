@@ -96,7 +96,9 @@ public class Attestor {
         }
 
         // Load the user-defined grammar
-        settings.grammar().loadGrammarFromFile( settings.input().getGrammarLocation(), null );
+		if(settings.input().getGrammarName() != null) {
+			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
+		}
 
         // Load the requested predefined grammars
 		for(String predefinedGrammar : settings.input().getUsedPredefinedGrammars()){
@@ -130,6 +132,7 @@ public class Attestor {
 		}
 
 		try {
+        	logger.debug("Loading initial states file " + settings.input().getInputLocation());
 			taskBuilder.loadInput( settings.input().getInputLocation() );
 		} catch (FileNotFoundException e) {
 			logger.fatal("File '" + settings.input().getInputLocation() + "' specifying input location not found.");

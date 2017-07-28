@@ -383,7 +383,7 @@ public class CommandLineReader {
 		} 
 		if( cmd.hasOption("i")){
 			inputSettings.setInputName(cmd.getOptionValue("i"));
-		} else {
+		} else if(inputSettings.getInputName() == null){
 			if(ClassLoader.getSystemClassLoader().getResource("initialStates") == null){
 				logger.entry("Default initial states location not found!");
 			} else {
