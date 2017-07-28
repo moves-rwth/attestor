@@ -33,7 +33,7 @@ public class EmbeddingStackChecker {
 
 	public StackEmbeddingResult getStackEmbeddingResult( HeapConfiguration toAbstract, 
 			Matching embedding, 
-			Nonterminal lhs ) {
+			Nonterminal lhs ) throws CannotMatchException{
 
 		Map<AbstractStackSymbol, List<StackSymbol>> materializations = new HashMap<>();
 
@@ -53,7 +53,7 @@ public class EmbeddingStackChecker {
 				//applyInstantiationTo( instantiation, instantiable );
 
 				if(! stackMatcher.canMatch( materializable, instantiable ) ){
-					return new StackEmbeddingResult( false, null, null );
+					throw new CannotMatchException();
 				}else{
 					Pair<AbstractStackSymbol, List<StackSymbol>> materializationRule = 
 							stackMatcher.getMaterializationRule(materializable, instantiable);
@@ -66,7 +66,7 @@ public class EmbeddingStackChecker {
 		
 		toAbstract = applyMaterializationsTo(toAbstract, materializations);
 
-		return new StackEmbeddingResult(true, toAbstract, lhs );
+		return new StackEmbeddingResult( toAbstract, lhs );
 	}
 
 	/**

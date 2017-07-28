@@ -11,23 +11,17 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  */
 public class StackEmbeddingResult {
 
-	private final boolean canMatch;
 	private final HeapConfiguration materializedToAbstract;
 	private final Nonterminal instantiatedLhs;
 	
-	public StackEmbeddingResult( boolean canMatch, 
-							     HeapConfiguration materializedToAbstract,
+	public StackEmbeddingResult( HeapConfiguration materializedToAbstract,
 							     Nonterminal instantiatedLhs ){
 		
-		this.canMatch = canMatch;
 		this.materializedToAbstract = materializedToAbstract;
 		this.instantiatedLhs = instantiatedLhs;
 	}
 	
-	public boolean canMatch() {
-		return this.canMatch;
-	}
-
+	
 	public HeapConfiguration getMaterializedToAbstract() {
 		return this.materializedToAbstract;
 	}

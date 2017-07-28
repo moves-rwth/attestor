@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingStackChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
@@ -40,9 +41,10 @@ public class EmbeddingStackCheckerTest {
 	/**
 	 * This test uses graphs without any nonterminals as inputs,
 	 * i.e. it doesn't test any logic.
+	 * @throws CannotMatchException 
 	 */
 	@Test
-	public void testSimple() {
+	public void testSimple() throws CannotMatchException {
 		HeapConfiguration toAbstract = getSimpleInput();
 		HeapConfiguration pattern = getSimpleInput();
 		Nonterminal lhs = getInstantiableNonterminal();
@@ -50,16 +52,16 @@ public class EmbeddingStackCheckerTest {
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertTrue( res.canMatch() );
 		assertEquals( getSimpleInput(), res.getMaterializedToAbstract() );
 		assertEquals( getInstantiableNonterminal(), res.getInstantiatedLhs() );
 	}
 	
 	/**
 	 * This tests verifies that the graphs are not modified, if the stacks match directly
+	 * @throws CannotMatchException 
 	 */
 	@Test
-	public void testWithIdenticalStacks(){
+	public void testWithIdenticalStacks() throws CannotMatchException{
 		List<StackSymbol> concreteStack = getConcreteStack();
 		HeapConfiguration toAbstract = getInputWithStack( concreteStack );
 		HeapConfiguration pattern = getInputWithStack( concreteStack );
@@ -68,7 +70,6 @@ public class EmbeddingStackCheckerTest {
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertTrue( res.canMatch() );
 		assertEquals( getInputWithStack( concreteStack ), res.getMaterializedToAbstract() );
 		assertEquals( getMatchingNonterminalWithStack( concreteStack), res.getInstantiatedLhs() );
 		
@@ -77,9 +78,10 @@ public class EmbeddingStackCheckerTest {
 	/**
 	 * This test verifies that materialization is applied correctly in a simple case
 	 * (No instantiation, no different abstract symbols)
+	 * @throws CannotMatchException 
 	 */
 	@Test
-	public void testOnlyMaterialization(){
+	public void testOnlyMaterialization() throws CannotMatchException{
 		List<StackSymbol> somePrefix = getStackPrefix();
 		List<StackSymbol> otherPrefix = getOtherStackPrefix();
 		
@@ -94,7 +96,6 @@ public class EmbeddingStackCheckerTest {
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertTrue( res.canMatch() );
 		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeConcrete( otherPrefix) ), 
 					  res.getMaterializedToAbstract() );
 		assertEquals( getMatchingNonterminalWithStack(concreteStack), res.getInstantiatedLhs() );
@@ -104,9 +105,10 @@ public class EmbeddingStackCheckerTest {
 	 * still requires no instantiation, but uses embeds two nonterminals
 	 * which have different abstract symbols (ensures that they are materialized
 	 * independently)
+	 * @throws CannotMatchException 
 	 */
 	@Test
-	public void testMaterializationWithDifferentAbstractSymbols(){
+	public void testMaterializationWithDifferentAbstractSymbols() throws CannotMatchException{
 		List<StackSymbol> somePrefix = getStackPrefix();
 		List<StackSymbol> otherPrefix = getOtherStackPrefix();
 		
@@ -126,7 +128,6 @@ public class EmbeddingStackCheckerTest {
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertTrue( res.canMatch() );
 		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeOtherConcrete( somePrefix ),
 										  makeConcrete( otherPrefix), makeOtherConcrete( otherPrefix ) ), 
 					  res.getMaterializedToAbstract() );
@@ -134,7 +135,7 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 	@Test
-	public void testInstantiation(){
+	public void testInstantiation() throws CannotMatchException{
 		List<StackSymbol> somePrefix = getStackPrefix();
 		
 		List<StackSymbol> toMatch = makeConcrete( somePrefix );
@@ -147,7 +148,6 @@ public class EmbeddingStackCheckerTest {
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertTrue( res.canMatch() );
 		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
 		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
 					  res.getInstantiatedLhs() );
