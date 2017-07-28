@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;

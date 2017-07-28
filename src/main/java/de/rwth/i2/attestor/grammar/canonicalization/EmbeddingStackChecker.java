@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.canoncalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
