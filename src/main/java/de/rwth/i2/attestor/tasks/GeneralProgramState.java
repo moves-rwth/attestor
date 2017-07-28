@@ -323,8 +323,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 		try {
 			heap.builder().removeVariableEdge(varEdge).build();
 		} catch(IllegalArgumentException e) {
-		    logger.warn("Variable not found: " + variableName);
-			// TODO add warning?
+			logger.trace("Variable '" + variableName + "' could not be removed as it does not exist.");
 		}
 	}
 

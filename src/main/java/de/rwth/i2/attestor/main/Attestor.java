@@ -34,9 +34,9 @@ public class Attestor {
 	/**
 	 * Individual log level to show the progress of the analysis even if errors are suppressed.
 	 */
-    private final static Level PHASE = Level.forName( ANSI_YELLOW+ "PHASE" + ANSI_RESET, 200);
-	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "INFO" + ANSI_RESET, 50);
-	private final static Level DONE = Level.forName( ANSI_GREEN + "DONE" + ANSI_RESET, 50);
+    private final static Level PHASE = Level.forName( ANSI_YELLOW+ "INFO" + ANSI_RESET, 300);
+	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "INFO" + ANSI_RESET, 200);
+	private final static Level DONE = Level.forName( ANSI_GREEN + "INFO" + ANSI_RESET, 50);
 
 
     /**
@@ -122,7 +122,7 @@ public class Attestor {
             System.exit(1);
 		}
 
-        logger.log(DONE, "Analysis summary: "
+        logger.log(DONE, "Done. Analyzed method: "
 				+ settings.input().getClasspath()
 				+ "/"
 				+ settings.input().getClassName()
