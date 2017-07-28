@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.main.settings;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
