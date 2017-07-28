@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * The main class to run Attestor.
@@ -23,12 +25,14 @@ import java.io.FileNotFoundException;
  */
 public class Attestor {
 
-	static final String VERSION = "0.0.4";
     static final String ANSI_RESET = "\u001B[0m";
     static final String ANSI_RED = "\u001B[31m";
 	static final String ANSI_GREEN = "\u001B[32m";
 	static final String ANSI_YELLOW = "\u001B[33m";
     static final String ANSI_BLUE = "\u001B[34m";
+
+    final Properties properties = new Properties();
+	private String version;
 
 
 	/**
@@ -72,6 +76,16 @@ public class Attestor {
 	public Attestor() {
 		settings.options().setRemoveDeadVariables(true);
 		commandLineReader.setupCLI();
+
+
+		try {
+			properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
+			version = properties.getProperty("artifactId") + " - version " + properties.getProperty("version");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
 	}
 
 	/**
@@ -81,7 +95,7 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
-	    logger.log(PROGRESS, "Attestor " + VERSION);
+	    logger.log(PROGRESS, version);
 
 		if(!validationPhase(args)) {
 			logger.fatal( "Validation phase failed.");
