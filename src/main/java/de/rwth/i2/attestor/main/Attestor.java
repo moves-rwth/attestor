@@ -1,19 +1,19 @@
 package de.rwth.i2.attestor.main;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.FileNotFoundException;
 
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
-import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.*;
+
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Map.*;
+
+import de.rwth.i2.attestor.main.settings.*;
+import de.rwth.i2.attestor.util.DebugMode;
+
 
 /**
  * The main class to run Attestor.
@@ -70,6 +70,10 @@ public class Attestor {
 			commandLineReader.getOptionSettings( settings );
 			commandLineReader.getOutputSettings( settings );
 			commandLineReader.getMCSettings( settings );
+
+			if( commandLineReader.hasRootPath() ){
+				settings.setRootPath( commandLineReader.getRootPath() );
+			}
 			
 			logger.log(PROGRESS, "Analyzing '"
                     + settings.input().getClasspath()

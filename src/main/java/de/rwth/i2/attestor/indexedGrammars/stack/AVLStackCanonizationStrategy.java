@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.indexedGrammars.stack;
 
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -10,10 +10,10 @@ import gnu.trove.list.array.TIntArrayList;
 /**
  * A StackCanonizationStrategy that uses a fixed right-regular string grammar given by the following rules:
  * <ul>
- *     <li>X -> sX</li>
- *     <li>X -> Z</li>
- *     <li>Y -> sY</li>
- *     <li>Y -> C</li>
+ *     <li>X &#8594; sX</li>
+ *     <li>X &#8594; Z</li>
+ *     <li>Y &#8594; sY</li>
+ *     <li>Y &#8594; C</li>
  * </ul>
  * Furthermore, abstraction is specialized towards features of AVL trees if a HeapConfiguration contains
  * selectors "left" and "right".

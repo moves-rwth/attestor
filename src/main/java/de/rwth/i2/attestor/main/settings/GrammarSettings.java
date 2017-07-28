@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.main.settings;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.materialization.GrammarBuilder;
+import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToGrammar;
@@ -54,7 +53,7 @@ public class GrammarSettings {
 
         if(grammar == null) {
             logger.warn("No grammar has been set. Proceeding with an empty grammar.");
-            grammar = new Grammar(new HashMap<>());
+            grammar = Grammar.builder().build();
         }
 
         return grammar;

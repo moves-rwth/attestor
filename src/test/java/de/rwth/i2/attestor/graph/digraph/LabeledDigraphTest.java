@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.graph.digraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import gnu.trove.list.array.TIntArrayList;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
+import gnu.trove.list.array.TIntArrayList;
 
 public class LabeledDigraphTest {
 

@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.main.settings;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.generated.lexer.LexerException;
 import de.rwth.i2.attestor.generated.parser.ParserException;
+import java.io.File;
+
 import org.apache.commons.cli.*;
 
 import de.rwth.i2.attestor.util.DebugMode;
@@ -46,6 +48,16 @@ public class CommandLineReader {
 
 		cliOptions = new Options();
 		
+		cliOptions.addOption(
+				Option.builder("rp")
+				.longOpt("root-path")
+				.hasArg()
+				.argName("path")
+				.desc( "(optional) defines a root path for the input. If specified, all other "
+						+ "paths are evaluated relative to this path." )
+				.build()
+				);
+		
 		cliOptions.addOption( 
 				Option.builder("sf")
 				.longOpt( "settings-file" )
@@ -55,7 +67,7 @@ public class CommandLineReader {
 						+ "Can be overwritten by additional command line settings" )
 				.build()
 				);
-
+		
 		cliOptions.addOption( 
 				Option.builder("p")
 				.longOpt("defaultpath")
@@ -64,7 +76,7 @@ public class CommandLineReader {
 				.desc("path to class and json files to be analyzed")
 				.build()
 				);
-
+		
 		cliOptions.addOption( 
 				Option.builder("c")
 				.longOpt("class")
@@ -282,12 +294,29 @@ public class CommandLineReader {
 	public boolean hasSettingsFile(){
 		return cmd.hasOption( "sf" );
 	}
-
+	
     /**
      * @return The path to the settings file provided in the command line arguments.
      */
 	public String getPathToSettingsFile(){
+		if( hasRootPath() ){
+			return getRootPath() + File.separator + cmd.getOptionValue( "sf" );
+		}
 		return cmd.getOptionValue( "sf" );
+	}
+	
+	/**
+	 * @return true if and only if a root path has been provided
+	 */
+	public boolean hasRootPath(){
+		return cmd.hasOption("rp");
+	}
+	
+	/**
+	 * @return The specified root path
+	 */
+	public String getRootPath(){
+		return cmd.getOptionValue("rp");
 	}
 
     /**

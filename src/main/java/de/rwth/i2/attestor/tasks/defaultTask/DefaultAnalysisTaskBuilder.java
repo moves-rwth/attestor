@@ -1,5 +1,9 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
+import java.io.FileNotFoundException;
+
+import org.json.JSONObject;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.main.AnalysisTask;
@@ -10,9 +14,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SSGBuilder;
 import de.rwth.i2.attestor.tasks.GeneralAnalysisTaskBuilder;
 import de.rwth.i2.attestor.util.FileReader;
-import org.json.JSONObject;
-
-import java.io.FileNotFoundException;
 
 /**
  * A simple builder to create an analysis task based on standard hyperedge

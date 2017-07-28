@@ -11,8 +11,7 @@
  * {@link de.rwth.i2.attestor.tasks.defaultTask}
  * and {@link de.rwth.i2.attestor.tasks.indexedTask}.
  *
- * @see {@link de.rwth.i2.attestor.main.AnalysisTask}
- * 
+ * @see de.rwth.i2.attestor.main.AnalysisTask
  * @author Christoph
  *
  */

@@ -8,6 +8,13 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Responsible for computing and caching the rules (lhs &#8594; rhs) in the grammar which resolve a certain
+ * violation point.
+ * 
+ * @author Hannah
+ *
+ */
 public class ViolationPointResolver {
 
 	private Grammar grammar;
@@ -25,7 +32,7 @@ public class ViolationPointResolver {
 	 * @param nonterminal the nonterminal to replace
 	 * @param tentacle the tentacle of the nonterminal at which the selector Label is requested
 	 * @param selectorName the name of the requested selector Label
-	 * @return
+	 * @return the rules in form lhs &#8594; {rhs}
 	 */
 	public Map<Nonterminal, Collection<HeapConfiguration>> getRulesCreatingSelectorFor( 
 			Nonterminal nonterminal, 

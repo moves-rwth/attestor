@@ -1,5 +1,3 @@
-*.html
-
 .metadata
 bin/
 tmp/
@@ -50,6 +48,7 @@ local.properties
 
 # JetBrains
 attestor.iml
+.idea/
 
 # Code Recommenders
 .recommenders/
@@ -59,3 +58,6 @@ attestor.iml
 
 #Log4J
 log4j2.xml
+
+
+attestor/doc/

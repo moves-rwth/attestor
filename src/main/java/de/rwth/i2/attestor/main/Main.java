@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.main;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 
 /**
  * Executes a program analysis with Attestor.

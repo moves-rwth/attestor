@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.indexedGrammars;
 
-import de.rwth.i2.attestor.tasks.GeneralProgramState;
-import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +7,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
+import de.rwth.i2.attestor.tasks.GeneralProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.DebugMode;
 

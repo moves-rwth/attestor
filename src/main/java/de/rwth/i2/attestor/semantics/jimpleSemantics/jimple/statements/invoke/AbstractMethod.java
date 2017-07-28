@@ -1,20 +1,13 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -86,6 +79,9 @@ public class AbstractMethod {
 	 *            the heap at the beginning of the method with all parameters
 	 *            and if applicable this attached as intermediates to the
 	 *            respective elements (i.e. nodes)
+	 * @param scopeDepth 
+	 * 			 The scope depth of the method to apply (necessary to distinguish
+	 * 			 variables with identical name).
 	 * @return all heaps which are in the fixpoint of the method at the terminal
 	 *         states of it.
 	 */

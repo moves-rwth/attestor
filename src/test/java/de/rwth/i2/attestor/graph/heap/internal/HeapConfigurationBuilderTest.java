@@ -1,17 +1,15 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-
-import static org.junit.Assert.*;
 
 public class HeapConfigurationBuilderTest {
 	

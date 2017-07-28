@@ -1,17 +1,18 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
 
-import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
 import de.rwth.i2.attestor.tasks.GeneralProgramState;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 /**
  * Simple implementation of program states for HRG-based analysis.
@@ -55,14 +56,6 @@ public class DefaultState extends GeneralProgramState {
 	protected DefaultState(DefaultState state) {
 		
 		super( state );
-	}
-
-    /**
-     * @return A hash code of this state.
-     */
-	public int hashCode() {
-
-		return heap.hashCode();
 	}
 
 	@Override
@@ -163,6 +156,12 @@ public class DefaultState extends GeneralProgramState {
 		result.scopeDepth = scopeDepth;
 		return result;
 	}
+
+	@Override
+    public int hashCode() {
+
+	    return Objects.hash(heap, programCounter, scopeDepth);
+    }
 
 	@Override
 	public boolean equals(Object other) {

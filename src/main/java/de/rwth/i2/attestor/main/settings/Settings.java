@@ -20,6 +20,7 @@ public class Settings {
 	public static Settings getInstance() {
 		return instance;
 	}
+	
 
     /**
      * Settings regarding input files.
@@ -102,4 +103,10 @@ public class Settings {
 	 * @return The collection of settings specifying the model checking behaviour.
 	 */
 	public ModelCheckingSettings modelChecking() {return mcSettings; }
+
+	public void setRootPath( String rootPath ) {
+		inputSettings.setRootPath( rootPath );
+		outputSettings.setRootPath( rootPath );
+	}
+
 }

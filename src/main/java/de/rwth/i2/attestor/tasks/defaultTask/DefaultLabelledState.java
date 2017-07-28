@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
-import java.util.HashSet;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

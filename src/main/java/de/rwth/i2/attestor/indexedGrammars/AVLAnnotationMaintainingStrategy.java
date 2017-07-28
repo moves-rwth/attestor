@@ -1,16 +1,9 @@
 package de.rwth.i2.attestor.indexedGrammars;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -46,7 +39,7 @@ public class AVLAnnotationMaintainingStrategy implements AnnotationsMaintainingS
 			Set<Integer> visited,
 			Queue<Integer> queue ) {
 		
-		Nonterminal btLabel = GeneralNonterminal.getNonterminal("BT");
+		//Nonterminal btLabel = GeneralNonterminal.getNonterminal("BT");
 
 		TIntArrayList ntEdges = hc.nonterminalEdges();
 		
@@ -56,7 +49,7 @@ public class AVLAnnotationMaintainingStrategy implements AnnotationsMaintainingS
 			
 			int ntEdge = iter.next();
 			IndexedNonterminal nt = (IndexedNonterminal) hc.labelOf(ntEdge);
-			if(nt.label().equals( btLabel )) {
+			if(nt.label().toString().equals( "BT" )) {
 				
 				int sourceNode = hc.attachedNodesOf(ntEdge).get(4);
 				heights.put(sourceNode, nt.stackSize() -1 );//assume stacks of form s*Z if something is linked to null and s*X otherwise

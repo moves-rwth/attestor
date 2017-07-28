@@ -1,18 +1,15 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import static org.junit.Assert.fail;
-
-import org.junit.*;
-import static org.junit.Assert.*;
-
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
+import org.junit.Test;
 
-@Ignore
+import static org.junit.Assert.*;
+
 public class ProofStructureTest extends StateSpace {
 	
 	public ProofStructureTest(){
@@ -333,17 +330,17 @@ public class ProofStructureTest extends StateSpace {
 		state1.addLabel(label1);
 		DefaultLabelledState state2 = new DefaultLabelledState(heapconf2);
 		state2.addLabel(label2);
-		
-		
-		this.addState(initialState);
+
+
 		initialState.setProgramCounter(0);
+		this.addState(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
 		state1.setProgramCounter(1);
+		this.addState(state1);
 		this.addControlFlowSuccessor(initialState, "stmt1", state1);
 		this.addControlFlowSuccessor(state1, "stmt2", state1);
-		this.addState(state2);
 		state2.setProgramCounter(2);
+		this.addState(state2);
 		this.addControlFlowSuccessor(state1, "stmt3", state2);
 		this.addControlFlowSuccessor(state2, "stmt4", initialState);
 		

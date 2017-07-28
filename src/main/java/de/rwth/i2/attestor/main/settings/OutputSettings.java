@@ -268,5 +268,12 @@ public class OutputSettings {
 		}
 		return true;
 	}
+
+	public void setRootPath(String rootPath) {
+		this.folderForBigStates = rootPath + File.separator + this.folderForBigStates;
+		this.folderForGrammar = rootPath + File.separator + this.folderForGrammar;
+		this.folderForStateSpace = rootPath + File.separator + this.folderForStateSpace;
+		this.folderForTerminalStates = rootPath + File.separator + this.folderForTerminalStates;
+	}
 	
 }

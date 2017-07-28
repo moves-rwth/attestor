@@ -1,13 +1,11 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class FakeViolationPointResolverForDefault extends ViolationPointResolver {
 

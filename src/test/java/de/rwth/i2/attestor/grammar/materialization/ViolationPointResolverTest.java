@@ -1,9 +1,8 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.fail;
+
+import org.junit.*;
 
 
 public class ViolationPointResolverTest {

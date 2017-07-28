@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -14,6 +12,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AnalysisTask;
 import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import soot.*;
 import soot.util.Chain;
 
