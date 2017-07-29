@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.grammar.canoncalization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +150,31 @@ public class EmbeddingStackCheckerTest {
 		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
 		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
 					  res.getInstantiatedLhs() );
+	}
+
+	@Test
+	public void testIncompatibleInstantiation() {
+		List<StackSymbol> somePrefix = getStackPrefix();
+		
+		List<StackSymbol> toMatch1 = makeConcrete( somePrefix );
+		List<StackSymbol> toMatch2 = makeOtherConcrete(somePrefix);
+		List<StackSymbol> reference = makeAbstract(somePrefix);
+		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
+		
+		List<StackSymbol> matching = makeInstantiable(somePrefix);
+		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		
+		try {
+			checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+			fail("Expected CannotMatchException");
+		} catch (CannotMatchException e) {
+			// expected
+		}
+		
+		
 	}
 
 
