@@ -72,6 +72,11 @@ public class EmbeddingStackChecker {
 		}
 
 		toAbstract = applyMaterializationsTo(toAbstract, materializations);
+		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
+			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
+			lhs = iLhs.getWithProlongedStack(instantiation);
+		}
+		
 
 		return new StackEmbeddingResult( toAbstract, lhs );
 	}
