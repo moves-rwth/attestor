@@ -128,7 +128,7 @@ public class EmbeddingStackChecker {
 	
 	private void updateInstantiation(List<StackSymbol> instantiation, List<StackSymbol> necessaryInstantiation) throws CannotMatchException {
 		
-		if( ! instantiation.isEmpty() && ! instantiation.equals(necessaryInstantiation) ) {
+		if( ! instantiation.isEmpty() && ! instantiation.equals( necessaryInstantiation ) ) {
 			throw new CannotMatchException();
 		}
 		else instantiation.addAll( necessaryInstantiation );

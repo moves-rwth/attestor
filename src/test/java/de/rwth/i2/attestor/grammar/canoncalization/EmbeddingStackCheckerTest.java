@@ -176,7 +176,7 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 	@Test
-	public void testTwoIdenticalInstantiations() {
+	public void testTwoIdenticalInstantiations() throws CannotMatchException {
 		List<StackSymbol> somePrefix = getStackPrefix();
 		
 		List<StackSymbol> toMatch1 = makeConcrete( somePrefix );
@@ -190,12 +190,14 @@ public class EmbeddingStackCheckerTest {
 		
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
-		try {
-			checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
-			fail("Expected CannotMatchException");
-		} catch (CannotMatchException e) {
-			// expected
-		}
+		
+		StackEmbeddingResult res = checker.getStackEmbeddingResult(toAbstract, embedding, lhs);
+		
+		assertEquals( toAbstract, 
+					  res.getMaterializedToAbstract() );
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+					  res.getInstantiatedLhs() );
+		
 	}
 	
 	@Test
