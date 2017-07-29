@@ -62,6 +62,7 @@ public class EmbeddingStackChecker {
 
 					if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
 						updateMaterializations( materializations, materializationRule );
+						updateInstantiation( instantiation, materializationRule );
 					}
 					if( stackMatcher.needsInstantiation(materializable, instantiable) ) {
 						updateInstantiation( instantiation, stackMatcher.getNecessaryInstantiation(materializable, instantiable) );
@@ -117,9 +118,17 @@ public class EmbeddingStackChecker {
 
 	}
 	
+	private void updateInstantiation( List<StackSymbol> instantiation,
+			Pair<AbstractStackSymbol, List<StackSymbol>> newMaterializationRule ) {
+		
+		if( !instantiation.isEmpty() ) {
+			materializeIn( instantiation, newMaterializationRule.first(), newMaterializationRule.second() );
+		}
+	}
+	
 	private void updateInstantiation(List<StackSymbol> instantiation, List<StackSymbol> necessaryInstantiation) throws CannotMatchException {
 		
-		if( ! instantiation.isEmpty() ) {
+		if( ! instantiation.isEmpty() && ! instantiation.equals(necessaryInstantiation) ) {
 			throw new CannotMatchException();
 		}
 		else instantiation.addAll( necessaryInstantiation );

@@ -173,8 +173,52 @@ public class EmbeddingStackCheckerTest {
 		} catch (CannotMatchException e) {
 			// expected
 		}
+	}
+	
+	@Test
+	public void testTwoIdenticalInstantiations() {
+		List<StackSymbol> somePrefix = getStackPrefix();
 		
+		List<StackSymbol> toMatch1 = makeConcrete( somePrefix );
+		List<StackSymbol> toMatch2 = makeConcrete(somePrefix);
+		List<StackSymbol> reference = makeAbstract(somePrefix);
+		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
 		
+		List<StackSymbol> matching = makeInstantiable(somePrefix);
+		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		
+		try {
+			checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+			fail("Expected CannotMatchException");
+		} catch (CannotMatchException e) {
+			// expected
+		}
+	}
+	
+	@Test
+	public void testMixedInstantiationAndMaterialization() throws CannotMatchException {
+		List<StackSymbol> somePrefix = getStackPrefix();
+		
+		List<StackSymbol> toMatch = makeAbstract(somePrefix);
+		List<StackSymbol> reference = toMatch;
+		HeapConfiguration toAbstract = getInputWithStacks(toMatch, toMatch, reference, reference);
+		
+		List<StackSymbol> matching1 = makeInstantiable(somePrefix);
+		List<StackSymbol> matching2 = makeConcrete(somePrefix);
+		HeapConfiguration pattern = getPatternWithStacks( matching1, matching2 );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable( new ArrayList<>() ));
+		
+		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
+		
+		StackEmbeddingResult res = checker.getStackEmbeddingResult(toAbstract, embedding, lhs);
+		
+		assertEquals( getInputWithStacks(matching2, matching2, matching2, matching2), 
+					  res.getMaterializedToAbstract() );
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+					  res.getInstantiatedLhs() );
 	}
 
 
