@@ -133,6 +133,42 @@ public class EmbeddingStackCheckerTest {
 		assertEquals( getMatchingNonterminalWithStack(concreteStack1), res.getInstantiatedLhs() );
 	}
 	
+	/**
+	 * Input: X -- s()<br>
+	 *        X -- ss()
+	 *        
+	 * -> should fail!
+	 */
+	@Test
+	public void testIncopatibleMaterialization() {
+		List<StackSymbol> somePrefix = getStackPrefix();
+		List<StackSymbol> longerPrefix = getLongerStackPrefix( somePrefix );
+		
+		List<StackSymbol> toMatch1 = makeAbstract( getEmptyStack() );
+		List<StackSymbol> toMatch2 = makeAbstract( getEmptyStack() );
+		List<StackSymbol> reference1 = makeAbstract( getEmptyStack() );
+		List<StackSymbol> reference2 = makeOtherAbstract( getEmptyStack() );
+		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
+															reference1, reference2 );
+		
+		List<StackSymbol> instantiable1 = makeInstantiable( somePrefix );
+		List<StackSymbol> instantiable2 = makeInstantiable( longerPrefix );
+		HeapConfiguration pattern = getPatternWithStacks( instantiable1, instantiable2 );
+		Nonterminal lhs = getMatchingNonterminalWithStack( instantiable1 );
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		
+		try {
+			StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+			fail("Expected CannotMatchException");
+		} catch (CannotMatchException e) {
+			//expected
+		}
+		
+		
+	}
+
+
+
 	@Test
 	public void testInstantiation() throws CannotMatchException{
 		List<StackSymbol> somePrefix = getStackPrefix();
@@ -142,13 +178,13 @@ public class EmbeddingStackCheckerTest {
 		
 		List<StackSymbol> matching = makeInstantiable( somePrefix );
 		HeapConfiguration pattern = getInputWithStack( matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
 					  res.getInstantiatedLhs() );
 	}
 
@@ -163,7 +199,7 @@ public class EmbeddingStackCheckerTest {
 		
 		List<StackSymbol> matching = makeInstantiable(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
@@ -186,7 +222,7 @@ public class EmbeddingStackCheckerTest {
 		
 		List<StackSymbol> matching = makeInstantiable(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(new ArrayList<>()) );
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
@@ -195,7 +231,7 @@ public class EmbeddingStackCheckerTest {
 		
 		assertEquals( toAbstract, 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
 					  res.getInstantiatedLhs() );
 		
 	}
@@ -211,7 +247,7 @@ public class EmbeddingStackCheckerTest {
 		List<StackSymbol> matching1 = makeInstantiable(somePrefix);
 		List<StackSymbol> matching2 = makeConcrete(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching1, matching2 );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable( new ArrayList<>() ));
+		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable( getEmptyStack() ));
 		
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
@@ -219,14 +255,18 @@ public class EmbeddingStackCheckerTest {
 		
 		assertEquals( getInputWithStacks(matching2, matching2, matching2, matching2), 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( new ArrayList<>())),
+		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
 					  res.getInstantiatedLhs() );
 	}
 
+	
+	private ArrayList<StackSymbol> getEmptyStack() {
+		return new ArrayList<>();
+	}
 
 	private List<StackSymbol> getStackPrefix() {
 		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
-		ArrayList<StackSymbol> prefix = new ArrayList<>();
+		ArrayList<StackSymbol> prefix = getEmptyStack();
 		prefix.add( s );
 		prefix.add( s );
 		return prefix;
@@ -236,10 +276,15 @@ public class EmbeddingStackCheckerTest {
 		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
 		StackSymbol other = ConcreteStackSymbol.getStackSymbol("other", false);
 		
-		ArrayList<StackSymbol> prefix = new ArrayList<>();
+		ArrayList<StackSymbol> prefix = getEmptyStack();
 		prefix.add( s );
 		prefix.add( other );
 		return prefix;
+	}
+	
+	private List<StackSymbol> getLongerStackPrefix(List<StackSymbol> prefix) {
+		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		return addSymbol( prefix, s );
 	}
 	
 	private List<StackSymbol> makeConcrete( List<StackSymbol> prefix ) {
@@ -308,7 +353,7 @@ public class EmbeddingStackCheckerTest {
 	}
 
 	private List<StackSymbol> getStackWithStackVariable() {
-		List<StackSymbol> stack = new ArrayList<>();
+		List<StackSymbol> stack = getEmptyStack();
 		stack.add( StackVariable.getGlobalInstance() );
 		return stack;
 	}

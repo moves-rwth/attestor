@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -92,17 +92,26 @@ public class StackMatcherTest {
 		assertThat( stackMatcher.getNecessaryInstantiation(materializableNonterminal, nt2),
 				      contains( ABSTRACT_STACK_SYMBOL));
 	}
+	
 
 	private IndexedNonterminal createMaterializableNonterminal() {
-		List<StackSymbol> stack = new ArrayList<>();
-		stack.add(s);
+		List<StackSymbol> stack = getStackPrefix();
+		return createMaterializableNonterminal(stack);
+	}
+
+	private IndexedNonterminal createMaterializableNonterminal(List<StackSymbol> stack) {
 		stack.add( ABSTRACT_STACK_SYMBOL );
 		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
 	}
 
-	private IndexedNonterminal createInstantiableNonterminal() {
+	private List<StackSymbol> getStackPrefix() {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
+		return stack;
+	}
+
+	private IndexedNonterminal createInstantiableNonterminal() {
+		List<StackSymbol> stack = getStackPrefix();
 		stack.add(a);
 		stack.add( StackVariable.getGlobalInstance() );
 		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
@@ -110,8 +119,7 @@ public class StackMatcherTest {
 
 	private IndexedNonterminal createConcreteNonterminal() {
 			
-		List<StackSymbol> stack = new ArrayList<>();
-		stack.add(s);
+		List<StackSymbol> stack = getStackPrefix();
 		stack.add(a);
 		stack.add(s);
 		stack.add(bottom);
