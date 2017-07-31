@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
@@ -208,6 +209,7 @@ public class Attestor {
 			loadRefinementAutomaton();
 			loadStateLabelingAutomaton();
 		} catch (FileNotFoundException e) {
+			logger.error("Automaton file could not be found.");
 			return false;
 		}
 
@@ -227,6 +229,9 @@ public class Attestor {
 
 	private void loadRefinementAutomaton() throws FileNotFoundException {
 
+		if(settings.input().getRefinementName() == null) {
+			return;
+		}
 		String file = settings.input().getPathToStateLabeling()
 				+ File.separator
 				+ settings.input().getRefinementName();
@@ -238,6 +243,10 @@ public class Attestor {
 	}
 
 	private void loadStateLabelingAutomaton() throws FileNotFoundException {
+
+		if(settings.input().getStateLabelingName() == null)	{
+			return;
+		}
 
 		String file = settings.input().getPathToStateLabeling()
 				+ File.separator
@@ -253,10 +262,24 @@ public class Attestor {
 
         logger.log(PHASE, "Preprocessing...");
 
-		// refine grammar now.
+		if(settings.automata().isStateLabelingEnabled()) {
+			HeapAutomaton stateLabelingAutomaton = settings.automata().getStateLabelingAutomaton();
+			settings.grammar().setGrammar(
+					stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
+			);
 
-        // refine input
-        taskBuilder.setInput(inputHeapConfiguration);
+			/**
+			 * TODO setup initial states and state labeling strategy.
+			 */
+		} else {
+			taskBuilder.setInput(inputHeapConfiguration);
+		}
+
+		if(settings.automata().isRefinementEnabled()) {
+			/**
+			 * TODO If refinement is enabled we have to modify the refinement strategy at some point...
+			 */
+		}
 
 		return true;
 	}

@@ -62,22 +62,6 @@ public class OptionSettings {
 	 */
 	private boolean indexedMode = false;
 
-	/**
-	 * Enabling this option means that heap automata shall be used to refine heap configurations prior to
-	 * canonicalization
-	 */
-	private boolean heapAutomataRefinement = false;
-
-	/**
-	 * Enabling this options means that heap automata shall be used to label states during state space generation.
-	 */
-	private boolean heapAutomataLabeling = false;
-
-	/**
-	 * Enabling this option leads to using a program analysis that applies heap automata additionally to
-     * hyperedge replacement grammars.
-	 */
-	private boolean heapAutomataMode = false;
 
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
@@ -202,32 +186,10 @@ public class OptionSettings {
 		this.indexedMode = indexedMode;
 	}
 
-    /**
-     * @return True if and only if a program analysis should use heap automata for refinement.
-     */
-    public boolean isHeapAutomataMode() {
-        return heapAutomataMode;
+    public boolean isApplyingHeapAutomata() {
+
+    	return Settings.getInstance().automata().getRefinementAutomaton() != null
+				|| Settings.getInstance().automata().getStateLabelingAutomaton() != null;
     }
 
-    public void setHeapAutomataMode(boolean heapAutomataMode) {
-        this.heapAutomataMode = heapAutomataMode;
-    }
-
-    public boolean isHeapAutomataRefinement() {
-        return this.heapAutomataRefinement;
-    }
-
-    public void setHeapAutomataRefinement(boolean heapAutomataRefinement) {
-        this.heapAutomataRefinement = heapAutomataRefinement;
-    }
-
-    public boolean isHeapAutomataLabeling() {
-        return this.heapAutomataLabeling;
-    }
-
-    public void setHeapAutomataLabeling(boolean heapAutomataLabeling) {
-        this.heapAutomataLabeling = heapAutomataLabeling;
-    }
-
-	
 }

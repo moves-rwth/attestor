@@ -12,9 +12,19 @@ public class HeapAutomataSettings {
         return refinementAutomaton;
     }
 
+    public boolean isRefinementEnabled() {
+
+        return refinementAutomaton != null;
+    }
+
     public HeapAutomaton getStateLabelingAutomaton() {
 
         return stateLabelingAutomaton;
+    }
+
+    public boolean isStateLabelingEnabled() {
+
+        return stateLabelingAutomaton != null;
     }
 
     public void setRefinementAutomaton(HeapAutomaton automaton) {
