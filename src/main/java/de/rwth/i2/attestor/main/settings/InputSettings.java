@@ -44,6 +44,26 @@ public class InputSettings {
      */
 	private String inputName;
 
+	/**
+	 * The path to the file specifying refinement of program states.
+	 */
+	private String pathToRefinement;
+
+	/**
+	 * The name of the file specifying refinement of program states.
+	 */
+	private String refinementName;
+
+	/**
+	 * The path to the file specifying the state space labeling.
+	 */
+	private String pathToStateLabeling;
+
+	/**
+	 * The name of the file specifiyng the state space labeling.
+	 */
+	private String stateLabelingName;
+
     /**
      * Sets the default path to search for all possible input files.
      * @param path The default path.
@@ -52,6 +72,8 @@ public class InputSettings {
 		classpath = path;
 		pathToGrammar = path;
 		pathToInput = path;
+		pathToStateLabeling = path;
+		pathToRefinement = path;
 	}
 
     /**
@@ -145,7 +167,73 @@ public class InputSettings {
 		return pathToInput + File.separator + inputName;
 	}
 
-    /**
+	/**
+	 * @param pathToStateLabeling The path to the file specifying the state space labeling.
+	 */
+	public void setPathToStateLabeling(String pathToStateLabeling) {
+
+		this.pathToStateLabeling = pathToStateLabeling;
+	}
+
+	/**
+	 * @return The path to the file specifying the state space labeling.
+	 */
+	public String getPathToStateLabeling() {
+
+		return this.pathToStateLabeling;
+	}
+
+	/**
+	 * @param pathToRefinement The path to the file specifying state refinement.
+	 */
+	public void setPathToRefinement(String pathToRefinement) {
+
+		this.pathToRefinement = pathToRefinement;
+	}
+
+	/**
+	 * @return The path to the file specifying state refinement.
+	 */
+	public String getPathToRefinement() {
+
+		return this.pathToRefinement;
+	}
+
+	/**
+	 * @param refinementName The name of the file specifying state refinement.
+	 */
+	public void setRefinementName(String refinementName) {
+
+		this.refinementName = refinementName;
+	}
+
+	/**
+	 * @return The name of the file specifying state refinement.
+	 */
+	public String getRefinementName() {
+
+		return this.refinementName;
+	}
+
+	/**
+	 * @param stateLabelingName The name of the file specifying the state space labeling.
+	 */
+	public void setStateLabelingName(String stateLabelingName) {
+
+		this.stateLabelingName = stateLabelingName;
+	}
+
+	/**
+	 * @return The name of the file specifying the state space labeling.
+	 */
+	public String getStateLabelingName() {
+
+		return this.stateLabelingName;
+	}
+
+
+
+	/**
      * @return Checks whether all paths and file names, i.e. grammar, class, classpath, method, and initial state,
      *         have been set.
      */
@@ -158,7 +246,9 @@ public class InputSettings {
 	public void setRootPath(String rootPath) {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
-		this.pathToInput = rootPath + File.separator + this.pathToInput;	
+		this.pathToInput = rootPath + File.separator + this.pathToInput;
+		this.pathToStateLabeling = rootPath + File.separator + this.stateLabelingName;
+		this.pathToRefinement = rootPath + File.separator + this.pathToRefinement;
 	}
 	
 

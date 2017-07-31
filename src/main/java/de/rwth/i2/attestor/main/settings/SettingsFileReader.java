@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
+import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.util.DebugMode;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
 
 /**
  * Populates {@link Settings} from a settings file.
@@ -96,7 +95,27 @@ public class SettingsFileReader {
 			logger.error("You must define a default path or a path for the initial state");
 		}
 		input.setInputName( initialSettings.getString( "file" ) );
-		
+
+		if(jsonInput.has("stateLabeling")) {
+            JSONObject stateLabelingSettings = jsonInput.getJSONObject("stateLabeling");
+            if (stateLabelingSettings.has("path")) {
+                input.setPathToStateLabeling(stateLabelingSettings.getString("path"));
+            } else if (!jsonInput.has("defaultPath")) {
+                logger.error("You must define a default path or a path for the initial state");
+            }
+            input.setStateLabelingName(stateLabelingSettings.getString("file"));
+        }
+
+        if(jsonInput.has("refinement")) {
+            JSONObject stateLabelingSettings = jsonInput.getJSONObject("refinement");
+            if (stateLabelingSettings.has("path")) {
+                input.setPathToStateLabeling(stateLabelingSettings.getString("path"));
+            } else if (!jsonInput.has("defaultPath")) {
+                logger.error("You must define a default path or a path for the initial state");
+            }
+            input.setStateLabelingName(stateLabelingSettings.getString("file"));
+        }
+
 		return input;
 	}
 
