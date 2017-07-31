@@ -20,6 +20,7 @@ public class Settings {
 	public static Settings getInstance() {
 		return instance;
 	}
+	
 
     /**
      * Settings regarding input files.
@@ -103,5 +104,10 @@ public class Settings {
      */
 	public GrammarSettings grammar() {
 	    return grammarSettings;
+	}
+
+	public void setRootPath( String rootPath ) {
+		inputSettings.setRootPath( rootPath );
+		outputSettings.setRootPath( rootPath );
 	}
 }

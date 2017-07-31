@@ -1,25 +1,24 @@
 package de.rwth.i2.attestor.abstraction;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Set;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class CanonicalizationStrategyTest {

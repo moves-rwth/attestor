@@ -1,21 +1,20 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.assertEquals;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class GraphMaterializerTest {
 	

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Compares lists that are interpreted as multi-sets.

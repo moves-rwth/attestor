@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.assertEquals;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -15,11 +13,13 @@ import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class StackMaterializerTest {
 
@@ -106,7 +106,7 @@ public class StackMaterializerTest {
 	 * We assume that there might be independent stacks (i.e. using different abstract symbols).
 	 * The stack materializer should only materialize those with the given symbol.
 	 * Any other stacks (including concrete ones should simply be ignored)
-	 * @throws CannotMaterializeException
+	 * @throws CannotMaterializeException is not expected and thus indicates an error.
 	 */
 	@Test
 	public void test_ConcreteStack_NonEmptyMaterialiation_ExpectNoException() throws CannotMaterializeException{

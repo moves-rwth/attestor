@@ -100,7 +100,8 @@ public class Field implements SettableValue {
 	 * expected type for the field.
 	 * @param executable the heap on which the assignment is performed
 	 * @param concreteTarget the value that is assigned to the heap
-	 * @throws NullPointerDereferenceException 
+	 * @throws NullPointerDereferenceException if the evaluation of the originValue 
+	 * results in a null pointer dereferenciation
 	 */
 	@Override
 	public void setValue( JimpleExecutable executable, ConcreteValue concreteTarget )

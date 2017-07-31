@@ -15,9 +15,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
 import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;

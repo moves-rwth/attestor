@@ -12,7 +12,7 @@
  *
  * The general algorithm to search and generate graph morphisms implemented in this package is the well-known
  * VF2 Algorithm. Details are found in the paper
- * @see <a href="http://dblp.uni-trier.de/rec/html/journals/pami/CordellaFSV04">Cordella et al.</a>
+ * @see <a href="http://dblp.uni-trier.de/rec/html/journals/pami/CordellaFSV04"> Cordella et al.</a>
  *
  * A key feature of the version of VF2 in this package is that it is highly modifiable through
  * so-called feasibility functions. Their interface is given by

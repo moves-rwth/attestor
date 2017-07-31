@@ -2,16 +2,15 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import static org.junit.Assert.assertTrue;
 
-
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;

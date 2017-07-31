@@ -3,12 +3,20 @@ package de.rwth.i2.attestor.grammar.materialization;
 import java.util.Collection;
 
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Applies the rules in a {@link GrammarResponse} to a
+ * graph.
+ * 
+ * @author Hannah
+ *
+ */
 public interface GrammarResponseApplier {
 
 	/**
-	 * materializes the given edge in the inputGraph with each rule in the
+	 * Materializes the given edge in the inputGraph with each rule in the
 	 * grammarResponse yielding a collection of materialized graphs.
 	 * 
 	 * @param inputGraph the graph which will be materialized

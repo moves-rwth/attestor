@@ -5,8 +5,7 @@ import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -17,6 +16,7 @@ import gnu.trove.iterator.TIntIterator;
 
 /**
  * Determines concrete violation points and resolves them.
+ * <br>
  * The class itself is oblivious of the used grammars and 
  * materializationMechanisms, i.e. it doesn't know whether 
  * only nonterminal edges are replaced by graphs or if 

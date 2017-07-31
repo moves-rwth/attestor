@@ -1,10 +1,5 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
@@ -14,6 +9,11 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class DefaultMaterializationRuleManagerTest {
 

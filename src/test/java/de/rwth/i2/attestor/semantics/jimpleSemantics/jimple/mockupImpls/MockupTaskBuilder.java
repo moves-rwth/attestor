@@ -1,13 +1,13 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
+import java.io.FileNotFoundException;
+
 import de.rwth.i2.attestor.main.AnalysisTask;
 import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.tasks.GeneralAnalysisTaskBuilder;
-
-import java.io.FileNotFoundException;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 
 /**
  * Simple builder class to create MockupTasks for testing.

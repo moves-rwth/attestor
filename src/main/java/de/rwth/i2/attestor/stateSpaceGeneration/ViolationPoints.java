@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A set of violation points.

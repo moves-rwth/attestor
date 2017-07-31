@@ -1,6 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
@@ -14,17 +19,12 @@ import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 public class InvokeStmtTest_WithEffect {
 	

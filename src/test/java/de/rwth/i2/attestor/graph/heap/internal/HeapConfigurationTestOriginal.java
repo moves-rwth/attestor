@@ -8,9 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
 import gnu.trove.list.array.TIntArrayList;
 

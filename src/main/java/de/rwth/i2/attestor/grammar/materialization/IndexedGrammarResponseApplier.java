@@ -9,6 +9,13 @@ import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 
+/**
+ * Capable of handling {@link MaterializationAndRuleResponse}
+ * in addition to all {@link GrammarResponse}s handled by {@link DefaultGrammarResponseApplier}
+ * 
+ * @author Hannah
+ *
+ */
 public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier {
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );

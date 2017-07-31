@@ -6,34 +6,17 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import soot.Unit;
-import soot.jimple.InstanceFieldRef;
-import soot.util.Chain;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.GotoStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IdentityStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.DebugMode;
+import soot.Unit;
+import soot.jimple.InstanceFieldRef;
+import soot.util.Chain;
 
 /**
  * Translator for all standard statements/values which operate on JimpleExecutables.

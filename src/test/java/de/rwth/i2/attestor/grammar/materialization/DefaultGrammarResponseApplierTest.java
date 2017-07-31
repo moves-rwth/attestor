@@ -1,31 +1,34 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.TypeFactory;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import java.util.*;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.*;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.SingleElementUtil;
-import gnu.trove.list.array.TIntArrayList;
-import sun.java2d.loops.FillRect.General;
 
 public class DefaultGrammarResponseApplierTest {
 

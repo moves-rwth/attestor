@@ -8,10 +8,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.graph.heap.*;
-import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
-import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
-import de.rwth.i2.attestor.graph.heap.matching.MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.graph.heap.matching.*;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
@@ -77,8 +74,8 @@ import gnu.trove.map.hash.TIntIntHashMap;
  *     All methods provided by {@link HeapConfiguration} always take public identifiers as parameters and return
  *     public identifiers.
  * </li>
- * <p>Hence, as long as a client uses only methods provided by HeapConfiguration, all identifiers are public.</p>
  * </ul>
+ * <p> Hence, as long as a client uses only methods provided by HeapConfiguration, all identifiers are public.</p>
  * <p>InternalHeapConfiguration provides the methods {@link InternalHeapConfiguration#getPrivateId(int)}
  *    and {@link InternalHeapConfiguration#getPublicId(int)}
  *    to translate a public identifier into a private identifier and a private identifier into a public identifier,

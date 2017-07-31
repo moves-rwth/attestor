@@ -3,10 +3,15 @@ package de.rwth.i2.attestor.grammar.materialization;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
+/**
+ * Applies the rules in a {@link DefaultGrammarResponse} to a graph
+ * 
+ * @author Hannah
+ *
+ */
 public class DefaultGrammarResponseApplier implements GrammarResponseApplier {
 	
 	GraphMaterializer graphMaterializer;
@@ -15,7 +20,9 @@ public class DefaultGrammarResponseApplier implements GrammarResponseApplier {
 		 this.graphMaterializer = graphMaterializer;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @throws WrongResponseTypeException if the grammarResponse is not instanceof 
+	 * {@link DefaultGrammarResponse}.
 	 * @see de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier#applyGrammarResponseTo(de.rwth.i2.attestor.graph.heap.HeapConfiguration, int, de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse)
 	 */
 	@Override

@@ -180,6 +180,9 @@ public class Attestor {
 		commandLineReader.getInputSettings(  settings );
 		commandLineReader.getOptionSettings( settings );
 		commandLineReader.getOutputSettings( settings );
+		if( commandLineReader.hasRootPath() ){
+			settings.setRootPath( commandLineReader.getRootPath() );
+		}
 
 		settings.grammar().loadGrammar( settings.input().getGrammarLocation() );
 

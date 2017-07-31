@@ -1,23 +1,25 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AnalysisTask;
 import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
-import soot.*;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Unit;
 import soot.util.Chain;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import static org.junit.Assert.*;
 
 public class testDefaultTask{
 	//private static final Logger logger = LogManager.getLogger( "testDefaultTask" );

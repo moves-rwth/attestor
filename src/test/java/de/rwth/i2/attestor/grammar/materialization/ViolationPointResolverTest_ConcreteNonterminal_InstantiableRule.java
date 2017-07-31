@@ -4,6 +4,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+
+import org.junit.Test;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -24,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 

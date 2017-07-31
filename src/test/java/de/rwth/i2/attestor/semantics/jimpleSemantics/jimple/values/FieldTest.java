@@ -6,10 +6,12 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.tasks.defaultTask.*;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;

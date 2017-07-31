@@ -5,23 +5,7 @@ import java.util.HashSet;
 import com.google.common.collect.HashBiMap;
 
 import de.rwth.i2.attestor.generated.analysis.AnalysisAdapter;
-import de.rwth.i2.attestor.generated.node.AAndStateform;
-import de.rwth.i2.attestor.generated.node.AAtomicpropTerm;
-import de.rwth.i2.attestor.generated.node.AFalseTerm;
-import de.rwth.i2.attestor.generated.node.ANegStateform;
-import de.rwth.i2.attestor.generated.node.ANextLtlform;
-import de.rwth.i2.attestor.generated.node.AOrStateform;
-import de.rwth.i2.attestor.generated.node.AReleaseLtlform;
-import de.rwth.i2.attestor.generated.node.AStateformLtlform;
-import de.rwth.i2.attestor.generated.node.ATermLtlform;
-import de.rwth.i2.attestor.generated.node.ATrueTerm;
-import de.rwth.i2.attestor.generated.node.AUntilLtlform;
-import de.rwth.i2.attestor.generated.node.Node;
-import de.rwth.i2.attestor.generated.node.PLtlform;
-import de.rwth.i2.attestor.generated.node.PStateform;
-import de.rwth.i2.attestor.generated.node.PTerm;
-import de.rwth.i2.attestor.generated.node.Start;
-import de.rwth.i2.attestor.generated.node.TNext;
+import de.rwth.i2.attestor.generated.node.*;
 
 /**
  * This class implements the tableau rules for the model checking.

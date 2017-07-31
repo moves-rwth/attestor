@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
+
+import java.util.*;
+
+import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -24,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 

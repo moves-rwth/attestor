@@ -115,6 +115,10 @@ public class StateSpace {
      */
 	protected int addState( ProgramState state ){
 
+		if(states.contains(state)) {
+			return states.indexOf(state);
+		}
+
 		int result = states.size();		
 		states.add( state );
 	

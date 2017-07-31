@@ -3,7 +3,8 @@ package de.rwth.i2.attestor.indexedGrammars;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
 import de.rwth.i2.attestor.types.Type;

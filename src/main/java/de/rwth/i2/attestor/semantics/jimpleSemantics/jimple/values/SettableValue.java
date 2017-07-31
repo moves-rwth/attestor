@@ -19,6 +19,11 @@ public interface SettableValue extends Value {
 	 * Sets a value to a given value that is evaluated in a given executable.
 	 * @param executable The executable used to evaluate the given value.
 	 * @param concreteRHS The value this value should be set to.
+	 * 
+	 * @throws NotSufficientlyMaterializedException if the evaluation of originValue
+	 * tries to access an abstracted selector
+	 * @throws NullPointerDereferenceException if the evaluation of originValue
+	 * results in a null pointer derefereniation
 	 */
 	void setValue(JimpleExecutable executable, ConcreteValue concreteRHS)
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException;

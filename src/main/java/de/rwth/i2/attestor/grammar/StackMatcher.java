@@ -39,9 +39,9 @@ public class StackMatcher {
 
 	/**
 	 * Determines whether the materializableNonterminal has to be materialized to achieve equal stacks
-	 * @param materializableNonterminal
-	 * @param instantiableNonterminal
-	 * @return
+	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
+	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
+	 * @return true, if the materialization is non-empty
 	 */
 	public boolean needsMaterialization(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
@@ -59,9 +59,9 @@ public class StackMatcher {
 	/**
 	 * The sequence of symbols with which to replace the abstract stack symbol at the end
 	 * of the stack of the materializableNonterminal in order to achieve equal stacks
-	 * @param materializableNonterminal
-	 * @param instantiableNonterminal
-	 * @return
+	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
+	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
+	 * @return a list of stack symbols
 	 */
 	private List<StackSymbol> getNecessaryMaterialization(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
@@ -89,9 +89,9 @@ public class StackMatcher {
 	/**
 	 * Determines whether the materializableNonterminal has to be instantiated to achieve equal stacks
 	 * (can be false for concrete stacks)
-	 * @param materializableNonterminal
-	 * @param instantiableNonterminal
-	 * @return
+	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
+	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
+	 * @return true, if the instantiationSequence is non-empty
 	 */
 	public boolean needsInstantiation(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
@@ -108,9 +108,9 @@ public class StackMatcher {
 	/**
 	  The sequence of symbols with which to replace the stack variable at the end
 	 * of the stack of the instantiableNonterminal in order to achieve equal stacks
-	 * @param materializableNonterminal
-	 * @param instantiableNonterminal
-	 * @return
+	 * @param materializableNonterminal the nonterminal in the graph that shall be replaced
+	 * @param instantiableNonterminal the nonterminal representing the lhs in the grammar
+	 * @return The list of stack symbols 
 	 */
 	public List<StackSymbol> getNecessaryInstantiation(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal ) {

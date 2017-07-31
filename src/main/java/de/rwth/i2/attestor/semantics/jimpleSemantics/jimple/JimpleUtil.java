@@ -3,13 +3,10 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
 import java.util.Set;
 
-import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
 /**

@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import soot.Scene;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import soot.Scene;
 
 /**
  * Takes care of the necessary soot initialisations for parsing.

@@ -282,14 +282,16 @@ public class ProofStructureTest extends StateSpace {
 		
 		
 		this.addState(initialState);
+
 		initialState.setProgramCounter(0);
+		this.addState(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
 		state1.setProgramCounter(1);
+		this.addState(state1);
 		this.addControlFlowSuccessor(initialState, "stmt1", state1);
 		this.addControlFlowSuccessor(state1, "stmt2", state1);
-		this.addState(state2);
 		state2.setProgramCounter(2);
+		this.addState(state2);
 		this.addControlFlowSuccessor(state1, "stmt3", state2);
 		this.addControlFlowSuccessor(state2, "stmt4", initialState);
 		
