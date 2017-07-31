@@ -8,6 +8,9 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of most common functionality to create and customize an
  * {@link AnalysisTaskBuilder}.
@@ -17,10 +20,10 @@ import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
 public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder {
 
     /**
-     * The initial heap configuration that -- together with the initial program location --
-     * determines the initial state of the heap configuration.
+     * The initial heap configurations that -- together with the initial program location --
+     * determine the initial states.
      */
-    protected HeapConfiguration input = null;
+    protected List<HeapConfiguration> inputs = null;
 
     /**
      * The program that should be analyzed.
@@ -58,12 +61,20 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
     private StateLabelingStrategy stateLabelingStrategy = null;
 
     protected GeneralAnalysisTaskBuilder() {
-
+        this.inputs = new ArrayList<>();
     }
 
     @Override
     public AnalysisTaskBuilder setInput(HeapConfiguration input) {
-        this.input = input;
+        this.inputs.clear();
+        this.inputs.add(input);
+        return this;
+    }
+
+    @Override
+    public AnalysisTaskBuilder setInputs(List<HeapConfiguration> inputs) {
+        this.inputs.clear();
+        this.inputs.addAll(inputs);
         return this;
     }
 
@@ -110,38 +121,41 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
     }
 
     /**
-     * Determines the initial program state.
-     * @return The initial program state.
+     * Determines the initial program states.
+     * @return The initial program states.
      */
-    protected abstract ProgramState setupInitialState();
+    protected abstract List<ProgramState> setupInitialStates();
 
     /**
      * @return A state space generator builder with a common default configuration.
      */
     protected SSGBuilder setupStateSpaceGeneratorBuilder() {
 
-        return StateSpaceGenerator.builder()
-                .setAbortStrategy(
-                        getAppliedAbortStrategy()
-                )
-                .setCanonizationStrategy(
-                        getAppliedCanonizationStrategy()
-                )
-                .setInclusionStrategy(
-                        getAppliedInclusionStrategy()
-                )
-                .setMaterializationStrategy(
-                        getAppliedMaterializationStrategy()
-                )
-                .setStateLabelingStrategy(
-                        getAppliedStateLabelingStrategy()
-                )
-                .setProgram(
-                        program
-                )
-                .addInitialState(
-                        setupInitialState()
-                );
+        SSGBuilder builder = StateSpaceGenerator.builder()
+            .setAbortStrategy(
+                getAppliedAbortStrategy()
+            )
+            .setCanonizationStrategy(
+                getAppliedCanonizationStrategy()
+            )
+            .setInclusionStrategy(
+                getAppliedInclusionStrategy()
+            )
+            .setMaterializationStrategy(
+                getAppliedMaterializationStrategy()
+            )
+            .setStateLabelingStrategy(
+                getAppliedStateLabelingStrategy()
+            )
+            .setProgram(
+                program
+            );
+
+        for(ProgramState state : setupInitialStates()) {
+            builder.addInitialState(state);
+        }
+
+        return builder;
     }
 
     /**
@@ -213,7 +227,7 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
      * Checks whether all mandatory elements to create an analysis task are properly configured.
      */
     protected void checkElements() {
-        if(input == null) {
+        if(inputs.isEmpty()) {
             throw new IllegalStateException("No input has been defined.");
         }
 

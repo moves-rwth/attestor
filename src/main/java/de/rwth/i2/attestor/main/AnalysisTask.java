@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
+import java.util.List;
+
 /**
  * An AnalysisTask comprises everything that is required to generate and export a state space.
  * The actual implementation is dependent on the actual analysis approach.
@@ -22,9 +24,9 @@ public interface AnalysisTask {
     StateSpace execute();
 
     /**
-     * @return The initial state passed to the state space generation.
+     * @return The initial states passed to the state space generation.
      */
-    HeapConfiguration getInput();
+    List<HeapConfiguration> getInputs();
 
     /**
      * @return The strategy that determines when the state space generation is aborted.

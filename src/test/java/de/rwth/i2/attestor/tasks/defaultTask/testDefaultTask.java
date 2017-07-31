@@ -18,6 +18,7 @@ import soot.util.Chain;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -50,7 +51,8 @@ public class testDefaultTask{
 
 			AnalysisTask task = builder.build();
 
-			HeapConfiguration res = task.getInput();
+			List<HeapConfiguration> resInputs = task.getInputs();
+			HeapConfiguration res = resInputs.get(0);
 
 			assertEquals("nr of nodes", 6, res.countNodes());
 			assertEquals( "nr of externals", 2, res.countExternalNodes() );

@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
-
 /**
  * A StateSpaceGenerator takes an analysis and generates a
  * state space from it. <br>
@@ -287,9 +283,8 @@ public class StateSpaceGenerator {
 
     /**
      * @return The initial state of the generated state space.
-     * TODO extend to multiple initial states
      */
-	public ProgramState getInitialState() {
-		return stateSpace.getInitialStates().get(0);
+	public List<ProgramState> getInitialStates() {
+		return stateSpace.getInitialStates();
 	}
 }
