@@ -85,4 +85,9 @@ public class HeapAutomaton {
         GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, transitions);
         return helper.getRefinedGrammar();
     }
+
+    public TransitionRelation getTransitionRelation() {
+
+        return transitions;
+    }
 }
