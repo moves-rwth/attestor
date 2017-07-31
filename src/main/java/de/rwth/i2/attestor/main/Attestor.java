@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
@@ -10,8 +11,10 @@ import de.rwth.i2.attestor.util.FileReader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
@@ -201,6 +204,13 @@ public class Attestor {
                 settings.input().getMethodName()
         );
 
+		try {
+			loadRefinementAutomaton();
+			loadStateLabelingAutomaton();
+		} catch (FileNotFoundException e) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -213,6 +223,30 @@ public class Attestor {
 		} else {
 			inputHeapConfiguration = JsonToDefaultHC.jsonToHC( jsonObj );
 		}
+	}
+
+	private void loadRefinementAutomaton() throws FileNotFoundException {
+
+		String file = settings.input().getPathToStateLabeling()
+				+ File.separator
+				+ settings.input().getRefinementName();
+
+		String str = FileReader.read(file);
+		JSONArray jsonArray = new JSONArray(str);
+		JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(jsonArray);
+		settings.automata().setRefinementAutomaton(parser.getHeapAutomaton());
+	}
+
+	private void loadStateLabelingAutomaton() throws FileNotFoundException {
+
+		String file = settings.input().getPathToStateLabeling()
+				+ File.separator
+				+ settings.input().getStateLabelingName();
+
+		String str = FileReader.read(file);
+		JSONArray jsonArray = new JSONArray(str);
+		JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(jsonArray);
+		settings.automata().setStateLabelingAutomaton(parser.getHeapAutomaton());
 	}
 
 	private boolean preprocessingPhase() {

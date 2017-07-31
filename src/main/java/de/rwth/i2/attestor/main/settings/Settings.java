@@ -106,7 +106,15 @@ public class Settings {
 	    return grammarSettings;
 	}
 
-	public void setRootPath( String rootPath ) {
+	/**
+	 * @return All settings regarding heap automata.
+	 */
+	public HeapAutomataSettings automata() {
+
+		return heapAutomataSettings;
+	}
+
+	public void setRootPath(String rootPath ) {
 		inputSettings.setRootPath( rootPath );
 		outputSettings.setRootPath( rootPath );
 	}
