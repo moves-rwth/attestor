@@ -1,20 +1,21 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.fail;
-
-import org.junit.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 
 public class ViolationPointResolverTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
 	}
 
-	@Test
-	@Ignore
-	public void test() {
-		fail("Not yet implemented");
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
 }

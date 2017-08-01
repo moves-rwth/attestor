@@ -1,27 +1,34 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-import java.util.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.*;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class DefaultGrammarResponseApplierTest {
 
@@ -29,6 +36,11 @@ public class DefaultGrammarResponseApplierTest {
 	private static final boolean[] REDUCTION_TENTACLES = new boolean [] {true,false};
 	private static final String UNIQUE_NT_LABEL = "DefaultGrammarResponseApplier";
 	private static final int RANK = 2;
+
+	@BeforeClass
+	public static void init() {
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() throws Exception {

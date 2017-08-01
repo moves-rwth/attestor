@@ -7,18 +7,25 @@ import java.util.*;
 
 import org.junit.Test;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.BeforeClass;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
@@ -31,6 +38,12 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_WITH_NEXT = 0;
 	private static final int TENTACLE_NOT_CREATING_NEXT = 1;
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test
@@ -135,7 +148,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		stack.add(s);
 		stack.add(bottom);
 
-		return new IndexedNonterminal(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack );
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack );
 	}
 
 	private static Nonterminal createIndexedNonterminalWithStack_Z() {
@@ -144,7 +157,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 
-		return new IndexedNonterminal(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack);
 	}
 
 

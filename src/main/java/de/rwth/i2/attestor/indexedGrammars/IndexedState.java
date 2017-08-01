@@ -60,7 +60,8 @@ public class IndexedState extends GeneralProgramState {
 				return false;
 			}
 
-			return heap.equals(state.getHeap());
+			return atomicPropositions.equals(state.getAPs())
+				&& heap.equals(state.getHeap());
 		}
 		
 		return false;
@@ -160,11 +161,6 @@ public class IndexedState extends GeneralProgramState {
 	@Override
 	protected String[] getConstants() {
 		return CONSTANT_NAMES;
-	}
-	
-	@Override
-	public boolean satisfiesAP(String ap){
-		return false;
 	}
 	
 }

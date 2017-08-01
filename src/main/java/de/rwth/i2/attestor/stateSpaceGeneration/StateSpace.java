@@ -250,6 +250,10 @@ public class StateSpace {
      */
 	protected void addInitialState(ProgramState programState){
 
+		if(!states.contains(programState)) {
+			states.add(programState);
+		}
+
 		initialStates.add( programState );
 		if(programState.size() > maxSize) {
 			maxSize = programState.size();

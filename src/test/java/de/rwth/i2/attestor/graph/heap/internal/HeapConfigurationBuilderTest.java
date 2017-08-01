@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -12,11 +14,18 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HeapConfigurationBuilderTest {
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to add new nodes.
 	 */
+	@Test
 	public void testAddNodes() {
 		
 		MockupType type = new MockupType();
@@ -40,10 +49,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests invalid input when adding nodes.
 	 */
+	@Test
 	public void testDefensiveAddNodes() {
 		
 		MockupType type = new MockupType();
@@ -78,10 +87,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to remove isolated nodes.
 	 */
+	@Test
 	public void testRemoveIsolatedNode() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -106,10 +115,10 @@ public class HeapConfigurationBuilderTest {
 		assertEquals("Underlying graph should be shrinked to 9 nodes.", 9, ihc.graph.size());
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when removing isolated nodes.
 	 */
+	@Test
 	public void testDefensiveRemoveIsolatedNode() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -170,10 +179,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to add selector edges
 	 */
+	@Test
 	public void testAddSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -194,10 +203,10 @@ public class HeapConfigurationBuilderTest {
 		assertEquals("Node should have exactly two selectors.", 2, hc.selectorLabelsOf(buffer.get(2)).size());
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when adding selector edges.
 	 */
+	@Test
 	public void testDefensiveAddSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -235,10 +244,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended use of builders to remove selector edges
 	 */
+	@Test
 	public void testRemoveSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -270,10 +279,10 @@ public class HeapConfigurationBuilderTest {
 			);
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when removing selectors.
 	 */
+	@Test
 	public void testDefensiveRemoveSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -305,10 +314,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended use of builders to replace the label of a selector edge.
 	 */
+	@Test
 	public void testReplaceSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -330,10 +339,10 @@ public class HeapConfigurationBuilderTest {
 		assertFalse("Node should not have a selector edge labeled with s2 anymore.", hc.selectorLabelsOf(nodes.get(1)).contains(s2));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when replacing selector labels
 	 */
+	@Test
 	public void testDefensiveReplaceSelector() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -376,10 +385,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to mark a node as external.
 	 */
+	@Test
 	public void testSetExternal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -402,10 +411,10 @@ public class HeapConfigurationBuilderTest {
 		assertEquals("Second external node is Node 2.", nodes.get(2), hc.externalNodeAt(1));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when marking a node as external.
 	 */
+	@Test
 	public void testDefensiveSetExternal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -437,10 +446,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended use of builders to mark a node as not being external anymore
 	 */
+	@Test
 	public void testUnsetExternal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -462,10 +471,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs for removing external nodes.
 	 */
+	@Test
 	public void testDefensiveUnsetExternal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -495,10 +504,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to add variable edges.
 	 */
+	@Test
 	public void testAddVariableEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -518,10 +527,10 @@ public class HeapConfigurationBuilderTest {
 		assertEquals("Variable with ID 3 should have name 'second'", "second", hc.nameOf( 3 ));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when adding variable edges.
 	 */
+	@Test
 	public void testDefensiveAddVariableEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -557,10 +566,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended use of builders to remove variable edges.
 	 */
+	@Test
 	public void testRemoveVariableEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -583,10 +592,10 @@ public class HeapConfigurationBuilderTest {
 		assertEquals("Variable v3 should still exist.", "v3", hc.nameOf(hc.attachedVariablesOf(nodes.get(3)).get(0)) );
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs for removing variable edges.
 	 */
+	@Test
 	public void testDefensiveRemoveVariableEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -615,10 +624,10 @@ public class HeapConfigurationBuilderTest {
 				
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to add nonterminal edges.
 	 */
+	@Test
 	public void testAddNonterminalEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -639,10 +648,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs for adding nonterminal edge.
 	 */
+	@Test
 	public void testDefensiveAddNonterminalEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -677,10 +686,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders for removing nonterminal edges.
 	 */
+	@Test
 	public void testRemoveNonterminalEdge() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -700,10 +709,10 @@ public class HeapConfigurationBuilderTest {
 				hc.attachedNodesOf( hc.nonterminalEdges().get(0) ).get(4) == 3);
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when removing nonterminal edges.
 	 */
+	@Test
 	public void testDefensiveRemoveNonterminalEdge() {
 	
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -729,10 +738,10 @@ public class HeapConfigurationBuilderTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to substitute a label of a nonterminal edge.
 	 */
+	@Test
 	public void testReplaceNonterminal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -750,10 +759,10 @@ public class HeapConfigurationBuilderTest {
 				);	
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when replacing the label of a nonterminal edge by a new nonterminal.
 	 */
+	@Test
 	public void testDefensiveReplaceNonterminal() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -790,10 +799,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to perform hyperedge replacement.
 	 */
+	@Test
 	public void testReplaceNonterminalEdge() {
 		
 		HeapConfiguration source = new InternalHeapConfiguration();
@@ -841,10 +850,10 @@ public class HeapConfigurationBuilderTest {
 				"next", source.selectorLabelsOf(srcNodes.get(1)).get(1).toString() );
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when replacing nonterminal edges by HeapConfigurations.
 	 */
+	@Test
 	public void testDefensiveReplaceNonterminalEdge() {
 		
 		HeapConfiguration source = new InternalHeapConfiguration();
@@ -878,10 +887,10 @@ public class HeapConfigurationBuilderTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests the intended usage of builders to replace matchings.
 	 */
+	@Test
 	public void testReplaceMatching() {
 		
 		HeapConfiguration pattern = new InternalHeapConfiguration();
@@ -931,10 +940,10 @@ public class HeapConfigurationBuilderTest {
 				3, target.attachedNodesOf(target.nonterminalEdges().get(0)).get(1));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when replacing matchings by nonterminal edges.
 	 */
+	@Test
 	public void testDefensiveReplaceMatching() {
 		
 		HeapConfiguration pattern = new InternalHeapConfiguration();

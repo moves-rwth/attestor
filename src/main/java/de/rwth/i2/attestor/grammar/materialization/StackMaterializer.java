@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
@@ -90,9 +91,9 @@ public class StackMaterializer {
 		while(edgeIter.hasNext()) {
 			int indexOfNonterminal = edgeIter.next();
 			Nonterminal nonterminal = inputGraph.labelOf( indexOfNonterminal );
-			if( nonterminal instanceof IndexedNonterminal ){
+			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getLastStackSymbol().equals( symbolToMaterialize ) ) {
+				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( symbolToMaterialize ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							computeMaterializedCopyOf(nonterminalToMaterialize, inputMaterializationPostfix);
@@ -120,7 +121,7 @@ public class StackMaterializer {
 			List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
-		if( nonterminalToMaterialize.hasConcreteStack() ){
+		if( nonterminalToMaterialize.getStack().hasConcreteStack() ){
 			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
 		}
 

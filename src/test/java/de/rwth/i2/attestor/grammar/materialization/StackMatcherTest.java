@@ -7,7 +7,10 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
@@ -26,7 +29,14 @@ public class StackMatcherTest {
 	static final StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 	
 	StackMatcher stackMatcher;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		StackMaterializationStrategy stackGrammar = new StackGrammarForTests();
@@ -97,7 +107,7 @@ public class StackMatcherTest {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add( ABSTRACT_STACK_SYMBOL );
-		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
 	}
 
 	private IndexedNonterminal createInstantiableNonterminal() {
@@ -105,7 +115,7 @@ public class StackMatcherTest {
 		stack.add(s);
 		stack.add(a);
 		stack.add( StackVariable.getGlobalInstance() );
-		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
 	}
 
 	private IndexedNonterminal createConcreteNonterminal() {
@@ -115,7 +125,7 @@ public class StackMatcherTest {
 		stack.add(a);
 		stack.add(s);
 		stack.add(bottom);
-		return new IndexedNonterminal(NONTERMINAL_LABEL, 2, REDUCTION_TENTACLES, stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, REDUCTION_TENTACLES, stack);
 	}
 
 }

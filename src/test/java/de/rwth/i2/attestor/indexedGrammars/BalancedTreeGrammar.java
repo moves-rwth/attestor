@@ -41,7 +41,7 @@ public class BalancedTreeGrammar{
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( ConcreteStackSymbol.getStackSymbol("s", false));
 		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
 		HeapConfiguration rhs = createRuleBalanced();
 		
@@ -54,10 +54,10 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<StackSymbol> r = new ArrayList<>();
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminal(NT_LABEL, r);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
 		ArrayList<StackSymbol> l = new ArrayList<>();
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminal(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_0;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_0;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -85,7 +85,7 @@ public class BalancedTreeGrammar{
 		lhsStack.add( s );
 		lhsStack.add( s );
 		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
 		HeapConfiguration rhs = createUnbalancedRuleLeft();
 		
@@ -99,11 +99,11 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<StackSymbol> r = new ArrayList<>();
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminal(NT_LABEL, r);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
 		ArrayList<StackSymbol> l = new ArrayList<>();
 		l.add(s);
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminal(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_M1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -131,7 +131,7 @@ public class BalancedTreeGrammar{
 		lhsStack.add( s );
 		lhsStack.add( s );
 		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
 		HeapConfiguration rhs = createUnbalancedRuleRight();
 		
@@ -145,10 +145,10 @@ public class BalancedTreeGrammar{
 		ArrayList<StackSymbol> r = new ArrayList<>();
 		r.add(s);
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminal(NT_LABEL, r);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
 		ArrayList<StackSymbol> l = new ArrayList<>();
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminal(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -173,7 +173,7 @@ public class BalancedTreeGrammar{
 
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
 		HeapConfiguration rhs = createBalancedLeafRule();
 		
@@ -201,7 +201,7 @@ public class BalancedTreeGrammar{
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		lhsStack.add( s );
 		lhsStack.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 
 		HeapConfiguration rhs = createLeftLeafRule();
 		
@@ -213,7 +213,7 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<StackSymbol> l = new ArrayList<>();
 		l.add(bottom);
-		IndexedNonterminal leftNt = new IndexedNonterminal(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_M1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -238,7 +238,7 @@ public class BalancedTreeGrammar{
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
 		lhsStack.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 
 		HeapConfiguration rhs = createRightLeafRule();
 		
@@ -250,7 +250,7 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<StackSymbol> r = new ArrayList<>();
 		r.add(bottom);
-		IndexedNonterminal rightNt = new IndexedNonterminal(NT_LABEL,r);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL,r);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;

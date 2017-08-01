@@ -47,7 +47,7 @@ public class FakeStackMatcher extends StackMatcher {
 	public boolean canMatch(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal ){
 		
-		return ! instantiableNonterminal.hasConcreteStack();
+		return ! instantiableNonterminal.getStack().hasConcreteStack();
 	}
 	
 	public boolean needsMaterialization(IndexedNonterminal materializableNonterminal, 
@@ -60,7 +60,7 @@ public class FakeStackMatcher extends StackMatcher {
 			   IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getLastStackSymbol();
+			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getStack().getLastStackSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );

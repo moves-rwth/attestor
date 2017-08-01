@@ -1,18 +1,22 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.JsonToDefaultHC;
+import de.rwth.i2.attestor.io.JsonToIndexedHC;
+import de.rwth.i2.attestor.main.settings.CommandLineReader;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.util.FileReader;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import org.apache.logging.log4j.*;
-
-
-import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Map.*;
-
-import de.rwth.i2.attestor.main.settings.*;
-import de.rwth.i2.attestor.util.DebugMode;
+import java.util.Properties;
 
 
 /**
@@ -24,22 +28,49 @@ import de.rwth.i2.attestor.util.DebugMode;
  */
 public class Attestor {
 
+    static final String ANSI_RESET = "\u001B[0m";
+    static final String ANSI_RED = "\u001B[31m";
+	static final String ANSI_GREEN = "\u001B[32m";
+	static final String ANSI_YELLOW = "\u001B[33m";
+    static final String ANSI_BLUE = "\u001B[34m";
+
+    final Properties properties = new Properties();
+
+
 	/**
 	 * Individual log level to show the progress of the analysis even if errors are suppressed.
 	 */
-	private final static Level PROGRESS = Level.forName("PROGRESS", 150);
+    private final static Level PHASE = Level.forName( ANSI_YELLOW+ "INFO" + ANSI_RESET, 300);
+	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "INFO" + ANSI_RESET, 200);
+	private final static Level DONE = Level.forName( ANSI_GREEN + "INFO" + ANSI_RESET, 50);
 
-	/**
+
+    /**
 	 * The top-level logger.
 	 */
-	private static final Logger logger = LogManager.getLogger( "Attestor" );
+	private static final Logger logger = LogManager.getLogger( "" );
 
 	/**
 	 * The global settings for Attestor.
 	 */
 	private final Settings settings = Settings.getInstance();
 
-	/**
+    /**
+     * The input heap configuration of the main method to analyze.
+     */
+    private HeapConfiguration inputHeapConfiguration;
+
+    /**
+     * The task builder used to construct the first analysis task.
+     */
+    private AnalysisTaskBuilder taskBuilder;
+
+    /**
+     * The task builder used to construct the first analysis task.
+     */
+    private AnalysisTask task;
+
+    /**
 	 * A parser for command line arguments.
 	 */
 	private final CommandLineReader commandLineReader = new CommandLineReader();
@@ -49,62 +80,123 @@ public class Attestor {
 		commandLineReader.setupCLI();
 	}
 
+
 	/**
 	 * Runs attestor to perform a program analysis.
 	 *
 	 * @param args The command line arguments determining settings and input files.
 	 */
 	public void run(String[] args) {
-		
-		if( commandLineReader.loadSettings(args) ) {
-			
-			if( commandLineReader.hasSettingsFile() ){
-				SettingsFileReader settingsReader = 
-						new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
-				settingsReader.getInputSettings( settings );
-				settingsReader.getOptionSettings( settings );
-				settingsReader.getOutputSettings( settings );
-				settingsReader.getMCSettings( settings );
-			}
-			commandLineReader.getInputSettings(  settings );
-			commandLineReader.getOptionSettings( settings );
-			commandLineReader.getOutputSettings( settings );
-			commandLineReader.getMCSettings( settings );
 
-			if( commandLineReader.hasRootPath() ){
-				settings.setRootPath( commandLineReader.getRootPath() );
-			}
-			
-			logger.log(PROGRESS, "Analyzing '"
-                    + settings.input().getClasspath()
-                    + "/"
-                    + settings.input().getClassName()
-                    + "."
-                    + settings.input().getMethodName()
-                    + "'..."
-            );
+	    printVersion();
 
-            setupGrammar();
-			
-			executeTask();
-		}
+		abortOnFail(validationPhase(args), "Validation phase failed.");
+
+		abortOnFail(parsingPhase(), "Parsing phase failed.");
+
+		printAnalyzedMethod();
+
+		abortOnFail(preprocessingPhase(), "Preprocessing phase failed.");
+
+		abortOnFail(stateSpaceGenerationPhase(), "State space generation phase failed.");
+
+		abortOnFail(modelCheckingPhase(), "Model checking phase failed.");
+
+		abortOnFail(reportPhase(), "Report phase failed.");
+
+		printSummary();
 	}
 
-	/**
-	 * Load the grammar used in the program analysis.
-	 */
-    private void setupGrammar() {
+	private void printVersion() {
 
-        if( DebugMode.ENABLED){
-            logger.log(PROGRESS, "Parsing grammar..." );
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
+            logger.log(PROGRESS, properties.getProperty("artifactId")
+                    + " - version " + properties.getProperty("version"));
+        } catch (IOException e) {
+            logger.fatal("Project version could not be found. Aborting.");
+            System.exit(1);
         }
+    }
 
-        // Load the user-defined grammar
+	private void printAnalyzedMethod() {
+
+        logger.log(PROGRESS, "Analyzing '"
+                + settings.input().getClasspath()
+                + "/"
+                + settings.input().getClassName()
+                + "."
+                + settings.input().getMethodName()
+                + "'..."
+        );
+
+    }
+
+    private void printSummary() {
+
+	    logger.log(DONE, "Done. Analyzed method: "
+                        + settings.input().getClasspath()
+                        + "/"
+                        + settings.input().getClassName()
+                        + "."
+                        + settings.input().getMethodName()
+                        + "\n"
+                        + "+-----------+----------------------+-----------------------+--------+\n"
+                        + "|           |  w/ procedure calls  |  w/o procedure calls  | final  |\n"
+                        + "+-----------+----------------------+-----------------------+--------+\n"
+                        + "|  #states  "
+                        + String.format("|  %18d  |  %19d  |  %5d |%n",
+                            Settings.getInstance().factory().getTotalNumberOfStates(),
+                            task.getStateSpace().getStates().size(),
+                            task.getStateSpace().getFinalStates().size()
+                          )
+                        + "+-----------+----------------------+-----------------------+--------+"
+        );
+    }
+
+	public void abortOnFail(boolean executionSuccessfull, String errorMessage) {
+
+	    if(!executionSuccessfull) {
+	        logger.fatal(errorMessage);
+	        System.exit(1);
+        }
+    }
+
+	private boolean validationPhase(String[] args) {
+
+		logger.log(PHASE, "Validation...");
+
+		return commandLineReader.loadSettings(args);
+
+	}
+
+	private boolean parsingPhase() {
+
+        logger.log(PHASE, "Parsing...");
+
+		if( commandLineReader.hasSettingsFile() ){
+			SettingsFileReader settingsReader =
+					new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
+			settingsReader.getInputSettings( settings );
+			settingsReader.getOptionSettings( settings );
+			settingsReader.getOutputSettings( settings );
+			settingsReader.getMCSettings( settings );
+		}
+		commandLineReader.getInputSettings(  settings );
+		commandLineReader.getOptionSettings( settings );
+		commandLineReader.getOutputSettings( settings );
+		commandLineReader.getMCSettings( settings );
+
+		if( commandLineReader.hasRootPath() ){
+			settings.setRootPath( commandLineReader.getRootPath() );
+		}
+
+		// Load the user-defined grammar
 		if(settings.input().getGrammarName() != null) {
 			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
 		}
 
-        // Load the requested predefined grammars
+		// Load the requested predefined grammars
 		if(settings.input().getUsedPredefinedGrammars() != null) {
 			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
 				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
@@ -112,70 +204,83 @@ public class Attestor {
 			}
 		}
 
-		settings.grammar().exportGrammar();
-    }
+		// TODO:
+		//settings.grammar().exportGrammar();
 
-    /**
-     * Construct and run the analysis task specified through the command line arguments.
-     */
-	private void executeTask() {
+        try {
+            loadInput();
+        } catch (FileNotFoundException e) {
+            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found.");
+            return false;
+        }
 
-		AnalysisTaskBuilder taskBuilder = settings.factory().createAnalysisTaskBuilder();
+        taskBuilder = settings.factory().createAnalysisTaskBuilder();
 
-		if( DebugMode.ENABLED){
-			logger.log(PROGRESS, "Parsing class files..." );
-		}
-		
 		taskBuilder.loadProgram(
-		        settings.input().getClasspath(),
+                settings.input().getClasspath(),
                 settings.input().getClassName(),
                 settings.input().getMethodName()
         );
 
-
-        if( DebugMode.ENABLED){
-			logger.log(PROGRESS, "Parsing input..." );
-		}
-
-		try {
-        	logger.debug("Loading initial states file " + settings.input().getInputLocation());
-			taskBuilder.loadInput( settings.input().getInputLocation() );
-		} catch (FileNotFoundException e) {
-			logger.fatal("File '" + settings.input().getInputLocation() + "' specifying input location not found.");
-			return;
-		}
-
-		if( DebugMode.ENABLED ) {
-			logger.log(PROGRESS, "Starting state space generation..." );
-		}
-
-		AnalysisTask task = taskBuilder.build();
-
-		task.execute();
-		
-		if( DebugMode.ENABLED ){
-			logger.log(PROGRESS, "Finished state space generation.");
-		}
-		
-		if(Settings.getInstance().output().isExportStateSpace() ) {
-			
-			if( DebugMode.ENABLED ){
-				logger.log(PROGRESS, "Exporting to '" + Settings.getInstance().output().getLocationForStateSpace() );
-			}
-			
-			task.exportAllStates();
-		}
-		
-		if( Settings.getInstance().output().isExportTerminalStates() ){
-			task.exportTerminalStates();
-		}
-		
-		logger.log(PROGRESS, "done.");
-        logger.log(PROGRESS, "#states (excluding procedure calls): " + task.getStateSpace().getStates().size() );
-        logger.log(PROGRESS, "#states (including procedure calls): "
-                + Settings.getInstance().factory().getTotalNumberOfStates());
-		logger.log(PROGRESS, "#terminalstates: " + task.getStateSpace().getFinalStates().size() );
-
+		return true;
 	}
 
+	private void loadInput() throws FileNotFoundException {
+		String str = FileReader.read(settings.input().getInputLocation());
+		JSONObject jsonObj = new JSONObject(str);
+
+		if(settings.options().isIndexedMode()) {
+			inputHeapConfiguration = JsonToIndexedHC.jsonToHC( jsonObj );
+		} else {
+			inputHeapConfiguration = JsonToDefaultHC.jsonToHC( jsonObj );
+		}
+	}
+
+	private boolean preprocessingPhase() {
+
+        logger.log(PHASE, "Preprocessing...");
+
+		// refine grammar now.
+
+        // refine input
+        taskBuilder.setInput(inputHeapConfiguration);
+
+		return true;
+	}
+
+	private boolean stateSpaceGenerationPhase() {
+
+        logger.log(PHASE, "State space generation...");
+
+        task = taskBuilder.build();
+        task.execute();
+
+		return true;
+	}
+
+	private boolean modelCheckingPhase() {
+
+        logger.log(PHASE, "Model-checking...");
+
+		return true;
+	}
+
+	private boolean reportPhase() {
+
+        logger.log(PHASE, "Report...");
+
+		if(Settings.getInstance().output().isExportStateSpace() ) {
+            logger.log(PROGRESS, "State space exported to '"
+                    + Settings.getInstance().output().getLocationForStateSpace()
+					+ "'"
+			);
+            task.exportAllStates();
+        }
+
+        if( Settings.getInstance().output().isExportTerminalStates() ){
+            task.exportTerminalStates();
+        }
+
+		return true;
+	}
 }

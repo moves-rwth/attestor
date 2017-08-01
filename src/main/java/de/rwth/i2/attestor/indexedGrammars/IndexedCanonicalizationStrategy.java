@@ -66,8 +66,8 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 	/**
 	 * Performs the actual grammar based abstraction of a given program state.
+	 * @param semantics The program statement executed prior to canonicalization.
 	 * @param state The program state that should be abstracted.
-	 * @param strongCanonicalization if true, the abstraction will ignore the minDereferenceDepthOption
 	 * @return The set of abstracted program states.
 	 */
 	@Override
@@ -155,7 +155,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	}
 	
 	private void resetInstantiation(IndexedNonterminal nonterminal) {
-		StackSymbol lastSymb = nonterminal.getLastStackSymbol();
+		StackSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
 		if( lastSymb instanceof StackVariable ){
 			( (StackVariable) lastSymb ).resetInstantiation();
 		}
@@ -185,7 +185,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 			IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
 			IndexedNonterminal targetNt =  (IndexedNonterminal) abstracted.getHeap().labelOf( embedding.match( edge ) );
-			indexMatch = targetNt.matchStack( patternNt );
+			indexMatch = targetNt.getStack().matchStack(patternNt.getStack());
 			if( ! indexMatch ){
 				break;
 			}	

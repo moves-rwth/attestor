@@ -1,9 +1,12 @@
 package de.rwth.i2.attestor.grammar;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Immutable data-object storing all the rules (lhs &#8594; rhs).
@@ -19,7 +22,7 @@ public class Grammar {
 
 	Map<Nonterminal, Set<HeapConfiguration>> rules;
 	
-	protected Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
 		this.rules = rules;
 	}
 

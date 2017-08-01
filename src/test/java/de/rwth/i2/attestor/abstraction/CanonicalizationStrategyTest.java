@@ -1,14 +1,6 @@
 package de.rwth.i2.attestor.abstraction;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -18,6 +10,15 @@ import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import gnu.trove.list.array.TIntArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class CanonicalizationStrategyTest {
@@ -26,10 +27,16 @@ public class CanonicalizationStrategyTest {
 	private static final Logger logger = LogManager.getLogger( "CanonicalizationStrategyTest" );
 	
 	private DefaultCanonicalizationStrategy canonicalizationStrategy;
+
+	@BeforeClass
+    public static void init() {
+	   UnitTestGlobalSettings.reset();
+    }
 	
 	@Before
 	public void setUp() throws Exception {
-		
+
+
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()

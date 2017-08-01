@@ -64,8 +64,7 @@ public class GeneralConcreteValue implements ConcreteValue {
 	public int getNode() {
 
 		if(isUndefined()) {
-
-			logger.warn("Attempting to get node of undefined value.");
+			logger.debug("Requested node of an undefined value.");
 		}
 
 		return node;

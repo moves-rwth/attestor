@@ -2,7 +2,9 @@ package de.rwth.i2.attestor.indexedGrammars;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -11,9 +13,15 @@ import de.rwth.i2.attestor.indexedGrammars.stack.*;
 public class TestAVLStackCanoization {
 
 	private AVLStackCanonizationStrategy canonizer;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
-	public void init(){
+	public void setup(){
 		canonizer = new AVLStackCanonizationStrategy();
 	}
 	
@@ -22,29 +30,29 @@ public class TestAVLStackCanoization {
 		HeapConfiguration graph = ExampleIndexedGraphFactory.getBalancedTreeLeft3();
 
 		IndexedNonterminal leftNonterminal = getLabelOfVar(graph, "left");
-		assertEquals("left before", 4, leftNonterminal.stackSize());
-		assertTrue("left before", leftNonterminal.hasConcreteStack());
+		assertEquals("left before", 4, leftNonterminal.getStack().size());
+		assertTrue("left before", leftNonterminal.getStack().hasConcreteStack());
 		IndexedNonterminal rightNonterminal = getLabelOfVar(graph, "right");
-		assertEquals("right before", 3, rightNonterminal.stackSize());
-		assertTrue("right before", rightNonterminal.hasConcreteStack());
+		assertEquals("right before", 3, rightNonterminal.getStack().size());
+		assertTrue("right before", rightNonterminal.getStack().hasConcreteStack());
 		
 		canonizer.canonizeStack(graph);
 
 		//ensure original Nonterminals did not alter
-		assertEquals("left before", 4, leftNonterminal.stackSize());
-		assertTrue("left before", leftNonterminal.hasConcreteStack());
-		assertEquals("right before", 3, rightNonterminal.stackSize());
-		assertTrue("right before", rightNonterminal.hasConcreteStack());
+		assertEquals("left before", 4, leftNonterminal.getStack().size());
+		assertTrue("left before", leftNonterminal.getStack().hasConcreteStack());
+		assertEquals("right before", 3, rightNonterminal.getStack().size());
+		assertTrue("right before", rightNonterminal.getStack().hasConcreteStack());
 		
 		//ensure nonterminals now present are correctly altered
 		IndexedNonterminal leftNonterminalRes = getLabelOfVar(graph, "left");
-		assertEquals("left after abs", 2, leftNonterminalRes.stackSize());
-		assertFalse("left after abs", leftNonterminalRes.hasConcreteStack());
-		assertEquals( leftNonterminalRes.getStackAt( 0 ), ConcreteStackSymbol.getStackSymbol( "s", false ));
-		assertEquals( leftNonterminalRes.getStackAt( 1 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals("left after abs", 2, leftNonterminalRes.getStack().size());
+		assertFalse("left after abs", leftNonterminalRes.getStack().hasConcreteStack());
+		assertEquals( leftNonterminalRes.getStack().get( 0 ), ConcreteStackSymbol.getStackSymbol( "s", false ));
+		assertEquals( leftNonterminalRes.getStack().get( 1 ), AbstractStackSymbol.get( "X" ) );
 		IndexedNonterminal rightNonterminalRes = getLabelOfVar(graph, "right");
-		assertEquals("right after abs", 1, rightNonterminalRes.stackSize());
-		assertEquals( rightNonterminalRes.getStackAt( 0 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals("right after abs", 1, rightNonterminalRes.getStack().size());
+		assertEquals( rightNonterminalRes.getStack().get( 0 ), AbstractStackSymbol.get( "X" ) );
 	}
 	
 	@Test
@@ -53,20 +61,20 @@ public class TestAVLStackCanoization {
 		
 		IndexedNonterminal leftNonterminal = getLabelOfVar(graph, "left");
 		
-		assertEquals("left before",4, leftNonterminal.stackSize());
-		assertFalse("left before",leftNonterminal.hasConcreteStack());
+		assertEquals("left before",4, leftNonterminal.getStack().size());
+		assertFalse("left before",leftNonterminal.getStack().hasConcreteStack());
 		IndexedNonterminal rightNonterminal = getLabelOfVar(graph, "right");
-		assertEquals("right before",3, rightNonterminal.stackSize());
-		assertTrue("right before",rightNonterminal.hasConcreteStack());
+		assertEquals("right before",3, rightNonterminal.getStack().size());
+		assertTrue("right before",rightNonterminal.getStack().hasConcreteStack());
 		
 		canonizer.canonizeStack(graph);
 		
 		//IndexedNonterminal leftNonterminal = graph.getVariable("left").getTarget().getAttachedNonterminalEdges().get(0).computeAtomicPropositions();
-		assertEquals("left after abs",4, leftNonterminal.stackSize());
-		assertFalse("left after abs",leftNonterminal.hasConcreteStack());
+		assertEquals("left after abs",4, leftNonterminal.getStack().size());
+		assertFalse("left after abs",leftNonterminal.getStack().hasConcreteStack());
 		//IndexedNonterminal rightNonterminal = graph.getVariable("right").getTarget().getAttachedNonterminalEdges().get(0).computeAtomicPropositions();
-		assertEquals("right after abs",3, rightNonterminal.stackSize());
-		assertTrue("right after abs",rightNonterminal.hasConcreteStack());
+		assertEquals("right after abs",3, rightNonterminal.getStack().size());
+		assertTrue("right after abs",rightNonterminal.getStack().hasConcreteStack());
 	}
 	
 	private IndexedNonterminal getLabelOfVar(HeapConfiguration graph, String name) {

@@ -26,12 +26,12 @@ public class ExampleIndexedGraphFactory {
 		leftStack.add(s);
 		leftStack.add(bottom);
 
-		IndexedNonterminal leftNonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, leftStack);
+		IndexedNonterminal leftNonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, leftStack);
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add(s);
 		rightStack.add(s);
 		rightStack.add(bottom);
-		IndexedNonterminal rightNonterminal = new IndexedNonterminal("B", rightStack );
+		IndexedNonterminal rightNonterminal = new IndexedNonterminalImpl("B", rightStack );
 
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
@@ -64,12 +64,12 @@ public class ExampleIndexedGraphFactory {
 		leftStack.add(s);
 		leftStack.add(abs);
 
-		IndexedNonterminal leftNonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, leftStack);
+		IndexedNonterminal leftNonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, leftStack);
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add(s);
 		rightStack.add(s);
 		rightStack.add(bottom);
-		IndexedNonterminal rightNonterminal = new IndexedNonterminal("B", rightStack );
+		IndexedNonterminal rightNonterminal = new IndexedNonterminalImpl("B", rightStack );
 
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
@@ -94,7 +94,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
@@ -128,7 +128,7 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
@@ -145,7 +145,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", stack);
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
@@ -168,7 +168,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", stack);
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "-1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
@@ -191,10 +191,10 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stackL = new ArrayList<>();
 		stackL.add(bottom);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", stackL);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", stackL);
 		ArrayList<StackSymbol> stackR = new ArrayList<>();
 		stackR.add(bottom);
-		IndexedNonterminal rightNt = new IndexedNonterminal("B", stackR);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl("B", stackR);
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
@@ -221,11 +221,11 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(abs);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add(s);
 		rightStack.add(abs);
-		IndexedNonterminal rightNt = new IndexedNonterminal("B", rightStack);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl("B", rightStack);
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "-1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
@@ -252,10 +252,10 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(bottom);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightAStack = new ArrayList<>();
 		rightAStack.add(bottom);
-		IndexedNonterminal rightANt = new IndexedNonterminal("B", rightAStack);
+		IndexedNonterminal rightANt = new IndexedNonterminalImpl("B", rightAStack);
 		
 		
 		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
@@ -286,10 +286,10 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(bottom);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightBStack = new ArrayList<>();
 		rightBStack.add(bottom);
-		IndexedNonterminal rightBNt = new IndexedNonterminal("B", rightBStack);
+		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBStack);
 		
 		
 		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
@@ -322,13 +322,13 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(abs);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightAStack = new ArrayList<>();
 		rightAStack.add(abs);
-		IndexedNonterminal rightANt = new IndexedNonterminal("B", rightAStack);
+		IndexedNonterminal rightANt = new IndexedNonterminalImpl("B", rightAStack);
 		ArrayList<StackSymbol> rightBStack = new ArrayList<>();
 		rightBStack.add(abs);
-		IndexedNonterminal rightBNt = new IndexedNonterminal("B", rightBStack);
+		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBStack);
 		
 		
 		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
@@ -365,14 +365,14 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(s);
 		leftStack.add(abs);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightAStack = new ArrayList<>();
 		rightAStack.add(s);
 		rightAStack.add(abs);
-		IndexedNonterminal rightANt = new IndexedNonterminal("B", rightAStack);
+		IndexedNonterminal rightANt = new IndexedNonterminalImpl("B", rightAStack);
 		ArrayList<StackSymbol> rightBStack = new ArrayList<>();
 		rightBStack.add(abs);
-		IndexedNonterminal rightBNt = new IndexedNonterminal("B", rightBStack);
+		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBStack);
 		
 		
 		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
@@ -409,14 +409,14 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> leftStack = new ArrayList<>();
 		leftStack.add(s);
 		leftStack.add(abs);
-		IndexedNonterminal leftNt = new IndexedNonterminal("B", 2, new boolean [] {false,true}, leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", 2, new boolean [] {false,true}, leftStack );
 		ArrayList<StackSymbol> rightAStack = new ArrayList<>();
 		rightAStack.add(abs);
-		IndexedNonterminal rightANt = new IndexedNonterminal("B", rightAStack);
+		IndexedNonterminal rightANt = new IndexedNonterminalImpl("B", rightAStack);
 		ArrayList<StackSymbol> rightBStack = new ArrayList<>();
 		rightBStack.add(s);
 		rightBStack.add(abs);
-		IndexedNonterminal rightBNt = new IndexedNonterminal("B", rightBStack);
+		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBStack);
 		
 		
 		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
@@ -462,7 +462,7 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add( AbstractStackSymbol.get("X"));
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -479,10 +479,10 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> stackLeft = new ArrayList<>();
 		stackLeft.add(abs);
-		IndexedNonterminal ntLeft = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stackLeft);
+		IndexedNonterminal ntLeft = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stackLeft);
 		ArrayList<StackSymbol> stackRight = new ArrayList<>();
 		stackRight.add(abs);
-		IndexedNonterminal ntRight = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stackRight);
+		IndexedNonterminal ntRight = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stackRight);
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
@@ -508,7 +508,7 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -528,7 +528,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);	
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -554,7 +554,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);	
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -580,7 +580,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);	
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -608,7 +608,7 @@ public class ExampleIndexedGraphFactory {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);	
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -635,12 +635,12 @@ public class ExampleIndexedGraphFactory {
 		stackLeft.add(s);
 		stackLeft.add(s);
 		stackLeft.add(bottom);
-		IndexedNonterminal ntLeft = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stackLeft);
+		IndexedNonterminal ntLeft = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stackLeft);
 		ArrayList<StackSymbol> stackRight = new ArrayList<>();
 		stackRight.add(s);
 		stackRight.add(s);
 		stackRight.add(bottom);
-		IndexedNonterminal ntRight = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stackRight);
+		IndexedNonterminal ntRight = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stackRight);
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
@@ -665,7 +665,7 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("AVLTree");
 		
@@ -685,7 +685,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(s);
 		stack.add(s);
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("B", 2, new boolean[]{false, true}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, stack);
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "");
@@ -764,7 +764,7 @@ public class ExampleIndexedGraphFactory {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add( ConcreteStackSymbol.getStackSymbol( "Z", true ) );
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
-		IndexedNonterminal nt = new IndexedNonterminal( "BTestpC3", 5, reductionTentacles, stack );
+		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, stack );
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
@@ -810,7 +810,7 @@ public class ExampleIndexedGraphFactory {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add( ConcreteStackSymbol.getStackSymbol( "Z", true ) );
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
-		IndexedNonterminal nt = new IndexedNonterminal( "BTestpC3", 5, reductionTentacles, stack );
+		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, stack );
 		
 		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel("left", "1");
 		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
@@ -861,22 +861,22 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftLeftStack = new ArrayList<>();
 		leftLeftStack.add( abs );
-		IndexedNonterminal leftLeftNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , leftLeftStack );
+		IndexedNonterminal leftLeftNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , leftLeftStack );
 		
 		ArrayList<StackSymbol> leftRightStack = new ArrayList<>( );
 		leftRightStack.add( abs );
-		IndexedNonterminal leftRightNt = new IndexedNonterminal( "BTestInst", leftRightStack );
+		IndexedNonterminal leftRightNt = new IndexedNonterminalImpl( "BTestInst", leftRightStack );
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( s );
 		rightStack.add( abs );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BTestInst", rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BTestInst", rightStack );
 		
 		ArrayList<StackSymbol> pStack = new ArrayList<>();
 		pStack.add( s );
 		pStack.add( s );
 		pStack.add( abs );
-		IndexedNonterminal pNt = new IndexedNonterminal( "PTestInst", 5, reductionTentacles, pStack );
+		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );
@@ -927,17 +927,17 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> leftStack = new ArrayList<>( );
 		leftStack.add( abs );
-		IndexedNonterminal leftNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , leftStack );
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( abs );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , rightStack );
 		
 		
 		ArrayList<StackSymbol> pStack = new ArrayList<>();
 		pStack.add( s );
 		pStack.add( abs );
-		IndexedNonterminal pNt = new IndexedNonterminal( "PTestInst", 5, reductionTentacles, pStack );
+		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );
@@ -984,13 +984,13 @@ public class ExampleIndexedGraphFactory {
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( var );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , rightStack );
 		
 		
 		ArrayList<StackSymbol> pStack = new ArrayList<>();
 		pStack.add( s );
 		pStack.add( var );
-		IndexedNonterminal pNt = new IndexedNonterminal( "PTestInst", 5, reductionTentacles, pStack );
+		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );
@@ -1034,19 +1034,19 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> leftStack = new ArrayList<>( );
 		leftStack.add( s );
 		leftStack.add( abs );
-		IndexedNonterminal leftNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , leftStack );
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( s );
 		rightStack.add( abs );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BTestInst", 5, reductionTentacles , rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BTestInst", 5, reductionTentacles , rightStack );
 		
 		
 		ArrayList<StackSymbol> pStack = new ArrayList<>();
 		pStack.add( s );
 		pStack.add( s );
 		pStack.add( abs );
-		IndexedNonterminal pNt = new IndexedNonterminal( "PTestInst", 5, reductionTentacles, pStack );
+		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );
@@ -1090,11 +1090,11 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> leftStack = new ArrayList<>( );
 		leftStack.add( s );
 		leftStack.add( abs );
-		IndexedNonterminal leftNt = new IndexedNonterminal( "BT", 5, reductionTentacles , leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , leftStack );
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( abs );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BT", 5, reductionTentacles , rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );
@@ -1137,11 +1137,11 @@ public class ExampleIndexedGraphFactory {
 		ArrayList<StackSymbol> leftStack = new ArrayList<>( );
 		leftStack.add( s );
 		leftStack.add( abs );
-		IndexedNonterminal leftNt = new IndexedNonterminal( "BT", 5, reductionTentacles , leftStack );
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , leftStack );
 		
 		ArrayList<StackSymbol> rightStack = new ArrayList<>();
 		rightStack.add( abs );
-		IndexedNonterminal rightNt = new IndexedNonterminal( "BT", 5, reductionTentacles , rightStack );
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightStack );
 		
 		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
 		Type int_z = TypeFactory.getInstance().getType( "int_0" );

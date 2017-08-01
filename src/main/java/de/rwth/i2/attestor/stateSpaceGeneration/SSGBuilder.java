@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class provides methods to safely initialize a StateSpaceGenerator.
  * The only means to create a new StateSpaceGenerator is through the static method
@@ -13,7 +16,7 @@ public class SSGBuilder {
 	/**
 	 * The initial state passed to the state space generation
 	 */
-	private ProgramState initialState;
+	private List<ProgramState> initialStates;
 	
 	/**
 	 * Internal instance of the StateSpaceGenerator under
@@ -26,7 +29,7 @@ public class SSGBuilder {
 	 * uninitialized StateSpaceGenerator.
 	 */
     SSGBuilder() {
-		initialState = null;
+		initialStates = new ArrayList<>();
 		generator = new StateSpaceGenerator();
 	}
 	
@@ -40,17 +43,18 @@ public class SSGBuilder {
 	 */
 	public StateSpaceGenerator build() {
 		
-		if(initialState == null 
-				|| generator.program == null || generator.materializer == null
+		if(initialStates.isEmpty()
+				|| generator.program == null || generator.materializationStrategy == null
 				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null) {
 			throw new IllegalStateException("StateSpaceGenerator not completely initialized");
 		}
-		
-		initialState.setProgramCounter(0);
-		
-		ProgramState initial = generator.getSubsumingStateInSSOrAddToSS(initialState);
-		generator.stateSpace.addInitialState( initial );
-		
+
+		for (ProgramState state : initialStates) {
+			state.setProgramCounter(0);
+			generator.stateSpace.addInitialState(state);
+			generator.unexploredConfigurations.add(state);
+		}
+
 		return generator;
 	}
 
@@ -59,8 +63,8 @@ public class SSGBuilder {
      *                     the state space generation.
      * @return The builder.
      */
-	public SSGBuilder setInitialState(ProgramState initialState) {
-		this.initialState = initialState;
+	public SSGBuilder addInitialState(ProgramState initialState) {
+		initialStates.add(initialState);
 		return this;
 	}
 
@@ -78,7 +82,7 @@ public class SSGBuilder {
 	 * @return The builder.
 	 */
 	public SSGBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
-		generator.materializer = materializationStrategy;
+		generator.materializationStrategy = materializationStrategy;
 		return this;
 	}
 

@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
@@ -76,7 +77,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 																		 tentacle, 
 																		 requestedSelector );
 
-		if( toReplace instanceof IndexedNonterminal ){
+		if( toReplace instanceof IndexedNonterminal){
 			IndexedNonterminal indexedToReplace = (IndexedNonterminal) toReplace;
 			return computeMaterializationsAndRules( indexedToReplace, rulesResolvingViolationPoint);
 
@@ -118,7 +119,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	}
 
 	private AbstractStackSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
-		StackSymbol lastSymbol = toReplace.getLastStackSymbol();
+		StackSymbol lastSymbol = toReplace.getStack().getLastStackSymbol();
 		if( lastSymbol instanceof AbstractStackSymbol ){
 			return (AbstractStackSymbol) lastSymbol;
 		}else{
@@ -132,7 +133,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	 * and instantiates all rules graphs such that the lhs matches the nonterminal
 	 * 
 	 * @param allMaterializationsAndRules the resultMap to which the results from this rule will be added
-	 * @param intexedToReplace the nonterminal to match
+	 * @param toReplace the nonterminal to match
 	 * @param lhs the lhs of these rules
 	 * @param uninstantiatedRulesForThisLhs  the rules belonging to this lhs
 	 */
@@ -214,7 +215,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 				int e = edgeIter.next();
 				
 				IndexedNonterminal label = (IndexedNonterminal) uninstantiatedRhs.labelOf(e);
-				if( ! label.hasConcreteStack() ){
+				if( ! label.getStack().hasConcreteStack() ){
 					builder.replaceNonterminal(e, label.getWithProlongedStack( necessaryInstantiation ));
 				}
 			}

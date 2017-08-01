@@ -7,18 +7,23 @@ import de.rwth.i2.attestor.grammar.GrammarExporter;
     import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
     import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
                import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-               import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-    import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.indexedGrammars.IndexedState;
+import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
     import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
     import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
-    import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-    import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
                import de.rwth.i2.attestor.tasks.GeneralNonterminal;
                import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
                import de.rwth.i2.attestor.tasks.GeneralType;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.tasks.indexedTask.IndexedAnalysisTask;
-               import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;
+import de.rwth.i2.attestor.types.Type;
 
                import java.util.ArrayList;
                import java.util.HashMap;
@@ -77,8 +82,12 @@ public class FactorySettings {
      */
     public Nonterminal getNonterminal(String label) {
 
-        if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, new ArrayList<>());
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            return new RefinedIndexedNonterminal(new IndexedNonterminalImpl(label, new ArrayList<>()), null);
+        } else if(requiresIndexedSymbols()) {
+            return new IndexedNonterminalImpl(label, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedNonterminalImpl(GeneralNonterminal.getNonterminal(label), null);
         } else {
             return GeneralNonterminal.getNonterminal(label);
         }
@@ -88,8 +97,15 @@ public class FactorySettings {
      * @return true if and only if an indexed analysis is performed.
      */
     private boolean requiresIndexedSymbols() {
-                                           return Settings.getInstance().options().isIndexedMode();
-                                                                                                   }
+        return Settings.getInstance().options().isIndexedMode();
+    }
+
+    /**
+     *
+     */
+    private boolean requiresRefinedSymbols() {
+        return Settings.getInstance().options().isHeapAutomataMode();
+    }
 
     /**
      * Creates a Nonterminal symbol with the provided parameters.
@@ -103,8 +119,18 @@ public class FactorySettings {
      */
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
-        if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, rank, isReductionTentacle, new ArrayList<>());
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            return new RefinedIndexedNonterminal(
+                    new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>()),
+                    null
+            );
+        } else if(requiresIndexedSymbols()) {
+            return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedNonterminalImpl(
+                    GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle),
+                    null
+            );
         } else {
             return GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle);
         }
@@ -201,5 +227,28 @@ public class FactorySettings {
      */
     public long getTotalNumberOfStates() {
         return totalNumberOfStates;
+    }
+
+    public ProgramState createProgramState(int programCounter, HeapConfiguration heapConfiguration, int scopeDepth) {
+
+        ProgramState result;
+
+        if(scopeDepth > 0)  {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration, scopeDepth);
+            } else {
+                result = new DefaultState(heapConfiguration, scopeDepth);
+            }
+        } else {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration);
+            } else {
+                result = new DefaultState(heapConfiguration);
+            }
+        }
+
+        result.setProgramCounter(programCounter);
+        result.prepareHeap();
+        return result;
     }
 }

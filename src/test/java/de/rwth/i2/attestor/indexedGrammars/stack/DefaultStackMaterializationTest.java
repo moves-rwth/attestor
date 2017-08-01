@@ -5,12 +5,19 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DefaultStackMaterializationTest {
 	
 	DefaultStackMaterialization stackGrammar = new DefaultStackMaterialization();
 
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test

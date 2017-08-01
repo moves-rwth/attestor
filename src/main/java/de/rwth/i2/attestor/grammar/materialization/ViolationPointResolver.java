@@ -72,8 +72,9 @@ public class ViolationPointResolver {
 
 		for( Nonterminal grammarNt : grammar.getAllLeftHandSides() ){
 
-			if( grammarNt.labelMatches( nonterminal ) ){
-				Collection<HeapConfiguration> rulesForGrammarNt = 
+			if( grammarNt.getLabel().equals(nonterminal.getLabel()) ) {
+
+				Collection<HeapConfiguration> rulesForGrammarNt =
 						getRuleGraphsResolvingViolationPointFor(grammarNt,
 																tentacle, requiredSelector);
 				if( ! rulesForGrammarNt.isEmpty() ){

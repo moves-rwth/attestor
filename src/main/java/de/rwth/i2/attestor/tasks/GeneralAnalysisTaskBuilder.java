@@ -139,7 +139,7 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
                 .setProgram(
                         program
                 )
-                .setInitialState(
+                .addInitialState(
                         setupInitialState()
                 );
     }

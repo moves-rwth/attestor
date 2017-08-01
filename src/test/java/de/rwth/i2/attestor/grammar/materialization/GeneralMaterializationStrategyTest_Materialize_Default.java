@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,6 +26,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
+
+		UnitTestGlobalSettings.reset();
+
 		GeneralNonterminal listLabel = GeneralNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		

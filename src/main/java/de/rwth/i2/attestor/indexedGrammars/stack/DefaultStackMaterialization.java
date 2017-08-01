@@ -44,7 +44,7 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
 		while(iter.hasNext()) {
 			int edge = iter.next();
 			IndexedNonterminal indexedNonterminal = (IndexedNonterminal) heapConfiguration.labelOf(edge);
-			if(indexedNonterminal.stackEndsWith(originalStackSymbol)) {
+			if(indexedNonterminal.getStack().stackEndsWith(originalStackSymbol)) {
 
 			    IndexedNonterminal updatedNt = getNonterminalWithUpdatedStack(indexedNonterminal,
                         desiredStackSymbol, originalStackSymbol);
@@ -112,14 +112,14 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
             int edge = iter.next();
             IndexedNonterminal l = (IndexedNonterminal) heapConfiguration.labelOf(edge);
 
-            assert( !l.hasConcreteStack() || !l.stackEndsWith(stackSymbol) );
+            assert( !l.getStack().hasConcreteStack() || !l.getStack().stackEndsWith(stackSymbol) );
         }
     }
 
 
     @Override
 	public IndexedNonterminal materializeStack( IndexedNonterminal nt, StackSymbol s ) {
-		assert( ! nt.hasConcreteStack() );
+		assert( ! nt.getStack().hasConcreteStack() );
 		nt = nt.getWithShortenedStack().getWithProlongedStack( s );
 		if( ! s.isBottom() ){
 			nt = nt.getWithProlongedStack( AbstractStackSymbol.get("X") );

@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -28,6 +30,11 @@ public class PrepareHeapTest {
 	private int falsePC;
 	private Type listType;
 
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() throws Exception{

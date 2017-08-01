@@ -5,7 +5,10 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -25,7 +28,9 @@ public class IfStmtTest {
 	private Type listType;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
 	}
 
 	@Before

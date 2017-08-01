@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -14,11 +15,13 @@ public class NewExprTest {
 	
 	private NewExpr expr;
 	private HeapConfiguration testGraph;
-	
+
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
 	}
-	
+
 	@Before
 	public void setUp(){
 		expr = new NewExpr( TypeFactory.getInstance().getType( "node"));

@@ -171,7 +171,8 @@ public class DefaultState extends GeneralProgramState {
             DefaultState state = (DefaultState) other;
 
             return !(programCounter != state.programCounter || scopeDepth != state.scopeDepth)
-                    && heap.equals(state.getHeap());
+                    && heap.equals(state.getHeap())
+					&& atomicPropositions.equals(state.getAPs());
 
         }
 		
@@ -183,10 +184,4 @@ public class DefaultState extends GeneralProgramState {
 		return CONSTANT_NAMES;
 	}
 
-	@Override
-	public boolean satisfiesAP(String ap) {
-		// this is the safe variant if no state labels are given
-		return false;
-	}
-	
 }

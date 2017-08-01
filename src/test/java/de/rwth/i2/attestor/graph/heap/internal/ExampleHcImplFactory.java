@@ -7,6 +7,7 @@ import java.util.List;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
+import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.*;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
@@ -1393,7 +1394,7 @@ public final class ExampleHcImplFactory {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = TypeFactory.getInstance().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminal("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1412,7 +1413,7 @@ public final class ExampleHcImplFactory {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = TypeFactory.getInstance().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminal("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)

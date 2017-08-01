@@ -1,18 +1,19 @@
 package de.rwth.i2.attestor.io;
 
-import static org.junit.Assert.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.junit.Test;
-
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import static org.junit.Assert.*;
 
 public class JsonToGrammarTest {
 	
@@ -20,6 +21,11 @@ public class JsonToGrammarTest {
 	private static final Logger logger = LogManager.getLogger( "JsonToGrammarTest" );
 
 
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	
