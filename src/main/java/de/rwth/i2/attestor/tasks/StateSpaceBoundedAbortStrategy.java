@@ -55,12 +55,6 @@ public class StateSpaceBoundedAbortStrategy implements AbortStrategy {
 	@Override
 	public boolean isAllowedToContinue(StateSpace stateSpace) {
 		
-		long newTimeStamp = System.currentTimeMillis();
-		if( newTimeStamp - timeStamp > 5000 ){
-			timeStamp = newTimeStamp;
-			logger.info( "#" + stateSpace.getStates().size() );
-		}
-		
 		if (maxStateSpaceSize != NO_MAXIMUM && stateSpace.getMaximalStateSize() > maxStateSize) {
 			
 			logger.error("Exceeded " + maxStateSize + " nodes in a heap configuration of a single state.");

@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.util.FileReader;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -28,27 +27,15 @@ import java.util.Properties;
  */
 public class Attestor {
 
+    private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_RED = "\u001B[31m";
-	private static final String ANSI_GREEN = "\u001B[32m";
-	private static final String ANSI_YELLOW = "\u001B[33m";
-    private static final String ANSI_BLUE = "\u001B[34m";
 
     private final Properties properties = new Properties();
-
-
-	/**
-	 * Individual log level to show the progress of the analysis even if errors are suppressed.
-	 */
-    private final static Level PHASE = Level.forName( ANSI_YELLOW+ "INFO" + ANSI_RESET, 300);
-	private final static Level PROGRESS = Level.forName( ANSI_BLUE + "INFO" + ANSI_RESET, 200);
-	private final static Level DONE = Level.forName( ANSI_GREEN + "INFO" + ANSI_RESET, 50);
-
 
     /**
 	 * The top-level logger.
 	 */
-	private static final Logger logger = LogManager.getLogger( "" );
+	private static final Logger logger = LogManager.getLogger( "Attestor" );
 
 	/**
 	 * The global settings for Attestor.
@@ -90,18 +77,23 @@ public class Attestor {
 
 	    printVersion();
 
+	    leavePhase("Validation");
 		abortOnFail(validationPhase(args), "Validation phase failed.");
 
+        leavePhase("Parsing");
 		abortOnFail(parsingPhase(), "Parsing phase failed.");
 
-		printAnalyzedMethod();
-
+        leavePhase("Preprocessing");
 		abortOnFail(preprocessingPhase(), "Preprocessing phase failed.");
 
+        leavePhase("State space generation");
+        printAnalyzedMethod();
 		abortOnFail(stateSpaceGenerationPhase(), "State space generation phase failed.");
 
+        leavePhase("Model-checking");
 		abortOnFail(modelCheckingPhase(), "Model checking phase failed.");
 
+        leavePhase("Report generation");
 		abortOnFail(reportPhase(), "Report phase failed.");
 
 		printSummary();
@@ -111,8 +103,7 @@ public class Attestor {
 
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
-            logger.log(PROGRESS, properties.getProperty("artifactId")
-                    + " - version " + properties.getProperty("version"));
+            logger.info(properties.getProperty("artifactId") + " - version " + properties.getProperty("version"));
         } catch (IOException e) {
             logger.fatal("Project version could not be found. Aborting.");
             System.exit(1);
@@ -121,7 +112,7 @@ public class Attestor {
 
 	private void printAnalyzedMethod() {
 
-        logger.log(PROGRESS, "Analyzing '"
+        logger.info("Analyzing '"
                 + settings.input().getClasspath()
                 + "/"
                 + settings.input().getClassName()
@@ -134,24 +125,15 @@ public class Attestor {
 
     private void printSummary() {
 
-	    logger.log(DONE, "Done. Analyzed method: "
-                        + settings.input().getClasspath()
-                        + "/"
-                        + settings.input().getClassName()
-                        + "."
-                        + settings.input().getMethodName()
-                        + "\n"
-                        + "+-----------+----------------------+-----------------------+--------+\n"
-                        + "|           |  w/ procedure calls  |  w/o procedure calls  | final  |\n"
-                        + "+-----------+----------------------+-----------------------+--------+\n"
-                        + "|  #states  "
-                        + String.format("|  %18d  |  %19d  |  %5d |%n",
+	    logger.info("+-----------+----------------------+-----------------------+--------+");
+        logger.info("|           |  w/ procedure calls  |  w/o procedure calls  | final  |");
+        logger.info("+-----------+----------------------+-----------------------+--------+");
+        logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
                             Settings.getInstance().factory().getTotalNumberOfStates(),
                             task.getStateSpace().getStates().size(),
                             task.getStateSpace().getFinalStates().size()
-                          )
-                        + "+-----------+----------------------+-----------------------+--------+"
-        );
+                          ));
+        logger.info("+-----------+----------------------+-----------------------+--------+");
     }
 
 	private void abortOnFail(boolean executionSuccessful, String errorMessage) {
@@ -164,14 +146,17 @@ public class Attestor {
 
 	private boolean validationPhase(String[] args) {
 
-		logger.log(PHASE, "Validation...");
-
 		return commandLineReader.loadSettings(args);
 	}
 
-	private boolean parsingPhase() {
+	private void leavePhase(String message) {
+        logger.info("+-------------------------------------------------------------------+");
+        logger.info(String.format("|  " + ANSI_GREEN + "Phase executed successfully:"
+                + ANSI_RESET + " %-35s |", message));
+        logger.info("+-------------------------------------------------------------------+");
+    }
 
-        logger.log(PHASE, "Parsing...");
+	private boolean parsingPhase() {
 
 		if( commandLineReader.hasSettingsFile() ){
 			SettingsFileReader settingsReader =
@@ -220,8 +205,6 @@ public class Attestor {
 
 	private boolean preprocessingPhase() {
 
-        logger.log(PHASE, "Preprocessing...");
-
         HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
         if(stateLabelingAutomaton == null) {
             taskBuilder.setInput(inputHeapConfiguration);
@@ -265,8 +248,6 @@ public class Attestor {
 
 	private boolean stateSpaceGenerationPhase() {
 
-        logger.log(PHASE, "State space generation...");
-
         task = taskBuilder.build();
         task.execute();
 
@@ -275,17 +256,13 @@ public class Attestor {
 
 	private boolean modelCheckingPhase() {
 
-        logger.log(PHASE, "Model-checking...");
-
 		return true;
 	}
 
 	private boolean reportPhase() {
 
-        logger.log(PHASE, "Report...");
-
 		if(Settings.getInstance().output().isExportStateSpace() ) {
-            logger.log(PROGRESS, "State space exported to '"
+            logger.info("State space exported to '"
                     + Settings.getInstance().output().getLocationForStateSpace()
 					+ "'"
 			);

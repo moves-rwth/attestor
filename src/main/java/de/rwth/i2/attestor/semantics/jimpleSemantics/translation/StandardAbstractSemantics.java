@@ -1,22 +1,24 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import soot.Unit;
 import soot.jimple.InstanceFieldRef;
 import soot.util.Chain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Translator for all standard statements/values which operate on JimpleExecutables.
@@ -105,7 +107,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		}
 
 		if( DebugMode.ENABLED ){
-			logger.info( "StandardSemantics not applicable. Using next level.." );
+			logger.debug( "StandardSemantics not applicable. Using next level.." );
 		}
 		return nextLevel.translateStatement( input, pc );
 	}
@@ -147,7 +149,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			return translateUnequalExpr( input );
 		}
 		if( DebugMode.ENABLED ){
-			logger.info( "StandardSemantic not applicable. Using next level.." );
+			logger.debug( "StandardSemantic not applicable. Using next level.." );
 		}
 		return nextLevel.translateValue( input );
 	}
