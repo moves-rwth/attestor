@@ -200,7 +200,8 @@ public class Attestor {
 		if(settings.input().getUsedPredefinedGrammars() != null) {
 			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
 				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-				settings.grammar().loadGrammarFromFile(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json").getPath(), renamingMap);
+				settings.grammar().loadGrammarFromFile(Attestor.class.getResource("../../../../../predefinedGrammars/" + predefinedGrammar + ".json").getPath(), renamingMap);
+
 			}
 		}
 
@@ -210,7 +211,7 @@ public class Attestor {
         try {
             loadInput();
         } catch (FileNotFoundException e) {
-            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found.");
+            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found. Test");
             return false;
         }
 
