@@ -27,10 +27,17 @@ public abstract class HeapAutomaton {
     public List<HeapConfiguration> refineHeapConfiguration(HeapConfiguration heapConfiguration, Grammar grammar,
                                                       Set<String> desiredAPs) {
 
+        List<HeapConfiguration> result = new ArrayList<>();
         Set<Nonterminal> nonterminals = grammar.getAllLeftHandSides();
 
         List<List<Nonterminal>> ntAssignments = new ArrayList<>();
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
+
+        if(ntEdges.isEmpty()) {
+            result.add(heapConfiguration);
+            return result;
+        }
+
         for(int i=0; i < ntEdges.size(); i++) {
 
             int edge = ntEdges.get(i);
@@ -39,7 +46,6 @@ public abstract class HeapAutomaton {
         }
 
         AssignmentIterator<Nonterminal> ntAssignmentIterator = new AssignmentIterator<>(ntAssignments);
-        List<HeapConfiguration> result = new ArrayList<>();
         while(ntAssignmentIterator.hasNext()) {
             List<Nonterminal> assignment = ntAssignmentIterator.next();
             List<AutomatonState> states = new ArrayList<>(assignment.size());

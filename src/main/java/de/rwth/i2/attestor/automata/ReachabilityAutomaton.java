@@ -90,6 +90,7 @@ class ReachabilityState implements AutomatonState {
     ReachabilityState(List<TIntSet> reachabilityRelation, Set<String> atomicPropositions) {
 
         kernel = computeKernel(reachabilityRelation);
+
         this.atomicPropositions = atomicPropositions;
     }
 
@@ -117,6 +118,21 @@ class ReachabilityState implements AutomatonState {
     }
 
     @Override
+    public boolean equals(Object other) {
+
+        if(other instanceof ReachabilityState) {
+            ReachabilityState state = (ReachabilityState) other;
+            return kernel.equals(state.kernel);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return kernel.hashCode();
+    }
+
+    @Override
     public boolean isFinal() {
 
         return atomicPropositions.isEmpty();
@@ -126,6 +142,27 @@ class ReachabilityState implements AutomatonState {
     public Set<String> getAtomicPropositions() {
 
         return atomicPropositions;
+    }
+
+    @Override
+    public String toString() {
+
+        TIntArrayList nodes = kernel.nodes();
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i < nodes.size(); i++) {
+           int u = nodes.get(i);
+           TIntIterator iter = kernel.successorNodesOf(u).iterator();
+           while(iter.hasNext()) {
+               int v = iter.next();
+               builder
+                       .append("(")
+                       .append(u)
+                       .append(",")
+                       .append(v)
+                       .append(")");
+           }
+        }
+        return builder.toString();
     }
 }
 

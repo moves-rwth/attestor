@@ -69,6 +69,11 @@ public class RefinedNonterminalImpl implements RefinedNonterminal {
     }
 
     @Override
+    public String toString() {
+       return "<" + nonterminal  + "," + state + ">";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if(o instanceof RefinedNonterminalImpl) {
            RefinedNonterminalImpl n = (RefinedNonterminalImpl) o;

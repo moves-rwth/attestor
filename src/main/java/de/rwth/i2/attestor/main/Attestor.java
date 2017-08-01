@@ -77,24 +77,24 @@ public class Attestor {
 
 	    printVersion();
 
-	    leavePhase("Validation");
 		abortOnFail(validationPhase(args), "Validation phase failed.");
+        leavePhase("Validation");
 
-        leavePhase("Parsing");
 		abortOnFail(parsingPhase(), "Parsing phase failed.");
+        leavePhase("Parsing");
 
-        leavePhase("Preprocessing");
 		abortOnFail(preprocessingPhase(), "Preprocessing phase failed.");
+        leavePhase("Preprocessing");
 
-        leavePhase("State space generation");
         printAnalyzedMethod();
 		abortOnFail(stateSpaceGenerationPhase(), "State space generation phase failed.");
+        leavePhase("State space generation");
 
-        leavePhase("Model-checking");
 		abortOnFail(modelCheckingPhase(), "Model checking phase failed.");
+        leavePhase("Model-checking");
 
-        leavePhase("Report generation");
 		abortOnFail(reportPhase(), "Report phase failed.");
+        leavePhase("Report generation");
 
 		printSummary();
 	}
@@ -209,10 +209,16 @@ public class Attestor {
         if(stateLabelingAutomaton == null) {
             taskBuilder.setInput(inputHeapConfiguration);
         } else {
+
+            logger.info("Refining grammar...");
 			settings.grammar().setGrammar(
 					stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
 			);
+			logger.info("done. Number of refined nonterminals: "
+                    + settings.grammar().getGrammar().getAllLeftHandSides().size());
+			logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
 
+			logger.info("Refining input heap configuration...");
 			List<HeapConfiguration> refinedInputs = stateLabelingAutomaton
                     .refineHeapConfiguration(inputHeapConfiguration, settings.grammar().getGrammar(),  new HashSet<>());
 
@@ -220,6 +226,9 @@ public class Attestor {
 		        logger.fatal("No refined initial state exists.");
 		        return false;
             }
+
+            logger.info("done. Number of refined heap configurations: "
+                    + refinedInputs.size());
 
 			taskBuilder.setInputs(refinedInputs);
 		    taskBuilder.setStateLabelingStrategy(
