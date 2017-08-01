@@ -54,6 +54,11 @@ public interface AnalysisTask {
     StateLabelingStrategy getStateLabelingStrategy();
 
     /**
+     * @return
+     */
+    StateRefinementStrategy getStateRefinementStrategy();
+
+    /**
      * @return Before calling {@link AnalysisTask#execute()} this method returns null.
      *         Otherwise, it returns the state space that has been generated.
      */

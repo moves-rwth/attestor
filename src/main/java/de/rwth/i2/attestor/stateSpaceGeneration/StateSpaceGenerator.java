@@ -84,6 +84,11 @@ public class StateSpaceGenerator {
 	StateLabelingStrategy stateLabelingStrategy;
 
 	/**
+	 * Strategy determining how states are refined prior to canonicalization
+ 	 */
+	StateRefinementStrategy stateRefinementStrategy;
+
+	/**
      * Initializes a state space generator with an empty state space.
 	 */
 	StateSpaceGenerator() {
@@ -93,6 +98,7 @@ public class StateSpaceGenerator {
 		this.abortStrategy = null;
 		this.inclusionStrategy = null;
 		this.stateLabelingStrategy = null;
+		this.stateRefinementStrategy = null;
 		this.unexploredConfigurations = new Stack<>();
 		this.stateSpace = new StateSpace();
 	}
@@ -130,6 +136,13 @@ public class StateSpaceGenerator {
      */
 	public StateLabelingStrategy getStateLabelingStrategy() {
 		return stateLabelingStrategy;
+	}
+
+	/**
+	 * @return The strategy determining how states are refined prior to canonicalization.
+	 */
+	public StateRefinementStrategy getStateRefinementStrategy() {
+		return stateRefinementStrategy;
 	}
 
 	/**
@@ -230,7 +243,8 @@ public class StateSpaceGenerator {
      * @return The refined state.
      */
 	private ProgramState refinementPhase(ProgramState state) {
-	    return state; // TODO this requires heap automata that have not been implemented yet.
+
+		return stateRefinementStrategy.refine(state);
     }
 
     /**

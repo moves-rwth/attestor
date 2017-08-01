@@ -60,6 +60,8 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
      */
     private StateLabelingStrategy stateLabelingStrategy = null;
 
+    private StateRefinementStrategy stateRefinementStrategy = null;
+
     protected GeneralAnalysisTaskBuilder() {
         this.inputs = new ArrayList<>();
     }
@@ -120,6 +122,12 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
         return this;
     }
 
+    @Override
+    public AnalysisTaskBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
+        this.stateRefinementStrategy = stateRefinementStrategy;
+        return this;
+    }
+
     /**
      * Determines the initial program states.
      * @return The initial program states.
@@ -147,6 +155,9 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
             .setStateLabelingStrategy(
                 getAppliedStateLabelingStrategy()
             )
+            .setStateRefinementStrategy(
+                getAppliedStateRefinementStrategy()
+                )
             .setProgram(
                 program
             );
@@ -221,6 +232,14 @@ public abstract class GeneralAnalysisTaskBuilder implements AnalysisTaskBuilder 
             return new NoStateLabelingStrategy();
         }
         return stateLabelingStrategy;
+    }
+
+    private StateRefinementStrategy getAppliedStateRefinementStrategy() {
+        if(stateRefinementStrategy == null) {
+            return state -> state;
+        } else {
+            return stateRefinementStrategy;
+        }
     }
 
     /**

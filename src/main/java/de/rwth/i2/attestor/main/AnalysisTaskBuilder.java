@@ -102,4 +102,5 @@ public interface AnalysisTaskBuilder {
      */
     AnalysisTaskBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy);
 
+    AnalysisTaskBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy);
 }

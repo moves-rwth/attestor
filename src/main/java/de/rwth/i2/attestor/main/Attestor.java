@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -268,17 +270,38 @@ public class Attestor {
 					stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
 			);
 
-			/**
-			 * TODO setup initial states and state labeling strategy.
-			 */
+			List<HeapConfiguration> refinedInputs = stateLabelingAutomaton
+                    .refineHeapConfiguration(inputHeapConfiguration, settings.grammar().getGrammar(),  new HashSet<>());
+
+		    if(refinedInputs.isEmpty())	{
+		        logger.fatal("No refined initial state exists.");
+		        return false;
+            }
+
+			taskBuilder.setInputs(refinedInputs);
+
+		    taskBuilder.setStateLabelingStrategy(
+                    programState -> {
+                        for(String ap : stateLabelingAutomaton
+                                .move(programState.getHeap())
+                                .getAtomicPropositions()) {
+                            programState.addAP(ap);
+                        }
+                    }
+            );
 		} else {
 			taskBuilder.setInput(inputHeapConfiguration);
 		}
 
 		if(settings.automata().isRefinementEnabled()) {
-			/**
-			 * TODO If refinement is enabled we have to modify the refinement strategy at some point...
-			 */
+
+		    HeapAutomaton automaton = settings.automata().getRefinementAutomaton();
+		    taskBuilder.setStateRefinementStrategy(
+                    state -> {
+                        automaton.move(state.getHeap());
+                        return state;
+                    }
+            );
 		}
 
 		return true;

@@ -93,6 +93,12 @@ public abstract class GeneralAnalysisTask implements AnalysisTask {
     }
 
     @Override
+    public StateRefinementStrategy getStateRefinementStrategy() {
+
+        return stateSpaceGenerator.getStateRefinementStrategy();
+    }
+
+    @Override
     public StateSpace getStateSpace() {
         if(stateSpace == null) {
            throw new IllegalStateException("No StateSpace has been generated yet.");

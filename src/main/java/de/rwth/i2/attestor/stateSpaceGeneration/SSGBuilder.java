@@ -45,8 +45,9 @@ public class SSGBuilder {
 		
 		if(initialStates.isEmpty()
 				|| generator.program == null || generator.materializationStrategy == null
-				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null) {
-			throw new IllegalStateException("StateSpaceGenerator not completely initialized");
+				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null
+				|| generator.stateLabelingStrategy == null || generator.stateRefinementStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator not completely initialized.");
 		}
 
 		for (ProgramState state : initialStates) {
@@ -119,6 +120,11 @@ public class SSGBuilder {
      */
 	public SSGBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy) {
 		generator.stateLabelingStrategy = stateLabelingStrategy;
+		return this;
+	}
+
+	public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
+		generator.stateRefinementStrategy = stateRefinementStrategy;
 		return this;
 	}
 	

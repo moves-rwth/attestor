@@ -27,7 +27,9 @@ public class MockupTaskBuilder extends GeneralAnalysisTaskBuilder {
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setInclusionStrategy(new MockupInclusionStrategy())
-                .setStateLabelingStrategy(new MockupStateLabellingStrategy());
+                .setStateLabelingStrategy(new MockupStateLabellingStrategy())
+                .setStateRefinementStrategy(state -> state);
+
 
         for(ProgramState state : setupInitialStates()) {
             builder.addInitialState(state);
