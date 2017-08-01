@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
@@ -96,26 +98,6 @@ public class SettingsFileReader {
 		}
 		input.setInputName( initialSettings.getString( "file" ) );
 
-		if(jsonInput.has("stateLabeling")) {
-            JSONObject stateLabelingSettings = jsonInput.getJSONObject("stateLabeling");
-            if (stateLabelingSettings.has("path")) {
-                input.setPathToStateLabeling(stateLabelingSettings.getString("path"));
-            } else if (!jsonInput.has("defaultPath")) {
-                logger.error("You must define a default path or a path for the initial state");
-            }
-            input.setStateLabelingName(stateLabelingSettings.getString("file"));
-        }
-
-        if(jsonInput.has("refinement")) {
-            JSONObject stateLabelingSettings = jsonInput.getJSONObject("refinement");
-            if (stateLabelingSettings.has("path")) {
-                input.setPathToStateLabeling(stateLabelingSettings.getString("path"));
-            } else if (!jsonInput.has("defaultPath")) {
-                logger.error("You must define a default path or a path for the initial state");
-            }
-            input.setStateLabelingName(stateLabelingSettings.getString("file"));
-        }
-
 		return input;
 	}
 
@@ -157,7 +139,19 @@ public class SettingsFileReader {
 		if( jsonOptions.has( "removeDeadVariables" ) ){
 			options.setRemoveDeadVariables( jsonOptions.getBoolean( "removeDeadVariables" ) );
 		}
-		
+
+		if( jsonOptions.has("stateLabeling") ) {
+            JSONArray stateLabelingSettings = jsonOptions.getJSONArray("stateLabeling");
+            JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateLabelingSettings);
+            options.setStateLabelingAutomaton( parser.getHeapAutomaton() );
+        }
+
+        if( jsonOptions.has("stateRefinement") ) {
+            JSONArray stateRefinementSettings = jsonOptions.getJSONArray("stateRefinement");
+            JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateRefinementSettings);
+            options.setStateRefinementAutomaton( parser.getHeapAutomaton() );
+        }
+
 		return options;
 	}
 

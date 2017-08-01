@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.automata.HeapAutomaton;
-import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
@@ -12,10 +11,8 @@ import de.rwth.i2.attestor.util.FileReader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
@@ -31,13 +28,13 @@ import java.util.Properties;
  */
 public class Attestor {
 
-    static final String ANSI_RESET = "\u001B[0m";
-    static final String ANSI_RED = "\u001B[31m";
-	static final String ANSI_GREEN = "\u001B[32m";
-	static final String ANSI_YELLOW = "\u001B[33m";
-    static final String ANSI_BLUE = "\u001B[34m";
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_RED = "\u001B[31m";
+	private static final String ANSI_GREEN = "\u001B[32m";
+	private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_BLUE = "\u001B[34m";
 
-    final Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
 
 	/**
@@ -157,9 +154,9 @@ public class Attestor {
         );
     }
 
-	public void abortOnFail(boolean executionSuccessfull, String errorMessage) {
+	private void abortOnFail(boolean executionSuccessful, String errorMessage) {
 
-	    if(!executionSuccessfull) {
+	    if(!executionSuccessful) {
 	        logger.fatal(errorMessage);
 	        System.exit(1);
         }
@@ -207,14 +204,6 @@ public class Attestor {
                 settings.input().getMethodName()
         );
 
-		try {
-			loadRefinementAutomaton();
-			loadStateLabelingAutomaton();
-		} catch (FileNotFoundException e) {
-			logger.error("Automaton file could not be found.");
-			return false;
-		}
-
 		return true;
 	}
 
@@ -229,43 +218,14 @@ public class Attestor {
 		}
 	}
 
-	private void loadRefinementAutomaton() throws FileNotFoundException {
-
-		if(settings.input().getRefinementName() == null) {
-			return;
-		}
-		String file = settings.input().getPathToStateLabeling()
-				+ File.separator
-				+ settings.input().getRefinementName();
-
-		String str = FileReader.read(file);
-		JSONArray jsonArray = new JSONArray(str);
-		JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(jsonArray);
-		settings.automata().setRefinementAutomaton(parser.getHeapAutomaton());
-	}
-
-	private void loadStateLabelingAutomaton() throws FileNotFoundException {
-
-		if(settings.input().getStateLabelingName() == null)	{
-			return;
-		}
-
-		String file = settings.input().getPathToStateLabeling()
-				+ File.separator
-				+ settings.input().getStateLabelingName();
-
-		String str = FileReader.read(file);
-		JSONArray jsonArray = new JSONArray(str);
-		JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(jsonArray);
-		settings.automata().setStateLabelingAutomaton(parser.getHeapAutomaton());
-	}
-
 	private boolean preprocessingPhase() {
 
         logger.log(PHASE, "Preprocessing...");
 
-		if(settings.automata().isStateLabelingEnabled()) {
-			HeapAutomaton stateLabelingAutomaton = settings.automata().getStateLabelingAutomaton();
+        HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
+        if(stateLabelingAutomaton == null) {
+            taskBuilder.setInput(inputHeapConfiguration);
+        } else {
 			settings.grammar().setGrammar(
 					stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
 			);
@@ -279,7 +239,6 @@ public class Attestor {
             }
 
 			taskBuilder.setInputs(refinedInputs);
-
 		    taskBuilder.setStateLabelingStrategy(
                     programState -> {
                         for(String ap : stateLabelingAutomaton
@@ -289,20 +248,17 @@ public class Attestor {
                         }
                     }
             );
-		} else {
-			taskBuilder.setInput(inputHeapConfiguration);
 		}
 
-		if(settings.automata().isRefinementEnabled()) {
-
-		    HeapAutomaton automaton = settings.automata().getRefinementAutomaton();
-		    taskBuilder.setStateRefinementStrategy(
+		HeapAutomaton stateRefinementAutomaton = settings.options().getStateRefinementAutomaton();
+        if(stateRefinementAutomaton != null) {
+            taskBuilder.setStateRefinementStrategy(
                     state -> {
-                        automaton.move(state.getHeap());
+                        stateRefinementAutomaton.move(state.getHeap());
                         return state;
                     }
             );
-		}
+        }
 
 		return true;
 	}

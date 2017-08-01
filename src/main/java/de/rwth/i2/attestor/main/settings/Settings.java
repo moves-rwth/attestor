@@ -47,11 +47,6 @@ public class Settings {
      */
 	private GrammarSettings grammarSettings;
 
-	/**
-	 * Settings regarding heap automata.
-	 */
-	private HeapAutomataSettings heapAutomataSettings;
-
     /**
      * Initializes with default settings.
      */
@@ -68,7 +63,6 @@ public class Settings {
         outputSettings = new OutputSettings();
         factorySettings = new FactorySettings();
         grammarSettings = new GrammarSettings();
-        heapAutomataSettings = new HeapAutomataSettings();
     }
 
     /**
@@ -104,14 +98,6 @@ public class Settings {
      */
 	public GrammarSettings grammar() {
 	    return grammarSettings;
-	}
-
-	/**
-	 * @return All settings regarding heap automata.
-	 */
-	public HeapAutomataSettings automata() {
-
-		return heapAutomataSettings;
 	}
 
 	public void setRootPath(String rootPath ) {

@@ -3,9 +3,6 @@ package de.rwth.i2.attestor.automata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.FileNotFoundException;
 
 public class JsonToHeapAutomatonParser {
 
@@ -16,13 +13,13 @@ public class JsonToHeapAutomatonParser {
 
     private HeapAutomaton heapAutomaton;
 
-    public JsonToHeapAutomatonParser(JSONArray automataArray) throws FileNotFoundException {
+    public JsonToHeapAutomatonParser(JSONArray automataArray) {
 
         heapAutomaton = null;
 
         for(int i=0; i < automataArray.length(); i++) {
-            JSONObject jsonObject = automataArray.getJSONObject(i);
-            HeapAutomaton nextAutomaton = parseAutomaton(jsonObject);
+            String automatonName = automataArray.getString(i);
+            HeapAutomaton nextAutomaton = parseAutomaton(automatonName);
             if(nextAutomaton != null) {
                 if (heapAutomaton == null) {
                     heapAutomaton = nextAutomaton;
@@ -38,16 +35,15 @@ public class JsonToHeapAutomatonParser {
         return heapAutomaton;
     }
 
-    private HeapAutomaton parseAutomaton(JSONObject jsonObject) {
+    private HeapAutomaton parseAutomaton(String automatonName) {
 
-        String automatonType = jsonObject.getString("automaton");
-        switch (automatonType) {
+        switch (automatonName) {
             case "reach":
                 return new ReachabilityAutomaton();
             case "balance":
                 return new BalancedTreeAutomaton();
             default:
-                logger.error("Unknown automaton '" + automatonType + "' is ignored.");
+                logger.error("Unknown automaton '" + automatonName + "' is ignored.");
                 return null;
         }
 

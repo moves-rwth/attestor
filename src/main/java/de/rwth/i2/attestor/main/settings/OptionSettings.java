@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.automata.HeapAutomaton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,6 +62,10 @@ public class OptionSettings {
 	 * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
 	 */
 	private boolean indexedMode = false;
+
+	private HeapAutomaton stateLabelingAutomaton = null;
+
+	private HeapAutomaton stateRefinementAutomaton = null;
 
 
 	/**
@@ -186,10 +191,23 @@ public class OptionSettings {
 		this.indexedMode = indexedMode;
 	}
 
-    public boolean isApplyingHeapAutomata() {
+	public void setStateLabelingAutomaton(HeapAutomaton stateLabelingAutomaton)	{
 
-    	return Settings.getInstance().automata().getRefinementAutomaton() != null
-				|| Settings.getInstance().automata().getStateLabelingAutomaton() != null;
-    }
+		this.stateLabelingAutomaton = stateLabelingAutomaton;
+	}
 
+	public HeapAutomaton getStateLabelingAutomaton() {
+
+		return stateLabelingAutomaton;
+	}
+
+	public void setStateRefinementAutomaton(HeapAutomaton stateRefinementAutomaton)	{
+
+		this.stateRefinementAutomaton = stateRefinementAutomaton;
+	}
+
+	public HeapAutomaton getStateRefinementAutomaton() {
+
+		return stateRefinementAutomaton;
+	}
 }
