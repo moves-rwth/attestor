@@ -119,7 +119,7 @@ public class SettingsFileReader {
 			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
 			if( initialSettings.has( "path" ) ){
 				input.setPathToInput( initialSettings.getString( "path" ) );
-			}else if( !jsonInput.has( "defaultPath" ) && initialSettings.has("file")){
+			}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
 				logger.error("You must define a default path or a path for the initial state");
 			}
 			System.out.println(initialSettings.toString());
