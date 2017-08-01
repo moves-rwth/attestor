@@ -105,8 +105,8 @@ public class FactorySettings {
      */
     private boolean requiresRefinedSymbols() {
 
-        return Settings.getInstance().automata().isRefinementEnabled()
-                || Settings.getInstance().automata().isStateLabelingEnabled();
+        return Settings.getInstance().options().getStateLabelingAutomaton() != null
+                || Settings.getInstance().options().getStateRefinementAutomaton() != null;
     }
 
     /**
