@@ -2,7 +2,7 @@
 <Configuration status="ERROR">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="[%highlight{%level}{STYLE=Logback}]  %highlight{%msg}{FATAL=red, ERROR=red, WARN=yellow, INFO=black, DEBUG=cyan, TRACE=white}%n"/>
+      <PatternLayout pattern="[%highlight{%level}{FATAL=red, ERROR=red, WARN=yellow, INFO=blue, DEBUG=cyan, TRACE=white}]  %highlight{%msg}{FATAL=red, ERROR=red, WARN=black, INFO=black, DEBUG=white, TRACE=white}%n"/>
     </Console>
   </Appenders>
   <Loggers>
