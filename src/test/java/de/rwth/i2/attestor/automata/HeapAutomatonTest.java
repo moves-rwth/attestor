@@ -39,7 +39,7 @@ public class HeapAutomatonTest {
 
     @Before
     public void setup() {
-        automaton = new HeapAutomaton(new MockUpTransitionRelation());
+        automaton = new MockupHeapAutomaton();
         hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
         type = Settings.getInstance().factory().getType("type");
         nt = Settings.getInstance().factory().createNonterminal("HAX", 3, new boolean[]{false,false,false});

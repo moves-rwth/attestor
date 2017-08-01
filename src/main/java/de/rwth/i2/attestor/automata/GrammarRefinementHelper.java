@@ -22,10 +22,7 @@ class GrammarRefinementHelper {
      */
     private Grammar grammar;
 
-    /**
-     * The transition relation of the heap automaton used for refinement.
-     */
-    private TransitionRelation transitions;
+    private HeapAutomaton automaton;
 
     /**
      * This flag is set to false as long as no new rules have been added to the refined grammar within
@@ -48,12 +45,12 @@ class GrammarRefinementHelper {
     /**
      * Refines a given grammar according to the transition relation of a heap automaton.
      * @param grammar The grammar that should be refined.
-     * @param transitions The transition relation of a heap automaton guiding the refinement.
+     * @param automaton The heap automaton guiding the refinement.
      */
-    GrammarRefinementHelper(Grammar grammar, TransitionRelation transitions) {
+    GrammarRefinementHelper(Grammar grammar, HeapAutomaton automaton) {
 
         this.grammar = grammar;
-        this.transitions = transitions;
+        this.automaton = automaton;
         foundStates = new HashMap<>();
         refinedGrammarRules = new HashMap<>();
         refineGrammar();
@@ -138,7 +135,7 @@ class GrammarRefinementHelper {
      * @param rhs The right-hand side of the original rule.
      */
     private void attemptAddRefinedRule(Nonterminal lhs, List<AutomatonState> ntAssignment, HeapConfiguration rhs) {
-        AutomatonState state = transitions.move(ntAssignment, rhs);
+        AutomatonState state = automaton.move(ntAssignment, rhs);
 
         Nonterminal refinedLhs = createRefinedLhs(lhs, state);
         HeapConfiguration refinedRhs = createRefinedRhs(ntAssignment, rhs);

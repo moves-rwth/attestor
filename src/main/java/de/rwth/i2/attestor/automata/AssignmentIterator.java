@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public class AssignmentIterator<E> {
+class AssignmentIterator<E> {
 
     /**
      * The number of elements contained in a single assignment.

@@ -52,10 +52,10 @@ public class GrammarRefinementHelperTest {
     @Test
     public void testRefinement() {
 
-        TransitionRelation transitions = new MockUpTransitionRelation();
+        MockupHeapAutomaton automaton = new MockupHeapAutomaton();
         Grammar grammar = createGrammar();
 
-        GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, transitions);
+        GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, automaton);
 
         Grammar refinedGrammar = helper.getRefinedGrammar();
         assertNotNull(refinedGrammar);

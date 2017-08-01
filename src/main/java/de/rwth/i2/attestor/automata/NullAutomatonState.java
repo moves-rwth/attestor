@@ -1,6 +1,4 @@
-package de.rwth.i2.attestor.automata.implementations;
-
-import de.rwth.i2.attestor.automata.AutomatonState;
+package de.rwth.i2.attestor.automata;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +17,4 @@ public class NullAutomatonState implements AutomatonState {
         return new HashSet<>();
     }
 
-    @Override
-    public Set<String> getAllAtomicPropositions() {
-
-        return new HashSet<>();
-    }
 }
