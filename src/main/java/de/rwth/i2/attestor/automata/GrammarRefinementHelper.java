@@ -121,7 +121,8 @@ class GrammarRefinementHelper {
      */
     private void findRefinementsOfRuleWithNts(Nonterminal lhs, HeapConfiguration rhs) {
 
-        AssignmentIterator<AutomatonState> choices = new AssignmentIterator<>(getPossibleStateChoices(rhs));
+        List<List<AutomatonState>> possibleAutomatonStates = getPossibleStateChoices(rhs);
+        AssignmentIterator<AutomatonState> choices = new AssignmentIterator<>(possibleAutomatonStates);
         while(choices.hasNext()) {
             List<AutomatonState> ntAssignment = choices.next();
             attemptAddRefinedRule(lhs, ntAssignment, rhs);
@@ -149,6 +150,7 @@ class GrammarRefinementHelper {
 
     private List<AutomatonState> getFoundStates(Nonterminal nt) {
 
+        System.out.println(foundStates);
         if(!foundStates.containsKey(nt)) {
             foundStates.put(nt, new ArrayList<>());
         }
@@ -182,7 +184,7 @@ class GrammarRefinementHelper {
      */
     private Nonterminal createRefinedLhs(Nonterminal lhs, AutomatonState state) {
 
-        RefinedNonterminalImpl newLhs = new RefinedNonterminalImpl(lhs, state);
+        RefinedNonterminal newLhs = ((RefinedNonterminal) lhs).withState(state);
         List<AutomatonState> lhsFoundStates = getFoundStates(lhs);
         if(!lhsFoundStates.contains(state)) {
             lhsFoundStates.add(state);

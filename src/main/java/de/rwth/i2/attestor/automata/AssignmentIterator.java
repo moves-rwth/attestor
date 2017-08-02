@@ -54,6 +54,12 @@ class AssignmentIterator<E> {
             assignmentSizes.add(availableAssignments.get(i).size());
         }
         position = 0;
+
+        for(List<E> list : availableAssignments) {
+            if(list.isEmpty()) {
+                position = size;
+            }
+        }
     }
 
     /**

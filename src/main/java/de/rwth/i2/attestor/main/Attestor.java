@@ -78,23 +78,48 @@ public class Attestor {
 
 	    printVersion();
 
-		abortOnFail(validationPhase(args), "Validation");
+	    try {
+			validationPhase(args);
+		} catch(Exception e) {
+	    	fail(e, "Validation");
+		}
         leavePhase("Validation");
 
-		abortOnFail(parsingPhase(), "Parsing");
+	    try {
+			parsingPhase();
+		} catch(Exception e) {
+	    	fail(e,"Parsing");
+		}
         leavePhase("Parsing");
 
-		abortOnFail(preprocessingPhase(), "Preprocessing");
+	    try {
+			preprocessingPhase();
+		} catch(Exception e) {
+	    	fail(e,"Preprocessing");
+		}
         leavePhase("Preprocessing");
 
         printAnalyzedMethod();
-		abortOnFail(stateSpaceGenerationPhase(), "State space generation");
+
+        try {
+			stateSpaceGenerationPhase();
+		} catch(Exception e) {
+        	fail(e,"State space generation");
+		}
         leavePhase("State space generation");
 
-		abortOnFail(modelCheckingPhase(), "Model checking");
+        try {
+        	modelCheckingPhase();
+		} catch (Exception e) {
+        	fail(e,"State space generation");
+		}
         leavePhase("Model-checking");
 
-		abortOnFail(reportPhase(), "Report generation");
+        try {
+        	reportPhase();
+		} catch(Exception e) {
+        	fail(e,"Report generation");
+		}
         leavePhase("Report generation");
 
 		printSummary();
@@ -137,20 +162,19 @@ public class Attestor {
         logger.info("+-----------+----------------------+-----------------------+--------+");
     }
 
-	private void abortOnFail(boolean executionSuccessful, String message) {
+    private void fail(Exception e, String message) {
+		e.printStackTrace();
+		logger.fatal(e.getMessage());
+		logger.fatal("+------------------------------------------------------------------+");
+		logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
+				+ ANSI_RESET + " %-39s |", message));
+		logger.fatal("+------------------------------------------------------------------+");
+		System.exit(1);
+	}
 
-	    if(!executionSuccessful) {
-			logger.fatal("+------------------------------------------------------------------+");
-			logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
-					+ ANSI_RESET + " %-39s |", message));
-			logger.fatal("+------------------------------------------------------------------+");
-			System.exit(1);
-		}
-    }
+	private void validationPhase(String[] args) {
 
-	private boolean validationPhase(String[] args) {
-
-		return commandLineReader.loadSettings(args);
+		commandLineReader.loadSettings(args);
 	}
 
 	private void leavePhase(String message) {
@@ -160,7 +184,7 @@ public class Attestor {
         logger.info("+-------------------------------------------------------------------+");
     }
 
-	private boolean parsingPhase() {
+	private void parsingPhase() throws FileNotFoundException {
 
 		if( commandLineReader.hasSettingsFile() ){
 			SettingsFileReader settingsReader =
@@ -178,12 +202,7 @@ public class Attestor {
 
 		settings.grammar().loadGrammar( settings.input().getGrammarLocation() );
 
-        try {
-            loadInput();
-        } catch (FileNotFoundException e) {
-            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found.");
-            return false;
-        }
+		loadInput();
 
         taskBuilder = settings.factory().createAnalysisTaskBuilder();
 
@@ -192,8 +211,6 @@ public class Attestor {
                 settings.input().getClassName(),
                 settings.input().getMethodName()
         );
-
-		return true;
 	}
 
 	private void loadInput() throws FileNotFoundException {
@@ -207,7 +224,7 @@ public class Attestor {
 		}
 	}
 
-	private boolean preprocessingPhase() {
+	private void preprocessingPhase() {
 
         HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
         if(stateLabelingAutomaton == null) {
@@ -230,7 +247,7 @@ public class Attestor {
 
 		    if(refinedInputs.isEmpty())	{
 		        logger.fatal("No refined initial state exists.");
-		        return false;
+		        throw new IllegalStateException();
             }
 
             logger.info("done. Number of refined heap configurations: "
@@ -262,36 +279,19 @@ public class Attestor {
             logger.info("No state refinement is used.");
         }
 
-
-		try {
-			task = taskBuilder.build();
-		} catch(Exception e) {
-			logger.fatal(e.getMessage());
-			return false;
-		}
-
-
-		return true;
+		task = taskBuilder.build();
 	}
 
-	private boolean stateSpaceGenerationPhase() {
+	private void stateSpaceGenerationPhase() {
 
-		try {
-			task.execute();
-		} catch(Exception e) {
-			logger.fatal(e.getMessage());
-			return false;
-		}
-
-		return true;
+		task.execute();
 	}
 
-	private boolean modelCheckingPhase() {
+	private void modelCheckingPhase() {
 
-		return true;
 	}
 
-	private boolean reportPhase() {
+	private void reportPhase() {
 
 		if(Settings.getInstance().output().isExportStateSpace() ) {
             logger.info("State space exported to '"
@@ -304,7 +304,5 @@ public class Attestor {
         if( Settings.getInstance().output().isExportTerminalStates() ){
             task.exportTerminalStates();
         }
-
-		return true;
 	}
 }
