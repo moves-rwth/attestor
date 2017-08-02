@@ -1,9 +1,10 @@
 package de.rwth.i2.attestor.main;
 
-import java.io.FileNotFoundException;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+
+import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * A builder class to comfortably create and customize a program analysis task from files or already created objects.
@@ -35,6 +36,12 @@ public interface AnalysisTaskBuilder {
      * @return The builder.
      */
     AnalysisTaskBuilder setInput(HeapConfiguration heapConfiguration);
+
+    /**
+     * Determines the initial states of the program analysis.
+     * @param heapConfigurations The initial states
+     */
+    AnalysisTaskBuilder setInputs(List<HeapConfiguration> heapConfigurations);
 
     /**
      * Load a program together with the initial method to analyze from a file.
@@ -95,4 +102,5 @@ public interface AnalysisTaskBuilder {
      */
     AnalysisTaskBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy);
 
+    AnalysisTaskBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy);
 }

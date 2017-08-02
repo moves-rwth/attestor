@@ -18,10 +18,4 @@ public interface AutomatonState {
      * @return Provides a representation of this state as a set of strings.
      */
     Set<String> getAtomicPropositions();
-
-    /**
-     * @return The set of all atomic propositions supported by the underlying
-     *         heap automaton.
-     */
-    Set<String> getAllAtomicPropositions();
 }

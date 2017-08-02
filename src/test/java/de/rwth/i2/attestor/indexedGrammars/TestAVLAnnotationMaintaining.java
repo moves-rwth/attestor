@@ -1,11 +1,12 @@
 package de.rwth.i2.attestor.indexedGrammars;
 
-import static org.junit.Assert.assertEquals;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.automata.BalancedTreeAutomaton;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestAVLAnnotationMaintaining {
 
@@ -25,10 +26,10 @@ public class TestAVLAnnotationMaintaining {
 	public void test() {
 		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_AnnotationMaintaining() );
 		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_AnnotationMaintaining());
-		
-		AVLAnnotationMaintainingStrategy strategy = new AVLAnnotationMaintainingStrategy();
-		strategy.maintainAnnotations(input);
-		
+
+		BalancedTreeAutomaton automaton = new BalancedTreeAutomaton();
+		automaton.move(input.getHeap());
+
 		assertEquals(expected, input);
 	}
 

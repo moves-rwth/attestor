@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.automata.HeapAutomaton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,22 +63,10 @@ public class OptionSettings {
 	 */
 	private boolean indexedMode = false;
 
-	/**
-	 * Enabling this option means that heap automata shall be used to refine heap configurations prior to
-	 * canonicalization
-	 */
-	private boolean heapAutomataRefinement = false;
+	private HeapAutomaton stateLabelingAutomaton = null;
 
-	/**
-	 * Enabling this options means that heap automata shall be used to label states during state space generation.
-	 */
-	private boolean heapAutomataLabeling = false;
+	private HeapAutomaton stateRefinementAutomaton = null;
 
-	/**
-	 * Enabling this option leads to using a program analysis that applies heap automata additionally to
-     * hyperedge replacement grammars.
-	 */
-	private boolean heapAutomataMode = false;
 
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
@@ -202,32 +191,23 @@ public class OptionSettings {
 		this.indexedMode = indexedMode;
 	}
 
-    /**
-     * @return True if and only if a program analysis should use heap automata for refinement.
-     */
-    public boolean isHeapAutomataMode() {
-        return heapAutomataMode;
-    }
+	public void setStateLabelingAutomaton(HeapAutomaton stateLabelingAutomaton)	{
 
-    public void setHeapAutomataMode(boolean heapAutomataMode) {
-        this.heapAutomataMode = heapAutomataMode;
-    }
+		this.stateLabelingAutomaton = stateLabelingAutomaton;
+	}
 
-    public boolean isHeapAutomataRefinement() {
-        return this.heapAutomataRefinement;
-    }
+	public HeapAutomaton getStateLabelingAutomaton() {
 
-    public void setHeapAutomataRefinement(boolean heapAutomataRefinement) {
-        this.heapAutomataRefinement = heapAutomataRefinement;
-    }
+		return stateLabelingAutomaton;
+	}
 
-    public boolean isHeapAutomataLabeling() {
-        return this.heapAutomataLabeling;
-    }
+	public void setStateRefinementAutomaton(HeapAutomaton stateRefinementAutomaton)	{
 
-    public void setHeapAutomataLabeling(boolean heapAutomataLabeling) {
-        this.heapAutomataLabeling = heapAutomataLabeling;
-    }
+		this.stateRefinementAutomaton = stateRefinementAutomaton;
+	}
 
-	
+	public HeapAutomaton getStateRefinementAutomaton() {
+
+		return stateRefinementAutomaton;
+	}
 }

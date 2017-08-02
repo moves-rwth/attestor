@@ -1,9 +1,5 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
-import java.io.FileNotFoundException;
-
-import org.json.JSONObject;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.main.AnalysisTask;
@@ -14,6 +10,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SSGBuilder;
 import de.rwth.i2.attestor.tasks.GeneralAnalysisTaskBuilder;
 import de.rwth.i2.attestor.util.FileReader;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple builder to create an analysis task based on standard hyperedge
@@ -31,18 +32,21 @@ public class DefaultAnalysisTaskBuilder extends GeneralAnalysisTaskBuilder {
     }
 
     @Override
-    protected ProgramState setupInitialState() {
+    protected List<ProgramState> setupInitialStates() {
 
-        ProgramState initialState;
-        if(scopeDepth > 0) {
-            initialState = new DefaultState(input, scopeDepth);
-        } else {
-            initialState = new DefaultState(input);
-            initialState.prepareHeap();
+        List<ProgramState> initialStates = new ArrayList<>();
+        for(HeapConfiguration input : inputs) {
+            ProgramState initialState;
+            if (scopeDepth > 0) {
+                initialState = new DefaultState(input, scopeDepth);
+            } else {
+                initialState = new DefaultState(input);
+                initialState.prepareHeap();
+            }
+            initialState.setProgramCounter(0);
+            initialStates.add(initialState);
         }
-
-        initialState.setProgramCounter(0);
-        return initialState;
+        return initialStates;
     }
 
     @Override

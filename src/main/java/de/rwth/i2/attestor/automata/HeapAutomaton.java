@@ -1,12 +1,14 @@
 package de.rwth.i2.attestor.automata;
 
-import de.rwth.i2.attestor.automata.implementations.NullAutomatonState;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The purpose of a heap automaton is twofold: First, it is the formal device to label heap configurations that
@@ -18,12 +20,63 @@ import java.util.*;
  *
  * @author Christoph
  */
-public class HeapAutomaton {
+public abstract class HeapAutomaton {
 
-    private TransitionRelation transitions;
+    protected abstract AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration);
 
-    public HeapAutomaton(TransitionRelation transitions) {
-        this.transitions = transitions;
+    public List<HeapConfiguration> refineHeapConfiguration(HeapConfiguration heapConfiguration, Grammar grammar,
+                                                      Set<String> desiredAPs) {
+
+        List<HeapConfiguration> result = new ArrayList<>();
+        Set<Nonterminal> nonterminals = grammar.getAllLeftHandSides();
+
+        List<List<Nonterminal>> ntAssignments = new ArrayList<>();
+        TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
+
+        if(ntEdges.isEmpty()) {
+            result.add(heapConfiguration);
+            return result;
+        }
+
+        for(int i=0; i < ntEdges.size(); i++) {
+
+            int edge = ntEdges.get(i);
+            Nonterminal label = heapConfiguration.labelOf(edge);
+            ntAssignments.add(findMatchingNonterminals(label, nonterminals));
+        }
+
+        AssignmentIterator<Nonterminal> ntAssignmentIterator = new AssignmentIterator<>(ntAssignments);
+        while(ntAssignmentIterator.hasNext()) {
+            List<Nonterminal> assignment = ntAssignmentIterator.next();
+            List<AutomatonState> states = new ArrayList<>(assignment.size());
+            assignment.forEach(n -> states.add(extractState(n)));
+            AutomatonState assignedState = move(states, heapConfiguration);
+            if(assignedState.getAtomicPropositions().containsAll(desiredAPs)) {
+                HeapConfiguration copy = heapConfiguration.clone();
+                TIntArrayList edges = copy.nonterminalEdges();
+                for (int i = 0; i < edges.size(); i++) {
+                    int edge = edges.get(i);
+                    copy.builder().replaceNonterminal(edge, assignment.get(i));
+                }
+                copy.builder().build();
+                result.add(copy);
+            }
+        }
+
+        assert(!result.isEmpty());
+        return result;
+    }
+
+    private List<Nonterminal> findMatchingNonterminals(Nonterminal nt, Set<Nonterminal> availableNonterminals) {
+
+        List<Nonterminal> result = new ArrayList<>(availableNonterminals.size());
+        for(Nonterminal a : availableNonterminals) {
+
+            if(a.getLabel().equals(nt.getLabel())) {
+                result.add(a);
+            }
+        }
+        return result;
     }
 
     /**
@@ -34,10 +87,21 @@ public class HeapAutomaton {
      */
     public AutomatonState move(HeapConfiguration heapConfiguration) {
 
-        return transitions.move(
+        return move(
                 extractStateAssignment(heapConfiguration),
                 heapConfiguration
         );
+    }
+
+    /**
+     * Refines a grammar according to the heap automaton by annotation of nonterminal edges.
+     * @param grammar The original grammar.
+     * @return The refined grammar.
+     */
+    public Grammar refine(Grammar grammar) {
+
+        GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, this);
+        return helper.getRefinedGrammar();
     }
 
     /**
@@ -46,7 +110,7 @@ public class HeapAutomaton {
      * @param heapConfiguration A heap configuration whose automaton states should be determined.
      * @return A list of the automaton states assigned to each nonterminal edge.
      */
-    private List<AutomatonState> extractStateAssignment(HeapConfiguration heapConfiguration) {
+    private static List<AutomatonState> extractStateAssignment(HeapConfiguration heapConfiguration) {
 
         List<AutomatonState> stateAssignments = new ArrayList<>(heapConfiguration.countNonterminalEdges());
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
@@ -64,7 +128,7 @@ public class HeapAutomaton {
      * @param nt The nonterminal.
      * @return The automaton state corresponding to the nonterminal.
      */
-    private AutomatonState extractState(Nonterminal nt) {
+    private static AutomatonState extractState(Nonterminal nt) {
         if(nt instanceof RefinedNonterminal) {
             AutomatonState res = ((RefinedNonterminal) nt).getState();
             if(res != null) {
@@ -75,14 +139,5 @@ public class HeapAutomaton {
         return new NullAutomatonState();
     }
 
-    /**
-     * Refines a grammar according to the heap automaton by annotation of nonterminal edges.
-     * @param grammar The original grammar.
-     * @return The refined grammar.
-     */
-    public Grammar refine(Grammar grammar) {
 
-        GrammarRefinementHelper helper = new GrammarRefinementHelper(grammar, transitions);
-        return helper.getRefinedGrammar();
-    }
 }

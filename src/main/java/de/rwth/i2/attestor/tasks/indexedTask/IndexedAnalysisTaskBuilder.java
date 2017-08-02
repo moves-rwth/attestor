@@ -1,11 +1,5 @@
 package de.rwth.i2.attestor.tasks.indexedTask;
 
-import java.io.FileNotFoundException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
@@ -22,6 +16,13 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SSGBuilder;
 import de.rwth.i2.attestor.tasks.GeneralAnalysisTaskBuilder;
 import de.rwth.i2.attestor.util.FileReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A task builder to create and customize an analysis based on indexed hyperedge
@@ -69,18 +70,22 @@ public class IndexedAnalysisTaskBuilder extends GeneralAnalysisTaskBuilder {
 	}
 
     @Override
-    protected ProgramState setupInitialState() {
+    protected List<ProgramState> setupInitialStates() {
 
-        IndexedState initialState;
-        if(scopeDepth > 0) {
-            initialState = new IndexedState(input, scopeDepth);
-        } else {
-            initialState = new IndexedState(input);
+	    List<ProgramState> initialStates = new ArrayList<>();
+
+	    for(HeapConfiguration input : inputs) {
+            IndexedState state;
+            if (scopeDepth > 0) {
+                state = new IndexedState(input, scopeDepth);
+            } else {
+                state = new IndexedState(input);
+            }
+            state.prepareHeap();
+            state.setProgramCounter(0);
+            initialStates.add(state);
         }
-
-        initialState.prepareHeap();
-        initialState.setProgramCounter(0);
-        return initialState;
+        return initialStates;
     }
 
     @Override

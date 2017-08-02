@@ -1,17 +1,19 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarRequest;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
+
+import java.util.*;
 
 /**
  * Computes and caches the rules for resolving a given violation point
@@ -82,6 +84,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			return computeMaterializationsAndRules( indexedToReplace, rulesResolvingViolationPoint);
 
 		}else{
+			System.out.println("NOT AN INT!!!");
 			return super.getRulesFor( toReplace, tentacle, requestedSelector );
 		}
 	}

@@ -5,6 +5,9 @@ import de.rwth.i2.attestor.main.AnalysisTask;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of most common functionality of analysis tasks.
  * The complete customization of an analysis task determining, for example how state spaces are exported,
@@ -56,8 +59,12 @@ public abstract class GeneralAnalysisTask implements AnalysisTask {
     }
 
     @Override
-    public HeapConfiguration getInput() {
-        return stateSpaceGenerator.getInitialState().getHeap();
+    public List<HeapConfiguration> getInputs() {
+
+        List<ProgramState> states = stateSpaceGenerator.getInitialStates();
+        List<HeapConfiguration> res = new ArrayList<>(states.size());
+        states.forEach(s -> res.add(s.getHeap()));
+        return res;
     }
 
     @Override
@@ -83,6 +90,12 @@ public abstract class GeneralAnalysisTask implements AnalysisTask {
     @Override
     public StateLabelingStrategy getStateLabelingStrategy() {
         return stateSpaceGenerator.getStateLabelingStrategy();
+    }
+
+    @Override
+    public StateRefinementStrategy getStateRefinementStrategy() {
+
+        return stateSpaceGenerator.getStateRefinementStrategy();
     }
 
     @Override

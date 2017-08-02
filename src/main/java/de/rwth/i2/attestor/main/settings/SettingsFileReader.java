@@ -1,19 +1,20 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Scanner;
-
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.generated.lexer.LexerException;
-import de.rwth.i2.attestor.generated.parser.ParserException;
+import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
+import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.util.DebugMode;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Populates {@link Settings} from a settings file.
@@ -115,28 +116,22 @@ public class SettingsFileReader {
 
 		}
 
-		//if(jsonInput.has("initialState")){
 			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
 			if( initialSettings.has( "path" ) ){
 				input.setPathToInput( initialSettings.getString( "path" ) );
 			}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
 				logger.error("You must define a default path or a path for the initial state");
 			}
-			System.out.println(initialSettings.toString());
 			if(initialSettings.has("file")) {
 				input.setInputName(initialSettings.getString("file"));
 			} else if(input.getInputName() == null) {
-				// Set default: empty HC
-				//} else {
 				if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
-					logger.entry("Default initial states location not found!");
+					throw new IllegalStateException("Default initial states location not found.");
 				} else {
 					input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
 				}
 			}
-		//}
 
-		
 		return input;
 	}
 
@@ -214,7 +209,19 @@ public class SettingsFileReader {
 		if( jsonOptions.has( "removeDeadVariables" ) ){
 			options.setRemoveDeadVariables( jsonOptions.getBoolean( "removeDeadVariables" ) );
 		}
-		
+
+		if( jsonOptions.has("stateLabeling") ) {
+            JSONArray stateLabelingSettings = jsonOptions.getJSONArray("stateLabeling");
+            JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateLabelingSettings);
+            options.setStateLabelingAutomaton( parser.getHeapAutomaton() );
+        }
+
+        if( jsonOptions.has("stateRefinement") ) {
+            JSONArray stateRefinementSettings = jsonOptions.getJSONArray("stateRefinement");
+            JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateRefinementSettings);
+            options.setStateRefinementAutomaton( parser.getHeapAutomaton() );
+        }
+
 		return options;
 	}
 

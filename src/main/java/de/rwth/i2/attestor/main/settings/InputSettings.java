@@ -175,7 +175,7 @@ public class InputSettings {
 		return pathToInput + File.separator + inputName;
 	}
 
-    /**
+	/**
      * @return Checks whether all paths and file names, i.e. grammar, class, classpath, method, and initial state,
      *         have been set.
      */
@@ -188,7 +188,7 @@ public class InputSettings {
 	public void setRootPath(String rootPath) {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
-		this.pathToInput = rootPath + File.separator + this.pathToInput;	
+		this.pathToInput = rootPath + File.separator + this.pathToInput;
 	}
 
 	/**

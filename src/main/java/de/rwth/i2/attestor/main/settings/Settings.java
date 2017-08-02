@@ -48,11 +48,6 @@ public class Settings {
 	private GrammarSettings grammarSettings;
 
 	/**
-	 * Settings regarding heap automata.
-	 */
-	private HeapAutomataSettings heapAutomataSettings;
-
-	/**
 	 * Settings customizing whether and how model checking is performed.
 	 */
 	private ModelCheckingSettings mcSettings;
@@ -74,7 +69,6 @@ public class Settings {
         factorySettings = new FactorySettings();
         grammarSettings = new GrammarSettings();
 		mcSettings = new ModelCheckingSettings();
-        heapAutomataSettings = new HeapAutomataSettings();
     }
 
     /**
