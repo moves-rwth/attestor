@@ -13,12 +13,8 @@ public class FileReader {
 
     public static String read(String filename) throws FileNotFoundException {
         Scanner scan = new Scanner(new java.io.FileReader( filename ) );
-        StringBuilder str = new StringBuilder("");
-        while (scan.hasNext()) {
-            str.append(scan.nextLine());
-        }
-        scan.close();
-        return str.toString();
+
+        return scannerToString(scan);
     }
 
     public static String read(InputStream stream){
