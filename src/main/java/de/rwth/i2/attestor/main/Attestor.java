@@ -227,7 +227,13 @@ public class Attestor {
 	private void preprocessingPhase() {
 
         HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
-        if(stateLabelingAutomaton == null) {
+
+		if(settings.options().isIndexedMode()) {
+			taskBuilder.setInput(inputHeapConfiguration);
+			taskBuilder.setStateLabelingStrategy(state -> {});
+			logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
+		}
+        else if(stateLabelingAutomaton == null) {
             taskBuilder.setInput(inputHeapConfiguration);
             taskBuilder.setStateLabelingStrategy(state -> {});
             logger.info("Skipped refinement, because no atomic propositions are required.");

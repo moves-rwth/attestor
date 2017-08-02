@@ -104,6 +104,22 @@ class BalancedTreeState implements AutomatonState {
         }
         return result;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof BalancedTreeState;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    public String toString() {
+        return "BTS";
+    }
+
+
 }
 
 /**

@@ -65,4 +65,24 @@ class IntersectionState implements AutomatonState {
         result.addAll(rightState.getAtomicPropositions());
         return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof IntersectionState) {
+            IntersectionState state = (IntersectionState) obj;
+            return leftState.equals(state.leftState) && rightState.equals(state.rightState);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 17 * leftState.hashCode() * rightState.hashCode();
+    }
+
+    @Override
+    public String toString() {
+
+        return leftState.toString() + ";" + rightState.toString();
+    }
 }

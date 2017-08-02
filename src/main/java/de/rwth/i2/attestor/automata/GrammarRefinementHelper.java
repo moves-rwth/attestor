@@ -150,7 +150,6 @@ class GrammarRefinementHelper {
 
     private List<AutomatonState> getFoundStates(Nonterminal nt) {
 
-        System.out.println(foundStates);
         if(!foundStates.containsKey(nt)) {
             foundStates.put(nt, new ArrayList<>());
         }
@@ -184,7 +183,7 @@ class GrammarRefinementHelper {
      */
     private Nonterminal createRefinedLhs(Nonterminal lhs, AutomatonState state) {
 
-        RefinedNonterminal newLhs = ((RefinedNonterminal) lhs).withState(state);
+        RefinedNonterminal newLhs = new RefinedNonterminalImpl(lhs, state);
         List<AutomatonState> lhsFoundStates = getFoundStates(lhs);
         if(!lhsFoundStates.contains(state)) {
             lhsFoundStates.add(state);
