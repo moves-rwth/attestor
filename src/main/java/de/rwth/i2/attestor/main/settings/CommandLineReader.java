@@ -413,11 +413,10 @@ public class CommandLineReader {
 		if( cmd.hasOption("i")){
 			inputSettings.setInputName(cmd.getOptionValue("i"));
 		} else if(inputSettings.getInputName() == null){
-			if(CommandLineReader.class.getResource("../../../../../../initialStates") == null){
+			if (CommandLineReader.class.getClassLoader().getResource("initialStates") == null) {
 				logger.entry("Default initial states location not found!");
 			} else {
-				inputSettings.setInputName("emptyInput.json");
-				inputSettings.setPathToInput(CommandLineReader.class.getResource("../../../../../../initialStates").getPath());
+				inputSettings.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
 			}
 		}
 		

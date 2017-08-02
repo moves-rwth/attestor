@@ -199,9 +199,9 @@ public class Attestor {
 		// Load the requested predefined grammars
 		if(settings.input().getUsedPredefinedGrammars() != null) {
 			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
+				logger.debug("Loading predefined grammar " + predefinedGrammar);
 				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-				settings.grammar().loadGrammarFromFile(Attestor.class.getResource("../../../../../predefinedGrammars/" + predefinedGrammar + ".json").getPath(), renamingMap);
-
+				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
 			}
 		}
 
@@ -210,8 +210,8 @@ public class Attestor {
 
         try {
             loadInput();
-        } catch (FileNotFoundException e) {
-            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found. Test");
+        } catch (Exception e) {
+            logger.fatal("Input file '" + settings.input().getInputLocation() + "' could not be found.");
             return false;
         }
 
@@ -226,8 +226,16 @@ public class Attestor {
 		return true;
 	}
 
-	private void loadInput() throws FileNotFoundException {
-		String str = FileReader.read(settings.input().getInputLocation());
+	private void loadInput() throws FileNotFoundException, IOException {
+		String str;
+		if(settings.input().getInputName() != null){
+			logger.debug("Reading user-defined initial state.");
+			str = FileReader.read(settings.input().getInputLocation());
+		} else {
+			logger.debug("Reading predefined empty initial state.");
+			str = FileReader.read(settings.input().getInitialStatesURL().openStream());
+		}
+
 		JSONObject jsonObj = new JSONObject(str);
 
 		if(settings.options().isIndexedMode()) {

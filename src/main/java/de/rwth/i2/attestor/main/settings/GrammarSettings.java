@@ -1,6 +1,9 @@
 package de.rwth.i2.attestor.main.settings;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -139,5 +142,43 @@ public class GrammarSettings {
             //Settings.getInstance().factory().getGrammarExporter(location).export(grammar);
             logger.debug("Exported grammar to " + location );
         }
+    }
+
+    public void loadGrammarFromURL(URL resource, HashMap<String, String> rename) {
+
+        if(grammar != null)  {
+            logger.debug("Extending previously set grammar.");
+        }
+
+        // The first time a grammar file is loaded
+        if(grammarBuilder == null) {
+            this.grammarBuilder = Grammar.builder();
+        }
+
+        try {
+            InputStream is = resource.openStream();
+            String str = FileReader.read(is);
+
+            // Modify grammar (replace all keys in rename by its values)
+            if(rename != null){
+                for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
+                    str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
+                }
+            }
+
+            logger.debug("Renamed grammar string: " + str);
+
+            JSONArray array = new JSONArray(str);
+
+            this.grammarBuilder.addRules(parseRules(array));
+
+        } catch (IOException e) {
+            logger.error("Could not parse grammar at location " + resource.getPath() + ". Skipping it.");
+        }
+
+        // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
+
     }
 }

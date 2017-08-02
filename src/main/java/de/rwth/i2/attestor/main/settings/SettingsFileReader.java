@@ -103,11 +103,8 @@ public class SettingsFileReader {
 			String grammarType = predefinedGrammarSetting.getString("type");
 
 			// Check if corresponding grammar exists
-			//File grammarFile = new File(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + grammarType + ".json").getPath());
-			if(SettingsFileReader.class.getResource("../../../../../../predefinedGrammars/" + grammarType + ".json") != null){
+			if(SettingsFileReader.class.getClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 
-
-			//if(ClassLoader.getSystemClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);
 					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
 					logger.debug("Adding predefined grammar " + grammarType);
@@ -131,12 +128,10 @@ public class SettingsFileReader {
 			} else if(input.getInputName() == null) {
 				// Set default: empty HC
 				//} else {
-				if (SettingsFileReader.class.getResource("../../../../../../initialStates") == null) {
+				if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
 					logger.entry("Default initial states location not found!");
 				} else {
-					input.setPathToInput(SettingsFileReader.class.getResource("../../../../../../initialStates").getPath());
-					logger.debug("Setting path to input: " + SettingsFileReader.class.getResource("../../../../../../initialStates").getPath());
-					input.setInputName("emptyInput.json");
+					input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
 				}
 			}
 		//}

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.settings;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,15 @@ public class InputSettings {
      * The path to the file specifying the initial state.
      */
 	private String pathToInput;
+
+	public URL getInitialStatesURL() {
+		return initialStatesURL;
+	}
+
+	/**
+	 * The url to the default empty initial state.
+	 */
+	public URL initialStatesURL;
 
 	public String getInputName() {
 		return inputName;
@@ -204,5 +214,9 @@ public class InputSettings {
 
 	public HashMap<String,String> getRenaming(String predefinedGrammar) {
 		return this.grammar2RenameMap.get(predefinedGrammar);
+	}
+
+	public void setInitialStatesURL(URL resource) {
+		this.initialStatesURL = resource;
 	}
 }
