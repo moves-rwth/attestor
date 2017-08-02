@@ -1,24 +1,29 @@
 package de.rwth.i2.attestor.indexedGrammars;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.indexedGrammars.stack.AVLStackCanonizationStrategy;
+import de.rwth.i2.attestor.indexedGrammars.stack.StackCanonizationStrategy;
+import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.util.DebugMode;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy {
 	private static final Logger logger = LogManager.getLogger( "IndexedCanonicalizationStrategy" );
@@ -41,7 +46,6 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	private boolean ignoreUniqueSuccessorStatements;
 
 	private final StackCanonizationStrategy stackCanonizer;
-	private final AnnotationsMaintainingStrategy annotationMaintainer;
 
 	/**
 	 * Initializes the strategy.
@@ -51,17 +55,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	public IndexedCanonicalizationStrategy(Grammar grammar, boolean isConfluent) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
-		this.ignoreUniqueSuccessorStatements = false;
 		this.stackCanonizer = new AVLStackCanonizationStrategy();
-		this.annotationMaintainer = new AVLAnnotationMaintainingStrategy();
-	}
-
-	/**
-	 * Sets a flag to prevent abstraction of program states with at most one successor.
-	 * @param enabled True if and only if program states with at most one successor are not abstracted.
-	 */
-	public void setIgnoreUniqueSuccessorStatements(boolean enabled) {
-		ignoreUniqueSuccessorStatements = enabled;
 	}
 
 	/**
@@ -74,12 +68,6 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
 		IndexedState conf = ((IndexedState) state).clone();
-
-		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
-
-			return SingleElementUtil.createSet( conf );
-		}
-		annotationMaintainer.maintainAnnotations( conf );
 
 		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
 			if( DebugMode.ENABLED ){

@@ -75,14 +75,15 @@ public class IndexedAnalysisTaskBuilder extends GeneralAnalysisTaskBuilder {
 	    List<ProgramState> initialStates = new ArrayList<>();
 
 	    for(HeapConfiguration input : inputs) {
-            IndexedState initialState;
+            IndexedState state;
             if (scopeDepth > 0) {
-                initialState = new IndexedState(input, scopeDepth);
+                state = new IndexedState(input, scopeDepth);
             } else {
-                initialState = new IndexedState(input);
+                state = new IndexedState(input);
             }
-            initialState.prepareHeap();
-            initialState.setProgramCounter(0);
+            state.prepareHeap();
+            state.setProgramCounter(0);
+            initialStates.add(state);
         }
         return initialStates;
     }

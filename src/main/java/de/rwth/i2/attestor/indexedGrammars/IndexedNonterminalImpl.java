@@ -1,18 +1,16 @@
 package de.rwth.i2.attestor.indexedGrammars;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.indexedGrammars.stack.Stack;
+import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 
-import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
 
-	private Stack stack;
-	private final GeneralNonterminal generalNonterminal;
+	protected Stack stack;
+	protected  final GeneralNonterminal generalNonterminal;
 
 	public IndexedNonterminalImpl(String label,
                                   int rank,
@@ -34,7 +32,7 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
         this.stack = new Stack(index);
 	}
 
-	private IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Stack stack) {
+	protected IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Stack stack) {
 	    this.generalNonterminal = generalNonterminal;
 	    this.stack = stack;
     }

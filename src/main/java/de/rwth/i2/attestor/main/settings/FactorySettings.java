@@ -83,7 +83,8 @@ public class FactorySettings {
     public Nonterminal getNonterminal(String label) {
 
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-            return new RefinedIndexedNonterminal(new IndexedNonterminalImpl(label, new ArrayList<>()), null);
+            return new RefinedIndexedNonterminal(label, new ArrayList<>(), null);
+            //return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
@@ -123,9 +124,10 @@ public class FactorySettings {
 
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
             return new RefinedIndexedNonterminal(
-                    new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>()),
+                    label, rank, isReductionTentacle, new ArrayList<>(),
                     null
             );
+            //return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {

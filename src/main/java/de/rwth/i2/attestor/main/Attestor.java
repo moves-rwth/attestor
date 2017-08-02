@@ -28,6 +28,7 @@ import java.util.Properties;
 public class Attestor {
 
     private static final String ANSI_GREEN = "\u001B[32m";
+	private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
 
     private final Properties properties = new Properties();
@@ -77,23 +78,23 @@ public class Attestor {
 
 	    printVersion();
 
-		abortOnFail(validationPhase(args), "Validation phase failed.");
+		abortOnFail(validationPhase(args), "Validation");
         leavePhase("Validation");
 
-		abortOnFail(parsingPhase(), "Parsing phase failed.");
+		abortOnFail(parsingPhase(), "Parsing");
         leavePhase("Parsing");
 
-		abortOnFail(preprocessingPhase(), "Preprocessing phase failed.");
+		abortOnFail(preprocessingPhase(), "Preprocessing");
         leavePhase("Preprocessing");
 
         printAnalyzedMethod();
-		abortOnFail(stateSpaceGenerationPhase(), "State space generation phase failed.");
+		abortOnFail(stateSpaceGenerationPhase(), "State space generation");
         leavePhase("State space generation");
 
-		abortOnFail(modelCheckingPhase(), "Model checking phase failed.");
+		abortOnFail(modelCheckingPhase(), "Model checking");
         leavePhase("Model-checking");
 
-		abortOnFail(reportPhase(), "Report phase failed.");
+		abortOnFail(reportPhase(), "Report generation");
         leavePhase("Report generation");
 
 		printSummary();
@@ -136,12 +137,15 @@ public class Attestor {
         logger.info("+-----------+----------------------+-----------------------+--------+");
     }
 
-	private void abortOnFail(boolean executionSuccessful, String errorMessage) {
+	private void abortOnFail(boolean executionSuccessful, String message) {
 
 	    if(!executionSuccessful) {
-	        logger.fatal(errorMessage);
-	        System.exit(1);
-        }
+			logger.fatal("+------------------------------------------------------------------+");
+			logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
+					+ ANSI_RESET + " %-39s |", message));
+			logger.fatal("+------------------------------------------------------------------+");
+			System.exit(1);
+		}
     }
 
 	private boolean validationPhase(String[] args) {
@@ -208,6 +212,8 @@ public class Attestor {
         HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
         if(stateLabelingAutomaton == null) {
             taskBuilder.setInput(inputHeapConfiguration);
+            taskBuilder.setStateLabelingStrategy(state -> {});
+            logger.info("Skipped refinement, because no atomic propositions are required.");
         } else {
 
             logger.info("Refining grammar...");
@@ -244,21 +250,38 @@ public class Attestor {
 
 		HeapAutomaton stateRefinementAutomaton = settings.options().getStateRefinementAutomaton();
         if(stateRefinementAutomaton != null) {
+
             taskBuilder.setStateRefinementStrategy(
                     state -> {
                         stateRefinementAutomaton.move(state.getHeap());
                         return state;
                     }
             );
+            logger.info("Initialized state refinement.");
+        } else {
+            logger.info("No state refinement is used.");
         }
+
+
+		try {
+			task = taskBuilder.build();
+		} catch(Exception e) {
+			logger.fatal(e.getMessage());
+			return false;
+		}
+
 
 		return true;
 	}
 
 	private boolean stateSpaceGenerationPhase() {
 
-        task = taskBuilder.build();
-        task.execute();
+		try {
+			task.execute();
+		} catch(Exception e) {
+			logger.fatal(e.getMessage());
+			return false;
+		}
 
 		return true;
 	}

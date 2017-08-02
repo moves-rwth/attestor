@@ -42,12 +42,33 @@ public class SSGBuilder {
 	 * methods of this builder
 	 */
 	public StateSpaceGenerator build() {
-		
-		if(initialStates.isEmpty()
-				|| generator.program == null || generator.materializationStrategy == null
-				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null
-				|| generator.stateLabelingStrategy == null || generator.stateRefinementStrategy == null) {
-			throw new IllegalStateException("StateSpaceGenerator not completely initialized.");
+
+	    if(initialStates.isEmpty())	 {
+	    	throw new IllegalStateException("StateSpaceGenerator: No initial states.");
+		}
+
+		if(generator.program == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No program.");
+		}
+
+		if(generator.materializationStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No materialization strategy.");
+		}
+
+		if(generator.canonicalizationStrategy== null) {
+			throw new IllegalStateException("StateSpaceGenerator: No canonicalization strategy.");
+		}
+
+		if(generator.abortStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No abort strategy.");
+		}
+
+		if(generator.stateLabelingStrategy == null)	{
+	    	throw new IllegalStateException("StateSpaceGenerator: No state labeling strategy.");
+		}
+
+		if(generator.stateRefinementStrategy == null)	{
+			throw new IllegalStateException("StateSpaceGenerator: No state refinement strategy.");
 		}
 
 		for (ProgramState state : initialStates) {
