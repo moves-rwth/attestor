@@ -90,6 +90,16 @@ public class SSGBuilder {
 		return this;
 	}
 
+	/**
+	 * @param initialStates The initial states from which all reachable states are computed by
+	 *                     the state space generation.
+	 * @return The builder.
+	 */
+	public SSGBuilder addInitialStates(List<ProgramState> initialStates) {
+		this.initialStates.addAll(initialStates);
+		return this;
+	}
+
     /**
      * @param program The program that is executed to generate the state space.
      * @return The builder.

@@ -52,6 +52,11 @@ public class Settings {
 	 */
 	private ModelCheckingSettings mcSettings;
 
+	/**
+	 * Settings customizing the state space generation.
+	 */
+	private StateSpaceGenerationSettings stateSpaceGenerationSettings;
+
     /**
      * Initializes with default settings.
      */
@@ -69,6 +74,7 @@ public class Settings {
         factorySettings = new FactorySettings();
         grammarSettings = new GrammarSettings();
 		mcSettings = new ModelCheckingSettings();
+		stateSpaceGenerationSettings = new StateSpaceGenerationSettings();
     }
 
     /**
@@ -116,4 +122,8 @@ public class Settings {
 		outputSettings.setRootPath( rootPath );
 	}
 
+    public StateSpaceGenerationSettings stateSpaceGeneration() {
+
+        return stateSpaceGenerationSettings;
+    }
 }

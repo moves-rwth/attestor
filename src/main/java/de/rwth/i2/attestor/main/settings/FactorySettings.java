@@ -13,8 +13,7 @@ import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
 import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.tasks.GeneralType;
@@ -27,6 +26,7 @@ import de.rwth.i2.attestor.types.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -254,5 +254,53 @@ public class FactorySettings {
         result.setProgramCounter(programCounter);
         result.prepareHeap();
         return result;
+    }
+
+    public StateSpaceGenerator createStateSpaceGenerator(Program program, HeapConfiguration input, int scopeDepth) {
+
+        return getStateSpaceGeneratorBuilder()
+                .setProgram(program)
+                .addInitialState(
+                        createProgramState(0, input, scopeDepth)
+                )
+                .build();
+    }
+
+    public StateSpaceGenerator createStateSpaceGenerator(Program program,
+                                                         List<HeapConfiguration> inputs, int scopeDepth) {
+        List<ProgramState> inputStates = new ArrayList<>(inputs.size());
+        inputs.forEach(hc -> inputStates.add(createProgramState(0, hc, scopeDepth)));
+
+        return getStateSpaceGeneratorBuilder()
+                .setProgram(program)
+                .addInitialStates(
+                        inputStates
+                )
+                .build();
+    }
+
+    private SSGBuilder getStateSpaceGeneratorBuilder() {
+
+        StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
+        return StateSpaceGenerator
+                .builder()
+                .setStateLabelingStrategy(
+                        settings.getStateLabelingStrategy()
+                )
+                .setMaterializationStrategy(
+                        settings.getMaterializationStrategy()
+                )
+                .setInclusionStrategy(
+                        settings.getInclusionStrategy()
+                )
+                .setCanonizationStrategy(
+                        settings.getCanonicalizationStrategy()
+                )
+                .setAbortStrategy(
+                        settings.getAbortStrategy()
+                )
+                .setStateRefinementStrategy(
+                        settings.getStateRefinementStrategy()
+                );
     }
 }

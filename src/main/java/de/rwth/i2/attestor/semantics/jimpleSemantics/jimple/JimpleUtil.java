@@ -1,13 +1,15 @@
 
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
-import java.util.Set;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+
+import java.util.Set;
 
 /**
  * This class should only be used inside of the jimple package.
@@ -43,13 +45,12 @@ public class JimpleUtil {
 	
 	public static StateSpace getStateSpace(Program program, HeapConfiguration input, int scopeDepth) {
 
-        return Settings.getInstance().factory()
-                .createAnalysisTaskBuilder()
-                    .setProgram(program)
-                    .setInput(input)
-                    .setScopeDepth(scopeDepth)
-                .build()
-                .execute();
-
+    	return Settings.getInstance()
+				.factory()
+				.createStateSpaceGenerator(
+					program,
+					input,
+					scopeDepth
+				).generate();
 	}
 }

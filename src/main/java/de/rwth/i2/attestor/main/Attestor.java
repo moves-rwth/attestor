@@ -1,12 +1,23 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.automata.HeapAutomaton;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.indexedGrammars.IndexedCanonicalizationStrategy;
+import de.rwth.i2.attestor.indexedGrammars.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.tasks.GeneralInclusionStrategy;
+import de.rwth.i2.attestor.tasks.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.util.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,11 +25,7 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -47,19 +54,24 @@ public class Attestor {
 	private final Settings settings = Settings.getInstance();
 
     /**
-     * The input heap configuration of the main method to analyze.
+     * The originally parsed input heap configuration.
      */
-    private HeapConfiguration inputHeapConfiguration;
+	private HeapConfiguration originalInput;
 
     /**
-     * The task builder used to construct the first analysis task.
+     * The input heap configurations that will be used to analyze the program.
      */
-    private AnalysisTaskBuilder taskBuilder;
+    private List<HeapConfiguration> inputs = new ArrayList<>();
 
-    /**
-     * The task builder used to construct the first analysis task.
-     */
-    private AnalysisTask task;
+	/**
+	 * The program that should be analyzed.
+	 */
+	private Program program;
+
+	/**
+	 * The state space obtained from analyzing the initial method of the provided program.
+	 */
+	private StateSpace stateSpace;
 
     /**
 	 * A parser for command line arguments.
@@ -102,7 +114,6 @@ public class Attestor {
 		}
         leavePhase("Preprocessing");
 
-        printAnalyzedMethod();
 
         try {
 			stateSpaceGenerationPhase();
@@ -159,8 +170,8 @@ public class Attestor {
         logger.info("+-----------+----------------------+-----------------------+--------+");
         logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
                             Settings.getInstance().factory().getTotalNumberOfStates(),
-                            task.getStateSpace().getStates().size(),
-                            task.getStateSpace().getFinalStates().size()
+                            stateSpace.getStates().size(),
+                            stateSpace.getFinalStates().size()
                           ));
         logger.info("+-----------+----------------------+-----------------------+--------+");
     }
@@ -225,13 +236,7 @@ public class Attestor {
 
 		loadInput();
 
-        taskBuilder = settings.factory().createAnalysisTaskBuilder();
-
-		taskBuilder.loadProgram(
-                settings.input().getClasspath(),
-                settings.input().getClassName(),
-                settings.input().getMethodName()
-        );
+		loadProgram();
 	}
 
 	private void loadInput() throws FileNotFoundException, IOException {
@@ -247,83 +252,199 @@ public class Attestor {
 		JSONObject jsonObj = new JSONObject(str);
 
 		if(settings.options().isIndexedMode()) {
-			inputHeapConfiguration = JsonToIndexedHC.jsonToHC( jsonObj );
+		    originalInput = JsonToIndexedHC.jsonToHC( jsonObj );
 		} else {
-			inputHeapConfiguration = JsonToDefaultHC.jsonToHC( jsonObj );
+			originalInput = JsonToDefaultHC.jsonToHC( jsonObj );
 		}
+	}
+
+	private void loadProgram() {
+
+		JimpleParser programParser = new JimpleParser(new StandardAbstractSemantics());
+		program = programParser.parse(
+				settings.input().getClasspath(),
+				settings.input().getClassName(),
+				settings.input().getMethodName()
+		);
 	}
 
 	private void preprocessingPhase() {
 
-        HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
-
-		if(settings.options().isIndexedMode()) {
-			taskBuilder.setInput(inputHeapConfiguration);
-			taskBuilder.setStateLabelingStrategy(state -> {});
-			logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
-		}
-        else if(stateLabelingAutomaton == null) {
-            taskBuilder.setInput(inputHeapConfiguration);
-            taskBuilder.setStateLabelingStrategy(state -> {});
-            logger.info("Skipped refinement, because no atomic propositions are required.");
+        if(!settings.options().isIndexedMode()
+                && settings.options().getStateLabelingAutomaton() != null) {
+            setupStateLabeling();
         } else {
-
-            logger.info("Refining grammar...");
-			settings.grammar().setGrammar(
-					stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
-			);
-			logger.info("done. Number of refined nonterminals: "
-                    + settings.grammar().getGrammar().getAllLeftHandSides().size());
-			logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
-
-			logger.info("Refining input heap configuration...");
-			List<HeapConfiguration> refinedInputs = stateLabelingAutomaton
-                    .refineHeapConfiguration(inputHeapConfiguration, settings.grammar().getGrammar(),  new HashSet<>());
-
-		    if(refinedInputs.isEmpty())	{
-		        logger.fatal("No refined initial state exists.");
-		        throw new IllegalStateException();
+            inputs.add(originalInput);
+            settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
+            if(settings.options().getStateLabelingAutomaton() == null) {
+                logger.info("Skipped refinement, because no atomic propositions are required.");
+            } else if(settings.options().isIndexedMode()) {
+                logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
             }
-
-            logger.info("done. Number of refined heap configurations: "
-                    + refinedInputs.size());
-
-			taskBuilder.setInputs(refinedInputs);
-		    taskBuilder.setStateLabelingStrategy(
-                    programState -> {
-                        for(String ap : stateLabelingAutomaton
-                                .move(programState.getHeap())
-                                .getAtomicPropositions()) {
-                            programState.addAP(ap);
-                        }
-                    }
-            );
-		}
-
-		HeapAutomaton stateRefinementAutomaton = settings.options().getStateRefinementAutomaton();
-        if(stateRefinementAutomaton != null) {
-
-            taskBuilder.setStateRefinementStrategy(
-                    state -> {
-                        stateRefinementAutomaton.move(state.getHeap());
-                        return state;
-                    }
-            );
-            logger.info("Initialized state refinement.");
-        } else {
-            logger.info("No state refinement is used.");
         }
 
-		task = taskBuilder.build();
+        setupStateRefinement();
 	}
+
+	private void setupStateLabeling() {
+
+        logger.info("Refining grammar...");
+        HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
+        settings.grammar().setGrammar(
+                stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
+        );
+        logger.info("done. Number of refined nonterminals: "
+                + settings.grammar().getGrammar().getAllLeftHandSides().size());
+        logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
+
+        logger.info("Refining input heap configuration...");
+        inputs = stateLabelingAutomaton.refineHeapConfiguration(
+                originalInput,
+                settings.grammar().getGrammar(),
+                new HashSet<>()
+        );
+
+        if(inputs.isEmpty())	{
+            logger.fatal("No refined initial state exists.");
+            throw new IllegalStateException();
+        }
+
+        logger.info("done. Number of refined heap configurations: "
+                + inputs.size());
+
+        settings.stateSpaceGeneration()
+                .setStateLabelingStrategy(
+                        programState -> {
+                            for(String ap : stateLabelingAutomaton
+                                    .move(programState.getHeap()).getAtomicPropositions()) {
+                                programState.addAP(ap);
+                            }
+                        }
+                );
+    }
+
+    private void setupStateRefinement() {
+
+        HeapAutomaton stateRefinementAutomaton = settings.options().getStateRefinementAutomaton();
+        if(stateRefinementAutomaton != null) {
+            settings.stateSpaceGeneration()
+                    .setStateRefinementStrategy(
+                            state -> {
+                                stateRefinementAutomaton.move(state.getHeap());
+                                return state;
+                            }
+                    );
+            logger.info("Initialized state refinement.");
+        } else {
+            settings.stateSpaceGeneration()
+                    .setStateRefinementStrategy(
+                            state -> state
+                    );
+            logger.info("No additional state refinement is used.");
+        }
+    }
 
 	private void stateSpaceGenerationPhase() {
 
-		task.execute();
+	    settings.factory().resetTotalNumberOfStates();
+
+	    setupMaterialization();
+	    setupCanonicalization();
+	    setupInclusionTest();
+	    setupAbortTest();
+
+	    assert(!inputs.isEmpty());
+
+	    StateSpaceGenerator stateSpaceGenerator = settings
+                .factory()
+                .createStateSpaceGenerator(
+	                program,
+                    inputs,
+                    0
+                );
+
+	    printAnalyzedMethod();
+
+	    stateSpace = stateSpaceGenerator.generate();
+	    logger.info("State space generation finished. #states: "
+                + settings.factory().getTotalNumberOfStates());
 	}
+
+	private void setupMaterialization() {
+
+        Grammar grammar = settings.grammar().getGrammar();
+        MaterializationStrategy strategy;
+
+        if(settings.options().isIndexedMode()) {
+            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+            StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+            MaterializationRuleManager grammarManager =
+                    new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+
+            GrammarResponseApplier ruleApplier =
+                    new IndexedGrammarResponseApplier( new StackMaterializer(),
+                            new GraphMaterializer() );
+
+            strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
+            logger.info("Setup materialization using indexed grammars.");
+        } else {
+            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+            MaterializationRuleManager grammarManager =
+                    new DefaultMaterializationRuleManager(vioResolver);
+            GrammarResponseApplier ruleApplier =
+                    new DefaultGrammarResponseApplier( new GraphMaterializer() );
+            strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
+            logger.info("Setup materialization using standard hyperedge replacement grammars.");
+        }
+
+        settings.stateSpaceGeneration().setMaterializationStrategy(strategy);
+    }
+
+    private void setupCanonicalization() {
+
+        Grammar grammar = settings.grammar().getGrammar();
+        CanonicalizationStrategy strategy;
+        if(settings.options().isIndexedMode()) {
+            strategy = new IndexedCanonicalizationStrategy(
+                    grammar,
+                    true
+            );
+            logger.info("Setup canonicalization using indexed grammar.");
+        } else {
+            strategy = new DefaultCanonicalizationStrategy(
+                    grammar,
+                    true
+            );
+            logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
+        }
+        settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
+    }
+
+    private void setupInclusionTest() {
+	    settings.stateSpaceGeneration()
+                .setInclusionStrategy(
+                        new GeneralInclusionStrategy()
+                );
+	    logger.info("Setup state inclusion test: Isomorphism.");
+    }
+
+    private void setupAbortTest() {
+        int stateSpaceBound = Settings.getInstance().options().getMaxStateSpaceSize();
+        int stateBound = Settings.getInstance().options().getMaxStateSize();
+        settings.stateSpaceGeneration()
+                .setAbortStrategy(
+                        new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
+                );
+        logger.info("Setup abort criterion: #states > "
+                + stateSpaceBound
+                + " or one state is larger than "
+                + stateBound
+                + " nodes.");
+    }
 
 	private void modelCheckingPhase() {
 
+	    logger.warn("Model checking phase not implemented yet.");
 	}
 
 	private void reportPhase() {
@@ -333,11 +454,11 @@ public class Attestor {
                     + Settings.getInstance().output().getLocationForStateSpace()
 					+ "'"
 			);
-            task.exportAllStates();
+            //task.exportAllStates();
         }
 
         if( Settings.getInstance().output().isExportTerminalStates() ){
-            task.exportTerminalStates();
+            //task.exportTerminalStates();
         }
 	}
 }
