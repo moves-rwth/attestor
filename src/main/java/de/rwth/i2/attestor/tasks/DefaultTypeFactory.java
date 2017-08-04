@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.tasks;
 
+import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 

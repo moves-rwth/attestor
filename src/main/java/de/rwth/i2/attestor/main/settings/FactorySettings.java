@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import de.rwth.i2.attestor.tasks.GeneralType;
+import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;

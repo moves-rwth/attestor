@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.tasks;
 
+import de.rwth.i2.attestor.types.GeneralType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

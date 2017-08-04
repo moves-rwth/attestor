@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.morphism.*;
-import de.rwth.i2.attestor.tasks.GeneralType;
+import de.rwth.i2.attestor.types.GeneralType;
 
 /**
  * Checks whether the labels of the nodes in the candidate pair coincide.

@@ -1,9 +1,8 @@
-package de.rwth.i2.attestor.tasks;
+package de.rwth.i2.attestor.types;
+
+import de.rwth.i2.attestor.util.SingleElementUtil;
 
 import java.util.Map;
-
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 
 /**
  * A simple implementation of types.
