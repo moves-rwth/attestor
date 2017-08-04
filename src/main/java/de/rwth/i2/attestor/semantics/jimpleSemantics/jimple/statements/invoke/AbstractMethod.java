@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.*;
-
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import java.util.*;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -17,6 +18,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
  */
 public class AbstractMethod {
 
+	public interface StateSpaceFactory {
+
+		StateSpace create(Program method, HeapConfiguration input, int scopeDepth);
+	}
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "AbstractMethod" );
@@ -34,13 +39,19 @@ public class AbstractMethod {
 	 */
 	private final String displayName;
 
-	public AbstractMethod( String signature ){
-		this(signature, signature);
+	/**
+	 * Factory to obtain a state space.
+	 */
+	private StateSpaceFactory factory;
+
+	public AbstractMethod( String signature, StateSpaceFactory factory ){
+		this(signature, signature, factory);
 	}
 
-	public AbstractMethod( String signature, String displayName ){
+	public AbstractMethod( String signature, String displayName, StateSpaceFactory factory){
 		knownInputs = new HashMap<>();
 		this.displayName = displayName;
+		this.factory = factory;
 	}
 
 	/**
@@ -92,7 +103,7 @@ public class AbstractMethod {
 			
 			StateSpace stateSpace;
 			Set<ProgramState> resultHeaps = new HashSet<>();
-			stateSpace = JimpleUtil.getStateSpace(method, input, scopeDepth);
+			stateSpace = factory.create(method, input, scopeDepth);
 			resultHeaps.addAll(stateSpace.getFinalStates());
 			
 			return resultHeaps;

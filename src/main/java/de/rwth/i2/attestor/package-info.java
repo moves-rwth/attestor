@@ -12,8 +12,7 @@
  *     </li>
  *     <li>
  *         {@link de.rwth.i2.attestor.stateSpaceGeneration} contains the data structures and algorithms to generate
- *         a state space. The state space generation itself is configurable through various strategies that are
- *         defined in an {@link de.rwth.i2.attestor.main.AnalysisTask}.
+ *         a state space. The state space generation itself is configurable through various strategies.
  *     </li>
  *     <li>
  *         {@link de.rwth.i2.attestor.tasks} contains different implementations of

@@ -94,11 +94,11 @@ public class Attestor {
 	    printVersion();
 
 	    try {
-			validationPhase(args);
+			setupPhase(args);
 		} catch(Exception e) {
-	    	fail(e, "Validation");
+	    	fail(e, "Setup");
 		}
-        leavePhase("Validation");
+        leavePhase("Setup");
 
 	    try {
 			parsingPhase();
@@ -186,9 +186,25 @@ public class Attestor {
 		System.exit(1);
 	}
 
-	private void validationPhase(String[] args) {
+	private void setupPhase(String[] args) {
 
 		commandLineReader.loadSettings(args);
+        if( commandLineReader.hasSettingsFile() ){
+            SettingsFileReader settingsReader =
+                    new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
+            settingsReader.getInputSettings( settings );
+            settingsReader.getOptionSettings( settings );
+            settingsReader.getOutputSettings( settings );
+            settingsReader.getMCSettings( settings );
+        }
+        commandLineReader.getInputSettings(  settings );
+        commandLineReader.getOptionSettings( settings );
+        commandLineReader.getOutputSettings( settings );
+        commandLineReader.getMCSettings( settings );
+
+        if( commandLineReader.hasRootPath() ){
+            settings.setRootPath( commandLineReader.getRootPath() );
+        }
 	}
 
 	private void leavePhase(String message) {
@@ -200,22 +216,6 @@ public class Attestor {
 
 	private void parsingPhase() throws IOException {
 
-		if( commandLineReader.hasSettingsFile() ){
-			SettingsFileReader settingsReader =
-					new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
-			settingsReader.getInputSettings( settings );
-			settingsReader.getOptionSettings( settings );
-			settingsReader.getOutputSettings( settings );
-			settingsReader.getMCSettings( settings );
-		}
-		commandLineReader.getInputSettings(  settings );
-		commandLineReader.getOptionSettings( settings );
-		commandLineReader.getOutputSettings( settings );
-		commandLineReader.getMCSettings( settings );
-
-		if( commandLineReader.hasRootPath() ){
-			settings.setRootPath( commandLineReader.getRootPath() );
-		}
 
 		// Load the user-defined grammar
 		if(settings.input().getGrammarName() != null) {

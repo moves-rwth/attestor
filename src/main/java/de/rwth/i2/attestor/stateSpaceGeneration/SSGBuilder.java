@@ -71,6 +71,10 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No state refinement strategy.");
 		}
 
+		if(generator.inclusionStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No inclusion strategy.");
+		}
+
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
 			generator.stateSpace.addInitialState(state);

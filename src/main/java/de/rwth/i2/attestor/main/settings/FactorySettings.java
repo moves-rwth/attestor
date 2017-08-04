@@ -12,15 +12,12 @@ import de.rwth.i2.attestor.indexedGrammars.IndexedState;
 import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
-import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.tasks.GeneralNonterminal;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.tasks.GeneralType;
 import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
-import de.rwth.i2.attestor.tasks.indexedTask.IndexedAnalysisTask;
 import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;
 import de.rwth.i2.attestor.types.Type;
 
@@ -56,17 +53,6 @@ public class FactorySettings {
      * The total number of states that has been generated since running the tool.
      */
     private long totalNumberOfStates = 0;
-
-    /**
-     * @return A builder to create a new AnalysisTask dependent on the current settings.
-     */
-    public AnalysisTaskBuilder createAnalysisTaskBuilder() {
-        if(requiresIndexedSymbols()) {
-            return IndexedAnalysisTask.builder();
-        } else {
-            return DefaultAnalysisTask.builder();
-        }
-    }
 
     /**
      * @return A HeapConfiguration that contains neither nodes nor edges.

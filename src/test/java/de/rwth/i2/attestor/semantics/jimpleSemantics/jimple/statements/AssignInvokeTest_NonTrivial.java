@@ -28,7 +28,6 @@ import static org.junit.Assert.*;
 
 public class AssignInvokeTest_NonTrivial {
 
-
 	private AssignInvoke stmt;
 	private HeapConfiguration inputGraph;
 	private DefaultState inputState;
@@ -43,8 +42,8 @@ public class AssignInvokeTest_NonTrivial {
 	public void setUp() throws Exception{
 		Type type = TypeFactory.getInstance().getType( "node" );
 		Local var = new Local( type, "x" );
-		
-		AbstractMethod method= new AbstractMethod( "method" );
+
+		AbstractMethod method= new AbstractMethod( "method", StateSpaceFactoryHelper.get());
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>() ));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );

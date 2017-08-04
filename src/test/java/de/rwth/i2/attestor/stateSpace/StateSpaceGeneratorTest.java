@@ -1,35 +1,54 @@
 package de.rwth.i2.attestor.stateSpace;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.util.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.main.AnalysisTask;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupTaskBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.AnalysisTask;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupTaskBuilder;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMaterializationStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupStateLabellingStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.tasks.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class StateSpaceGeneratorTest {
 	//private static final Logger logger = LogManager.getLogger( "StateSpaceGeneratorTest" );
 
+	private SSGBuilder ssgBuilder;
 
 	@BeforeClass
 	public static void init()
 	{
 		UnitTestGlobalSettings.reset();
+	}
+
+
+	@Before
+	public void setup() {
+
+	    ssgBuilder = StateSpaceGenerator.builder()
+                .setStateLabelingStrategy(new MockupStateLabellingStrategy())
+                .setAbortStrategy(new MockupAbortStrategy())
+                .setCanonizationStrategy(new MockupCanonicalizationStrategy())
+                .setMaterializationStrategy(new MockupMaterializationStrategy())
+                .setStateRefinementStrategy(s -> s)
+                .setInclusionStrategy(new GeneralInclusionStrategy());
 	}
 
 	@Test
@@ -42,11 +61,13 @@ public class StateSpaceGeneratorTest {
 		programInstructions.add( new ReturnVoidStmt() );
 		Program mainProgram = new Program( programInstructions );
 
-		AnalysisTask task = new MockupTaskBuilder()
-				.setInput(initialGraph)
-				.setProgram(mainProgram)
-				.build();
-		StateSpace res = task.execute();
+
+		ProgramState initialState = new DefaultState(initialGraph);
+		StateSpace res = ssgBuilder
+                .setProgram(mainProgram)
+                .addInitialState(initialState)
+                .build()
+                .generate();
 
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
@@ -67,14 +88,15 @@ public class StateSpaceGeneratorTest {
 		programInstructions.add( assignStmt );
 		Statement returnStmt = new ReturnVoidStmt();
 		programInstructions.add( returnStmt );
-	
+
 		Program mainProgram = new Program( programInstructions );
 
-		AnalysisTask task = new MockupTaskBuilder()
-				.setInput(initialGraph)
-				.setProgram(mainProgram)
-				.build();
-		StateSpace res = task.execute();
+		ProgramState initialState = new DefaultState(initialGraph);
+        StateSpace res = ssgBuilder
+                .setProgram(mainProgram)
+                .addInitialState(initialState)
+                .build()
+                .generate();
 
 		assertEquals( 4, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
@@ -105,12 +127,12 @@ public class StateSpaceGeneratorTest {
 		programInstructions.add( secondReturn );
 		Program mainProgram = new Program( programInstructions );
 
-
-		AnalysisTask task = new MockupTaskBuilder()
-				.setInput(initialGraph)
-				.setProgram(mainProgram)
-				.build();
-		StateSpace res = task.execute();
+        ProgramState initialState = new DefaultState(initialGraph);
+        StateSpace res = ssgBuilder
+                .setProgram(mainProgram)
+                .addInitialState(initialState)
+                .build()
+                .generate();
 
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );

@@ -39,70 +39,55 @@ public class StateSpaceGenerator {
 	 * Stores the state space generated upon instantiation of
 	 * this generator.
 	 */
-	final StateSpace stateSpace;
+	final StateSpace stateSpace = new StateSpace();
 
 	/**
 	 * Stores the program configurations that still have
 	 * to be executed by the state space generation
 	 */
-	final Stack<ProgramState> unexploredConfigurations;
+	final Stack<ProgramState> unexploredConfigurations = new Stack<>();
 
 	/**
 	 * The control flow of the program together with the
 	 * abstract semantics of each statement
 	 */
-	Program program;
+	Program program = null;
 
 	/**
 	 * Strategy guiding the materialization of states.
 	 * This strategy is invoked whenever an abstract transfer
 	 * function cannot be executed.
 	 */
-	MaterializationStrategy materializationStrategy;
+	MaterializationStrategy materializationStrategy = null;
 
 	/**
 	 * Strategy guiding the canonicalization of states.
 	 * This strategy is invoked after execution of abstract transfer
 	 * functions in order to generalize.
 	 */
-	CanonicalizationStrategy canonicalizationStrategy;
+	CanonicalizationStrategy canonicalizationStrategy = null;
 
 	/**
 	 * Strategy determining when to give up on further state space
 	 * exploration.
 	 */
-	AbortStrategy abortStrategy;
+	AbortStrategy abortStrategy = null;
 
 	/**
 	 * Strategy determining which (approximation of) an inclusion
 	 * check is used.
 	 */
-	InclusionStrategy inclusionStrategy;
+	InclusionStrategy inclusionStrategy = null;
 
 	/**
 	 * Strategy determining the labels of states in the state space
 	 */
-	StateLabelingStrategy stateLabelingStrategy;
+	StateLabelingStrategy stateLabelingStrategy = null;
 
 	/**
 	 * Strategy determining how states are refined prior to canonicalization
  	 */
-	StateRefinementStrategy stateRefinementStrategy;
-
-	/**
-     * Initializes a state space generator with an empty state space.
-	 */
-	StateSpaceGenerator() {
-		this.materializationStrategy = null;
-		this.canonicalizationStrategy = null;
-		this.program = null;
-		this.abortStrategy = null;
-		this.inclusionStrategy = null;
-		this.stateLabelingStrategy = null;
-		this.stateRefinementStrategy = null;
-		this.unexploredConfigurations = new Stack<>();
-		this.stateSpace = new StateSpace();
-	}
+	StateRefinementStrategy stateRefinementStrategy = null;
 
     /**
      * @return The strategy determining when state space generation is aborted.
