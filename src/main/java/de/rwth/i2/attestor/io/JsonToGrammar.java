@@ -1,18 +1,17 @@
 package de.rwth.i2.attestor.io;
 
-import java.util.*;
-
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.util.Pair;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.util.Pair;
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.*;
 
 public class JsonToGrammar {
 
@@ -31,19 +30,24 @@ public class JsonToGrammar {
 
 			int rank = getRank(grammarFragment);
 			String label = getLabel(grammarFragment);
-			Nonterminal nt;
 
 			if( hasDefinedTentacles(grammarFragment) ) {
 
-				nt = GeneralNonterminal.getNonterminal(label, rank, getReductionTentacles(grammarFragment));
+				GeneralNonterminal.getNonterminal(label, rank, getReductionTentacles(grammarFragment));
 			} else {
 
 				boolean[] rts = new boolean[rank];
 				Arrays.fill(rts, false);
-				nt = GeneralNonterminal.getNonterminal( label, rank, rts);
+				Nonterminal nt = GeneralNonterminal.getNonterminal( label, rank, rts);
 				ntsWithoutReductionTentacles.add(nt);
 			}
 
+		}
+
+		for(int i=0; i < input.length(); i++) {
+			JSONObject grammarFragment = input.getJSONObject( i );
+			String label = getLabel(grammarFragment);
+			Nonterminal nt = GeneralNonterminal.getNonterminal(label);
 			res.put( nt,  getGraphs(nt, grammarFragment) );
 		}
 
