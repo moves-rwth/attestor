@@ -1,17 +1,20 @@
 package de.rwth.i2.attestor.grammar;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.util.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StackMatcher {
 	
-	Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<StackSymbol>, List<StackSymbol>>>
+	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<StackSymbol>, List<StackSymbol>>>
 		knownMatches = new HashMap<>();
 
-	StackMaterializationStrategy stackGrammar;
+	private StackMaterializationStrategy stackGrammar;
 	
 	public StackMatcher(StackMaterializationStrategy stackGrammar) {
 		this.stackGrammar = stackGrammar;
@@ -201,7 +204,6 @@ public class StackMatcher {
 
 	private void addNegativeResultToKnownMatches(Pair<IndexedNonterminal, IndexedNonterminal> requestPair) {
 		knownMatches.put( requestPair, null );
-		return;
 	}
 
 }

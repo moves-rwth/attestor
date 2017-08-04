@@ -1,24 +1,23 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.indexedGrammars.IndexedState;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
 import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.GeneralType;
-import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
-import de.rwth.i2.attestor.tasks.indexedTask.RefinedIndexedNonterminal;
 import de.rwth.i2.attestor.types.Type;
 
 import java.util.ArrayList;
@@ -69,12 +68,11 @@ public class FactorySettings {
     public Nonterminal getNonterminal(String label) {
 
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-            return new RefinedIndexedNonterminal(label, new ArrayList<>(), null);
-            //return new IndexedNonterminalImpl(label, new ArrayList<>());
+            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
-            return new RefinedNonterminalImpl(GeneralNonterminal.getNonterminal(label), null);
+            return new RefinedDefaultNonterminal(GeneralNonterminal.getNonterminal(label), null);
         } else {
             return GeneralNonterminal.getNonterminal(label);
         }
@@ -109,15 +107,11 @@ public class FactorySettings {
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-            return new RefinedIndexedNonterminal(
-                    label, rank, isReductionTentacle, new ArrayList<>(),
-                    null
-            );
-            //return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
-            return new RefinedNonterminalImpl(
+            return new RefinedDefaultNonterminal(
                     GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle),
                     null
             );

@@ -1,20 +1,18 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import static org.junit.Assert.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.tasks.GeneralConcreteValue;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import org.junit.*;
-import org.junit.Before;
-import org.junit.Test;
-
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class FieldTest {
 
@@ -67,10 +65,7 @@ public class FieldTest {
 			assertNotNull("Variable 'x' should exist.", expectedRes);
 			
 			int expNode = expectedRes.getNode();
-			assertNotNull("Node corresponding to variable x should be defined.", expNode);
-			
 			expNode = executable.getHeap().selectorTargetOf(expNode, sel);
-			assertNotNull("Target of selector 'next' should exist.", expNode);
 
 			assert res != null;
 			assertEquals("doesn't return correct node", expNode, res.getNode());

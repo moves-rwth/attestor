@@ -21,8 +21,8 @@ import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.*;
-import de.rwth.i2.attestor.indexedGrammars.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 

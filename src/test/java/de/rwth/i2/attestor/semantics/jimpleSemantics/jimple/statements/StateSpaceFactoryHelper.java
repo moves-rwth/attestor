@@ -3,10 +3,10 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
-import de.rwth.i2.attestor.tasks.GeneralInclusionStrategy;
-import de.rwth.i2.attestor.tasks.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.tasks.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
+import de.rwth.i2.attestor.strategies.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 
 import java.util.ArrayList;
 import java.util.HashSet;

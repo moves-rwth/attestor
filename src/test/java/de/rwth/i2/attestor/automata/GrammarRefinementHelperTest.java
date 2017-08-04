@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.tasks.RefinedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.AfterClass;
@@ -62,8 +62,8 @@ public class GrammarRefinementHelperTest {
         assertEquals("The number of refined nonterminals is incorrect",
                 2, refinedGrammar.getAllLeftHandSides().size());
 
-        RefinedNonterminalImpl nt0 = new RefinedNonterminalImpl(nt, new MockUpState(0, false));
-        RefinedNonterminalImpl nt1 = new RefinedNonterminalImpl(nt, new MockUpState(1, true));
+        RefinedDefaultNonterminal nt0 = new RefinedDefaultNonterminal(nt, new MockUpState(0, false));
+        RefinedDefaultNonterminal nt1 = new RefinedDefaultNonterminal(nt, new MockUpState(1, true));
 
         for(Nonterminal nonterminal : refinedGrammar.getAllLeftHandSides()) {
 

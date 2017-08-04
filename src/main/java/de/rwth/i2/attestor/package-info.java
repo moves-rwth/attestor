@@ -5,7 +5,7 @@
  * <ul>
  *     <li>
  *         {@link de.rwth.i2.attestor.main} contains the main Attestor class that is used to customize and execute
- *         an analysis. It also contains the general interface for all analysis tasks.
+ *         an analysis. It also contains the general interface for all analysis strategies.
  *         The actual execution of the full tool as well as integration test should always create an
  *         {@link de.rwth.i2.attestor.main.Attestor} object that is fed with command line options and/or setting files.
  *         All global options are handled in the subpackage {@link de.rwth.i2.attestor.main.settings}.
@@ -15,11 +15,8 @@
  *         a state space. The state space generation itself is configurable through various strategies.
  *     </li>
  *     <li>
- *         {@link de.rwth.i2.attestor.tasks} contains different implementations of
- *         {@link de.rwth.i2.attestor.main.AnalysisTask}. For example, it implements tasks to perform an analysis
- *         based on standard HRGs and indexed HRGs, respectively.
- *         Furthermore, task-specific objects, such as program states and concrete strategies to customize the state
- *         space generation are implemented in this package.
+ *         {@link de.rwth.i2.attestor.strategies} contains different implementations of strategies that guide
+ *         the analysis.
  *     </li>
  *     <li>
  *         {@link de.rwth.i2.attestor.graph} contains the all algorithms and data structures on hypergraphs.

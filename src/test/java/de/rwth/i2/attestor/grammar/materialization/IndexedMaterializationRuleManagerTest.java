@@ -1,26 +1,33 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
-import de.rwth.i2.attestor.grammar.testUtil.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
+import de.rwth.i2.attestor.grammar.testUtil.FakeStackMatcher;
+import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolver;
+import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.*;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class IndexedMaterializationRuleManagerTest {
 
@@ -197,11 +204,7 @@ public class IndexedMaterializationRuleManagerTest {
 		final ArrayList<StackSymbol> stack = new ArrayList<>();
 		final StackSymbol someAbstractStackSymbol = AbstractStackSymbol.get("SomeAbstractStackSymbol");
 		stack.add( someAbstractStackSymbol );
-		final String label = UNIQUE_NT_LABEL;
-		final int rank = RANK;
-		final boolean[] reductionTentacles = REDUCTION_TENTACLES;
-		IndexedNonterminal requestNonterminal = new IndexedNonterminalImpl(label, rank, reductionTentacles, stack);
-		return requestNonterminal;
+		return new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 	}
 	
 	private static Collection<Nonterminal> createExampleNts() {

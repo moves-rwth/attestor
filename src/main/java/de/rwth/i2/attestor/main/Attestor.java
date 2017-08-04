@@ -5,8 +5,6 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.indexedGrammars.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
@@ -15,15 +13,16 @@ import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.tasks.GeneralInclusionStrategy;
-import de.rwth.i2.attestor.tasks.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultCanonicalizationStrategy;
+import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
+import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -239,7 +238,7 @@ public class Attestor {
 		loadProgram();
 	}
 
-	private void loadInput() throws FileNotFoundException, IOException {
+	private void loadInput() throws IOException {
 		String str;
 		if(settings.input().getInputName() != null){
 			logger.debug("Reading user-defined initial state.");
@@ -461,8 +460,8 @@ public class Attestor {
             //task.exportAllStates();
         }
 
-        if( Settings.getInstance().output().isExportTerminalStates() ){
+        //if( Settings.getInstance().output().isExportTerminalStates() ){
             //task.exportTerminalStates();
-        }
+        //}
 	}
 }

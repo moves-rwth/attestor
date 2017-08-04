@@ -1,36 +1,34 @@
 package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.*;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.SingleElementUtil;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 
@@ -38,7 +36,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private static final ConcreteStackSymbol STACK_SYMBOL_Z = ConcreteStackSymbol.getStackSymbol("Z", true);
 	private static final ConcreteStackSymbol STACK_SYMBOL_S = ConcreteStackSymbol.getStackSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
-	GeneralMaterializationStrategy materializer;
+	private GeneralMaterializationStrategy materializer;
 
 	@BeforeClass
 	public static void init() {

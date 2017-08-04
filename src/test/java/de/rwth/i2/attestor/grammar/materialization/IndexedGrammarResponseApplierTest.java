@@ -1,28 +1,34 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import java.util.*;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.*;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
+import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.*;
+
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 public class IndexedGrammarResponseApplierTest {
 
@@ -55,7 +61,7 @@ public class IndexedGrammarResponseApplierTest {
 		
 			Map<List<StackSymbol>, Collection<HeapConfiguration> > rules = new HashMap<>();
 			List<StackSymbol> materialization1 = createEmptyMaterialization();
-			rules.put(materialization1, new ArrayList<HeapConfiguration>() );
+			rules.put(materialization1, new ArrayList<>() );
 		HeapConfiguration mat1_rule1 = createSimpleRule();
 			rules.get(materialization1).add(mat1_rule1);
 		List<StackSymbol> materialization2 = createNonEmptyMaterialization();

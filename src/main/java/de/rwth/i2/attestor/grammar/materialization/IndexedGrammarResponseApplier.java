@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 
 /**
  * Capable of handling {@link MaterializationAndRuleResponse}
