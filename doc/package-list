@@ -1,4 +1,5 @@
 de.rwth.i2.attestor
+de.rwth.i2.attestor.automata
 de.rwth.i2.attestor.export
 de.rwth.i2.attestor.grammar
 de.rwth.i2.attestor.grammar.materialization
@@ -12,8 +13,6 @@ de.rwth.i2.attestor.graph.morphism
 de.rwth.i2.attestor.graph.morphism.checkers
 de.rwth.i2.attestor.graph.morphism.feasibility
 de.rwth.i2.attestor.graph.morphism.terminationFunctions
-de.rwth.i2.attestor.strategies.indexedGrammarStrategies
-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack
 de.rwth.i2.attestor.io
 de.rwth.i2.attestor.io.htmlExport
 de.rwth.i2.attestor.main
@@ -30,6 +29,7 @@ de.rwth.i2.attestor.semantics.jimpleSemantics.translation
 de.rwth.i2.attestor.stateSpaceGeneration
 de.rwth.i2.attestor.strategies
 de.rwth.i2.attestor.strategies.defaultGrammarStrategies
-de.rwth.i2.attestor.strategies.indexedTask
+de.rwth.i2.attestor.strategies.indexedGrammarStrategies
+de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack
 de.rwth.i2.attestor.types
 de.rwth.i2.attestor.util
