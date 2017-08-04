@@ -45,7 +45,7 @@ public class CanonicalizationStrategyTest {
 				.addRule( listLabel , ExampleHcImplFactory.getListRule3() )
 				.build();
 		
-		canonicalizationStrategy = new DefaultCanonicalizationStrategy(grammar, true);
+		canonicalizationStrategy = new DefaultCanonicalizationStrategy(grammar, true, 1000);
 		canonicalizationStrategy.setIgnoreUniqueSuccessorStatements(false);
 	}
 

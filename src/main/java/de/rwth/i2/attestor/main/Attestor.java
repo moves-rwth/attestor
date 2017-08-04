@@ -413,7 +413,8 @@ public class Attestor {
         } else {
             strategy = new DefaultCanonicalizationStrategy(
                     grammar,
-                    true
+                    true,
+                    settings.options().getAggressiveAbstractionThreshold()
             );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }

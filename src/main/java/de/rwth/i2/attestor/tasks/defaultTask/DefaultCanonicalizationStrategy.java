@@ -1,11 +1,5 @@
 package de.rwth.i2.attestor.tasks.defaultTask;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -15,9 +9,16 @@ import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The strategy to abstract program states based on a standard
@@ -45,15 +46,18 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private boolean ignoreUniqueSuccessorStatements;
 
+    private final int aggressiveAbstractionThreshold;
+
 	/**
 	 * Initializes the strategy.
 	 * @param grammar The grammar that guides abstraction.
 	 * @param isConfluent True if and only if the grammar is backward confluent.
 	 */
-	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent) {	
+	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent, int aggressiveAbstractionThreshold) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
 		this.ignoreUniqueSuccessorStatements = false;
+		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 	}
 
 	/**
@@ -65,8 +69,8 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	}
 
 	/**
-	 * Determines whether the state should be canonicalised
-	 * and performs the abstraction in this case.
+	 * Performs canonicalization with respect to the given statement to a program state.
+	 * @param semantics The statement executed prior to canonicalization.
 	 * @param state The program state that should be abstracted.
 	 * @return The set of abstracted program states.
 	 */
@@ -79,7 +83,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 			return SingleElementUtil.createSet( conf );
 		}
-		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
+		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold ){
 			if( DebugMode.ENABLED ){
 				logger.trace( "Using aggressive canonization" );
 			}
