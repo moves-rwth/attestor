@@ -407,14 +407,17 @@ public class Attestor {
         if(settings.options().isIndexedMode()) {
             strategy = new IndexedCanonicalizationStrategy(
                     grammar,
-                    true
+                    true,
+                    settings.options().getAggressiveAbstractionThreshold(),
+                    settings.options().isAggressiveReturnAbstraction()
             );
             logger.info("Setup canonicalization using indexed grammar.");
         } else {
             strategy = new DefaultCanonicalizationStrategy(
                     grammar,
                     true,
-                    settings.options().getAggressiveAbstractionThreshold()
+                    settings.options().getAggressiveAbstractionThreshold(),
+                    settings.options().isAggressiveReturnAbstraction()
             );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }

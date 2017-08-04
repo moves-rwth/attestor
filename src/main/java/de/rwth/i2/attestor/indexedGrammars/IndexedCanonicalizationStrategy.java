@@ -11,13 +11,11 @@ import de.rwth.i2.attestor.indexedGrammars.stack.AVLStackCanonizationStrategy;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackCanonizationStrategy;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
 import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.util.DebugMode;
 import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,17 +43,26 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private boolean ignoreUniqueSuccessorStatements;
 
-	private final StackCanonizationStrategy stackCanonizer;
+	private final StackCanonizationStrategy stackCanonizationStrategy;
+
+	private final int aggressiveAbstractionThreshold;
+
+	private final boolean aggressiveReturnAbstraction;
+
 
 	/**
 	 * Initializes the strategy.
 	 * @param grammar The grammar that guides abstraction.
 	 * @param isConfluent True if and only if the grammar is backward confluent.
 	 */
-	public IndexedCanonicalizationStrategy(Grammar grammar, boolean isConfluent) {
+	public IndexedCanonicalizationStrategy(Grammar grammar, boolean isConfluent,
+										   int aggressiveAbstractionThreshold,
+										   boolean aggressiveReturnAbstraction) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
-		this.stackCanonizer = new AVLStackCanonizationStrategy();
+		this.stackCanonizationStrategy = new AVLStackCanonizationStrategy();
+		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
+		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
 
 	/**
@@ -69,13 +76,12 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 		IndexedState conf = ((IndexedState) state).clone();
 
-		if( conf.getHeap().countNodes() > Settings.getInstance().options().getAggressiveAbstractionThreshold() ){
-			if( DebugMode.ENABLED ){
-				logger.trace( "Using aggressive canonization" );
-			}
+		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold) {
+
+			logger.trace( "Using aggressive canonization" );
 			return performCanonicalization( conf, true );
-		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() 
-				&& 
+		}else if(aggressiveReturnAbstraction
+				&&
 				(semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt) ){
 			return performCanonicalization( conf, true );
 		}
@@ -101,7 +107,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 				if( !checkNext ) { break; }
 
-				stackCanonizer.canonizeStack( state.getHeap() );
+				stackCanonizationStrategy.canonizeStack( state.getHeap() );
 				
 				AbstractMatchingChecker checker;
 				if( strongCanonicalization ){
@@ -160,7 +166,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 			builder.replaceNonterminal(edge, label.getWithInstantiation() );
 		}
 		builder.build();
-		stackCanonizer.canonizeStack( abstracted.getHeap() );
+		stackCanonizationStrategy.canonizeStack( abstracted.getHeap() );
 	}
 
 	private boolean checkIndexMatching(HeapConfiguration pattern, IndexedState abstracted, Matching embedding) {

@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
@@ -48,16 +47,21 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
     private final int aggressiveAbstractionThreshold;
 
+    private final boolean aggressiveReturnAbstraction;
+
 	/**
 	 * Initializes the strategy.
 	 * @param grammar The grammar that guides abstraction.
 	 * @param isConfluent True if and only if the grammar is backward confluent.
 	 */
-	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent, int aggressiveAbstractionThreshold) {
+	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent,
+                                           int aggressiveAbstractionThreshold,
+                                           boolean aggressiveReturnAbstraction) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
 		this.ignoreUniqueSuccessorStatements = false;
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
+		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 				logger.trace( "Using aggressive canonization" );
 			}
 			return performCanonicalization( conf, true );
-		}else if( Settings.getInstance().options().isAggressiveReturnAbstraction() 
+		}else if( aggressiveReturnAbstraction
 				&& 
 				( semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt ) ){
 			return performCanonicalization( conf, true );
