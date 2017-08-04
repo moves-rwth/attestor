@@ -79,7 +79,6 @@ public class Attestor {
 	private final CommandLineReader commandLineReader = new CommandLineReader();
 
 	public Attestor() {
-		settings.options().setRemoveDeadVariables(true);
 		commandLineReader.setupCLI();
 	}
 
@@ -205,6 +204,7 @@ public class Attestor {
         if( commandLineReader.hasRootPath() ){
             settings.setRootPath( commandLineReader.getRootPath() );
         }
+
 	}
 
 	private void leavePhase(String message) {

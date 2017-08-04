@@ -45,11 +45,11 @@ public class AssignInvokeTest_NonTrivial {
 
 		AbstractMethod method= new AbstractMethod( "method", StateSpaceFactoryHelper.get());
 		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>() ));
+		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>(), false));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare
-			= new StaticInvokeHelper( new ArrayList<>(), SingleElementUtil.createList("x") );
+		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(),
+				SingleElementUtil.createList("x"), false );
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		

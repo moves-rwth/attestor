@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.TemporaryVariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -41,12 +41,16 @@ public class AssignStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	public AssignStmt( SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames ){
+	private final boolean removeDeadVariables;
+
+	public AssignStmt( SettableValue lhs , Value rhs , int nextPC,
+					   Set<String> liveVariableNames, boolean removeDeadVariables ){
 		super();
 		this.rhs = rhs;
 		this.lhs = lhs;
 		this.nextPC = nextPC;
 		this.liveVariableNames = liveVariableNames;
+		this.removeDeadVariables = removeDeadVariables;
 		
 		potentialViolationPoints = new ViolationPoints();
 		potentialViolationPoints.addAll(lhs.getPotentialViolationPoints());
@@ -103,9 +107,11 @@ public class AssignStmt extends Statement {
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
-		
-		TemporaryVariablesUtil.checkAndRemoveTemp(rhs.toString(), executable, liveVariableNames);
-		
+
+		if(removeDeadVariables) {
+			VariablesUtil.removeDeadVariables(rhs.toString(), executable, liveVariableNames);
+		}
+
 		JimpleExecutable result = JimpleUtil.deepCopy(executable);
 		result.setProgramCounter(nextPC);
 		

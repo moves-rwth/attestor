@@ -1,18 +1,21 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.TemporaryVariablesUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.*;
+import de.rwth.i2.attestor.util.DebugMode;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Set;
 
 /**
  * IfStmt models statements like if condition goto pc
@@ -41,11 +44,16 @@ public class IfStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames ){
+	private boolean removeDeadVariables;
+
+	public IfStmt( Value condition, int truePC, int falsePC,
+				   Set<String> liveVariableNames, boolean removeDeadVariables ){
+
 		this.conditionValue = condition;
 		this.truePC = truePC;
 		this.falsePC = falsePC;
 		this.liveVariableNames = liveVariableNames;
+		this.removeDeadVariables = removeDeadVariables;
 	}
 
 	/**
@@ -88,8 +96,10 @@ public class IfStmt extends Statement {
 				logger.warn( "concreteCondition is not of type int, but " + concreteCondition.type() );
 			}
 		}
-		
-		TemporaryVariablesUtil.checkAndRemoveTemp(conditionValue.toString(), executable, liveVariableNames);
+
+		if(removeDeadVariables) {
+			VariablesUtil.removeDeadVariables(conditionValue.toString(), executable, liveVariableNames);
+		}
 
 		if( concreteCondition.equals( trueValue ) ){
 			

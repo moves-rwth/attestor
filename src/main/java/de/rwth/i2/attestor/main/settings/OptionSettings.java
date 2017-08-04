@@ -52,11 +52,8 @@ public class OptionSettings {
 	/**
 	 * Enabling this option results in dead variables (variables that are not accessed before being rewritten in the
 	 * following) being deleted in order to enable more possible abstractions.
-	 *
-	 * Although the default should be true, this should be turned on in the main class
-	 * in order to avoid collusion with unit tests.
 	 */
-	private boolean removeDeadVariables = false;
+	private boolean removeDeadVariables = true;
 
 	/**
 	 * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.

@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * Prepares the heap for the invoke of a static method and cleans it afterwards.
@@ -34,13 +33,18 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * @see InvokeHelper
 	 * 
 	 * @param argumentValues
-	 *            the values which form the arguments of the method in the
+	 *            The values which form the arguments of the method in the
 	 *            correct ordering
 	 * @param namesOfLocals
-	 *            the names of all locals which occur within the method (so they
+	 *            The names of all locals which occur within the method (so they
 	 *            can be removed afterwards).
+	 * @param removeDeadVariables
+	 * 			  True if and only if dead variables shall be removed after execution
+	 * 			  of this statement.
 	 */
-	public StaticInvokeHelper( List<Value> argumentValues, List<String> namesOfLocals ){
+	public StaticInvokeHelper( List<Value> argumentValues, List<String> namesOfLocals, boolean removeDeadVariables ){
+
+		super(removeDeadVariables);
 		this.argumentValues = argumentValues;
 		this.namesOfLocals = namesOfLocals;
 		

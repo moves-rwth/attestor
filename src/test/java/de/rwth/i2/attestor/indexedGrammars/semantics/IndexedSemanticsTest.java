@@ -1,23 +1,24 @@
 package de.rwth.i2.attestor.indexedGrammars.semantics;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.indexedGrammars.ExampleIndexedGraphFactory;
 import de.rwth.i2.attestor.indexedGrammars.IndexedState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class IndexedSemanticsTest {
 
@@ -38,7 +39,7 @@ public class IndexedSemanticsTest {
 		
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
-		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>());
+		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>(), false);
 		try {
 			Set<ProgramState> result = stmt.computeSuccessors(input);
 			assertEquals(1, result.size());
@@ -61,7 +62,7 @@ public class IndexedSemanticsTest {
 		
 		Local varTmp = new Local(type, "tmp");
 		NewExpr expr = new NewExpr(type);
-		AssignStmt stmt = new AssignStmt(varTmp, expr, 0, new HashSet<>());
+		AssignStmt stmt = new AssignStmt(varTmp, expr, 0, new HashSet<>(), false);
 		try {
 			Set<ProgramState> result = stmt.computeSuccessors(input);
 			assertEquals(1, result.size());
@@ -83,7 +84,7 @@ public class IndexedSemanticsTest {
 		Local varTmp = new Local(type, "tmp");
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
-		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>());
+		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>(), false);
 		
 		try {
 			Set<ProgramState> result = stmt.computeSuccessors(input);

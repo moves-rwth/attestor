@@ -1,24 +1,26 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class IfStmtTest {
 	
@@ -54,7 +56,7 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = testState.clone();
@@ -95,7 +97,7 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = testState.clone();
@@ -135,7 +137,7 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = testState.clone();

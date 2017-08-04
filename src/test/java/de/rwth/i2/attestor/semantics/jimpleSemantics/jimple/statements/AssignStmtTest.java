@@ -1,24 +1,27 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import static org.junit.Assert.*;
-
-import java.util.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
 import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class AssignStmtTest {
 
@@ -47,7 +50,7 @@ public class AssignStmtTest {
 		Value origin = new Local( type, "ZYX" );
 		Value rhs = new Field( type, origin, "right" );
 
-		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>());
+		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>(), false);
 		try{
 			
 			DefaultState input = new DefaultState(testGraph);

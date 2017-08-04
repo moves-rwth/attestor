@@ -58,11 +58,12 @@ public class InvokeStmtTest_WithEffect {
 		methodBody.add( new IdentityStmt(1, varY, "@parameter0:"));
 		
 		HashSet<String> liveVariables = new HashSet<>();	
-		methodBody.add( new AssignStmt(nextOfY, varY, 2, liveVariables));
+		methodBody.add( new AssignStmt(nextOfY, varY, 2, liveVariables, false));
 		methodBody.add( new ReturnValueStmt(varY, type) );
 		method.setControlFlow( methodBody );
 		
-		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(nextOfX), SingleElementUtil.createList("y"));
+		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(nextOfX),
+				SingleElementUtil.createList("y"), false);
 		stmt = new InvokeStmt(method, invokeHelper, 1);
 		
 	}

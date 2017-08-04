@@ -1,16 +1,15 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * Prepares the heap for the invoke of an instance method and cleans it afterwards.
@@ -49,7 +48,10 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 *            the names of all locals which occur within the method (so they
 	 *            can be removed afterwards).
 	 */
-	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues, List<String> namesOfLocals ){
+	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues,
+								 List<String> namesOfLocals, boolean removeDeadVariables ){
+
+		super(removeDeadVariables);
 		this.baseValue = baseValue;
 		this.argumentValues = argumentValues;
 		this.namesOfLocals = namesOfLocals;

@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
 
-import java.util.Set;
-
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+
+import java.util.Set;
 
 /**
  * An auxiliary class to remove dead variables from a given executable.
  */
-public class TemporaryVariablesUtil {
+public class VariablesUtil {
 
     /**
      * Removes all dead variables from a given expression.
@@ -17,18 +16,14 @@ public class TemporaryVariablesUtil {
      * @param executable The executable in which dead variables should be removed.
      * @param liveVariables A list of live variables for the expression encoded by name.
      */
-	public static void checkAndRemoveTemp(String name, JimpleExecutable executable, Set<String> liveVariables) {
+	public static void removeDeadVariables(String name, JimpleExecutable executable, Set<String> liveVariables) {
 
-		if(Settings.getInstance().options().isRemoveDeadVariables() ) {
-
-			String [] vars = name.split( "(==)|(\\!=)|(=)" );
-			for (String var : vars) {
-				String varName = var.split("\\.")[0].trim();
-				if (!liveVariables.contains(varName) && !executable.isConstantName(varName)) {
-					executable.removeVariable(varName);
-				}
-			}
-
-		}
+        String [] vars = name.split( "(==)|(\\!=)|(=)" );
+		for (String var : vars) {
+            String varName = var.split("\\.")[0].trim();
+            if (!liveVariables.contains(varName) && !executable.isConstantName(varName)) {
+                executable.removeVariable(varName);
+            }
+        }
 	}
 }
