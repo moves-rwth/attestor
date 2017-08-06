@@ -49,9 +49,24 @@ public class EmbeddingStackChecker {
 			if( patternLabel instanceof IndexedNonterminal 
 					&& targetLabel instanceof IndexedNonterminal ){
 
-				if( instantiation.isEmpty() ) {
-				matchMaterializableWithInstantiable( materializations, instantiation, 
-													 patternLabel, targetLabel );
+				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+				materializable = applyCurrentMaterializationTo( materializations, materializable );
+				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+				instantiable = applyInstantiationTo( instantiation, instantiable );
+
+				if(! stackMatcher.canMatch( materializable, instantiable ) ){
+					throw new CannotMatchException();
+				}else{
+					Pair<AbstractStackSymbol, List<StackSymbol>> materializationRule = 
+							stackMatcher.getMaterializationRule(materializable, instantiable);
+
+					if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
+						updateMaterializations( materializations, materializationRule );
+						updateInstantiation( instantiation, materializationRule );
+					}
+					if( stackMatcher.needsInstantiation(materializable, instantiable) ) {
+						updateInstantiation( instantiation, stackMatcher.getNecessaryInstantiation(materializable, instantiable) );
+					}
 				}
 			}
 
@@ -61,8 +76,6 @@ public class EmbeddingStackChecker {
 		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
 			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
 			lhs = iLhs.getWithProlongedStack(instantiation);
-		}else {
-			//TODO
 		}
 		
 		checkAppliedResult(toAbstract, embedding, pattern);
@@ -96,31 +109,6 @@ public class EmbeddingStackChecker {
 				if( ! materializable.matchStack(instantiable) ) {
 					throw new CannotMatchException();
 				}
-			}
-		}
-	}
-
-	private void matchMaterializableWithInstantiable(Map<AbstractStackSymbol, List<StackSymbol>> materializations,
-			List<StackSymbol> instantiation, Nonterminal patternLabel, Nonterminal targetLabel)
-			throws CannotMatchException {
-		IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-		materializable = applyCurrentMaterializationTo( materializations, materializable );
-		IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-
-		if(! stackMatcher.canMatch( materializable, instantiable ) ){
-			throw new CannotMatchException();
-		}else{
-			if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
-				Pair<AbstractStackSymbol, List<StackSymbol>> materializationRule = 
-						stackMatcher.getMaterializationRule(materializable, instantiable);
-
-				updateMaterializations( materializations, materializationRule );
-				updateInstantiation( instantiation, materializationRule );
-			}
-			if( stackMatcher.needsInstantiation(materializable, instantiable) ) {
-				List<StackSymbol> necessaryInstantiation = 
-						stackMatcher.getNecessaryInstantiation(materializable, instantiable);
-				updateInstantiation( instantiation, necessaryInstantiation );
 			}
 		}
 	}
