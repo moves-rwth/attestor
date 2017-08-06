@@ -65,7 +65,23 @@ public class EmbeddingStackChecker {
 			//TODO
 		}
 		
-		iterator =  pattern.nonterminalEdges().iterator();
+		checkAppliedResult(toAbstract, embedding, pattern);
+		return new StackEmbeddingResult( toAbstract, lhs );
+	}
+
+	/**
+	 * To avoid checking corner cases in the original compuation of matchings,
+	 * the stacks with applied materialization and instantiation are checked for
+	 * equality.
+	 * @param toAbstract the outer graph
+	 * @param embedding the matching from pattern to outer graph elements
+	 * @param pattern the embedded graph
+	 * @throws CannotMatchException if one of the stacks does not match
+	 */
+	private void checkAppliedResult(HeapConfiguration toAbstract, Matching embedding, HeapConfiguration pattern)
+			throws CannotMatchException {
+		
+		TIntIterator iterator =  pattern.nonterminalEdges().iterator();
 		while( iterator.hasNext() ){
 			int nt = iterator.next();
 
@@ -75,16 +91,13 @@ public class EmbeddingStackChecker {
 					&& targetLabel instanceof IndexedNonterminal ){
 
 				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-				materializable = applyCurrentMaterializationTo( materializations, materializable );
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-				instantiable = applyInstantiationTo( instantiation, instantiable );
 				
 				if( ! materializable.matchStack(instantiable) ) {
 					throw new CannotMatchException();
 				}
 			}
 		}
-		return new StackEmbeddingResult( toAbstract, lhs );
 	}
 
 	private void matchMaterializableWithInstantiable(Map<AbstractStackSymbol, List<StackSymbol>> materializations,
