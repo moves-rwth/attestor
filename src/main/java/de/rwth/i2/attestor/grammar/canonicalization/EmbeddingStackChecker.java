@@ -65,7 +65,25 @@ public class EmbeddingStackChecker {
 			//TODO
 		}
 		
+		iterator =  pattern.nonterminalEdges().iterator();
+		while( iterator.hasNext() ){
+			int nt = iterator.next();
 
+			Nonterminal patternLabel = pattern.labelOf( nt );
+			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
+			if( patternLabel instanceof IndexedNonterminal 
+					&& targetLabel instanceof IndexedNonterminal ){
+
+				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+				materializable = applyCurrentMaterializationTo( materializations, materializable );
+				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+				instantiable = applyInstantiationTo( instantiation, instantiable );
+				
+				if( ! materializable.matchStack(instantiable) ) {
+					throw new CannotMatchException();
+				}
+			}
+		}
 		return new StackEmbeddingResult( toAbstract, lhs );
 	}
 
