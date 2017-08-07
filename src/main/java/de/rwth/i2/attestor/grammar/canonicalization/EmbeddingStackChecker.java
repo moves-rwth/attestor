@@ -221,7 +221,6 @@ public class EmbeddingStackChecker {
 
 		StackSymbol lastStackSymbol = materializable.getStack().getLastStackSymbol();
 		if( lastStackSymbol instanceof AbstractStackSymbol ){
-			AbstractStackSymbol abs = (AbstractStackSymbol) lastStackSymbol;
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
 				return materializable.getWithProlongedStack( currentMaterializations.get(lastStackSymbol) );
 			}
