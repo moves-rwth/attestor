@@ -1,27 +1,21 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Matching;
-import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
-import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AVLStackCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import gnu.trove.iterator.TIntIterator;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.Set;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import gnu.trove.iterator.TIntIterator;
 
 public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy {
 	private static final Logger logger = LogManager.getLogger( "IndexedCanonicalizationStrategy" );
@@ -76,7 +70,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 		
 
-		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold) {
+		if( state.getHeap().countNodes() > aggressiveAbstractionThreshold) {
 
 			logger.trace( "Using aggressive canonization" );
 			return performCanonicalization( state, true );

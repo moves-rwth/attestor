@@ -12,10 +12,8 @@ import de.rwth.i2.attestor.grammar.materialization.communication.CannotMateriali
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 
@@ -106,7 +104,7 @@ public class EmbeddingStackChecker {
 				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
 				
-				if( ! materializable.matchStack(instantiable) ) {
+				if( ! materializable.getStack().matchStack(instantiable.getStack() ) ) {
 					throw new CannotMatchException();
 				}
 			}
@@ -221,7 +219,7 @@ public class EmbeddingStackChecker {
 			IndexedNonterminal materializable ) 
 	{
 
-		StackSymbol lastStackSymbol = materializable.getLastStackSymbol();
+		StackSymbol lastStackSymbol = materializable.getStack().getLastStackSymbol();
 		if( lastStackSymbol instanceof AbstractStackSymbol ){
 			AbstractStackSymbol abs = (AbstractStackSymbol) lastStackSymbol;
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
@@ -233,7 +231,7 @@ public class EmbeddingStackChecker {
 
 	private IndexedNonterminal applyInstantiationTo(List<StackSymbol> instantiation, IndexedNonterminal instantiable) {
 
-		StackSymbol lastSymbol = instantiable.getLastStackSymbol();
+		StackSymbol lastSymbol = instantiable.getStack().getLastStackSymbol();
 		if( ! instantiation.isEmpty() && lastSymbol instanceof StackVariable ) {
 			return instantiable.getWithProlongedStack(instantiation);
 		}else {

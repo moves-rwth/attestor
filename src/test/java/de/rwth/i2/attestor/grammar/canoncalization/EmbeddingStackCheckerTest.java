@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.grammar.canoncalization;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingStackChecker;
-import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.indexedGrammars.BalancedTreeGrammar;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -332,7 +328,7 @@ public class EmbeddingStackCheckerTest {
 		String label = "matching_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
 		return nt;
 	}
 	
@@ -340,7 +336,7 @@ public class EmbeddingStackCheckerTest {
 		String label = "matching2_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
 		return nt;
 	}
 	
@@ -348,7 +344,7 @@ public class EmbeddingStackCheckerTest {
 		String label = "reference_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
 		return nt;
 	}
 
