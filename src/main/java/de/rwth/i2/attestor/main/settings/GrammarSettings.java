@@ -1,7 +1,11 @@
 package de.rwth.i2.attestor.main.settings;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +24,7 @@ import de.rwth.i2.attestor.util.FileReader;
  *
  * Stores all settings related to the graph grammar underlying the current analysis.
  *
- * @author Christoph
+ * @author Christoph, Christina
  */
 public class GrammarSettings {
 
@@ -33,6 +37,12 @@ public class GrammarSettings {
      * The graph grammar that is used by the currently loaded analysis.
      */
     private Grammar grammar = null;
+
+    /**
+     * The grammar builder, that initially builds the (indexed) HRG.
+     */
+    private GrammarBuilder grammarBuilder = null;
+
 
     /**
      * Prevents creating objects of this class outside this package.
@@ -62,26 +72,46 @@ public class GrammarSettings {
     }
 
     /**
-     * Loads a graph grammar from a file and sets it as the graph grammar underlying the current analysis.
+     * Loads a graph grammar from a file and sets it as the graph grammar underlying the current analysis or extends
+     * the previously loaded grammar (if present).
+     *
      * @param filename The file storing the graph grammar.
      */
-    public void loadGrammar(String filename) {
+    public void loadGrammarFromFile(String filename, HashMap<String, String> rename) {
 
         if(grammar != null)  {
-            logger.warn("Overwriting previously set grammar.");
+            logger.debug("Extending previously set grammar.");
+        }
+
+        // The first time a grammar file is loaded
+        if(grammarBuilder == null) {
+            this.grammarBuilder = Grammar.builder();
         }
 
         try {
             String str = FileReader.read(filename);
+            // Modify grammar (replace all keys in rename by its values)
+            if(rename != null){
+                for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
+                    str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
+                }
+            }
+
+            logger.debug("Renamed grammar string: " + str);
+
             JSONArray array = new JSONArray(str);
-            GrammarBuilder grammarBuilder = Grammar.builder();
-            grammarBuilder.addRules(parseRules(array));
-            grammar = grammarBuilder.build();
-            exportGrammar();
+
+            this.grammarBuilder.addRules(parseRules(array));
+
+
         } catch (FileNotFoundException e) {
-            grammar = null;
-            logger.error("Could not parse grammar at location " + filename);
+            logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
+
+        // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
+
     }
 
     /**
@@ -102,7 +132,7 @@ public class GrammarSettings {
     /**
      * Exports the grammar to a file.
      */
-    private void exportGrammar() {
+    public void exportGrammar() {
 
         if( Settings.getInstance().output().isExportGrammar() ) {
 
@@ -112,5 +142,43 @@ public class GrammarSettings {
             //Settings.getInstance().factory().getGrammarExporter(location).export(grammar);
             logger.debug("Exported grammar to " + location );
         }
+    }
+
+    public void loadGrammarFromURL(URL resource, HashMap<String, String> rename) {
+
+        if(grammar != null)  {
+            logger.debug("Extending previously set grammar.");
+        }
+
+        // The first time a grammar file is loaded
+        if(grammarBuilder == null) {
+            this.grammarBuilder = Grammar.builder();
+        }
+
+        try {
+            InputStream is = resource.openStream();
+            String str = FileReader.read(is);
+
+            // Modify grammar (replace all keys in rename by its values)
+            if(rename != null){
+                for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
+                    str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
+                }
+            }
+
+            logger.debug("Renamed grammar string: " + str);
+
+            JSONArray array = new JSONArray(str);
+
+            this.grammarBuilder.addRules(parseRules(array));
+
+        } catch (IOException e) {
+            logger.error("Could not parse grammar at location " + resource.getPath() + ". Skipping it.");
+        }
+
+        // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
+
     }
 }

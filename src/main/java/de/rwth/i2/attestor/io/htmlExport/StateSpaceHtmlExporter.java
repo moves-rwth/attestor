@@ -1,15 +1,20 @@
 package de.rwth.i2.attestor.io.htmlExport;
 
-import java.io.*;
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSuccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * All the dirty details to export a full StateSpace into multiple HTML files.
@@ -70,7 +75,7 @@ public class StateSpaceHtmlExporter implements StateSpaceExporter {
 					+ File.separator + indexName );
 		}
 
-		logger.info( "HeapConfigurations exported to " + directory
+		logger.info( "Heap configurations exported to " + directory
 				+ File.separator + indexName );
 	}
 

@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import java.util.List;
-
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 import gnu.trove.iterator.TIntIterator;
+
+import java.util.List;
 
 /**
  * Responsible for applying the materialization rules to the stacks of the nonterminals
@@ -90,9 +90,9 @@ public class StackMaterializer {
 		while(edgeIter.hasNext()) {
 			int indexOfNonterminal = edgeIter.next();
 			Nonterminal nonterminal = inputGraph.labelOf( indexOfNonterminal );
-			if( nonterminal instanceof IndexedNonterminal ){
+			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getLastStackSymbol().equals( symbolToMaterialize ) ) {
+				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( symbolToMaterialize ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							computeMaterializedCopyOf(nonterminalToMaterialize, inputMaterializationPostfix);
@@ -120,7 +120,7 @@ public class StackMaterializer {
 			List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
-		if( nonterminalToMaterialize.hasConcreteStack() ){
+		if( nonterminalToMaterialize.getStack().hasConcreteStack() ){
 			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
 		}
 

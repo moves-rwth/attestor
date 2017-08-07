@@ -3,8 +3,9 @@ package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
-import sun.java2d.loops.FillRect.General;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 
 public class GeneralMaterializationStrategyTest_Materialize_Default {
 
@@ -32,6 +32,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
+
+		UnitTestGlobalSettings.reset();
+
 		GeneralNonterminal listLabel = GeneralNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		

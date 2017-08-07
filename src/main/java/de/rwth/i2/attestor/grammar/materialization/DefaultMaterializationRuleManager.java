@@ -1,11 +1,16 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Calculates and caches the rules of a basic grammar (i.e. non-indexed) to handle each violationPoint.
@@ -28,9 +33,11 @@ public class DefaultMaterializationRuleManager implements MaterializationRuleMan
 	@Override
 	public GrammarResponse getRulesFor(Nonterminal toReplace, int tentacle, String requestedSelector) 
 			throws UnexpectedNonterminalTypeException {
-		
-		if( !( toReplace instanceof GeneralNonterminal) ){
-			throw new UnexpectedNonterminalTypeException("DefaultMaterializationRuleManager can only deal with DefaultNonterminals");
+
+		// TODO The second type of nonterminals might be incorrect. Please check this again.
+		if( !(toReplace instanceof GeneralNonterminal) && !(toReplace instanceof RefinedDefaultNonterminal)  ){
+			throw new UnexpectedNonterminalTypeException("DefaultMaterializationRuleManager can only deal with " +
+					"DefaultNonterminal and RefinedNonterminalImpl");
 		}
 		
 		Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingVioPoint =

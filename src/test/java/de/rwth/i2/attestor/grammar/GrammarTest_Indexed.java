@@ -6,7 +6,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.materialization.*;
@@ -14,9 +17,9 @@ import de.rwth.i2.attestor.grammar.materialization.communication.Materialization
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.BalancedTreeGrammar;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import gnu.trove.iterator.TIntIterator;
 
 public class GrammarTest_Indexed {
@@ -24,7 +27,15 @@ public class GrammarTest_Indexed {
 	private MaterializationRuleManager grammarManager;
 	
 	private Nonterminal nonterminal;
-	
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
@@ -41,7 +52,7 @@ public class GrammarTest_Indexed {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		nonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		 
 			MaterializationAndRuleResponse response = 
 					(MaterializationAndRuleResponse) 
@@ -65,7 +76,7 @@ public class GrammarTest_Indexed {
 		ArrayList<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
-		nonterminal = new IndexedNonterminal("B", 2, new boolean[]{false,true}, stack);
+		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		MaterializationAndRuleResponse response = 
 				(MaterializationAndRuleResponse) 
@@ -82,7 +93,7 @@ public class GrammarTest_Indexed {
 		 while( ntIterator.hasNext() ){
 			 int ntId = ntIterator.next();
 			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", nt.hasConcreteStack() );
+			 assertTrue("leftLeafRule not instantiatied", nt.getStack().hasConcreteStack() );
 		 }
 		 assertTrue( result.contains( BalancedTreeGrammar.createRightLeafRule()) );
 		 }

@@ -1,31 +1,40 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-
-import org.junit.Test;
-
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashSet;
+
+import static org.junit.Assert.*;
 
 public class TableauRulesSwitchTest {
-	
+
+	private HeapConfiguration hc;
+	private DefaultState state;
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+	@Before
+	public void setup() {
+
+		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		state = new DefaultState(hc);
+		state.addAP("ap1");
+	}
+
 	@Test
 	public void caseAAtomicpropTerm(){
 		
-		// Generate assertion
-
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
-
 		Assertion currentVertex = new Assertion(state);
 		
 		TAtomicprop ap = new TAtomicprop("ap1");
@@ -42,8 +51,8 @@ public class TableauRulesSwitchTest {
 		assertTrue(currentVertex.isTrue());
 		
 		// Reset state and rule switch with new AP
-		state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
+		state = new DefaultState(hc);
+		state.addAP("ap1");
 
 		currentVertex = new Assertion(state);
 		
@@ -65,21 +74,10 @@ public class TableauRulesSwitchTest {
 		for(Assertion newAssertion : output){
 			assertTrue(newAssertion.getFormulae().isEmpty());
 		}
-
-		
 	}
 	
 	@Test
 	public void caseALtlTerm(){
-		// Generate assertion
-
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-				
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
-
 		Assertion currentVertex = new Assertion(state);
 				
 		TAtomicprop ap = new TAtomicprop("ap1");
@@ -101,14 +99,9 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseAFalseTerm(){
 		
-		// Generate assertion
-
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-				
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
+		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		DefaultState state = new DefaultState(hc);
+		state.addAP("ap1");
 
 		Assertion currentVertex = new Assertion(state);
 		
@@ -142,14 +135,6 @@ public class TableauRulesSwitchTest {
 	
 	@Test 
 	public void caseATrueTerm(){
-		// Generate assertion
-
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-						
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
 
 		Assertion currentVertex = new Assertion(state);
 			
@@ -174,12 +159,9 @@ public class TableauRulesSwitchTest {
 	public void ANegStateform(){
 		// Generate assertion
 
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-				
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
+		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		DefaultState state = new DefaultState(hc);
+		state.addAP("ap1");
 
 		Assertion currentVertex = new Assertion(state);
 		
@@ -206,14 +188,6 @@ public class TableauRulesSwitchTest {
 	
 	@Test
 	public void AAndStateform(){
-		// Generate assertion
-
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-								
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState state = new DefaultLabelledState(heapconf);
-		state.addLabel(label1);
 
 		Assertion currentVertex = new Assertion(state);
 		
@@ -251,58 +225,49 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseAUntilLtlform(){
 		
-		// Generate assertion
+        Assertion currentVertex = new Assertion(state);
 
-				StateLabel label1 = new StateLabel();
-				label1.addAP("ap1");
-										
-				HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-				DefaultLabelledState state = new DefaultLabelledState(heapconf);
-				state.addLabel(label1);
+        TAtomicprop ap1 = new TAtomicprop("ap1");
+        AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
+        ATermLtlform termLtl1 = new ATermLtlform(term1);
 
-				Assertion currentVertex = new Assertion(state);
-				
-				TAtomicprop ap1 = new TAtomicprop("ap1");
-				AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
-				ATermLtlform termLtl1 = new ATermLtlform(term1);
-				
-				TAtomicprop ap2 = new TAtomicprop("ap2");
-				AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
-				ATermLtlform termLtl2 = new ATermLtlform(term2);
-				
-				TAtomicprop ap3 = new TAtomicprop("ap3");
-				AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
-				ATermLtlform termLtl3 = new ATermLtlform(term3);
-							
-				AAndStateform andStateForm = new AAndStateform(new TLparen(), termLtl1, new TAnd(), termLtl2,new TRparen());
-				AStateformLtlform andLTLForm = new AStateformLtlform(andStateForm);
-				currentVertex.addFormula(andStateForm);
+        TAtomicprop ap2 = new TAtomicprop("ap2");
+        AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
+        ATermLtlform termLtl2 = new ATermLtlform(term2);
 
-				AUntilLtlform untilForm = new AUntilLtlform(new TLparen(), termLtl3, new TUntil(), andLTLForm,new TRparen());
-				currentVertex.addFormula(untilForm);
-										
-				// Check whether the tableau rule application returns two new assertions with the same state but term1 (term2) 
-				// included instead of term1 and term2
-				TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
-				rulesSwitch.setIn(untilForm, currentVertex);
-										
-				untilForm.apply(rulesSwitch);
-				assertFalse(currentVertex.isTrue());
-				HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(untilForm);
+        TAtomicprop ap3 = new TAtomicprop("ap3");
+        AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
+        ATermLtlform termLtl3 = new ATermLtlform(term3);
 
-				assertEquals(output.size(), 2);
-				
-				boolean containsNextForm = false;
-				for(Assertion generatedAssertion : output){
-					
-					assertFalse(generatedAssertion.getFormulae().contains(untilForm));
-					assertEquals(generatedAssertion.getFormulae().size(), 3);
-					
-					for(Node node : generatedAssertion.getFormulae()){
-						if(node instanceof ANextLtlform){
-							containsNextForm = true;
-							assertEquals(node, generatedAssertion.getFormulae().getLast());
-						}
+        AAndStateform andStateForm = new AAndStateform(new TLparen(), termLtl1, new TAnd(), termLtl2,new TRparen());
+        AStateformLtlform andLTLForm = new AStateformLtlform(andStateForm);
+        currentVertex.addFormula(andStateForm);
+
+        AUntilLtlform untilForm = new AUntilLtlform(new TLparen(), termLtl3, new TUntil(), andLTLForm,new TRparen());
+        currentVertex.addFormula(untilForm);
+
+        // Check whether the tableau rule application returns two new assertions with the same state but term1 (term2)
+        // included instead of term1 and term2
+        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+        rulesSwitch.setIn(untilForm, currentVertex);
+
+        untilForm.apply(rulesSwitch);
+        assertFalse(currentVertex.isTrue());
+        HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(untilForm);
+
+        assertEquals(output.size(), 2);
+
+        boolean containsNextForm = false;
+        for(Assertion generatedAssertion : output){
+
+            assertFalse(generatedAssertion.getFormulae().contains(untilForm));
+            assertEquals(generatedAssertion.getFormulae().size(), 3);
+
+            for(Node node : generatedAssertion.getFormulae()){
+                if(node instanceof ANextLtlform){
+                    containsNextForm = true;
+                    assertEquals(node, generatedAssertion.getFormulae().getLast());
+                }
 					}
 				}
 				assertTrue(containsNextForm);
@@ -311,65 +276,56 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseAReleaseLtlform(){
 		
-		// Generate assertion
+        Assertion currentVertex = new Assertion(state);
 
-				StateLabel label1 = new StateLabel();
-				label1.addAP("ap1");
-										
-				HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-				DefaultLabelledState state = new DefaultLabelledState(heapconf);
-				state.addLabel(label1);
+        TAtomicprop ap1 = new TAtomicprop("ap1");
+        AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
+        ATermLtlform termLtl1 = new ATermLtlform(term1);
 
-				Assertion currentVertex = new Assertion(state);
-				
-				TAtomicprop ap1 = new TAtomicprop("ap1");
-				AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
-				ATermLtlform termLtl1 = new ATermLtlform(term1);
-				
-				TAtomicprop ap2 = new TAtomicprop("ap2");
-				AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
-				ATermLtlform termLtl2 = new ATermLtlform(term2);
-				currentVertex.addFormula(termLtl2);
-				
-				TAtomicprop ap3 = new TAtomicprop("ap3");
-				AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
-				ATermLtlform termLtl3 = new ATermLtlform(term3);
-							
-				AAndStateform andStateForm = new AAndStateform(new TLparen(), termLtl1, new TAnd(), termLtl2,new TRparen());
-				AStateformLtlform andLTLForm = new AStateformLtlform(andStateForm);
-				
+        TAtomicprop ap2 = new TAtomicprop("ap2");
+        AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
+        ATermLtlform termLtl2 = new ATermLtlform(term2);
+        currentVertex.addFormula(termLtl2);
 
-				AReleaseLtlform releaseForm = new AReleaseLtlform(new TLparen(), termLtl3, new TRelease(), andLTLForm,new TRparen());
-				currentVertex.addFormula(releaseForm);
-										
-				// Check whether the tableau rule application returns two new assertions with the same state but term1 (term2) 
-				// included instead of term1 and term2
-				TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
-				rulesSwitch.setIn(releaseForm, currentVertex);
-										
-				releaseForm.apply(rulesSwitch);
-				assertFalse(currentVertex.isTrue());
-				HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(releaseForm);
+        TAtomicprop ap3 = new TAtomicprop("ap3");
+        AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
+        ATermLtlform termLtl3 = new ATermLtlform(term3);
 
-				assertEquals(output.size(), 2);
-				
-				boolean containsNextForm = false;
-				for(Assertion generatedAssertion : output){
-					
-					assertFalse(generatedAssertion.getFormulae().contains(releaseForm));
-					
-					for(Node node : generatedAssertion.getFormulae()){
-						if(node instanceof ANextLtlform){
-							containsNextForm = true;
-							assertEquals(node, generatedAssertion.getFormulae().getLast());
-							assertEquals(generatedAssertion.getFormulae().size(), 3);
+        AAndStateform andStateForm = new AAndStateform(new TLparen(), termLtl1, new TAnd(), termLtl2,new TRparen());
+        AStateformLtlform andLTLForm = new AStateformLtlform(andStateForm);
 
-						}
-						
-						if(node.equals(andLTLForm)){
-							assertEquals(generatedAssertion.getFormulae().size(), 2);
-						}
-					}
+
+        AReleaseLtlform releaseForm = new AReleaseLtlform(new TLparen(), termLtl3, new TRelease(), andLTLForm,new TRparen());
+        currentVertex.addFormula(releaseForm);
+
+        // Check whether the tableau rule application returns two new assertions with the same state but term1 (term2)
+        // included instead of term1 and term2
+        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+        rulesSwitch.setIn(releaseForm, currentVertex);
+
+        releaseForm.apply(rulesSwitch);
+        assertFalse(currentVertex.isTrue());
+        HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(releaseForm);
+
+        assertEquals(output.size(), 2);
+
+        boolean containsNextForm = false;
+        for(Assertion generatedAssertion : output){
+
+            assertFalse(generatedAssertion.getFormulae().contains(releaseForm));
+
+            for(Node node : generatedAssertion.getFormulae()){
+                if(node instanceof ANextLtlform){
+                    containsNextForm = true;
+                    assertEquals(node, generatedAssertion.getFormulae().getLast());
+                    assertEquals(generatedAssertion.getFormulae().size(), 3);
+
+                }
+
+                if(node.equals(andLTLForm)){
+                    assertEquals(generatedAssertion.getFormulae().size(), 2);
+                }
+            }
 				}
 				assertTrue(containsNextForm);
 	}

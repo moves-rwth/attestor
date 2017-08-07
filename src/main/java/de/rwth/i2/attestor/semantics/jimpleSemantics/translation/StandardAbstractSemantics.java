@@ -1,22 +1,25 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import soot.Unit;
 import soot.jimple.InstanceFieldRef;
 import soot.util.Chain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Translator for all standard statements/values which operate on JimpleExecutables.
@@ -105,7 +108,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		}
 
 		if( DebugMode.ENABLED ){
-			logger.info( "StandardSemantics not applicable. Using next level.." );
+			logger.debug( "StandardSemantics not applicable. Using next level.." );
 		}
 		return nextLevel.translateStatement( input, pc );
 	}
@@ -147,7 +150,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			return translateUnequalExpr( input );
 		}
 		if( DebugMode.ENABLED ){
-			logger.info( "StandardSemantic not applicable. Using next level.." );
+			logger.debug( "StandardSemantic not applicable. Using next level.." );
 		}
 		return nextLevel.translateValue( input );
 	}
@@ -188,7 +191,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
-			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input) );
+			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input),
+					Settings.getInstance().options().isRemoveDeadVariables());
 		}
 	}
 
@@ -242,9 +246,11 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			soot.Value sootBase = instanceMethod.getBase();
 			Value translatedBase = topLevel.translateValue( sootBase );
 
-			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams, localNames );
+			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams, localNames,
+                    Settings.getInstance().options().isRemoveDeadVariables() );
 		}else{
-			invokeHelper = new StaticInvokeHelper( translatedParams, localNames );
+			invokeHelper = new StaticInvokeHelper( translatedParams, localNames,
+                    Settings.getInstance().options().isRemoveDeadVariables() );
 		}
 		return invokeHelper;
 	}
@@ -320,7 +326,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		Unit trueSuccessor = stmt.getTarget();
 		int truePC = topLevel.getPCforUnit( trueSuccessor );
 		int falsePC = pc + 1;
-		return new IfStmt( condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input) );
+		return new IfStmt( condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input),
+				Settings.getInstance().options().isRemoveDeadVariables());
 	}
 
     /**

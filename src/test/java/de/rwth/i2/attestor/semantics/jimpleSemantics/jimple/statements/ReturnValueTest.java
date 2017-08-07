@@ -4,14 +4,16 @@ import static org.junit.Assert.*;
 
 import java.util.Set;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -22,6 +24,13 @@ public class ReturnValueTest {
 	private ReturnValueStmt stmt;
 	private HeapConfiguration inputGraph;
 	private DefaultState inputState;
+
+
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() throws Exception{

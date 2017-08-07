@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
@@ -14,17 +15,17 @@ import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.IndexedState;
-import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.DefaultStackMaterialization;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
@@ -45,6 +47,11 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	AbstractStackSymbol oneAbstractSymbol;
 	AbstractStackSymbol otherAbstractSymbol;
 	private static final String VIOLATION_POINT_SELECTOR = "next";
+
+	@BeforeClass
+	public static void init() {
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() {
@@ -158,7 +165,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private Nonterminal getNonterminalWithStack( List<StackSymbol> stack ) {
-		return new IndexedNonterminal(LABEL, RANK, REDUCTION_TENTACLEs, stack);
+		return new IndexedNonterminalImpl(LABEL, RANK, REDUCTION_TENTACLEs, stack);
 	}
 	
 	private HeapConfiguration someRhs() {

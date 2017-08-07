@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.graph.heap.internal;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -11,11 +13,18 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HeapConfigurationTest {
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	
-	@Test
 	/**
 	 * Tests access to builders through HeapConfiguration.
 	 */
+    @Test
 	public void testBuilder() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -38,10 +47,10 @@ public class HeapConfigurationTest {
 		}
 	}
 
-	@Test
 	/**
 	 * Tests access to all nodes in a HeapConfiguration.
 	 */
+    @Test
 	public void testNodes() {
 	
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -63,10 +72,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests the access to the type of a node.
 	 */
+    @Test
 	public void testNodeTypeOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -77,10 +86,10 @@ public class HeapConfigurationTest {
 		assertEquals(type, hc.nodeTypeOf(0));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when requesting the type of a node.
 	 */
+    @Test
 	public void testDefensiveNodeTypeOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -105,10 +114,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to the variables attached to a node.
 	 */
+    @Test
 	public void testAttachedVariablesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -133,10 +142,10 @@ public class HeapConfigurationTest {
 		assertTrue( hc.attachedVariablesOf( nodes.get(2) ).contains(6) );
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when requesting the variables attached to a node.
 	 */
+    @Test
 	public void testDefensiveAttachedVariablesOf() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
@@ -163,10 +172,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to the nonterminal edges attached to a node.
 	 */
+    @Test
 	public void testAttachedNonterminalEdgesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -189,10 +198,10 @@ public class HeapConfigurationTest {
 		
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when accessing the nonterminal edges of a node.
 	 */
+    @Test
 	public void testDefensiveAttachedNonterminalEdgesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -220,10 +229,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to the successor nodes of a node.
 	 */
+    @Test
 	public void testSuccessorNodesOf() {
 	
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -242,10 +251,10 @@ public class HeapConfigurationTest {
 		assertEquals(nodes.get(3), hc.successorNodesOf(nodes.get(0)).get(2));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs for accessing successor nodes of a given node.
 	 */
+    @Test
 	public void testDefensiveSuccessorNodesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -273,10 +282,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to the predecessor nodes of a node.
 	 */
+    @Test
 	public void testPredecessorNodesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -295,10 +304,10 @@ public class HeapConfigurationTest {
 		assertEquals(nodes.get(3), hc.predecessorNodesOf(nodes.get(0)).get(2));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs for accessing predecessor nodes of a given node.
 	 */
+    @Test
 	public void testDefensivePredecessorNodesOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -326,10 +335,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to all selectors occurring on outgoing edges of a node.
 	 */
+    @Test
 	public void testSelectorLabelsOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -348,10 +357,10 @@ public class HeapConfigurationTest {
 		assertEquals("third", hc.selectorLabelsOf(nodes.get(0)).get(2).toString());
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when accessing selectors occurring on outgoing edges of a node.
 	 */
+    @Test
 	public void testDefensiveSelectorLabelsOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -379,10 +388,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests access to the node reached from a given node using a given selector.
 	 */
+    @Test
 	public void testSelectorTargetOf() {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -401,12 +410,12 @@ public class HeapConfigurationTest {
 		assertEquals(nodes.get(3), hc.selectorTargetOf(nodes.get(0), sel));
 	}
 	
-	@Test
 	/**
 	 * Tests invalid inputs when accessing the node reached from a given node by a given selector.
 	 */
+    @Test
 	public void testDefensiveSelectorTargetOf() {
-	
+
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		try {
@@ -432,10 +441,10 @@ public class HeapConfigurationTest {
 		}
 	}
 	
-	@Test
 	/**
 	 * Tests creation of deep copies of HeapConfigurations.
 	 */
+    @Test
 	public void testClone() {
 		
 		InternalHeapConfiguration hc = new InternalHeapConfiguration();

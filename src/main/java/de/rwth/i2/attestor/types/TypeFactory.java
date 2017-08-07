@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.types;
 
-import de.rwth.i2.attestor.tasks.DefaultTypeFactory;
-
 /**
  * 
  * Abstract singleton factory to create Type objects.

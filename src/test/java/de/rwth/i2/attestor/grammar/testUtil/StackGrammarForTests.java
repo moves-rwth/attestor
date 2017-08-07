@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackMaterializationStrategy;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackMaterializationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 
 public class StackGrammarForTests implements StackMaterializationStrategy {
 

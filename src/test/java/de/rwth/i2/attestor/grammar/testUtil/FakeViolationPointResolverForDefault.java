@@ -5,7 +5,7 @@ import java.util.*;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
 
 public class FakeViolationPointResolverForDefault extends ViolationPointResolver {
 

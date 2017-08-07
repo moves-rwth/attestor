@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.graph.morphism;
 
 import static org.junit.Assert.assertFalse;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -10,7 +12,13 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2IsomorphismChecker;
 
 public class IsomorphismCheckerTest {
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Test 
 	public void checkIdenticalGraphs() {
 		

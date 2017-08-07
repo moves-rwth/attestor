@@ -1,10 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
@@ -12,9 +8,19 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.DebugMode;
-import soot.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Unit;
 import soot.jimple.Stmt;
 import soot.util.Chain;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class organizes the actual translation process by splitting a Jimple program
@@ -81,8 +87,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Assumes that soot.Scene already contains the Jimple code that should be
 	 * translated.
 	 * 
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#AbstractMethod(String)
-	 *      AbstractMethod(String name)
+	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#AbstractMethod(String, AbstractMethod.StateSpaceFactory)
+	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory)
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#setControlFlow(List)
 	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)
@@ -107,7 +113,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		for (SootMethod method : methods) {
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
-			methodMapping.put(signature, new AbstractMethod(signature, shortName));
+			methodMapping.put(signature, new AbstractMethod(signature, shortName, getStateSpaceFactory()));
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);
@@ -219,7 +225,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			return res;
 		} else {
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );
-			AbstractMethod defaultMethod = new AbstractMethod(signature + " (only default - empty Method)", displayName);
+			AbstractMethod defaultMethod = new AbstractMethod(signature + " (only default - empty Method)",
+					displayName, getStateSpaceFactory());
 			methodMapping.put(signature, defaultMethod);
 			List<Semantics> defaultControlFlow = new ArrayList<>();
 			defaultControlFlow.add(new Skip(-1));
@@ -231,6 +238,20 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
 			return defaultMethod;
 		}
+	}
+
+	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() {
+
+		return (program, input, scopeDepth) -> {
+			return Settings.getInstance()
+					.factory()
+					.createStateSpaceGenerator(
+							program,
+							input,
+							scopeDepth
+					).generate();
+
+		};
 	}
 
 	@Override

@@ -14,13 +14,6 @@ public class MockupNonterminal implements Nonterminal {
 	}
 	
 	@Override
-	public int compareTo(Nonterminal o) {
-		
-		return label.compareTo(o.toString()); 
-		
-	}
-
-	@Override
 	public int getRank() {
 		
 		return rank;
@@ -49,9 +42,8 @@ public class MockupNonterminal implements Nonterminal {
 	}
 
 	@Override
-	public boolean labelMatches(Nonterminal nonterminal) {
-		// TODO Auto-generated method stub
-		return false;
+	public String getLabel() {
+		return label;
 	}
-	
+
 }

@@ -1,12 +1,14 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
+import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.util.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.util.Pair;
 
 /**
  * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in stackVariable).
@@ -47,20 +49,20 @@ public class FakeStackMatcher extends StackMatcher {
 	public boolean canMatch(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal ){
 		
-		return ! instantiableNonterminal.hasConcreteStack();
+		return ! instantiableNonterminal.getStack().hasConcreteStack();
 	}
 	
 	public boolean needsMaterialization(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
 		
-		return canMatch(materializableNonterminal, instantiableNonterminal) ? true : false;
+		return canMatch(materializableNonterminal, instantiableNonterminal);
 	}
 	
 	public Pair<AbstractStackSymbol, List<StackSymbol> > getMaterializationRule(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getLastStackSymbol();
+			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getStack().getLastStackSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );
@@ -78,7 +80,7 @@ public class FakeStackMatcher extends StackMatcher {
 	public boolean needsInstantiation(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal )  {
 		
-		return canMatch(materializableNonterminal, instantiableNonterminal) ? true : false;
+		return canMatch(materializableNonterminal, instantiableNonterminal);
 	}
 	
 	public List<StackSymbol> getNecessaryInstantiation(IndexedNonterminal materializableNonterminal, 

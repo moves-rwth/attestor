@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
-import java.util.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
 import org.junit.Test;
 
@@ -12,13 +12,21 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.BeforeClass;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 
@@ -39,6 +47,13 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	private static final String SELECTOR_NEXT_NAME = "next";
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_NOT_CREATING_NEXT = 1;
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 
 
 	@Test
@@ -73,7 +88,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		List<StackSymbol> stack = SingleElementUtil.createList( bottom );
 				
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
 	}
 
 	private static Nonterminal createNonterminal_Instantiable() {
@@ -81,7 +96,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		List<StackSymbol> stack = SingleElementUtil.createList( var );
 		
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
 	}
 	
 	private static Nonterminal createNonterminal_s() {
@@ -92,7 +107,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		stack.add(var);
 		
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
 	}
 
 	private static HeapConfiguration getInstantiableRuleCreatingNext() {

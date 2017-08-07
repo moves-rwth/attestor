@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class provides methods to safely initialize a StateSpaceGenerator.
  * The only means to create a new StateSpaceGenerator is through the static method
@@ -13,7 +16,7 @@ public class SSGBuilder {
 	/**
 	 * The initial state passed to the state space generation
 	 */
-	private ProgramState initialState;
+	private List<ProgramState> initialStates;
 	
 	/**
 	 * Internal instance of the StateSpaceGenerator under
@@ -26,7 +29,7 @@ public class SSGBuilder {
 	 * uninitialized StateSpaceGenerator.
 	 */
     SSGBuilder() {
-		initialState = null;
+		initialStates = new ArrayList<>();
 		generator = new StateSpaceGenerator();
 	}
 	
@@ -39,18 +42,45 @@ public class SSGBuilder {
 	 * methods of this builder
 	 */
 	public StateSpaceGenerator build() {
-		
-		if(initialState == null 
-				|| generator.program == null || generator.materializer == null
-				|| generator.canonicalizationStrategy == null || generator.abortStrategy == null) {
-			throw new IllegalStateException("StateSpaceGenerator not completely initialized");
+
+	    if(initialStates.isEmpty())	 {
+	    	throw new IllegalStateException("StateSpaceGenerator: No initial states.");
 		}
-		
-		initialState.setProgramCounter(0);
-		
-		ProgramState initial = generator.getSubsumingStateInSSOrAddToSS(initialState);
-		generator.stateSpace.addInitialState( initial );
-		
+
+		if(generator.program == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No program.");
+		}
+
+		if(generator.materializationStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No materialization strategy.");
+		}
+
+		if(generator.canonicalizationStrategy== null) {
+			throw new IllegalStateException("StateSpaceGenerator: No canonicalization strategy.");
+		}
+
+		if(generator.abortStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No abort strategy.");
+		}
+
+		if(generator.stateLabelingStrategy == null)	{
+	    	throw new IllegalStateException("StateSpaceGenerator: No state labeling strategy.");
+		}
+
+		if(generator.stateRefinementStrategy == null)	{
+			throw new IllegalStateException("StateSpaceGenerator: No state refinement strategy.");
+		}
+
+		if(generator.inclusionStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No inclusion strategy.");
+		}
+
+		for (ProgramState state : initialStates) {
+			state.setProgramCounter(0);
+			generator.stateSpace.addInitialState(state);
+			generator.unexploredConfigurations.add(state);
+		}
+
 		return generator;
 	}
 
@@ -59,8 +89,18 @@ public class SSGBuilder {
      *                     the state space generation.
      * @return The builder.
      */
-	public SSGBuilder setInitialState(ProgramState initialState) {
-		this.initialState = initialState;
+	public SSGBuilder addInitialState(ProgramState initialState) {
+		initialStates.add(initialState);
+		return this;
+	}
+
+	/**
+	 * @param initialStates The initial states from which all reachable states are computed by
+	 *                     the state space generation.
+	 * @return The builder.
+	 */
+	public SSGBuilder addInitialStates(List<ProgramState> initialStates) {
+		this.initialStates.addAll(initialStates);
 		return this;
 	}
 
@@ -78,7 +118,7 @@ public class SSGBuilder {
 	 * @return The builder.
 	 */
 	public SSGBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
-		generator.materializer = materializationStrategy;
+		generator.materializationStrategy = materializationStrategy;
 		return this;
 	}
 
@@ -115,6 +155,11 @@ public class SSGBuilder {
      */
 	public SSGBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy) {
 		generator.stateLabelingStrategy = stateLabelingStrategy;
+		return this;
+	}
+
+	public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
+		generator.stateRefinementStrategy = stateRefinementStrategy;
 		return this;
 	}
 	

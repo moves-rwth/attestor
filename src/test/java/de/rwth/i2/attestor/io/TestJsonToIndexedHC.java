@@ -3,14 +3,25 @@ package de.rwth.i2.attestor.io;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
 
 public class TestJsonToIndexedHC {
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+		Settings.getInstance().options().setIndexedMode(true);
+	}
 
 	@Before
 	public void initClass() {

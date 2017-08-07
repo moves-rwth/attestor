@@ -1,20 +1,19 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.TemporaryVariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An instance of this class is a helper for a specific invoke statement. It can
@@ -55,6 +54,13 @@ public abstract class InvokeHelper {
 	private Set<String> liveVariableNames = new HashSet<>();
 
 	/**
+	 * True if and only if dead variables should be removed after
+	 * execution of this statement.
+	 */
+	private boolean removeDeadVariables;
+
+
+	/**
 	 * Increases the scope
 	 * 
 	 * Attaches method parameters and if need be this to the executable for use
@@ -82,9 +88,10 @@ public abstract class InvokeHelper {
 	 */
 	public abstract void cleanHeap( JimpleExecutable executable );
 	
-	InvokeHelper() {
+	InvokeHelper(boolean removeDeadVariables) {
 		
 		potentialViolationPoints = new ViolationPoints();
+		this.removeDeadVariables = removeDeadVariables;
 	}
 	
 	void precomputePotentialViolationPoints() {
@@ -122,7 +129,10 @@ public abstract class InvokeHelper {
 			}else{
 				executable.setIntermediate( referenceName, concreteArgument );
 			}
-			TemporaryVariablesUtil.checkAndRemoveTemp(argumentValues.get( i ).toString(), executable, liveVariableNames);
+
+			if(removeDeadVariables) {
+				VariablesUtil.removeDeadVariables(argumentValues.get( i ).toString(), executable, liveVariableNames);
+			}
 		}
 	}
 

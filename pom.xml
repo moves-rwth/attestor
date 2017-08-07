@@ -5,7 +5,7 @@
 
   <groupId>de.rwth.i2</groupId>
   <artifactId>attestor</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>attestor</name>
@@ -106,11 +106,12 @@
   <build>
         <resources>
             <resource>
-                  <directory>src/main/resources</directory>
-                  <targetPath>${project.build.directory}</targetPath>
-                  <includes>
-                          <include>log4j2.xml</include>
-                  </includes>
+                    <directory>src/main/resources</directory>
+                    <filtering>true</filtering>
+            </resource>
+            <resource>
+                  <directory>src/main/assets</directory>
+                  <targetPath>${project.build.directory}/classes</targetPath>
             </resource>
         </resources> 
 	<plugins>

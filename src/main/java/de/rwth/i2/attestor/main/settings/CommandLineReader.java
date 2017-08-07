@@ -1,18 +1,33 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.generated.lexer.LexerException;
+import de.rwth.i2.attestor.generated.parser.ParserException;
 import java.io.File;
 
 import org.apache.commons.cli.*;
 
 import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 /**
  * Parses the provided command line options in order to populate
  * {@link Settings}.
  *
- * @author Hannah Arndt, Christoph
+ * @author Hannah Arndt, Christoph, Christina
  */
 public class CommandLineReader {
+
+	/**
+	 * The logger of this class.
+	 */
+	private static final Logger logger = LogManager.getLogger( "CommandLineReader" );
 
     /**
      * A specification of the available command line options.
@@ -94,7 +109,7 @@ public class CommandLineReader {
 				.longOpt("initial")
 				.hasArg()
 				.argName("file")
-				.desc("name of file containing initial state in json-format")
+				.desc("(optional) name of file containing initial state in json-format")
 				.build()
 				);
 
@@ -231,7 +246,16 @@ public class CommandLineReader {
 				.desc("(optional) if enabled, states with more than 30 states will be exported to folder debug."
 						+ " Only possible for indexed analysis.")
 				.build()
-				);		
+				);
+		cliOptions.addOption(
+				Option.builder("mc")
+				.longOpt("model-checking")
+				.hasArg()
+				.argName("formulae")
+				.desc("(optional) if enabled, model checking will be performed for the provided formulae +"
+						+ "(separated by ,)")
+				.build()
+		);
 	}
 
 
@@ -388,9 +412,40 @@ public class CommandLineReader {
 		} 
 		if( cmd.hasOption("i")){
 			inputSettings.setInputName(cmd.getOptionValue("i"));
+		} else if(inputSettings.getInputName() == null){
+			if (CommandLineReader.class.getClassLoader().getResource("initialStates") == null) {
+				logger.entry("Default initial states location not found!");
+			} else {
+				inputSettings.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
+			}
 		}
 		
 		return inputSettings;
+	}
+
+	/**
+	 * Populates all settings that customize if and how model checking is performed.
+	 * @param settings All settings.
+	 * @return The populated model checking settings.
+	 */
+	public ModelCheckingSettings getMCSettings( Settings settings ) {
+		ModelCheckingSettings mcSettings = settings.modelChecking();
+		if( cmd.hasOption("mc")){
+			mcSettings.setModelCheckingEnabled( true );
+
+			String formulaString = cmd.getOptionValue("mc");
+			for(String formula : formulaString.split(",")){
+				LTLFormula ltlFormula = null;
+				try {
+					ltlFormula = new LTLFormula(formula);
+					mcSettings.addFormula(ltlFormula);
+				} catch (Exception e) {
+					logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
+				}
+			}
+		}
+
+		return mcSettings;
 	}
 
     /**
@@ -405,7 +460,10 @@ public class CommandLineReader {
 			return  cmd.hasOption( "sf" )
 					|| 
 					( cmd.hasOption("p") && cmd.hasOption("c") && cmd.hasOption("m")
-					&& cmd.hasOption("g") && cmd.hasOption("i") );
+					&& cmd.hasOption("g")
+							// Initial HC no longer necessary, default: empty HC
+							//&& cmd.hasOption("i")
+					);
 		
 	}
 

@@ -1,28 +1,29 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
-    import de.rwth.i2.attestor.graph.Nonterminal;
-               import de.rwth.i2.attestor.graph.SelectorLabel;
-               import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-    import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-    import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-               import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-               import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-    import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
-    import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
-    import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
-    import de.rwth.i2.attestor.main.AnalysisTaskBuilder;
-    import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-    import de.rwth.i2.attestor.tasks.defaultTask.DefaultAnalysisTask;
-               import de.rwth.i2.attestor.tasks.GeneralNonterminal;
-               import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
-               import de.rwth.i2.attestor.tasks.GeneralType;
-import de.rwth.i2.attestor.tasks.indexedTask.IndexedAnalysisTask;
-               import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
+import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
+import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
+import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.types.Type;
 
-               import java.util.ArrayList;
-               import java.util.HashMap;
-               import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -53,17 +54,6 @@ public class FactorySettings {
     private long totalNumberOfStates = 0;
 
     /**
-     * @return A builder to create a new AnalysisTask dependent on the current settings.
-     */
-    public AnalysisTaskBuilder createAnalysisTaskBuilder() {
-        if(requiresIndexedSymbols()) {
-            return IndexedAnalysisTask.builder();
-        } else {
-            return DefaultAnalysisTask.builder();
-        }
-    }
-
-    /**
      * @return A HeapConfiguration that contains neither nodes nor edges.
      */
     public HeapConfiguration createEmptyHeapConfiguration() {
@@ -77,8 +67,12 @@ public class FactorySettings {
      */
     public Nonterminal getNonterminal(String label) {
 
-        if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, new ArrayList<>());
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
+        } else if(requiresIndexedSymbols()) {
+            return new IndexedNonterminalImpl(label, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedDefaultNonterminal(GeneralNonterminal.getNonterminal(label), null);
         } else {
             return GeneralNonterminal.getNonterminal(label);
         }
@@ -88,8 +82,17 @@ public class FactorySettings {
      * @return true if and only if an indexed analysis is performed.
      */
     private boolean requiresIndexedSymbols() {
-                                           return Settings.getInstance().options().isIndexedMode();
-                                                                                                   }
+        return Settings.getInstance().options().isIndexedMode();
+    }
+
+    /**
+     * @return True if and only if heap automata are required.
+     */
+    private boolean requiresRefinedSymbols() {
+
+        return Settings.getInstance().options().getStateLabelingAutomaton() != null
+                || Settings.getInstance().options().getStateRefinementAutomaton() != null;
+    }
 
     /**
      * Creates a Nonterminal symbol with the provided parameters.
@@ -103,8 +106,15 @@ public class FactorySettings {
      */
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
-        if(requiresIndexedSymbols()) {
-            return new IndexedNonterminal(label, rank, isReductionTentacle, new ArrayList<>());
+        if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
+            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
+        } else if(requiresIndexedSymbols()) {
+            return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+        } else if(requiresRefinedSymbols()) {
+            return new RefinedDefaultNonterminal(
+                    GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle),
+                    null
+            );
         } else {
             return GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle);
         }
@@ -201,5 +211,76 @@ public class FactorySettings {
      */
     public long getTotalNumberOfStates() {
         return totalNumberOfStates;
+    }
+
+    public ProgramState createProgramState(int programCounter, HeapConfiguration heapConfiguration, int scopeDepth) {
+
+        ProgramState result;
+
+        if(scopeDepth > 0)  {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration, scopeDepth);
+            } else {
+                result = new DefaultState(heapConfiguration, scopeDepth);
+            }
+        } else {
+            if(requiresIndexedSymbols()) {
+                result = new IndexedState(heapConfiguration);
+            } else {
+                result = new DefaultState(heapConfiguration);
+            }
+        }
+
+        result.setProgramCounter(programCounter);
+        result.prepareHeap();
+        return result;
+    }
+
+    public StateSpaceGenerator createStateSpaceGenerator(Program program, HeapConfiguration input, int scopeDepth) {
+
+        return getStateSpaceGeneratorBuilder()
+                .setProgram(program)
+                .addInitialState(
+                        createProgramState(0, input, scopeDepth)
+                )
+                .build();
+    }
+
+    public StateSpaceGenerator createStateSpaceGenerator(Program program,
+                                                         List<HeapConfiguration> inputs, int scopeDepth) {
+        List<ProgramState> inputStates = new ArrayList<>(inputs.size());
+        inputs.forEach(hc -> inputStates.add(createProgramState(0, hc, scopeDepth)));
+
+        return getStateSpaceGeneratorBuilder()
+                .setProgram(program)
+                .addInitialStates(
+                        inputStates
+                )
+                .build();
+    }
+
+    private SSGBuilder getStateSpaceGeneratorBuilder() {
+
+        StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
+        return StateSpaceGenerator
+                .builder()
+                .setStateLabelingStrategy(
+                        settings.getStateLabelingStrategy()
+                )
+                .setMaterializationStrategy(
+                        settings.getMaterializationStrategy()
+                )
+                .setInclusionStrategy(
+                        settings.getInclusionStrategy()
+                )
+                .setCanonizationStrategy(
+                        settings.getCanonicalizationStrategy()
+                )
+                .setAbortStrategy(
+                        settings.getAbortStrategy()
+                )
+                .setStateRefinementStrategy(
+                        settings.getStateRefinementStrategy()
+                );
     }
 }

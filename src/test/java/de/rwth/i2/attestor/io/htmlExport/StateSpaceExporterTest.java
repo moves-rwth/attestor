@@ -14,6 +14,7 @@ public class StateSpaceExporterTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
+		UnitTestGlobalSettings.reset();
 	}
 
 	@Before

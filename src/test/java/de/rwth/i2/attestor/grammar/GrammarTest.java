@@ -1,20 +1,24 @@
 package de.rwth.i2.attestor.grammar;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.*;
-
-import org.junit.Test;
-
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.indexedGrammars.BalancedTreeGrammar;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.*;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GrammarTest {
 
@@ -35,6 +39,14 @@ public class GrammarTest {
 			BalancedTreeGrammar.createUnbalancedRuleRight();
 	public static final Set<HeapConfiguration> RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL = 
 			constructRhsForInstantiableIndexedNonterminal();
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 
 	@Test
 	public void testGrammarOnDefaultNonterminal(){
@@ -192,8 +204,7 @@ public class GrammarTest {
 		final boolean[] reductionTentacles = new boolean[]{false,true};
 		final int rank = 2;
 		final String label = "List";
-		GeneralNonterminal lhs = GeneralNonterminal.getNonterminal(label, rank, reductionTentacles);
-		return lhs;
+		return GeneralNonterminal.getNonterminal(label, rank, reductionTentacles);
 	}
 
 	private static Set<HeapConfiguration> constructRhsForDefaultNonterminal(){
@@ -207,8 +218,7 @@ public class GrammarTest {
 		ConcreteStackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
-		IndexedNonterminal lhs = new IndexedNonterminal("B", 2, new boolean[]{false, true}, lhsStack );
-		return lhs;
+		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
 	}
 
 	private static Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal(){
@@ -223,8 +233,7 @@ public class GrammarTest {
 		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s);
 		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminal("B", 2, new boolean[]{false, true}, lhsStack );
-		return lhs;
+		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
 	}
 
 	private static Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {

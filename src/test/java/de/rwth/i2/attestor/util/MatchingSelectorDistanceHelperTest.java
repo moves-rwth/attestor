@@ -6,14 +6,21 @@ import static org.junit.Assert.assertTrue;
 import java.util.*;
 import java.util.function.Predicate;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.tasks.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 
 public class MatchingSelectorDistanceHelperTest {
 
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Test
 	public void testHasMatch_WithEquals() {

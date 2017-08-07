@@ -6,7 +6,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -14,8 +16,8 @@ import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.*;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
@@ -29,7 +31,14 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 	private static final ConcreteStackSymbol STACK_SYMBOL_S = ConcreteStackSymbol.getStackSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	GeneralMaterializationStrategy materializer;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
@@ -268,9 +277,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		String label = BalancedTreeGrammar.NT_LABEL;
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
 		
-		IndexedNonterminal referenceNt = new IndexedNonterminal(label, stackForReferenceNt );
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, stackForReferenceNt );
 		Type type = BalancedTreeGrammar.TYPE;
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -291,7 +300,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		String label = BalancedTreeGrammar.NT_LABEL;
-		IndexedNonterminal referenceNt = new IndexedNonterminal(label , stackForReferenceNt  );
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label , stackForReferenceNt  );
 		
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_0;
@@ -323,8 +332,8 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		List<StackSymbol> stack_Z = getStack_Z();
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack_Z);
-		IndexedNonterminal referenceNt = new IndexedNonterminal(label, stackForReferenceNt  );
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack_Z);
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, stackForReferenceNt  );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -356,9 +365,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		List<StackSymbol> stack_Z = getStack_Z();
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack_Z);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack_Z);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminal(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -390,9 +399,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
-		IndexedNonterminal nt = new IndexedNonterminal(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminal(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -431,11 +440,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
-				new IndexedNonterminal(label,rank,isReductionTentacle, leftStack);
+				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftStack);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminal(label, rightStack );
+				new IndexedNonterminalImpl(label, rightStack );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminal(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -473,11 +482,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
-				new IndexedNonterminal(label,rank,isReductionTentacle, leftStack);
+				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftStack);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminal(label, rightStack );
+				new IndexedNonterminalImpl(label, rightStack );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminal(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)

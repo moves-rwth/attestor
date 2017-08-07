@@ -1,24 +1,28 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class PrepareHeapTest {
 	//private static final Logger logger = LogManager.getLogger( "PrepareHeapTest.java" );
@@ -28,6 +32,11 @@ public class PrepareHeapTest {
 	private int falsePC;
 	private Type listType;
 
+	@BeforeClass
+	public static void init()
+	{
+		UnitTestGlobalSettings.reset();
+	}
 
 	@Before
 	public void setUp() throws Exception{
@@ -44,7 +53,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Local( listType, "x" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = new DefaultState( testGraph );
@@ -72,7 +81,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin, "next" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = new DefaultState( testGraph );
@@ -101,7 +110,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin3, "next" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
 			DefaultState input = new DefaultState( testGraph );

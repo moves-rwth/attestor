@@ -1,28 +1,38 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
-import de.rwth.i2.attestor.tasks.GeneralNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class StackMaterializerTest {
 
 	private static final String UNIQUE_NT_LABEL = "StackMaterializerTest";
 	private static final int RANK = 3;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false,true};
+
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 
 	@Test
@@ -352,7 +362,7 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -370,8 +380,8 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt1 = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
-		Nonterminal nt2 = new IndexedNonterminal(UNIQUE_NT_LABEL, stack2);
+		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -394,7 +404,7 @@ public class StackMaterializerTest {
 
 		Type type = TypeFactory.getInstance().getType("type");
 
-		Nonterminal nt = new IndexedNonterminal( UNIQUE_NT_LABEL, RANK, 
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
 												 REDUCTION_TENTACLES, 
 												 stackForIndexedNonterminal);
 		GeneralNonterminal defaultNt = GeneralNonterminal.getNonterminal(UNIQUE_NT_LABEL,

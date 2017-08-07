@@ -48,10 +48,9 @@ public class JimpleParser implements ProgramParser {
 	public Program parse(String classpath, String classname, String entryPoint) {
 		
 		try {
-			logger.info( "Invoking ProgramReader: " + classname + ", " + classpath );
+			logger.info( "Initializing Soot with classpath: " + classpath );
 			new SootInitializer().initialize(classpath);
 		
-			logger.debug( "loading soot" );
 
 			Options.v().parse( new String [] { "-p", "jb",  "use-original-names:true" });
 
@@ -64,16 +63,20 @@ public class JimpleParser implements ProgramParser {
 		
 			Options.v().parse( new String [] {"-pp", "-keep-line-number", "-f", "jimple", classname } );
 			Scene.v().loadNecessaryClasses();
+
+			logger.info( "Invoking Soot." );
 			PackManager.v().runPacks();
-		
+			logger.info( "Soot is done." );
+
 
 		} catch(Exception e) {
 			
-			logger.fatal( "soot threw an exception." );
+			logger.fatal( "Soot threw an exception." );
 			
 			if(DebugMode.ENABLED) {
 				e.printStackTrace();
 			}
+			// TODO push this to Attestor as System.exit(1) may lead to weird behavior in jmh
 			System.exit(1);
 		}
 

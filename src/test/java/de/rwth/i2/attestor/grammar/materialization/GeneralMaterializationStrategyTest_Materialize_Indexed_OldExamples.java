@@ -5,21 +5,30 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.*;
-import de.rwth.i2.attestor.indexedGrammars.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
 public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamples {
 
 	private GeneralMaterializationStrategy materializer;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+
 	@Before
 	public void setUp() throws Exception {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();

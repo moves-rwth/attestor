@@ -1,14 +1,15 @@
 package de.rwth.i2.attestor.io.htmlExport;
 
-import java.io.*;
-import java.util.*;
-
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.*;
-import gnu.trove.iterator.TIntIterator;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All the dirty details to export a single HeapConfiguration into an HTML file.

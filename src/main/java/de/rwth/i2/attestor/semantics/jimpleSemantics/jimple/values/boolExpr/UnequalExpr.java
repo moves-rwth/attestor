@@ -60,9 +60,7 @@ public class UnequalExpr implements Value {
 			return executable.getUndefined();
 		}
 		if( leftRes.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "leftExpr evaluated to undefined. Returning undefined." );
-			}
+			logger.debug( "leftExpr evaluated to undefined. Returning undefined." );
 			return executable.getUndefined();
 		}
 		ConcreteValue rightRes;
@@ -73,10 +71,8 @@ public class UnequalExpr implements Value {
 			return executable.getUndefined();
 		}
 		if( rightRes.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "rightExpr evaluated to undefined. Returning undefined." );
-				return executable.getUndefined();
-			}
+			logger.debug( "rightExpr evaluated to undefined. Returning undefined." );
+			return executable.getUndefined();
 		}
 
 		ConcreteValue res = executable.getConstant( "" + ( !leftRes.equals( rightRes ) ) );

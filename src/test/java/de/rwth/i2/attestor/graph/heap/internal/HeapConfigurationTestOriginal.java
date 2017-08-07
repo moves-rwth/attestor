@@ -2,7 +2,10 @@ package de.rwth.i2.attestor.graph.heap.internal;
 
 import static org.junit.Assert.*;
 
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.*;
@@ -19,7 +22,13 @@ public class HeapConfigurationTestOriginal {
 	
 	private HeapConfiguration result;
 	private TIntArrayList nodes;
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
 	@Before
 	public void setUp() {
 		

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.automata.HeapAutomaton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,18 +50,20 @@ public class OptionSettings {
 	private boolean aggressiveReturnAbstraction = true;
 	
 	/**
-	 * Enabling this options results in dead variables (variables that are not accessed before being rewritten in the
+	 * Enabling this option results in dead variables (variables that are not accessed before being rewritten in the
 	 * following) being deleted in order to enable more possible abstractions.
-	 *
-	 * Although the default should be true, this should be turned on in the main class
-	 * in order to avoid collusion with unit tests.
 	 */
-	private boolean removeDeadVariables = false;
+	private boolean removeDeadVariables = true;
 
 	/**
 	 * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
 	 */
 	private boolean indexedMode = false;
+
+	private HeapAutomaton stateLabelingAutomaton = null;
+
+	private HeapAutomaton stateRefinementAutomaton = null;
+
 
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
@@ -184,5 +187,24 @@ public class OptionSettings {
 	public void setIndexedMode(boolean indexedMode) {
 		this.indexedMode = indexedMode;
 	}
-	
+
+	public void setStateLabelingAutomaton(HeapAutomaton stateLabelingAutomaton)	{
+
+		this.stateLabelingAutomaton = stateLabelingAutomaton;
+	}
+
+	public HeapAutomaton getStateLabelingAutomaton() {
+
+		return stateLabelingAutomaton;
+	}
+
+	public void setStateRefinementAutomaton(HeapAutomaton stateRefinementAutomaton)	{
+
+		this.stateRefinementAutomaton = stateRefinementAutomaton;
+	}
+
+	public HeapAutomaton getStateRefinementAutomaton() {
+
+		return stateRefinementAutomaton;
+	}
 }

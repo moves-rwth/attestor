@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.io.htmlExport;
 
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 
 class TestStateSpaceInput extends StateSpace {
 	//private static final Logger logger = LogManager.getLogger( "TestStateSpaceInput.java" );

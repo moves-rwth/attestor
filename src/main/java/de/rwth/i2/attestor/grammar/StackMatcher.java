@@ -1,17 +1,20 @@
 package de.rwth.i2.attestor.grammar;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.util.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StackMatcher {
 	
-	Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<StackSymbol>, List<StackSymbol>>>
+	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<StackSymbol>, List<StackSymbol>>>
 		knownMatches = new HashMap<>();
 
-	StackMaterializationStrategy stackGrammar;
+	private StackMaterializationStrategy stackGrammar;
 	
 	public StackMatcher(StackMaterializationStrategy stackGrammar) {
 		this.stackGrammar = stackGrammar;
@@ -79,7 +82,7 @@ public class StackMatcher {
 			   IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getLastStackSymbol();
+			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getStack().getLastStackSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );
@@ -129,8 +132,8 @@ public class StackMatcher {
 		
 		Pair<IndexedNonterminal, IndexedNonterminal> requestPair =
 				new Pair<>(materializableNonterminal, instantiableNonterminal);
-		
-		if( ! materializableNonterminal.label().equals( instantiableNonterminal.label() ) ){
+
+		if( ! materializableNonterminal.getLabel().equals(instantiableNonterminal.getLabel() ) ) {
 			addNegativeResultToKnownMatches(requestPair);
 			return;
 		}
@@ -139,8 +142,8 @@ public class StackMatcher {
 		List<StackSymbol> necessaryInstantiation = new ArrayList<>();
 		
 			
-			for( int i = 0; i < materializableNonterminal.stackSize() 
-						 || i < instantiableNonterminal.stackSize(); 
+			for( int i = 0; i < materializableNonterminal.getStack().size()
+						 || i < instantiableNonterminal.getStack().size();
 				i++ ){
 				StackSymbol s1 = getNextSymbolForMaterializableNonterminal(materializableNonterminal, necessaryMaterialization, i);
 				StackSymbol s2 = getNextSymbolForInstantiableNonterminal(instantiableNonterminal, i);
@@ -174,8 +177,8 @@ public class StackMatcher {
 
 	private StackSymbol getNextSymbolForInstantiableNonterminal(IndexedNonterminal instantiableNonterminal, int i) {
 		StackSymbol s2;
-		if( i < instantiableNonterminal.stackSize() ){
-		    s2 = instantiableNonterminal.getStackAt( i );
+		if( i < instantiableNonterminal.getStack().size() ){
+		    s2 = instantiableNonterminal.getStack().get(i);
 		}else{
 			s2 = StackVariable.getGlobalInstance();
 		}
@@ -185,8 +188,8 @@ public class StackMatcher {
 	private StackSymbol getNextSymbolForMaterializableNonterminal(IndexedNonterminal materializableNonterminal,
 			List<StackSymbol> necessaryMaterialization, int i) {
 		StackSymbol s1;
-		if( i < materializableNonterminal.stackSize() ){
-		 s1 = materializableNonterminal.getStackAt( i );
+		if( i < materializableNonterminal.getStack().size() ){
+		 s1 = materializableNonterminal.getStack().get( i );
 		}else{
 		  /* 
 		   * +1 is added because the first symbol in the materialization
@@ -194,14 +197,13 @@ public class StackMatcher {
 		   * Example NT[s,s,X], materialization [a,b,Y] -> then a replaces X.
 		   * The result of applying the materialization would be NT[s,s,a,b,Y] 	
 		   */
-		  s1 = necessaryMaterialization.get(i - materializableNonterminal.stackSize() +1 );
+		  s1 = necessaryMaterialization.get(i - materializableNonterminal.getStack().size() +1 );
 		}
 		return s1;
 	}
 
 	private void addNegativeResultToKnownMatches(Pair<IndexedNonterminal, IndexedNonterminal> requestPair) {
 		knownMatches.put( requestPair, null );
-		return;
 	}
 
 }

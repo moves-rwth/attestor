@@ -1,21 +1,37 @@
 package de.rwth.i2.attestor.modelChecking;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateLabel;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.tasks.defaultTask.DefaultLabelledState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ProofStructureTest extends StateSpace {
-	
+
+	private HeapConfiguration hc;
+
 	public ProofStructureTest(){
 		super();
 	}
-	
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
+
+	@Before
+	public void setup() {
+
+		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+	}
+
 	@Test
 	public void buildProofStructureTestAndStateform(){
 		
@@ -26,18 +42,11 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
+		DefaultState state1 = new DefaultState(hc);
+		state1.addAP("ap2");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
@@ -71,18 +80,11 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
+		DefaultState state1 = new DefaultState(hc);
+		state1.addAP("ap2");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
@@ -112,17 +114,10 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
-
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		state1.addLabel(label2);
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
+		DefaultState state1 = new DefaultState(hc);
+		state1.addAP("ap2");
 		
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -154,18 +149,11 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
+		DefaultState state1 = new DefaultState(hc);
+		state1.addAP("ap2");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
@@ -194,18 +182,9 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		//DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		//state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		//this.addState(state1);
@@ -234,27 +213,16 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		//DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		//state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
-		//this.addState(state1);
 		this.addControlFlowSuccessor(initialState, "stmt1", initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
 		
-		// Expected output
 		assertEquals(proofStruct.getLeaves().size(), 2);
 		for(Assertion assertion : proofStruct.getLeaves()){
 			// Make sure all leaves are successful
@@ -275,18 +243,9 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap1");
 
-		HeapConfiguration heapconf = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf);
-		initialState.addLabel(label1);
-		//DefaultLabelledState state1 = new DefaultLabelledState(heapconf);
-		//state1.addLabel(label2);
-		
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		//this.addState(state1);
@@ -295,7 +254,6 @@ public class ProofStructureTest extends StateSpace {
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
 		
-		// Expected output
 		assertEquals(proofStruct.getLeaves().size(), 2);
 		for(Assertion assertion : proofStruct.getLeaves()){
 			// Make sure all leaves are successful
@@ -315,22 +273,15 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		// Create dummy state space
-		StateLabel label1 = new StateLabel();
-		label1.addAP("ap1");
-		label1.addAP("ap3");
-		StateLabel label2 = new StateLabel();
-		label2.addAP("ap2");
-
-		HeapConfiguration heapconf1 = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		HeapConfiguration heapconf2 = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultLabelledState initialState = new DefaultLabelledState(heapconf1);
-		initialState.addLabel(label2);
-		DefaultLabelledState state1 = new DefaultLabelledState(heapconf2);
-		state1.addLabel(label1);
-		DefaultLabelledState state2 = new DefaultLabelledState(heapconf2);
-		state2.addLabel(label2);
-
+		DefaultState initialState = new DefaultState(hc);
+		initialState.addAP("ap2");
+		DefaultState state1 = new DefaultState(hc);
+		state1.addAP("ap1");
+		DefaultState state2 = new DefaultState(hc);
+		state2.addAP("ap2");
+		
+		
+		this.addState(initialState);
 
 		initialState.setProgramCounter(0);
 		this.addState(initialState);

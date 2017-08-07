@@ -1,19 +1,33 @@
 package de.rwth.i2.attestor.graph.digraph;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import gnu.trove.list.array.TIntArrayList;
 
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
-import gnu.trove.list.array.TIntArrayList;
 
 public class LabeledDigraphTest {
+
+	@BeforeClass
+	public static void init() {
+
+		UnitTestGlobalSettings.reset();
+	}
 
 	private void addNodeWithVariableLabel(LabeledDigraph graph, String label, int succCapacity, int predCapacity) {
 	   graph.addNode( Variable.get( label ), succCapacity, predCapacity );
     }
+
+
 	
 	@Test
 	public void createEmptyTest() {

@@ -5,9 +5,13 @@ import java.util.List;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -33,7 +37,7 @@ class ExpectedHCs {
 		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false, false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
@@ -51,7 +55,7 @@ class ExpectedHCs {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
@@ -69,7 +73,7 @@ class ExpectedHCs {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(var);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
@@ -87,7 +91,7 @@ class ExpectedHCs {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
@@ -105,7 +109,7 @@ class ExpectedHCs {
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		
@@ -136,7 +140,7 @@ class ExpectedHCs {
 		StackSymbol var = StackVariable.getGlobalInstance();
 		List<StackSymbol> stack = new ArrayList<>();
 		stack.add(var);
-		IndexedNonterminal nt = new IndexedNonterminal("TestJson", 2, new boolean[]{false,false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
 		Type type = TypeFactory.getInstance().getType("type");
 		

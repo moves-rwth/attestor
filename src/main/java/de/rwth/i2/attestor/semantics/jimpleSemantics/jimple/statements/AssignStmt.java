@@ -1,18 +1,19 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.TemporaryVariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.*;
+import de.rwth.i2.attestor.util.DebugMode;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Set;
 
 /**
  * AssignStmts model assignments of locals or fields to values e.g. x.y = z
@@ -40,12 +41,16 @@ public class AssignStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	public AssignStmt( SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames ){
+	private final boolean removeDeadVariables;
+
+	public AssignStmt( SettableValue lhs , Value rhs , int nextPC,
+					   Set<String> liveVariableNames, boolean removeDeadVariables ){
 		super();
 		this.rhs = rhs;
 		this.lhs = lhs;
 		this.nextPC = nextPC;
 		this.liveVariableNames = liveVariableNames;
+		this.removeDeadVariables = removeDeadVariables;
 		
 		potentialViolationPoints = new ViolationPoints();
 		potentialViolationPoints.addAll(lhs.getPotentialViolationPoints());
@@ -82,7 +87,11 @@ public class AssignStmt extends Statement {
 		}
 
 		if( concreteRHS.isUndefined() ){
-			logger.warn( "The value of rhs is undefined. Ignoring Assign." );
+			if(rhs instanceof Field)  {
+				logger.warn( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
+			} else {
+				logger.debug( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
+			}
 		}else{
 			if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
@@ -98,9 +107,11 @@ public class AssignStmt extends Statement {
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
-		
-		TemporaryVariablesUtil.checkAndRemoveTemp(rhs.toString(), executable, liveVariableNames);
-		
+
+		if(removeDeadVariables) {
+			VariablesUtil.removeDeadVariables(rhs.toString(), executable, liveVariableNames);
+		}
+
 		JimpleExecutable result = JimpleUtil.deepCopy(executable);
 		result.setProgramCounter(nextPC);
 		

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.io;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -9,8 +10,8 @@ import org.json.JSONObject;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.IndexedNonterminal;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -36,13 +37,23 @@ public class JsonToIndexedGrammar {
 
 			if( hasDefinedTentacles(grammarFragment) ) {
 
-				nt = new IndexedNonterminal(label, rank, getReductionTentacles(grammarFragment), stack);
+				nt = (IndexedNonterminal) Settings
+						.getInstance()
+						.factory()
+						.createNonterminal(label, rank, getReductionTentacles(grammarFragment));
+				nt = nt.getWithStack(stack);
 
 			} else {
 
 				boolean[] rts = new boolean[rank];
 				Arrays.fill(rts, false);
-				nt = new IndexedNonterminal(label, rank, rts, stack);
+
+				nt = (IndexedNonterminal) Settings
+						.getInstance()
+						.factory()
+						.createNonterminal(label, rank, rts);
+				nt = nt.getWithStack(stack);
+
 				ntsWithoutReductionTentacles.add(nt);
 			}
 

@@ -3,8 +3,8 @@ package de.rwth.i2.attestor.grammar.materialization.communication;
 import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.indexedGrammars.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.indexedGrammars.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 
 public class MaterializationAndRuleResponse implements GrammarResponse {
 
