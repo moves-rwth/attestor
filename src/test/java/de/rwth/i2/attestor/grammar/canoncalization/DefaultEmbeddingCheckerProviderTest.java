@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.grammar.canoncalization;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -8,9 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -23,7 +21,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect DepthEmbeddingChecker
 	 */
 	@Test
-	public void test() {
+	public void testSimpleCase() {
 		int aggressiveAbstractionThreshold = 10;
 		boolean aggressiveReturnAbstraction = true;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
@@ -42,7 +40,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect  aggressive EmbeddingChecker
 	 */
 	@Test
-	public void test2() {
+	public void testLargeState() {
 		int aggressiveAbstractionThreshold = 2;
 		boolean aggressiveReturnAbstraction = false;
 		HeapConfiguration graph = getGraphBiggerThan( aggressiveAbstractionThreshold );
@@ -62,7 +60,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect aggressive EmbeddingChecker
 	 */
 	@Test
-	public void test3() {
+	public void testAggressiveReturn() {
 		int aggressiveAbstractionThreshold = 10;
 		boolean aggressiveReturnAbstraction = true;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
@@ -81,7 +79,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect DepthEmbeddingChecker
 	 */
 	@Test
-	public void test4() {
+	public void testNormalReturn() {
 		int aggressiveAbstractionThreshold = 10;
 		boolean aggressiveReturnAbstraction = false;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
