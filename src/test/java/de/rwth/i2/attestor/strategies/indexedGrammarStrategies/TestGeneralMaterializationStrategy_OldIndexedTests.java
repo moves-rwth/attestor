@@ -11,6 +11,7 @@ import org.junit.*;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;

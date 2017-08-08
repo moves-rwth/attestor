@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarR
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeStackMatcher;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolver;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;

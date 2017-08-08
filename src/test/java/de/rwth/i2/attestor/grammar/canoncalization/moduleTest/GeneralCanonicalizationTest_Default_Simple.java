@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canoncalization.*;
-import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -23,7 +24,7 @@ import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
-public class GeneralCanonicalizationTest {
+public class GeneralCanonicalizationTest_Default_Simple {
 	
 	private static final int RANK = 3;
 	private static final Type TYPE = TypeFactory.getInstance().getType("type");

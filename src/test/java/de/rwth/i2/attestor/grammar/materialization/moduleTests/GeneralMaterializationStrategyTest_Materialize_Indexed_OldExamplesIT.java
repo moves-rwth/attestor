@@ -12,14 +12,8 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
+import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;

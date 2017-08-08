@@ -13,13 +13,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.materialization.DefaultGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
+import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;

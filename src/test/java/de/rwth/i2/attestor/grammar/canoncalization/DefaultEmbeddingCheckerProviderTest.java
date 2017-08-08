@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
@@ -95,6 +96,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 
 	private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
 			HeapConfiguration graph, HeapConfiguration pattern, Statement statement, AbstractMatchingChecker expected) {
+		
 		EmbeddingCheckerProvider checkerProvider = 
 				new EmbeddingCheckerProvider( aggressiveAbstractionThreshold,
 											  aggressiveReturnAbstraction 	);

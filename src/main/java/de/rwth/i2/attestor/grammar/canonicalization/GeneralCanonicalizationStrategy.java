@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.canoncalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canoncalization.MatchingReplacer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;

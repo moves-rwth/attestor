@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.rwth.i2.attestor.grammar.canonicalization.MatchingReplacer;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.*;

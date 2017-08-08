@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
-import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;

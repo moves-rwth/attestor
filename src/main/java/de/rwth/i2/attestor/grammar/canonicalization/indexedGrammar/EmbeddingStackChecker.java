@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.canonicalization;
+package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -7,8 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
+import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
+import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;

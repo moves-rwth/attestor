@@ -1,5 +1,6 @@
-package de.rwth.i2.attestor.grammar.canoncalization;
+package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
+import de.rwth.i2.attestor.grammar.canonicalization.MatchingReplacer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;

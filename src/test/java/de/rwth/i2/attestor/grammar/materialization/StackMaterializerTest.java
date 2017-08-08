@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
