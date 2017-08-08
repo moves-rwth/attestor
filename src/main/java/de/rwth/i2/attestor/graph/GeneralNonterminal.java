@@ -41,7 +41,7 @@ public class GeneralNonterminal implements Nonterminal {
 			logger.fatal( "requested nonterminal does not exist" );
 			logger.fatal( "requested was: " + label );
 			logger.fatal( "have: " + existingNonterminals );
-			System.exit( 1 );
+			throw new IllegalArgumentException("Requested nonterminal does not exist.");
 		}
 		return existingNonterminals.get( label );
 	}
