@@ -6,16 +6,20 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
- * Used to construct a grammar
+ * Used to construct a grammar.
+ * By default, the grammar is not marked as backwards confluent.
+ * Use setConfluent() to change this.
+ * 
  * @author Hannah
  *
  */
 public class GrammarBuilder {
 	
 	Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
-
+	boolean isConfluent = false;
+	
 	public Grammar build() {
-		return new Grammar( rules );
+		return new Grammar( rules, isConfluent );
 	}
 	
 	public GrammarBuilder addRule( Nonterminal lhs, HeapConfiguration rhs) {
@@ -41,6 +45,10 @@ public class GrammarBuilder {
 			this.addRules( ruleEntry.getKey(), ruleEntry.getValue() );
 		}
 		return this;
+	}
+	
+	public void setConfluent(){
+		this.isConfluent = true;
 	}
 
 

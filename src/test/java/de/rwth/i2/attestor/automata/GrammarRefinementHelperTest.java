@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.automata;
 
+import static org.junit.Assert.*;
+
+import java.util.*;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -9,19 +15,6 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class GrammarRefinementHelperTest {
 
@@ -137,7 +130,7 @@ public class GrammarRefinementHelperTest {
                 .build()
         );
 
-        return new Grammar(rules);
+        return new Grammar( rules, false );
     }
 
 

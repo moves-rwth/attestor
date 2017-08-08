@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.automata;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -7,8 +9,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
 
 /**
  * An auxiliary class that performs the actual refinement of a graph grammar according to a heap automaton.
@@ -61,7 +61,7 @@ class GrammarRefinementHelper {
      */
     Grammar getRefinedGrammar() {
 
-        return new Grammar(new HashMap<>(refinedGrammarRules));
+        return new Grammar(new HashMap<>(refinedGrammarRules), grammar.isConfluent() );
     }
 
     /**

@@ -1,12 +1,9 @@
 package de.rwth.i2.attestor.grammar;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Immutable data-object storing all the rules (lhs &#8594; rhs).
@@ -21,9 +18,11 @@ public class Grammar {
 	}
 
 	Map<Nonterminal, Set<HeapConfiguration>> rules;
+	private boolean isConfluent;
 	
-	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules, boolean isConfluent ) {
 		this.rules = rules;
+		this.isConfluent = isConfluent;
 	}
 
 	/**
@@ -47,6 +46,11 @@ public class Grammar {
 	 */
 	public Set<Nonterminal> getAllLeftHandSides() {
 		return Collections.unmodifiableSet( rules.keySet() );
+	}
+
+	public boolean isConfluent() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
