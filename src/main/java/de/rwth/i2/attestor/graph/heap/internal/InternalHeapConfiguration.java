@@ -617,7 +617,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
 	@Override
 	public String toString(){
-		StringBuilder res = new StringBuilder();
+		StringBuilder res = new StringBuilder("\n");
 		
 		res.append(this.nodes().toString() );
 	
