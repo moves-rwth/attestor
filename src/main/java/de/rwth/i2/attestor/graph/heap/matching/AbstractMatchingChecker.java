@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
  * @author Christoph
  *
  */
-public abstract class AbstractMatchingChecker {
+public class AbstractMatchingChecker {
 	
 	/**
 	 * The pattern HeapConfiguration that should be embedded in a target HeapConfiguration
@@ -40,7 +40,7 @@ public abstract class AbstractMatchingChecker {
 	 * @param target The target HeapConfiguration.
 	 * @param checker The underlying {@link MorphismChecker} that determines the kind of matching to compute.
 	 */
-    AbstractMatchingChecker(HeapConfiguration pattern, HeapConfiguration target, MorphismChecker checker) {
+    public AbstractMatchingChecker(HeapConfiguration pattern, HeapConfiguration target, MorphismChecker checker) {
 		
 		if(!(pattern instanceof Graph)) {
 			throw new IllegalArgumentException("Provided pattern is not a Graph.");
