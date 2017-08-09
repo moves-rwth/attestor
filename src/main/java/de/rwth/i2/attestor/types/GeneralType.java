@@ -83,11 +83,8 @@ public class GeneralType implements Type {
      * @return True if and only if two objects refer to the same type.
      */
 	public boolean typeEquals( Object other ){
-		if( this == other)
-			return true;
-		if( this == nullType )
-			return true;
-		return other == nullType;
+
+		return this == other;
 	}
 	
 	
