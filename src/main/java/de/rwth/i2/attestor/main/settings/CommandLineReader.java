@@ -67,33 +67,6 @@ public class CommandLineReader {
 						+ "Can be overwritten by additional command line settings" )
 				.build()
 				);
-		
-		cliOptions.addOption( 
-				Option.builder("p")
-				.longOpt("defaultpath")
-				.hasArg()
-				.argName("path")
-				.desc("path to class and json files to be analyzed")
-				.build()
-				);
-		
-		cliOptions.addOption( 
-				Option.builder("c")
-				.longOpt("class")
-				.hasArg()
-				.argName("name")
-				.desc("name of a class containing the main method")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("cp")
-				.longOpt("classpath")
-				.hasArg()
-				.argName("path")
-				.desc("classpath if not identical with defaultpath")
-				.build()
-				);
 
 		cliOptions.addOption(
 				Option.builder("m")
@@ -104,56 +77,6 @@ public class CommandLineReader {
 				.build()
 				);
 
-		cliOptions.addOption(
-				Option.builder("i")
-				.longOpt("initial")
-				.hasArg()
-				.argName("file")
-				.desc("(optional) name of file containing initial state in json-format")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("ip")
-				.longOpt("initial-path")
-				.hasArg()
-				.argName("path")
-				.desc("path to initial state if not identical with defaultpath")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("g")
-				.longOpt("grammar")
-				.hasArg()
-				.argName("file")
-				.desc("name of file containing grammar in json-format")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("gp")
-				.longOpt("grammar-path")
-				.hasArg()
-				.argName("path")
-				.desc("path to grammar if not identical with defaultpath")
-				.build()
-				);
-
-
-		cliOptions.addOption(
-				Option.builder("kd")
-				.longOpt("keep-dead-variables")
-				.desc("(optional) keep non-live variables in the heap")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("x")
-				.longOpt("indexed")
-				.desc("(otional) use indexed grammars for analysis")
-				.build()
-				);
 
 		cliOptions.addOption(
 				Option.builder("v")
@@ -214,15 +137,6 @@ public class CommandLineReader {
 				.build()
 				);
 
-		cliOptions.addOption( 
-				Option.builder("o")
-				.longOpt( "output-path" )
-				.hasArg()
-				.argName( "path" )
-				.desc( "(optional) set the default path to where the output (e.g. stateSpace, grammar) will be placed (default inputpath)" )
-				.build()
-				);
-
 		cliOptions.addOption(
 				Option.builder("html")
 				.longOpt("export-to-html")
@@ -237,16 +151,6 @@ public class CommandLineReader {
 				.build()
 				);
 
-		cliOptions.addOption(
-				Option.builder("bs")
-				.longOpt("export-big-states")
-				.hasArg()
-				.optionalArg(true)
-				.argName("threshold")
-				.desc("(optional) if enabled, states with more than 30 states will be exported to folder debug."
-						+ " Only possible for indexed analysis.")
-				.build()
-				);
 		cliOptions.addOption(
 				Option.builder("mc")
 				.longOpt("model-checking")
@@ -327,9 +231,6 @@ public class CommandLineReader {
      */
 	public OutputSettings getOutputSettings( Settings settings ) {
 		OutputSettings outputSettings = settings.output();
-		if( cmd.hasOption( "o" )){
-			outputSettings.setDefaultPath( cmd.getOptionValue( "o" ) );
-		}
 
 		if(cmd.hasOption("html")) {
 			outputSettings.setExportStateSpace( true );
@@ -337,10 +238,6 @@ public class CommandLineReader {
 
 		if( cmd.hasOption("ghtml")){
 			outputSettings.setExportGrammar( true );
-		}
-
-		if( cmd.hasOption("bigStates")){
-			outputSettings.setExportBigStates( true );
 		}
 		
 		return outputSettings;
@@ -355,9 +252,6 @@ public class CommandLineReader {
 	public OptionSettings getOptionSettings( Settings settings ) {
 		
 		OptionSettings optionSettings = settings.options();
-		if(cmd.hasOption("x")) {
-			optionSettings.setIndexedMode(true);
-		}
 
 		DebugMode.ENABLED = cmd.hasOption("v");
 
@@ -380,12 +274,6 @@ public class CommandLineReader {
 		if( cmd.hasOption("ar") ){
 			optionSettings.setAggressiveReturnAbstraction( Boolean.getBoolean(cmd.getOptionValue("ar")) );
 		}
-
-		if(cmd.hasOption("kd")){
-			optionSettings.setRemoveDeadVariables(false);
-		}else{
-			optionSettings.setRemoveDeadVariables(true);
-		}
 		
 		return optionSettings;
 	}
@@ -398,26 +286,9 @@ public class CommandLineReader {
      */
 	public InputSettings getInputSettings( Settings settings ) {
 		InputSettings inputSettings = settings.input();
-		if( cmd.hasOption("p")){
-			inputSettings.setDefaultPath( cmd.getOptionValue("p"));
-		}
-		if( cmd.hasOption("c")){
-			inputSettings.setClassName( cmd.getOptionValue("c"));
-		}
+
 		if( cmd.hasOption("m")){
 			inputSettings.setMethodName(cmd.getOptionValue("m"));
-		}
-		if( cmd.hasOption("g")){
-			inputSettings.setGrammarName(cmd.getOptionValue("g"));
-		} 
-		if( cmd.hasOption("i")){
-			inputSettings.setInputName(cmd.getOptionValue("i"));
-		} else if(inputSettings.getInputName() == null){
-			if (CommandLineReader.class.getClassLoader().getResource("initialStates") == null) {
-				logger.entry("Default initial states location not found!");
-			} else {
-				inputSettings.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
-			}
 		}
 		
 		return inputSettings;
@@ -450,20 +321,13 @@ public class CommandLineReader {
 
     /**
      * Checks whether the provided command line arguments are valid in the sense
-     * that either a settings file or sufficient individual command line arguments
-     * have been provided.
+     * that a settings file has been provided.
      * @param cmd The parsed command line arguments.
-     * @return true if and only if sufficient command line arguments have been provided.
+     * @return true if and only if a settings file has been provided.
      */
 	private boolean commandLineIsValid(CommandLine cmd){
 		
-			return  cmd.hasOption( "sf" )
-					|| 
-					( cmd.hasOption("p") && cmd.hasOption("c") && cmd.hasOption("m")
-					&& cmd.hasOption("g")
-							// Initial HC no longer necessary, default: empty HC
-							//&& cmd.hasOption("i")
-					);
+			return  cmd.hasOption( "sf" );
 		
 	}
 
