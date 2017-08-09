@@ -19,11 +19,14 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicali
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
+import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 
@@ -450,18 +453,36 @@ public class Attestor {
 	    logger.warn("Model checking phase not implemented yet.");
 	}
 
-	private void reportPhase() {
+	private void reportPhase() throws IOException {
 
-		if(Settings.getInstance().output().isExportStateSpace() ) {
+		if(settings.output().isExportStateSpace() ) {
+
+		    String location = settings.output().getLocationForStateSpace();
+
+            settings.factory().export(
+                    location + File.separator + "data",
+                    "statespace.json",
+                    stateSpace
+            );
+
+            List<ProgramState> states = stateSpace.getStates();
+            for(int i=0; i < states.size(); i++) {
+                settings.factory().export(
+                        location + File.separator + "data",
+                        "hc_" + i + ".json",
+                        states.get(i).getHeap()
+                );
+            }
+
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
             logger.info("State space exported to '"
-                    + Settings.getInstance().output().getLocationForStateSpace()
-					+ "'"
-			);
-            //task.exportAllStates();
+                    + location
+                    + "'"
+            );
         }
-
-        //if( Settings.getInstance().output().isExportTerminalStates() ){
-            //task.exportTerminalStates();
-        //}
 	}
 }

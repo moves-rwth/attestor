@@ -8,18 +8,18 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.io.htmlExport.GrammarHtmlExporter;
-import de.rwth.i2.attestor.io.htmlExport.HeapConfigurationHtmlExporter;
-import de.rwth.i2.attestor.io.htmlExport.StateSpaceHtmlExporter;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,41 +144,54 @@ public class FactorySettings {
                                                                     }
 
     /**
-     * Yields a GrammarExporter that writes into the specified directory.
-     * @param directory The directory into which the GrammarExporter should write its result.
-     * @return The GrammarExporter.
-     */
-    public GrammarExporter getGrammarExporter(String directory) {
-        if( grammarExporters.containsKey( directory ) ) {
-            return grammarExporters.get( directory );
-        } else {
-            GrammarExporter newExporter = new GrammarHtmlExporter(directory);
-            grammarExporters.put( directory, newExporter );
-            return newExporter;
-        }
-    }
-
-    /**
      * Yields a HeapConfigurationExporter that writes into the specified directory.
-     * @param directory The directory into which the HeapConfigurationExporter should write its result.
+     * @param filename The name of the file the heap configuration should be exported to.
      * @return The HeapConfigurationExporter.
      */
-    public HeapConfigurationExporter getHeapConfigurationExporter(String directory) {
-        if( heapConfigurationExporters.containsKey( directory ) ) {
+    public void export(String directory, String filename, HeapConfiguration hc) throws IOException {
+
+        prepareFilename(directory);
+
+        FileWriter writer = new FileWriter(directory + File.separator + filename);
+        HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
+        exporter.export(hc);
+        writer.close();
+        /*if( heapConfigurationExporters.containsKey( directory ) ) {
             return heapConfigurationExporters.get( directory );
         } else {
             HeapConfigurationExporter newExporter = new HeapConfigurationHtmlExporter( directory);
             heapConfigurationExporters.put( directory, newExporter );
             return newExporter;
+        }*/
+    }
+
+    private void prepareFilename(String directory) throws IOException {
+        File file = new File(directory);
+        if( !file.exists() || !file.isDirectory() ) {
+            boolean success = ( new File( directory ) ).mkdirs();
+            if( !success ) {
+                throw new IOException( "Unable to generate directory: " + directory );
+            }
         }
     }
 
     /**
      * Creates an object to export state spaces.
-     * @param directory The directory in which the exported state spaces should be stored.
+     * @param filename The name of the file the state space should be exported to.
+     * @param stateSpace The state space to export.
      * @return The created StateSpaceExporter.
      */
-    public StateSpaceExporter getStateSpaceExporter(String directory) {
+    public void export(String directory, String filename, StateSpace stateSpace) throws IOException {
+
+        prepareFilename(directory);
+
+        Writer writer = new BufferedWriter(
+                new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
+        );
+        StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
+        exporter.export(stateSpace);
+        writer.close();
+        /*
         if( stateSpaceExporters.containsKey( directory ) ) {
             return stateSpaceExporters.get( directory );
         } else {
@@ -186,6 +199,7 @@ public class FactorySettings {
             stateSpaceExporters.put( directory, newExporter );
             return newExporter;
         }
+        */
     }
 
     /**

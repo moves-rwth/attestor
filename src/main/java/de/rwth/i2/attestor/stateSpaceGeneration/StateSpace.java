@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -133,9 +134,12 @@ public class StateSpace {
 			HeapConfiguration heap = state.getHeap();
 			
 			String location = Settings.getInstance().output().getLocationForBigStates();
-			Settings.getInstance().factory()
-					.getHeapConfigurationExporter(location)
-					.export("state>30", heap);
+			try {
+				Settings.getInstance().factory()
+                        .export(location, "largeState", heap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
@@ -158,6 +162,10 @@ public class StateSpace {
 	public List<ProgramState> successorsOf(ProgramState programState) {
 		
 		List<ProgramState> res = new ArrayList<>();
+
+		if(!successors.containsKey(programState)) {
+			return res;
+		}
 		
 		for(StateSuccessor s : successors.get(programState)) {
 			
