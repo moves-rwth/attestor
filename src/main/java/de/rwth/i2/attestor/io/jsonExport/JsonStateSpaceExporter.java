@@ -7,9 +7,25 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
+/**
+ * Exports a state space to a JSON file.
+ *
+ * @author Christoph
+ */
 public class JsonStateSpaceExporter implements StateSpaceExporter {
 
     private Writer writer;
+    private JSONWriter jsonWriter;
+    private StateSpace stateSpace;
+    private Program program;
+
+    private List<ProgramState> states;
+    private List<ProgramState> initialStates;
+    private List<ProgramState> finalStates;
+
+    private Map<ProgramState, Integer> incomingEdges = new HashMap<>();
+    private Map<ProgramState, Integer> stateToId = new HashMap<>();
+    private Set<ProgramState> isEssentialState = new HashSet<>();
 
     public JsonStateSpaceExporter(Writer writer) {
 
@@ -19,31 +35,29 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     @Override
     public void export(StateSpace stateSpace, Program program) throws IOException {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        jsonWriter = new JSONWriter(writer);
+        this.stateSpace = stateSpace;
+        this.program = program;
+
+        states = stateSpace.getStates();
+        initialStates = stateSpace.getInitialStates();
+        finalStates = stateSpace.getFinalStates();
+        computeIdsAndIncomingEdges();
 
         jsonWriter.object()
                 .key("elements")
                 .object()
                 .key("nodes")
                 .array();
-
-        writeStates(jsonWriter, stateSpace, program);
-
-
+        addNodes();
+        jsonWriter.endArray().key("edges").array();
+        addStateSpaceEdges();
+        addTransitiveEdges();
         jsonWriter.endArray().endObject().endObject();;
-
         writer.close();
     }
 
-    private void writeStates(JSONWriter jsonWriter, StateSpace stateSpace, Program program) {
-
-        List<ProgramState> states = stateSpace.getStates();
-        List<ProgramState> initialStates = stateSpace.getInitialStates();
-        List<ProgramState> finalStates = stateSpace.getFinalStates();
-
-        Map<ProgramState, Integer> incomingEdges = new HashMap<>(states.size());
-        Map<ProgramState, Integer> stateToId = new HashMap<>(states.size());
-        Set<ProgramState> isEssentialState = new HashSet<>(states.size());
+    private void computeIdsAndIncomingEdges() {
 
         for(int i=0; i < states.size(); i++) {
             ProgramState s = states.get(i);
@@ -56,13 +70,14 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 }
             }
         }
+    }
+
+    private void addNodes() {
 
         for(int i=0; i < states.size(); i++) {
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(i);
-
             ProgramState s = states.get(i);
-
             jsonWriter.key("type");
             if(initialStates.contains(s)) {
                 jsonWriter.value("initialState");
@@ -89,8 +104,9 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             jsonWriter.value(essential);
             jsonWriter.endObject().endObject();
         }
+    }
 
-        jsonWriter.endArray().key("edges").array();
+    private void addStateSpaceEdges() {
 
         for( Map.Entry<?,?> transition : stateSpace.getSuccessors().entrySet() ) {
             ProgramState predState = (ProgramState) transition.getKey();
@@ -111,14 +127,14 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                         .endObject().endObject();
             }
         }
+    }
+
+    private void addTransitiveEdges() {
 
         for(ProgramState s : stateSpace.getStates()) {
-
             if(isEssentialState.contains(s)) {
-
                 int source = stateToId.get(s);
-                for(ProgramState succ : addTransitiveEdges(stateSpace, s, isEssentialState)) {
-
+                for(ProgramState succ : computeEssentialSuccessors(s)) {
                     int target = stateToId.get(succ);
                     jsonWriter.object().key("data").object()
                             .key("source").value(source)
@@ -131,16 +147,14 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private List<ProgramState> addTransitiveEdges(StateSpace stateSpace, ProgramState state,
-                                                  Set<ProgramState> isEssentialState) {
+    private List<ProgramState> computeEssentialSuccessors(ProgramState state) {
 
         List<ProgramState> reachableEssentials = new ArrayList<>();
         for(ProgramState succ : stateSpace.successorsOf(state)) {
-
             if(isEssentialState.contains(succ)) {
                 reachableEssentials.add(succ);
             } else {
-                reachableEssentials.addAll( addTransitiveEdges(stateSpace, succ, isEssentialState)  );
+                reachableEssentials.addAll( computeEssentialSuccessors(succ)  );
             }
         }
 
