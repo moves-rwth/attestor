@@ -8,9 +8,7 @@ import org.json.JSONWriter;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JsonStateSpaceExporter implements StateSpaceExporter {
 
@@ -48,6 +46,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
 
         Map<ProgramState, Integer> incomingEdges = new HashMap<>(states.size());
         Map<ProgramState, Integer> stateToId = new HashMap<>(states.size());
+        Set<ProgramState> isEssentialState = new HashSet<>(states.size());
 
         for(int i=0; i < states.size(); i++) {
             ProgramState s = states.get(i);
@@ -82,7 +81,15 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 jsonWriter.value(ap);
             }
             jsonWriter.endArray();
-            jsonWriter.key("statement").value("TODO");
+            jsonWriter.key("statement").value("TODO"); // TODO
+            jsonWriter.key("essential");
+            boolean essential = !incomingEdges.containsKey(s)
+                    || incomingEdges.get(s) != 1
+                    || stateSpace.successorsOf(s).size() != 1;
+            if(essential) {
+                isEssentialState.add(s);
+            }
+            jsonWriter.value(essential);
             jsonWriter.endObject().endObject();
         }
 
@@ -108,5 +115,38 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             }
         }
 
+        for(ProgramState s : stateSpace.getStates()) {
+
+            if(isEssentialState.contains(s)) {
+
+                int source = stateToId.get(s);
+                for(ProgramState succ : addTransitiveEdges(stateSpace, s, isEssentialState)) {
+
+                    int target = stateToId.get(succ);
+                    jsonWriter.object().key("data").object()
+                            .key("source").value(source)
+                            .key("target").value(target)
+                            .key("type").value("transitive")
+                            .key("label").value("")
+                            .endObject().endObject();
+                }
+            }
+        }
+    }
+
+    private List<ProgramState> addTransitiveEdges(StateSpace stateSpace, ProgramState state,
+                                                  Set<ProgramState> isEssentialState) {
+
+        List<ProgramState> reachableEssentials = new ArrayList<>();
+        for(ProgramState succ : stateSpace.successorsOf(state)) {
+
+            if(isEssentialState.contains(succ)) {
+                reachableEssentials.add(succ);
+            } else {
+                reachableEssentials.addAll( addTransitiveEdges(stateSpace, succ, isEssentialState)  );
+            }
+        }
+
+        return reachableEssentials;
     }
 }
