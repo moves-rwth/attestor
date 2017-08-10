@@ -77,7 +77,11 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             } else {
                 jsonWriter.value("state");
             }
-            jsonWriter.key("propositions").array().endArray();
+            jsonWriter.key("propositions").array();
+            for(String ap : s.getAPs()) {
+                jsonWriter.value(ap);
+            }
+            jsonWriter.endArray();
             jsonWriter.key("statement").value("TODO");
             jsonWriter.endObject().endObject();
         }

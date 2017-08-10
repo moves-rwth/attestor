@@ -9,6 +9,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class PointsToAutomaton extends HeapAutomaton {
@@ -142,5 +143,20 @@ class PointsToState implements AutomatonState {
             }
         }
         return aps;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+
+        if(other instanceof PointsToState) {
+            return kernel.equals( ((PointsToState) other).kernel );
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hashCode(kernel);
     }
 }

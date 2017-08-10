@@ -42,6 +42,8 @@ public class JsonToHeapAutomatonParser {
                 return new ReachabilityAutomaton();
             case "balance":
                 return new BalancedTreeAutomaton();
+            case "points-to":
+                return new PointsToAutomaton();
             default:
                 logger.error("Unknown automaton '" + automatonName + "' is ignored.");
                 return null;
