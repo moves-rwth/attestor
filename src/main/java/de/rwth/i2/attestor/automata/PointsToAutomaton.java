@@ -24,6 +24,13 @@ public class PointsToAutomaton extends HeapAutomaton {
     @Override
     protected AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
 
+        HeapConfiguration composedHc = composeHc(ntAssignment, heapConfiguration);
+        HeapConfiguration kernel = computeKernel(composedHc);
+        return new PointsToState(kernel);
+    }
+
+    private HeapConfiguration composeHc(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
+
         heapConfiguration = heapConfiguration.clone();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
@@ -34,10 +41,7 @@ public class PointsToAutomaton extends HeapAutomaton {
             HeapConfiguration stateKernel = state.kernel;
             builder.replaceNonterminalEdge(edge, stateKernel);
         }
-        builder.build();
-
-        HeapConfiguration kernel = computeKernel(heapConfiguration);
-        return new PointsToState(kernel);
+        return builder.build();
     }
 
     private HeapConfiguration computeKernel(HeapConfiguration heapConfiguration) {
@@ -46,15 +50,42 @@ public class PointsToAutomaton extends HeapAutomaton {
         int countExt = heapConfiguration.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList( countExt );
 
-        for(int i=0; i < countExt; i++) {
+        addExternalsAndSelectors(builder, nodes, heapConfiguration);
+        addVariablesAndSelectors(builder, nodes, heapConfiguration);
+        return builder.build();
+    }
+
+    private void addExternalsAndSelectors(HeapConfigurationBuilder builder,
+                                          TIntArrayList nodes, HeapConfiguration heapConfiguration) {
+
+        int countExt = heapConfiguration.countExternalNodes();
+
+        for(int i=0; i < heapConfiguration.countExternalNodes(); i++) {
             int ext = heapConfiguration.externalNodeAt(i);
             Type type = heapConfiguration.nodeTypeOf(ext);
             builder.addNodes(type, 1, nodes);
             builder.setExternal( nodes.get(i) );
         }
 
+        for(int i=0; i < countExt; i++) {
+            int ext = heapConfiguration.externalNodeAt(i);
+            for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(ext)) {
+                int target = heapConfiguration.selectorTargetOf(ext, sel);
+                if(heapConfiguration.isExternalNode(target)) {
+                    int extTo =  nodes.get( heapConfiguration.externalIndexOf(target) );
+                    builder.addSelector(nodes.get(i), sel, extTo);
+                }
+            }
+        }
+    }
+
+    private void addVariablesAndSelectors(HeapConfigurationBuilder builder,
+                                          TIntArrayList nodes, HeapConfiguration heapConfiguration) {
+
+        int countExt = heapConfiguration.countExternalNodes();
         TIntArrayList variables = heapConfiguration.variableEdges();
         TIntArrayList variableTargets = new TIntArrayList(variables.size());
+
         for(int i=0; i < variables.size(); i++) {
             int var = variables.get(i);
             String varName = heapConfiguration.nameOf(var);
@@ -70,19 +101,7 @@ public class PointsToAutomaton extends HeapAutomaton {
             }
         }
 
-        for(int i=0; i < countExt; i++) {
-            int ext = heapConfiguration.externalNodeAt(i);
-            for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(ext)) {
-                int target = heapConfiguration.selectorTargetOf(ext, sel);
-                if(heapConfiguration.isExternalNode(target)) {
-                    int extTo =  nodes.get( heapConfiguration.externalIndexOf(target) );
-                    builder.addSelector(nodes.get(i), sel, extTo);
-                }
-            }
-        }
-
         for(int i=0; i < variables.size(); i++) {
-
             int var = variables.get(i);
             String varName = heapConfiguration.nameOf(var);
             int hcSource = heapConfiguration.targetOf(var);
@@ -100,9 +119,6 @@ public class PointsToAutomaton extends HeapAutomaton {
                 }
             }
         }
-
-
-        return builder.build();
     }
 
 }
