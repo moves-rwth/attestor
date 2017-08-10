@@ -12,6 +12,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A simple heap automaton to determine all variables that point via a single selector to each other.
+ * In other words, it determines all triples (s,l,t) in a heap configuration, where s and t are variable
+ * names and l is the name of a selector such that s.l = a holds.
+ *
+ * @author Christoph
+ */
 public class PointsToAutomaton extends HeapAutomaton {
 
     @Override
