@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSuccessor;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     }
 
     @Override
-    public void export(StateSpace stateSpace) throws IOException {
+    public void export(StateSpace stateSpace, Program program) throws IOException {
 
         JSONWriter jsonWriter = new JSONWriter(writer);
 
@@ -30,7 +27,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 .key("nodes")
                 .array();
 
-        writeStates(jsonWriter, stateSpace);
+        writeStates(jsonWriter, stateSpace, program);
 
 
         jsonWriter.endArray().endObject().endObject();;
@@ -38,7 +35,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         writer.close();
     }
 
-    private void writeStates(JSONWriter jsonWriter, StateSpace stateSpace) {
+    private void writeStates(JSONWriter jsonWriter, StateSpace stateSpace, Program program) {
 
         List<ProgramState> states = stateSpace.getStates();
         List<ProgramState> initialStates = stateSpace.getInitialStates();
@@ -81,7 +78,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 jsonWriter.value(ap);
             }
             jsonWriter.endArray();
-            jsonWriter.key("statement").value("TODO"); // TODO
+            jsonWriter.key("statement").value(program.getStatement(s.getProgramCounter()).toString());
             jsonWriter.key("essential");
             boolean essential = !incomingEdges.containsKey(s)
                     || incomingEdges.get(s) != 1

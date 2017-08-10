@@ -181,7 +181,7 @@ public class FactorySettings {
      * @param stateSpace The state space to export.
      * @return The created StateSpaceExporter.
      */
-    public void export(String directory, String filename, StateSpace stateSpace) throws IOException {
+    public void export(String directory, String filename, StateSpace stateSpace, Program program) throws IOException {
 
         prepareFilename(directory);
 
@@ -189,7 +189,7 @@ public class FactorySettings {
                 new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
-        exporter.export(stateSpace);
+        exporter.export(stateSpace, program);
         writer.close();
         /*
         if( stateSpaceExporters.containsKey( directory ) ) {

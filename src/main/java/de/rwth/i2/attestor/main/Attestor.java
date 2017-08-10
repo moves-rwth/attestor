@@ -469,7 +469,8 @@ public class Attestor {
             settings.factory().export(
                     location + File.separator + "data",
                     "statespace.json",
-                    stateSpace
+                    stateSpace,
+                    program
             );
 
             List<ProgramState> states = stateSpace.getStates();

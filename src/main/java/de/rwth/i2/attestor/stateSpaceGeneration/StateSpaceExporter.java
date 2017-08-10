@@ -13,7 +13,8 @@ public interface StateSpaceExporter {
     /**
      * Exports a StateSpace into one or more files with the given name.
      * @param stateSpace The StateSpace that should be exported.
+     * @param program The program used to generate the state space.
      */
-	void export(StateSpace stateSpace ) throws IOException;
+	void export(StateSpace stateSpace, Program program) throws IOException;
 
 }
