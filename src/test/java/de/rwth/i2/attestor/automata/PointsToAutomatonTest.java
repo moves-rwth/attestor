@@ -128,4 +128,45 @@ public class PointsToAutomatonTest {
         assertEquals(kernel, state.kernel);
         assertFalse(state.isFinal());
     }
+
+    @Test
+    public void testConcreteWithVariables() {
+
+        SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
+        SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");
+        Type type = GeneralType.getType("type");
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+        TIntArrayList nodes = new TIntArrayList();
+        hc.builder()
+                .addNodes(type, 4, nodes)
+                .addSelector(nodes.get(0), selA, nodes.get(1))
+                .addSelector(nodes.get(1), selA, nodes.get(2))
+                .addSelector(nodes.get(2), selA, nodes.get(3))
+                .addSelector(nodes.get(2), selB, nodes.get(3))
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(2))
+                .setExternal(nodes.get(3))
+                .addVariableEdge("x", nodes.get(1))
+                .addVariableEdge("y", nodes.get(2))
+                .build();
+
+        nodes.clear();
+        HeapConfiguration kernel = new InternalHeapConfiguration()
+                .builder()
+                .addNodes(type, 4, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .setExternal(nodes.get(2))
+                .addSelector(nodes.get(1), selA, nodes.get(2))
+                .addSelector(nodes.get(1), selB, nodes.get(2))
+                .addSelector(nodes.get(3), selA, nodes.get(1))
+                .addVariableEdge("x", nodes.get(3))
+                .addVariableEdge("y", nodes.get(1))
+                .build();
+
+        PointsToState state = (PointsToState) automaton.move(new ArrayList<>(), hc);
+        assertEquals(kernel, state.kernel);
+        assert(state.isFinal());
+    }
 }

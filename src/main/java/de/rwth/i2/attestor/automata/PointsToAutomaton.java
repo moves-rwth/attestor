@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +45,23 @@ public class PointsToAutomaton extends HeapAutomaton {
             builder.setExternal( nodes.get(i) );
         }
 
+        TIntArrayList variables = heapConfiguration.variableEdges();
+        TIntArrayList variableTargets = new TIntArrayList(variables.size());
+        for(int i=0; i < variables.size(); i++) {
+            int var = variables.get(i);
+            String varName = heapConfiguration.nameOf(var);
+            int varTarget = heapConfiguration.targetOf(var);
+            variableTargets.add(varTarget);
+            if(heapConfiguration.isExternalNode(varTarget)) {
+                int ext = nodes.get( heapConfiguration.externalIndexOf(varTarget) );
+                builder.addVariableEdge(varName, ext);
+            } else {
+                Type type = heapConfiguration.nodeTypeOf(varTarget);
+                builder.addNodes(type, 1, nodes);
+                builder.addVariableEdge(varName, nodes.get(nodes.size()-1));
+            }
+        }
+
         for(int i=0; i < countExt; i++) {
             int ext = heapConfiguration.externalNodeAt(i);
             for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(ext)) {
@@ -54,6 +72,27 @@ public class PointsToAutomaton extends HeapAutomaton {
                 }
             }
         }
+
+        for(int i=0; i < variables.size(); i++) {
+
+            int var = variables.get(i);
+            String varName = heapConfiguration.nameOf(var);
+            int hcSource = heapConfiguration.targetOf(var);
+            if(!heapConfiguration.isExternalNode(hcSource)) {
+                int source = nodes.get(countExt + i);
+                for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(hcSource)) {
+                    int hcTarget = heapConfiguration.selectorTargetOf(hcSource, sel);
+                    if(heapConfiguration.isExternalNode(hcTarget)) {
+                        int target = nodes.get( heapConfiguration.externalIndexOf(hcTarget) );
+                        builder.addSelector(source, sel, target);
+                    } else if(variableTargets.contains(hcTarget)) {
+                        int target = nodes.get( countExt + variableTargets.indexOf(hcTarget) );
+                        builder.addSelector(source, sel, target);
+                    }
+                }
+            }
+        }
+
 
         return builder.build();
     }
@@ -79,6 +118,29 @@ class PointsToState implements AutomatonState {
     @Override
     public Set<String> getAtomicPropositions() {
 
-        return null;
+        Set<String> aps = new HashSet<>();
+        TIntArrayList variables = kernel.variableEdges();
+        TIntArrayList variableTargets = new TIntArrayList(variables.size());
+        for(int i=0; i < variables.size(); i++) {
+            variableTargets.add(kernel.targetOf(variables.get(i)));
+        }
+        for(int i=0; i < variables.size(); i++) {
+            int source = variableTargets.get(i);
+            for(SelectorLabel sel : kernel.selectorLabelsOf(source)) {
+                int target = kernel.selectorTargetOf(source, sel);
+                if(variableTargets.contains(target)) {
+                    aps.add(
+                            "("
+                            + kernel.nameOf(variables.get(i))
+                            + ","
+                            + sel.getLabel()
+                            + ","
+                            + kernel.nameOf(variables.get(variableTargets.indexOf(target)))
+                            + ")"
+                    );
+                }
+            }
+        }
+        return aps;
     }
 }
