@@ -249,7 +249,7 @@ public class JsonToGrammar {
 	 * @param i the tentacle to consider
 	 * @param rulesForNt the grammar rules for nonterminal nt (nt on lhs)
 	 * @param changedTentacles if the tentacle changed to NonReduction it will be added to this
-	 * stack so that it is later propagated to tentacles it is adjacent to
+	 * index so that it is later propagated to tentacles it is adjacent to
 	 */
 	private static void computeSimpleNonReductionTentaclesFor( Nonterminal nt, int i,
 			Collection<HeapConfiguration> rulesForNt,

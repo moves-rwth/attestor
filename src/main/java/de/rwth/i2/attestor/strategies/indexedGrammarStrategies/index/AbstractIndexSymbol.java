@@ -1,22 +1,22 @@
-package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack;
+package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AbstractStackSymbol implements StackSymbol {
+public class AbstractIndexSymbol implements IndexSymbol {
 
-	private static final Map<String, AbstractStackSymbol> existingSymbols = new HashMap<>();
+	private static final Map<String, AbstractIndexSymbol> existingSymbols = new HashMap<>();
 
-	public static synchronized AbstractStackSymbol get( String label ){
+	public static synchronized AbstractIndexSymbol get(String label ){
 		if( ! existingSymbols.containsKey(label) ){
-			existingSymbols.put(label, new AbstractStackSymbol(label));
+			existingSymbols.put(label, new AbstractIndexSymbol(label));
 		}
 		return existingSymbols.get(label);
 	}
 
 	private final String label;
 
-	private AbstractStackSymbol(String label) {
+	private AbstractIndexSymbol(String label) {
 		super();
 		this.label = label;
 	}

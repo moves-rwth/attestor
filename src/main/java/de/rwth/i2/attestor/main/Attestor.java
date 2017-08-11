@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
@@ -19,7 +19,7 @@ import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
@@ -368,12 +368,12 @@ public class Attestor {
 
         if(settings.options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-            StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+            IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
             MaterializationRuleManager grammarManager =
-                    new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+                    new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 
             GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier( new StackMaterializer(),
+                    new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(),
                             new GraphMaterializer() );
 
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
