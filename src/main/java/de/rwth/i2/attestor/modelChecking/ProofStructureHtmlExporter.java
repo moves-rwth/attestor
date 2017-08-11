@@ -1,7 +1,5 @@
-package de.rwth.i2.attestor.export;
+package de.rwth.i2.attestor.modelChecking;
 
-import de.rwth.i2.attestor.modelChecking.Assertion;
-import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
