@@ -296,4 +296,27 @@ public class StateSpace {
 		
 		return res;		
 	}
+
+	public List<ProgramState> getSuccessorsWithoutMaterialisation(ProgramState currentState) {
+		List<ProgramState> res = new ArrayList<>();
+
+		if(!successors.containsKey(currentState)) {
+			return res;
+		}
+
+		for(StateSuccessor s : successors.get(currentState)) {
+
+			// The successor resulted from a materialisation step. Leap over and add all its successors!
+			if(s.getLabel() == ""){
+				for(StateSuccessor ms : successors.get(s)) {
+					res.add(ms.getTarget());
+				}
+			} else {
+				res.add(s.getTarget());
+			}
+		}
+
+		return res;
+
+	}
 }
