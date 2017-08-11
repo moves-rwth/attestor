@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.semantics;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * Terminal Statements are used to model the exit point of a method. They return
@@ -60,6 +62,12 @@ public class TerminalStatement implements Semantics {
 	public void setPermitCanonicalization(boolean permitted) {
 	
 		isCanonicalizationPermitted = permitted;
+	}
+
+	@Override
+	public String toString() {
+
+		return "program terminated";
 	}
 
 }
