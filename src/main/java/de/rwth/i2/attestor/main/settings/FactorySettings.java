@@ -11,7 +11,7 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
@@ -146,7 +146,6 @@ public class FactorySettings {
     /**
      * Yields a HeapConfigurationExporter that writes into the specified directory.
      * @param filename The name of the file the heap configuration should be exported to.
-     * @return The HeapConfigurationExporter.
      */
     public void export(String directory, String filename, HeapConfiguration hc) throws IOException {
 
@@ -179,7 +178,6 @@ public class FactorySettings {
      * Creates an object to export state spaces.
      * @param filename The name of the file the state space should be exported to.
      * @param stateSpace The state space to export.
-     * @return The created StateSpaceExporter.
      */
     public void export(String directory, String filename, StateSpace stateSpace, Program program) throws IOException {
 
@@ -227,7 +225,7 @@ public class FactorySettings {
         return totalNumberOfStates;
     }
 
-    public ProgramState createProgramState(int programCounter, HeapConfiguration heapConfiguration, int scopeDepth) {
+    private ProgramState createProgramState(int programCounter, HeapConfiguration heapConfiguration, int scopeDepth) {
 
         ProgramState result;
 
@@ -235,13 +233,13 @@ public class FactorySettings {
             if(requiresIndexedSymbols()) {
                 result = new IndexedState(heapConfiguration, scopeDepth);
             } else {
-                result = new DefaultState(heapConfiguration, scopeDepth);
+                result = new DefaultProgramState(heapConfiguration, scopeDepth);
             }
         } else {
             if(requiresIndexedSymbols()) {
                 result = new IndexedState(heapConfiguration);
             } else {
-                result = new DefaultState(heapConfiguration);
+                result = new DefaultProgramState(heapConfiguration);
             }
         }
 

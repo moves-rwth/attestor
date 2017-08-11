@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +55,7 @@ public class CanonicalizationStrategyTest {
 
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest1();
 		
-		DefaultState testExec = new DefaultState(test);
+		DefaultProgramState testExec = new DefaultProgramState(test);
 		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest1(), test );
@@ -76,7 +76,7 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest2();
 		
 	
-		DefaultState testExec = new DefaultState(test);
+		DefaultProgramState testExec = new DefaultProgramState(test);
 		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest2(), test );
@@ -94,7 +94,7 @@ public class CanonicalizationStrategyTest {
 
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest3();
 		
-		DefaultState testExec = new DefaultState(test);
+		DefaultProgramState testExec = new DefaultProgramState(test);
 		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(null, testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest3(), test );
@@ -110,7 +110,7 @@ public class CanonicalizationStrategyTest {
 	public void testLongSllFullAbstraction() {
 		
 		HeapConfiguration test = ExampleHcImplFactory.getLongConcreteSLL();
-		DefaultState testExec = new DefaultState(test);
+		DefaultProgramState testExec = new DefaultProgramState(test);
 		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
@@ -135,7 +135,7 @@ public class CanonicalizationStrategyTest {
 			.build();
 		
 		
-		DefaultState testExec = new DefaultState(test);
+		DefaultProgramState testExec = new DefaultProgramState(test);
 		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();

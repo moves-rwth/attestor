@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TableauRulesSwitchTest {
 
 	private HeapConfiguration hc;
-	private DefaultState state;
+	private DefaultProgramState state;
 
 	@BeforeClass
 	public static void init() {
@@ -28,7 +28,7 @@ public class TableauRulesSwitchTest {
 	public void setup() {
 
 		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		state = new DefaultState(hc);
+		state = new DefaultProgramState(hc);
 		state.addAP("ap1");
 	}
 
@@ -51,7 +51,7 @@ public class TableauRulesSwitchTest {
 		assertTrue(currentVertex.isTrue());
 		
 		// Reset state and rule switch with new AP
-		state = new DefaultState(hc);
+		state = new DefaultProgramState(hc);
 		state.addAP("ap1");
 
 		currentVertex = new Assertion(state);
@@ -100,7 +100,7 @@ public class TableauRulesSwitchTest {
 	public void caseAFalseTerm(){
 		
 		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultState state = new DefaultState(hc);
+		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("ap1");
 
 		Assertion currentVertex = new Assertion(state);
@@ -160,7 +160,7 @@ public class TableauRulesSwitchTest {
 		// Generate assertion
 
 		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultState state = new DefaultState(hc);
+		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("ap1");
 
 		Assertion currentVertex = new Assertion(state);

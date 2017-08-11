@@ -81,7 +81,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		DefaultState conf = (DefaultState) state.clone();
+		DefaultProgramState conf = (DefaultProgramState) state.clone();
 
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
@@ -107,7 +107,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 * @param strongCanonicalization if true, the abstraction will ignore the minDereferenceDepthOption
 	 * @return The set of abstracted program states.
 	 */
-	private Set<ProgramState> performCanonicalization(DefaultState state, boolean strongCanonicalization) {
+	private Set<ProgramState> performCanonicalization(DefaultProgramState state, boolean strongCanonicalization) {
 
 		Set<ProgramState> result = new HashSet<>();
 
@@ -132,7 +132,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 					checkNext = !isConfluent; 
 
-					DefaultState abstracted  = state;
+					DefaultProgramState abstracted  = state;
 					if(checkNext) {
 						abstracted = state.clone();
 					}
@@ -154,7 +154,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 		return result;
 	}
 
-	private void replaceEmbeddingBy(DefaultState abstracted, Matching embedding, Nonterminal nonterminal) {
+	private void replaceEmbeddingBy(DefaultProgramState abstracted, Matching embedding, Nonterminal nonterminal) {
 		abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
 	}
 

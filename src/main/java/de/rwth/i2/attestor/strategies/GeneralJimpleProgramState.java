@@ -22,12 +22,12 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public abstract class GeneralProgramState implements JimpleProgramState {
+public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 
     /**
      * The logger of this class.
      */
-    private static final Logger logger = LogManager.getLogger( "GeneralProgramState" );
+    private static final Logger logger = LogManager.getLogger( "GeneralJimpleProgramState" );
 
     /**
      * The heap configuration that determines the shape of the heap and the assignment of
@@ -54,7 +54,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
      * Initializes a state with the initial program location and scope depth 0.
      * @param heap The initial heap configuration.
      */
-	protected GeneralProgramState(HeapConfiguration heap) {
+	protected GeneralJimpleProgramState(HeapConfiguration heap) {
 		
 		this.heap = heap;
 		this.programCounter = 0;
@@ -67,7 +67,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
      * @param heap The initial heap configuration.
      * @param scopeDepth The initial call scope depth.
      */
-	protected GeneralProgramState(HeapConfiguration heap, int scopeDepth) {
+	protected GeneralJimpleProgramState(HeapConfiguration heap, int scopeDepth) {
 		
 		this.heap = heap;
 		this.programCounter = 0;
@@ -79,7 +79,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
      * Creates a shallow copy of a program state.
      * @param state The state that should be copied.
      */
-	protected GeneralProgramState(GeneralProgramState state) {
+	protected GeneralJimpleProgramState(GeneralJimpleProgramState state) {
 		
 		this.heap = state.heap;
 		this.programCounter = state.programCounter;
@@ -95,7 +95,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
     /**
      * @return A deep copy of this program state.
      */
-    public abstract GeneralProgramState clone();
+    public abstract GeneralJimpleProgramState clone();
 
     /**
      * Checks whether a given name corresponds to a constant.
@@ -451,7 +451,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
 			return res;
 		} catch( ClassCastException e ) {
 			
-			logger.error("GeneralProgramState expects NodeTypes as types.");
+			logger.error("GeneralJimpleProgramState expects NodeTypes as types.");
 			builder.build();
 			return null;
 		}
@@ -465,7 +465,7 @@ public abstract class GeneralProgramState implements JimpleProgramState {
 	
 	@Override
 	public ProgramState shallowCopyWithUpdateHeap(HeapConfiguration newHeap) {
-		GeneralProgramState copy = (GeneralProgramState) shallowCopy();
+		GeneralJimpleProgramState copy = (GeneralJimpleProgramState) shallowCopy();
 		copy.heap = newHeap;
 		return copy;
 	}
