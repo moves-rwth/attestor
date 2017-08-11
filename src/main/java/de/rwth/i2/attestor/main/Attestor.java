@@ -6,8 +6,11 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
+import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
@@ -21,14 +24,13 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicali
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
+import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 
@@ -468,7 +470,7 @@ public class Attestor {
 
 		    String location = settings.output().getLocationForStateSpace();
 
-            settings.factory().export(
+		    exportStateSpace(
                     location + File.separator + "data",
                     "statespace.json",
                     stateSpace,
@@ -477,7 +479,7 @@ public class Attestor {
 
             List<ProgramState> states = stateSpace.getStates();
             for(int i=0; i < states.size(); i++) {
-                settings.factory().export(
+                exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
                         states.get(i).getHeap()
@@ -495,6 +497,28 @@ public class Attestor {
             );
         }
 	}
+
+    private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)
+            throws IOException {
+
+        FileUtils.createDirectories(directory);
+        FileWriter writer = new FileWriter(directory + File.separator + filename);
+        HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
+        exporter.export(hc);
+        writer.close();
+    }
+
+    private void exportStateSpace(String directory, String filename, StateSpace stateSpace, Program program)
+            throws IOException {
+
+        FileUtils.createDirectories(directory);
+        Writer writer = new BufferedWriter(
+                new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
+        );
+        StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
+        exporter.export(stateSpace, program);
+        writer.close();
+    }
 
 	private void printSummary() {
 
