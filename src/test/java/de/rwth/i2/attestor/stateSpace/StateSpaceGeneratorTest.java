@@ -48,7 +48,9 @@ public class StateSpaceGeneratorTest {
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(s -> s)
-                .setInclusionStrategy(new GeneralInclusionStrategy());
+                .setInclusionStrategy(new GeneralInclusionStrategy())
+				.setStateCounter(s -> {})
+				;
 	}
 
 	@Test

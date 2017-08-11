@@ -26,7 +26,7 @@ public class PointsToAutomatonTest {
     @Before
     public void setup() {
 
-        automaton = new PointsToAutomaton();
+        automaton = new PointsToAutomaton( () -> new InternalHeapConfiguration() );
     }
 
     @Test

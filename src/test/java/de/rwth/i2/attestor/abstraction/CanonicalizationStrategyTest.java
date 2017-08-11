@@ -46,7 +46,7 @@ public class CanonicalizationStrategyTest {
 				.build();
 		
 		canonicalizationStrategy = new DefaultCanonicalizationStrategy(grammar, true,
-				1000, false);
+				1000, false, 0);
 		canonicalizationStrategy.setIgnoreUniqueSuccessorStatements(false);
 	}
 

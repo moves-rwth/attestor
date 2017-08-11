@@ -1,9 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
-
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -127,21 +123,6 @@ public class StateSpace {
 			maxSize = state.size();
 		}
 
-		if( Settings.getInstance().output().isExportBigStates() 
-			&& state.size() > Settings.getInstance().output().getBigStatesThreshold()
-			&& state.getHeap() != null){
-			
-			HeapConfiguration heap = state.getHeap();
-			
-			String location = Settings.getInstance().output().getLocationForBigStates();
-			try {
-				Settings.getInstance().factory()
-                        .export(location, "largeState", heap);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
 		return result;
 	}
 

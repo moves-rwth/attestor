@@ -400,7 +400,8 @@ public class Attestor {
                     grammar,
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction()
+                    settings.options().isAggressiveReturnAbstraction(),
+                    settings.options().getMinDereferenceDepth()
             );
             logger.info("Setup canonicalization using indexed grammar.");
         } else {
@@ -408,7 +409,8 @@ public class Attestor {
                     grammar,
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction()
+                    settings.options().isAggressiveReturnAbstraction(),
+                    settings.options().getMinDereferenceDepth()
             );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }

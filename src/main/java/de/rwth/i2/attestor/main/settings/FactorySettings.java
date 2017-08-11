@@ -293,6 +293,9 @@ public class FactorySettings {
                 )
                 .setStateRefinementStrategy(
                         settings.getStateRefinementStrategy()
+                )
+                .setStateCounter(
+                        states -> Settings.getInstance().factory().addGeneratedStates(states)
                 );
     }
 }
