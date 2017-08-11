@@ -87,7 +87,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * translated.
 	 * 
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#AbstractMethod(String, AbstractMethod.StateSpaceFactory)
-	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory)
+	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory()())
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#setControlFlow(List)
 	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)

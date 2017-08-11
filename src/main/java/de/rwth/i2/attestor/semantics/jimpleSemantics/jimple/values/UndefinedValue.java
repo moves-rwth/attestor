@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
@@ -25,7 +25,7 @@ public class UndefinedValue implements Value {
 	}
 
 	public Type getType(){
-		return TypeFactory.getInstance().getType( "undefined" );
+		return Settings.getInstance().factory().getType( "undefined" );
 	}
 
 	@Override

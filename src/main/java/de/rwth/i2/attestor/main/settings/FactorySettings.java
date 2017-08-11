@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  *
- * A factory class to create all commonly used objects that depend on previously defined settings.
+ * A factory()() class to create all commonly used objects that depend on previously defined settings.
  *
  * @author Christoph
  */

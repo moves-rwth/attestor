@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,7 +42,7 @@ public class AssignInvokeTest_trivial {
 	public void setUp() throws Exception{
 		Settings.getInstance().grammar().setGrammar( Grammar.builder().build() );
 		
-		Type type = TypeFactory.getInstance().getType( "node" );
+		Type type = Settings.getInstance().factory().getType( "node" );
 		Local var 
 			= new Local( type, "x" );
 

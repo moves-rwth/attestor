@@ -1,15 +1,16 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import static org.junit.Assert.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
-import org.junit.*;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.types.TypeFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class NewExprTest {
 	
@@ -24,7 +25,7 @@ public class NewExprTest {
 
 	@Before
 	public void setUp(){
-		expr = new NewExpr( TypeFactory.getInstance().getType( "node"));
+		expr = new NewExpr( Settings.getInstance().factory().getType( "node"));
 		testGraph = ExampleHcImplFactory.getThreeElementDLL();
 	}
 

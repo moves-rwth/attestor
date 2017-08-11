@@ -1,34 +1,34 @@
 package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
@@ -84,7 +84,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 
 	private HeapConfiguration getInput() {
-		Type someType = TypeFactory.getInstance().getType("type");
+		Type someType = Settings.getInstance().factory().getType("type");
 		
 		List<IndexSymbol> stackWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
 		Nonterminal toReplace = getNonterminalWithStack(stackWithOneIndexSymbol);
@@ -111,7 +111,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private HeapConfiguration getExpected() {
-		Type someType = TypeFactory.getInstance().getType("type");
+		Type someType = Settings.getInstance().factory().getType("type");
 		GeneralSelectorLabel selectorLabel = GeneralSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		List<IndexSymbol> stackWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
@@ -162,7 +162,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private HeapConfiguration someRhs() {
-		Type someType = TypeFactory.getInstance().getType("type");
+		Type someType = Settings.getInstance().factory().getType("type");
 		GeneralSelectorLabel selectorLabel = GeneralSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();

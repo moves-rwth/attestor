@@ -1,22 +1,21 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import static org.junit.Assert.*;
-
-import java.util.Set;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class ReturnValueTest {
 	//private static final Logger logger = LogManager.getLogger( "ReturnValueTest.java" );
@@ -34,7 +33,7 @@ public class ReturnValueTest {
 
 	@Before
 	public void setUp() throws Exception{
-		Type type = TypeFactory.getInstance().getType( "node" );
+		Type type = Settings.getInstance().factory().getType( "node" );
 		stmt = new ReturnValueStmt( new Local( type, "x" ), type );
 		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
 		inputState.prepareHeap();

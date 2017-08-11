@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.BranchingSkip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.UndefinedValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
@@ -95,7 +95,7 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Type translateType(soot.Type input) {
 		
-		return TypeFactory.getInstance().getType("undefined Type");
+		return Settings.getInstance().factory().getType("undefined Type");
 	}
 
 	@Override

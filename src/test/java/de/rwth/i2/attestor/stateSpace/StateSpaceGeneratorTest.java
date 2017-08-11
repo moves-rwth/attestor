@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.stateSpace;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMaterializationStrategy;
@@ -15,7 +16,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class StateSpaceGeneratorTest {
 		HeapConfiguration initialGraph 
 				= ExampleHcImplFactory.getEmptyGraphWithConstants();
 		
-		Type type = TypeFactory.getInstance().getType( "type" );
+		Type type = Settings.getInstance().factory().getType( "type" );
 		
 		List<Semantics> programInstructions = new ArrayList<>();
 		Statement skipStmt = new Skip( 1 );

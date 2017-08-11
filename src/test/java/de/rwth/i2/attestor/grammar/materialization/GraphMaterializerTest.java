@@ -1,14 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -60,7 +60,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createOneNonterminalInput(Nonterminal toReplace) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -74,7 +74,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -89,7 +89,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createExpectedMaterializedGraph() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();

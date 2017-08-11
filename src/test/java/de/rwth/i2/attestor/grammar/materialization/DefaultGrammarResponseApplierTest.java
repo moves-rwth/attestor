@@ -4,16 +4,16 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
@@ -141,7 +141,7 @@ public class DefaultGrammarResponseApplierTest {
 
 	private HeapConfiguration getInputGraph() {
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL,
 															RANK, 
 															REDUCTION_TENTACLES );
@@ -158,7 +158,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -172,7 +172,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_ApplySimpleRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -185,7 +185,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createBigRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -204,7 +204,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_applyBigRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -221,7 +221,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createOtherBigRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -240,7 +240,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_applyOtherBigRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 

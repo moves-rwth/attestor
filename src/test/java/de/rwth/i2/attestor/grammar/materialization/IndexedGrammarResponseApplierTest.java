@@ -12,12 +12,12 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
@@ -86,7 +86,7 @@ public class IndexedGrammarResponseApplierTest {
 		List<IndexSymbol> someStack = new ArrayList<>();
 		
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 												 RANK, 
 												 REDUCTION_TENTACLES,
@@ -114,7 +114,7 @@ public class IndexedGrammarResponseApplierTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -130,7 +130,7 @@ public class IndexedGrammarResponseApplierTest {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 				 RANK, 
 				 REDUCTION_TENTACLES,

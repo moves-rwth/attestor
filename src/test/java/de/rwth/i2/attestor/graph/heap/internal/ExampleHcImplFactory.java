@@ -4,6 +4,7 @@ package de.rwth.i2.attestor.graph.heap.internal;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
@@ -11,7 +12,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractInd
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralNonterminal nt = GeneralNonterminal.getNonterminal("3", 3, new boolean[]{false, false, false});
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return  result.builder()
@@ -41,7 +41,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		return result.builder()
@@ -59,7 +59,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		return result.builder()
@@ -76,7 +76,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()
@@ -95,7 +95,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()
@@ -118,7 +118,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()
@@ -137,7 +137,7 @@ public final class ExampleHcImplFactory {
 	public static HeapConfiguration getTLLRule() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
@@ -165,7 +165,7 @@ public final class ExampleHcImplFactory {
 	public static HeapConfiguration getTLLRulePermuted() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
@@ -193,7 +193,7 @@ public final class ExampleHcImplFactory {
 	public static HeapConfiguration getTree() {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
@@ -211,7 +211,7 @@ public final class ExampleHcImplFactory {
 	public static HeapConfiguration getLargerTree() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
@@ -233,7 +233,7 @@ public final class ExampleHcImplFactory {
 	public static HeapConfiguration getLargerTreeWithOutExternals() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		Type type = TypeFactory.getInstance().getType("node");	
+		Type type = Settings.getInstance().factory().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
@@ -255,8 +255,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");	
-		Type intType = TypeFactory.getInstance().getType("int");
+		Type type = Settings.getInstance().factory().getType("List");
+		Type intType = Settings.getInstance().factory().getType("int");
 
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		
@@ -280,8 +280,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("node");	
-		Type booleanType = TypeFactory.getInstance().getType("int");
+		Type type = Settings.getInstance().factory().getType("node");
+		Type booleanType = Settings.getInstance().factory().getType("int");
 		
 		return result.builder()
 				.addNodes(booleanType, 2, nodes )
@@ -299,7 +299,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");	
+		Type type = Settings.getInstance().factory().getType("List");
 		
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		
@@ -319,7 +319,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		
@@ -341,7 +341,7 @@ public final class ExampleHcImplFactory {
 		int nullNode =  empty.targetOf(empty.variableWith("null"));
 		int trueNode =  empty.targetOf(empty.variableWith("true"));
 		
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
@@ -364,7 +364,7 @@ public final class ExampleHcImplFactory {
 		int nullNode =  empty.targetOf(empty.variableWith("null"));
 		int trueNode =  empty.targetOf(empty.variableWith("true"));
 		
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
@@ -392,7 +392,7 @@ public final class ExampleHcImplFactory {
 		int nullNode =  empty.targetOf(empty.variableWith("null"));
 		int trueNode =  empty.targetOf(empty.variableWith("true"));
 		
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
 		
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
@@ -414,7 +414,7 @@ public final class ExampleHcImplFactory {
 		int nullNode =  empty.targetOf(empty.variableWith("null"));
 		int trueNode =  empty.targetOf(empty.variableWith("true"));
 		
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.BoolList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.BoolList");
 		
 		GeneralSelectorLabel nextSelector = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
@@ -435,7 +435,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
 		GeneralSelectorLabel nextSelector = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
 
@@ -463,7 +463,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		GeneralSelectorLabel nextSelector = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
 
@@ -487,7 +487,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
-		Type defaultType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
+		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
 		GeneralSelectorLabel nextSelector = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralSelectorLabel valSelector = GeneralSelectorLabel.getSelectorLabel( "value" );
 
@@ -516,7 +516,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -533,7 +533,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 		
@@ -552,7 +552,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
 			
 		TIntArrayList nodes = new TIntArrayList();
@@ -570,7 +570,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 		
@@ -588,7 +588,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 		
@@ -606,7 +606,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
 			
 		TIntArrayList nodes = new TIntArrayList();
@@ -626,7 +626,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -643,7 +643,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralSelectorLabel prevSel = GeneralSelectorLabel.getSelectorLabel("p");
 		
@@ -662,7 +662,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralSelectorLabel prevSel = GeneralSelectorLabel.getSelectorLabel("p");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("List", 2, new boolean []{false,false});
@@ -683,7 +683,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralSelectorLabel prevSel = GeneralSelectorLabel.getSelectorLabel("p");
 		
@@ -706,7 +706,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralSelectorLabel prevSel = GeneralSelectorLabel.getSelectorLabel("p");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
@@ -729,7 +729,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralSelectorLabel prevSel = GeneralSelectorLabel.getSelectorLabel("p");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
@@ -752,7 +752,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("DLL");
+		Type listType = Settings.getInstance().factory().getType("DLL");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -796,7 +796,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] {false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -812,7 +812,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -828,7 +828,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("List", 2,new boolean[] {false,true} );
@@ -850,7 +850,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -865,7 +865,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] {false,true});
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -880,7 +880,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] {false,true});
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -898,7 +898,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -914,7 +914,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -930,7 +930,7 @@ public final class ExampleHcImplFactory {
 		
 		HeapConfiguration result = getEmptyGraphWithConstants();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -944,7 +944,7 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
-		Type listType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
+		Type listType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -962,7 +962,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		Type listType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
+		Type listType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 
@@ -980,7 +980,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		Type listType = TypeFactory.getInstance().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
+		Type listType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
 
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
 			
@@ -998,7 +998,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		Type listType = TypeFactory.getInstance().getType("RListNode");
+		Type listType = Settings.getInstance().factory().getType("RListNode");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 			
 		return result.builder()
@@ -1014,7 +1014,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		Type listType = TypeFactory.getInstance().getType("RListNode");
+		Type listType = Settings.getInstance().factory().getType("RListNode");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel("n");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal("RList",2,new boolean[]{false,false});
 			
@@ -1034,7 +1034,7 @@ public final class ExampleHcImplFactory {
 		
 		GeneralNonterminal n2 = GeneralNonterminal.getNonterminal( "ReductionTest_N2", 3, new boolean[]{false,false,false} );
 		
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 		GeneralSelectorLabel sel1 = GeneralSelectorLabel.getSelectorLabel("sel1");
 
 		return result.builder()
@@ -1054,7 +1054,7 @@ public final class ExampleHcImplFactory {
 		
 		GeneralNonterminal n1 = GeneralNonterminal.getNonterminal( "ReductionTest_N1", 3, new boolean[]{false,false,false} );
 
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 
 		return result.builder()
 				.addNodes( type, 3, nodes )
@@ -1070,7 +1070,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 		GeneralSelectorLabel sel1 = GeneralSelectorLabel.getSelectorLabel("sel1");
 		GeneralSelectorLabel sel2 = GeneralSelectorLabel.getSelectorLabel("sel2");
 
@@ -1089,7 +1089,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel nextSel = GeneralSelectorLabel.getSelectorLabel( "next" );
 		
 		return result.builder()
@@ -1111,7 +1111,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type listType = TypeFactory.getInstance().getType("List");
+		Type listType = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
 		
 		return result.builder()
@@ -1125,7 +1125,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = getEmptyGraphWithConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType( "type" );
+		Type type = Settings.getInstance().factory().getType( "type" );
 		
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1137,7 +1137,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = getThreeElementDLL();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 		
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1149,7 +1149,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = getListAndConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 		
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1162,7 +1162,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		Type type = TypeFactory.getInstance().getType("node");
+		Type type = Settings.getInstance().factory().getType("node");
 
 		GeneralSelectorLabel left = GeneralSelectorLabel.getSelectorLabel("left");
 		GeneralSelectorLabel right = GeneralSelectorLabel.getSelectorLabel("right");
@@ -1191,7 +1191,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
 		
@@ -1211,7 +1211,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
 		
@@ -1233,7 +1233,7 @@ public final class ExampleHcImplFactory {
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "?");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "?");
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		return result.builder()
 				.addNodes(type, 3, nodes)
@@ -1253,7 +1253,7 @@ public final class ExampleHcImplFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "?");
 		AnnotatedSelectorLabel left2 = new AnnotatedSelectorLabel("left", "2");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "?");
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		return result.builder()
 				.addNodes(type, 3, nodes)
@@ -1270,7 +1270,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
 		
@@ -1288,7 +1288,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
 		GeneralSelectorLabel parent = GeneralSelectorLabel.getSelectorLabel("parent");
@@ -1310,7 +1310,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal dllLabel = GeneralNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
@@ -1328,7 +1328,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
 		GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
 		GeneralSelectorLabel list = GeneralSelectorLabel.getSelectorLabel("list");
@@ -1356,7 +1356,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal dllLabel = GeneralNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
@@ -1374,7 +1374,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		GeneralNonterminal dllLabel = GeneralNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
@@ -1395,7 +1395,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
 	
 		return result.builder()
@@ -1414,7 +1414,7 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = TypeFactory.getInstance().getType("List");
+		Type type = Settings.getInstance().factory().getType("List");
 		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
 	
 		return result.builder()

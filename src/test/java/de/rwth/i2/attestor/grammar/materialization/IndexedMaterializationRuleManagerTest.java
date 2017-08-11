@@ -12,13 +12,14 @@ import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -236,7 +237,7 @@ public class IndexedMaterializationRuleManagerTest {
 	private HeapConfiguration uninstantiatedRhsWithoutNonterminal(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -252,7 +253,7 @@ public class IndexedMaterializationRuleManagerTest {
 	private static HeapConfiguration graphWithOneNonterminalWithStack( List<IndexSymbol> stack) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 		
@@ -339,7 +340,7 @@ public class IndexedMaterializationRuleManagerTest {
 																  List<IndexSymbol> stack2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
 		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);

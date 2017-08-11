@@ -1,32 +1,30 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.BeforeClass;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 
@@ -112,7 +110,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 
 	private static HeapConfiguration getInstantiableRuleCreatingNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = TypeFactory.getInstance().getType("type");
+		Type nodeType = Settings.getInstance().factory().getType("type");
 		
 		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NEXT_NAME );
 		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
@@ -133,7 +131,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	
 	private static HeapConfiguration getInstantiableRuleNotCreatingNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = TypeFactory.getInstance().getType("type");
+		Type nodeType = Settings.getInstance().factory().getType("type");
 		
 		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NEXT_NAME );
 		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );

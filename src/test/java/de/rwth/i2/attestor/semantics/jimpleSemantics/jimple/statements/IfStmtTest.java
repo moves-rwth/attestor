@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
@@ -11,7 +12,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.Equa
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -38,7 +38,7 @@ public class IfStmtTest {
 	@Before
 	public void setUp() throws Exception{
 		testGraph = ExampleHcImplFactory.getListAndConstants();
-		listType = TypeFactory.getInstance().getType( "node" );
+		listType = Settings.getInstance().factory().getType( "node" );
 
 		truePC = 5;
 		falsePC = 7;

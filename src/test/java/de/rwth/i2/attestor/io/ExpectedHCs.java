@@ -1,19 +1,20 @@
 package de.rwth.i2.attestor.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class ExpectedHCs {
 	
@@ -22,7 +23,7 @@ class ExpectedHCs {
 		
 		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -38,7 +39,7 @@ class ExpectedHCs {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -56,7 +57,7 @@ class ExpectedHCs {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -74,7 +75,7 @@ class ExpectedHCs {
 		stack.add(var);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -92,7 +93,7 @@ class ExpectedHCs {
 		stack.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -110,7 +111,7 @@ class ExpectedHCs {
 		stack.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -123,7 +124,7 @@ class ExpectedHCs {
 		
 		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -141,7 +142,7 @@ class ExpectedHCs {
 		stack.add(var);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)

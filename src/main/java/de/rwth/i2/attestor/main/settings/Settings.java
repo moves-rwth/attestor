@@ -99,7 +99,7 @@ public class Settings {
 	}
 
     /**
-     * @return A factory to create (customized) objects.
+     * @return A factory()() to create (customized) objects.
      */
 	public FactorySettings factory() {
 		return factorySettings;
