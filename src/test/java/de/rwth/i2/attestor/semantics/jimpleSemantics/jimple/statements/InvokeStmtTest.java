@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -27,7 +27,7 @@ public class InvokeStmtTest {
 
 	private InvokeStmt stmt;
 	private HeapConfiguration inputGraph;
-	private DefaultState inputState;
+	private DefaultProgramState inputState;
 
 
 	@BeforeClass
@@ -48,7 +48,7 @@ public class InvokeStmtTest {
 			= new InstanceInvokeHelper( var, new ArrayList<>(), new ArrayList<>(), false );
 		
 		stmt = new InvokeStmt( method, invokePrepare, 1 );
-		inputState = new DefaultState( ExampleHcImplFactory.getListAndConstants() );
+		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();
 	}
@@ -58,11 +58,11 @@ public class InvokeStmtTest {
 		try{
 			Set<ProgramState> res = stmt.computeSuccessors( inputState );
 			assertEquals( 1, res.size() );
-			DefaultState resState = (DefaultState) res.iterator().next();
+			DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
 			assertNotSame("ensure clone on state level", resState, inputState );
 			assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap() );
 			assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap() );
-			DefaultState tmp = new DefaultState( ExampleHcImplFactory.getListAndConstants() );
+			DefaultProgramState tmp = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
 			tmp.prepareHeap();
 			HeapConfiguration expectedGraph = tmp.getHeap();
 			assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph );

@@ -9,10 +9,10 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 
@@ -31,12 +31,12 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
 	public void setup(){
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver violationPointResolver = new ViolationPointResolver(grammar);
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager grammarManager = 
-				new IndexedMaterializationRuleManager(violationPointResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(violationPointResolver, indexMatcher);
 		
 		GrammarResponseApplier ruleApplier = 
-				new IndexedGrammarResponseApplier( new StackMaterializer(), new GraphMaterializer() );
+				new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(), new GraphMaterializer() );
 		
 		this.materializer = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
 	

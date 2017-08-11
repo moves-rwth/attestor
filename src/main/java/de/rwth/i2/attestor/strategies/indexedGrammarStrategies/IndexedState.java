@@ -1,18 +1,16 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
-import de.rwth.i2.attestor.strategies.GeneralProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class IndexedState extends GeneralProgramState {
+public class IndexedState extends GeneralJimpleProgramState {
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
 	private static final String[] CONSTANT_NAMES = {"true", "false", "null", "1", "0", "-1"};
 	
@@ -51,17 +49,14 @@ public class IndexedState extends GeneralProgramState {
 	public boolean equals(Object other) {
 		
 		if(other instanceof IndexedState) {
-			
-			IndexedState state = (IndexedState) other;
-			
-			if(programCounter != state.programCounter
-					|| scopeDepth != state.scopeDepth) {
-				
-				return false;
-			}
 
-			return atomicPropositions.equals(state.getAPs())
-				&& heap.equals(state.getHeap());
+			IndexedState state = (IndexedState) other;
+
+			return programCounter == state.programCounter
+					&& scopeDepth == state.scopeDepth
+					&& atomicPropositions.equals(state.getAPs())
+					&& heap.equals(state.getHeap());
+
 		}
 		
 		return false;
@@ -74,7 +69,7 @@ public class IndexedState extends GeneralProgramState {
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			
 			if(dFrom.isUndefined()) {
-				logger.warn("getSelectorTarget: origin is undefined");
+				logger.debug("getSelectorTarget: origin is undefined. Returning undefined.");
 				return dFrom;
 			}
 
@@ -91,15 +86,10 @@ public class IndexedState extends GeneralProgramState {
 					
 				}
 			}
-			if(DebugMode.ENABLED) {
-				logger.warn("getSelectorTarget: source node didnt have selector " + selectorName);
-			}
-			
+			logger.warn("getSelectorTarget: source node did not have selector " + selectorName);
+
 		} else {
-			
-			if(DebugMode.ENABLED) {
-				logger.warn("getSelectorTarget got invalid source");
-			}
+			logger.warn("getSelectorTarget got invalid source");
 		}
 		
 		return GeneralConcreteValue.getUndefined();

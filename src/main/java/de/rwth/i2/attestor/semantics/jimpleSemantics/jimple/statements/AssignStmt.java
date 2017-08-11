@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -62,8 +61,7 @@ public class AssignStmt extends Statement {
 	/**
 	 * evaluates the rhs and assigns it to the left hand side. In case the rhs
 	 * evaluates to undefined, the variable will be removed from the heap (It
-	 * will not point to its old value). In this case the logger will also issue
-	 * a warning. <br>
+	 * will not point to its old value). <br>
 	 * If the types of the lhs and the rhs do not match, there will be a
 	 * warning, but the assignment will still be realized.<br>
 	 * 
@@ -73,17 +71,17 @@ public class AssignStmt extends Statement {
 	 * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state ) throws NotSufficientlyMaterializedException {
+	public Set<ProgramState> computeSuccessors( ProgramState programState ) throws NotSufficientlyMaterializedException {
 		
-		JimpleExecutable executable = (JimpleExecutable) state;		
-		executable = JimpleUtil.deepCopy(executable);
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
+		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 		
 		ConcreteValue concreteRHS;
 		try {
-			concreteRHS = rhs.evaluateOn( executable );
+			concreteRHS = rhs.evaluateOn( jimpleProgramState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error( e.getErrorMessage(this) );
-			concreteRHS = executable.getUndefined();
+			concreteRHS = jimpleProgramState.getUndefined();
 		}
 
 		if( concreteRHS.isUndefined() ){
@@ -93,37 +91,37 @@ public class AssignStmt extends Statement {
 				logger.debug( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
 			}
 		}else{
-			if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 				msg += " with the type of the lhs";
 				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.warn( msg );
+				logger.debug( msg );
 			}
 		}
 		
 		try {
-			lhs.evaluateOn( executable );
-			lhs.setValue( executable, concreteRHS );
+			lhs.evaluateOn( jimpleProgramState );
+			lhs.setValue( jimpleProgramState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
 
 		if(removeDeadVariables) {
-			VariablesUtil.removeDeadVariables(rhs.toString(), executable, liveVariableNames);
+			VariablesUtil.removeDeadVariables(rhs.toString(), jimpleProgramState, liveVariableNames);
 		}
 
-		JimpleExecutable result = JimpleUtil.deepCopy(executable);
+		JimpleProgramState result = JimpleUtil.deepCopy(jimpleProgramState);
 		result.setProgramCounter(nextPC);
 		
 		return SingleElementUtil.createSet( result );
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState state ){
+	public boolean needsMaterialization( ProgramState programState ){
 		
-		JimpleExecutable executable = (JimpleExecutable) state;
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 		
-		return rhs.needsMaterialization( executable ) || lhs.needsMaterialization( executable );
+		return rhs.needsMaterialization( jimpleProgramState ) || lhs.needsMaterialization( jimpleProgramState );
 	}
 
 

@@ -1,20 +1,12 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.generated.lexer.LexerException;
-import de.rwth.i2.attestor.generated.parser.ParserException;
-import java.io.File;
-
 import org.apache.commons.cli.*;
-
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
+import java.io.File;
 
 /**
  * Parses the provided command line options in order to populate
@@ -358,8 +350,6 @@ public class CommandLineReader {
 		if(cmd.hasOption("x")) {
 			optionSettings.setIndexedMode(true);
 		}
-
-		DebugMode.ENABLED = cmd.hasOption("v");
 
 		if(cmd.hasOption("d")) {
 			optionSettings.setMinDereferenceDepth( Integer.valueOf(cmd.getOptionValue("d")) );

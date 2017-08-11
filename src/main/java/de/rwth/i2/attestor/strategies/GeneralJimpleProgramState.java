@@ -2,13 +2,12 @@ package de.rwth.i2.attestor.strategies;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -22,12 +21,12 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public abstract class GeneralProgramState implements JimpleExecutable {
+public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 
     /**
      * The logger of this class.
      */
-    private static final Logger logger = LogManager.getLogger( "GeneralProgramState" );
+    private static final Logger logger = LogManager.getLogger( "GeneralJimpleProgramState" );
 
     /**
      * The heap configuration that determines the shape of the heap and the assignment of
@@ -54,7 +53,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
      * Initializes a state with the initial program location and scope depth 0.
      * @param heap The initial heap configuration.
      */
-	protected GeneralProgramState(HeapConfiguration heap) {
+	protected GeneralJimpleProgramState(HeapConfiguration heap) {
 		
 		this.heap = heap;
 		this.programCounter = 0;
@@ -67,7 +66,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
      * @param heap The initial heap configuration.
      * @param scopeDepth The initial call scope depth.
      */
-	protected GeneralProgramState(HeapConfiguration heap, int scopeDepth) {
+	protected GeneralJimpleProgramState(HeapConfiguration heap, int scopeDepth) {
 		
 		this.heap = heap;
 		this.programCounter = 0;
@@ -79,7 +78,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
      * Creates a shallow copy of a program state.
      * @param state The state that should be copied.
      */
-	protected GeneralProgramState(GeneralProgramState state) {
+	protected GeneralJimpleProgramState(GeneralJimpleProgramState state) {
 		
 		this.heap = state.heap;
 		this.programCounter = state.programCounter;
@@ -95,7 +94,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
     /**
      * @return A deep copy of this program state.
      */
-    public abstract GeneralProgramState clone();
+    public abstract GeneralJimpleProgramState clone();
 
     /**
      * Checks whether a given name corresponds to a constant.
@@ -117,7 +116,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
      * @param name The name of a variable or constant.
      * @return The corresponding name in the current scope of this state.
      */
-    public String getScopedName(String name) {
+    private String getScopedName(String name) {
 
         return String.valueOf(scopeDepth) + "-" + name;
     }
@@ -301,11 +300,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 			Type type = heap.nodeTypeOf(node);
 			return new GeneralConcreteValue( type, node );
 		} catch( NullPointerException | IllegalArgumentException e ) {
-			
-			if(DebugMode.ENABLED) {
-				logger.warn("Variable " + variableName + " could not be found.");
-			}
-			
+			logger.trace("Variable " + variableName + " could not be found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}
@@ -344,11 +339,12 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 			
 			int node = v.getNode();
 			if(node == GeneralConcreteValue.UNDEFINED) {
-				
-				if(DebugMode.ENABLED) {
-					logger.warn("Aborting setVariable as the new target '" + v.toString() + "' for the following variable could be found: '" + variableName + "'");
-				}
-				
+					logger.debug("Aborting setVariable as the new target '"
+							+ v.toString()
+							+ "' for the following variable could be found: '"
+							+ variableName
+							+ "'"
+					);
 				return;
 			}
 			
@@ -379,10 +375,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 			return new GeneralConcreteValue( t, n );
 		} catch( NullPointerException | IllegalArgumentException e ) {
 			
-			if(DebugMode.ENABLED) {
-				logger.warn("Constant '" + constantName + "' not found.");
-			}
-			
+			logger.warn("Constant '" + constantName + "' not found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}
@@ -451,7 +444,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 			return res;
 		} catch( ClassCastException e ) {
 			
-			logger.error("GeneralProgramState expects NodeTypes as types.");
+			logger.error("GeneralJimpleProgramState expects NodeTypes as types.");
 			builder.build();
 			return null;
 		}
@@ -465,7 +458,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
 	
 	@Override
 	public ProgramState shallowCopyWithUpdateHeap(HeapConfiguration newHeap) {
-		GeneralProgramState copy = (GeneralProgramState) shallowCopy();
+		GeneralJimpleProgramState copy = (GeneralJimpleProgramState) shallowCopy();
 		copy.heap = newHeap;
 		return copy;
 	}

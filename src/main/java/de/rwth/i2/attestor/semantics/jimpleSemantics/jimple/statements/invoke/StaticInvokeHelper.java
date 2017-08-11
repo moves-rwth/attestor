@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * Prepares the heap for the invoke of a static method and cleans it afterwards.
  * <br><br>
- * Call {@link #prepareHeap(JimpleExecutable) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleExecutable) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br> 
+ * Call {@link #prepareHeap(JimpleProgramState) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(JimpleProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * <br>
  * Handles the evaluation of parameter expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
@@ -57,11 +57,11 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * sets the current scope the the method's scope.
 	 */
 	@Override
-	public void prepareHeap( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public void prepareHeap( JimpleProgramState programState) throws NotSufficientlyMaterializedException{
 
-		appendArguments( executable );
+		appendArguments(programState);
 
-		executable.enterScope();
+		programState.enterScope();
 	}
 
 	/**
@@ -69,13 +69,13 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * leaves the method's scope.
 	 */
 	@Override
-	public void cleanHeap( JimpleExecutable executable ){
+	public void cleanHeap( JimpleProgramState programState){
 
-		removeParameters( executable );
-		removeLocals( executable );
-		removeReturn( executable );
+		removeParameters(programState);
+		removeLocals(programState);
+		removeReturn(programState);
 
-		executable.leaveScope();
+		programState.leaveScope();
 	}
 
 }

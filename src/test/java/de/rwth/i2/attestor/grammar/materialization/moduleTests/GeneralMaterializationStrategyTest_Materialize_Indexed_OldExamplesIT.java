@@ -6,23 +6,17 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.materialization.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
-import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.StackMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
+import de.rwth.i2.attestor.grammar.materialization.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
@@ -40,12 +34,12 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager ruleManager = 
-				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 		
 		GrammarResponseApplier ruleApplier = 
-				new IndexedGrammarResponseApplier( new StackMaterializer(), new GraphMaterializer() );
+				new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(), new GraphMaterializer() );
 		this.materializer = new GeneralMaterializationStrategy( ruleManager, ruleApplier );
 	}
 

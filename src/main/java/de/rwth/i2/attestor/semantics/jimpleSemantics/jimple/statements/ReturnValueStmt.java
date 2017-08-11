@@ -1,20 +1,22 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.*;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * ReturnValue models statements like return x;
@@ -42,49 +44,40 @@ public class ReturnValueStmt extends Statement {
 		this.expectedType = type;
 	}
 
-	/**
-	 * evaluates the return expression and attaches an intermediate "return" to
-	 * the result element (i.e. node).
-	 * Then, removes all locals of the current scope from the heap,
-	 * and returns the resulting heap with exit location (-1)
-	 */
-	
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 		
-		JimpleExecutable executable = JimpleUtil.deepCopy( (JimpleExecutable) state);
+		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState);
 
 		ConcreteValue concreteReturn;
 		try {
-			concreteReturn = returnValue.evaluateOn( executable );
+			concreteReturn = returnValue.evaluateOn( jimpleProgramState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteReturn = executable.getUndefined();
+			concreteReturn = jimpleProgramState.getUndefined();
 		}
-		if( DebugMode.ENABLED && !( concreteReturn.type().equals( expectedType ) ) ){
-			logger.warn( "type missmatch. Expected: " + expectedType + " got: " + concreteReturn.type() );
+		if( !( concreteReturn.type().equals( expectedType ) ) ){
+			logger.debug( "type mismatch. Expected: " + expectedType + " got: " + concreteReturn.type() );
 		}
 
 		if( concreteReturn.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "return value evaluated to undefined. No return will be attached" );
-			}
+			logger.warn( "return value evaluated to undefined. No return will be attached" );
 		}else{
-			executable.setIntermediate( "@return", concreteReturn );
+			jimpleProgramState.setIntermediate( "@return", concreteReturn );
 		}
 
 	  	// -1 since this statement has no successor location
 		int nextPC = -1;
-		executable.setProgramCounter(nextPC);
+		jimpleProgramState.setProgramCounter(nextPC);
 		
-		removeLocals( executable );
-		return SingleElementUtil.createSet( executable );
+		removeLocals( jimpleProgramState );
+		return SingleElementUtil.createSet( jimpleProgramState );
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState executable ){
-		return returnValue.needsMaterialization( (JimpleExecutable) executable );
+	public boolean needsMaterialization( ProgramState programState ){
+		return returnValue.needsMaterialization( (JimpleProgramState) programState );
 	}
 
 	public String toString(){
@@ -111,11 +104,11 @@ public class ReturnValueStmt extends Statement {
 
     /**
      * Removes local variables from the current block.
-     * @param state The state whose local variables should be removed.
+     * @param programState The programState whose local variables should be removed.
      */
-	private void removeLocals( JimpleExecutable state ){
-		int scope = state.getScopeDepth();
-		HeapConfiguration heap = state.getHeap();
+	private void removeLocals( JimpleProgramState programState ){
+		int scope = programState.getScopeDepth();
+		HeapConfiguration heap = programState.getHeap();
 		
 		TIntIterator iter = heap.variableEdges().iterator();
 		

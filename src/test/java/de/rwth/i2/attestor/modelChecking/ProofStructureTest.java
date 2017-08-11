@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,10 +41,10 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
-		DefaultState state1 = new DefaultState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
 		this.addState(initialState);
@@ -79,10 +79,10 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
-		DefaultState state1 = new DefaultState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
 		this.addState(initialState);
@@ -113,10 +113,10 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
-		DefaultState state1 = new DefaultState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 		
 		this.addState(initialState);
@@ -148,10 +148,10 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
-		DefaultState state1 = new DefaultState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
 		this.addState(initialState);
@@ -182,7 +182,7 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		DefaultState initialState = new DefaultState(hc);
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
 
 		this.addState(initialState);
@@ -212,8 +212,8 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ sll }");
 
 		this.addState(initialState);
@@ -243,7 +243,7 @@ public class ProofStructureTest extends StateSpace {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
-		DefaultState initialState = new DefaultState(hc);
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ sll }");
 
 		this.addState(initialState);
@@ -272,12 +272,12 @@ public class ProofStructureTest extends StateSpace {
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
-		DefaultState initialState = new DefaultState(hc);
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
-		DefaultState state1 = new DefaultState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ sll }");
-		DefaultState state2 = new DefaultState(hc);
+		DefaultProgramState state2 = new DefaultProgramState(hc);
 		state2.addAP("{ tree }");
 		
 		

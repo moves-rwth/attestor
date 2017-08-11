@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar;
 
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.Pair;
 
 import java.util.ArrayList;
@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StackMatcher {
+public class IndexMatcher {
 	
-	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<StackSymbol>, List<StackSymbol>>>
+	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<IndexSymbol>, List<IndexSymbol>>>
 		knownMatches = new HashMap<>();
 
-	private StackMaterializationStrategy stackGrammar;
+	private IndexMaterializationStrategy stackGrammar;
 	
-	public StackMatcher(StackMaterializationStrategy stackGrammar) {
+	public IndexMatcher(IndexMaterializationStrategy stackGrammar) {
 		this.stackGrammar = stackGrammar;
 	}
 
@@ -24,8 +24,8 @@ public class StackMatcher {
 	 * Determines whether there is a materialization and an instantiation such that the
 	 * stacks of the given nonterminals are equal.
 	 * 
-	 * @param materializableNonterminal a nonterminal with a (possibly) abstract stack
-	 * @param instantiableNonterminal a nonterminal with a (possibly) instantiable stack
+	 * @param materializableNonterminal a nonterminal with a (possibly) abstract index
+	 * @param instantiableNonterminal a nonterminal with a (possibly) instantiable index
 	 * @return true if there is a materialization and an instantiation such that the
 	 * stacks of the given nonterminals are equal.
 	 */
@@ -60,14 +60,14 @@ public class StackMatcher {
 	}
 
 	/**
-	 * The sequence of symbols with which to replace the abstract stack symbol at the end
-	 * of the stack of the materializableNonterminal in order to achieve equal stacks
+	 * The sequence of symbols with which to replace the abstract index symbol at the end
+	 * of the index of the materializableNonterminal in order to achieve equal stacks
 	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
-	 * @return a list of stack symbols
+	 * @return a list of index symbols
 	 */
-	private List<StackSymbol> getNecessaryMaterialization(IndexedNonterminal materializableNonterminal, 
-			   IndexedNonterminal instantiableNonterminal )  {
+	private List<IndexSymbol> getNecessaryMaterialization(IndexedNonterminal materializableNonterminal,
+														  IndexedNonterminal instantiableNonterminal )  {
 		Pair<IndexedNonterminal, IndexedNonterminal> requestPair =
 				new Pair<>(materializableNonterminal, instantiableNonterminal);
 		
@@ -78,11 +78,11 @@ public class StackMatcher {
 		return knownMatches.get(requestPair).first();
 	}
 	
-	public Pair<AbstractStackSymbol, List<StackSymbol> > getMaterializationRule(IndexedNonterminal materializableNonterminal, 
-			   IndexedNonterminal instantiableNonterminal )  {
+	public Pair<AbstractIndexSymbol, List<IndexSymbol> > getMaterializationRule(IndexedNonterminal materializableNonterminal,
+																				IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractStackSymbol lhs = (AbstractStackSymbol) materializableNonterminal.getStack().getLastStackSymbol();
+			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastStackSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );
@@ -109,14 +109,14 @@ public class StackMatcher {
 	}
 
 	/**
-	  The sequence of symbols with which to replace the stack variable at the end
-	 * of the stack of the instantiableNonterminal in order to achieve equal stacks
+	  The sequence of symbols with which to replace the index variable at the end
+	 * of the index of the instantiableNonterminal in order to achieve equal stacks
 	 * @param materializableNonterminal the nonterminal in the graph that shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs in the grammar
-	 * @return The list of stack symbols 
+	 * @return The list of index symbols
 	 */
-	public List<StackSymbol> getNecessaryInstantiation(IndexedNonterminal materializableNonterminal, 
-			   IndexedNonterminal instantiableNonterminal ) {
+	public List<IndexSymbol> getNecessaryInstantiation(IndexedNonterminal materializableNonterminal,
+													   IndexedNonterminal instantiableNonterminal ) {
 		Pair<IndexedNonterminal, IndexedNonterminal> requestPair =
 				new Pair<>(materializableNonterminal, instantiableNonterminal);
 		
@@ -138,24 +138,24 @@ public class StackMatcher {
 			return;
 		}
 		
-		List<StackSymbol> necessaryMaterialization = new ArrayList<>();
-		List<StackSymbol> necessaryInstantiation = new ArrayList<>();
+		List<IndexSymbol> necessaryMaterialization = new ArrayList<>();
+		List<IndexSymbol> necessaryInstantiation = new ArrayList<>();
 		
 			
-			for( int i = 0; i < materializableNonterminal.getStack().size()
-						 || i < instantiableNonterminal.getStack().size();
+			for( int i = 0; i < materializableNonterminal.getIndex().size()
+						 || i < instantiableNonterminal.getIndex().size();
 				i++ ){
-				StackSymbol s1 = getNextSymbolForMaterializableNonterminal(materializableNonterminal, necessaryMaterialization, i);
-				StackSymbol s2 = getNextSymbolForInstantiableNonterminal(instantiableNonterminal, i);
+				IndexSymbol s1 = getNextSymbolForMaterializableNonterminal(materializableNonterminal, necessaryMaterialization, i);
+				IndexSymbol s2 = getNextSymbolForInstantiableNonterminal(instantiableNonterminal, i);
 				
-				if( s1 instanceof ConcreteStackSymbol 
-						&& s2 instanceof ConcreteStackSymbol
+				if( s1 instanceof ConcreteIndexSymbol
+						&& s2 instanceof ConcreteIndexSymbol
 						&& (! s1.equals(s2)) ){
 					addNegativeResultToKnownMatches(requestPair);
 					return;
-				}else if( s2 instanceof StackVariable ){
+				}else if( s2 instanceof IndexVariable){
 					necessaryInstantiation.add( s1 );
-				}else if( s1 instanceof AbstractStackSymbol && s2 instanceof ConcreteStackSymbol ){
+				}else if( s1 instanceof AbstractIndexSymbol && s2 instanceof ConcreteIndexSymbol){
 					if( ! necessaryMaterialization.isEmpty() ){
 						necessaryMaterialization.remove( necessaryMaterialization.size() -1 );
 					}
@@ -168,36 +168,36 @@ public class StackMatcher {
 				}
 			}
 
-			Pair<List<StackSymbol>, List<StackSymbol>> result = new Pair<>(necessaryMaterialization, necessaryInstantiation);
+			Pair<List<IndexSymbol>, List<IndexSymbol>> result = new Pair<>(necessaryMaterialization, necessaryInstantiation);
 			knownMatches.put(requestPair, result);
 		
 	}
 
 
 
-	private StackSymbol getNextSymbolForInstantiableNonterminal(IndexedNonterminal instantiableNonterminal, int i) {
-		StackSymbol s2;
-		if( i < instantiableNonterminal.getStack().size() ){
-		    s2 = instantiableNonterminal.getStack().get(i);
+	private IndexSymbol getNextSymbolForInstantiableNonterminal(IndexedNonterminal instantiableNonterminal, int i) {
+		IndexSymbol s2;
+		if( i < instantiableNonterminal.getIndex().size() ){
+		    s2 = instantiableNonterminal.getIndex().get(i);
 		}else{
-			s2 = StackVariable.getGlobalInstance();
+			s2 = IndexVariable.getGlobalInstance();
 		}
 		return s2;
 	}
 
-	private StackSymbol getNextSymbolForMaterializableNonterminal(IndexedNonterminal materializableNonterminal,
-			List<StackSymbol> necessaryMaterialization, int i) {
-		StackSymbol s1;
-		if( i < materializableNonterminal.getStack().size() ){
-		 s1 = materializableNonterminal.getStack().get( i );
+	private IndexSymbol getNextSymbolForMaterializableNonterminal(IndexedNonterminal materializableNonterminal,
+																  List<IndexSymbol> necessaryMaterialization, int i) {
+		IndexSymbol s1;
+		if( i < materializableNonterminal.getIndex().size() ){
+		 s1 = materializableNonterminal.getIndex().get( i );
 		}else{
 		  /* 
 		   * +1 is added because the first symbol in the materialization
-		   * replaces the last symbol in the normal stack.
+		   * replaces the last symbol in the normal index.
 		   * Example NT[s,s,X], materialization [a,b,Y] -> then a replaces X.
 		   * The result of applying the materialization would be NT[s,s,a,b,Y] 	
 		   */
-		  s1 = necessaryMaterialization.get(i - materializableNonterminal.getStack().size() +1 );
+		  s1 = necessaryMaterialization.get(i - materializableNonterminal.getIndex().size() +1 );
 		}
 		return s1;
 	}

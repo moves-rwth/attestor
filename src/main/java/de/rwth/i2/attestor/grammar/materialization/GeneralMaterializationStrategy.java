@@ -20,7 +20,7 @@ import gnu.trove.iterator.TIntIterator;
  * The class itself is oblivious of the used grammars and 
  * materializationMechanisms, i.e. it doesn't know whether 
  * only nonterminal edges are replaced by graphs or if 
- * additional stack materializations are applied (These
+ * additional index materializations are applied (These
  * mechanisms are provided by the MaterializationRuleManager
  * and GrammarResponseApplier).
  * @author Hannah

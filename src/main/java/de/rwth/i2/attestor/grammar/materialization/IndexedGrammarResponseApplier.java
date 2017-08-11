@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import java.util.*;
-
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Capable of handling {@link MaterializationAndRuleResponse}
@@ -20,12 +21,12 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );
 	
-	StackMaterializer stackMaterializer;
+	IndexMaterializationStrategy indexMaterializationStrategy;
 
-	public IndexedGrammarResponseApplier(StackMaterializer stackMaterializer,
+	public IndexedGrammarResponseApplier(IndexMaterializationStrategy indexMaterializationStrategy,
 			GraphMaterializer graphMaterializer) {
 		super( graphMaterializer );
-		this.stackMaterializer = stackMaterializer;
+		this.indexMaterializationStrategy = indexMaterializationStrategy;
 	}
 	
 	public Collection<HeapConfiguration> applyGrammarResponseTo( HeapConfiguration inputGraph, 
@@ -39,11 +40,11 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 			
 			 Collection<HeapConfiguration> materializedGraphs = new ArrayList<>();
 			 
-			 for( List<StackSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
+			 for( List<IndexSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
 				 	 
 				 HeapConfiguration materializedStacks;
 				try {
-					materializedStacks = stackMaterializer
+					materializedStacks = indexMaterializationStrategy
 							.getMaterializedCloneWith(inputGraph, 
 													  indexedRespose.getStackSymbolToMaterialize(), 
 													  materialization );

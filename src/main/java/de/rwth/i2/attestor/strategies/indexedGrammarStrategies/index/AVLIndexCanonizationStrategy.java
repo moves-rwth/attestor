@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack;
+package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index;
 
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -8,7 +8,7 @@ import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
- * A StackCanonizationStrategy that uses a fixed right-regular string grammar given by the following rules:
+ * A IndexCanonizationStrategy that uses a fixed right-regular string grammar given by the following rules:
  * <ul>
  *     <li>X &#8594; sX</li>
  *     <li>X &#8594; Z</li>
@@ -20,12 +20,12 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Hannah, Christoph
  */
-public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
+public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 
 	/**
-	 * abstracts the stacks of all nonterminals in heapConfiguration simultaneously and as far as possible.
+	 * Abstracts the indices of all nonterminals in heapConfiguration simultaneously and as far as possible.
 	 * Actually alters the nonterminals in heapConfiguration (no clone is performed).
-	 * This method assumes that stack abstraction is sound (e.g. it doesn't check whether anything is linked to null)
+	 * This method assumes that index abstraction is sound (e.g. it doesn't check whether anything is linked to null)
 	 */
 	@Override
 	public void canonizeStack( HeapConfiguration heapConfiguration ) {
@@ -44,12 +44,12 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
 	}
 
     /**
-     * Attempt to abstract the given HeapConfiguration by abstracting the given stack rightmost symbol.
+     * Attempt to abstract the given HeapConfiguration by abstracting the given index rightmost symbol.
      * @param heapConfiguration The HeapConfiguration that should be abstracted.
-     * @param stackLabel The rightmost stack symbol that should be part of the abstraction.
+     * @param indexLabel The rightmost index symbol that should be part of the abstraction.
      * @return true if and only if abstraction actually has been applied.
      */
-	private boolean attemptAbstraction(HeapConfiguration heapConfiguration, String stackLabel) {
+	private boolean attemptAbstraction(HeapConfiguration heapConfiguration, String indexLabel) {
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
         TIntArrayList applicableEdges = new TIntArrayList(ntEdges.size()) ;
@@ -59,8 +59,8 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
             int edge = iter.next();
             IndexedNonterminal edgeLabel = (IndexedNonterminal) heapConfiguration.labelOf(edge);
 
-            if(isAbstractionPossible(edgeLabel, stackLabel)) {
-               if(isAbstractionApplicable(edgeLabel, stackLabel)) {
+            if(isAbstractionPossible(edgeLabel, indexLabel)) {
+               if(isAbstractionApplicable(edgeLabel, indexLabel)) {
                    applicableEdges.add(edge);
                }
             } else {
@@ -72,37 +72,37 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
     }
 
     /**
-     * Checks whether at least one abstraction step that abstracts the given stackLabel is possible at all.
+     * Checks whether at least one abstraction step that abstracts the given indexLabel is possible at all.
      * @param edgeLabel An edge label that should be checked for possible abstractions.
-     * @param stackLabel The rightmost symbol that should be abstracted.
+     * @param indexLabel The rightmost symbol that should be abstracted.
      * @return true if and only if abstraction is possible at all.
      */
-    private boolean isAbstractionPossible(IndexedNonterminal edgeLabel, String stackLabel) {
+    private boolean isAbstractionPossible(IndexedNonterminal edgeLabel, String indexLabel) {
 
-	    String endEdge = edgeLabel.getStack().getLastStackSymbol().toString();
+	    String endEdge = edgeLabel.getIndex().getLastStackSymbol().toString();
 
 	    return (
-                (stackLabel.equals("Z") && !endEdge.equals("X"))
-                || (stackLabel.equals("C") && !endEdge.equals("Y"))
-                || (stackLabel.equals("X") && !endEdge.equals("Z") && (!endEdge.equals("X") || edgeLabel.getStack().size() > 1))
-                || (stackLabel.equals("Y") && !endEdge.equals("C") && (!endEdge.equals("Y") || edgeLabel.getStack().size() > 1))
+                (indexLabel.equals("Z") && !endEdge.equals("X"))
+                || (indexLabel.equals("C") && !endEdge.equals("Y"))
+                || (indexLabel.equals("X") && !endEdge.equals("Z") && (!endEdge.equals("X") || edgeLabel.getIndex().size() > 1))
+                || (indexLabel.equals("Y") && !endEdge.equals("C") && (!endEdge.equals("Y") || edgeLabel.getIndex().size() > 1))
         );
     }
 
     /**
      * Checks whether abstraction with the given rightmost symbol is applicable to the given Nonterminal.
      * @param edgeLabel The Nonterminal that should be abstracted.
-     * @param stackLabel The label of the rightmost StackSymbol that should be abstracted.
+     * @param indexLabel The label of the rightmost IndexSymbol that should be abstracted.
      * @return true if and only if a hyperedge labeled with edgeLabel should be abstracted.
      */
-    private boolean isAbstractionApplicable(IndexedNonterminal edgeLabel, String stackLabel) {
+    private boolean isAbstractionApplicable(IndexedNonterminal edgeLabel, String indexLabel) {
 
-	    return edgeLabel.getStack().getLastStackSymbol().toString().equals(stackLabel)
-                && (stackLabel.equals("Z") || stackLabel.equals("C") || edgeLabel.getStack().size() > 1);
+	    return edgeLabel.getIndex().getLastStackSymbol().toString().equals(indexLabel)
+                && (indexLabel.equals("Z") || indexLabel.equals("C") || edgeLabel.getIndex().size() > 1);
     }
 
     /**
-     * Applies abstraction to the stacks of the given edges.
+     * Applies abstraction to the indices of the given edges.
      * @param heapConfiguration The HeapConfiguration whose edges should be abstracted.
      * @param applicableEdges A subset of edges of heapConfiguration that are actually abstracted.
      * @return true if and only if the abstraction has been successfully executed.
@@ -126,42 +126,42 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
     }
 
     /**
-     * Creates an IndexedNonterminal with an updated stack according to the abstraction rules
+     * Creates an IndexedNonterminal with an updated index according to the abstraction rules
      * inferred from the underlying context-free string grammar.
-     * @param originalNonterminal The nonterminal symbol whose stack should be abstracted.
-     * @return A new IndexedNonterminal with an abstracted stack.
+     * @param originalNonterminal The nonterminal symbol whose index should be abstracted.
+     * @return A new IndexedNonterminal with an abstracted index.
      */
     private IndexedNonterminal updateNonterminal(IndexedNonterminal originalNonterminal) {
 
-	    String last = originalNonterminal.getStack().getLastStackSymbol().toString();
+	    String last = originalNonterminal.getIndex().getLastStackSymbol().toString();
 
 	    if(last.equals("Z")) {
 	        return originalNonterminal
                     .getWithShortenedStack() // Z
-                    .getWithProlongedStack(AbstractStackSymbol.get("X")); // -> X
+                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("X")) {
 	        return originalNonterminal
                     .getWithShortenedStack() // X
                     .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractStackSymbol.get("X")); // -> X
+                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("C")) {
             return originalNonterminal
                     .getWithShortenedStack() // C
-                    .getWithProlongedStack(AbstractStackSymbol.get("Y")); // -> Y
+                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         if(last.equals("Y")) {
             return originalNonterminal
                     .getWithShortenedStack() // Y
                     .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractStackSymbol.get("Y")); // -> Y
+                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
-        throw new IllegalStateException("Unknown stack symbol.");
+        throw new IllegalStateException("Unknown index symbol.");
     }
 
 

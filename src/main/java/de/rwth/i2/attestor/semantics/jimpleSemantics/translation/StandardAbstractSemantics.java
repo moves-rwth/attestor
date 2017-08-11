@@ -11,7 +11,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.Equa
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
@@ -107,9 +106,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 
 		}
 
-		if( DebugMode.ENABLED ){
-			logger.debug( "StandardSemantics not applicable. Using next level.." );
-		}
+		logger.trace( "StandardSemantics not applicable. Using next level.." );
 		return nextLevel.translateStatement( input, pc );
 	}
 
@@ -149,9 +146,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		if( input instanceof soot.jimple.NeExpr ){
 			return translateUnequalExpr( input );
 		}
-		if( DebugMode.ENABLED ){
-			logger.debug( "StandardSemantic not applicable. Using next level.." );
-		}
+		logger.trace( "StandardSemantic not applicable. Using next level.." );
 		return nextLevel.translateValue( input );
 	}
 
@@ -173,9 +168,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 	 * @return translated Statement
 	 */
 	private Statement translateAssignStmt( soot.jimple.Stmt input, int pc ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized AssignStmt" );
-		}
+		logger.trace( "Recognized AssignStmt" );
 		soot.jimple.AssignStmt stmt = (soot.jimple.AssignStmt) input;
 
 		SettableValue lhs = (SettableValue) topLevel.translateValue( stmt.getLeftOp() );
@@ -184,10 +177,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			InvokeHelper invokePrepare = createInvokeHelper( invokeExpr );
 			invokePrepare.setLiveVariableNames( LiveVariableHelper.extractLiveVariables( input ) );
 			AbstractMethod method = topLevel.getMethod( invokeExpr.getMethod().getSignature() );
-			if( DebugMode.ENABLED ){
-				logger.debug( "Recogniced AssignInvoke" );
-
-			}
+			logger.trace( "Recognized AssignInvoke" );
 			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
@@ -214,9 +204,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 
 		InvokeHelper invokePrepare = createInvokeHelper( expr );
 		invokePrepare.setLiveVariableNames( LiveVariableHelper.extractLiveVariables( input ) );
-		if( DebugMode.ENABLED ){
-			logger.debug( "recogniced InvokeStmt. " + name );
-		}
+		logger.trace( "recognized InvokeStmt. " + name );
 		return new InvokeStmt( translatedMethod, invokePrepare, pc + 1 );
 	}
 	
@@ -259,9 +247,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated return void statement.
      */
 	private ReturnVoidStmt translateReturnVoidStmt() {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized Return void" );
-		}
+		logger.trace( "recognized Return void" );
 		return new ReturnVoidStmt();
 	}
 
@@ -271,9 +257,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated statement to return a value.
      */
 	private ReturnValueStmt translateReturnValueStmt( soot.jimple.Stmt input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized Return value" );
-		}
+		logger.trace( "recognized Return value" );
 		soot.jimple.ReturnStmt stmt = (soot.jimple.ReturnStmt) input;
 		Value returnValue = topLevel.translateValue( stmt.getOp() );
 		Type expectedType = topLevel.translateType( stmt.getOp().getType() );
@@ -287,9 +271,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated identity statement.
      */
 	private IdentityStmt translateIdentityStmt( soot.jimple.Stmt input, int pc ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized Identity" );
-		}
+		logger.trace( "recognized Identity" );
 		soot.jimple.IdentityStmt stmt = (soot.jimple.IdentityStmt) input;
 		SettableValue lhs = (SettableValue) topLevel.translateValue( stmt.getLeftOp() );
 		String rhs = stmt.getRightOp().toString();
@@ -302,9 +284,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated goto statement.
      */
 	private GotoStmt translateGotoStmt( soot.jimple.Stmt input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized GotoStmt" );
-		}
+		logger.trace( "recognized GotoStmt" );
 		soot.jimple.GotoStmt stmt = (soot.jimple.GotoStmt) input;
 		Unit successor = stmt.getTarget();
 		int successorPC = topLevel.getPCforUnit( successor );
@@ -318,9 +298,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated if statement.
      */
 	private IfStmt translateIfStmt( soot.jimple.Stmt input, int pc ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized IfStmt" );
-		}
+		logger.trace( "recognized IfStmt" );
 		soot.jimple.IfStmt stmt = (soot.jimple.IfStmt) input;
 		Value condition = topLevel.translateValue( stmt.getCondition() );
 		Unit trueSuccessor = stmt.getTarget();
@@ -336,9 +314,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated unequal expression.
      */
 	private UnequalExpr translateUnequalExpr( soot.Value input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized NeExpr" );
-		}
+		logger.trace( "recognized NeExpr" );
 		soot.jimple.NeExpr expr = (soot.jimple.NeExpr) input;
 		Value leftExpr = topLevel.translateValue( expr.getOp1() );
 		Value rightExpr = topLevel.translateValue( expr.getOp2() );
@@ -351,9 +327,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated equal expression.
      */
 	private EqualExpr translateEqualExpr( soot.Value input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized EqExpr" );
-		}
+		logger.trace( "recognized EqExpr" );
 		soot.jimple.EqExpr expr = (soot.jimple.EqExpr) input;
 		Value leftExpr = topLevel.translateValue( expr.getOp1() );
 		Value rightExpr = topLevel.translateValue( expr.getOp2() );
@@ -366,9 +340,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated Jimple new expression.
      */
 	private NewExpr translateNewExpr( soot.Value input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized new" );
-		}
+		logger.trace( "recognized new" );
 		soot.jimple.NewExpr expr = (soot.jimple.NewExpr) input;
 		Type type = topLevel.translateType( expr.getType() );
 		return new NewExpr( type );
@@ -380,9 +352,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated field expression.
      */
 	private Field translateField( soot.Value input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized Field" );
-		}
+		logger.trace( "recognized Field" );
 		InstanceFieldRef fieldRef = (InstanceFieldRef) input;
 		Value base = topLevel.translateValue( fieldRef.getBase() );
 		String name = fieldRef.getField().getName();
@@ -397,9 +367,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The translated local variable.
      */
 	private Local translateLocal( soot.Value input ) {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized Local" );
-		}
+		logger.trace( "recognized Local" );
 		soot.Local local = (soot.Local) input;
 		String name = local.getName();
 		Type type = topLevel.translateType( local.getType() );
@@ -412,9 +380,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      * @return The null constant.
      */
 	private NullConstant translateNullConstant() {
-		if( DebugMode.ENABLED ){
-			logger.debug( "recognized NullConstant" );
-		}
+		logger.trace( "recognized NullConstant" );
 		return new NullConstant();
 	}
 
@@ -425,9 +391,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      */
 	private Value translateIntConstant( soot.Value input ) {
 		soot.jimple.IntConstant val = (soot.jimple.IntConstant) input;
-        if( DebugMode.ENABLED ){
-		    logger.debug( "Recognized IntConstant with value " + val.value );
-		}
+		logger.trace( "Recognized IntConstant with value " + val.value );
 		return new IntConstant( val.value );
 	}
 
