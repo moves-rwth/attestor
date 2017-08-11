@@ -84,7 +84,6 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			return computeMaterializationsAndRules( indexedToReplace, rulesResolvingViolationPoint);
 
 		}else{
-			System.out.println("NOT AN INT!!!");
 			return super.getRulesFor( toReplace, tentacle, requestedSelector );
 		}
 	}
