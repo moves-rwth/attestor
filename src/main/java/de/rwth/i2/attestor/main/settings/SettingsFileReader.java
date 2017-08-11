@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,7 +109,8 @@ public class SettingsFileReader {
 					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
 					logger.debug("Adding predefined grammar " + grammarType);
 			} else {
-				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type") + " available. Skipping it.");
+				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type")
+						+ " available. Skipping it.");
 			}
 
 
@@ -164,7 +164,8 @@ public class SettingsFileReader {
 
 			}
 		} catch (FileNotFoundException e) {
-			logger.warn("File " + predefinedGrammarSetting.getString("definition") + " not found. Skipping predefined grammar "
+			logger.warn("File " + predefinedGrammarSetting.getString("definition") + " not found. "
+					+ "Skipping predefined grammar "
 					+ predefinedGrammarSetting.getString("type") + ".");
 		}
 
@@ -183,8 +184,6 @@ public class SettingsFileReader {
 		if(jsonOptions.has( "mode" )) {
 			options.setIndexedMode( jsonOptions.get( "mode" ).equals( "indexed" ) );
 		}
-
-		DebugMode.ENABLED = jsonOptions.has("logging");
 
 		if( jsonOptions.has( "depth" )) {
 			options.setMinDereferenceDepth( jsonOptions.getInt( "depth" ) );

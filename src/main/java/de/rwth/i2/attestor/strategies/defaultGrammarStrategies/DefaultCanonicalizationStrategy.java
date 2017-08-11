@@ -11,7 +11,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoi
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,9 +87,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 			return SingleElementUtil.createSet( conf );
 		}
 		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold ){
-			if( DebugMode.ENABLED ){
-				logger.trace( "Using aggressive canonization" );
-			}
+			logger.trace( "Using aggressive canonization" );
 			return performCanonicalization( conf, true );
 		}else if( aggressiveReturnAbstraction
 				&& 

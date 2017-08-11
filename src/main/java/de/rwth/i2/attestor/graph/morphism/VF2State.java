@@ -1,12 +1,10 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.util.DebugMode;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Captures a current, possibly incomplete, candidate for a graph morphism that is constructed step by step
@@ -141,10 +139,6 @@ public class VF2State {
 			}
 		}
 		
-		if(DebugMode.ENABLED) {
-			logger.trace("outgoing candidates: " + result);
-		}
-		
 		return result;
 	}
 
@@ -173,10 +167,6 @@ public class VF2State {
 			}
 		}
 		
-		if(DebugMode.ENABLED) {
-			logger.trace("ingoing candidates: " + result);
-		}
-		
 		return result;
 	}
 
@@ -202,10 +192,6 @@ public class VF2State {
 					}
 				}
 			}
-		}
-		
-		if(DebugMode.ENABLED) {
-			logger.trace("all candidates: " + result);
 		}
 		
 		return result;

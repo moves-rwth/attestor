@@ -1,13 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Locals represent local variables
@@ -41,22 +39,18 @@ public class Local implements SettableValue {
 		return this.type;
 	}
 
-	/**
-	 * gets the element referenced by the variable in the heap.
-	 * Logs a warning if the element's type does not match the expected type. 
-	 */
 	@Override
 	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue res = programState.getVariableTarget( this.getName() );
 		
-		if( DebugMode.ENABLED && !( this.type.equals( res.type() ) ) ){
+		if( !( this.type.equals( res.type() ) ) ){
 			
 			String msg = "The type of the resulting ConcreteValue ";
 			msg += this.getName();
 			msg += " does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.warn( msg );
+			logger.debug( msg );
 		}
 
 		return res;

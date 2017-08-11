@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,9 +94,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 			concreteBase = programState.getUndefined();
 		}
 		if( concreteBase.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "base evaluated to undefined and is therefore not attached. " );
-			}
+			logger.warn( "base evaluated to undefined and is therefore not attached. " );
 		}else{
 			// String type = " " + baseValue.getType().toString();
 			String type = "";

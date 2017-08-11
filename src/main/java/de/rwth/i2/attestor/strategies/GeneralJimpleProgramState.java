@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcre
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -301,11 +300,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			Type type = heap.nodeTypeOf(node);
 			return new GeneralConcreteValue( type, node );
 		} catch( NullPointerException | IllegalArgumentException e ) {
-			
-			if(DebugMode.ENABLED) {
-				logger.warn("Variable " + variableName + " could not be found.");
-			}
-			
+			logger.warn("Variable " + variableName + " could not be found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}
@@ -344,11 +339,12 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			
 			int node = v.getNode();
 			if(node == GeneralConcreteValue.UNDEFINED) {
-				
-				if(DebugMode.ENABLED) {
-					logger.warn("Aborting setVariable as the new target '" + v.toString() + "' for the following variable could be found: '" + variableName + "'");
-				}
-				
+					logger.warn("Aborting setVariable as the new target '"
+							+ v.toString()
+							+ "' for the following variable could be found: '"
+							+ variableName
+							+ "'"
+					);
 				return;
 			}
 			
@@ -379,10 +375,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			return new GeneralConcreteValue( t, n );
 		} catch( NullPointerException | IllegalArgumentException e ) {
 			
-			if(DebugMode.ENABLED) {
-				logger.warn("Constant '" + constantName + "' not found.");
-			}
-			
+			logger.warn("Constant '" + constantName + "' not found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}

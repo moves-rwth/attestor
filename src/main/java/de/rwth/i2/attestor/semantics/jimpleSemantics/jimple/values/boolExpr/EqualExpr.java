@@ -1,17 +1,15 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents expressions of the form x == y
@@ -47,7 +45,7 @@ public class EqualExpr implements Value {
 	/**
 	 * evaluates both expressions on the executable and returns the element representing
 	 * true if they result in the same element (otherwise false). undefined if one of the expressions 
-	 * evaluates to undefined. in this case a warning is issued.
+	 * evaluates to undefined.
 	 * @return the heap element representing true/false or undefined.
 	 */
 	@Override
@@ -85,10 +83,10 @@ public class EqualExpr implements Value {
 			res = programState.getConstant( "false" );
 		}
 
-		if( DebugMode.ENABLED && !( res.type().equals( this.type ) ) ){
+		if( !( res.type().equals( this.type ) ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.warn( msg );
+			logger.debug( msg );
 		}
 
 		return res;
