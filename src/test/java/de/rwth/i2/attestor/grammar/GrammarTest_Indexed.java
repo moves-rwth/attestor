@@ -19,7 +19,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import gnu.trove.iterator.TIntIterator;
 
 public class GrammarTest_Indexed {
@@ -40,17 +40,17 @@ public class GrammarTest_Indexed {
 	public void setUp() throws Exception {
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		grammarManager = 
-				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 	}
 	
 	@Test
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_Z() 
 												throws UnexpectedNonterminalTypeException {
 		
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		ArrayList<StackSymbol> stack = new ArrayList<>();
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		 
@@ -58,7 +58,7 @@ public class GrammarTest_Indexed {
 					(MaterializationAndRuleResponse) 
 					grammarManager.getRulesFor( nonterminal, 0, "left");
 
-			final ArrayList<StackSymbol> emptyMaterialization = new ArrayList<>();
+			final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
 			 Collection<HeapConfiguration> result = 
 					 response.getRulesForMaterialization(emptyMaterialization);
 		 
@@ -70,10 +70,10 @@ public class GrammarTest_Indexed {
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_sZ() 
 			throws UnexpectedNonterminalTypeException {
 				
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
-		ArrayList<StackSymbol> stack = new ArrayList<>();
+		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
 		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -82,7 +82,7 @@ public class GrammarTest_Indexed {
 				(MaterializationAndRuleResponse) 
 				grammarManager.getRulesFor( nonterminal, 0, "left");
 
-		final ArrayList<StackSymbol> emptyMaterialization = new ArrayList<>();
+		final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
 		 Collection<HeapConfiguration> result = 
 				 response.getRulesForMaterialization(emptyMaterialization);
 		 
@@ -93,7 +93,7 @@ public class GrammarTest_Indexed {
 		 while( ntIterator.hasNext() ){
 			 int ntId = ntIterator.next();
 			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", nt.getStack().hasConcreteStack() );
+			 assertTrue("leftLeafRule not instantiatied", nt.getIndex().hasConcreteStack() );
 		 }
 		 assertTrue( result.contains( BalancedTreeGrammar.createRightLeafRule()) );
 		 }

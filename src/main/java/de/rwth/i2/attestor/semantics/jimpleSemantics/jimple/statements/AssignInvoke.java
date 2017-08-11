@@ -1,19 +1,22 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.*;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * AssignInvoke models statements of the form x = foo(); or x = bar(3, name);
@@ -63,59 +66,61 @@ public class AssignInvoke extends Statement {
 	 * as it is clearly not live at this point.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 		
-		JimpleExecutable executable = (JimpleExecutable) state;
-		executable = JimpleUtil.deepCopy(executable);
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
+		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 		
-		invokePrepare.prepareHeap( executable );
+		invokePrepare.prepareHeap( jimpleProgramState );
 		
 		if( lhs instanceof Local ){
-			executable.leaveScope();
-			executable.removeVariable( ((Local)lhs).getName() );
-			executable.enterScope();
+			jimpleProgramState.leaveScope();
+			jimpleProgramState.removeVariable( ((Local)lhs).getName() );
+			jimpleProgramState.enterScope();
 		}
-		Set<ProgramState> methodResult = method.getResult( executable.getHeap(), executable.getScopeDepth() );
+
+		Set<ProgramState> methodResult = method.getResult(
+				jimpleProgramState.getHeap(),
+				jimpleProgramState.getScopeDepth()
+		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
 		for( ProgramState resState : methodResult ) {
 
-			JimpleExecutable resExec = (JimpleExecutable) resState;
-			ConcreteValue concreteRHS = resExec.removeIntermediate( "@return" );
+			JimpleProgramState jimpleResState = (JimpleProgramState) resState;
+			ConcreteValue concreteRHS = jimpleResState.removeIntermediate( "@return" );
 
-			invokePrepare.cleanHeap( resExec );
+			invokePrepare.cleanHeap( jimpleResState );
 
 			if( concreteRHS.isUndefined() ){
-				if( DebugMode.ENABLED ){
-					logger.warn( "rhs evaluated to undefined (no return attached to heap)" );
-				}
+					logger.debug( "rhs evaluated to undefined (no return attached to heap)" );
 			}else{
-				if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+				if(!( lhs.getType().equals( concreteRHS.type() ) ) ){
 					String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 					msg += " with the type of the lhs";
 					msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-					logger.warn( msg );
+					logger.debug( msg );
 				}
 			}
 			try {
-				lhs.setValue( resExec, concreteRHS );
+				lhs.setValue( jimpleResState, concreteRHS );
 			} catch (NullPointerDereferenceException e) {
 				logger.error(e.getErrorMessage(this));
 			}
 			
-			JimpleExecutable freshExecutable = JimpleUtil.deepCopy(resExec);
-			freshExecutable.setProgramCounter(nextPC);
+			JimpleProgramState freshState = JimpleUtil.deepCopy(jimpleResState);
+			freshState.setProgramCounter(nextPC);
 			
-			assignResult.add( freshExecutable );
+			assignResult.add( freshState );
 		}
 				
 		return assignResult;
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState executable ){
-		return invokePrepare.needsMaterialization( (JimpleExecutable) executable );
+	public boolean needsMaterialization( ProgramState programState ){
+		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
 	}
 
 	public String toString(){

@@ -11,7 +11,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -56,7 +56,7 @@ public class PrepareHeapTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = new DefaultState( testGraph );
+			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 			Set<ProgramState> res = stmt.computeSuccessors( input );
 			
@@ -84,7 +84,7 @@ public class PrepareHeapTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = new DefaultState( testGraph );
+			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 			Set<ProgramState> res = stmt.computeSuccessors( input );
 
@@ -113,7 +113,7 @@ public class PrepareHeapTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = new DefaultState( testGraph );
+			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 
 			Set<ProgramState> res = stmt.computeSuccessors( input );

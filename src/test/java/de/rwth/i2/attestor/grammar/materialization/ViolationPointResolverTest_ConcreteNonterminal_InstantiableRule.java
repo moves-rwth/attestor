@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -13,9 +15,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -84,25 +84,25 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 
 
 	private static Nonterminal createNonterminal_Z() {
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		List<StackSymbol> stack = SingleElementUtil.createList( bottom );
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		List<IndexSymbol> stack = SingleElementUtil.createList( bottom );
 				
 		boolean[] reductionTentacles = new boolean[]{false,false};
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
 	}
 
 	private static Nonterminal createNonterminal_Instantiable() {
-		StackSymbol var = StackVariable.getGlobalInstance();
-		List<StackSymbol> stack = SingleElementUtil.createList( var );
+		IndexSymbol var = IndexVariable.getGlobalInstance();
+		List<IndexSymbol> stack = SingleElementUtil.createList( var );
 		
 		boolean[] reductionTentacles = new boolean[]{false,false};
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , stack);
 	}
 	
 	private static Nonterminal createNonterminal_s() {
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol var = StackVariable.getGlobalInstance();
-		List<StackSymbol> stack = new ArrayList<>();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol var = IndexVariable.getGlobalInstance();
+		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(var);
 		

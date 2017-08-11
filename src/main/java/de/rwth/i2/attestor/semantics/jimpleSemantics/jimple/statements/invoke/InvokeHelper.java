@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,8 +22,8 @@ import java.util.Set;
  * only be visible inside the method, e.g. references which the method did not
  * remove and its local variables.
  * <br><br>
- * Call {@link #prepareHeap(JimpleExecutable) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleExecutable) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br> 
+ * Call {@link #prepareHeap(JimpleProgramState) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(JimpleProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * 
  * @author Hannah Arndt
  *
@@ -63,30 +62,30 @@ public abstract class InvokeHelper {
 	/**
 	 * Increases the scope
 	 * 
-	 * Attaches method parameters and if need be this to the executable for use
+	 * Attaches method parameters and if need be this to the programState for use
 	 * in the method.
 	 * 
 	 * Exceptions may occur in the evaluation of the arguments or the calling
 	 * Value cause them.
 	 * 
-	 * @param executable
-	 *            : the executable which will be the input of the called method
+	 * @param programState
+	 *            : the programState which will be the input of the called method
 	 * @exception NotSufficientlyMaterializedException if the argument or the base value
 	 * can not be evaluated on the heap before it is materialized.
 	 */
-	public abstract void prepareHeap( JimpleExecutable executable ) throws NotSufficientlyMaterializedException;
+	public abstract void prepareHeap( JimpleProgramState programState ) throws NotSufficientlyMaterializedException;
 
 	/**
 	 * Decreases the scope
 	 * 
 	 * Removes unused intermediates (this, params, return) and local variables
-	 * from the executable.
+	 * from the programState.
 	 * 
-	 * @param executable
+	 * @param programState
 	 *            after execution of method (potentially wiht unused
 	 *            intermediates and local variables)
 	 */
-	public abstract void cleanHeap( JimpleExecutable executable );
+	public abstract void cleanHeap( JimpleProgramState programState );
 	
 	InvokeHelper(boolean removeDeadVariables) {
 		
@@ -101,67 +100,65 @@ public abstract class InvokeHelper {
 		}
 	}
 
-	public boolean needsMaterialization( JimpleExecutable heap ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
 		boolean res = false;
 		for( Value argument : argumentValues ){
-			res = res || argument.needsMaterialization(heap);
+			res = res || argument.needsMaterialization(programState);
 		}
 		return res;
 	}
 
 
-	void appendArguments(JimpleExecutable executable) throws NotSufficientlyMaterializedException{
+	void appendArguments(JimpleProgramState programState) throws NotSufficientlyMaterializedException{
 		for( int i = 0; i < argumentValues.size(); i++ ){
 			// String name = "@parameter"+i+": "+arguments.get(i).getType();
 			String referenceName = "@parameter" + i + ":";
 			
 			ConcreteValue concreteArgument;
 			try {
-				concreteArgument = argumentValues.get( i ).evaluateOn( executable );
+				concreteArgument = argumentValues.get( i ).evaluateOn( programState );
 			} catch (NullPointerDereferenceException e) {
 				logger.error(e.getErrorMessage(this));
-				concreteArgument = executable.getUndefined();
+				concreteArgument = programState.getUndefined();
 			}
 			if( concreteArgument.isUndefined() ){
-				if( DebugMode.ENABLED ){
-					logger.warn( "param " + i + " evaluated to undefined and is therefore not attached. " );
-				}
+				logger.warn( "param " + i + " evaluated to undefined and is therefore not attached. " );
 			}else{
-				executable.setIntermediate( referenceName, concreteArgument );
+				programState.setIntermediate( referenceName, concreteArgument );
 			}
 
 			if(removeDeadVariables) {
-				VariablesUtil.removeDeadVariables(argumentValues.get( i ).toString(), executable, liveVariableNames);
+				VariablesUtil.removeDeadVariables(argumentValues.get( i ).toString(), programState, liveVariableNames);
 			}
 		}
 	}
 
 	/**
-	 * removes all locals from the scope of the method from the executable
-	 * @param executable the executable at the end of the method
+	 * removes all locals from the scope of the method from the programState
+	 * @param programState the programState at the end of the method
 	 */
-    void removeLocals(JimpleExecutable executable){
+    void removeLocals(JimpleProgramState programState){
 		for( String varName : namesOfLocals ){
-			executable.removeVariable( varName );
+			programState.removeVariable( varName );
 		}
 	}
 
 	/**
-	 * removes the parameters (intermediates) from the executable
-	 * @param executable the executable at the end of the method
+	 * removes the parameters (intermediates) from the programState
+	 * @param programState the programState at the end of the method
 	 */
-    void removeParameters(JimpleExecutable executable){
+    void removeParameters(JimpleProgramState programState){
 		for( int i = 0; i < this.argumentValues.size(); i++ ){
-			executable.removeIntermediate( "@parameter" + i + ":" );
+			programState.removeIntermediate( "@parameter" + i + ":" );
 		}
 	}
 
 	/**
 	 * removes the return intermediate in case it was not used by an AssignInvokeStmt
-	 * @param executable the heap from which the parameters are removed
+	 * @param programState the heap from which the parameters are removed
 	 */
-    void removeReturn(JimpleExecutable executable){
-		executable.removeIntermediate( "@return" );
+    void removeReturn(JimpleProgramState programState){
+		programState.removeIntermediate( "@return" );
 	}
 
 	/**

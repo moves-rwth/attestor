@@ -1,16 +1,16 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * ReturnVoidStmt models the statement return;
@@ -25,10 +25,10 @@ public class ReturnVoidStmt extends Statement {
 	 * and returns the resulting heap with exit location (-1)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState executable )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 		
-		JimpleExecutable result = JimpleUtil.deepCopy( (JimpleExecutable) executable);
+		JimpleProgramState result = JimpleUtil.deepCopy( (JimpleProgramState) programState);
 
 		// -1 since this statement has no successor location
 		int nextPC = -1;
@@ -67,11 +67,11 @@ public class ReturnVoidStmt extends Statement {
 
 	/**
 	 * Removes local variables from the current block.
-	 * @param state The state whose local variables should be removed.
+	 * @param programState The programState whose local variables should be removed.
 	 */
-	private void removeLocals( JimpleExecutable state ){
-		int scope = state.getScopeDepth();
-		HeapConfiguration heap = state.getHeap();
+	private void removeLocals( JimpleProgramState programState ){
+		int scope = programState.getScopeDepth();
+		HeapConfiguration heap = programState.getHeap();
 		
 		TIntIterator iter = heap.variableEdges().iterator();
 		

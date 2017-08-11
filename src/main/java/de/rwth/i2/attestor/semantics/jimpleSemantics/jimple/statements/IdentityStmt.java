@@ -1,20 +1,18 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Set;
 
 /**
  * IdentityStmt models statements like x = {@literal @}this or x = {@literal @}param_1
@@ -52,36 +50,34 @@ public class IdentityStmt extends Statement {
 	 * (i.e. this statement can only be called once per intermediate)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 
-		JimpleExecutable executable = JimpleUtil.deepCopy( (JimpleExecutable) state );
+		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
 
-		ConcreteValue concreteRHS = executable.removeIntermediate( rhs );
+		ConcreteValue concreteRHS = jimpleProgramState.removeIntermediate( rhs );
 		if( concreteRHS.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( rhs + " is not attached to the heap. (Continued by ignoring." );
-			}
+			logger.debug( rhs + " is not attached to the heap. (Continued by ignoring." );
 		}else{
-			if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 				msg += " with the type of the lhs";
 				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.warn( msg );
+				logger.debug( msg );
 			}
 		}
 		try {
-			lhs.setValue( executable, concreteRHS );
+			lhs.setValue( jimpleProgramState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
 		
-		return JimpleUtil.createSingletonAndUpdatePC(executable, nextPC);
+		return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, nextPC);
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState heap ){
-		return lhs.needsMaterialization( (JimpleExecutable) heap );
+	public boolean needsMaterialization( ProgramState programState ){
+		return lhs.needsMaterialization( (JimpleProgramState) programState );
 	}
 
 	public String toString(){

@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.util.DebugMode;
-import soot.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import soot.PackManager;
+import soot.Scene;
+import soot.SootClass;
 import soot.options.Options;
 
 /**
@@ -72,12 +72,7 @@ public class JimpleParser implements ProgramParser {
 		} catch(Exception e) {
 			
 			logger.fatal( "Soot threw an exception." );
-			
-			if(DebugMode.ENABLED) {
-				e.printStackTrace();
-			}
-			// TODO push this to Attestor as System.exit(1) may lead to weird behavior in jmh
-			System.exit(1);
+			throw e;
 		}
 
 		logger.trace( "start translating" );

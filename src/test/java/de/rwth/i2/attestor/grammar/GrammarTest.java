@@ -7,9 +7,9 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -215,8 +215,8 @@ public class GrammarTest {
 	}
 
 	private static IndexedNonterminal constructConcreteIndexedNonterminal() {
-		ConcreteStackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
 		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
 	}
@@ -228,9 +228,9 @@ public class GrammarTest {
 	}
 
 	private static Nonterminal constructInstantiableIndexedNonterminal() {
-		final StackVariable var = StackVariable.getGlobalInstance();
-		final ConcreteStackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		final IndexVariable var = IndexVariable.getGlobalInstance();
+		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s);
 		lhsStack.add(var);
 		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );

@@ -123,7 +123,8 @@ public class OptionSettings {
      */
 	public void setNullDistanceEnabled(boolean nullDistanceEnabled) {
 		if(  minDereferenceDepth == 0 && nullDistanceEnabled){
-			logger.warn("The option 'nullDistanceEnabled' will have no effect since the dereference depth is 0");
+			logger.warn("The option 'nullDistanceEnabled' will have no effect " +
+					"since the minimal abstraction distance is 0");
 		}
 		this.nullDistanceEnabled = nullDistanceEnabled;
 	}
@@ -138,7 +139,7 @@ public class OptionSettings {
 	public void setAggressiveAbstractionThreshold(int aggressiveAbstractionThreshold) {
 		if(  minDereferenceDepth == 0 && aggressiveAbstractionThreshold > 0){
 			logger.warn("The option 'aggressiveAbstractionThreshold' will have " +
-                    "no effect since the dereference depth is 0");
+                    "no effect since the minimal abstraction distance is 0");
 		}
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 	}
@@ -153,7 +154,8 @@ public class OptionSettings {
 
 	public void setAggressiveReturnAbstraction(boolean aggressiveReturnAbstraction) {
 		if(  minDereferenceDepth == 0 && aggressiveReturnAbstraction){
-			logger.warn("The option 'aggressiveReturnAbstraction' will have no effect since the dereference depth is 0");
+			logger.warn("The option 'aggressiveReturnAbstraction' will have no effect " +
+					"since the minimal abstraction distance is 0");
 		}
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}

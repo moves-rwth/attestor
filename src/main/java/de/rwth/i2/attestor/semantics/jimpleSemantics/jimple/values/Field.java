@@ -1,13 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * fields model selectors of objects, e.g. curr.next or x.left.right
@@ -55,37 +53,31 @@ public class Field implements SettableValue {
 	/**
 	 * evaluates the expression defining the origin and gets the element referenced by 
 	 * the field starting at this origin element. <br>
-	 * Logs a warning if the origin is undefined or the actual type does not match the
-	 * expected one.
 	 * @return undefined if the origin evaluates to undefined or if the corresponding
 	 * selector is missing at the origin element. The correct element otherwise.
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException, NullPointerDereferenceException {
+	public ConcreteValue evaluateOn( JimpleProgramState programState )
+			throws NotSufficientlyMaterializedException, NullPointerDereferenceException {
 
-		ConcreteValue concreteOrigin = originValue.evaluateOn( executable );
+		ConcreteValue concreteOrigin = originValue.evaluateOn( programState );
 		
 		if( concreteOrigin.isUndefined() ){
 			
-			if( DebugMode.ENABLED ){
-				
-				logger.warn( "the origin evaluated to undefined. returning undefined." );
-			}
-			return executable.getUndefined();
+            logger.trace( "The origin evaluated to undefined. Returning undefined." );
+			return programState.getUndefined();
 		} else {
 			
-			
-			
-			if(executable.getConstant("null").equals(concreteOrigin)) {
+			if(programState.getConstant("null").equals(concreteOrigin)) {
 				throw new NullPointerDereferenceException(originValue);
 			}
 			
-			ConcreteValue res = executable.getSelectorTarget( concreteOrigin, fieldName );
-			if( DebugMode.ENABLED && !res.type().equals( this.type ) ){
+			ConcreteValue res = programState.getSelectorTarget( concreteOrigin, fieldName );
+			if( !res.type().equals( this.type ) ){
 				
 				String msg = "The type of the resulting ConcreteValue does not match.";
 				msg += "\n expected: " + this.type + " got: " + res.type();
-				logger.warn( msg );
+				logger.debug( msg );
 			}
 
 			return res;
@@ -93,38 +85,35 @@ public class Field implements SettableValue {
 	}
 
 	/**
-	 * sets the value of the field in executable to concreteTarget. <br>
-	 * Logs a warning if the origin evaluates to undefined. In this case the 
-	 * heap is not changed by the expression.<br>
+	 * Sets the value of the field in programState to concreteTarget. <br>
+	 * In this case the heap is not changed by the expression.<br>
 	 * Also logs a warning if the type of concreteTarget does not match the 
 	 * expected type for the field.
-	 * @param executable the heap on which the assignment is performed
+	 * @param programState the heap on which the assignment is performed
 	 * @param concreteTarget the value that is assigned to the heap
 	 * @throws NullPointerDereferenceException if the evaluation of the originValue 
-	 * results in a null pointer dereferenciation
+	 * results in a null pointer dereference.
 	 */
 	@Override
-	public void setValue( JimpleExecutable executable, ConcreteValue concreteTarget )
+	public void setValue(JimpleProgramState programState, ConcreteValue concreteTarget )
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException{
 		
-		if( DebugMode.ENABLED && !concreteTarget.type().equals( this.type ) ){
+		if( !concreteTarget.type().equals( this.type ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + concreteTarget.type();
-			logger.warn( msg );
+			logger.debug( msg );
 		}
 
-		ConcreteValue concreteOrigin = originValue.evaluateOn( executable );
+		ConcreteValue concreteOrigin = originValue.evaluateOn( programState );
 		if( concreteOrigin.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "origin evaluated to undefined. field is not reassigned" );
-			}
+            logger.warn( "Origin evaluated to undefined. Field is not reassigned" );
 		}else{
-			executable.setSelector( concreteOrigin, fieldName, concreteTarget );
+			programState.setSelector( concreteOrigin, fieldName, concreteTarget );
 		}
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
 		return true;
 	}
 

@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -14,12 +14,12 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 public class NullConstant implements Value {
 
 	/**
-	 * gets the element of executable that represents null
+	 * gets the element of programState that represents null
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		return executable.getConstant( "null" );
+		return programState.getConstant( "null" );
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class NullConstant implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
 		return false;
 	}
 

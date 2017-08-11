@@ -11,7 +11,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoi
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,16 +80,14 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
-		DefaultState conf = (DefaultState) state.clone();
+		DefaultProgramState conf = (DefaultProgramState) state.clone();
 
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
 			return SingleElementUtil.createSet( conf );
 		}
 		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold ){
-			if( DebugMode.ENABLED ){
-				logger.trace( "Using aggressive canonization" );
-			}
+			logger.trace( "Using aggressive canonization" );
 			return performCanonicalization( conf, true );
 		}else if( aggressiveReturnAbstraction
 				&& 
@@ -107,7 +104,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 * @param strongCanonicalization if true, the abstraction will ignore the minDereferenceDepthOption
 	 * @return The set of abstracted program states.
 	 */
-	private Set<ProgramState> performCanonicalization(DefaultState state, boolean strongCanonicalization) {
+	private Set<ProgramState> performCanonicalization(DefaultProgramState state, boolean strongCanonicalization) {
 
 		Set<ProgramState> result = new HashSet<>();
 
@@ -132,7 +129,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 					checkNext = !isConfluent; 
 
-					DefaultState abstracted  = state;
+					DefaultProgramState abstracted  = state;
 					if(checkNext) {
 						abstracted = state.clone();
 					}
@@ -154,7 +151,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 		return result;
 	}
 
-	private void replaceEmbeddingBy(DefaultState abstracted, Matching embedding, Nonterminal nonterminal) {
+	private void replaceEmbeddingBy(DefaultProgramState abstracted, Matching embedding, Nonterminal nonterminal) {
 		abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
 	}
 

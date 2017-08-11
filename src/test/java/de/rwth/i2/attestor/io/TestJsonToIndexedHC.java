@@ -71,7 +71,7 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"Z\"],\n"
+				+"			\"index\":[\"Z\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
@@ -98,7 +98,7 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"s\",\"Z\"],\n"
+				+"			\"index\":[\"s\",\"Z\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
@@ -124,7 +124,7 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"s\",\"()\"],\n"
+				+"			\"index\":[\"s\",\"()\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
@@ -149,7 +149,7 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"s\",\"_X\"],\n"
+				+"			\"index\":[\"s\",\"_X\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
@@ -175,13 +175,13 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"_X\",\"s\"],\n"
+				+"			\"index\":[\"_X\",\"s\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
 		
 			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
-			fail("abstract stack symbols may only occur at the end of stack");
+			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
 		}
@@ -203,13 +203,13 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"Z\",\"s\"],\n"
+				+"			\"index\":[\"Z\",\"s\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
 		
 			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
-			fail("bottom stack symbols may only occur at the end of stack");
+			fail("bottom index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
 		}
@@ -231,13 +231,13 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"()\",\"Z\"],\n"
+				+"			\"index\":[\"()\",\"Z\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
 		
 			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
-			fail("variable stack symbols may only occur at the end of stack");
+			fail("variable index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
 		}
@@ -259,13 +259,13 @@ public class TestJsonToIndexedHC {
 				+"	\"hyperedges\":[\n"
 				+"			{\n"
 				+"			\"label\":\"TestJson\",\n"
-				+"			\"stack\":[\"s\",\"s\"],\n"
+				+"			\"index\":[\"s\",\"s\"],\n"
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
 		
 			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
-			fail("abstract stack symbols may only occur at the end of stack");
+			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
 		}

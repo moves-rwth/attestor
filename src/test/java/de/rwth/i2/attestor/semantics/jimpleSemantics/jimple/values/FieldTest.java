@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -45,7 +45,7 @@ public class FieldTest {
 		
 		try {
 			
-			DefaultState executable = new DefaultState( testGraph.clone() );
+			DefaultProgramState executable = new DefaultProgramState( testGraph.clone() );
 			executable.prepareHeap();
 			
 			GeneralConcreteValue res = null;
@@ -72,7 +72,7 @@ public class FieldTest {
 			
 			HeapConfiguration resHeapConfig = executable.getHeap();
 			
-			DefaultState original = new DefaultState( testGraph.clone() );
+			DefaultProgramState original = new DefaultProgramState( testGraph.clone() );
 			original.prepareHeap();
 			
 			assertTrue("heap should not change", original.getHeap().equals(resHeapConfig));
@@ -87,11 +87,11 @@ public class FieldTest {
 		
 		int hash = testGraph.hashCode();
 		
-		DefaultState testState = new DefaultState( testGraph );
+		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 		
 		try {
-			DefaultState executable = testState.clone();
+			DefaultProgramState executable = testState.clone();
 			
 			ConcreteValue concreteLocal = local.evaluateOn(executable);
 			try {
@@ -123,7 +123,7 @@ public class FieldTest {
 			assertFalse("heap should have changed", testState.getHeap().equals(resultHeap) );
 			
 			HeapConfiguration expectedGraph = ExampleHcImplFactory.getListAndConstantsWithChange();
-			DefaultState expectedState = new DefaultState(expectedGraph);
+			DefaultProgramState expectedState = new DefaultProgramState(expectedGraph);
 			expectedState.prepareHeap();
 			
 			assertTrue("heap not as expected", expectedState.getHeap().equals(resultHeap) );

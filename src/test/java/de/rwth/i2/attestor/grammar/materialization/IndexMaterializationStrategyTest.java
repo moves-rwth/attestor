@@ -6,9 +6,9 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -21,9 +21,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class StackMaterializerTest {
+public class IndexMaterializationStrategyTest {
 
-	private static final String UNIQUE_NT_LABEL = "StackMaterializerTest";
+	private static final String UNIQUE_NT_LABEL = "IndexMaterializationStrategyTest";
 	private static final int RANK = 3;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false,true};
 
@@ -38,14 +38,14 @@ public class StackMaterializerTest {
 	@Test
 	public void testOn_Materializable_EmptyStack_EmptyMaterialization() throws CannotMaterializeException {
 
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
-		AbstractStackSymbol symbolToMaterialize = someAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = someAbstractSymbol();
 		HeapConfiguration inputGraph = unmaterializedGraphWithEmptyStack( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = emptyMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = emptyMaterialization();
 		HeapConfiguration expected = materializedGraph_EmptyStack_EmptyMaterialization( symbolToMaterialize );
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", unmaterializedGraphWithEmptyStack( symbolToMaterialize ), 
@@ -54,15 +54,15 @@ public class StackMaterializerTest {
 
 	@Test
 	public void testOn_Materializable_EmptyStack_AbstractMaterialization() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
-		AbstractStackSymbol symbolToMaterialize = someAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = someAbstractSymbol();
 		
 		HeapConfiguration inputGraph = unmaterializedGraphWithEmptyStack( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = abstractMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = abstractMaterialization();
 		HeapConfiguration expected = materializedGraph_EmptyStack_AbstractMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", unmaterializedGraphWithEmptyStack( symbolToMaterialize ), inputGraph);	
@@ -70,15 +70,15 @@ public class StackMaterializerTest {
 
 	@Test
 	public void testOn_Materializable_EmptyStack_ConcreteMaterialization() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 		
-		AbstractStackSymbol symbolToMaterialize = otherAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = otherAbstractSymbol();
 
 		HeapConfiguration inputGraph = unmaterializedGraphWithEmptyStack(symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = concreteMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = concreteMaterialization();
 		HeapConfiguration expected = materializedGraph_EmptyStack_concreteMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,
 															symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
@@ -88,14 +88,14 @@ public class StackMaterializerTest {
 
 	@Test
 	public void testOn_Materializable_NonEmptyStack_ConcreteMaterialization() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
-		AbstractStackSymbol symbolToMaterialize = someAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = someAbstractSymbol();
 		HeapConfiguration inputGraph = unmaterializedGraph_NonEmptyStack( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = concreteMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = concreteMaterialization();
 		HeapConfiguration expected = materializedGraph_NonEmptyStack_concreteMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", unmaterializedGraph_NonEmptyStack(symbolToMaterialize), 
@@ -104,31 +104,31 @@ public class StackMaterializerTest {
 
 	/**
 	 * We assume that there might be independent stacks (i.e. using different abstract symbols).
-	 * The stack materializer should only materialize those with the given symbol.
+	 * The index materializer should only materialize those with the given symbol.
 	 * Any other stacks (including concrete ones should simply be ignored)
 	 * @throws CannotMaterializeException is not expected and thus indicates an error.
 	 */
 	@Test
 	public void test_ConcreteStack_NonEmptyMaterialiation_ExpectNoException() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
 		HeapConfiguration inputGraph = unmaterializedGraph_ConcreteStack();
-		List<StackSymbol> inputMaterializationPostfix = abstractMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = abstractMaterialization();
 
-		stackMaterializer.getMaterializedCloneWith( inputGraph,  someAbstractSymbol(), inputMaterializationPostfix);
+		indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  someAbstractSymbol(), inputMaterializationPostfix);
 
 		assertEquals("input graph has changed", unmaterializedGraph_ConcreteStack(), inputGraph);
 	}
 
 	@Test
 	public void testOn_ConcreteStack_EmptyMaterialization() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
 		HeapConfiguration inputGraph = unmaterializedGraph_ConcreteStack();
-		List<StackSymbol> inputMaterializationPostfix = emptyMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = emptyMaterialization();
 		HeapConfiguration expected = materializedGraph_ConcreteStack_emptyMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  null, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  null, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", unmaterializedGraph_ConcreteStack(), inputGraph);
@@ -136,14 +136,14 @@ public class StackMaterializerTest {
 
 	@Test
 	public void testOn_GraphWithTwoNonterminals_canMaterialize() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
-		AbstractStackSymbol symbolToMaterialize = otherAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = otherAbstractSymbol();
 		HeapConfiguration inputGraph = unmaterializedGraph_TwoNonterminals_canMaterialize( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = abstractMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = abstractMaterialization();
 		HeapConfiguration expected = materializedGraph_TwoNonterminals_abstractMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", 
@@ -153,15 +153,15 @@ public class StackMaterializerTest {
 	
 	@Test
 	public void testOn_GraphWithDefaultNonterminal() throws CannotMaterializeException{
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 
-		AbstractStackSymbol symbolToMaterialize = someAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize = someAbstractSymbol();
 		HeapConfiguration inputGraph = unmaterializedGraph_TwoNonterminals_oneDefault( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostfix = abstractMaterialization();
+		List<IndexSymbol> inputMaterializationPostfix = abstractMaterialization();
 		HeapConfiguration expected = 
 				materializedGraph_TwoNonterminals_oneDefault_abstractMaterialization();
 		HeapConfiguration actual = 
-				stackMaterializer.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,  symbolToMaterialize, inputMaterializationPostfix);
 
 		assertEquals("materialization not as expected",expected, actual);
 		assertEquals("input graph has changed", 
@@ -170,17 +170,17 @@ public class StackMaterializerTest {
 	
 	@Test
 	public void testOn_GraphWithTwoNonterminals_differentAbstractSymbols() throws CannotMaterializeException {
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMaterializationStrategy indexMaterializationStrategy = new IndexMaterializationStrategy();
 		
-		AbstractStackSymbol symbolToMaterialize  = someAbstractSymbol();
+		AbstractIndexSymbol symbolToMaterialize  = someAbstractSymbol();
 		HeapConfiguration inputGraph = 
 				inputTwoNonterminalsDifferentAbstractSymbols( symbolToMaterialize );
-		List<StackSymbol> inputMaterializationPostFix = concreteMaterialization();
+		List<IndexSymbol> inputMaterializationPostFix = concreteMaterialization();
 		HeapConfiguration expected = 
 				expectedTwoNonterminalsDifferentAbstractSymbols( inputMaterializationPostFix );
 		
 		HeapConfiguration actual =
-				stackMaterializer.getMaterializedCloneWith( inputGraph, 
+				indexMaterializationStrategy.getMaterializedCloneWith( inputGraph,
 														    symbolToMaterialize,
 														    inputMaterializationPostFix );
 		
@@ -190,99 +190,99 @@ public class StackMaterializerTest {
 		
 	}
 
-	private AbstractStackSymbol someAbstractSymbol() {
-		return AbstractStackSymbol.get("X");
+	private AbstractIndexSymbol someAbstractSymbol() {
+		return AbstractIndexSymbol.get("X");
 	}
 
-	private AbstractStackSymbol otherAbstractSymbol() {
-		return AbstractStackSymbol.get("Y");
+	private AbstractIndexSymbol otherAbstractSymbol() {
+		return AbstractIndexSymbol.get("Y");
 	}
 	
-	private List<StackSymbol> emptyMaterialization() {
+	private List<IndexSymbol> emptyMaterialization() {
 		return new ArrayList<>();
 	}
 
-	private List<StackSymbol> abstractMaterialization() {
-		StackSymbol someConcreteStackSymbol = ConcreteStackSymbol.getStackSymbol("b", false);
-		StackSymbol someAbstractStackSymbol = AbstractStackSymbol.get("Y");
+	private List<IndexSymbol> abstractMaterialization() {
+		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
+		IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("Y");
 
-		List<StackSymbol> abstractMaterialization = new ArrayList<>();
-		abstractMaterialization.add(someConcreteStackSymbol);
-		abstractMaterialization.add(someAbstractStackSymbol);
-		abstractMaterialization.add(someAbstractStackSymbol);
+		List<IndexSymbol> abstractMaterialization = new ArrayList<>();
+		abstractMaterialization.add(someConcreteIndexSymbol);
+		abstractMaterialization.add(someAbstractIndexSymbol);
+		abstractMaterialization.add(someAbstractIndexSymbol);
 		return abstractMaterialization;
 	}
 
-	private List<StackSymbol> concreteMaterialization() {
-		StackSymbol someConcreteStackSymbol = ConcreteStackSymbol.getStackSymbol("b", false);
-		StackSymbol someBottomStackSymbol = ConcreteStackSymbol.getStackSymbol("Z", true );
+	private List<IndexSymbol> concreteMaterialization() {
+		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
+		IndexSymbol someBottomIndexSymbol = ConcreteIndexSymbol.getStackSymbol("Z", true );
 
-		List<StackSymbol> abstractMaterialization = new ArrayList<>();
-		abstractMaterialization.add(someConcreteStackSymbol);
-		abstractMaterialization.add(someBottomStackSymbol);
+		List<IndexSymbol> abstractMaterialization = new ArrayList<>();
+		abstractMaterialization.add(someConcreteIndexSymbol);
+		abstractMaterialization.add(someBottomIndexSymbol);
 		return abstractMaterialization;
 	}
 	
-	private List<StackSymbol> emptyStack() {
+	private List<IndexSymbol> emptyStack() {
 		return new ArrayList<>();
 	}
 	
-	private List<StackSymbol> nonEmptyStack(){
-		StackSymbol someStackSymbol = ConcreteStackSymbol.getStackSymbol("c", false);
-		StackSymbol otherStackSymbol = ConcreteStackSymbol.getStackSymbol("b", false);
+	private List<IndexSymbol> nonEmptyStack(){
+		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getStackSymbol("c", false);
+		IndexSymbol otherIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
 
-		List<StackSymbol> nonEmptyStack = new ArrayList<>();
-		nonEmptyStack.add(someStackSymbol);
-		nonEmptyStack.add(otherStackSymbol);
-		nonEmptyStack.add(someStackSymbol);
+		List<IndexSymbol> nonEmptyStack = new ArrayList<>();
+		nonEmptyStack.add(someIndexSymbol);
+		nonEmptyStack.add(otherIndexSymbol);
+		nonEmptyStack.add(someIndexSymbol);
 
 		return nonEmptyStack;
 	}
 	
-	private List<StackSymbol> concreteStack() {
-		StackSymbol someStackSymbol = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol someBottomSymbol = ConcreteStackSymbol.getStackSymbol("Z", true);
+	private List<IndexSymbol> concreteStack() {
+		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol someBottomSymbol = ConcreteIndexSymbol.getStackSymbol("Z", true);
 
-		List<StackSymbol> concreteStack = new ArrayList<>();
-		concreteStack.add(someStackSymbol);
+		List<IndexSymbol> concreteStack = new ArrayList<>();
+		concreteStack.add(someIndexSymbol);
 		concreteStack.add(someBottomSymbol);
 
 		return concreteStack;
 	}
 
 
-	private HeapConfiguration unmaterializedGraphWithEmptyStack(AbstractStackSymbol symbolToMaterialize) {
-		List<StackSymbol> materializableEmptyStack = emptyStack();
+	private HeapConfiguration unmaterializedGraphWithEmptyStack(AbstractIndexSymbol symbolToMaterialize) {
+		List<IndexSymbol> materializableEmptyStack = emptyStack();
 		materializableEmptyStack.add( symbolToMaterialize );
 		return graphWithOneNonterminalAndStack( materializableEmptyStack );
 	}
 
-	private HeapConfiguration materializedGraph_EmptyStack_EmptyMaterialization(AbstractStackSymbol symbolToMaterialize) {
+	private HeapConfiguration materializedGraph_EmptyStack_EmptyMaterialization(AbstractIndexSymbol symbolToMaterialize) {
 		return unmaterializedGraphWithEmptyStack( symbolToMaterialize );
 	}
 
 	private HeapConfiguration materializedGraph_EmptyStack_AbstractMaterialization() {
-		List<StackSymbol> materializedEmptyStack = emptyStack();
+		List<IndexSymbol> materializedEmptyStack = emptyStack();
 		materializedEmptyStack.addAll( abstractMaterialization() );
 		return graphWithOneNonterminalAndStack( materializedEmptyStack );
 	}
 
 	private HeapConfiguration materializedGraph_EmptyStack_concreteMaterialization() {
-		List<StackSymbol> materializedEmptyStack = emptyStack();
+		List<IndexSymbol> materializedEmptyStack = emptyStack();
 		materializedEmptyStack.addAll( concreteMaterialization() );
 		return graphWithOneNonterminalAndStack( materializedEmptyStack );
 	}
 
 
 
-	private HeapConfiguration unmaterializedGraph_NonEmptyStack(AbstractStackSymbol abstractStackSymbol) {
-		List<StackSymbol> materializableNonEmptyStack = nonEmptyStack();
-		materializableNonEmptyStack.add( abstractStackSymbol );
+	private HeapConfiguration unmaterializedGraph_NonEmptyStack(AbstractIndexSymbol abstractIndexSymbol) {
+		List<IndexSymbol> materializableNonEmptyStack = nonEmptyStack();
+		materializableNonEmptyStack.add(abstractIndexSymbol);
 		return graphWithOneNonterminalAndStack( materializableNonEmptyStack );
 	}
 
 	private HeapConfiguration materializedGraph_NonEmptyStack_concreteMaterialization() {
-		List<StackSymbol> materializedNonEmptyStack = nonEmptyStack();
+		List<IndexSymbol> materializedNonEmptyStack = nonEmptyStack();
 		materializedNonEmptyStack.addAll( concreteMaterialization() );
 		return graphWithOneNonterminalAndStack( materializedNonEmptyStack );
 	}
@@ -299,65 +299,65 @@ public class StackMaterializerTest {
 
 
 	private HeapConfiguration unmaterializedGraph_TwoNonterminals_canMaterialize(
-			AbstractStackSymbol abstractStackSymbol) {
+			AbstractIndexSymbol abstractIndexSymbol) {
 		
-		List<StackSymbol> stack1 = emptyStack();
-		stack1.add(abstractStackSymbol);
-		List<StackSymbol> stack2 = nonEmptyStack();
-		stack2.add(abstractStackSymbol);
+		List<IndexSymbol> stack1 = emptyStack();
+		stack1.add(abstractIndexSymbol);
+		List<IndexSymbol> stack2 = nonEmptyStack();
+		stack2.add(abstractIndexSymbol);
 
 		return graphWithTwoNonterminalsWithStacks( stack1, stack2 );
 	}
 	
 
 	private HeapConfiguration materializedGraph_TwoNonterminals_abstractMaterialization() {
-		List<StackSymbol> materializedStack1 = emptyStack();
+		List<IndexSymbol> materializedStack1 = emptyStack();
 		materializedStack1.addAll( abstractMaterialization() );
-		List<StackSymbol> materializedStack2 = nonEmptyStack();
+		List<IndexSymbol> materializedStack2 = nonEmptyStack();
 		materializedStack2.addAll( abstractMaterialization() );
 		
 		return graphWithTwoNonterminalsWithStacks(materializedStack1, materializedStack2);
 	}
 
 	private HeapConfiguration unmaterializedGraph_TwoNonterminals_oneDefault(
-																AbstractStackSymbol abstractStackSymbol) {
+																AbstractIndexSymbol abstractIndexSymbol) {
 		
-		List<StackSymbol> stackForIndexedNonterminal = emptyStack();
-		stackForIndexedNonterminal.add(abstractStackSymbol);
+		List<IndexSymbol> stackForIndexedNonterminal = emptyStack();
+		stackForIndexedNonterminal.add(abstractIndexSymbol);
 		
 		return graphWithDefaultNonterminalAndIndexedWithStack( stackForIndexedNonterminal );
 	}
 
 
 	private HeapConfiguration materializedGraph_TwoNonterminals_oneDefault_abstractMaterialization() {
-		List<StackSymbol> materializedStackForIndexedNonterminal = emptyStack();
+		List<IndexSymbol> materializedStackForIndexedNonterminal = emptyStack();
 		materializedStackForIndexedNonterminal.addAll( abstractMaterialization() );
 		
 		return graphWithDefaultNonterminalAndIndexedWithStack(materializedStackForIndexedNonterminal);
 	}
 	
-	private HeapConfiguration inputTwoNonterminalsDifferentAbstractSymbols(AbstractStackSymbol symbolToMaterialize) {
-		List<StackSymbol> stackToMaterialize = emptyStack();
+	private HeapConfiguration inputTwoNonterminalsDifferentAbstractSymbols(AbstractIndexSymbol symbolToMaterialize) {
+		List<IndexSymbol> stackToMaterialize = emptyStack();
 		stackToMaterialize.add(symbolToMaterialize);
-		List<StackSymbol> stackNotToMaterialize = emptyStack();
+		List<IndexSymbol> stackNotToMaterialize = emptyStack();
 		stackNotToMaterialize.add( otherAbstractSymbol() );
 		
 		return graphWithTwoNonterminalsWithStacks( stackToMaterialize, stackNotToMaterialize );
 	}
 	
 	private HeapConfiguration expectedTwoNonterminalsDifferentAbstractSymbols(
-			List<StackSymbol> inputMaterializationPostFix) {
+			List<IndexSymbol> inputMaterializationPostFix) {
 		
-		List<StackSymbol> stackToMaterialize = emptyStack();
+		List<IndexSymbol> stackToMaterialize = emptyStack();
 		stackToMaterialize.addAll( inputMaterializationPostFix );
-		List<StackSymbol> stackNotToMaterialize = emptyStack();
+		List<IndexSymbol> stackNotToMaterialize = emptyStack();
 		stackNotToMaterialize.add( otherAbstractSymbol() );
 		
 		return graphWithTwoNonterminalsWithStacks( stackToMaterialize, stackNotToMaterialize );
 	}
 
 
-	private HeapConfiguration graphWithOneNonterminalAndStack(List<StackSymbol> stack) {
+	private HeapConfiguration graphWithOneNonterminalAndStack(List<IndexSymbol> stack) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = TypeFactory.getInstance().getType("type");
@@ -374,8 +374,8 @@ public class StackMaterializerTest {
 				.build();
 	}
 
-	private HeapConfiguration graphWithTwoNonterminalsWithStacks( List<StackSymbol> stack1, 
-			List<StackSymbol> stack2 ){
+	private HeapConfiguration graphWithTwoNonterminalsWithStacks( List<IndexSymbol> stack1,
+			List<IndexSymbol> stack2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = TypeFactory.getInstance().getType("type");
@@ -399,7 +399,7 @@ public class StackMaterializerTest {
 	}
 	
 	private HeapConfiguration graphWithDefaultNonterminalAndIndexedWithStack(
-			List<StackSymbol> stackForIndexedNonterminal) {
+			List<IndexSymbol> stackForIndexedNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = TypeFactory.getInstance().getType("type");

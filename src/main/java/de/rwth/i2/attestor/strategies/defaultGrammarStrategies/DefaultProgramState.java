@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
 
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
-import de.rwth.i2.attestor.strategies.GeneralProgramState;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,12 +18,12 @@ import java.util.Objects;
  *
  * @author Christoph
  */
-public class DefaultState extends GeneralProgramState {
+public class DefaultProgramState extends GeneralJimpleProgramState {
 
     /**
      * The logger of this class.
      */
-	private static final Logger logger = LogManager.getLogger( "DefaultState" );
+	private static final Logger logger = LogManager.getLogger( "DefaultProgramState" );
 
     /**
      * The constants that should be present in every default state.
@@ -35,7 +34,7 @@ public class DefaultState extends GeneralProgramState {
      * Initializes a program state with the default scope depth.
      * @param heap The underlying heap configuration.
      */
-	public DefaultState( HeapConfiguration heap ) {
+	public DefaultProgramState(HeapConfiguration heap ) {
 		super(heap);
 	}
 
@@ -44,7 +43,7 @@ public class DefaultState extends GeneralProgramState {
      * @param heap The underlying heap configuration.
      * @param scopeDepth The depth of the scope.
      */
-	public DefaultState( HeapConfiguration heap, int scopeDepth ) {
+	public DefaultProgramState(HeapConfiguration heap, int scopeDepth ) {
 		
 		super( heap, scopeDepth);
 	}
@@ -53,7 +52,7 @@ public class DefaultState extends GeneralProgramState {
      * Creates a copy of the state.
      * @param state The state to be copied.
      */
-	protected DefaultState(DefaultState state) {
+	protected DefaultProgramState(DefaultProgramState state) {
 		
 		super( state );
 	}
@@ -61,13 +60,13 @@ public class DefaultState extends GeneralProgramState {
 	@Override
 	public ProgramState shallowCopy() {
 		
-		return new DefaultState(this);
+		return new DefaultProgramState(this);
 	}
 
 	@Override
 	public ProgramState shallowCopyUpdatePC(int newPC) {
 		
-		DefaultState result = new DefaultState(this);
+		DefaultProgramState result = new DefaultProgramState(this);
 		result.setProgramCounter(newPC);
 		return result;
 		
@@ -91,9 +90,7 @@ public class DefaultState extends GeneralProgramState {
 			node = heap.selectorTargetOf(node, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				if(DebugMode.ENABLED) {
-					logger.warn("getSelectorTarget got invalid value");
-				}
+				logger.warn("getSelectorTarget got invalid value");
 				return GeneralConcreteValue.getUndefined();
 			}
 			
@@ -101,10 +98,7 @@ public class DefaultState extends GeneralProgramState {
 			
 			return new GeneralConcreteValue( type, node );
 		} else {
-			
-			if(DebugMode.ENABLED) {
-				logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
-			}
+			logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
 		}
 		
 		return GeneralConcreteValue.getUndefined();
@@ -115,7 +109,7 @@ public class DefaultState extends GeneralProgramState {
 		
 		if(from.isUndefined() || to.isUndefined()) {
 			
-			logger.warn("Specified edge has invalid source or target.");
+			logger.warn("Specified edge has undefined source or target.");
 			return;
 		}
 		
@@ -148,10 +142,10 @@ public class DefaultState extends GeneralProgramState {
 	}
 
 	@Override	
-	public DefaultState clone() {
+	public DefaultProgramState clone() {
 		
 		HeapConfiguration newHeap = heap.clone();
-		DefaultState result = new DefaultState(newHeap);
+		DefaultProgramState result = new DefaultProgramState(newHeap);
 		result.setProgramCounter( programCounter );
 		result.scopeDepth = scopeDepth;
 		return result;
@@ -166,9 +160,9 @@ public class DefaultState extends GeneralProgramState {
 	@Override
 	public boolean equals(Object other) {
 
-		if(other instanceof DefaultState) {
+		if(other instanceof DefaultProgramState) {
 
-            DefaultState state = (DefaultState) other;
+            DefaultProgramState state = (DefaultProgramState) other;
 
             return !(programCounter != state.programCounter || scopeDepth != state.scopeDepth)
                     && heap.equals(state.getHeap())
