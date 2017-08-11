@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -67,25 +67,25 @@ public class IfStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 		
-		JimpleExecutable executable = (JimpleExecutable) state;
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 
-		Set<ProgramState> defaultRes = JimpleUtil.createSingletonAndUpdatePC(executable, truePC);
-		defaultRes.add( JimpleUtil.updatePC(executable, falsePC) );
+		Set<ProgramState> defaultRes = JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
+		defaultRes.add( JimpleUtil.updatePC(jimpleProgramState, falsePC) );
 
-		executable = JimpleUtil.deepCopy(executable);
+		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 
-		ConcreteValue trueValue = executable.getConstant( "true" );
-		ConcreteValue falseValue = executable.getConstant( "false" );
+		ConcreteValue trueValue = jimpleProgramState.getConstant( "true" );
+		ConcreteValue falseValue = jimpleProgramState.getConstant( "false" );
 
 		ConcreteValue concreteCondition;
 		try {
-			concreteCondition = conditionValue.evaluateOn( executable );
+			concreteCondition = conditionValue.evaluateOn( jimpleProgramState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteCondition = executable.getUndefined();
+			concreteCondition = jimpleProgramState.getUndefined();
 		}
 		
 		if( concreteCondition.isUndefined() ){
@@ -98,23 +98,23 @@ public class IfStmt extends Statement {
 		}
 
 		if(removeDeadVariables) {
-			VariablesUtil.removeDeadVariables(conditionValue.toString(), executable, liveVariableNames);
+			VariablesUtil.removeDeadVariables(conditionValue.toString(), jimpleProgramState, liveVariableNames);
 		}
 
 		if( concreteCondition.equals( trueValue ) ){
 			
-			return JimpleUtil.createSingletonAndUpdatePC(executable, truePC);
+			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
 		}else if( concreteCondition.equals( falseValue )){
 			
-			return JimpleUtil.createSingletonAndUpdatePC(executable, falsePC);
+			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, falsePC);
 		}else{
 			return defaultRes;
 		}
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState state ){
-		return conditionValue.needsMaterialization( (JimpleExecutable) state );
+	public boolean needsMaterialization( ProgramState programState ){
+		return conditionValue.needsMaterialization( (JimpleProgramState) programState );
 	}
 
 

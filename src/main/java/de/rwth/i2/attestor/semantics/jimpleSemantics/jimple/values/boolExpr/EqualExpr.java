@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr;
 
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -51,38 +51,38 @@ public class EqualExpr implements Value {
 	 * @return the heap element representing true/false or undefined.
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue leftRes;
 		try {
-			leftRes = leftExpr.evaluateOn( executable );
+			leftRes = leftExpr.evaluateOn(programState);
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		
 		if( leftRes.isUndefined() ){
 			logger.debug( "leftExpr evaluated to undefined. Returning undefined." );
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		ConcreteValue rightRes;
 		try {
-			rightRes = rightExpr.evaluateOn( executable );
+			rightRes = rightExpr.evaluateOn(programState);
 		} catch (NullPointerDereferenceException e) {
 			logger.error("Null pointer dereference in " + this);
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		if( rightRes.isUndefined() ){
 			logger.debug( "rightExpr evaluated to undefined. Returning undefined." );
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 				
 		ConcreteValue res;
 		
 		if(leftRes.equals( rightRes )) {
-			res = executable.getConstant( "true" );
+			res = programState.getConstant( "true" );
 		} else {
-			res = executable.getConstant( "false" );
+			res = programState.getConstant( "false" );
 		}
 
 		if( DebugMode.ENABLED && !( res.type().equals( this.type ) ) ){
@@ -95,9 +95,9 @@ public class EqualExpr implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ) {
+	public boolean needsMaterialization( JimpleProgramState programState) {
 		
-		return rightExpr.needsMaterialization( executable ) || leftExpr.needsMaterialization( executable );
+		return rightExpr.needsMaterialization(programState) || leftExpr.needsMaterialization(programState);
 	}
 
 

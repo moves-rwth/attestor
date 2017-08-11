@@ -12,15 +12,15 @@ import de.rwth.i2.attestor.types.Type;
  * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple jimple}.
  *
  * To avoid collision between variables in different scopes, for example due to recursion,
- * the JimpleExecutable always remembers its current scope. If an operation on a variable is
+ * the JimpleProgramState always remembers its current scope. If an operation on a variable is
  * performed, it will always reference the variable in the current scope and not affect variables
  * of the same name in another scope.
- * The user has to manage the scope. That is, she has to tell the JimpleExecutable whenever a scope is entered or
+ * The user has to manage the scope. That is, she has to tell the JimpleProgramState whenever a scope is entered or
  * left.
  *
  * @author Hannah, Christoph
  */
-public interface JimpleExecutable extends ProgramState {
+public interface JimpleProgramState extends ProgramState {
 
 	/**
 	 * Manages the scope in order to distinguish variables of the same name, for example within recursion.
@@ -124,7 +124,7 @@ public interface JimpleExecutable extends ProgramState {
     /**
      * @return A deep copy of this executable.
      */
-	JimpleExecutable clone();
+	JimpleProgramState clone();
 	
 	/**
      * Provides the depth of the scope of this executable, which is necessary to pass this to abstract methods.

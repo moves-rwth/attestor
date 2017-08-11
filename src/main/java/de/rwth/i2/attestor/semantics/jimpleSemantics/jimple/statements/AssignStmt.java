@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
@@ -73,17 +73,17 @@ public class AssignStmt extends Statement {
 	 * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state ) throws NotSufficientlyMaterializedException {
+	public Set<ProgramState> computeSuccessors( ProgramState programState ) throws NotSufficientlyMaterializedException {
 		
-		JimpleExecutable executable = (JimpleExecutable) state;		
-		executable = JimpleUtil.deepCopy(executable);
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
+		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 		
 		ConcreteValue concreteRHS;
 		try {
-			concreteRHS = rhs.evaluateOn( executable );
+			concreteRHS = rhs.evaluateOn( jimpleProgramState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error( e.getErrorMessage(this) );
-			concreteRHS = executable.getUndefined();
+			concreteRHS = jimpleProgramState.getUndefined();
 		}
 
 		if( concreteRHS.isUndefined() ){
@@ -102,28 +102,28 @@ public class AssignStmt extends Statement {
 		}
 		
 		try {
-			lhs.evaluateOn( executable );
-			lhs.setValue( executable, concreteRHS );
+			lhs.evaluateOn( jimpleProgramState );
+			lhs.setValue( jimpleProgramState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
 
 		if(removeDeadVariables) {
-			VariablesUtil.removeDeadVariables(rhs.toString(), executable, liveVariableNames);
+			VariablesUtil.removeDeadVariables(rhs.toString(), jimpleProgramState, liveVariableNames);
 		}
 
-		JimpleExecutable result = JimpleUtil.deepCopy(executable);
+		JimpleProgramState result = JimpleUtil.deepCopy(jimpleProgramState);
 		result.setProgramCounter(nextPC);
 		
 		return SingleElementUtil.createSet( result );
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState state ){
+	public boolean needsMaterialization( ProgramState programState ){
 		
-		JimpleExecutable executable = (JimpleExecutable) state;
+		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 		
-		return rhs.needsMaterialization( executable ) || lhs.needsMaterialization( executable );
+		return rhs.needsMaterialization( jimpleProgramState ) || lhs.needsMaterialization( jimpleProgramState );
 	}
 
 

@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.Set;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
@@ -10,6 +8,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+
+import java.util.Set;
 
 /**
  * InvokeStmt models statements like foo(); or bar(1,2);
@@ -50,24 +50,24 @@ public class InvokeStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState state )
+	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
 		
-		JimpleExecutable executable = JimpleUtil.deepCopy( (JimpleExecutable) state );
+		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
 
-		invokePrepare.prepareHeap( executable );
+		invokePrepare.prepareHeap( jimpleProgramState );
 
-		Set<ProgramState> methodResult = method.getResult( executable.getHeap(), executable.getScopeDepth() );
-		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleExecutable) x ) );
-		methodResult.forEach( x -> ( (JimpleExecutable) x ).clone() );
+		Set<ProgramState> methodResult = method.getResult( jimpleProgramState.getHeap(), jimpleProgramState.getScopeDepth() );
+		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleProgramState) x ) );
+		methodResult.forEach( x -> ( (JimpleProgramState) x ).clone() );
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		
 		return methodResult;
 	}
 
 	@Override
-	public boolean needsMaterialization( ProgramState executable ){
-		return invokePrepare.needsMaterialization( (JimpleExecutable) executable );
+	public boolean needsMaterialization( ProgramState programState ){
+		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
 	}
 
 

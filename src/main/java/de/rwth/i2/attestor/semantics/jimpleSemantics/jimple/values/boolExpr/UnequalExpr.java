@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr;
 
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -51,31 +51,31 @@ public class UnequalExpr implements Value {
 	 * @return the heap element representing true/false or undefined.
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState) throws NotSufficientlyMaterializedException{
 		ConcreteValue leftRes;
 		try {
-			leftRes = leftExpr.evaluateOn( executable );
+			leftRes = leftExpr.evaluateOn(programState);
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		if( leftRes.isUndefined() ){
 			logger.debug( "leftExpr evaluated to undefined. Returning undefined." );
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		ConcreteValue rightRes;
 		try {
-			rightRes = rightExpr.evaluateOn( executable );
+			rightRes = rightExpr.evaluateOn(programState);
 		} catch (NullPointerDereferenceException e) {
 			logger.error("Null pointer dereference detected in " + rightExpr);
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 		if( rightRes.isUndefined() ){
 			logger.debug( "rightExpr evaluated to undefined. Returning undefined." );
-			return executable.getUndefined();
+			return programState.getUndefined();
 		}
 
-		ConcreteValue res = executable.getConstant( "" + ( !leftRes.equals( rightRes ) ) );
+		ConcreteValue res = programState.getConstant( "" + ( !leftRes.equals( rightRes ) ) );
 		if( DebugMode.ENABLED && !( res.type().equals( this.type ) ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
@@ -85,9 +85,9 @@ public class UnequalExpr implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState){
 		
-		return rightExpr.needsMaterialization( executable ) || leftExpr.needsMaterialization( executable );
+		return rightExpr.needsMaterialization(programState) || leftExpr.needsMaterialization(programState);
 	}
 
 

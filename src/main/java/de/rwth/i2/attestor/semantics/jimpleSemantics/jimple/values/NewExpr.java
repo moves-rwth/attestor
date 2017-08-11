@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -22,13 +22,13 @@ public class NewExpr implements Value {
 	}
 
 	/**
-	 * inserts a new element of the expected type into the executable.
+	 * inserts a new element of the expected type into the programState.
 	 * @return the newly inserted element
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		return executable.insertNewElement( type );
+		return programState.insertNewElement( type );
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class NewExpr implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
 		
 		return false;
 	}

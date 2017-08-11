@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -19,8 +19,9 @@ public class UndefinedValue implements Value {
 	}
 
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
-		return executable.getUndefined();
+	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
+
+		return programState.getUndefined();
 	}
 
 	public Type getType(){
@@ -28,7 +29,8 @@ public class UndefinedValue implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
+
 		return false;
 	}
 
