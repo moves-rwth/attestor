@@ -37,15 +37,15 @@ public class ProofStructureTest extends StateSpace {
 		
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("(ap1 & ap2)");
+			formula = new LTLFormula("({dll} & {tree})");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ dll }");
 		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("ap2");
+		state1.addAP("{ tree }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -75,15 +75,15 @@ public class ProofStructureTest extends StateSpace {
 		
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("(ap1 | ap2)");
+			formula = new LTLFormula("({dll} | {tree})");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ dll }");
 		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("ap2");
+		state1.addAP("{ tree }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -109,15 +109,15 @@ public class ProofStructureTest extends StateSpace {
 		
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("X ! ap1");
+			formula = new LTLFormula("X ! {dll}");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ dll }");
 		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("ap2");
+		state1.addAP("{ tree }");
 		
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -144,15 +144,15 @@ public class ProofStructureTest extends StateSpace {
 		
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("(ap1 U ap2)");
+			formula = new LTLFormula("({dll} U {tree})");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ dll }");
 		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("ap2");
+		state1.addAP("{ tree }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -177,13 +177,13 @@ public class ProofStructureTest extends StateSpace {
 	public void buildProofStructureTestUntilWithCycle(){
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("(ap1 U ap2)");
+			formula = new LTLFormula("({dll} U {tree})");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ dll }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -208,13 +208,13 @@ public class ProofStructureTest extends StateSpace {
 	public void buildProofStructureTestUntilOrRelease(){
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("((ap1 U ap2) | (ap2 R ap1))");
+			formula = new LTLFormula("(({sll} U {dll}) | ({dll} R {sll}))");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ sll }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -238,13 +238,13 @@ public class ProofStructureTest extends StateSpace {
 	public void buildProofStructureTestUntilAndRelease(){
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("((ap1 U ap2) & (ap2 R ap1))");
+			formula = new LTLFormula("(({sll} U {dll}) & ({dll} R {sll}))");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
 		
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap1");
+		initialState.addAP("{ sll }");
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
@@ -268,17 +268,17 @@ public class ProofStructureTest extends StateSpace {
 		
 		LTLFormula formula = null;
 		try{
-			formula = new LTLFormula("X(ap1 U (ap3 R X ap2))");
+			formula = new LTLFormula("X({sll} U ({tree} R X {dll}))");
 		} catch(Exception e) {
 			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
 		}
-		
+
 		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("ap2");
+		initialState.addAP("{ dll }");
 		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("ap1");
+		state1.addAP("{ sll }");
 		DefaultProgramState state2 = new DefaultProgramState(hc);
-		state2.addAP("ap2");
+		state2.addAP("{ tree }");
 		
 		
 		this.addState(initialState);
