@@ -117,8 +117,31 @@
 					"tentacles":[3,0]
 				}
 			]
+		},
+		{
+		      "nodes":[
+		          {
+		              "type":"NULL",
+		              "number":1
+		          },{
+		              "type":"BTNode",
+		              "number":3
+		          }
+		      ],
+		      "externals":[1,0],
+		      "variables":[],
+		      "selectors":[],
+		      "hyperedges":[
+		          {
+		              "label":"RefTP",
+		              "tentacles":[1,2,0]
+		          },
+		          {
+		              "label":"RefBT",
+		              "tentacles":[2,0]
+		          }
+		      ]
 		}
-
 	]
   },
   {
@@ -379,6 +402,31 @@
 					"tentacles":[1,4]
 				}
 			]
+		},
+		{
+		      "nodes":[
+		          {
+		              "type":"BTNode",
+		              "number":3
+		          },
+		          {
+		              "type":"NULL",
+		              "number":1
+		          }
+		      ],
+		      "externals":[0,1,3],
+		      "variables":[],
+		      "selectors":[],
+		      "hyperedges":[
+		          {
+		              "label":"RefTP",
+		              "tentacles":[0,2,3]
+		          },
+		          {
+		              "label":"RefTP",
+		              "tentacles":[2,1,3]
+		          }
+		      ]
 		}
 	]
   }
