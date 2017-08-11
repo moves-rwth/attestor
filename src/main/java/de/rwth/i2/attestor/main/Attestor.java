@@ -40,6 +40,22 @@ import java.util.*;
  *  To start a program analysis it suffices to call {Attestor#run(args)}, where args are the command line arguments
  * passed, for example, to a main method.
  * In particular, these arguments have to include the path to a settings file customizing the analysis.
+ * <br>
+ * The execution of Attestor consists of six phases. Any fatal failure of a phase (that is an exception caught
+ * by the method starting the phase) aborts further execution.
+ * The six phases are executed in the following order:
+ * <ol>
+ *     <li>Setup phase: Validates the provided command line options and populates the global Settings.</li>
+ *     <li>Parsing phase: Parses all supplied input files, such as the program to be analyzed,
+ *                        the grammar, input state, etc.</li>
+ *     <li>Preprocessing phase: Applies all pre-computation steps that should be applied to programs, grammars, etc.
+ *                              For example, grammar refinement is performed in this phase.</li>
+ *     <li>State space generation phase: Applies the abstract semantics defined by the provided graph grammar and
+ *                                       the input program until a fixed point is reached.</li>
+ *     <li>Model-checking phase: If temporal logic formulas have been provided, this phase checks whether they
+ *                               are satisfied by the state space generated in the previous phase.</li>
+ *     <li>Report phase: Exports the previously computed results. </li>
+ * </ol>
  *
  * @author Christoph
  */
