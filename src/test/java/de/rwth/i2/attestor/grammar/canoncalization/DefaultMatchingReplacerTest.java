@@ -40,7 +40,7 @@ public class DefaultMatchingReplacerTest {
 
 	private Nonterminal getNonterminal() {
 		boolean [] reductionTentacles = new boolean[RANK];
-		return GeneralNonterminal.getNonterminal("some label", RANK, reductionTentacles );
+		return GeneralNonterminal.getNonterminal("DefaultMatchingReplacerTest", RANK, reductionTentacles );
 	}
 
 	private HeapConfiguration getGraph() {
