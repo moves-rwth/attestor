@@ -49,8 +49,7 @@ public class Grammar {
 	}
 
 	public boolean isConfluent() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isConfluent;
 	}
 
 }

@@ -47,8 +47,9 @@ public class GrammarBuilder {
 		return this;
 	}
 	
-	public void setConfluent(){
+	public GrammarBuilder setConfluent(){
 		this.isConfluent = true;
+		return this;
 	}
 
 

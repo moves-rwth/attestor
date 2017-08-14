@@ -18,11 +18,11 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	private Grammar grammar; 
 	private EmbeddingCheckerProvider provider; 
 	private MatchingReplacer replacer;
-	
+
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
-											EmbeddingCheckerProvider provider, 
-											MatchingReplacer replacer ) {
-		
+			EmbeddingCheckerProvider provider, 
+			MatchingReplacer replacer ) {
+
 		this.grammar = grammar;
 		this.provider = provider;
 		this.replacer = replacer;
@@ -30,34 +30,40 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state ) {
-		
-		if( !semantics.permitsCanonicalization() ) { //TODO was ist hier gemeint??
+
+		if( !semantics.permitsCanonicalization() ) { 
 
 			return SingleElementUtil.createSet( state );
 		}
-		
+
 		return performCanonicalization( semantics, state );
 	}
 
 	private Set<ProgramState> performCanonicalization(Semantics semantics, ProgramState state) {
-		
+
 		Set<ProgramState> result = new HashSet<>();
-		
+
 		boolean isConfluent = grammar.isConfluent();
 		boolean success = false;
-		
+
 		for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
-			
+
 			if( success && isConfluent ) { break; }
-			
+
 			for( HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs) ){
-				
+
 				if( success && isConfluent ) { break; }
-				
-				success = tryReplaceMatching(state, rhs, lhs, result, semantics, isConfluent );
+
+				Set<ProgramState> abstractedStates = tryReplaceMatching(state, rhs, lhs, semantics, isConfluent );
+				if( !abstractedStates.isEmpty() ) {
+					success = true;
+					for( ProgramState abstracted : abstractedStates) {
+						result.addAll( performCanonicalization( semantics, abstracted ) );
+					}
+				}
 			}			
 		}
-		
+
 		if(result.isEmpty()) {	
 
 			result.add(state);
@@ -66,31 +72,32 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 		return result;
 	}
 
-	private boolean tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
-										Set<ProgramState> result,
-										Semantics semantics, boolean isConfluent ) {
-		boolean success = false;
+	private Set<ProgramState> tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
+			Semantics semantics, boolean isConfluent ) {
 		
+		boolean success = false;
+		Set<ProgramState> result  = new HashSet<>();
+
 		AbstractMatchingChecker checker = 
 				provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
-		
-		while(checker.hasNext() && ( !isConfluent || !success ) ) {
-			
+
+		while( checker.hasNext() && ( !isConfluent || !success ) ) {
+
 			success = true;
-			
+
 			ProgramState toAbstract  = state;
-			
+
 			Matching embedding = checker.getNext();
 
-			
+
 			if( success ){
 				ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, lhs );
-				result.addAll( performCanonicalization( semantics, abstracted ) );
+				result.add(abstracted);
 			}
 		}
-		return success;
+		return result;
 	}
-	
+
 	/**
 	 * replaces the embedding in  abstracted by the given nonterminal
 	 * 
