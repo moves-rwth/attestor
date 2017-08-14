@@ -40,7 +40,8 @@ public class AbstractMatchingChecker {
 	 * @param target The target HeapConfiguration.
 	 * @param checker The underlying {@link MorphismChecker} that determines the kind of matching to compute.
 	 */
-    public AbstractMatchingChecker(HeapConfiguration pattern, HeapConfiguration target, MorphismChecker checker) {
+    public AbstractMatchingChecker( HeapConfiguration pattern, HeapConfiguration target, 
+    		MorphismChecker checker ) {
 		
 		if(!(pattern instanceof Graph)) {
 			throw new IllegalArgumentException("Provided pattern is not a Graph.");

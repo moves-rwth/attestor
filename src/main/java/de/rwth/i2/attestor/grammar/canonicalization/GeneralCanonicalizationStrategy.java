@@ -54,22 +54,7 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 				
 				if( success && isConfluent ) { break; }
 				
-				AbstractMatchingChecker checker = 
-						provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
-				
-				while(checker.hasNext() && ( !isConfluent || !success ) ) {
-					success = true;
-					
-					ProgramState toAbstract  = state;
-					
-					Matching embedding = checker.getNext();
-
-					
-					if( success ){
-						ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, lhs);
-						result.addAll( performCanonicalization( semantics, abstracted ) );
-					}
-				}
+				success = tryReplaceMatching(state, rhs, lhs, result, semantics, isConfluent );
 			}			
 		}
 		
@@ -79,6 +64,31 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 		}
 
 		return result;
+	}
+
+	private boolean tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
+										Set<ProgramState> result,
+										Semantics semantics, boolean isConfluent ) {
+		boolean success = false;
+		
+		AbstractMatchingChecker checker = 
+				provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
+		
+		while(checker.hasNext() && ( !isConfluent || !success ) ) {
+			
+			success = true;
+			
+			ProgramState toAbstract  = state;
+			
+			Matching embedding = checker.getNext();
+
+			
+			if( success ){
+				ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, lhs );
+				result.addAll( performCanonicalization( semantics, abstracted ) );
+			}
+		}
+		return success;
 	}
 	
 	/**
