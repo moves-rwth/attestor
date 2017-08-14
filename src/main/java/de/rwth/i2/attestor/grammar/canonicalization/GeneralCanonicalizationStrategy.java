@@ -16,16 +16,13 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
 	private Grammar grammar; 
-	private EmbeddingCheckerProvider provider; 
-	private MatchingReplacer replacer;
+	private MatchingHandler matchingHandler;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
-			EmbeddingCheckerProvider provider, 
-			MatchingReplacer replacer ) {
+											MatchingHandler matchingHandler ) {
 
 		this.grammar = grammar;
-		this.provider = provider;
-		this.replacer = replacer;
+		this.matchingHandler = matchingHandler;
 	}
 
 	@Override
@@ -54,7 +51,8 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 				if( success && isConfluent ) { break; }
 
-				Set<ProgramState> abstractedStates = tryReplaceMatching(state, rhs, lhs, semantics, isConfluent );
+				Set<ProgramState> abstractedStates = 
+						matchingHandler.tryReplaceMatching(state, rhs, lhs, semantics, isConfluent);
 				if( !abstractedStates.isEmpty() ) {
 					success = true;
 					for( ProgramState abstracted : abstractedStates) {
@@ -72,44 +70,8 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 		return result;
 	}
 
-	private Set<ProgramState> tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
-			Semantics semantics, boolean isConfluent ) {
-		
-		boolean success = false;
-		Set<ProgramState> result  = new HashSet<>();
-
-		AbstractMatchingChecker checker = 
-				provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
-
-		while( checker.hasNext() && ( !isConfluent || !success ) ) {
-
-			success = true;
-
-			ProgramState toAbstract  = state;
-
-			Matching embedding = checker.getNext();
 
 
-			if( success ){
-				ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, lhs );
-				result.add(abstracted);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * replaces the embedding in  abstracted by the given nonterminal
-	 * 
-	 * @param abstracted the outer graph.
-	 * @param embedding the embedding of the inner graph in the outer graph
-	 * @param nonterminal the nonterminal to replace the embedding
-	 */
-	private ProgramState replaceEmbeddingBy( ProgramState stateToAbstract, Matching embedding, Nonterminal nonterminal) {
-		HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
-		HeapConfiguration abstracted = replacer.replaceIn(toAbstract, nonterminal, embedding );
-		return stateToAbstract.shallowCopyWithUpdateHeap( abstracted );
-	}
 
 
 }

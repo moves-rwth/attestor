@@ -12,7 +12,9 @@ import org.junit.Test;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
 import de.rwth.i2.attestor.grammar.canonicalization.MatchingReplacer;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
@@ -36,13 +38,13 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	private static int RANK = 2;
 	private static final Type TYPE = TypeFactory.getInstance().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
-	EmbeddingCheckerProvider provider;
-	MatchingReplacer replacer;
-
+	MatchingHandler matchingHandler;
+	
 	@Before
 	public void setUp() throws Exception {
-		provider = new EmbeddingCheckerProvider(10, false);
-		replacer = new DefaultMatchingReplacer();
+		EmbeddingCheckerProvider provider = new EmbeddingCheckerProvider(10, false);
+		MatchingReplacer replacer = new DefaultMatchingReplacer();
+		matchingHandler = new DefaultMatchingHandler( provider, replacer );
 	}
 	
 	@Test
@@ -56,7 +58,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 										   .build();
 		
 		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, provider, replacer );
+				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
 		ProgramState inputState = new DefaultState( getInputGraph() );
 		Statement stmt = new Skip( 0 );

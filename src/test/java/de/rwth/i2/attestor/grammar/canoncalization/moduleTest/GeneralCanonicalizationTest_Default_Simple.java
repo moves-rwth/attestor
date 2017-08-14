@@ -12,6 +12,7 @@ import org.junit.Test;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canoncalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.*;
@@ -29,13 +30,13 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	private static final int RANK = 3;
 	private static final Type TYPE = TypeFactory.getInstance().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
-	EmbeddingCheckerProvider provider;
-	MatchingReplacer replacer;
-
+	MatchingHandler matchingHandler;
+	
 	@Before
 	public void setUp() throws Exception {
-		provider = new EmbeddingCheckerProvider(10, false);
-		replacer = new DefaultMatchingReplacer();
+		EmbeddingCheckerProvider provider = new EmbeddingCheckerProvider(10, false);
+		MatchingReplacer replacer = new DefaultMatchingReplacer();
+		matchingHandler = new DefaultMatchingHandler( provider, replacer );
 	}
 
 	@Test
@@ -45,7 +46,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 		Grammar grammar = Grammar.builder().addRule( lhs, rhs ).build();
 		
 		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, provider, replacer );
+				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
 		ProgramState inputState = new DefaultState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
