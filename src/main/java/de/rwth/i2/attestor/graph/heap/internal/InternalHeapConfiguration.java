@@ -570,6 +570,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
 		if(minAbstractionDepth > 0) {
 			return new MinDepthEmbeddingChecker(pattern, this, minAbstractionDepth);
+
 		} else {
 			return new EmbeddingChecker(pattern, this);
 		}

@@ -72,7 +72,8 @@ public class SettingsFileReader {
 	public InputSettings getInputSettings( Settings settings ){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
 		InputSettings input = settings.input();
-		
+
+		// path to class and json files to be analyzed
 		if( jsonInput.has( "defaultPath" ) ){
 			input.setDefaultPath( jsonInput.getString( "defaultPath" ) );
 		}
@@ -83,17 +84,25 @@ public class SettingsFileReader {
 		}else if( !jsonInput.has( "defaultPath" )){
 			logger.error("You must define a default path or a classpath");
 		}
-		input.setClassName( programSettings.getString( "class" ) );
-		input.setMethodName( programSettings.getString( "method" ) );
+		if(programSettings.has("class")) {
+			input.setClassName(programSettings.getString("class"));
+		} else {
+			logger.error("Please provide a class to be analysed.");
+		}
+		if(programSettings.has("method")) {
+			input.setMethodName(programSettings.getString("method"));
+		} else {
+			logger.error("Please provide a method to be analysed.");
+		}
 		
-		JSONObject grammarSettings = jsonInput.getJSONObject( "grammar" );
+		JSONObject grammarSettings = jsonInput.getJSONObject( "userDefinedGrammar" );
 		if(grammarSettings.has("file")) {
 			if (grammarSettings.has("path")) {
 				input.setPathToGrammar(grammarSettings.getString("path"));
 			} else if (!jsonInput.has("defaultPath")) {
-				logger.error("You must define a default path or a path for grammar");
+				logger.error("You must define a default path or a path for the grammar");
 			}
-			input.setGrammarName(grammarSettings.getString("file"));
+			input.setUserDefinedGrammarName(grammarSettings.getString("file"));
 		}
 
 		// Add requested predefined grammars
@@ -116,21 +125,21 @@ public class SettingsFileReader {
 
 		}
 
-			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
-			if( initialSettings.has( "path" ) ){
-				input.setPathToInput( initialSettings.getString( "path" ) );
-			}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
-				logger.error("You must define a default path or a path for the initial state");
+		JSONObject initialSettings = jsonInput.getJSONObject("initialState");
+		if( initialSettings.has( "path" ) ){
+			input.setPathToInput( initialSettings.getString( "path" ) );
+		}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
+			logger.error("You must define a default path or a path for the initial state");
+		}
+		if(initialSettings.has("file")) {
+			input.setInputName(initialSettings.getString("file"));
+		} else if(input.getInputName() == null) {
+			if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
+				throw new IllegalStateException("Default initial states location not found.");
+			} else {
+				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
 			}
-			if(initialSettings.has("file")) {
-				input.setInputName(initialSettings.getString("file"));
-			} else if(input.getInputName() == null) {
-				if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
-					throw new IllegalStateException("Default initial states location not found.");
-				} else {
-					input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
-				}
-			}
+		}
 
 		return input;
 	}
@@ -185,8 +194,8 @@ public class SettingsFileReader {
 			options.setIndexedMode( jsonOptions.get( "mode" ).equals( "indexed" ) );
 		}
 
-		if( jsonOptions.has( "depth" )) {
-			options.setMinDereferenceDepth( jsonOptions.getInt( "depth" ) );
+		if( jsonOptions.has( "abstractionDistance" )) {
+			options.setAbstractionDistance( jsonOptions.getInt( "abstractionDistance" ) );
 		}
 
 		if( jsonOptions.has( "maximalStateSpace") ) {
@@ -197,8 +206,8 @@ public class SettingsFileReader {
 			options.setMaxStateSize( jsonOptions.getInt( "maximalHeap" ) );
 		}
 
-		if( jsonOptions.has( "aggressiveThreshold" )) {
-			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveThreshold" ));
+		if( jsonOptions.has( "aggressiveAbstractionThreshold" )) {
+			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveAbstractionThreshold" ));
 		}
 
 		if( jsonOptions.has( "aggressiveReturn" ) ){
@@ -220,6 +229,10 @@ public class SettingsFileReader {
             JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateRefinementSettings);
             options.setStateRefinementAutomaton( parser.getHeapAutomaton() );
         }
+
+        if( jsonOptions.has("aggressiveNullAbstraction") ){
+			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
+		}
 
 		return options;
 	}

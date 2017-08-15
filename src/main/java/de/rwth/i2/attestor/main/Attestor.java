@@ -216,7 +216,7 @@ public class Attestor {
 	private void parsingPhase() throws IOException {
 
 		// Load the user-defined grammar
-		if(settings.input().getGrammarName() != null) {
+		if(settings.input().getUserDefinedGrammarName() != null) {
 			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
 		}
 
@@ -419,7 +419,7 @@ public class Attestor {
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
                     settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getMinDereferenceDepth()
+                    settings.options().getAbstractionDistance()
             );
             logger.info("Setup canonicalization using indexed grammar.");
         } else {
@@ -428,7 +428,7 @@ public class Attestor {
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
                     settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getMinDereferenceDepth()
+                    settings.options().getAbstractionDistance()
             );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * All global settings regarding input files.
@@ -36,7 +35,7 @@ public class InputSettings {
     /**
      * The name of the file of the graph grammar underlying the analysis.
      */
-	private String grammarName = null;
+	private String userDefinedGrammarName = null;
 
 	// The list of predefined grammars used by the current analysis
 	private ArrayList<String> usedPredefinedGrammars;
@@ -133,23 +132,23 @@ public class InputSettings {
     /**
      * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
      */
-	public String getGrammarName() {
-		return this.grammarName;
+	public String getUserDefinedGrammarName() {
+		return this.userDefinedGrammarName;
 	}
 
 	/**
-	 * Sets the name of the file containing the graph grammar underlying the analysis.
-	 * @param grammarName The name of the file containing the graph grammar.
+	 * Sets the name of the file containing the user-defined graph grammar underlying the analysis.
+	 * @param userDefinedGrammarName The name of the file containing the graph grammar.
 	 */
-	public void setGrammarName(String grammarName) {
-		this.grammarName = grammarName;
+	public void setUserDefinedGrammarName(String userDefinedGrammarName) {
+		this.userDefinedGrammarName = userDefinedGrammarName;
 	}
 
     /**
      * @return The fully qualified path to the file holding the graph grammar underlying the analysis.
      */
 	public String getGrammarLocation(){
-		return pathToGrammar + File.separator + grammarName;
+		return pathToGrammar + File.separator + userDefinedGrammarName;
 	}
 
     /**
@@ -181,7 +180,7 @@ public class InputSettings {
      */
 	public boolean isComplete() {
 		return className != null && classpath != null && methodName != null
-				&& pathToGrammar != null && grammarName != null
+				&& pathToGrammar != null && userDefinedGrammarName != null
 				&& pathToInput != null && inputName != null;
 	}
 
