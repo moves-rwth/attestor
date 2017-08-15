@@ -61,7 +61,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 
 	private Nonterminal getNonterminal() {
 		boolean[] isReductionTentacle = new boolean[RANK];
-		return GeneralNonterminal.getNonterminal("some label", RANK, isReductionTentacle );
+		return GeneralNonterminal.getNonterminal("GeneralCanonicalizationDS", RANK, isReductionTentacle );
 	}
 
 	private HeapConfiguration getPattern() {

@@ -8,10 +8,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
 import de.rwth.i2.attestor.grammar.testUtil.StackGrammarForTests;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
@@ -25,6 +31,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
@@ -40,6 +47,22 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 	private static final Type TYPE = TypeFactory.getInstance().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
 
+	private IndexedMatchingHandler matchingHandler;
+	
+	@Before
+	public void init() {
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(10, false);
+		
+		StackMaterializer materializer = new StackMaterializer();
+		DefaultStackMaterialization stackGrammar = new DefaultStackMaterialization();
+		StackMatcher stackMatcher = new StackMatcher( stackGrammar);
+		EmbeddingStackChecker stackChecker = 
+				new EmbeddingStackChecker( stackMatcher, 
+											materializer );
+		
+		matchingHandler = new IndexedMatchingHandler(checkerProvider, stackChecker);
+		
+	}
 
 	@Test
 	public void test() {
@@ -50,7 +73,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		Grammar grammar = Grammar.builder().addRule( lhs, rhs ).build();
 		
 		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, null );
+				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
 		ProgramState inputState = new DefaultState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
@@ -58,7 +81,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
 		
 		assertEquals( 1, res.size() );
-		assertThat( res, contains( expectedSimpleAbstraction() ) );
+		assertEquals( res.iterator().next().getHeap(), expectedSimpleAbstraction().getHeap() );
 	}
 
 
@@ -122,16 +145,18 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 				.build();
 	}
 	
-	private HeapConfiguration expectedSimpleAbstraction() {
+	private ProgramState expectedSimpleAbstraction() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(TYPE, 2, nodes)
+		hc =  hc.builder().addNodes(TYPE, 2, nodes)
 				.addNonterminalEdge( getNonterminal( makeConcrete(getStackPrefix()) ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()
 				.build();
+		
+		return new IndexedState( hc );
 	}
 
 
