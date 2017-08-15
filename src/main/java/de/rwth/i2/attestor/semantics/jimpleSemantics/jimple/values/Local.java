@@ -1,13 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Locals represent local variables
@@ -41,39 +39,35 @@ public class Local implements SettableValue {
 		return this.type;
 	}
 
-	/**
-	 * gets the element referenced by the variable in the heap.
-	 * Logs a warning if the element's type does not match the expected type. 
-	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		ConcreteValue res = executable.getVariableTarget( this.getName() );
+		ConcreteValue res = programState.getVariableTarget( this.getName() );
 		
-		if( DebugMode.ENABLED && !( this.type.equals( res.type() ) ) ){
+		if( !( this.type.equals( res.type() ) ) ){
 			
 			String msg = "The type of the resulting ConcreteValue ";
 			msg += this.getName();
 			msg += " does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.warn( msg );
+			logger.debug( msg );
 		}
 
 		return res;
 	}
 
 	/**
-	 * sets the variable in executable to concreteTarget
+	 * sets the variable in programState to concreteTarget
 	 */
 	@Override
-	public void setValue( JimpleExecutable executable, ConcreteValue concreteTarget )
+	public void setValue(JimpleProgramState programState, ConcreteValue concreteTarget )
 			throws NotSufficientlyMaterializedException{
 
-		executable.setVariable( this.getName(), concreteTarget );
+		programState.setVariable( this.getName(), concreteTarget );
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
+	public boolean needsMaterialization( JimpleProgramState programState ){
 		return false;
 	}
 

@@ -3,16 +3,16 @@ package de.rwth.i2.attestor.grammar.materialization.communication;
 import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 
 public class MaterializationAndRuleResponse implements GrammarResponse {
 
-	private AbstractStackSymbol symbolToMaterialize;
-	private Map<List<StackSymbol>, Collection<HeapConfiguration>> materializationsAndRules;
+	private AbstractIndexSymbol symbolToMaterialize;
+	private Map<List<IndexSymbol>, Collection<HeapConfiguration>> materializationsAndRules;
 
-	public MaterializationAndRuleResponse(Map<List<StackSymbol>, Collection<HeapConfiguration>> rules,
-			AbstractStackSymbol stackSymbolToMaterialize ) {
+	public MaterializationAndRuleResponse(Map<List<IndexSymbol>, Collection<HeapConfiguration>> rules,
+			AbstractIndexSymbol stackSymbolToMaterialize ) {
 		super();
 		this.materializationsAndRules = rules;
 		this.symbolToMaterialize = stackSymbolToMaterialize;
@@ -23,15 +23,15 @@ public class MaterializationAndRuleResponse implements GrammarResponse {
 		return symbolToMaterialize != null;
 	}
 	
-	public AbstractStackSymbol getStackSymbolToMaterialize(){
+	public AbstractIndexSymbol getStackSymbolToMaterialize(){
 		return symbolToMaterialize;
 	}
 	
-	public Set<List<StackSymbol>> getPossibleMaterializations(){
+	public Set<List<IndexSymbol>> getPossibleMaterializations(){
 		return materializationsAndRules.keySet();
 	}
 	
-	public Collection<HeapConfiguration> getRulesForMaterialization( List<StackSymbol> materialization ){
+	public Collection<HeapConfiguration> getRulesForMaterialization( List<IndexSymbol> materialization ){
 		return materializationsAndRules.get( materialization );
 	}
 	

@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * IntConstants represent access to constants of type int
@@ -25,18 +23,14 @@ public class IntConstant implements Value {
 		this.intValue = value;
 	}
 
-	/**
-	 * returns the heap element corresponding to constant.
-	 * Logs a warning if the element type is not as expected.
-	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		ConcreteValue res = executable.getConstant( "" + intValue );
-		if( DebugMode.ENABLED && res.type() != this.type ){
+		ConcreteValue res = programState.getConstant( "" + intValue );
+		if( res.type() != this.type ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.warn( msg );
+			logger.debug( msg );
 		}
 		return res;
 	}
@@ -53,7 +47,7 @@ public class IntConstant implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization(JimpleExecutable executable) {
+	public boolean needsMaterialization(JimpleProgramState programState) {
 
 		return false;
 	}

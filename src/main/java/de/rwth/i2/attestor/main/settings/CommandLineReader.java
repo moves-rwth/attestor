@@ -5,8 +5,6 @@ import de.rwth.i2.attestor.LTLFormula;
 import java.io.File;
 
 import org.apache.commons.cli.*;
-
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -248,10 +246,9 @@ public class CommandLineReader {
 		
 		OptionSettings optionSettings = settings.options();
 
-		DebugMode.ENABLED = cmd.hasOption("v");
-
 		if(cmd.hasOption("ad")) {
 			optionSettings.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
+
 		}
 
 		if(cmd.hasOption("msp")) {

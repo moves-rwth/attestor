@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -37,7 +37,7 @@ public class AssignStmtTest {
 		HeapConfiguration testGraph = ExampleHcImplFactory.getTLLRule();
 		
 		
-		DefaultState tmp = new DefaultState(testGraph);
+		DefaultProgramState tmp = new DefaultProgramState(testGraph);
 		
 		tmp.prepareHeap();
 		testGraph = tmp.getHeap();
@@ -53,7 +53,7 @@ public class AssignStmtTest {
 		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>(), false);
 		try{
 			
-			DefaultState input = new DefaultState(testGraph);
+			DefaultProgramState input = new DefaultProgramState(testGraph);
 			
 			Set<ProgramState> res = stmt.computeSuccessors( input );
 			
@@ -64,7 +64,7 @@ public class AssignStmtTest {
 			
 			for(ProgramState resProgramState : res) {
 				
-				DefaultState resState = (DefaultState) resProgramState;
+				DefaultProgramState resState = (DefaultProgramState) resProgramState;
 				
 				assertTrue( "nextPC != 2", resState.getProgramCounter() == 2 );
 				
@@ -83,7 +83,7 @@ public class AssignStmtTest {
 				assertFalse( resState.getHeap().equals(input.getHeap()) );
 								
 				HeapConfiguration expectedHeap = ExampleHcImplFactory.getExpectedResult_AssignStmt();
-				DefaultState tmpState = new DefaultState(expectedHeap);
+				DefaultProgramState tmpState = new DefaultProgramState(expectedHeap);
 				tmpState.prepareHeap();
 				expectedHeap = tmpState.getHeap();
 				assertEquals( expectedHeap, resState.getHeap());

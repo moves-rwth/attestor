@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Set;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -23,7 +23,7 @@ public class ItentityStatementTest {
 
 	private IdentityStmt stmt;
 	private HeapConfiguration inputGraph;
-	private DefaultState inputState;
+	private DefaultProgramState inputState;
 
 
 	@BeforeClass
@@ -36,7 +36,7 @@ public class ItentityStatementTest {
 	public void setUp() throws Exception{
 		Type type = TypeFactory.getInstance().getType( "node" );
 		stmt = new IdentityStmt( 1, new Local( type, "y" ), "x" );
-		inputState = new DefaultState( ExampleHcImplFactory.getListAndConstants() );
+		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();
 	}
@@ -46,11 +46,11 @@ public class ItentityStatementTest {
 		try{
 			Set<ProgramState> res = stmt.computeSuccessors( inputState );
 			assertEquals( 1, res.size() );
-			DefaultState resState = (DefaultState) res.iterator().next();
+			DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
 			assertNotSame("ensure clone on state level", resState, inputState );
 			assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap() );
 			assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap() );
-			DefaultState tmp = new DefaultState( ExampleHcImplFactory.getListAndConstants() );
+			DefaultProgramState tmp = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
 			tmp.prepareHeap();
 			HeapConfiguration expectedGraph = tmp.getHeap();
 			assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph );

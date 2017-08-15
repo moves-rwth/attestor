@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -49,7 +49,7 @@ public class IfStmtTest {
 	public void testWithLocal(){
 		int hash = testGraph.hashCode();
 		
-		DefaultState testState = new DefaultState( testGraph );
+		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 		
 		Value leftExpr = new Local( listType, "x" );
@@ -59,7 +59,7 @@ public class IfStmtTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = testState.clone();
+			DefaultProgramState input = testState.clone();
 					
 			Set<ProgramState> res = stmt.computeSuccessors( input );
 			
@@ -68,7 +68,7 @@ public class IfStmtTest {
 			
 			for(ProgramState resProgramState : res) {
 				
-				DefaultState resState = (DefaultState) resProgramState;
+				DefaultProgramState resState = (DefaultProgramState) resProgramState;
 				
 				assertTrue( "condition should evaluate to false", resState.getProgramCounter() == falsePC );
 				assertFalse( "condition has evaluated to true", resState.getProgramCounter() == truePC );
@@ -88,7 +88,7 @@ public class IfStmtTest {
 	public void testWithField(){
 		int hash = testGraph.hashCode();
 		
-		DefaultState testState = new DefaultState( testGraph );
+		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 		
 
@@ -100,7 +100,7 @@ public class IfStmtTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = testState.clone();
+			DefaultProgramState input = testState.clone();
 			Set<ProgramState> res = stmt.computeSuccessors( input );
 			
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
@@ -108,7 +108,7 @@ public class IfStmtTest {
 			
 			for(ProgramState resProgramState : res) {
 			
-				DefaultState resState = (DefaultState) resProgramState;
+				DefaultProgramState resState = (DefaultProgramState) resProgramState;
 				
 				assertTrue( "condition should evaluate to false", resState.getProgramCounter() == falsePC );
 				assertFalse( "condition has evaluated to true", resState.getProgramCounter() == truePC );
@@ -127,7 +127,7 @@ public class IfStmtTest {
 	public void testToTrue(){
 		int hash = testGraph.hashCode();
 		
-		DefaultState testState = new DefaultState( testGraph );
+		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 
 		Value origin1 = new Local( listType, "x" );
@@ -140,7 +140,7 @@ public class IfStmtTest {
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
 
 		try{
-			DefaultState input = testState.clone();
+			DefaultProgramState input = testState.clone();
 			
 			
 			Set<ProgramState> res = stmt.computeSuccessors( input );
@@ -150,7 +150,7 @@ public class IfStmtTest {
 			
 			for(ProgramState resProgramState : res) {
 
-				DefaultState resState = (DefaultState) resProgramState;
+				DefaultProgramState resState = (DefaultProgramState) resProgramState;
 				
 				assertFalse( "condition should evaluate to true, but got false", resState.getProgramCounter() == falsePC );
 				assertTrue( "condition should evaluate to true", resState.getProgramCounter() == truePC );

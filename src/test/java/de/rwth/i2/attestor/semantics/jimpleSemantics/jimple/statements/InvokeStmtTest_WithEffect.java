@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 
 public class InvokeStmtTest_WithEffect {
 	
-	private DefaultState testInput;
+	private DefaultProgramState testInput;
 	private HeapConfiguration expectedHeap;
 	private InvokeStmt stmt;
 
@@ -40,10 +40,10 @@ public class InvokeStmtTest_WithEffect {
 
 	@Before
 	public void setUp() throws Exception {
-		testInput = new DefaultState( ExampleHcImplFactory.getInput_InvokeWithEffect() );
+		testInput = new DefaultProgramState( ExampleHcImplFactory.getInput_InvokeWithEffect() );
 		testInput.prepareHeap();
 		
-		DefaultState expectedState = new DefaultState( ExampleHcImplFactory.getExpectedResult_InvokeWithEffect() );
+		DefaultProgramState expectedState = new DefaultProgramState( ExampleHcImplFactory.getExpectedResult_InvokeWithEffect() );
 		expectedState.prepareHeap();
 		expectedHeap = expectedState.getHeap();
 		

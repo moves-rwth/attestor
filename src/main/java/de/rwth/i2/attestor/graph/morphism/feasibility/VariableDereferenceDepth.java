@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
-import de.rwth.i2.attestor.graph.morphism.*;
-import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.graph.morphism.CandidatePair;
+import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -16,14 +18,19 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 	/**
 	 * The minimal distance of variables to nodes belonging to the morphism we are searching for.
 	 */
-	private final int depth;
+	private final int minAbstractionDistance;
+
+	private final boolean isNullAbstractionDistanceEnabled;
 
 	/**
-	 * @param depth The minimal distance of variables to nodes in the morphism.
+	 * @param minAbstractionDistance The minimal distance of variables to nodes in the morphism.
+	 * @param isNullAbstractionDistanceEnabled True if and only if the minimal distance should be ignored
+	 *                                         for the null node.
 	 */
-	public VariableDereferenceDepth(int depth) {
+	public VariableDereferenceDepth(int minAbstractionDistance, boolean isNullAbstractionDistanceEnabled) {
 		
-		this.depth = depth;
+		this.minAbstractionDistance = minAbstractionDistance;
+		this.isNullAbstractionDistanceEnabled = isNullAbstractionDistanceEnabled;
 	}
 
 	@Override
@@ -37,8 +44,10 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 			if(graph.getNodeLabel(var) instanceof Variable) {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
+
 				// TODO: ask christoph!
-				boolean isNull = (!Settings.getInstance().options().getAggressiveNullAbstraction()) || label.contains("null");
+				boolean isNull = (!isNullAbstractionDistanceEnabled) || label.contains("null");
+
 				
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				
@@ -48,7 +57,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 					
 					if(state.getPattern().containsMatch(i) 
 							&& pattern.isExternal(i) 
-							&& dist.get(state.getPattern().getMatch(i)) < depth
+							&& dist.get(state.getPattern().getMatch(i)) < minAbstractionDistance
 							) {
 						
 						if (isNull || pattern.getSuccessorsOf(i).size() > 0) {							

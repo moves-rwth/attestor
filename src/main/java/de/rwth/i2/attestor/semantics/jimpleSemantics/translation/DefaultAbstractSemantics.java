@@ -1,18 +1,18 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.BranchingSkip;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.UndefinedValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
-import de.rwth.i2.attestor.util.DebugMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import soot.Unit;
 import soot.UnitBox;
+
+import java.util.List;
 
 
 
@@ -66,16 +66,14 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 			}else{
 				res = new Skip(-1);
 			}
-			if( DebugMode.ENABLED && targets.size() > 2 ){
+			if( targets.size() > 2 ){
 				logger.warn("Only the first two targets are considered");
 			}
 
 			return res;
 		}
-		if(DebugMode.ENABLED ) {
-			   logger.warn("Warning: " + input + " is not supported. Replaced by undefined.");
-		}
-		
+		logger.warn("Warning: " + input + " is not supported. Replaced by undefined.");
+
 		res = new Skip( pc+1);
 		return res;
 	}
@@ -87,10 +85,7 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Value translateValue(soot.Value input) {
 	
-		if(DebugMode.ENABLED) {
-			   logger.warn("Warning: " + input + " is not supported. Replaced by undefined.");
-		}
-		
+		logger.warn(input + " is not supported. Replaced by undefined.");
 		return new UndefinedValue();
 	}
 

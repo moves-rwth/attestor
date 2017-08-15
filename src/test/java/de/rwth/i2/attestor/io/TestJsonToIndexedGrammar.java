@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 
 public class TestJsonToIndexedGrammar {
 
@@ -33,7 +33,7 @@ public class TestJsonToIndexedGrammar {
 				+"	\"nonterminal\":\"TestJson\",\n"
 				+"	\"rank\":2,\n"
 				+"	\"redundandTentacles\":[false,false],\n"
-				+"	\"stack\":[\"s\",\"()\"],\n"
+				+"	\"index\":[\"s\",\"()\"],\n"
 				+"	\"rules\":[\n"
 				+"		{\n"
 				+"			\"nodes\":[{\n"
@@ -47,7 +47,7 @@ public class TestJsonToIndexedGrammar {
 				+"				{\n"
 				+"					\"label\":\"TestJson\",\n"
 				+"					\"tentacles\":[0,1],\n"
-				+"					\"stack\":[\"()\"]\n"
+				+"					\"index\":[\"()\"]\n"
 				+"				}\n"
 				+"			]\n"
 				+"		}]\n"
@@ -56,7 +56,7 @@ public class TestJsonToIndexedGrammar {
 				+"	\"nonterminal\":\"TestJson\",\n"
 				+"	\"rank\":2,\n"
 				+"	\"redundandTentacles\":[false,false],\n"
-				+"	\"stack\":[\"Z\"],\n"
+				+"	\"index\":[\"Z\"],\n"
 				+"	\"rules\":[\n"
 				+"		{\n"
 				+"			\"nodes\":[{\n"
@@ -86,14 +86,14 @@ public class TestJsonToIndexedGrammar {
 							.build();
 		
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		StackSymbol var = StackVariable.getGlobalInstance();
-		List<StackSymbol> stack1 = new ArrayList<>();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol var = IndexVariable.getGlobalInstance();
+		List<IndexSymbol> stack1 = new ArrayList<>();
 		stack1.add(s);
 		stack1.add(var);
 		IndexedNonterminal nt1 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack1);
-		List<StackSymbol> stack2 = new ArrayList<>();
+		List<IndexSymbol> stack2 = new ArrayList<>();
 		stack2.add(bottom);
 		IndexedNonterminal nt2 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack2);
 		

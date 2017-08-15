@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.export;
 
-import java.io.*;
-import java.util.HashMap;
-
+import de.rwth.i2.attestor.modelChecking.Assertion;
+import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.modelChecking.Assertion;
-import de.rwth.i2.attestor.modelChecking.ProofStructure;
+import java.io.*;
+import java.util.HashMap;
 
 public class ProofStructureHtmlExporter implements ProofStructureExporter {
 
@@ -26,7 +25,7 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 	}
 	
 	@Override
-	public void export(String name, ProofStructure ps) {
+	public void export(String name, ProofStructure ps) throws IOException {
 		
 		// Create a new file
 		String filename = filePrefix + name + fileSuffix;
@@ -35,8 +34,8 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.warn("Not able to create file for proof structure visualisation: " + filename);
+			throw e;
 		}
 		
 		try {

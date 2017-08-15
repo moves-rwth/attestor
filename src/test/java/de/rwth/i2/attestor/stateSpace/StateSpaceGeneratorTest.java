@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import org.junit.Before;
@@ -48,7 +48,9 @@ public class StateSpaceGeneratorTest {
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(s -> s)
-                .setInclusionStrategy(new GeneralInclusionStrategy());
+                .setInclusionStrategy(new GeneralInclusionStrategy())
+				.setStateCounter(s -> {})
+				;
 	}
 
 	@Test
@@ -62,7 +64,7 @@ public class StateSpaceGeneratorTest {
 		Program mainProgram = new Program( programInstructions );
 
 
-		ProgramState initialState = new DefaultState(initialGraph);
+		ProgramState initialState = new DefaultProgramState(initialGraph);
 		StateSpace res = ssgBuilder
                 .setProgram(mainProgram)
                 .addInitialState(initialState)
@@ -92,7 +94,7 @@ public class StateSpaceGeneratorTest {
 
 		Program mainProgram = new Program( programInstructions );
 
-		ProgramState initialState = new DefaultState(initialGraph);
+		ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = ssgBuilder
                 .setProgram(mainProgram)
                 .addInitialState(initialState)
@@ -104,13 +106,13 @@ public class StateSpaceGeneratorTest {
 		assertFalse( initialGraph.equals( res.getFinalStates().get( 0 ).getHeap() ) );
 		HeapConfiguration expectedState = ExampleHcImplFactory.getExpectedResultTestGenerateNew();
 		assertEquals(expectedState, res.getFinalStates().get(0).getHeap());
-		DefaultState firstState = (DefaultState)  res.getStates().get( 0 );
+		DefaultProgramState firstState = (DefaultProgramState)  res.getStates().get( 0 );
 		assertEquals( skipStmt.toString() , res.getSuccessors().get( firstState ).get( 0 ).getLabel() );
-		DefaultState secondState = (DefaultState) res.getStates().get( 1 );
+		DefaultProgramState secondState = (DefaultProgramState) res.getStates().get( 1 );
 		assertEquals( assignStmt.toString(), res.getSuccessors().get( secondState ).get( 0 ).getLabel() );
-		DefaultState thirdState = (DefaultState) res.getStates().get( 2 );
+		DefaultProgramState thirdState = (DefaultProgramState) res.getStates().get( 2 );
 		assertEquals( returnStmt.toString(), res.getSuccessors().get( thirdState ).get( 0 ).getLabel() );
-		DefaultState fourthState = (DefaultState) res.getStates().get( 3 );
+		DefaultProgramState fourthState = (DefaultProgramState) res.getStates().get( 3 );
 		assertFalse( res.getSuccessors().containsKey( fourthState ) );
 	}
 	
@@ -128,7 +130,7 @@ public class StateSpaceGeneratorTest {
 		programInstructions.add( secondReturn );
 		Program mainProgram = new Program( programInstructions );
 
-        ProgramState initialState = new DefaultState(initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = ssgBuilder
                 .setProgram(mainProgram)
                 .addInitialState(initialState)
@@ -138,12 +140,12 @@ public class StateSpaceGeneratorTest {
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
 		assertEquals( initialGraph,  res.getFinalStates().get( 0 ).getHeap()  );
-		DefaultState firstState = (DefaultState) res.getStates().get( 0 );
+		DefaultProgramState firstState = (DefaultProgramState) res.getStates().get( 0 );
 		assertEquals( ifStmt.toString(), res.getSuccessors().get( firstState ).get( 0 ).getLabel() );
-		DefaultState secondState = (DefaultState) res.getStates().get( 1 );
+		DefaultProgramState secondState = (DefaultProgramState) res.getStates().get( 1 );
 		assertFalse( secondReturn.toString().equals( res.getSuccessors().get( secondState ).get( 0 ).getLabel() ) );
 		assertEquals( firstReturn.toString(), res.getSuccessors().get( secondState ).get( 0 ).getLabel() );
-		DefaultState thirdState = (DefaultState) res.getStates().get( 2 );
+		DefaultProgramState thirdState = (DefaultProgramState) res.getStates().get( 2 );
 		assertFalse( res.getSuccessors().containsKey( thirdState ) );
 	}
 }

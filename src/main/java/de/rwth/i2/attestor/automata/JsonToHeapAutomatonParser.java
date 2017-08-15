@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.automata;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -42,6 +43,8 @@ public class JsonToHeapAutomatonParser {
                 return new ReachabilityAutomaton();
             case "balance":
                 return new BalancedTreeAutomaton();
+            case "points-to":
+                return new PointsToAutomaton( () -> Settings.getInstance().factory().createEmptyHeapConfiguration() );
             default:
                 logger.error("Unknown automaton '" + automatonName + "' is ignored.");
                 return null;

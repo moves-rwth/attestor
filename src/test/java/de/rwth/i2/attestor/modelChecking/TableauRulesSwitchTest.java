@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TableauRulesSwitchTest {
 
 	private HeapConfiguration hc;
-	private DefaultState state;
+	private DefaultProgramState state;
 
 	@BeforeClass
 	public static void init() {
@@ -28,16 +28,16 @@ public class TableauRulesSwitchTest {
 	public void setup() {
 
 		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		state = new DefaultState(hc);
-		state.addAP("ap1");
+		state = new DefaultProgramState(hc);
+		state.addAP("{ sll }");
 	}
 
 	@Test
 	public void caseAAtomicpropTerm(){
 		
 		Assertion currentVertex = new Assertion(state);
-		
-		TAtomicprop ap = new TAtomicprop("ap1");
+
+		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
 		
 		currentVertex.addFormula(term);
@@ -51,12 +51,12 @@ public class TableauRulesSwitchTest {
 		assertTrue(currentVertex.isTrue());
 		
 		// Reset state and rule switch with new AP
-		state = new DefaultState(hc);
-		state.addAP("ap1");
+		state = new DefaultProgramState(hc);
+		state.addAP("{ sll }");
 
 		currentVertex = new Assertion(state);
-		
-		TAtomicprop ap2 = new TAtomicprop("ap2");
+
+		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
 		AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
 		
 		currentVertex.addFormula(term2);
@@ -79,8 +79,8 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseALtlTerm(){
 		Assertion currentVertex = new Assertion(state);
-				
-		TAtomicprop ap = new TAtomicprop("ap1");
+
+		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
 		ATermLtlform ltlTerm = new ATermLtlform(term);
 				
@@ -100,8 +100,8 @@ public class TableauRulesSwitchTest {
 	public void caseAFalseTerm(){
 		
 		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultState state = new DefaultState(hc);
-		state.addAP("ap1");
+		DefaultProgramState state = new DefaultProgramState(hc);
+		state.addAP("{ sll }");
 
 		Assertion currentVertex = new Assertion(state);
 		
@@ -160,12 +160,12 @@ public class TableauRulesSwitchTest {
 		// Generate assertion
 
 		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
-		DefaultState state = new DefaultState(hc);
-		state.addAP("ap1");
+		DefaultProgramState state = new DefaultProgramState(hc);
+		state.addAP("{ sll }");
 
 		Assertion currentVertex = new Assertion(state);
-		
-		TAtomicprop ap = new TAtomicprop("ap1");
+
+		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		ANegStateform negStateForm = new ANegStateform(new TNeg(), ap);
 		
 		currentVertex.addFormula(negStateForm);
@@ -190,12 +190,12 @@ public class TableauRulesSwitchTest {
 	public void AAndStateform(){
 
 		Assertion currentVertex = new Assertion(state);
-		
-		TAtomicprop ap1 = new TAtomicprop("ap1");
+
+		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
 		ATermLtlform termLtl1 = new ATermLtlform(term1);
-		
-		TAtomicprop ap2 = new TAtomicprop("ap2");
+
+		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
 		AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
 		ATermLtlform termLtl2 = new ATermLtlform(term2);
 		currentVertex.addFormula(termLtl2);
@@ -227,15 +227,15 @@ public class TableauRulesSwitchTest {
 		
         Assertion currentVertex = new Assertion(state);
 
-        TAtomicprop ap1 = new TAtomicprop("ap1");
+		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
         ATermLtlform termLtl1 = new ATermLtlform(term1);
 
-        TAtomicprop ap2 = new TAtomicprop("ap2");
+		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
         AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
         ATermLtlform termLtl2 = new ATermLtlform(term2);
 
-        TAtomicprop ap3 = new TAtomicprop("ap3");
+		ATreeAtomicprop ap3 = new ATreeAtomicprop(new TLcurlyparen(), new TAptree(), new TRcurlyparen());
         AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
         ATermLtlform termLtl3 = new ATermLtlform(term3);
 
@@ -278,17 +278,17 @@ public class TableauRulesSwitchTest {
 		
         Assertion currentVertex = new Assertion(state);
 
-        TAtomicprop ap1 = new TAtomicprop("ap1");
+		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
         ATermLtlform termLtl1 = new ATermLtlform(term1);
 
-        TAtomicprop ap2 = new TAtomicprop("ap2");
+		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
         AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
         ATermLtlform termLtl2 = new ATermLtlform(term2);
         currentVertex.addFormula(termLtl2);
 
-        TAtomicprop ap3 = new TAtomicprop("ap3");
-        AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
+		ATreeAtomicprop ap3 = new ATreeAtomicprop(new TLcurlyparen(), new TAptree(), new TRcurlyparen());
+		AAtomicpropTerm term3 = new AAtomicpropTerm(ap3);
         ATermLtlform termLtl3 = new ATermLtlform(term3);
 
         AAndStateform andStateForm = new AAndStateform(new TLparen(), termLtl1, new TAnd(), termLtl2,new TRparen());

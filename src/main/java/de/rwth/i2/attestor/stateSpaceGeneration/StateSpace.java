@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
-
 import java.util.*;
 
 /**
@@ -126,18 +123,6 @@ public class StateSpace {
 			maxSize = state.size();
 		}
 
-		if( Settings.getInstance().output().isExportBigStates() 
-			&& state.size() > Settings.getInstance().output().getBigStatesThreshold()
-			&& state.getHeap() != null){
-			
-			HeapConfiguration heap = state.getHeap();
-			
-			String location = Settings.getInstance().output().getLocationForBigStates();
-			Settings.getInstance().factory()
-					.getHeapConfigurationExporter(location)
-					.export("state>30", heap);
-		}
-		
 		return result;
 	}
 
@@ -158,6 +143,10 @@ public class StateSpace {
 	public List<ProgramState> successorsOf(ProgramState programState) {
 		
 		List<ProgramState> res = new ArrayList<>();
+
+		if(!successors.containsKey(programState)) {
+			return res;
+		}
 		
 		for(StateSuccessor s : successors.get(programState)) {
 			
@@ -287,5 +276,28 @@ public class StateSpace {
 		}
 		
 		return res;		
+	}
+
+	public List<ProgramState> getSuccessorsWithoutMaterialisation(ProgramState currentState) {
+		List<ProgramState> res = new ArrayList<>();
+
+		if(!successors.containsKey(currentState)) {
+			return res;
+		}
+
+		for(StateSuccessor s : successors.get(currentState)) {
+
+			// The successor resulted from a materialisation step. Leap over and add all its successors!
+			if(s.getLabel() == ""){
+				for(StateSuccessor ms : successors.get(s)) {
+					res.add(ms.getTarget());
+				}
+			} else {
+				res.add(s.getTarget());
+			}
+		}
+
+		return res;
+
 	}
 }

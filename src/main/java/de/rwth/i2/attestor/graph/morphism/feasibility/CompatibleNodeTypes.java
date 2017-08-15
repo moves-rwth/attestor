@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
+import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
@@ -19,14 +20,16 @@ public class CompatibleNodeTypes implements FeasibilityFunction {
 		Graph patternGraph = state.getPattern().getGraph();
 		Graph targetGraph = state.getTarget().getGraph();
 
-		if( patternGraph.getNodeLabel(candidate.p) instanceof GeneralType){
-			GeneralType nodeType = (GeneralType) patternGraph.getNodeLabel(candidate.p);
-			return nodeType.typeEquals( targetGraph.getNodeLabel(candidate.t) );
-		}else{
-			return patternGraph.getNodeLabel(candidate.p)
-					.matches(
-							targetGraph.getNodeLabel(candidate.t)
-							);
+		NodeLabel patternLabel = patternGraph.getNodeLabel(candidate.p);
+		NodeLabel targetLabel = targetGraph.getNodeLabel(candidate.t);
+
+		if( patternLabel instanceof GeneralType && targetLabel instanceof GeneralType){
+			GeneralType patternType = (GeneralType) patternLabel;
+			GeneralType targetType = (GeneralType) targetLabel;
+			return patternType.typeEquals(targetType)
+					|| targetType.typeEquals( GeneralType.getType("NULL") );
+		}else {
+			return patternLabel.matches(targetLabel);
 		}
 	}
 

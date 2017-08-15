@@ -3,11 +3,11 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 import static org.junit.Assert.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
@@ -35,7 +35,7 @@ public class NewExprTest {
 		int oldNodeNumber = testGraph.countNodes();
 				
 		try {
-			DefaultState executable = new DefaultState(testGraph.clone());
+			DefaultProgramState executable = new DefaultProgramState(testGraph.clone());
 			
 			expr.evaluateOn( executable );
 			

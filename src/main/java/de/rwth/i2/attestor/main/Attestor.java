@@ -1,8 +1,9 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
@@ -10,6 +11,7 @@ import de.rwth.i2.attestor.io.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -17,20 +19,25 @@ import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
+import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 
 /**
  * The main class to run Attestor.
- * To start a program analysis it suffices to call run(args), where args are the command line arguments
+ *
+ *  To start a program analysis it suffices to call {Attestor#run(args)}, where args are the command line arguments
  * passed, for example, to a main method.
+ * In particular, these arguments have to include the path to a settings file customizing the analysis.
  *
  * @author Christoph
  */
@@ -77,15 +84,10 @@ public class Attestor {
 	 */
 	private final CommandLineReader commandLineReader = new CommandLineReader();
 
-	public Attestor() {
-		commandLineReader.setupCLI();
-	}
-
-
 	/**
 	 * Runs attestor to perform a program analysis.
 	 *
-	 * @param args The command line arguments determining settings and input files.
+	 * @param args The command line arguments determining settings and analysis customizations.
 	 */
 	public void run(String[] args) {
 
@@ -94,49 +96,51 @@ public class Attestor {
 	    try {
 			setupPhase(args);
 		} catch(Exception e) {
-	    	fail(e, "Setup");
+	    	failPhase(e, "Setup");
 		}
         leavePhase("Setup");
 
 	    try {
 			parsingPhase();
 		} catch(Exception e) {
-	    	fail(e,"Parsing");
+	    	failPhase(e,"Parsing");
 		}
         leavePhase("Parsing");
 
 	    try {
 			preprocessingPhase();
 		} catch(Exception e) {
-	    	fail(e,"Preprocessing");
+	    	failPhase(e,"Preprocessing");
 		}
         leavePhase("Preprocessing");
-
 
         try {
 			stateSpaceGenerationPhase();
 		} catch(Exception e) {
-        	fail(e,"State space generation");
+        	failPhase(e,"State space generation");
 		}
         leavePhase("State space generation");
 
         try {
         	modelCheckingPhase();
 		} catch (Exception e) {
-        	fail(e,"State space generation");
+        	failPhase(e,"Model-checking");
 		}
         leavePhase("Model-checking");
 
         try {
         	reportPhase();
 		} catch(Exception e) {
-        	fail(e,"Report generation");
+        	failPhase(e,"Report generation");
 		}
         leavePhase("Report generation");
 
 		printSummary();
 	}
 
+    /**
+     * Prints the currently running version of attestor.
+     */
 	private void printVersion() {
 
         try {
@@ -148,44 +152,13 @@ public class Attestor {
         }
     }
 
-	private void printAnalyzedMethod() {
-
-        logger.info("Analyzing '"
-                + settings.input().getClasspath()
-                + "/"
-                + settings.input().getClassName()
-                + "."
-                + settings.input().getMethodName()
-                + "'..."
-        );
-
-    }
-
-    private void printSummary() {
-
-	    logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info("|           |  w/ procedure calls  |  w/o procedure calls  | final  |");
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
-                            Settings.getInstance().factory().getTotalNumberOfStates(),
-                            stateSpace.getStates().size(),
-                            stateSpace.getFinalStates().size()
-                          ));
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-    }
-
-    private void fail(Exception e, String message) {
-		e.printStackTrace();
-		logger.fatal(e.getMessage());
-		logger.fatal("+------------------------------------------------------------------+");
-		logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
-				+ ANSI_RESET + " %-39s |", message));
-		logger.fatal("+------------------------------------------------------------------+");
-		System.exit(1);
-	}
-
+    /**
+     * This phase initializes the command line interfaces and populates the global settings.
+     * @param args The command line arguments passed to attestor.
+     */
 	private void setupPhase(String[] args) {
 
+        commandLineReader.setupCLI();
 		commandLineReader.loadSettings(args);
         if( commandLineReader.hasSettingsFile() ){
             SettingsFileReader settingsReader =
@@ -203,8 +176,17 @@ public class Attestor {
         if( commandLineReader.hasRootPath() ){
             settings.setRootPath( commandLineReader.getRootPath() );
         }
-
 	}
+
+    private void failPhase(Exception e, String message) {
+        e.printStackTrace();
+        logger.fatal(e.getMessage());
+        logger.fatal("+------------------------------------------------------------------+");
+        logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
+                + ANSI_RESET + " %-39s |", message));
+        logger.fatal("+------------------------------------------------------------------+");
+        System.exit(1);
+    }
 
 	private void leavePhase(String message) {
         logger.info("+-------------------------------------------------------------------+");
@@ -214,7 +196,6 @@ public class Attestor {
     }
 
 	private void parsingPhase() throws IOException {
-
 
 		// Load the user-defined grammar
 		if(settings.input().getUserDefinedGrammarName() != null) {
@@ -226,19 +207,17 @@ public class Attestor {
 			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
 				logger.debug("Loading predefined grammar " + predefinedGrammar);
 				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader().getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
+				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
+                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
 			}
 		}
 
-		// TODO:
-		//settings.grammar().exportGrammar();
-
 		loadInput();
-
 		loadProgram();
 	}
 
 	private void loadInput() throws IOException {
+
 		String str;
 		if(settings.input().getInputName() != null){
 			logger.debug("Reading user-defined initial state.");
@@ -369,6 +348,19 @@ public class Attestor {
                 + settings.factory().getTotalNumberOfStates());
 	}
 
+    private void printAnalyzedMethod() {
+
+        logger.info("Analyzing '"
+                + settings.input().getClasspath()
+                + "/"
+                + settings.input().getClassName()
+                + "."
+                + settings.input().getMethodName()
+                + "'..."
+        );
+
+    }
+
 	private void setupMaterialization() {
 
         Grammar grammar = settings.grammar().getGrammar();
@@ -376,12 +368,12 @@ public class Attestor {
 
         if(settings.options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-            StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+            IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
             MaterializationRuleManager grammarManager =
-                    new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+                    new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 
             GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier( new StackMaterializer(),
+                    new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(),
                             new GraphMaterializer() );
 
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
@@ -408,7 +400,8 @@ public class Attestor {
                     grammar,
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction()
+                    settings.options().isAggressiveReturnAbstraction(),
+                    settings.options().getMinDereferenceDepth()
             );
             logger.info("Setup canonicalization using indexed grammar.");
         } else {
@@ -416,7 +409,8 @@ public class Attestor {
                     grammar,
                     true,
                     settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction()
+                    settings.options().isAggressiveReturnAbstraction(),
+                    settings.options().getMinDereferenceDepth()
             );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }
@@ -424,6 +418,7 @@ public class Attestor {
     }
 
     private void setupInclusionTest() {
+
 	    settings.stateSpaceGeneration()
                 .setInclusionStrategy(
                         new GeneralInclusionStrategy()
@@ -432,6 +427,7 @@ public class Attestor {
     }
 
     private void setupAbortTest() {
+
         int stateSpaceBound = Settings.getInstance().options().getMaxStateSpaceSize();
         int stateBound = Settings.getInstance().options().getMaxStateSize();
         settings.stateSpaceGeneration()
@@ -447,21 +443,69 @@ public class Attestor {
 
 	private void modelCheckingPhase() {
 
-	    logger.warn("Model checking phase not implemented yet.");
-	}
+	    Set<LTLFormula> formulas = settings.modelChecking().getFormulae();
 
-	private void reportPhase() {
-
-		if(Settings.getInstance().output().isExportStateSpace() ) {
-            logger.info("State space exported to '"
-                    + Settings.getInstance().output().getLocationForStateSpace()
-					+ "'"
-			);
-            //task.exportAllStates();
+	    if(formulas.isEmpty()) {
+	        logger.info("No LTL formulas have been provided.");
         }
 
-        //if( Settings.getInstance().output().isExportTerminalStates() ){
-            //task.exportTerminalStates();
-        //}
+	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
+
+	        logger.info("Checking formula: " + formula.toString() + "...");
+            ProofStructure proofStructure = new ProofStructure();
+            proofStructure.build(stateSpace, formula);
+            if(proofStructure.isSuccessful()) {
+                logger.info("Formula is satisfied.");
+            } else {
+                logger.warn("Formula is not satisfied.");
+            }
+        }
 	}
+
+	private void reportPhase() throws IOException {
+
+		if(settings.output().isExportStateSpace() ) {
+
+		    String location = settings.output().getLocationForStateSpace();
+
+            settings.factory().export(
+                    location + File.separator + "data",
+                    "statespace.json",
+                    stateSpace,
+                    program
+            );
+
+            List<ProgramState> states = stateSpace.getStates();
+            for(int i=0; i < states.size(); i++) {
+                settings.factory().export(
+                        location + File.separator + "data",
+                        "hc_" + i + ".json",
+                        states.get(i).getHeap()
+                );
+            }
+
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            logger.info("State space exported to '"
+                    + location
+                    + "'"
+            );
+        }
+	}
+
+	private void printSummary() {
+
+        logger.info("+-----------+----------------------+-----------------------+--------+");
+        logger.info("|           |  w/ procedure calls  |  w/o procedure calls  | final  |");
+        logger.info("+-----------+----------------------+-----------------------+--------+");
+        logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
+                Settings.getInstance().factory().getTotalNumberOfStates(),
+                stateSpace.getStates().size(),
+                stateSpace.getFinalStates().size()
+        ));
+        logger.info("+-----------+----------------------+-----------------------+--------+");
+    }
 }
