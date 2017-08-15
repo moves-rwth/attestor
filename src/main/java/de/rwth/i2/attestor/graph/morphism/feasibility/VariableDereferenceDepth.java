@@ -37,7 +37,8 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 			if(graph.getNodeLabel(var) instanceof Variable) {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
-				boolean isNull = (!Settings.getInstance().options().isNullDistanceEnabled()) || label.contains("null");
+				// TODO: ask christoph!
+				boolean isNull = (!Settings.getInstance().options().getAggressiveNullAbstraction()) || label.contains("null");
 				
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				

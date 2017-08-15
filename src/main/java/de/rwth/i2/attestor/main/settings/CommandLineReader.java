@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.generated.lexer.LexerException;
-import de.rwth.i2.attestor.generated.parser.ParserException;
+
 import java.io.File;
 
 import org.apache.commons.cli.*;
@@ -11,10 +10,6 @@ import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 
 /**
  * Parses the provided command line options in order to populate
@@ -86,10 +81,10 @@ public class CommandLineReader {
 				);
 
 		cliOptions.addOption(
-				Option.builder("d")
+				Option.builder("ad")
 				.longOpt("depth")
-				.desc("(optional) sets the dereference depth for canonicalization (default is " 
-						+ Settings.getInstance().options().getMinDereferenceDepth() + ")")
+				.desc("(optional) sets the abstraction distance (default is "
+						+ Settings.getInstance().options().getAbstractionDistance() + ")")
 				.hasArg()
 				.argName("int")
 				.build()
@@ -116,12 +111,12 @@ public class CommandLineReader {
 				);
 
 		cliOptions.addOption(
-				Option.builder("aggr")
-				.longOpt("aggressive-canonization-threshold")
+				Option.builder("at")
+				.longOpt("aggressive-abstraction-threshold")
 				.hasArg()
 				.optionalArg(true)
 				.argName("int")
-				.desc("(optional) after this threshold canonization will ignore the depth argument (default "
+				.desc("(optional) after this threshold abstraction will ignore the distance argument (default "
 						+ Settings.getInstance().options().getAggressiveAbstractionThreshold() + ")"
 						+"(only applicable to indexed analysis)")
 				.build()
@@ -255,8 +250,8 @@ public class CommandLineReader {
 
 		DebugMode.ENABLED = cmd.hasOption("v");
 
-		if(cmd.hasOption("d")) {
-			optionSettings.setMinDereferenceDepth( Integer.valueOf(cmd.getOptionValue("d")) );
+		if(cmd.hasOption("ad")) {
+			optionSettings.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
 		}
 
 		if(cmd.hasOption("msp")) {
@@ -267,7 +262,7 @@ public class CommandLineReader {
 			optionSettings.setMaxStateSize( Integer.valueOf(cmd.getOptionValue("mh")) );
 		}
 
-		if(cmd.hasOption("aggr")) {
+		if(cmd.hasOption("at")) {
 			optionSettings.setAggressiveAbstractionThreshold( Integer.valueOf(cmd.getOptionValue("aggr")) );
 		}
 

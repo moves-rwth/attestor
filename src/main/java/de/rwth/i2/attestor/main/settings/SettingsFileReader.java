@@ -96,14 +96,14 @@ public class SettingsFileReader {
 			logger.error("Please provide a method to be analysed.");
 		}
 		
-		JSONObject grammarSettings = jsonInput.getJSONObject( "grammar" );
+		JSONObject grammarSettings = jsonInput.getJSONObject( "userDefinedGrammar" );
 		if(grammarSettings.has("file")) {
 			if (grammarSettings.has("path")) {
 				input.setPathToGrammar(grammarSettings.getString("path"));
 			} else if (!jsonInput.has("defaultPath")) {
-				logger.error("You must define a default path or a path for grammar");
+				logger.error("You must define a default path or a path for the grammar");
 			}
-			input.setGrammarName(grammarSettings.getString("file"));
+			input.setUserDefinedGrammarName(grammarSettings.getString("file"));
 		}
 
 		// Add requested predefined grammars
@@ -195,8 +195,8 @@ public class SettingsFileReader {
 
 		DebugMode.ENABLED = jsonOptions.has("logging");
 
-		if( jsonOptions.has( "depth" )) {
-			options.setMinDereferenceDepth( jsonOptions.getInt( "depth" ) );
+		if( jsonOptions.has( "abstractionDistance" )) {
+			options.setAbstractionDistance( jsonOptions.getInt( "abstractionDistance" ) );
 		}
 
 		if( jsonOptions.has( "maximalStateSpace") ) {
@@ -207,8 +207,8 @@ public class SettingsFileReader {
 			options.setMaxStateSize( jsonOptions.getInt( "maximalHeap" ) );
 		}
 
-		if( jsonOptions.has( "aggressiveThreshold" )) {
-			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveThreshold" ));
+		if( jsonOptions.has( "aggressiveAbstractionThreshold" )) {
+			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveAbstractionThreshold" ));
 		}
 
 		if( jsonOptions.has( "aggressiveReturn" ) ){

@@ -217,7 +217,7 @@ public class Attestor {
 
 
 		// Load the user-defined grammar
-		if(settings.input().getGrammarName() != null) {
+		if(settings.input().getUserDefinedGrammarName() != null) {
 			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
 		}
 

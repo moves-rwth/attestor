@@ -562,7 +562,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	@Override
 	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern) {
 
-    	int depth = Settings.getInstance().options().getMinDereferenceDepth();
+    	int depth = Settings.getInstance().options().getAbstractionDistance();
 
 		if(depth > 0) {
 

@@ -214,11 +214,11 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/rwth/i2/attestor/main/settings/OptionSettings.html#setMinDereferenceDepth-int-">setMinDereferenceDepth</a></span>(int&nbsp;minDereferenceDepth)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/rwth/i2/attestor/main/settings/OptionSettings.html#setMinDereferenceDepth-int-">setMinDereferenceDepth</a></span>(int&nbsp;abstractionDistance)</code>&nbsp;</td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/rwth/i2/attestor/main/settings/OptionSettings.html#setNullDistanceEnabled-boolean-">setNullDistanceEnabled</a></span>(boolean&nbsp;nullDistanceEnabled)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../de/rwth/i2/attestor/main/settings/OptionSettings.html#setNullDistanceEnabled-boolean-">setNullDistanceEnabled</a></span>(boolean&nbsp;aggressiveNullAbstraction)</code>&nbsp;</td>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -342,10 +342,10 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>setMinDereferenceDepth</h4>
-<pre>public&nbsp;void&nbsp;setMinDereferenceDepth(int&nbsp;minDereferenceDepth)</pre>
+<pre>public&nbsp;void&nbsp;setMinDereferenceDepth(int&nbsp;abstractionDistance)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>minDereferenceDepth</code> - The minimal distance between variables and nodes in an
+<dd><code>abstractionDistance</code> - The minimal distance between variables and nodes in an
                             embedding before abstraction is performed.</dd>
 </dl>
 </li>
@@ -369,10 +369,10 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>setNullDistanceEnabled</h4>
-<pre>public&nbsp;void&nbsp;setNullDistanceEnabled(boolean&nbsp;nullDistanceEnabled)</pre>
+<pre>public&nbsp;void&nbsp;setNullDistanceEnabled(boolean&nbsp;aggressiveNullAbstraction)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>nullDistanceEnabled</code> - True if and only if the minimal dereference distance
+<dd><code>aggressiveNullAbstraction</code> - True if and only if the minimal dereference distance
                             should be ignored for the null node.</dd>
 </dl>
 </li>
