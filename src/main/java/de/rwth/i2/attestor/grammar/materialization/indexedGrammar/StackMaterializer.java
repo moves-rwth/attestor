@@ -47,6 +47,7 @@ public class StackMaterializer {
 			return inputGraph;
 		}
 	}
+	
 
 	/**
 	 * Creates a clone of the input graph and applies the given materialization to
@@ -126,5 +127,7 @@ public class StackMaterializer {
 
 		return	nonterminalToMaterialize.getWithProlongedStack( inputMaterializationPostfix );
 	}
+
+
 
 }

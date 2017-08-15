@@ -198,7 +198,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 
 	private List<StackSymbol> getExpectedStack() {
 		List<StackSymbol> stack = getEmptyStack();
-		for( int i = 0; i < sizeOfChain; i++ ) {
+		for( int i = 0; i < sizeOfChain - 1; i++ ) {
 			stack.add( DefaultStackMaterialization.SYMBOL_s );
 		}
 		return makeConcrete( stack );

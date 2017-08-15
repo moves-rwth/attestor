@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.CannotMateriali
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
@@ -72,7 +73,8 @@ public class EmbeddingStackChecker {
 
 		}
 
-		toAbstract = applyMaterializationsTo(toAbstract, materializations);
+		toAbstract = applyMaterializationsTo( toAbstract, materializations );
+		pattern = applyInstantiationTo( pattern, instantiation );
 		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
 			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
 			lhs = iLhs.getWithProlongedStack(instantiation);
@@ -81,6 +83,7 @@ public class EmbeddingStackChecker {
 		checkAppliedResult(toAbstract, embedding, pattern);
 		return new StackEmbeddingResult( toAbstract, lhs );
 	}
+
 
 	/**
 	 * To avoid checking corner cases in the original compuation of matchings,
@@ -136,6 +139,31 @@ public class EmbeddingStackChecker {
 		}
 		return hc;
 	}
+	
+	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<StackSymbol> instantiation) {
+		
+		StackSymbol stackVariable = StackVariable.getGlobalInstance();
+		pattern = pattern.clone();
+		HeapConfigurationBuilder builder = pattern.builder();
+		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();
+		while(edgeIter.hasNext()) {
+			int indexOfNonterminal = edgeIter.next();
+			Nonterminal nonterminal = pattern.labelOf( indexOfNonterminal );
+			if( nonterminal instanceof IndexedNonterminal){
+				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
+				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( stackVariable ) ) {
+					
+					Nonterminal nonterminalWithMaterializedStack = 
+							applyInstantiationTo(instantiation, nonterminalToMaterialize);
+					builder.replaceNonterminal(indexOfNonterminal, nonterminalWithMaterializedStack );
+				}
+
+			}
+		}
+		HeapConfiguration materializedGraph = builder.build();
+		return materializedGraph;
+	}
+
 
 
 	private void updateMaterializations(Map<AbstractStackSymbol, List<StackSymbol>> materializations,
