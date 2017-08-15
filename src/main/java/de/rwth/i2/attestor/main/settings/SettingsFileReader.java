@@ -230,6 +230,10 @@ public class SettingsFileReader {
             options.setStateRefinementAutomaton( parser.getHeapAutomaton() );
         }
 
+        if( jsonOptions.has("aggressiveNullAbstraction") ){
+			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
+		}
+
 		return options;
 	}
 
