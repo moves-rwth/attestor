@@ -18,7 +18,7 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -45,7 +45,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 		GeneralCanonicalizationStrategy canonizer 
 				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
-		ProgramState inputState = new DefaultState( getSimpleGraph() );
+		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
 		
 		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
@@ -92,6 +92,6 @@ public class GeneralCanonicalizationTest_Default_Simple {
 			builder.addTentacle( nodes.get(i) );
 		}
 		hc =  builder.build().build();
-		return new DefaultState( hc );
+		return new DefaultProgramState( hc );
 	}
 }

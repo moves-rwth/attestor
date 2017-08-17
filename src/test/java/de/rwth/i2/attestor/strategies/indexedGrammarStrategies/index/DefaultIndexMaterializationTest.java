@@ -1,16 +1,14 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
 public class DefaultIndexMaterializationTest {
 	

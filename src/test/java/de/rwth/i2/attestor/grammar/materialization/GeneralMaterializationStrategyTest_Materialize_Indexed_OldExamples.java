@@ -5,15 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.grammar.IndexMatcher;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 
 public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamples {
 

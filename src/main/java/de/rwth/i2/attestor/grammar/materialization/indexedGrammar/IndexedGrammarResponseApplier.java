@@ -1,10 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -20,8 +24,8 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 
 	IndexMaterializationStrategy indexMaterializationStrategy;
 
-	public IndexedGrammarResponseApplier(IndexMaterializationStrategy indexMaterializationStrategy,
-			GraphMaterializer graphMaterializer) {
+	public IndexedGrammarResponseApplier( IndexMaterializationStrategy indexMaterializationStrategy,
+										  GraphMaterializer graphMaterializer) {
 		super( graphMaterializer );
 		this.indexMaterializationStrategy = indexMaterializationStrategy;
 	}

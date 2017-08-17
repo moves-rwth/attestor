@@ -1,21 +1,21 @@
 package de.rwth.i2.attestor.grammar;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.*;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import java.util.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 
 public class GrammarTest {
 

@@ -1,23 +1,25 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
-import gnu.trove.list.array.TIntArrayList;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.TypeFactory;
+import gnu.trove.list.array.TIntArrayList;
 
 public class IndexMaterializationStrategyTest {
 

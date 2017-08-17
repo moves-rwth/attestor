@@ -12,12 +12,9 @@ import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 
@@ -110,7 +107,7 @@ public class EmbeddingStackChecker {
 				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
 				
-				if( ! materializable.getStack().matchStack(instantiable.getStack() ) ) {
+				if( ! materializable.getIndex().matchStack(instantiable.getIndex() ) ) {
 					throw new CannotMatchException();
 				}
 			}
@@ -152,7 +149,7 @@ public class EmbeddingStackChecker {
 			Nonterminal nonterminal = pattern.labelOf( indexOfNonterminal );
 			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( stackVariable ) ) {
+				if( nonterminalToMaterialize.getIndex().getLastStackSymbol().equals( stackVariable ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							applyInstantiationTo(instantiation, nonterminalToMaterialize);
@@ -250,7 +247,7 @@ public class EmbeddingStackChecker {
 			IndexedNonterminal materializable ) 
 	{
 
-		IndexSymbol lastStackSymbol = materializable.getStack().getLastStackSymbol();
+		IndexSymbol lastStackSymbol = materializable.getIndex().getLastStackSymbol();
 		if( lastStackSymbol instanceof AbstractIndexSymbol ){
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
 				return materializable.getWithProlongedStack( currentMaterializations.get(lastStackSymbol) );
@@ -261,7 +258,7 @@ public class EmbeddingStackChecker {
 
 	private IndexedNonterminal applyInstantiationTo(List<IndexSymbol> instantiation, IndexedNonterminal instantiable) {
 
-		IndexSymbol lastSymbol = instantiable.getStack().getLastStackSymbol();
+		IndexSymbol lastSymbol = instantiable.getIndex().getLastStackSymbol();
 		if( ! instantiation.isEmpty() && lastSymbol instanceof IndexVariable ) {
 			return instantiable.getWithProlongedStack(instantiation);
 		}else {

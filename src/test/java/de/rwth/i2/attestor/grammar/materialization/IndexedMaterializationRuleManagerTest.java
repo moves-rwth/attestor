@@ -1,29 +1,27 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
-import de.rwth.i2.attestor.grammar.testUtil.FakeIndexMatcher;
-import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolver;
-import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.testUtil.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class IndexedMaterializationRuleManagerTest {
 

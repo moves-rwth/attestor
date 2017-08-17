@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-
 import java.util.List;
+
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.digraph.NodeLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.Index;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
 
@@ -138,4 +140,5 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	public String getLabel() {
 		return generalNonterminal.getLabel();
 	}
+
 }

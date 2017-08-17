@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
+import java.util.List;
+
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
-
-import java.util.List;
 
 /**
  * Responsible for applying the materialization rules to the stacks of the nonterminals
@@ -93,7 +93,7 @@ public class IndexMaterializationStrategy {
 			Nonterminal nonterminal = inputGraph.labelOf( indexOfNonterminal );
 			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getStack().getLastStackSymbol().equals( symbolToMaterialize ) ) {
+				if( nonterminalToMaterialize.getIndex().getLastStackSymbol().equals( symbolToMaterialize ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							computeMaterializedCopyOf(nonterminalToMaterialize, inputMaterializationPostfix);
@@ -121,7 +121,7 @@ public class IndexMaterializationStrategy {
 			List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
-		if( nonterminalToMaterialize.getStack().hasConcreteStack() ){
+		if( nonterminalToMaterialize.getIndex().hasConcreteStack() ){
 			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
 		}
 

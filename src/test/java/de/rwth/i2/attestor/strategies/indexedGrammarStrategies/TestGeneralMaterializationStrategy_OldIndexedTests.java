@@ -5,15 +5,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 
 
 public class TestGeneralMaterializationStrategy_OldIndexedTests {

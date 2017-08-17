@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import static org.junit.Assert.*;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 
 
 public class TestAVLIndexCanoization {

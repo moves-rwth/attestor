@@ -5,8 +5,8 @@ import java.util.List;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 
 public class IndexGrammarForTests implements IndexMaterializationStrategy {
 

@@ -1,18 +1,17 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ExampleHcImplFactory {
 	

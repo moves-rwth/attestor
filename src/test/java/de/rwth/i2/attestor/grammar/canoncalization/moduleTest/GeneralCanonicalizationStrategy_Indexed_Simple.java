@@ -1,13 +1,9 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,26 +11,19 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -75,7 +64,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		GeneralCanonicalizationStrategy canonizer 
 				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
-		ProgramState inputState = new DefaultState( getSimpleGraph() );
+		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
 		
 		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);

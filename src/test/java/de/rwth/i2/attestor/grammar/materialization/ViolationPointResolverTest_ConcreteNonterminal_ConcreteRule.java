@@ -1,26 +1,24 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
-import gnu.trove.list.array.TIntArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import java.util.*;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.TypeFactory;
+import gnu.trove.list.array.TIntArrayList;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 

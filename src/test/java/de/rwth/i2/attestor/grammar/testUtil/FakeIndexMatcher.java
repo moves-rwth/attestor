@@ -1,11 +1,12 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
-import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.util.Pair;
 
 /**
  * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in stackVariable).

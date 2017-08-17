@@ -1,14 +1,15 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import java.util.ArrayList;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.ArrayList;
 
 public class BalancedTreeGrammar{
 

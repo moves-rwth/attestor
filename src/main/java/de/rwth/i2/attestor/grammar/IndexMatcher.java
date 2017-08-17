@@ -197,8 +197,8 @@ public class IndexMatcher {
 
 		List<IndexSymbol> necessaryMaterialization, int i) {
 		IndexSymbol s1;
-		if( i < materializableNonterminal.getStack().size() ){
-		 s1 = materializableNonterminal.getStack().get( i );
+		if( i < materializableNonterminal.getIndex().size() ){
+		 s1 = materializableNonterminal.getIndex().get( i );
 
 		}else{
 		  /* 

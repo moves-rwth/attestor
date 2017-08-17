@@ -10,7 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
+import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
@@ -20,7 +21,6 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 

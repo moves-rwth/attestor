@@ -15,7 +15,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVal
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import gnu.trove.iterator.TIntIterator;
 
 public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy {

@@ -1,5 +1,12 @@
 package de.rwth.i2.attestor.main;
 
+import java.io.*;
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -11,9 +18,7 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.main.settings.*;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
@@ -22,16 +27,9 @@ import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.ZipUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 
 /**
