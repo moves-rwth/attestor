@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import gnu.trove.iterator.TIntIterator;
 
@@ -37,7 +38,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private boolean ignoreUniqueSuccessorStatements;
 
-	private final StackCanonizationStrategy stackCanonizationStrategy;
+	private final IndexCanonizationStrategy stackCanonizationStrategy;
 
 	private final int aggressiveAbstractionThreshold;
 
@@ -54,7 +55,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 										   boolean aggressiveReturnAbstraction) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
-		this.stackCanonizationStrategy = new AVLStackCanonizationStrategy();
+		this.stackCanonizationStrategy = new AVLIndexCanonizationStrategy();
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
@@ -136,9 +137,9 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	}
 	
 	private void resetInstantiation(IndexedNonterminal nonterminal) {
-		StackSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
-		if( lastSymb instanceof StackVariable ){
-			( (StackVariable) lastSymb ).resetInstantiation();
+		IndexSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
+		if( lastSymb instanceof IndexVariable ){
+			( (IndexVariable) lastSymb ).resetInstantiation();
 		}
 	}
 

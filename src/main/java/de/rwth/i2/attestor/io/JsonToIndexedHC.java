@@ -4,10 +4,10 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
@@ -64,7 +64,7 @@ public class JsonToIndexedHC {
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
 			String label = hyperedge.getString( "label" );
 			
-			List<StackSymbol> stack = parseStack( hyperedge.getJSONArray("stack") );
+			List<IndexSymbol> stack = parseStack( hyperedge.getJSONArray("stack") );
 			
 			IndexedNonterminal nt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
 			nt = nt.getWithStack(stack);
@@ -78,21 +78,21 @@ public class JsonToIndexedHC {
 		}
 	}
 	
-	static List<StackSymbol>  parseStack(JSONArray stack){
-		List<StackSymbol> res = new ArrayList<>();
+	static List<IndexSymbol>  parseStack(JSONArray stack){
+		List<IndexSymbol> res = new ArrayList<>();
 		for( int i = 0; i < stack.length(); i++ ){
 			String symbol = stack.getString(i);
 			if( symbol.equals("()") ){
-				res.add( StackVariable.getGlobalInstance() );
+				res.add( IndexVariable.getGlobalInstance() );
 				assert( i == stack.length() -1 ) : "variables should be the last symbol of a stack"; 
 			}else if( symbol.startsWith("_") ){
-				res.add( AbstractStackSymbol.get(symbol.substring(1)) );
+				res.add( AbstractIndexSymbol.get(symbol.substring(1)) );
 				assert( i == stack.length() -1 ) : "abstract stack symbols may only occur at the end of stack";
 			}else if( Character.isLowerCase(symbol.codePointAt(0)) ){
-				res.add( ConcreteStackSymbol.getStackSymbol(symbol, false) );
+				res.add( ConcreteIndexSymbol.getStackSymbol(symbol, false) );
 				assert( i < stack.length() -1 ) : "stacks cannot end with a concrete non-bottom symbol";
 			}else if( Character.isUpperCase( symbol.codePointAt(0)) ){
-				res.add( ConcreteStackSymbol.getStackSymbol(symbol, true) );
+				res.add( ConcreteIndexSymbol.getStackSymbol(symbol, true) );
 				assert( i == stack.length() -1 ) : "bottom symbols have to be the last element of a stack";
 			}
 		}

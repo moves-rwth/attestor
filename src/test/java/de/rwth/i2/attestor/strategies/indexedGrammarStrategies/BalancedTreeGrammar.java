@@ -4,9 +4,9 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -39,9 +39,9 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addRuleBalanced(GrammarBuilder builder){
-		StackVariable var = StackVariable.getGlobalInstance();
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( ConcreteStackSymbol.getStackSymbol("s", false));
+		IndexVariable var = IndexVariable.getGlobalInstance();
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
+		lhsStack.add( ConcreteIndexSymbol.getStackSymbol("s", false));
 		lhsStack.add(var);
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
@@ -52,12 +52,12 @@ public class BalancedTreeGrammar{
 
 	public static HeapConfiguration createRuleBalanced() {
 		
-		StackVariable var =  StackVariable.getGlobalInstance();
+		IndexVariable var =  IndexVariable.getGlobalInstance();
 		
-		ArrayList<StackSymbol> r = new ArrayList<>();
+		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
-		ArrayList<StackSymbol> l = new ArrayList<>();
+		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(var);
 		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 
@@ -77,10 +77,10 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addUnbalancedRuleLeft(GrammarBuilder builder){
-		StackVariable var = StackVariable.getGlobalInstance();
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
+		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
 		
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
 		lhsStack.add( s );
 		lhsStack.add(var);
@@ -93,13 +93,13 @@ public class BalancedTreeGrammar{
 
 	public static HeapConfiguration createUnbalancedRuleLeft() {
 		
-		StackVariable var = StackVariable.getGlobalInstance();
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
+		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
 		
-		ArrayList<StackSymbol> r = new ArrayList<>();
+		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
-		ArrayList<StackSymbol> l = new ArrayList<>();
+		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(s);
 		l.add(var);
 		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
@@ -123,10 +123,10 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addUnbalancedRuleRight(GrammarBuilder builder){
-		StackVariable var = StackVariable.getGlobalInstance();
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
+		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
 		
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
 		lhsStack.add( s );
 		lhsStack.add(var);
@@ -138,14 +138,14 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createUnbalancedRuleRight() {
-		StackVariable var = StackVariable.getGlobalInstance();
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
+		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
 		
-		ArrayList<StackSymbol> r = new ArrayList<>();
+		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(s);
 		r.add(var);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
-		ArrayList<StackSymbol> l = new ArrayList<>();
+		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(var);
 		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;
@@ -168,9 +168,9 @@ public class BalancedTreeGrammar{
 	}
 
 	private static void addBalancedLeafRule(GrammarBuilder builder){
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
@@ -195,9 +195,9 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addLeftLeafRule(GrammarBuilder builder){
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		lhsStack.add( s );
 		lhsStack.add(bottom);
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
@@ -208,9 +208,9 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createLeftLeafRule() {
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
-		ArrayList<StackSymbol> l = new ArrayList<>();
+		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(bottom);
 		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_1;
@@ -231,10 +231,10 @@ public class BalancedTreeGrammar{
 	}
 
 	private static void addRightLeafRule(GrammarBuilder builder){
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
-		ArrayList<StackSymbol> lhsStack = new ArrayList<>();
+		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
 		lhsStack.add(bottom);
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
@@ -245,9 +245,9 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createRightLeafRule() {
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
-		ArrayList<StackSymbol> r = new ArrayList<>();
+		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(bottom);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL,r);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;

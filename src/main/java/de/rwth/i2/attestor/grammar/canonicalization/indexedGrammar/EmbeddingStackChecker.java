@@ -6,16 +6,17 @@ import java.util.Map.Entry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
@@ -24,11 +25,11 @@ public class EmbeddingStackChecker {
 	private static final Logger logger = LogManager.getLogger( "EmbeddingStackChecker" );
 
 
-	StackMatcher stackMatcher;
-	StackMaterializer stackMaterializer;
+	IndexMatcher stackMatcher;
+	IndexMaterializationStrategy stackMaterializer;
 
 
-	public EmbeddingStackChecker(StackMatcher matcher, StackMaterializer materializer) {
+	public EmbeddingStackChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
 		this.stackMatcher = matcher;
 		this.stackMaterializer = materializer;
 	}
@@ -37,8 +38,8 @@ public class EmbeddingStackChecker {
 			Matching embedding, 
 			Nonterminal lhs ) throws CannotMatchException{
 
-		Map<AbstractStackSymbol, List<StackSymbol>> materializations = new HashMap<>();
-		List<StackSymbol> instantiation = new ArrayList<>();
+		Map<AbstractIndexSymbol, List<IndexSymbol>> materializations = new HashMap<>();
+		List<IndexSymbol> instantiation = new ArrayList<>();
 
 		HeapConfiguration pattern = embedding.pattern();
 		TIntIterator iterator =  pattern.nonterminalEdges().iterator();
@@ -58,7 +59,7 @@ public class EmbeddingStackChecker {
 				if(! stackMatcher.canMatch( materializable, instantiable ) ){
 					throw new CannotMatchException();
 				}else{
-					Pair<AbstractStackSymbol, List<StackSymbol>> materializationRule = 
+					Pair<AbstractIndexSymbol, List<IndexSymbol>> materializationRule = 
 							stackMatcher.getMaterializationRule(materializable, instantiable);
 
 					if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
@@ -128,8 +129,8 @@ public class EmbeddingStackChecker {
 	 * @return
 	 */
 	private HeapConfiguration applyMaterializationsTo(HeapConfiguration hc,
-			Map<AbstractStackSymbol, List<StackSymbol>> materializations) {
-		for( Entry<AbstractStackSymbol, List<StackSymbol>> rule : materializations.entrySet() ){
+			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations) {
+		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> rule : materializations.entrySet() ){
 			try {
 				hc = this.stackMaterializer.getMaterializedCloneWith(hc, rule.getKey(), rule.getValue() );
 			} catch (CannotMaterializeException e) {
@@ -140,9 +141,9 @@ public class EmbeddingStackChecker {
 		return hc;
 	}
 	
-	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<StackSymbol> instantiation) {
+	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<IndexSymbol> instantiation) {
 		
-		StackSymbol stackVariable = StackVariable.getGlobalInstance();
+		IndexSymbol stackVariable = IndexVariable.getGlobalInstance();
 		pattern = pattern.clone();
 		HeapConfigurationBuilder builder = pattern.builder();
 		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();
@@ -166,8 +167,8 @@ public class EmbeddingStackChecker {
 
 
 
-	private void updateMaterializations(Map<AbstractStackSymbol, List<StackSymbol>> materializations,
-			Pair<AbstractStackSymbol,List<StackSymbol>> newMaterializationRule) {
+	private void updateMaterializations(Map<AbstractIndexSymbol, List<IndexSymbol>> materializations,
+			Pair<AbstractIndexSymbol,List<IndexSymbol>> newMaterializationRule) {
 
 		applyNewMaterialiationTo(materializations,  newMaterializationRule);
 
@@ -177,15 +178,15 @@ public class EmbeddingStackChecker {
 
 	}
 	
-	private void updateInstantiation( List<StackSymbol> instantiation,
-			Pair<AbstractStackSymbol, List<StackSymbol>> newMaterializationRule ) {
+	private void updateInstantiation( List<IndexSymbol> instantiation,
+			Pair<AbstractIndexSymbol, List<IndexSymbol>> newMaterializationRule ) {
 		
 		if( !instantiation.isEmpty() ) {
 			materializeIn( instantiation, newMaterializationRule.first(), newMaterializationRule.second() );
 		}
 	}
 	
-	private void updateInstantiation(List<StackSymbol> instantiation, List<StackSymbol> necessaryInstantiation) throws CannotMatchException {
+	private void updateInstantiation(List<IndexSymbol> instantiation, List<IndexSymbol> necessaryInstantiation) throws CannotMatchException {
 		
 		if( ! instantiation.isEmpty() && ! instantiation.equals( necessaryInstantiation ) ) {
 			throw new CannotMatchException();
@@ -208,12 +209,12 @@ public class EmbeddingStackChecker {
 	 * @param newMaterialization
 	 */
 	private void applyNewMaterialiationTo(
-			Map<AbstractStackSymbol, List<StackSymbol>> materializations,
-			Pair<AbstractStackSymbol,List<StackSymbol>> newMaterialization) 
+			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations,
+			Pair<AbstractIndexSymbol,List<IndexSymbol>> newMaterialization) 
 	{
 
-		for( Entry<AbstractStackSymbol, List<StackSymbol>> materializationRule : materializations.entrySet() ){
-			List<StackSymbol> rhs = materializationRule.getValue();
+		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> materializationRule : materializations.entrySet() ){
+			List<IndexSymbol> rhs = materializationRule.getValue();
 			materializeIn( rhs, newMaterialization.first(), newMaterialization.second() );
 		}
 	}
@@ -223,7 +224,7 @@ public class EmbeddingStackChecker {
 	 * @param stack the stack containing the elements
 	 * @return the last symbol of stack
 	 */
-	private StackSymbol getLastSymbolOf(List<StackSymbol> stack) {
+	private IndexSymbol getLastSymbolOf(List<IndexSymbol> stack) {
 		return stack.get( stack.size() - 1 );
 	}
 
@@ -236,7 +237,7 @@ public class EmbeddingStackChecker {
 	 * @param lhs the abstract stack symbol to materialized
 	 * @param rhs the sequence of stack symbols with which to materialize
 	 */
-	private void materializeIn(List<StackSymbol> stack, StackSymbol lhs, List<StackSymbol> rhs) {
+	private void materializeIn(List<IndexSymbol> stack, IndexSymbol lhs, List<IndexSymbol> rhs) {
 
 		if( getLastSymbolOf(stack).equals(lhs) ){
 			stack.remove( stack.size() -1 );
@@ -245,12 +246,12 @@ public class EmbeddingStackChecker {
 	}
 
 	private IndexedNonterminal applyCurrentMaterializationTo( 
-			Map<AbstractStackSymbol, List<StackSymbol>> currentMaterializations,
+			Map<AbstractIndexSymbol, List<IndexSymbol>> currentMaterializations,
 			IndexedNonterminal materializable ) 
 	{
 
-		StackSymbol lastStackSymbol = materializable.getStack().getLastStackSymbol();
-		if( lastStackSymbol instanceof AbstractStackSymbol ){
+		IndexSymbol lastStackSymbol = materializable.getStack().getLastStackSymbol();
+		if( lastStackSymbol instanceof AbstractIndexSymbol ){
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
 				return materializable.getWithProlongedStack( currentMaterializations.get(lastStackSymbol) );
 			}
@@ -258,10 +259,10 @@ public class EmbeddingStackChecker {
 		return materializable;
 	}
 
-	private IndexedNonterminal applyInstantiationTo(List<StackSymbol> instantiation, IndexedNonterminal instantiable) {
+	private IndexedNonterminal applyInstantiationTo(List<IndexSymbol> instantiation, IndexedNonterminal instantiable) {
 
-		StackSymbol lastSymbol = instantiable.getStack().getLastStackSymbol();
-		if( ! instantiation.isEmpty() && lastSymbol instanceof StackVariable ) {
+		IndexSymbol lastSymbol = instantiable.getStack().getLastStackSymbol();
+		if( ! instantiation.isEmpty() && lastSymbol instanceof IndexVariable ) {
 			return instantiable.getWithProlongedStack(instantiation);
 		}else {
 			return instantiable;

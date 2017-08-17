@@ -8,11 +8,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 
-public class TestAVLStackCanoization {
+public class TestAVLIndexCanoization {
 
-	private AVLStackCanonizationStrategy canonizer;
+	private AVLIndexCanonizationStrategy canonizer;
 
 	@BeforeClass
 	public static void init() {
@@ -22,7 +23,7 @@ public class TestAVLStackCanoization {
 
 	@Before
 	public void setup(){
-		canonizer = new AVLStackCanonizationStrategy();
+		canonizer = new AVLIndexCanonizationStrategy();
 	}
 	
 	@Test
@@ -48,11 +49,11 @@ public class TestAVLStackCanoization {
 		IndexedNonterminal leftNonterminalRes = getLabelOfVar(graph, "left");
 		assertEquals("left after abs", 2, leftNonterminalRes.getStack().size());
 		assertFalse("left after abs", leftNonterminalRes.getStack().hasConcreteStack());
-		assertEquals( leftNonterminalRes.getStack().get( 0 ), ConcreteStackSymbol.getStackSymbol( "s", false ));
-		assertEquals( leftNonterminalRes.getStack().get( 1 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals( leftNonterminalRes.getStack().get( 0 ), ConcreteIndexSymbol.getStackSymbol( "s", false ));
+		assertEquals( leftNonterminalRes.getStack().get( 1 ), AbstractIndexSymbol.get( "X" ) );
 		IndexedNonterminal rightNonterminalRes = getLabelOfVar(graph, "right");
 		assertEquals("right after abs", 1, rightNonterminalRes.getStack().size());
-		assertEquals( rightNonterminalRes.getStack().get( 0 ), AbstractStackSymbol.get( "X" ) );
+		assertEquals( rightNonterminalRes.getStack().get( 0 ), AbstractIndexSymbol.get( "X" ) );
 	}
 	
 	@Test

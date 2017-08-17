@@ -3,26 +3,26 @@ package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StackVariable implements StackSymbol {
+public class IndexVariable implements IndexSymbol {
 
-	private static final StackVariable instance = new StackVariable();
+	private static final IndexVariable instance = new IndexVariable();
 	
-	public static StackVariable getGlobalInstance(){
+	public static IndexVariable getGlobalInstance(){
 		return instance;
 	}
 	
-	private final List<StackSymbol> instantiation = new ArrayList<>();
+	private final List<IndexSymbol> instantiation = new ArrayList<>();
 	
 	@Override
 	public boolean isBottom() {
 		return false;
 	}
 	
-	public void prolongInstantiation( StackSymbol instantiation ){
+	public void prolongInstantiation( IndexSymbol instantiation ){
 		this.instantiation.add(instantiation);
 	}
 	
-	public boolean matchInstantiation( List<StackSymbol> matchAgainst ){
+	public boolean matchInstantiation( List<IndexSymbol> matchAgainst ){
 		if( matchAgainst.size() < instantiation.size() ){
 			return false;
 		}
@@ -37,7 +37,7 @@ public class StackVariable implements StackSymbol {
 		return true;
 	}
 	
-	public Iterable<StackSymbol> getInstantiation(){
+	public Iterable<IndexSymbol> getInstantiation(){
 		return this.instantiation;
 	}
 	

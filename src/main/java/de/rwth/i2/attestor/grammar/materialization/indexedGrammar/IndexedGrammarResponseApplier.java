@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 
 /**
  * Capable of handling {@link MaterializationAndRuleResponse}
@@ -21,9 +21,9 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );
 	
-	StackMaterializer stackMaterializer;
+	IndexMaterializationStrategy stackMaterializer;
 
-	public IndexedGrammarResponseApplier(StackMaterializer stackMaterializer,
+	public IndexedGrammarResponseApplier(IndexMaterializationStrategy stackMaterializer,
 			GraphMaterializer graphMaterializer) {
 		super( graphMaterializer );
 		this.stackMaterializer = stackMaterializer;
@@ -40,7 +40,7 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 			
 			 Collection<HeapConfiguration> materializedGraphs = new ArrayList<>();
 			 
-			 for( List<StackSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
+			 for( List<IndexSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
 				 	 
 				 HeapConfiguration materializedStacks;
 				try {

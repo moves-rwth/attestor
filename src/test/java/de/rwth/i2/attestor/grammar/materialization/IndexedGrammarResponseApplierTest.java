@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -15,9 +15,9 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -38,7 +38,7 @@ public class IndexedGrammarResponseApplierTest {
 	private static final String UNIQUE_NT_LABEL = "IndexedGrammarResponseApplierTest";
 	private static final int RANK = 2;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false};
-	private static final AbstractStackSymbol symbolToMaterialize = AbstractStackSymbol.get("X");
+	private static final AbstractIndexSymbol symbolToMaterialize = AbstractIndexSymbol.get("X");
 
 	@BeforeClass
 	public static void init() {
@@ -53,7 +53,7 @@ public class IndexedGrammarResponseApplierTest {
 
 	@Test
 	public void testDelegation() throws WrongResponseTypeException, CannotMaterializeException {
-		StackMaterializer stackMaterializerMock = mock( StackMaterializer.class );
+		IndexMaterializationStrategy stackMaterializerMock = mock( IndexMaterializationStrategy.class );
 		GraphMaterializer graphMaterializerMock = mock( GraphMaterializer.class );
 		
 		IndexedGrammarResponseApplier ruleApplier = 
@@ -61,19 +61,19 @@ public class IndexedGrammarResponseApplierTest {
 		
 		HeapConfiguration inputGraph = createInputGraph();
 		
-			Map<List<StackSymbol>, Collection<HeapConfiguration> > rules = new HashMap<>();
-			List<StackSymbol> materialization1 = createEmptyMaterialization();
+			Map<List<IndexSymbol>, Collection<HeapConfiguration> > rules = new HashMap<>();
+			List<IndexSymbol> materialization1 = createEmptyMaterialization();
 			rules.put(materialization1, new ArrayList<>() );
 		HeapConfiguration mat1_rule1 = createSimpleRule();
 			rules.get(materialization1).add(mat1_rule1);
-		List<StackSymbol> materialization2 = createNonEmptyMaterialization();
+		List<IndexSymbol> materialization2 = createNonEmptyMaterialization();
 			rules.put(materialization2, new ArrayList<>() );
 		HeapConfiguration mat2_rule1 = createSimpleRule();
 			rules.get(materialization2).add(mat2_rule1);
 		HeapConfiguration mat2_rule2 = createBigRule();
 			rules.get(materialization2).add(mat2_rule2);
 			
-		AbstractStackSymbol symbolToMaterialize = AbstractStackSymbol.get("SYMBOL TO MATERIALIZE");
+		AbstractIndexSymbol symbolToMaterialize = AbstractIndexSymbol.get("SYMBOL TO MATERIALIZE");
 			
 		GrammarResponse grammarResponse = new MaterializationAndRuleResponse( rules, symbolToMaterialize ); 
 			
@@ -85,7 +85,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createInputGraph() {
-		List<StackSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someStack = new ArrayList<>();
 		
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
 		Type type = TypeFactory.getInstance().getType("type");
@@ -103,12 +103,12 @@ public class IndexedGrammarResponseApplierTest {
 				.build();
 	}
 
-	private List<StackSymbol> createEmptyMaterialization() {
+	private List<IndexSymbol> createEmptyMaterialization() {
 		return new ArrayList<>();
 	}
 
-	private List<StackSymbol> createNonEmptyMaterialization() {
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+	private List<IndexSymbol> createNonEmptyMaterialization() {
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
 		return SingleElementUtil.createList( bottom );
 	}
@@ -128,7 +128,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createBigRule() {
-		List<StackSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someStack = new ArrayList<>();
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
 

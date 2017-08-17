@@ -8,8 +8,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -136,10 +136,10 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 
 	private static Nonterminal createIndexedNonterminalWithStack_sZ() {
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol( "s", false );
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 
-		List<StackSymbol> stack = new ArrayList<>();
+		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
 
@@ -147,9 +147,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	}
 
 	private static Nonterminal createIndexedNonterminalWithStack_Z() {
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 
-		List<StackSymbol> stack = new ArrayList<>();
+		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack);

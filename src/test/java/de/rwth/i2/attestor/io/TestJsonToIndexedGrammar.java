@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONArray;
 import org.junit.BeforeClass;
@@ -86,14 +87,14 @@ public class TestJsonToIndexedGrammar {
 							.build();
 		
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		StackSymbol var = StackVariable.getGlobalInstance();
-		List<StackSymbol> stack1 = new ArrayList<>();
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol var = IndexVariable.getGlobalInstance();
+		List<IndexSymbol> stack1 = new ArrayList<>();
 		stack1.add(s);
 		stack1.add(var);
 		IndexedNonterminal nt1 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack1);
-		List<StackSymbol> stack2 = new ArrayList<>();
+		List<IndexSymbol> stack2 = new ArrayList<>();
 		stack2.add(bottom);
 		IndexedNonterminal nt2 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack2);
 		

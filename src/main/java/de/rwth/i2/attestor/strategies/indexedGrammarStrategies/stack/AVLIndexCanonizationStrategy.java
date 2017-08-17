@@ -20,7 +20,7 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Hannah, Christoph
  */
-public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
+public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 
 	/**
 	 * abstracts the stacks of all nonterminals in heapConfiguration simultaneously and as far as possible.
@@ -138,27 +138,27 @@ public class AVLStackCanonizationStrategy implements StackCanonizationStrategy {
 	    if(last.equals("Z")) {
 	        return originalNonterminal
                     .getWithShortenedStack() // Z
-                    .getWithProlongedStack(AbstractStackSymbol.get("X")); // -> X
+                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("X")) {
 	        return originalNonterminal
                     .getWithShortenedStack() // X
                     .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractStackSymbol.get("X")); // -> X
+                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("C")) {
             return originalNonterminal
                     .getWithShortenedStack() // C
-                    .getWithProlongedStack(AbstractStackSymbol.get("Y")); // -> Y
+                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         if(last.equals("Y")) {
             return originalNonterminal
                     .getWithShortenedStack() // Y
                     .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractStackSymbol.get("Y")); // -> Y
+                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         throw new IllegalStateException("Unknown stack symbol.");

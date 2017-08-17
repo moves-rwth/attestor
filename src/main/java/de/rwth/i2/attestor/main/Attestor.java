@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
@@ -371,12 +371,12 @@ public class Attestor {
 
         if(settings.options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-            StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+            IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
             MaterializationRuleManager grammarManager =
                     new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 
             GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier( new StackMaterializer(),
+                    new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(),
                             new GraphMaterializer() );
 
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );

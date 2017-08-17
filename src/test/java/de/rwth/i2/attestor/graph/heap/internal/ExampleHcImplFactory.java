@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
@@ -1386,8 +1387,8 @@ public final class ExampleHcImplFactory {
 	}
 
 	public static HeapConfiguration getInput_DifferentStacks_1() {
-		StackSymbol abstractStackSymbol = AbstractStackSymbol.get("X");
-		List<StackSymbol> stack = new ArrayList<>();
+		IndexSymbol abstractStackSymbol = AbstractIndexSymbol.get("X");
+		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(abstractStackSymbol);
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
@@ -1403,9 +1404,9 @@ public final class ExampleHcImplFactory {
 	}
 	
 	public static HeapConfiguration getInput_DifferentStacks_2() {
-		StackSymbol concreteStackSymbol = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol abstractStackSymbol = AbstractStackSymbol.get("X");
-		List<StackSymbol> stack = new ArrayList<>();
+		IndexSymbol concreteStackSymbol = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol abstractStackSymbol = AbstractIndexSymbol.get("X");
+		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(concreteStackSymbol);
 		stack.add(abstractStackSymbol);
 		

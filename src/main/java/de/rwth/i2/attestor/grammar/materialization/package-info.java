@@ -18,7 +18,7 @@
  * The MaterializationRuleManager itself gets a {@link de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver}
  * which is responsible to get and cache the rules resolving a specific violation point.
  * An {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}
- * additionally gets a {@link de.rwth.i2.attestor.grammar.StackMatcher} which ensures that
+ * additionally gets a {@link de.rwth.i2.attestor.grammar.IndexMatcher} which ensures that
  * indexed rules are instantiated appropriately and that also provides the necessary materialization
  * whichh has to be applied before applying the rule graph.
  * <br>
@@ -28,7 +28,7 @@
  * The {@link de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier} consists
  * only of a {@link de.rwth.i2.attestor.grammar.materialization.GraphMaterializer} which replaces
  * the nonterminal by the rule graph. The {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier}
- * additionally consists of a {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer}
+ * additionally consists of a {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy}
  * which applies the materilaization to stacks.
  * <br>
  * Note that you may get an error if you combine an {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}

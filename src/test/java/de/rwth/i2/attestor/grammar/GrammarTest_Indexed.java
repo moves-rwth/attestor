@@ -8,6 +8,8 @@ import java.util.Collection;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,7 +43,7 @@ public class GrammarTest_Indexed {
 	public void setUp() throws Exception {
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
 		grammarManager = 
 				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 	}
@@ -50,8 +52,8 @@ public class GrammarTest_Indexed {
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_Z() 
 												throws UnexpectedNonterminalTypeException {
 		
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
-		ArrayList<StackSymbol> stack = new ArrayList<>();
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		 
@@ -59,7 +61,7 @@ public class GrammarTest_Indexed {
 					(MaterializationAndRuleResponse) 
 					grammarManager.getRulesFor( nonterminal, 0, "left");
 
-			final ArrayList<StackSymbol> emptyMaterialization = new ArrayList<>();
+			final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
 			 Collection<HeapConfiguration> result = 
 					 response.getRulesForMaterialization(emptyMaterialization);
 		 
@@ -71,10 +73,10 @@ public class GrammarTest_Indexed {
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_sZ() 
 			throws UnexpectedNonterminalTypeException {
 				
-		StackSymbol s = ConcreteStackSymbol.getStackSymbol("s", false);
-		StackSymbol bottom = ConcreteStackSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
 		
-		ArrayList<StackSymbol> stack = new ArrayList<>();
+		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
 		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -83,7 +85,7 @@ public class GrammarTest_Indexed {
 				(MaterializationAndRuleResponse) 
 				grammarManager.getRulesFor( nonterminal, 0, "left");
 
-		final ArrayList<StackSymbol> emptyMaterialization = new ArrayList<>();
+		final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
 		 Collection<HeapConfiguration> result = 
 				 response.getRulesForMaterialization(emptyMaterialization);
 		 

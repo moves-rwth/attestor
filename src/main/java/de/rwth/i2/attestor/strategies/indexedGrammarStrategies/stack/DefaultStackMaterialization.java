@@ -23,16 +23,16 @@ import gnu.trove.list.array.TIntArrayList;
  */
 public class DefaultStackMaterialization implements StackMaterializationStrategy {
 	
-	public static AbstractStackSymbol SYMBOL_X = AbstractStackSymbol.get("X");
-	public static AbstractStackSymbol SYMBOL_Y = AbstractStackSymbol.get("Y");
-	public static StackSymbol SYMBOL_s = ConcreteStackSymbol.getStackSymbol( "s", false);
-	public static StackSymbol SYMBOL_Z = ConcreteStackSymbol.getStackSymbol( "Z", true );
-	public static StackSymbol SYMBOL_C = ConcreteStackSymbol.getStackSymbol( "C", true );
+	public static AbstractIndexSymbol SYMBOL_X = AbstractIndexSymbol.get("X");
+	public static AbstractIndexSymbol SYMBOL_Y = AbstractIndexSymbol.get("Y");
+	public static IndexSymbol SYMBOL_s = ConcreteIndexSymbol.getStackSymbol( "s", false);
+	public static IndexSymbol SYMBOL_Z = ConcreteIndexSymbol.getStackSymbol( "Z", true );
+	public static IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getStackSymbol( "C", true );
 
 	@Override
 	public void materializeStacks(HeapConfiguration heapConfiguration, 
-								  StackSymbol originalStackSymbol,
-                                  StackSymbol desiredStackSymbol) {
+								  IndexSymbol originalStackSymbol,
+                                  IndexSymbol desiredStackSymbol) {
 
 		if( DebugMode.ENABLED ) {
             checkRules(originalStackSymbol, desiredStackSymbol);
@@ -67,8 +67,8 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
      * @return A new IndexedNonterminal with an updated stack.
      */
     private IndexedNonterminal getNonterminalWithUpdatedStack(IndexedNonterminal nonterminal,
-                                                              StackSymbol desiredStackSymbol,
-                                                              StackSymbol originalStackSymbol) {
+                                                              IndexSymbol desiredStackSymbol,
+                                                              IndexSymbol originalStackSymbol) {
 
         IndexedNonterminal result = nonterminal.getWithShortenedStack().
         											getWithProlongedStack(desiredStackSymbol);
@@ -85,7 +85,7 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
      * @param desiredStackSymbol The desired StackSymbol that should be obtained through 
      * materialization.
      */
-    private static void checkRules(StackSymbol originalStackSymbol, StackSymbol desiredStackSymbol) {
+    private static void checkRules(IndexSymbol originalStackSymbol, IndexSymbol desiredStackSymbol) {
 
         String original = originalStackSymbol.toString();
         String desired = desiredStackSymbol.toString();
@@ -102,9 +102,9 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
      * @param heapConfiguration The HeapConfiguration that should be checked.
      * @param stackSymbol The stackSymbol that should be materialized.
      */
-    private static void checkConsistency(HeapConfiguration heapConfiguration, StackSymbol stackSymbol) {
+    private static void checkConsistency(HeapConfiguration heapConfiguration, IndexSymbol stackSymbol) {
 
-        assert(stackSymbol instanceof AbstractStackSymbol);
+        assert(stackSymbol instanceof AbstractIndexSymbol);
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
         TIntIterator iter = ntEdges.iterator();
@@ -118,19 +118,19 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
 
 
     @Override
-	public IndexedNonterminal materializeStack( IndexedNonterminal nt, StackSymbol s ) {
+	public IndexedNonterminal materializeStack( IndexedNonterminal nt, IndexSymbol s ) {
 		assert( ! nt.getStack().hasConcreteStack() );
 		nt = nt.getWithShortenedStack().getWithProlongedStack( s );
 		if( ! s.isBottom() ){
-			nt = nt.getWithProlongedStack( AbstractStackSymbol.get("X") );
+			nt = nt.getWithProlongedStack( AbstractIndexSymbol.get("X") );
 		}
 		return nt;		
 	}
 
 	@Override
-	public List<StackSymbol> getRuleCreatingSymbolFor( StackSymbol originalStackSymbol, 
-															StackSymbol desiredStackSymbol ) {
-		List<StackSymbol> result = new ArrayList<>();
+	public List<IndexSymbol> getRuleCreatingSymbolFor( IndexSymbol originalStackSymbol, 
+															IndexSymbol desiredStackSymbol ) {
+		List<IndexSymbol> result = new ArrayList<>();
 		if(  originalStackSymbol.equals(SYMBOL_X) ){
 			if( desiredStackSymbol.equals(SYMBOL_s) ){
 				result.add(SYMBOL_s);
@@ -150,7 +150,7 @@ public class DefaultStackMaterialization implements StackMaterializationStrategy
 	}
 
 	@Override
-	public boolean canCreateSymbolFor(StackSymbol originalStackSymbol, StackSymbol desiredStackSymbol) {
+	public boolean canCreateSymbolFor(IndexSymbol originalStackSymbol, IndexSymbol desiredStackSymbol) {
   
 
         return (

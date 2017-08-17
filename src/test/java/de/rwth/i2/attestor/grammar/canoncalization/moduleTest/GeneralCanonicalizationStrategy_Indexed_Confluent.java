@@ -10,12 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -29,8 +29,8 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -51,9 +51,9 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	public void init() {
 		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(10, false);
 		
-		StackMaterializer materializer = new StackMaterializer();
+		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
 		DefaultStackMaterialization stackGrammar = new DefaultStackMaterialization();
-		StackMatcher stackMatcher = new StackMatcher( stackGrammar);
+		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
 		EmbeddingStackChecker stackChecker = 
 				new EmbeddingStackChecker( stackMatcher, 
 											materializer );
@@ -68,7 +68,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 //		Nonterminal lhs0 = getNonterminal( lhsStack0 );
 //		HeapConfiguration rhs0 = getPattern0();
 		
-		List<StackSymbol> lhsStack1 = makeInstantiable(getStackPrefix());
+		List<IndexSymbol> lhsStack1 = makeInstantiable(getStackPrefix());
 		Nonterminal lhs1 = getNonterminal( lhsStack1  );
 		HeapConfiguration rhs1 = getPattern1();
 		HeapConfiguration rhs2 = getPattern2();
@@ -90,31 +90,31 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 
 
 
-	private List<StackSymbol> getEmptyStack() {
-		List<StackSymbol> stack = new ArrayList<>();
+	private List<IndexSymbol> getEmptyStack() {
+		List<IndexSymbol> stack = new ArrayList<>();
 		return stack;
 	}
 	
-	private List<StackSymbol> getStackPrefix() {
-		List<StackSymbol> stack = getEmptyStack();
+	private List<IndexSymbol> getStackPrefix() {
+		List<IndexSymbol> stack = getEmptyStack();
 		stack.add( DefaultStackMaterialization.SYMBOL_s );
 		return stack;
 	}
 
-	private List<StackSymbol> makeConcrete( List<StackSymbol> stack ){
-		List<StackSymbol> stackCopy = new ArrayList<>( stack );
+	private List<IndexSymbol> makeConcrete( List<IndexSymbol> stack ){
+		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
 		stackCopy.add( DefaultStackMaterialization.SYMBOL_Z );
 		return stackCopy;
 	}
 	
-	private List<StackSymbol> makeInstantiable( List<StackSymbol> stack ){
-		List<StackSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( StackVariable.getGlobalInstance() );
+	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> stack ){
+		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
+		stackCopy.add( IndexVariable.getGlobalInstance() );
 		return stackCopy;
 	}
 
 
-	private Nonterminal getNonterminal( List<StackSymbol> stack ) {
+	private Nonterminal getNonterminal( List<IndexSymbol> stack ) {
 		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, stack);
 	}
 
@@ -183,7 +183,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	private ProgramState expectedSimpleAbstraction() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		List<StackSymbol> expectedStack = getExpectedStack();
+		List<IndexSymbol> expectedStack = getExpectedStack();
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc =  hc.builder().addNodes(TYPE, 2, nodes)
@@ -196,8 +196,8 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		return new IndexedState( hc );
 	}
 
-	private List<StackSymbol> getExpectedStack() {
-		List<StackSymbol> stack = getEmptyStack();
+	private List<IndexSymbol> getExpectedStack() {
+		List<IndexSymbol> stack = getEmptyStack();
 		for( int i = 0; i < sizeOfChain - 1; i++ ) {
 			stack.add( DefaultStackMaterialization.SYMBOL_s );
 		}

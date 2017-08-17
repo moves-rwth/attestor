@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface StackMaterializationStrategy {
 
-	IndexedNonterminal materializeStack( IndexedNonterminal nt, StackSymbol s );
-	List<StackSymbol> getRuleCreatingSymbolFor(StackSymbol s1, StackSymbol s2);
-	void materializeStacks(HeapConfiguration heapConfiguration, StackSymbol originalStackSymbol,
-			StackSymbol desiredStackSymbol);
-	boolean canCreateSymbolFor(StackSymbol originalStackSymbol, StackSymbol desiredStackSymbol);
+	IndexedNonterminal materializeStack( IndexedNonterminal nt, IndexSymbol s );
+	List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol s1, IndexSymbol s2);
+	void materializeStacks(HeapConfiguration heapConfiguration, IndexSymbol originalStackSymbol,
+			IndexSymbol desiredStackSymbol);
+	boolean canCreateSymbolFor(IndexSymbol originalStackSymbol, IndexSymbol desiredStackSymbol);
 
 }

@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Stack {
 
-   private List<StackSymbol> stackSymbols;
+   private List<IndexSymbol> stackSymbols;
 
-   public Stack(List<StackSymbol> stackSymbols) {
+   public Stack(List<IndexSymbol> stackSymbols) {
        this.stackSymbols = stackSymbols;
    }
 
@@ -16,10 +16,10 @@ public class Stack {
        this.stackSymbols = stack.stackSymbols;
    }
 
-   public boolean startsWith(Iterable<StackSymbol> prefix) {
+   public boolean startsWith(Iterable<IndexSymbol> prefix) {
 
-       Iterator<StackSymbol> stackIterator = stackSymbols.iterator();
-       Iterator<StackSymbol> prefixIterator = prefix.iterator();
+       Iterator<IndexSymbol> stackIterator = stackSymbols.iterator();
+       Iterator<IndexSymbol> prefixIterator = prefix.iterator();
 
        while( stackIterator.hasNext() && prefixIterator.hasNext() ){
            if( ! stackIterator.next().equals( prefixIterator.next() ) ){
@@ -31,45 +31,45 @@ public class Stack {
    }
 
 
-    public boolean stackEndsWith( StackSymbol symbol ){
+    public boolean stackEndsWith( IndexSymbol symbol ){
         return (! stackSymbols.isEmpty() ) && stackSymbols.get( stackSymbols.size() -1 ).equals(symbol);
     }
 
 
-    public StackSymbol getLastStackSymbol(){
+    public IndexSymbol getLastStackSymbol(){
         assert( stackSymbols.size() > 0 );
         return stackSymbols.get( stackSymbols.size() -1 );
     }
 
     public Stack getWithShortenedStack(){
         assert( stackSymbols.size() > 0 );
-        List<StackSymbol> stackCopy = new ArrayList<>(stackSymbols);
+        List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         stackCopy.remove(stackCopy.size() -1 );
         return new Stack(stackCopy);
     }
 
-    public Stack getWithProlongedStack( StackSymbol s ){
-        List<StackSymbol> stackCopy = new ArrayList<>(stackSymbols);
+    public Stack getWithProlongedStack( IndexSymbol s ){
+        List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         stackCopy.add(s);
         return new Stack(stackCopy);
     }
 
     public Stack getWithInstantiation(){
-        List<StackSymbol> stackCopy = new ArrayList<>(stackSymbols);
-        if( stackSymbols.size() > 0 && this.getLastStackSymbol() instanceof StackVariable ){
-            StackVariable lastSymbol = (StackVariable)stackCopy.get(stackCopy.size() - 1);
+        List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
+        if( stackSymbols.size() > 0 && this.getLastStackSymbol() instanceof IndexVariable ){
+            IndexVariable lastSymbol = (IndexVariable)stackCopy.get(stackCopy.size() - 1);
             stackCopy.remove( stackCopy.size() - 1 );
             lastSymbol.getInstantiation().forEach(stackCopy::add);
         }
         return new Stack(stackCopy);
     }
 
-    public Stack getWithProlongedStack( List<StackSymbol> postfix ){
+    public Stack getWithProlongedStack( List<IndexSymbol> postfix ){
         assert( this.size() > 0 );
-        StackSymbol lastSymbol = this.getLastStackSymbol();
-        assert( !( lastSymbol instanceof ConcreteStackSymbol ) );
+        IndexSymbol lastSymbol = this.getLastStackSymbol();
+        assert( !( lastSymbol instanceof ConcreteIndexSymbol ) );
 
-        List<StackSymbol> stackCopy = new ArrayList<>(stackSymbols);
+        List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         stackCopy.remove( stackCopy.size() - 1 );
         stackCopy.addAll(postfix) ;
 
@@ -89,14 +89,14 @@ public class Stack {
     }
 
     public boolean matchStack( Stack other ){
-        List<StackSymbol> otherStack = other.stackSymbols;
+        List<IndexSymbol> otherStack = other.stackSymbols;
         for( int i = 0; i < this.size() && i < otherStack.size(); i++ ){
-            StackSymbol s1 = this.get( i );
-            StackSymbol s2 = otherStack.get( i );
-            if( s1 instanceof StackVariable ){
-                return ( (StackVariable) s1 ).matchInstantiation( otherStack.subList( i, otherStack.size() ) );
-            }else if( s2 instanceof StackVariable ){
-                return ( (StackVariable) s2 ).matchInstantiation( this.stackSymbols.subList( i, stackSymbols.size() ) );
+            IndexSymbol s1 = this.get( i );
+            IndexSymbol s2 = otherStack.get( i );
+            if( s1 instanceof IndexVariable ){
+                return ( (IndexVariable) s1 ).matchInstantiation( otherStack.subList( i, otherStack.size() ) );
+            }else if( s2 instanceof IndexVariable ){
+                return ( (IndexVariable) s2 ).matchInstantiation( this.stackSymbols.subList( i, stackSymbols.size() ) );
             }
             if( ! s1.equals( s2 )){
                 return false;
@@ -106,7 +106,7 @@ public class Stack {
         return otherStack.size() == this.size();
     }
 
-    public StackSymbol get( int pos ){
+    public IndexSymbol get( int pos ){
         return stackSymbols.get( pos );
     }
 

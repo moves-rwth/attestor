@@ -5,8 +5,8 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
  * @author Hannah
  *
  */
-public class StackMaterializer {
+public class IndexMaterializationStrategy {
 
 	/**
 	 * Applies the given materialization ( e.g. X &#8594; ssX ) to all indexed nonterminals to a 
@@ -35,7 +35,7 @@ public class StackMaterializer {
 	 * @throws CannotMaterializeException if a nonterminal unexpectedly has a concrete stack
 	 */
 	public HeapConfiguration getMaterializedCloneWith(HeapConfiguration inputGraph,
-			AbstractStackSymbol symbolToMaterialize, List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
+			AbstractIndexSymbol symbolToMaterialize, List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 
 		if( ! inputMaterializationPostfix.isEmpty() ){
 
@@ -62,7 +62,7 @@ public class StackMaterializer {
 	 * graph has a concrete stack and can therefore not be materialized
 	 */
 	private HeapConfiguration computeCloneWithAppliedMaterializationOf(HeapConfiguration inputGraph,
-			AbstractStackSymbol symbolToMaterialize, List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
+			AbstractIndexSymbol symbolToMaterialize, List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
 		final HeapConfiguration clone = inputGraph.clone();
@@ -84,7 +84,7 @@ public class StackMaterializer {
 	 */
 	private HeapConfiguration applyMaterializationToIndexedNonterminalsOf(
 			final HeapConfiguration inputGraph,
-			AbstractStackSymbol symbolToMaterialize, List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
+			AbstractIndexSymbol symbolToMaterialize, List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		HeapConfigurationBuilder builder = inputGraph.builder();
 		TIntIterator edgeIter = inputGraph.nonterminalEdges().iterator();
@@ -118,7 +118,7 @@ public class StackMaterializer {
 	 * @throws CannotMaterializeException if the nonterminal has a concrete stack
 	 */
 	private Nonterminal computeMaterializedCopyOf( IndexedNonterminal nonterminalToMaterialize,
-			List<StackSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
+			List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
 		if( nonterminalToMaterialize.getStack().hasConcreteStack() ){

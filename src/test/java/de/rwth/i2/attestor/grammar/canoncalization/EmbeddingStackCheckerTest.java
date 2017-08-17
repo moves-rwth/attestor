@@ -9,16 +9,17 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.StackMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -29,8 +30,8 @@ public class EmbeddingStackCheckerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		StackMatcher stackMatcher = new StackMatcher( new DefaultStackMaterialization() );
-		StackMaterializer stackMaterializer = new StackMaterializer();
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMaterializationStrategy stackMaterializer = new IndexMaterializationStrategy();
 		 checker = new EmbeddingStackChecker( stackMatcher, stackMaterializer );
 	}
 
@@ -58,7 +59,7 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testWithIdenticalStacks() throws CannotMatchException{
-		List<StackSymbol> concreteStack = getConcreteStack();
+		List<IndexSymbol> concreteStack = getConcreteStack();
 		HeapConfiguration toAbstract = getInputWithStack( concreteStack );
 		HeapConfiguration pattern = getInputWithStack( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
@@ -78,14 +79,14 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testOnlyMaterialization() throws CannotMatchException{
-		List<StackSymbol> somePrefix = getStackPrefix();
-		List<StackSymbol> otherPrefix = getOtherStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> otherPrefix = getOtherStackPrefix();
 		
-		List<StackSymbol> toMatch = makeAbstract( somePrefix);
-		List<StackSymbol> reference = makeAbstract( otherPrefix );
+		List<IndexSymbol> toMatch = makeAbstract( somePrefix);
+		List<IndexSymbol> reference = makeAbstract( otherPrefix );
 		HeapConfiguration toAbstract = getInputWithStacks( toMatch, reference );
 		
-		List<StackSymbol> concreteStack = makeConcrete( somePrefix );		
+		List<IndexSymbol> concreteStack = makeConcrete( somePrefix );		
 		HeapConfiguration pattern = getInputWithStack( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
@@ -105,19 +106,19 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testMaterializationWithDifferentAbstractSymbols() throws CannotMatchException{
-		List<StackSymbol> somePrefix = getStackPrefix();
-		List<StackSymbol> otherPrefix = getOtherStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> otherPrefix = getOtherStackPrefix();
 		
-		List<StackSymbol> toMatch1 = makeAbstract( somePrefix);
-		List<StackSymbol> reference1 = makeAbstract( otherPrefix );
+		List<IndexSymbol> toMatch1 = makeAbstract( somePrefix);
+		List<IndexSymbol> reference1 = makeAbstract( otherPrefix );
 		
-		List<StackSymbol> toMatch2 = makeOtherAbstract( somePrefix );
-		List<StackSymbol> reference2 = makeOtherAbstract( otherPrefix );
+		List<IndexSymbol> toMatch2 = makeOtherAbstract( somePrefix );
+		List<IndexSymbol> reference2 = makeOtherAbstract( otherPrefix );
 		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
 															reference1, reference2 );
 		
-		List<StackSymbol> concreteStack1 = makeConcrete( somePrefix );
-		List<StackSymbol> concreteStack2 = makeOtherConcrete( somePrefix );
+		List<IndexSymbol> concreteStack1 = makeConcrete( somePrefix );
+		List<IndexSymbol> concreteStack2 = makeOtherConcrete( somePrefix );
 		HeapConfiguration pattern = getPatternWithStacks( concreteStack1, concreteStack2 );
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack1 );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
@@ -138,18 +139,18 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testIncopatibleMaterialization() {
-		List<StackSymbol> somePrefix = getStackPrefix();
-		List<StackSymbol> longerPrefix = getLongerStackPrefix( somePrefix );
+		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> longerPrefix = getLongerStackPrefix( somePrefix );
 		
-		List<StackSymbol> toMatch1 = makeAbstract( getEmptyStack() );
-		List<StackSymbol> toMatch2 = makeAbstract( getEmptyStack() );
-		List<StackSymbol> reference1 = makeAbstract( getEmptyStack() );
-		List<StackSymbol> reference2 = makeOtherAbstract( getEmptyStack() );
+		List<IndexSymbol> toMatch1 = makeAbstract( getEmptyStack() );
+		List<IndexSymbol> toMatch2 = makeAbstract( getEmptyStack() );
+		List<IndexSymbol> reference1 = makeAbstract( getEmptyStack() );
+		List<IndexSymbol> reference2 = makeOtherAbstract( getEmptyStack() );
 		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
 															reference1, reference2 );
 		
-		List<StackSymbol> instantiable1 = makeInstantiable( somePrefix );
-		List<StackSymbol> instantiable2 = makeInstantiable( longerPrefix );
+		List<IndexSymbol> instantiable1 = makeInstantiable( somePrefix );
+		List<IndexSymbol> instantiable2 = makeInstantiable( longerPrefix );
 		HeapConfiguration pattern = getPatternWithStacks( instantiable1, instantiable2 );
 		Nonterminal lhs = getMatchingNonterminalWithStack( instantiable1 );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
@@ -168,12 +169,12 @@ public class EmbeddingStackCheckerTest {
 
 	@Test
 	public void testInstantiation() throws CannotMatchException{
-		List<StackSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
 		
-		List<StackSymbol> toMatch = makeConcrete( somePrefix );
+		List<IndexSymbol> toMatch = makeConcrete( somePrefix );
 		HeapConfiguration toAbstract = getInputWithStack( toMatch );
 		
-		List<StackSymbol> matching = makeInstantiable( somePrefix );
+		List<IndexSymbol> matching = makeInstantiable( somePrefix );
 		HeapConfiguration pattern = getInputWithStack( matching );
 		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
@@ -187,14 +188,14 @@ public class EmbeddingStackCheckerTest {
 
 	@Test
 	public void testIncompatibleInstantiation() {
-		List<StackSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
 		
-		List<StackSymbol> toMatch1 = makeConcrete( somePrefix );
-		List<StackSymbol> toMatch2 = makeOtherConcrete(somePrefix);
-		List<StackSymbol> reference = makeAbstract(somePrefix);
+		List<IndexSymbol> toMatch1 = makeConcrete( somePrefix );
+		List<IndexSymbol> toMatch2 = makeOtherConcrete(somePrefix);
+		List<IndexSymbol> reference = makeAbstract(somePrefix);
 		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
 		
-		List<StackSymbol> matching = makeInstantiable(somePrefix);
+		List<IndexSymbol> matching = makeInstantiable(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
 		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		
@@ -210,14 +211,14 @@ public class EmbeddingStackCheckerTest {
 	
 	@Test
 	public void testTwoIdenticalInstantiations() throws CannotMatchException {
-		List<StackSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
 		
-		List<StackSymbol> toMatch1 = makeConcrete( somePrefix );
-		List<StackSymbol> toMatch2 = makeConcrete(somePrefix);
-		List<StackSymbol> reference = makeAbstract(somePrefix);
+		List<IndexSymbol> toMatch1 = makeConcrete( somePrefix );
+		List<IndexSymbol> toMatch2 = makeConcrete(somePrefix);
+		List<IndexSymbol> reference = makeAbstract(somePrefix);
 		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
 		
-		List<StackSymbol> matching = makeInstantiable(somePrefix);
+		List<IndexSymbol> matching = makeInstantiable(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
 		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		
@@ -235,14 +236,14 @@ public class EmbeddingStackCheckerTest {
 	
 	@Test
 	public void testMixedInstantiationAndMaterialization() throws CannotMatchException {
-		List<StackSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getStackPrefix();
 		
-		List<StackSymbol> toMatch = makeAbstract(somePrefix);
-		List<StackSymbol> reference = toMatch;
+		List<IndexSymbol> toMatch = makeAbstract(somePrefix);
+		List<IndexSymbol> reference = toMatch;
 		HeapConfiguration toAbstract = getInputWithStacks(toMatch, toMatch, reference, reference);
 		
-		List<StackSymbol> matching1 = makeInstantiable(somePrefix);
-		List<StackSymbol> matching2 = makeConcrete(somePrefix);
+		List<IndexSymbol> matching1 = makeInstantiable(somePrefix);
+		List<IndexSymbol> matching2 = makeConcrete(somePrefix);
 		HeapConfiguration pattern = getPatternWithStacks( matching1, matching2 );
 		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable( getEmptyStack() ));
 		
@@ -257,75 +258,75 @@ public class EmbeddingStackCheckerTest {
 	}
 
 	
-	private ArrayList<StackSymbol> getEmptyStack() {
+	private ArrayList<IndexSymbol> getEmptyStack() {
 		return new ArrayList<>();
 	}
 
-	private List<StackSymbol> getStackPrefix() {
-		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
-		ArrayList<StackSymbol> prefix = getEmptyStack();
+	private List<IndexSymbol> getStackPrefix() {
+		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		ArrayList<IndexSymbol> prefix = getEmptyStack();
 		prefix.add( s );
 		prefix.add( s );
 		return prefix;
 	}
 	
-	private List<StackSymbol> getOtherStackPrefix() {
-		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
-		StackSymbol other = ConcreteStackSymbol.getStackSymbol("other", false);
+	private List<IndexSymbol> getOtherStackPrefix() {
+		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		IndexSymbol other = ConcreteIndexSymbol.getStackSymbol("other", false);
 		
-		ArrayList<StackSymbol> prefix = getEmptyStack();
+		ArrayList<IndexSymbol> prefix = getEmptyStack();
 		prefix.add( s );
 		prefix.add( other );
 		return prefix;
 	}
 	
-	private List<StackSymbol> getLongerStackPrefix(List<StackSymbol> prefix) {
-		StackSymbol s = DefaultStackMaterialization.SYMBOL_s;
+	private List<IndexSymbol> getLongerStackPrefix(List<IndexSymbol> prefix) {
+		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
 		return addSymbol( prefix, s );
 	}
 	
-	private List<StackSymbol> makeConcrete( List<StackSymbol> prefix ) {
-		StackSymbol bottom = DefaultStackMaterialization.SYMBOL_Z;
+	private List<IndexSymbol> makeConcrete( List<IndexSymbol> prefix ) {
+		IndexSymbol bottom = DefaultStackMaterialization.SYMBOL_Z;
 		return addSymbol( prefix,bottom );
 	}
 	
-	private List<StackSymbol> makeOtherConcrete(List<StackSymbol>  prefix) {
-		StackSymbol bottom = DefaultStackMaterialization.SYMBOL_C;
+	private List<IndexSymbol> makeOtherConcrete(List<IndexSymbol>  prefix) {
+		IndexSymbol bottom = DefaultStackMaterialization.SYMBOL_C;
 		return addSymbol( prefix,bottom );
 	}
 	
-	private List<StackSymbol> makeAbstract(List<StackSymbol> prefix) {
-		AbstractStackSymbol abs = DefaultStackMaterialization.SYMBOL_X;
+	private List<IndexSymbol> makeAbstract(List<IndexSymbol> prefix) {
+		AbstractIndexSymbol abs = DefaultStackMaterialization.SYMBOL_X;
 		return addSymbol(prefix, abs);
 	}
 	
-	private List<StackSymbol> makeInstantiable(List<StackSymbol> prefix) {
-		StackSymbol var = StackVariable.getGlobalInstance();
+	private List<IndexSymbol> makeInstantiable(List<IndexSymbol> prefix) {
+		IndexSymbol var = IndexVariable.getGlobalInstance();
 		return addSymbol( prefix, var );
 	}
 	
-	private List<StackSymbol> makeOtherAbstract(List<StackSymbol> prefix) {
-		AbstractStackSymbol abs = DefaultStackMaterialization.SYMBOL_Y;
+	private List<IndexSymbol> makeOtherAbstract(List<IndexSymbol> prefix) {
+		AbstractIndexSymbol abs = DefaultStackMaterialization.SYMBOL_Y;
 		return addSymbol(prefix, abs);
 	}
 
-	private List<StackSymbol> addSymbol(List<StackSymbol> prefix, StackSymbol abs) {
-		ArrayList<StackSymbol> stack = new ArrayList<>( prefix );
+	private List<IndexSymbol> addSymbol(List<IndexSymbol> prefix, IndexSymbol abs) {
+		ArrayList<IndexSymbol> stack = new ArrayList<>( prefix );
 		stack.add( abs );
 		return stack;
 	}
 
-	private List<StackSymbol> getConcreteStack() {
-		List<StackSymbol> stack = getStackPrefix();
+	private List<IndexSymbol> getConcreteStack() {
+		List<IndexSymbol> stack = getStackPrefix();
 		return makeConcrete(stack);
 	}
 
 	private Nonterminal getInstantiableNonterminal() {
-		List<StackSymbol> stack = getStackWithStackVariable();
+		List<IndexSymbol> stack = getStackWithStackVariable();
 		return getMatchingNonterminalWithStack(stack);
 	}
 
-	private Nonterminal getMatchingNonterminalWithStack(List<StackSymbol> stack) {
+	private Nonterminal getMatchingNonterminalWithStack(List<IndexSymbol> stack) {
 		String label = "matching_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
@@ -333,7 +334,7 @@ public class EmbeddingStackCheckerTest {
 		return nt;
 	}
 	
-	private Nonterminal getOtherMatchingNonterminalWithStack(List<StackSymbol> stack) {
+	private Nonterminal getOtherMatchingNonterminalWithStack(List<IndexSymbol> stack) {
 		String label = "matching2_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
@@ -341,7 +342,7 @@ public class EmbeddingStackCheckerTest {
 		return nt;
 	}
 	
-	private Nonterminal getReferenceNonterminalWithStack(List<StackSymbol> stack) {
+	private Nonterminal getReferenceNonterminalWithStack(List<IndexSymbol> stack) {
 		String label = "reference_EmbeddingStackChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
@@ -349,9 +350,9 @@ public class EmbeddingStackCheckerTest {
 		return nt;
 	}
 
-	private List<StackSymbol> getStackWithStackVariable() {
-		List<StackSymbol> stack = getEmptyStack();
-		stack.add( StackVariable.getGlobalInstance() );
+	private List<IndexSymbol> getStackWithStackVariable() {
+		List<IndexSymbol> stack = getEmptyStack();
+		stack.add( IndexVariable.getGlobalInstance() );
 		return stack;
 	}
 
@@ -368,7 +369,7 @@ public class EmbeddingStackCheckerTest {
 				.build();
 	}
 	
-	private HeapConfiguration getInputWithStack(List<StackSymbol> stack) {
+	private HeapConfiguration getInputWithStack(List<IndexSymbol> stack) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -389,7 +390,7 @@ public class EmbeddingStackCheckerTest {
 				.build();
 	}
 	
-	private HeapConfiguration getInputWithStacks(List<StackSymbol> toMatch, List<StackSymbol> reference) {
+	private HeapConfiguration getInputWithStacks(List<IndexSymbol> toMatch, List<IndexSymbol> reference) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -415,8 +416,8 @@ public class EmbeddingStackCheckerTest {
 	
 
 	private HeapConfiguration getInputWithStacks(
-			List<StackSymbol> toMatch1, List<StackSymbol> toMatch2,
-			List<StackSymbol> reference1, List<StackSymbol> reference2) {
+			List<IndexSymbol> toMatch1, List<IndexSymbol> toMatch2,
+			List<IndexSymbol> reference1, List<IndexSymbol> reference2) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -452,7 +453,7 @@ public class EmbeddingStackCheckerTest {
 	}
 
 	private HeapConfiguration getPatternWithStacks(
-			List<StackSymbol> stack1, List<StackSymbol> stack2) 
+			List<IndexSymbol> stack1, List<IndexSymbol> stack2) 
 	{
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();

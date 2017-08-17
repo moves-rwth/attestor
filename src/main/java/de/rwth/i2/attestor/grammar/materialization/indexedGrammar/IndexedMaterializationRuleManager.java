@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import de.rwth.i2.attestor.grammar.StackMatcher;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarRequest;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
@@ -11,8 +11,8 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractStackSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.*;
@@ -28,11 +28,11 @@ import java.util.*;
 public class IndexedMaterializationRuleManager extends DefaultMaterializationRuleManager {
 
 	private ViolationPointResolver violationPointResolver;
-	private StackMatcher stackMatcher;
+	private IndexMatcher stackMatcher;
 
 	private Map<GrammarRequest, GrammarResponse> instantiatedRuleGraphsCreatingSelector = new HashMap<>();
 
-	public IndexedMaterializationRuleManager(ViolationPointResolver vioResolver, StackMatcher stackMatcher) {
+	public IndexedMaterializationRuleManager(ViolationPointResolver vioResolver, IndexMatcher stackMatcher) {
 		super( vioResolver );
 		this.violationPointResolver = vioResolver;
 		this.stackMatcher = stackMatcher;
@@ -104,7 +104,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingViolationPoint) {
 
 	
-		Map<List<StackSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules = 
+		Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules = 
 				new HashMap<>();
 
 		for( Nonterminal lhs : rulesResolvingViolationPoint.keySet() ){
@@ -117,16 +117,16 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			}
 		}
 		
-		AbstractStackSymbol stackSymbolToMaterialize = getStackSymbolToMaterialize( toReplace );
+		AbstractIndexSymbol stackSymbolToMaterialize = getStackSymbolToMaterialize( toReplace );
 		
 		return new MaterializationAndRuleResponse( allMaterializationsAndRules, 
 												   stackSymbolToMaterialize );
 	}
 
-	private AbstractStackSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
-		StackSymbol lastSymbol = toReplace.getStack().getLastStackSymbol();
-		if( lastSymbol instanceof AbstractStackSymbol ){
-			return (AbstractStackSymbol) lastSymbol;
+	private AbstractIndexSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
+		IndexSymbol lastSymbol = toReplace.getStack().getLastStackSymbol();
+		if( lastSymbol instanceof AbstractIndexSymbol ){
+			return (AbstractIndexSymbol) lastSymbol;
 		}else{
 			return null;
 		}
@@ -142,11 +142,11 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	 * @param lhs the lhs of these rules
 	 * @param uninstantiatedRulesForThisLhs  the rules belonging to this lhs
 	 */
-	private void addMaterializationAndRules(Map<List<StackSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules,
+	private void addMaterializationAndRules(Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules,
 			final IndexedNonterminal toReplace, IndexedNonterminal lhs,
 			Collection<HeapConfiguration> uninstantiatedRulesForThisLhs ) {
 		
-			final List<StackSymbol> necessaryMaterialization = 
+			final List<IndexSymbol> necessaryMaterialization = 
 					stackMatcher.getMaterializationRule(toReplace, lhs).second();
 			addMaterializationIfNeceessaryTo(allMaterializationsAndRules, necessaryMaterialization);
 			
@@ -163,8 +163,8 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	 * @param allMaterializationsAndRules the map in which the materialization shall be present
 	 * @param necessaryMaterialization the materialization which shall be in the map
 	 */
-	private void addMaterializationIfNeceessaryTo(Map<List<StackSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules,
-			final List<StackSymbol> necessaryMaterialization) {
+	private void addMaterializationIfNeceessaryTo(Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules,
+			final List<IndexSymbol> necessaryMaterialization) {
 		
 		if( ! allMaterializationsAndRules.containsKey( necessaryMaterialization)){
 			allMaterializationsAndRules.put(necessaryMaterialization, new ArrayList<>());
@@ -190,7 +190,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 		
 		if( stackMatcher.needsInstantiation(intexedToReplace, indexedLhs) ){
 			
-			final List<StackSymbol> necessaryInstantiation = 
+			final List<IndexSymbol> necessaryInstantiation = 
 					stackMatcher.getNecessaryInstantiation(intexedToReplace, indexedLhs);
 			instantiatedRulesForThisLhs = instantiateRhs( necessaryInstantiation, uninstantiatedRulesForThisLhs );
 		}else{
@@ -209,7 +209,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	 * @param uninstantiatedRules the rules that (may) require instantiation
 	 * @return a collection containing all graphs, now with fully instantiated stacks.
 	 */
-	private Collection<HeapConfiguration> instantiateRhs(List<StackSymbol> necessaryInstantiation,
+	private Collection<HeapConfiguration> instantiateRhs(List<IndexSymbol> necessaryInstantiation,
 			Collection<HeapConfiguration> uninstantiatedRules) {
 		Collection<HeapConfiguration> res = new ArrayList<>();
 
