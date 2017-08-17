@@ -102,6 +102,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 isEssentialState.add(s);
             }
             jsonWriter.value(essential);
+            jsonWriter.key("size").value(s.getHeap().countNodes());
             jsonWriter.endObject().endObject();
         }
     }

@@ -97,7 +97,7 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 	 */
 	public void caseANegStateform(ANegStateform node){
 		Assertion current = (Assertion) this.getIn(node);
-		
+
 		String negExpectedAP = node.getAtomicprop().toString().trim();
 		if(!current.getProgramState().satisfiesAP(negExpectedAP)){
 			current.setTrue();

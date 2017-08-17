@@ -102,8 +102,7 @@ public class ProofStructure {
 					// Generate an assertion for each successor state of the current state in the state space 
 					// with formula set equal to the next successor formulae generated before
 					ProgramState currentState = currentVertex.getProgramState();
-					for(StateSuccessor s : statespace.getSuccessors().get(currentState)){
-						ProgramState succState = s.getTarget();
+					for(ProgramState succState : statespace.getSuccessorsWithoutMaterialisation(currentState)){
 						Assertion newAssertion = new Assertion(succState);
 						
 						for(Node succFormula : nextSuccessors){

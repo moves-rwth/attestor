@@ -16,8 +16,11 @@ import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarR
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
+import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.main.settings.*;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
@@ -29,7 +32,9 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicali
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
+import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
+
 
 
 /**
@@ -38,6 +43,22 @@ import de.rwth.i2.attestor.util.ZipUtils;
  *  To start a program analysis it suffices to call {Attestor#run(args)}, where args are the command line arguments
  * passed, for example, to a main method.
  * In particular, these arguments have to include the path to a settings file customizing the analysis.
+ * <br>
+ * The execution of Attestor consists of six phases. Any fatal failure of a phase (that is an exception caught
+ * by the method starting the phase) aborts further execution.
+ * The six phases are executed in the following order:
+ * <ol>
+ *     <li>Setup phase: Validates the provided command line options and populates the global Settings.</li>
+ *     <li>Parsing phase: Parses all supplied input files, such as the program to be analyzed,
+ *                        the grammar, input state, etc.</li>
+ *     <li>Preprocessing phase: Applies all pre-computation steps that should be applied to programs, grammars, etc.
+ *                              For example, grammar refinement is performed in this phase.</li>
+ *     <li>State space generation phase: Applies the abstract semantics defined by the provided graph grammar and
+ *                                       the input program until a fixed point is reached.</li>
+ *     <li>Model-checking phase: If temporal logic formulas have been provided, this phase checks whether they
+ *                               are satisfied by the state space generated in the previous phase.</li>
+ *     <li>Report phase: Exports the previously computed results. </li>
+ * </ol>
  *
  * @author Christoph
  */
@@ -469,7 +490,7 @@ public class Attestor {
 
 		    String location = settings.output().getLocationForStateSpace();
 
-            settings.factory().export(
+		    exportStateSpace(
                     location + File.separator + "data",
                     "statespace.json",
                     stateSpace,
@@ -478,7 +499,7 @@ public class Attestor {
 
             List<ProgramState> states = stateSpace.getStates();
             for(int i=0; i < states.size(); i++) {
-                settings.factory().export(
+                exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
                         states.get(i).getHeap()
@@ -496,6 +517,28 @@ public class Attestor {
             );
         }
 	}
+
+    private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)
+            throws IOException {
+
+        FileUtils.createDirectories(directory);
+        FileWriter writer = new FileWriter(directory + File.separator + filename);
+        HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
+        exporter.export(hc);
+        writer.close();
+    }
+
+    private void exportStateSpace(String directory, String filename, StateSpace stateSpace, Program program)
+            throws IOException {
+
+        FileUtils.createDirectories(directory);
+        Writer writer = new BufferedWriter(
+                new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
+        );
+        StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
+        exporter.export(stateSpace, program);
+        writer.close();
+    }
 
 	private void printSummary() {
 
