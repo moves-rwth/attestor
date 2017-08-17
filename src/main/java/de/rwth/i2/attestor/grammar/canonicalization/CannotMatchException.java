@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.canonicalization;
 
+@SuppressWarnings("serial")
 public class CannotMatchException extends Exception {
 
 	public CannotMatchException() {

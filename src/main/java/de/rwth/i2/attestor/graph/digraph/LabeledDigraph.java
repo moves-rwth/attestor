@@ -610,17 +610,6 @@ public class LabeledDigraph {
 		return INVALID;
 	}
 	
-	private void replaceNodeLabel(NodeLabel oldLabel, NodeLabel newLabel) {
-		
-		for(int i=0; i < nodeLabels.size(); i++) {
-			
-			if(nodeLabels.get(i).equals(oldLabel)) {
-				
-				nodeLabels.set(i, newLabel);
-			}
-		}
-	}
-	
 	/**
 	 * Sets the label of a node to newLabel.
 	 * @param node The node.

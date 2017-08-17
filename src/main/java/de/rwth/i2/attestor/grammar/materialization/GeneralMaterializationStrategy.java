@@ -28,7 +28,6 @@ import gnu.trove.iterator.TIntIterator;
  */
 public class GeneralMaterializationStrategy implements MaterializationStrategy {
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "GeneralMaterializationStrategy" );
 
 	private MaterializationRuleManager ruleManager;

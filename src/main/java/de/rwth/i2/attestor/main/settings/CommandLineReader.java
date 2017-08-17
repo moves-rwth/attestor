@@ -1,20 +1,12 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.generated.lexer.LexerException;
-import de.rwth.i2.attestor.generated.parser.ParserException;
 import java.io.File;
 
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.*;
 
+import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.util.DebugMode;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 
 /**
  * Parses the provided command line options in order to populate

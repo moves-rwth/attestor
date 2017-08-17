@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**

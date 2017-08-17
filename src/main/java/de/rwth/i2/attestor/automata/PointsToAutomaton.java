@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.automata;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * A simple heap automaton to determine all variables that point via a single selector to each other.
@@ -103,7 +100,6 @@ public class PointsToAutomaton extends HeapAutomaton {
 
         for(int i=0; i < variables.size(); i++) {
             int var = variables.get(i);
-            String varName = heapConfiguration.nameOf(var);
             int hcSource = heapConfiguration.targetOf(var);
             if(!heapConfiguration.isExternalNode(hcSource)) {
                 int source = nodes.get(countExt + i);
