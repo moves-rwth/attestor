@@ -11,10 +11,16 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
@@ -28,9 +34,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstrac
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
@@ -416,28 +420,48 @@ public class Attestor {
     private void setupCanonicalization() {
 
         Grammar grammar = settings.grammar().getGrammar();
-        CanonicalizationStrategy strategy;
+        EmbeddingCheckerProvider checkerProvider = getEmbeddingCheckerProvider();
+        CanonicalizationHelper canonicalizationHelper;
+         
         if(settings.options().isIndexedMode()) {
-            strategy = new IndexedCanonicalizationStrategy(
-                    grammar,
-                    true,
-                    settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getAbstractionDistance()
-            );
+        	
+        	canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
             logger.info("Setup canonicalization using indexed grammar.");
+            
         } else {
-            strategy = new DefaultCanonicalizationStrategy(
-                    grammar,
-                    true,
-                    settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getAbstractionDistance()
-            );
+        	canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }
+        CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper); 
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
     }
+
+	private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+		CanonicalizationHelper canonicalizationHelper;
+		IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
+		
+		
+		
+		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
+		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();
+		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
+		EmbeddingStackChecker stackChecker = 
+				new EmbeddingStackChecker( stackMatcher, 
+											materializer );
+		
+		canonicalizationHelper = new IndexedMatchingHandler( indexStrategy, checkerProvider, stackChecker);
+		return canonicalizationHelper;
+	}
+
+	private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {
+		final int abstractionDifference = settings.options().getAbstractionDistance();
+		final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
+		final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference ,
+																				aggressiveAbstractionThreshold, 
+																				aggressiveReturnAbstraction);
+		return checkerProvider;
+	}
 
     private void setupInclusionTest() {
 
