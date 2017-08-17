@@ -32,8 +32,13 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		EmbeddingCheckerProvider provider = new EmbeddingCheckerProvider(10, false);
-		matchingHandler = new DefaultMatchingHandler( provider );
+		final int minDereferenceDepth = 1;
+		final int aggressiveAbstractionThreshold = 10;
+		final boolean aggressiveReturnAbstraction = false;
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
+																				aggressiveAbstractionThreshold, 
+																				aggressiveReturnAbstraction);
+		matchingHandler = new DefaultMatchingHandler( checkerProvider );
 	}
 	
 	@Test

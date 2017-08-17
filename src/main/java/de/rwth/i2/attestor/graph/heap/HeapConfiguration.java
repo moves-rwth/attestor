@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.graph.heap;
 
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.List;
 
 /**
  * 
@@ -227,9 +227,10 @@ public interface HeapConfiguration {
 	 * in this HeapConfiguration (the target).
 	 *
 	 * @param pattern The HeapConfiguration to search for.
+	 * @param minAbstractionDistance The minimal distance between a variable and an embedding.
 	 *
 	 * @return An AbstractMatchingChecker to iterate through all found embeddings.
 	 */
-	AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern);
+	AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance);
 
 }

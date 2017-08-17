@@ -5,7 +5,6 @@ import java.util.*;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -17,6 +16,19 @@ import gnu.trove.list.array.TIntArrayList;
  * @author Christoph
  */
 public class PointsToAutomaton extends HeapAutomaton {
+
+    @FunctionalInterface
+    public interface HeapConfigurationFactory {
+
+        HeapConfiguration createEmptyHc();
+    }
+
+    private HeapConfigurationFactory hcFactory;
+
+    public PointsToAutomaton(HeapConfigurationFactory hcFactory) {
+
+        this.hcFactory = hcFactory;
+    }
 
     @Override
     protected AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
@@ -43,7 +55,7 @@ public class PointsToAutomaton extends HeapAutomaton {
 
     private HeapConfiguration computeKernel(HeapConfiguration heapConfiguration) {
 
-        HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
+        HeapConfigurationBuilder builder = hcFactory.createEmptyHc().builder();
         int countExt = heapConfiguration.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList( countExt );
 

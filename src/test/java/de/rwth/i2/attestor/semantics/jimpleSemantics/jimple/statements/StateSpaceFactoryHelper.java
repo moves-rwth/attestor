@@ -36,6 +36,7 @@ public class StateSpaceFactoryHelper {
                                 return res;
                             }
                     )
+                    .setStateCounter( s -> {} )
                     .build()
                     .generate();
         };

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +33,12 @@ public class StateSpaceGenerator {
 	}	
 
 	private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
+
+	@FunctionalInterface
+	public interface TotalStatesCounter {
+
+		void addStates(int states);
+	}
 
 	/**
 	 * Stores the state space generated upon instantiation of
@@ -88,6 +93,11 @@ public class StateSpaceGenerator {
 	 * Strategy determining how states are refined prior to canonicalization
  	 */
 	StateRefinementStrategy stateRefinementStrategy = null;
+
+	/**
+	 * Counter for the total number of states generated so far.
+	 */
+	TotalStatesCounter totalStatesCounter = null;
 
     /**
      * @return The strategy determining when state space generation is aborted.
@@ -151,10 +161,7 @@ public class StateSpaceGenerator {
             }
 		}
 
-		Settings.getInstance()
-				.factory()
-				.addGeneratedStates(stateSpace.getStates().size());
-
+		totalStatesCounter.addStates(stateSpace.getStates().size());
 		return stateSpace;
 	}
 

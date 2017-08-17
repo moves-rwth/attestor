@@ -30,7 +30,6 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	 * If this is the case, it suffices to consider a single sequence of inverse derivations.
 	 */
 	private final boolean isConfluent;
-
 	/**
 	 * A flag that prevents abstraction of program states whose corresponding program location
 	 * has at most one successor.
@@ -38,10 +37,13 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	private boolean ignoreUniqueSuccessorStatements;
 
 
+
 	private final IndexCanonizationStrategy indexCanonizationStrategy;
 	private final int aggressiveAbstractionThreshold;
 
 	private final boolean aggressiveReturnAbstraction;
+
+	private final int minAbstractionDistance;
 
 
 	/**
@@ -51,13 +53,16 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	public IndexedCanonicalizationStrategy(Grammar grammar, boolean isConfluent,
 										   int aggressiveAbstractionThreshold,
-										   boolean aggressiveReturnAbstraction) {
+										   boolean aggressiveReturnAbstraction,
+										   int minAbstractionDistance) {
+
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
 
 		this.indexCanonizationStrategy = new AVLIndexCanonizationStrategy();
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
+		this.minAbstractionDistance = minAbstractionDistance;
 	}
 
 	/**
@@ -108,7 +113,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 				if( strongCanonicalization ){
 					checker = new EmbeddingChecker(pattern, state.getHeap() );
 				}else{
-					checker = state.getHeap().getEmbeddingsOf(pattern);
+					checker = state.getHeap().getEmbeddingsOf(pattern, minAbstractionDistance);
 				}
 				
 				

@@ -29,7 +29,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 		HeapConfiguration pattern = getPattern();
 		Statement statement = new Skip(0);
 		
-		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern );
+		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1 );
 		
 		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
 					 graph, pattern, statement, expected );
@@ -87,7 +87,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 		HeapConfiguration pattern = getPattern();
 		Statement statement = new ReturnVoidStmt();
 		
-		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern );
+		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1 );
 		
 		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
 					 graph, pattern, statement, expected );
@@ -97,8 +97,10 @@ public class DefaultEmbeddingCheckerProviderTest {
 	private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
 			HeapConfiguration graph, HeapConfiguration pattern, Statement statement, AbstractMatchingChecker expected) {
 		
+		final int minDereferenceDepth = 1;
 		EmbeddingCheckerProvider checkerProvider = 
-				new EmbeddingCheckerProvider( aggressiveAbstractionThreshold,
+				new EmbeddingCheckerProvider( minDereferenceDepth,
+											  aggressiveAbstractionThreshold,
 											  aggressiveReturnAbstraction 	);
 		
 	

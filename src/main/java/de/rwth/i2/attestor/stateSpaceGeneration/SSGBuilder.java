@@ -75,6 +75,10 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No inclusion strategy.");
 		}
 
+		if(generator.totalStatesCounter == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No state counter.");
+		}
+
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
 			generator.stateSpace.addInitialState(state);
@@ -160,6 +164,11 @@ public class SSGBuilder {
 
 	public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 		generator.stateRefinementStrategy = stateRefinementStrategy;
+		return this;
+	}
+
+	public SSGBuilder setStateCounter(StateSpaceGenerator.TotalStatesCounter stateCounter) {
+		generator.totalStatesCounter = stateCounter;
 		return this;
 	}
 	

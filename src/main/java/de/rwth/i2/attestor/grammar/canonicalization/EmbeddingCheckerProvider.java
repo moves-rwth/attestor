@@ -9,10 +9,13 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class EmbeddingCheckerProvider {
 	
+	private int minDereferenceDepth;
 	private int aggressiveAbstractionThreshold;
 	private boolean aggressiveReturnAbstraction;
 
-	public EmbeddingCheckerProvider(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction) {
+	public EmbeddingCheckerProvider( int minDereferenceDepth,
+			int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction) {
+		this.minDereferenceDepth = minDereferenceDepth;
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
@@ -29,7 +32,7 @@ public class EmbeddingCheckerProvider {
 			return new EmbeddingChecker( pattern, graph );
 		}
 
-		return graph.getEmbeddingsOf(pattern);
+		return graph.getEmbeddingsOf(pattern, minDereferenceDepth);
 	}
 
 }

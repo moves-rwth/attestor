@@ -47,6 +47,8 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
     private final boolean aggressiveReturnAbstraction;
 
+    private final int minAbstractionDistance;
+
 	/**
 	 * Initializes the strategy.
 	 * @param grammar The grammar that guides abstraction.
@@ -54,12 +56,15 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	public DefaultCanonicalizationStrategy(Grammar grammar, boolean isConfluent,
                                            int aggressiveAbstractionThreshold,
-                                           boolean aggressiveReturnAbstraction) {
+                                           boolean aggressiveReturnAbstraction,
+										   int minAbstractionDistance) {
+
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
 		this.ignoreUniqueSuccessorStatements = false;
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
+		this.minAbstractionDistance = minAbstractionDistance;
 	}
 
 	/**
@@ -113,6 +118,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 		boolean success = false;
 
+
 		for(Nonterminal nonterminal : grammar.getAllLeftHandSides() ) {
 
 			if( success && isConfluent ) { break; }
@@ -125,7 +131,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 				if( strongCanonicalization ){
 					checker = new EmbeddingChecker(pattern, state.getHeap() );
 				}else{
-					checker = state.getHeap().getEmbeddingsOf(pattern);
+					checker = state.getHeap().getEmbeddingsOf(pattern, minAbstractionDistance);
 				}
 				
 				
@@ -164,6 +170,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private ProgramState replaceEmbeddingBy( ProgramState abstracted, Matching embedding, Nonterminal nonterminal) {
 		abstracted = abstracted.clone();
+
 
 		abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
 		return abstracted;

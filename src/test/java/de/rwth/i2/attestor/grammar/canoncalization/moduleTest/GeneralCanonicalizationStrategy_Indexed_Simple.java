@@ -40,7 +40,12 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 	
 	@Before
 	public void init() {
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(10, false);
+		final int minDereferenceDepth = 1;
+		final int aggressiveAbstractionThreshold = 10;
+		final boolean aggressiveReturnAbstraction = false;
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
+																				aggressiveAbstractionThreshold, 
+																				aggressiveReturnAbstraction);
 		
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
 		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();

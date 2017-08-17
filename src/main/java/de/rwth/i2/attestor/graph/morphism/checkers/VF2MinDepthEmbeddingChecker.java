@@ -17,6 +17,7 @@ import de.rwth.i2.attestor.graph.morphism.feasibility.TwoStepLookahead;
 import de.rwth.i2.attestor.graph.morphism.feasibility.VariableDereferenceDepth;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
+import de.rwth.i2.attestor.main.settings.Settings;
 
 /**
  * A specialized {@link MorphismChecker} to determine embeddings between a pattern graph
@@ -107,7 +108,8 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 				.addFeasibilityCondition( embeddingExternalNodes )
 				.addFeasibilityCondition( compatibleNodeTypes )
 				.addFeasibilityCondition( embeddingEdgeLabels )
-				.addFeasibilityCondition( new VariableDereferenceDepth(depth) )
+				.addFeasibilityCondition( new VariableDereferenceDepth(depth,
+						Settings.getInstance().options().isNullDistanceEnabled()) )
 				.build()
 			);
 	}
