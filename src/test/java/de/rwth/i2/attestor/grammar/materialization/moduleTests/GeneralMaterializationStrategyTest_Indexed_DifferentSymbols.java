@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
@@ -51,11 +51,11 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 	@Before
 	public void setUp() {
-		oneAbstractSymbol = DefaultStackMaterialization.SYMBOL_X;
-		otherAbstractSymbol = DefaultStackMaterialization.SYMBOL_Y;
+		oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
+		otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
 		Grammar grammar = buildSimpleGrammarWithTwoStackGrammars();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		IndexedMaterializationRuleManager grammarManager = 
 				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 		

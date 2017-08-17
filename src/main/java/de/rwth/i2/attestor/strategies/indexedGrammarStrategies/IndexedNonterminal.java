@@ -1,14 +1,14 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.Stack;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.Index;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 
 import java.util.List;
 
 public interface IndexedNonterminal extends Nonterminal {
 
-    Stack getStack();
+    Index getStack();
 
     IndexedNonterminal getWithShortenedStack();
 

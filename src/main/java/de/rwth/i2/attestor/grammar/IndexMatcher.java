@@ -15,9 +15,9 @@ public class IndexMatcher {
 	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<IndexSymbol>, List<IndexSymbol>>>
 		knownMatches = new HashMap<>();
 
-	private StackMaterializationStrategy stackGrammar;
+	private IndexMaterializationStrategy stackGrammar;
 	
-	public IndexMatcher(StackMaterializationStrategy stackGrammar) {
+	public IndexMatcher(IndexMaterializationStrategy stackGrammar) {
 		this.stackGrammar = stackGrammar;
 	}
 

@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.testUtil.StackGrammarForTests;
+import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 
@@ -41,7 +41,7 @@ public class IndexMatcherTest {
 
 	@Before
 	public void setUp() throws Exception {
-		StackMaterializationStrategy stackGrammar = new StackGrammarForTests();
+		IndexMaterializationStrategy stackGrammar = new IndexGrammarForTests();
 		stackMatcher = new IndexMatcher( stackGrammar );
 	}
 

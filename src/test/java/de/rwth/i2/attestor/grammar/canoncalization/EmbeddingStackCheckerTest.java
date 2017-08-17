@@ -30,7 +30,7 @@ public class EmbeddingStackCheckerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		IndexMaterializationStrategy stackMaterializer = new IndexMaterializationStrategy();
 		 checker = new EmbeddingStackChecker( stackMatcher, stackMaterializer );
 	}
@@ -263,7 +263,7 @@ public class EmbeddingStackCheckerTest {
 	}
 
 	private List<IndexSymbol> getStackPrefix() {
-		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
 		ArrayList<IndexSymbol> prefix = getEmptyStack();
 		prefix.add( s );
 		prefix.add( s );
@@ -271,7 +271,7 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 	private List<IndexSymbol> getOtherStackPrefix() {
-		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
 		IndexSymbol other = ConcreteIndexSymbol.getStackSymbol("other", false);
 		
 		ArrayList<IndexSymbol> prefix = getEmptyStack();
@@ -281,22 +281,22 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 	private List<IndexSymbol> getLongerStackPrefix(List<IndexSymbol> prefix) {
-		IndexSymbol s = DefaultStackMaterialization.SYMBOL_s;
+		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
 		return addSymbol( prefix, s );
 	}
 	
 	private List<IndexSymbol> makeConcrete( List<IndexSymbol> prefix ) {
-		IndexSymbol bottom = DefaultStackMaterialization.SYMBOL_Z;
+		IndexSymbol bottom = DefaultIndexMaterialization.SYMBOL_Z;
 		return addSymbol( prefix,bottom );
 	}
 	
 	private List<IndexSymbol> makeOtherConcrete(List<IndexSymbol>  prefix) {
-		IndexSymbol bottom = DefaultStackMaterialization.SYMBOL_C;
+		IndexSymbol bottom = DefaultIndexMaterialization.SYMBOL_C;
 		return addSymbol( prefix,bottom );
 	}
 	
 	private List<IndexSymbol> makeAbstract(List<IndexSymbol> prefix) {
-		AbstractIndexSymbol abs = DefaultStackMaterialization.SYMBOL_X;
+		AbstractIndexSymbol abs = DefaultIndexMaterialization.SYMBOL_X;
 		return addSymbol(prefix, abs);
 	}
 	
@@ -306,7 +306,7 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 	private List<IndexSymbol> makeOtherAbstract(List<IndexSymbol> prefix) {
-		AbstractIndexSymbol abs = DefaultStackMaterialization.SYMBOL_Y;
+		AbstractIndexSymbol abs = DefaultIndexMaterialization.SYMBOL_Y;
 		return addSymbol(prefix, abs);
 	}
 

@@ -21,7 +21,7 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Hannah, Christoph
  */
-public class DefaultStackMaterialization implements StackMaterializationStrategy {
+public class DefaultIndexMaterialization implements IndexMaterializationStrategy {
 	
 	public static AbstractIndexSymbol SYMBOL_X = AbstractIndexSymbol.get("X");
 	public static AbstractIndexSymbol SYMBOL_Y = AbstractIndexSymbol.get("Y");

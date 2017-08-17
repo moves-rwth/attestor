@@ -46,7 +46,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager ruleManager = 
 				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 		

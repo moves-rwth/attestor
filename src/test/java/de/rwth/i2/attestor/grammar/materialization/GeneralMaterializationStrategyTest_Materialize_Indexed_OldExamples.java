@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
@@ -35,7 +35,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamples 
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager ruleManager = 
 				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 		

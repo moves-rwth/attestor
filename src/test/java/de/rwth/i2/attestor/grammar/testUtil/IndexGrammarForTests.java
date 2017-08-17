@@ -5,12 +5,12 @@ import java.util.List;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.StackMaterializationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 
-public class StackGrammarForTests implements StackMaterializationStrategy {
+public class IndexGrammarForTests implements IndexMaterializationStrategy {
 
-	public StackGrammarForTests() {
+	public IndexGrammarForTests() {
 		// TODO Auto-generated constructor stub
 	}
 

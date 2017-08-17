@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.Stack;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.Index;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
 
-	protected Stack stack;
+	protected Index stack;
 	protected  final GeneralNonterminal generalNonterminal;
 
 	public IndexedNonterminalImpl(String label,
@@ -18,27 +18,27 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
                                   List<IndexSymbol> stack){
 
 		this.generalNonterminal = GeneralNonterminal.getNonterminal( label, rank, isReductionTentacle );
-		this.stack = new Stack(stack);
+		this.stack = new Index(stack);
 	}
 
 
 	public IndexedNonterminalImpl(String label, List<IndexSymbol> index ){
 		this.generalNonterminal = GeneralNonterminal.getNonterminal(label);
-		this.stack = new Stack(index);
+		this.stack = new Index(index);
 	}
 
 	private IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, List<IndexSymbol> index ){
 		this.generalNonterminal = generalNonterminal;
-        this.stack = new Stack(index);
+        this.stack = new Index(index);
 	}
 
-	protected IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Stack stack) {
+	protected IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Index stack) {
 	    this.generalNonterminal = generalNonterminal;
 	    this.stack = stack;
     }
 
     @Override
-    public Stack getStack() {
+    public Index getStack() {
 	    return stack;
     }
 

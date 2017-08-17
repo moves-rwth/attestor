@@ -43,7 +43,7 @@ public class GrammarTest_Indexed {
 	public void setUp() throws Exception {
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		grammarManager = 
 				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 	}

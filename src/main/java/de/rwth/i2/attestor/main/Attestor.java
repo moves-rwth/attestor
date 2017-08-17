@@ -22,7 +22,7 @@ import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
@@ -371,7 +371,7 @@ public class Attestor {
 
         if(settings.options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-            IndexMatcher stackMatcher = new IndexMatcher( new DefaultStackMaterialization() );
+            IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
             MaterializationRuleManager grammarManager =
                     new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
 

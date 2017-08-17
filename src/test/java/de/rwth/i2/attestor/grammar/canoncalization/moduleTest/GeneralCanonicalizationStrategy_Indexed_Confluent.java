@@ -28,7 +28,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultStackMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
@@ -52,7 +52,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(10, false);
 		
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
-		DefaultStackMaterialization stackGrammar = new DefaultStackMaterialization();
+		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();
 		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
 		EmbeddingStackChecker stackChecker = 
 				new EmbeddingStackChecker( stackMatcher, 
@@ -97,13 +97,13 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	
 	private List<IndexSymbol> getStackPrefix() {
 		List<IndexSymbol> stack = getEmptyStack();
-		stack.add( DefaultStackMaterialization.SYMBOL_s );
+		stack.add( DefaultIndexMaterialization.SYMBOL_s );
 		return stack;
 	}
 
 	private List<IndexSymbol> makeConcrete( List<IndexSymbol> stack ){
 		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( DefaultStackMaterialization.SYMBOL_Z );
+		stackCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
 		return stackCopy;
 	}
 	
@@ -199,7 +199,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	private List<IndexSymbol> getExpectedStack() {
 		List<IndexSymbol> stack = getEmptyStack();
 		for( int i = 0; i < sizeOfChain - 1; i++ ) {
-			stack.add( DefaultStackMaterialization.SYMBOL_s );
+			stack.add( DefaultIndexMaterialization.SYMBOL_s );
 		}
 		return makeConcrete( stack );
 	}

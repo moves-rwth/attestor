@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 
 import java.util.List;
 
-public interface StackMaterializationStrategy {
+public interface IndexMaterializationStrategy {
 
 	IndexedNonterminal materializeStack( IndexedNonterminal nt, IndexSymbol s );
 	List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol s1, IndexSymbol s2);

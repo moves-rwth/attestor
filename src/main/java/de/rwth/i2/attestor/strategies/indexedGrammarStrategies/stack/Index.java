@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Stack {
+public class Index {
 
    private List<IndexSymbol> stackSymbols;
 
-   public Stack(List<IndexSymbol> stackSymbols) {
+   public Index(List<IndexSymbol> stackSymbols) {
        this.stackSymbols = stackSymbols;
    }
 
-   public Stack(Stack stack) {
+   public Index(Index stack) {
        this.stackSymbols = stack.stackSymbols;
    }
 
@@ -41,30 +41,30 @@ public class Stack {
         return stackSymbols.get( stackSymbols.size() -1 );
     }
 
-    public Stack getWithShortenedStack(){
+    public Index getWithShortenedStack(){
         assert( stackSymbols.size() > 0 );
         List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         stackCopy.remove(stackCopy.size() -1 );
-        return new Stack(stackCopy);
+        return new Index(stackCopy);
     }
 
-    public Stack getWithProlongedStack( IndexSymbol s ){
+    public Index getWithProlongedStack( IndexSymbol s ){
         List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         stackCopy.add(s);
-        return new Stack(stackCopy);
+        return new Index(stackCopy);
     }
 
-    public Stack getWithInstantiation(){
+    public Index getWithInstantiation(){
         List<IndexSymbol> stackCopy = new ArrayList<>(stackSymbols);
         if( stackSymbols.size() > 0 && this.getLastStackSymbol() instanceof IndexVariable ){
             IndexVariable lastSymbol = (IndexVariable)stackCopy.get(stackCopy.size() - 1);
             stackCopy.remove( stackCopy.size() - 1 );
             lastSymbol.getInstantiation().forEach(stackCopy::add);
         }
-        return new Stack(stackCopy);
+        return new Index(stackCopy);
     }
 
-    public Stack getWithProlongedStack( List<IndexSymbol> postfix ){
+    public Index getWithProlongedStack( List<IndexSymbol> postfix ){
         assert( this.size() > 0 );
         IndexSymbol lastSymbol = this.getLastStackSymbol();
         assert( !( lastSymbol instanceof ConcreteIndexSymbol ) );
@@ -73,7 +73,7 @@ public class Stack {
         stackCopy.remove( stackCopy.size() - 1 );
         stackCopy.addAll(postfix) ;
 
-        return new Stack(stackCopy);
+        return new Index(stackCopy);
     }
 
     public boolean hasConcreteStack(){
@@ -88,7 +88,7 @@ public class Stack {
         return stackSymbols.isEmpty();
     }
 
-    public boolean matchStack( Stack other ){
+    public boolean matchStack( Index other ){
         List<IndexSymbol> otherStack = other.stackSymbols;
         for( int i = 0; i < this.size() && i < otherStack.size(); i++ ){
             IndexSymbol s1 = this.get( i );
@@ -111,8 +111,8 @@ public class Stack {
     }
 
     public boolean equals(Object other) {
-        if(other instanceof Stack) {
-            Stack stack = (Stack) other;
+        if(other instanceof Index) {
+            Index stack = (Index) other;
             return stackSymbols.equals(stack.stackSymbols);
         }
         return false;
