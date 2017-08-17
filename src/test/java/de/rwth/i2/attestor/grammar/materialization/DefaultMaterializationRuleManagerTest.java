@@ -31,7 +31,7 @@ public class DefaultMaterializationRuleManagerTest {
 		
 		final int tentacle = 3;
 		final boolean[] isReductionTentacle = new boolean[]{true, false};
-		final String uniqueLabel = "DefaultMaterializationRuleManagerTest";
+		final String uniqueLabel = "testDelegationOfRequest";
 		final Nonterminal toReplace = GeneralNonterminal.getNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
 		
 		final String requestedSelector = "someSelector";
@@ -52,8 +52,8 @@ public class DefaultMaterializationRuleManagerTest {
 	@Test
 	public void testWhetherResponseComplete(){
 		
-		ViolationPointResolver grammarLogik = new FakeViolationPointResolverForDefault();
-		MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogik);
+		ViolationPointResolver grammarLogic = new FakeViolationPointResolverForDefault();
+		MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
 		
 		GrammarResponse actualResponse;
 		try {
