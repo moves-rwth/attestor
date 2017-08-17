@@ -1,7 +1,7 @@
 
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -16,26 +16,26 @@ import java.util.Set;
 public class JimpleUtil {
 	
 	
-    public static JimpleExecutable shallowCopyExecutable(JimpleExecutable executable) {
+    public static JimpleProgramState shallowCopyExecutable(JimpleProgramState programState) {
 
-        return (JimpleExecutable) executable.shallowCopy();
+        return (JimpleProgramState) programState.shallowCopy();
 	}
 
-	public static JimpleExecutable updatePC(JimpleExecutable executable, int nextPC) {
+	public static JimpleProgramState updatePC(JimpleProgramState programState, int nextPC) {
 		
-		JimpleExecutable shallow = shallowCopyExecutable(executable);
+		JimpleProgramState shallow = shallowCopyExecutable(programState);
 		shallow.setProgramCounter(nextPC);
 		return shallow;
 	}
 	
-	public static JimpleExecutable deepCopy(JimpleExecutable executable) {
+	public static JimpleProgramState deepCopy(JimpleProgramState programState) {
 
-        return executable.clone();
+        return programState.clone();
 	}
 	
-	public static Set<ProgramState> createSingletonAndUpdatePC(JimpleExecutable executable, int nextPC) {
+	public static Set<ProgramState> createSingletonAndUpdatePC(JimpleProgramState programState, int nextPC) {
 		
-		JimpleExecutable result = JimpleUtil.updatePC(executable, nextPC);
+		JimpleProgramState result = JimpleUtil.updatePC(programState, nextPC);
 		return SingleElementUtil.createSet( result );
 	}
 	

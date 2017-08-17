@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -14,9 +14,10 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
  */
 public interface Value {
 
-	ConcreteValue evaluateOn(JimpleExecutable executable) throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
+	ConcreteValue evaluateOn(JimpleProgramState programState)
+			throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
 
-	boolean needsMaterialization(JimpleExecutable executable);
+	boolean needsMaterialization(JimpleProgramState programState);
 
 	Type getType();
 

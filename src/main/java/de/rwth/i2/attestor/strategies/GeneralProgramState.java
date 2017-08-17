@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.strategies;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -22,7 +22,7 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public abstract class GeneralProgramState implements JimpleExecutable {
+public abstract class GeneralProgramState implements JimpleProgramState {
 
     /**
      * The logger of this class.
@@ -117,7 +117,7 @@ public abstract class GeneralProgramState implements JimpleExecutable {
      * @param name The name of a variable or constant.
      * @return The corresponding name in the current scope of this state.
      */
-    public String getScopedName(String name) {
+    private String getScopedName(String name) {
 
         return String.valueOf(scopeDepth) + "-" + name;
     }

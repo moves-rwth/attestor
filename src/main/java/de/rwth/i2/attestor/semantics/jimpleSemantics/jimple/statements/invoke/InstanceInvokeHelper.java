@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleExecutable;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Prepares the heap for the invoke of an instance method and cleans it afterwards.
  * <br><br>
- * Call {@link #prepareHeap(JimpleExecutable) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleExecutable) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br> 
+ * Call {@link #prepareHeap(JimpleProgramState) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(JimpleProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * <br>
  * Handles the evaluation of parameter and this expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
@@ -66,14 +66,14 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * leave the scope of the method.
 	 */
 	@Override
-	public void cleanHeap( JimpleExecutable executable ){
+	public void cleanHeap( JimpleProgramState programState ){
 
-		executable.removeIntermediate( "@this:" );
-		removeParameters( executable );
-		removeLocals( executable );
-		removeReturn( executable );
+		programState.removeIntermediate( "@this:" );
+		removeParameters( programState );
+		removeLocals( programState );
+		removeReturn( programState );
 
-		executable.leaveScope();
+		programState.leaveScope();
 	}
 
 	/*
@@ -82,17 +82,17 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * @see
 	 * de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.
 	 * InvokePrepare#prepareHeap(de.rwth.i2.attestor.semantics.jimpleSemantics.
-	 * JimpleExecutable)
+	 * JimpleProgramState)
 	 */
 	@Override
-	public void prepareHeap( JimpleExecutable executable ) throws NotSufficientlyMaterializedException{
+	public void prepareHeap( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue concreteBase;
 		try {
-			concreteBase = baseValue.evaluateOn( executable );
+			concreteBase = baseValue.evaluateOn( programState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteBase = executable.getUndefined();
+			concreteBase = programState.getUndefined();
 		}
 		if( concreteBase.isUndefined() ){
 			if( DebugMode.ENABLED ){
@@ -101,12 +101,12 @@ public class InstanceInvokeHelper extends InvokeHelper {
 		}else{
 			// String type = " " + baseValue.getType().toString();
 			String type = "";
-			executable.setIntermediate( "@this:" + type, concreteBase );
+			programState.setIntermediate( "@this:" + type, concreteBase );
 		}
 
-		appendArguments( executable );
+		appendArguments( programState );
 
-		executable.enterScope();
+		programState.enterScope();
 
 	}
 
@@ -119,8 +119,8 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * AbstractHeap)
 	 */
 	@Override
-	public boolean needsMaterialization( JimpleExecutable executable ){
-		return super.needsMaterialization(executable) || baseValue.needsMaterialization( executable );
+	public boolean needsMaterialization( JimpleProgramState programState ){
+		return super.needsMaterialization(programState) || baseValue.needsMaterialization( programState );
 	}
 
 
