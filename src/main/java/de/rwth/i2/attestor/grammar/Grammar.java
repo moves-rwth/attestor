@@ -18,11 +18,9 @@ public class Grammar {
 	}
 
 	Map<Nonterminal, Set<HeapConfiguration>> rules;
-	private boolean isConfluent;
 	
-	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules, boolean isConfluent ) {
+	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules ) {
 		this.rules = rules;
-		this.isConfluent = isConfluent;
 	}
 
 	/**
@@ -48,8 +46,5 @@ public class Grammar {
 		return Collections.unmodifiableSet( rules.keySet() );
 	}
 
-	public boolean isConfluent() {
-		return this.isConfluent;
-	}
 
 }

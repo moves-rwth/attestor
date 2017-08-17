@@ -61,7 +61,7 @@ class GrammarRefinementHelper {
      */
     Grammar getRefinedGrammar() {
 
-        return new Grammar(new HashMap<>(refinedGrammarRules), grammar.isConfluent() );
+        return new Grammar(new HashMap<>(refinedGrammarRules));
     }
 
     /**

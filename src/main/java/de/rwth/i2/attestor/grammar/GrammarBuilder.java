@@ -16,10 +16,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 public class GrammarBuilder {
 	
 	Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
-	boolean isConfluent = false;
 	
 	public Grammar build() {
-		return new Grammar( rules, isConfluent );
+		return new Grammar( rules );
 	}
 	
 	public GrammarBuilder addRule( Nonterminal lhs, HeapConfiguration rhs) {
@@ -47,11 +46,5 @@ public class GrammarBuilder {
 		return this;
 	}
 	
-	public GrammarBuilder setConfluent(){
-		this.isConfluent = true;
-		return this;
-	}
-
-
 	
 }

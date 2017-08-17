@@ -1,28 +1,20 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.Set;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingReplacer;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.NonterminalEdgeBuilder;
+import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
@@ -31,7 +23,6 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
-import soot.jbco.jimpleTransformations.AddSwitches;
 
 public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
@@ -54,7 +45,6 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 		HeapConfiguration rhs2 = getPattern2();
 		Grammar grammar = Grammar.builder().addRule( lhs, rhs1 )
 										   .addRule(lhs, rhs2)
-										   .setConfluent()
 										   .build();
 		
 		GeneralCanonicalizationStrategy canonizer 

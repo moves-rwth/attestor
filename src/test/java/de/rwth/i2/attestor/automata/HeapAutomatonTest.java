@@ -89,7 +89,7 @@ public class HeapAutomatonTest {
         Set<HeapConfiguration> rhs = new HashSet<>();
         rhs.add(hc);
         rules.put(nt, rhs);
-        Grammar grammar = new Grammar( rules, false );
+        Grammar grammar = new Grammar( rules);
 
         Grammar result = automaton.refine(grammar);
         assertEquals(1, result.getAllLeftHandSides().size());

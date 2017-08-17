@@ -130,7 +130,7 @@ public class GrammarRefinementHelperTest {
                 .build()
         );
 
-        return new Grammar( rules, false );
+        return new Grammar( rules );
     }
 
 
