@@ -38,8 +38,8 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private boolean ignoreUniqueSuccessorStatements;
 
-	private final IndexCanonizationStrategy stackCanonizationStrategy;
 
+	private final IndexCanonizationStrategy indexCanonizationStrategy;
 	private final int aggressiveAbstractionThreshold;
 
 	private final boolean aggressiveReturnAbstraction;
@@ -55,7 +55,8 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 										   boolean aggressiveReturnAbstraction) {
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
-		this.stackCanonizationStrategy = new AVLIndexCanonizationStrategy();
+
+		this.indexCanonizationStrategy = new AVLIndexCanonizationStrategy();
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
@@ -102,7 +103,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 				if( success && isConfluent ) { break; }
 
-				stackCanonizationStrategy.canonizeStack( state.getHeap() );
+				indexCanonizationStrategy.canonizeStack( state.getHeap() );
 				
 				AbstractMatchingChecker checker;
 				if( strongCanonicalization ){
@@ -137,8 +138,9 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	}
 	
 	private void resetInstantiation(IndexedNonterminal nonterminal) {
-		IndexSymbol lastSymb = nonterminal.getStack().getLastStackSymbol();
-		if( lastSymb instanceof IndexVariable ){
+
+		IndexSymbol lastSymb = nonterminal.getIndex().getLastStackSymbol();
+		if( lastSymb instanceof IndexVariable){
 			( (IndexVariable) lastSymb ).resetInstantiation();
 		}
 	}
@@ -156,7 +158,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 			builder.replaceNonterminal(edge, label.getWithInstantiation() );
 		}
 		builder.build();
-		stackCanonizationStrategy.canonizeStack( abstracted.getHeap() );
+		indexCanonizationStrategy.canonizeStack( abstracted.getHeap() );
 	}
 
 	private boolean checkIndexMatching(HeapConfiguration pattern, ProgramState abstracted, Matching embedding) {
@@ -169,7 +171,7 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 
 			IndexedNonterminal patternNt = (IndexedNonterminal) pattern.labelOf(edge);
 			IndexedNonterminal targetNt =  (IndexedNonterminal) abstracted.getHeap().labelOf( embedding.match( edge ) );
-			indexMatch = targetNt.getStack().matchStack(patternNt.getStack());
+			indexMatch = targetNt.getIndex().matchStack(patternNt.getIndex());
 			if( ! indexMatch ){
 				break;
 			}	

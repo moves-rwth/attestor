@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -30,7 +30,7 @@ public class AssignInvokeTest_NonTrivial {
 
 	private AssignInvoke stmt;
 	private HeapConfiguration inputGraph;
-	private DefaultState inputState;
+	private DefaultProgramState inputState;
 
 	@BeforeClass
 	public static void init() {
@@ -54,7 +54,7 @@ public class AssignInvokeTest_NonTrivial {
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		
 		inputGraph = ExampleHcImplFactory.getListAndConstants();
-		inputState = new DefaultState( inputGraph );
+		inputState = new DefaultProgramState( inputGraph );
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class AssignInvokeTest_NonTrivial {
 		try{
 			Set<ProgramState> resStates = stmt.computeSuccessors( inputState );
 			assertEquals( 1, resStates.size() );
-			DefaultState resState = (DefaultState) resStates.iterator().next();
+			DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
 			assertNotSame( resState, inputState );
 			assertNotSame( inputGraph, resState.getHeap() );
 			assertSame( inputGraph, inputState.getHeap() );

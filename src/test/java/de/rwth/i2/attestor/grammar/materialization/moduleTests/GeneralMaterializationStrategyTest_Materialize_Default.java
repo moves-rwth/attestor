@@ -20,7 +20,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 
 public class GeneralMaterializationStrategyTest_Materialize_Default {
 
@@ -53,7 +53,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 	public void testMaterialize_Default() {
 		
 		HeapConfiguration testInput = ExampleHcImplFactory.getMaterializationTest();
-		DefaultState inputConf = new DefaultState(testInput);
+		DefaultProgramState inputConf = new DefaultProgramState(testInput);
 		
 		ViolationPoints vio = new ViolationPoints("x", "next");
 		

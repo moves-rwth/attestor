@@ -8,11 +8,11 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
-import de.rwth.i2.attestor.strategies.GeneralProgramState;
+import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.DebugMode;
 
-public class IndexedState extends GeneralProgramState {
+public class IndexedState extends GeneralJimpleProgramState {
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
 	private static final String[] CONSTANT_NAMES = {"true", "false", "null", "1", "0", "-1"};
 	
@@ -51,17 +51,14 @@ public class IndexedState extends GeneralProgramState {
 	public boolean equals(Object other) {
 		
 		if(other instanceof IndexedState) {
-			
-			IndexedState state = (IndexedState) other;
-			
-			if(programCounter != state.programCounter
-					|| scopeDepth != state.scopeDepth) {
-				
-				return false;
-			}
 
-			return atomicPropositions.equals(state.getAPs())
-				&& heap.equals(state.getHeap());
+			IndexedState state = (IndexedState) other;
+
+			return programCounter == state.programCounter
+					&& scopeDepth == state.scopeDepth
+					&& atomicPropositions.equals(state.getAPs())
+					&& heap.equals(state.getHeap());
+
 		}
 		
 		return false;

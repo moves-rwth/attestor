@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.Index;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 
 import java.util.List;
 
 public interface IndexedNonterminal extends Nonterminal {
 
-    Index getStack();
+
+    Index getIndex();
 
     IndexedNonterminal getWithShortenedStack();
 
@@ -19,8 +18,8 @@ public interface IndexedNonterminal extends Nonterminal {
     /**
      * removes the last symbol (stackVariable () or abstractStackSymbol) and
      * adds all elements in postfix
-     * @param postfix The postfix to prolong the stack
-     * @return The nonterminal with prolonged stack
+     * @param postfix The postfix to prolong the index
+     * @return The nonterminal with prolonged index
      */
     IndexedNonterminal getWithProlongedStack(List<IndexSymbol> postfix);
 

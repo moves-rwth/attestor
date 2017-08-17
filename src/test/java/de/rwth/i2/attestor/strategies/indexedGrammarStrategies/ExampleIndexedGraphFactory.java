@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;

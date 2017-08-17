@@ -14,10 +14,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGramm
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
@@ -49,9 +45,9 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager ruleManager = 
-				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 		
 		GrammarResponseApplier ruleApplier = 
 				new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(), new GraphMaterializer() );
@@ -203,8 +199,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private List<IndexSymbol> getStack_Z() {
 		return SingleElementUtil.createList( STACK_SYMBOL_Z );
 	}
-	
-	private List<IndexSymbol> getStack_sZ() {	
+	private List<IndexSymbol> getStack_sZ() {
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(STACK_SYMBOL_S);
 		stack.add(STACK_SYMBOL_Z);
@@ -275,8 +270,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private HeapConfiguration getExpected_ssX_RightRule(List<IndexSymbol> stackForReferenceNt) {
 		return getAppliedRightRuleWithStacks( getStack_X(), getStack_sX(), stackForReferenceNt );
 	}
-	
-	private HeapConfiguration getGraphWithReferenzNonterminalWithStack(List<IndexSymbol> stack, 
+	private HeapConfiguration getGraphWithReferenzNonterminalWithStack(List<IndexSymbol> stack,
 			List<IndexSymbol> stackForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		String label = BalancedTreeGrammar.NT_LABEL;
@@ -391,7 +385,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 	
-	private HeapConfiguration getAppliedBalancedRuleWithStack(List<IndexSymbol> stack, 
+	private HeapConfiguration getAppliedBalancedRuleWithStack(List<IndexSymbol> stack,
 						List<IndexSymbol> stackForReferenceNonterminal ) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
@@ -430,8 +424,8 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 	
-	private HeapConfiguration getAppliedLeftRuleWithStacks( List<IndexSymbol> leftStack, 
-															List<IndexSymbol> rightStack, 
+	private HeapConfiguration getAppliedLeftRuleWithStacks( List<IndexSymbol> leftStack,
+															List<IndexSymbol> rightStack,
 															List<IndexSymbol> stackForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
@@ -473,7 +467,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 
-	private HeapConfiguration getAppliedRightRuleWithStacks(List<IndexSymbol> leftStack, 
+	private HeapConfiguration getAppliedRightRuleWithStacks(List<IndexSymbol> leftStack,
 															List<IndexSymbol> rightStack, List<IndexSymbol> stackForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
@@ -514,8 +508,4 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 					.build()
 				.build();
 	}
-
-	
-	
-
 }

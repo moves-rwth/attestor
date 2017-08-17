@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 
 public class TestJsonToIndexedGrammar {
 
@@ -34,7 +34,7 @@ public class TestJsonToIndexedGrammar {
 				+"	\"nonterminal\":\"TestJson\",\n"
 				+"	\"rank\":2,\n"
 				+"	\"redundandTentacles\":[false,false],\n"
-				+"	\"stack\":[\"s\",\"()\"],\n"
+				+"	\"index\":[\"s\",\"()\"],\n"
 				+"	\"rules\":[\n"
 				+"		{\n"
 				+"			\"nodes\":[{\n"
@@ -48,7 +48,7 @@ public class TestJsonToIndexedGrammar {
 				+"				{\n"
 				+"					\"label\":\"TestJson\",\n"
 				+"					\"tentacles\":[0,1],\n"
-				+"					\"stack\":[\"()\"]\n"
+				+"					\"index\":[\"()\"]\n"
 				+"				}\n"
 				+"			]\n"
 				+"		}]\n"
@@ -57,7 +57,7 @@ public class TestJsonToIndexedGrammar {
 				+"	\"nonterminal\":\"TestJson\",\n"
 				+"	\"rank\":2,\n"
 				+"	\"redundandTentacles\":[false,false],\n"
-				+"	\"stack\":[\"Z\"],\n"
+				+"	\"index\":[\"Z\"],\n"
 				+"	\"rules\":[\n"
 				+"		{\n"
 				+"			\"nodes\":[{\n"

@@ -7,17 +7,11 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -55,9 +49,9 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 		otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
 		Grammar grammar = buildSimpleGrammarWithTwoStackGrammars();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		IndexedMaterializationRuleManager grammarManager = 
-				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 		
 		IndexedGrammarResponseApplier ruleApplier = 
 				new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(), new GraphMaterializer() );
@@ -89,9 +83,9 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	private HeapConfiguration getInput() {
 		Type someType = TypeFactory.getInstance().getType("type");
 		
-		List<IndexSymbol> stackWithOneStackSymbol = SingleElementUtil.createList( oneAbstractSymbol );
-		Nonterminal toReplace = getNonterminalWithStack( stackWithOneStackSymbol);
-		Nonterminal controlWithSameStack = getNonterminalWithStack( stackWithOneStackSymbol);
+		List<IndexSymbol> stackWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
+		Nonterminal toReplace = getNonterminalWithStack(stackWithOneIndexSymbol);
+		Nonterminal controlWithSameStack = getNonterminalWithStack(stackWithOneIndexSymbol);
 		Nonterminal controlWithOtherStack = getNonterminalWithStack( SingleElementUtil.createList( otherAbstractSymbol) );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -117,7 +111,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 		Type someType = TypeFactory.getInstance().getType("type");
 		GeneralSelectorLabel selectorLabel = GeneralSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
-		List<IndexSymbol> stackWithOneStackSymbol = SingleElementUtil.createList( oneAbstractSymbol );
+		List<IndexSymbol> stackWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
 		List<IndexSymbol> materializedStack = stackForLhs();
 		materializedStack.add(oneAbstractSymbol);
 		Nonterminal controlWithSameStack = getNonterminalWithStack( materializedStack );

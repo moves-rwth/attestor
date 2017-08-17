@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
@@ -13,9 +15,6 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;

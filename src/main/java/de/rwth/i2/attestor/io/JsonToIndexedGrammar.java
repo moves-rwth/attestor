@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -75,8 +74,9 @@ public class JsonToIndexedGrammar {
 		return grammarFragment.getString( "nonterminal" );
 	}
 	
-	private static List<IndexSymbol> getStack( JSONObject grammarFragment ){
-		JSONArray stack = grammarFragment.getJSONArray("stack");
+
+	private static List<IndexSymbol> getStack(JSONObject grammarFragment ){
+		JSONArray stack = grammarFragment.getJSONArray("index");
 		return JsonToIndexedHC.parseStack(stack);
 	}
 
@@ -266,7 +266,7 @@ public class JsonToIndexedGrammar {
 	 * @param i the tentacle to consider
 	 * @param rulesForNt the grammar rules for nonterminal nt (nt on lhs)
 	 * @param changedTentacles if the tentacle changed to NonReduction it will be added to this
-	 * stack so that it is later propagated to tentacles it is adjacent to
+	 * index so that it is later propagated to tentacles it is adjacent to
 	 */
 	private static void computeSimpleNonReductionTentaclesFor( IndexedNonterminal nt, int i,
 			Collection<HeapConfiguration> rulesForNt,

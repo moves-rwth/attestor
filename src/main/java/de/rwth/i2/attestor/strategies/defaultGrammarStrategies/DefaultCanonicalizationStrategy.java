@@ -81,6 +81,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
+
 		if( ignoreUniqueSuccessorStatements && !semantics.permitsCanonicalization() ) {
 
 			return SingleElementUtil.createSet( state );
@@ -108,6 +109,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private Set<ProgramState> performCanonicalization(ProgramState state, boolean strongCanonicalization) {
 
+
 		Set<ProgramState> result = new HashSet<>();
 
 		boolean success = false;
@@ -132,6 +134,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 					ProgramState toAbstract  = state;
 					
+
 					Matching embedding = checker.getNext();
 
 					success = true;
@@ -162,6 +165,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 	 */
 	private ProgramState replaceEmbeddingBy( ProgramState abstracted, Matching embedding, Nonterminal nonterminal) {
 		abstracted = abstracted.clone();
+
 		abstracted.getHeap().builder().replaceMatching( embedding , nonterminal).build();
 		return abstracted;
 	}

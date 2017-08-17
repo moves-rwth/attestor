@@ -1,14 +1,11 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import java.util.*;
-
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 
 /**
  * Capable of handling {@link MaterializationAndRuleResponse}
@@ -20,13 +17,13 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol
 public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier {
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );
-	
-	IndexMaterializationStrategy stackMaterializer;
 
-	public IndexedGrammarResponseApplier(IndexMaterializationStrategy stackMaterializer,
+	IndexMaterializationStrategy indexMaterializationStrategy;
+
+	public IndexedGrammarResponseApplier(IndexMaterializationStrategy indexMaterializationStrategy,
 			GraphMaterializer graphMaterializer) {
 		super( graphMaterializer );
-		this.stackMaterializer = stackMaterializer;
+		this.indexMaterializationStrategy = indexMaterializationStrategy;
 	}
 	
 	public Collection<HeapConfiguration> applyGrammarResponseTo( HeapConfiguration inputGraph, 
@@ -44,7 +41,7 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 				 	 
 				 HeapConfiguration materializedStacks;
 				try {
-					materializedStacks = stackMaterializer
+					materializedStacks = indexMaterializationStrategy
 							.getMaterializedCloneWith(inputGraph, 
 													  indexedRespose.getStackSymbolToMaterialize(), 
 													  materialization );

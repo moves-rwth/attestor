@@ -3,8 +3,7 @@ package de.rwth.i2.attestor.grammar.materialization.communication;
 import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
+
 
 public class MaterializationAndRuleResponse implements GrammarResponse {
 
@@ -34,8 +33,5 @@ public class MaterializationAndRuleResponse implements GrammarResponse {
 	public Collection<HeapConfiguration> getRulesForMaterialization( List<IndexSymbol> materialization ){
 		return materializationsAndRules.get( materialization );
 	}
-	
-
-	
 	
 }

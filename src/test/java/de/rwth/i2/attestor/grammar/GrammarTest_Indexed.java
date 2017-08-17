@@ -22,7 +22,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import gnu.trove.iterator.TIntIterator;
 
 public class GrammarTest_Indexed {
@@ -43,9 +43,10 @@ public class GrammarTest_Indexed {
 	public void setUp() throws Exception {
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
+
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		grammarManager = 
-				new IndexedMaterializationRuleManager(vioResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 	}
 	
 	@Test
@@ -96,7 +97,7 @@ public class GrammarTest_Indexed {
 		 while( ntIterator.hasNext() ){
 			 int ntId = ntIterator.next();
 			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", nt.getStack().hasConcreteStack() );
+			 assertTrue("leftLeafRule not instantiatied", nt.getIndex().hasConcreteStack() );
 		 }
 		 assertTrue( result.contains( BalancedTreeGrammar.createRightLeafRule()) );
 		 }

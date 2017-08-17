@@ -15,9 +15,6 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
 import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -53,11 +50,12 @@ public class IndexedGrammarResponseApplierTest {
 
 	@Test
 	public void testDelegation() throws WrongResponseTypeException, CannotMaterializeException {
-		IndexMaterializationStrategy stackMaterializerMock = mock( IndexMaterializationStrategy.class );
+
+		IndexMaterializationStrategy indexMaterializationStrategyMock = mock( IndexMaterializationStrategy.class );
 		GraphMaterializer graphMaterializerMock = mock( GraphMaterializer.class );
 		
 		IndexedGrammarResponseApplier ruleApplier = 
-				new IndexedGrammarResponseApplier( stackMaterializerMock, graphMaterializerMock );
+				new IndexedGrammarResponseApplier(indexMaterializationStrategyMock, graphMaterializerMock );
 		
 		HeapConfiguration inputGraph = createInputGraph();
 		
@@ -78,8 +76,8 @@ public class IndexedGrammarResponseApplierTest {
 		GrammarResponse grammarResponse = new MaterializationAndRuleResponse( rules, symbolToMaterialize ); 
 			
 		ruleApplier.applyGrammarResponseTo(inputGraph, EDGE_ID, grammarResponse);
-		verify( stackMaterializerMock ).getMaterializedCloneWith( inputGraph, symbolToMaterialize, materialization1 );
-		verify( stackMaterializerMock ).getMaterializedCloneWith( inputGraph, symbolToMaterialize, materialization2 );
+		verify(indexMaterializationStrategyMock).getMaterializedCloneWith( inputGraph, symbolToMaterialize, materialization1 );
+		verify(indexMaterializationStrategyMock).getMaterializedCloneWith( inputGraph, symbolToMaterialize, materialization2 );
 		verify( graphMaterializerMock, times(2) ).getMaterializedCloneWith(anyObject(), eq(EDGE_ID), eq(mat1_rule1) );
 		verify( graphMaterializerMock ).getMaterializedCloneWith(anyObject(), eq(EDGE_ID), eq(mat2_rule2) );
 	}

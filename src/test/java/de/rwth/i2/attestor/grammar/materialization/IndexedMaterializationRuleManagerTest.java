@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarR
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeIndexMatcher;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolver;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
@@ -15,10 +14,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
@@ -175,10 +170,11 @@ public class IndexedMaterializationRuleManagerTest {
 		fakeVioResolver.defineReturnedLhsForTest( expectedViolationPointResultLhs );
 		fakeVioResolver.defineRhsForAllNonterminals( hardCodedViolationPointResoverResult );
 		
-		IndexMatcher fakeStackMatcher = new FakeIndexMatcher();
+
+		IndexMatcher fakeIndexMatcher = new FakeIndexMatcher();
 		
 		IndexedMaterializationRuleManager ruleManager = 
-				new IndexedMaterializationRuleManager( fakeVioResolver, fakeStackMatcher );
+				new IndexedMaterializationRuleManager( fakeVioResolver, fakeIndexMatcher);
 		
 		GrammarResponse actualGrammarResponse;
 		try {
@@ -203,8 +199,9 @@ public class IndexedMaterializationRuleManagerTest {
 		
 	private IndexedNonterminal createRequestNonterminal() {
 		final ArrayList<IndexSymbol> stack = new ArrayList<>();
-		final IndexSymbol someAbstractStackSymbol = AbstractIndexSymbol.get("SomeAbstractStackSymbol");
-		stack.add( someAbstractStackSymbol );
+
+		final IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("SomeAbstractStackSymbol");
+		stack.add(someAbstractIndexSymbol);
 		return new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 	}
 	
@@ -268,7 +265,7 @@ public class IndexedMaterializationRuleManagerTest {
 			.build();
 	}
 	
-	//----- Empty Instantiable Stack ----------
+	//----- Empty Instantiable Index ----------
 
 	private List<IndexSymbol> emptyStack(){
 		return new ArrayList<>();
@@ -286,7 +283,7 @@ public class IndexedMaterializationRuleManagerTest {
 		return graphWithOneNonterminalWithStack( instantiatedEmptyStack );
 	}
 	
-	//------ Non-Empty Instantiable Stack ------
+	//------ Non-Empty Instantiable Index ------
 	
 	private List<IndexSymbol> nonEmptyStack(){
 		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
@@ -312,7 +309,7 @@ public class IndexedMaterializationRuleManagerTest {
 		return graphWithOneNonterminalWithStack( instantiatedNonEmptyStack );
 	}
 	
-	//---------- Concrete Stack --------------------------
+	//---------- Concrete Index --------------------------
 	
 	private List<IndexSymbol> concreteStack(){
 		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
@@ -336,8 +333,8 @@ public class IndexedMaterializationRuleManagerTest {
 	}
 	
 	//=============== Two Nonterminals ======================
-	
-	private HeapConfiguration graphWithTwoNonterminalsWithStacks( List<IndexSymbol> stack1, 
+
+	private HeapConfiguration graphWithTwoNonterminalsWithStacks( List<IndexSymbol> stack1,
 																  List<IndexSymbol> stack2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		

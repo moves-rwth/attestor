@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
@@ -21,7 +22,6 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultState;
 
 public class MaterializationTest {
 	
@@ -64,7 +64,7 @@ public class MaterializationTest {
 	public void testMaterialization() {
 		
 		HeapConfiguration testInput = ExampleHcImplFactory.getMaterializationTest();
-		DefaultState inputConf = new DefaultState(testInput);
+		DefaultProgramState inputConf = new DefaultProgramState(testInput);
 		
 		ViolationPoints vio = new ViolationPoints("x", "next");
 		

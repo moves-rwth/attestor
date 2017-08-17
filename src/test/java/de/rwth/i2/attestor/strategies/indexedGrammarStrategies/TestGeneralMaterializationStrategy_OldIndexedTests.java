@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.stack.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 
@@ -32,9 +31,10 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
 	public void setup(){
 		Grammar grammar = BalancedTreeGrammar.getGrammar();
 		ViolationPointResolver violationPointResolver = new ViolationPointResolver(grammar);
-		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
+
+		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		MaterializationRuleManager grammarManager = 
-				new IndexedMaterializationRuleManager(violationPointResolver, stackMatcher);
+				new IndexedMaterializationRuleManager(violationPointResolver, indexMatcher);
 		
 		GrammarResponseApplier ruleApplier = 
 				new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(), new GraphMaterializer() );

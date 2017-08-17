@@ -18,6 +18,7 @@
  * The MaterializationRuleManager itself gets a {@link de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver}
  * which is responsible to get and cache the rules resolving a specific violation point.
  * An {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}
+
  * additionally gets a {@link de.rwth.i2.attestor.grammar.IndexMatcher} which ensures that
  * indexed rules are instantiated appropriately and that also provides the necessary materialization
  * whichh has to be applied before applying the rule graph.
