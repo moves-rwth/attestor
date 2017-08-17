@@ -20,17 +20,18 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 	 */
 	private final int minAbstractionDistance;
 
-	private final boolean isNullAbstractionDistanceEnabled;
+	private final boolean aggressiveNullAbstraction;
 
 	/**
 	 * @param minAbstractionDistance The minimal distance of variables to nodes in the morphism.
-	 * @param isNullAbstractionDistanceEnabled True if and only if the minimal distance should be ignored
+	 * @param aggressiveNullAbstraction True if and only if the minimal distance should be ignored
 	 *                                         for the null node.
 	 */
-	public VariableDereferenceDepth(int minAbstractionDistance, boolean isNullAbstractionDistanceEnabled) {
+	public VariableDereferenceDepth(int minAbstractionDistance, boolean aggressiveNullAbstraction
+	) {
 		
 		this.minAbstractionDistance = minAbstractionDistance;
-		this.isNullAbstractionDistanceEnabled = isNullAbstractionDistanceEnabled;
+		this.aggressiveNullAbstraction = aggressiveNullAbstraction;
 	}
 
 	@Override
@@ -44,7 +45,9 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 			if(graph.getNodeLabel(var) instanceof Variable) {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
-				boolean isNull = (!isNullAbstractionDistanceEnabled) || label.contains("null");
+
+				boolean isNull = aggressiveNullAbstraction || label.contains("null");
+
 				
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				

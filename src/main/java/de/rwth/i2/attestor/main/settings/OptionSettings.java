@@ -30,12 +30,12 @@ public class OptionSettings {
 	 * The minimal distance between variables in a heap configuration and embeddings used for abstraction.
 	 * Increasing this number allows to use a less aggressive abstraction.
 	 */
-	private int minDereferenceDepth = 0;
+	private int abstractionDistance = 0;
 
 	/**
-	 * Enabling this option ignores the minimal dereference depth for the null node.
+	 * Indicates whether the abstraction distance for the null node is set to 0 (otherwise or the specified distance is chosen).
 	 */
-	private boolean nullDistanceEnabled = false;
+	private boolean aggressiveNullAbstraction = true;
 
 	/**
 	 * The minimal number of nodes in a heap configuration before the minimal dereference depth is ignored
@@ -96,37 +96,37 @@ public class OptionSettings {
 	/**
 	 * @return The minimal distance between variables and nodes in an embedding before abstraction is performed.
 	 */
-	public int getMinDereferenceDepth() {
-		return minDereferenceDepth;
+	public int getAbstractionDistance() {
+		return abstractionDistance;
 	}
 
     /**
-     * @param minDereferenceDepth The minimal distance between variables and nodes in an
+     * @param abstractionDistance The minimal distance between variables and nodes in an
      *                            embedding before abstraction is performed.
      */
-	public void setMinDereferenceDepth(int minDereferenceDepth) {
-		assert( minDereferenceDepth >= 0 );
-		this.minDereferenceDepth = minDereferenceDepth;
+	public void setAbstractionDistance(int abstractionDistance) {
+		assert( abstractionDistance >= 0 );
+		this.abstractionDistance = abstractionDistance;
 	}
 
     /**
-     * @return True if and only if the minimal dereference distance should be ignored for the null node.
+     * @return True if and only if the set abstraction distance should be ignored for the null node (and instead set to 0).
      */
-	public boolean isNullDistanceEnabled() {
-		return nullDistanceEnabled;
+	public boolean getAggressiveNullAbstraction() {
+		return aggressiveNullAbstraction;
 	}
 
     /**
      *
-     * @param nullDistanceEnabled True if and only if the minimal dereference distance
+     * @param aggressiveNullAbstraction True if and only if the abstraction distance
      *                            should be ignored for the null node.
      */
-	public void setNullDistanceEnabled(boolean nullDistanceEnabled) {
-		if(  minDereferenceDepth == 0 && nullDistanceEnabled){
-			logger.warn("The option 'nullDistanceEnabled' will have no effect " +
-					"since the minimal abstraction distance is 0");
+	public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
+		if(  abstractionDistance == 0 && aggressiveNullAbstraction){
+			logger.warn("The option 'aggressiveNullAbstraction' will have no effect " +
+					"since the dereference depth is already set to 0");
 		}
-		this.nullDistanceEnabled = nullDistanceEnabled;
+		this.aggressiveNullAbstraction = aggressiveNullAbstraction;
 	}
 
     /**
@@ -137,7 +137,7 @@ public class OptionSettings {
 	}
 
 	public void setAggressiveAbstractionThreshold(int aggressiveAbstractionThreshold) {
-		if(  minDereferenceDepth == 0 && aggressiveAbstractionThreshold > 0){
+		if(  abstractionDistance == 0 && aggressiveAbstractionThreshold > 0){
 			logger.warn("The option 'aggressiveAbstractionThreshold' will have " +
                     "no effect since the minimal abstraction distance is 0");
 		}
@@ -153,9 +153,9 @@ public class OptionSettings {
 	}
 
 	public void setAggressiveReturnAbstraction(boolean aggressiveReturnAbstraction) {
-		if(  minDereferenceDepth == 0 && aggressiveReturnAbstraction){
+		if(  abstractionDistance == 0 && aggressiveReturnAbstraction){
 			logger.warn("The option 'aggressiveReturnAbstraction' will have no effect " +
-					"since the minimal abstraction distance is 0");
+					" since the abstraction distance is 0");
 		}
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
