@@ -48,13 +48,11 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 				if( success ) { break; }
 
-				Set<ProgramState> abstractedStates = 
+				ProgramState abstractedState = 
 						matchingHandler.tryReplaceMatching(state, rhs, lhs, semantics );
-				if( !abstractedStates.isEmpty() ) {
-					success = true;
-					for( ProgramState abstracted : abstractedStates) {
-						result.addAll( performCanonicalization( semantics, abstracted ) );
-					}
+				if( abstractedState != null ) {
+					success = true;	
+					result.addAll( performCanonicalization( semantics, abstractedState ) );
 				}
 			}			
 		}

@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -27,17 +24,16 @@ public class IndexedMatchingHandler implements MatchingHandler {
 	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
 	 */
 	@Override
-	public Set<ProgramState> tryReplaceMatching( ProgramState state, 
+	public ProgramState tryReplaceMatching( ProgramState state, 
 												 HeapConfiguration rhs, Nonterminal lhs,
 												Semantics semantics ) {
 		
-		boolean success = false;
-		Set<ProgramState> result  = new HashSet<>();
+		ProgramState result = null;
 
 		AbstractMatchingChecker checker = 
 				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs, semantics);
 
-		while( checker.hasNext() && !success  ) {
+		while( checker.hasNext() && result == null  ) {
 		
 			ProgramState toAbstract  = state;
 
@@ -45,11 +41,11 @@ public class IndexedMatchingHandler implements MatchingHandler {
 			try {
 				StackEmbeddingResult res = 
 						stackChecker.getStackEmbeddingResult(toAbstract.getHeap(), embedding, lhs);
-				success = true;
+	
 				HeapConfiguration abstracted = replaceEmbeddingBy( res.getMaterializedToAbstract(), 
 															  embedding, res.getInstantiatedLhs() );
-				ProgramState resultState = toAbstract.shallowCopyWithUpdateHeap( abstracted );
-				result.add( resultState );
+				result = toAbstract.shallowCopyWithUpdateHeap( abstracted );
+				
 			}catch( CannotMatchException e ) {
 				//this may happen. loop will continue.
 			}

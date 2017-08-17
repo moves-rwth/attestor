@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -13,10 +10,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class DefaultMatchingHandler implements MatchingHandler {
-	
+
 	public EmbeddingCheckerProvider provider;
 
-	
+
 	public DefaultMatchingHandler( EmbeddingCheckerProvider provider ) {
 		super();
 		this.provider = provider;
@@ -26,30 +23,20 @@ public class DefaultMatchingHandler implements MatchingHandler {
 	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
 	 */
 	@Override
-	public Set<ProgramState> tryReplaceMatching( ProgramState state, 
-												 HeapConfiguration rhs, Nonterminal lhs,
-												 Semantics semantics) {
-		
-		boolean success = false;
-		Set<ProgramState> result  = new HashSet<>();
+	public ProgramState tryReplaceMatching( ProgramState toAbstract, 
+			HeapConfiguration rhs, Nonterminal lhs,
+			Semantics semantics) {
+
 
 		AbstractMatchingChecker checker = 
-				provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
+				provider.getEmbeddingChecker(toAbstract.getHeap(), rhs, semantics);
 
-		while( checker.hasNext() && ( !success ) ) {
-
-			success = true;
-
-			ProgramState toAbstract  = state;
+		if( checker.hasNext() ) {
 
 			Matching embedding = checker.getNext();
-
-			if( success ){
-				ProgramState abstracted = replaceEmbeddingBy( toAbstract, embedding, lhs );
-				result.add(abstracted);
-			}
+			return replaceEmbeddingBy( toAbstract, embedding, lhs );
 		}
-		return result;
+		return null;
 	}
 
 	/**
