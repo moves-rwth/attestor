@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.util.DebugMode;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -34,10 +33,8 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
 								  IndexSymbol originalIndexSymbol,
                                   IndexSymbol desiredIndexSymbol) {
 
-		if( DebugMode.ENABLED ) {
-            checkRules(originalIndexSymbol, desiredIndexSymbol);
-            checkConsistency(heapConfiguration, originalIndexSymbol);
-		}
+        checkRules(originalIndexSymbol, desiredIndexSymbol);
+        checkConsistency(heapConfiguration, originalIndexSymbol);
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
 		TIntIterator iter = ntEdges.iterator();

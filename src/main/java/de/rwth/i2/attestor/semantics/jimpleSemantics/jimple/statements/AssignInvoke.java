@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -95,15 +94,13 @@ public class AssignInvoke extends Statement {
 			invokePrepare.cleanHeap( jimpleResState );
 
 			if( concreteRHS.isUndefined() ){
-				if( DebugMode.ENABLED ){
-					logger.warn( "rhs evaluated to undefined (no return attached to heap)" );
-				}
+					logger.debug( "rhs evaluated to undefined (no return attached to heap)" );
 			}else{
-				if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+				if(!( lhs.getType().equals( concreteRHS.type() ) ) ){
 					String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 					msg += " with the type of the lhs";
 					msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-					logger.warn( msg );
+					logger.debug( msg );
 				}
 			}
 			try {

@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -8,16 +14,8 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.util.DebugMode;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The strategy to abstract program states based on a standard
@@ -88,10 +86,11 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 		}
 
 		if( state.getHeap().countNodes() > aggressiveAbstractionThreshold ){
-			if( DebugMode.ENABLED ){
+			
 				logger.trace( "Using aggressive canonization" );
-			}
+			
 			return performCanonicalization( state, true );
+
 		}else if( aggressiveReturnAbstraction
 				&& 
 				( semantics instanceof ReturnValueStmt || semantics instanceof ReturnVoidStmt ) ){

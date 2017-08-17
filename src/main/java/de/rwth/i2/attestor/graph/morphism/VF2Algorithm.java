@@ -1,12 +1,10 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.util.DebugMode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
@@ -127,9 +125,7 @@ public class VF2Algorithm {
 
 			if(isFeasible(state, c)) {
 				
-				if(DebugMode.ENABLED) {
-					logger.trace("found feasible candidate " + c);
-				}
+				logger.trace("found feasible candidate " + c);
 
 				/* A shallow copy only copies data required for backtracking
 				   such as the last candidate. After that we move further
@@ -148,10 +144,6 @@ public class VF2Algorithm {
 			}
 		}
 		
-		if(DebugMode.ENABLED) {
-			logger.trace("backtracking...");			
-		}
-
 		/* We stored all morphisms found so far and finished going through all search trees
 		   after adding all available candidate pairs to the current state.
            Hence, we backtrack and remove the last pair added to the current state before.
@@ -173,10 +165,7 @@ public class VF2Algorithm {
 		for(FeasibilityFunction f : feasibilityChecks) {
 			if(!f.eval(state, candidate)) {
 				
-				if(DebugMode.ENABLED) {
-					logger.trace(f.getClass().getSimpleName() + " rejected candidate " + candidate);
-				}
-				
+				logger.trace(f.getClass().getSimpleName() + " rejected candidate " + candidate);
 				return false;
 			}
 		}

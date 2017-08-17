@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -62,8 +61,7 @@ public class AssignStmt extends Statement {
 	/**
 	 * evaluates the rhs and assigns it to the left hand side. In case the rhs
 	 * evaluates to undefined, the variable will be removed from the heap (It
-	 * will not point to its old value). In this case the logger will also issue
-	 * a warning. <br>
+	 * will not point to its old value). <br>
 	 * If the types of the lhs and the rhs do not match, there will be a
 	 * warning, but the assignment will still be realized.<br>
 	 * 
@@ -93,11 +91,11 @@ public class AssignStmt extends Statement {
 				logger.debug( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
 			}
 		}else{
-			if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 				msg += " with the type of the lhs";
 				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.warn( msg );
+				logger.debug( msg );
 			}
 		}
 		

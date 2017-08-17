@@ -9,7 +9,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
@@ -58,14 +57,12 @@ public class ReturnValueStmt extends Statement {
 			logger.error(e.getErrorMessage(this));
 			concreteReturn = jimpleProgramState.getUndefined();
 		}
-		if( DebugMode.ENABLED && !( concreteReturn.type().equals( expectedType ) ) ){
-			logger.warn( "type missmatch. Expected: " + expectedType + " got: " + concreteReturn.type() );
+		if( !( concreteReturn.type().equals( expectedType ) ) ){
+			logger.debug( "type mismatch. Expected: " + expectedType + " got: " + concreteReturn.type() );
 		}
 
 		if( concreteReturn.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( "return value evaluated to undefined. No return will be attached" );
-			}
+			logger.warn( "return value evaluated to undefined. No return will be attached" );
 		}else{
 			jimpleProgramState.setIntermediate( "@return", concreteReturn );
 		}

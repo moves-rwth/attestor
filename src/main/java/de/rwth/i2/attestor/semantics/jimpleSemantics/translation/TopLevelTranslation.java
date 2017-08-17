@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.Ab
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Scene;
@@ -178,9 +177,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			curr = units.getSuccOf(curr);
 		}
 
-		if (DebugMode.ENABLED) {
-			logger.debug("method Name: " + method.getSignature());
-		}
+		logger.trace("method Name: " + method.getSignature());
 		methodMapping.get(method.getSignature()).setControlFlow(programStatements);
 
 	}
@@ -232,9 +229,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			defaultControlFlow.add(new Skip(-1));
 			defaultMethod.setControlFlow(defaultControlFlow);
 
-			if (DebugMode.ENABLED) {
-				logger.warn("Method " + signature + " replaced by empty default method.");
-			}
+			logger.warn("Method " + signature + " replaced by empty default method.");
 
 			return defaultMethod;
 		}

@@ -6,7 +6,6 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.*;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.util.DebugMode;
 
 /**
  * Parses the provided command line options in order to populate
@@ -350,8 +349,6 @@ public class CommandLineReader {
 		if(cmd.hasOption("x")) {
 			optionSettings.setIndexedMode(true);
 		}
-
-		DebugMode.ENABLED = cmd.hasOption("v");
 
 		if(cmd.hasOption("d")) {
 			optionSettings.setMinDereferenceDepth( Integer.valueOf(cmd.getOptionValue("d")) );

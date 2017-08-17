@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
 
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.DebugMode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,9 +90,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 			node = heap.selectorTargetOf(node, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				if(DebugMode.ENABLED) {
-					logger.warn("getSelectorTarget got invalid value");
-				}
+				logger.warn("getSelectorTarget got invalid value");
 				return GeneralConcreteValue.getUndefined();
 			}
 			
@@ -101,10 +98,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 			
 			return new GeneralConcreteValue( type, node );
 		} else {
-			
-			if(DebugMode.ENABLED) {
-				logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
-			}
+			logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
 		}
 		
 		return GeneralConcreteValue.getUndefined();
@@ -115,7 +109,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 		
 		if(from.isUndefined() || to.isUndefined()) {
 			
-			logger.warn("Specified edge has invalid source or target.");
+			logger.warn("Specified edge has undefined source or target.");
 			return;
 		}
 		

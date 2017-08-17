@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -123,9 +122,7 @@ public abstract class InvokeHelper {
 				concreteArgument = programState.getUndefined();
 			}
 			if( concreteArgument.isUndefined() ){
-				if( DebugMode.ENABLED ){
-					logger.warn( "param " + i + " evaluated to undefined and is therefore not attached. " );
-				}
+				logger.warn( "param " + i + " evaluated to undefined and is therefore not attached. " );
 			}else{
 				programState.setIntermediate( referenceName, concreteArgument );
 			}

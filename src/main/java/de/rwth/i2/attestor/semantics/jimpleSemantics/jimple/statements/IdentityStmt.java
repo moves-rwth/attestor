@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.DebugMode;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -58,15 +57,13 @@ public class IdentityStmt extends Statement {
 
 		ConcreteValue concreteRHS = jimpleProgramState.removeIntermediate( rhs );
 		if( concreteRHS.isUndefined() ){
-			if( DebugMode.ENABLED ){
-				logger.warn( rhs + " is not attached to the heap. (Continued by ignoring." );
-			}
+			logger.debug( rhs + " is not attached to the heap. (Continued by ignoring." );
 		}else{
-			if( DebugMode.ENABLED && !( lhs.getType().equals( concreteRHS.type() ) ) ){
+			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
 				msg += " with the type of the lhs";
 				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.warn( msg );
+				logger.debug( msg );
 			}
 		}
 		try {
