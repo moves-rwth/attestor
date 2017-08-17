@@ -9,7 +9,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public interface MatchingHandler {
 
-	Set<ProgramState> tryReplaceMatching(ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
-			Semantics semantics, boolean isConfluent);
+	Set<ProgramState> tryReplaceMatching( ProgramState state, 
+										  HeapConfiguration rhs, Nonterminal lhs,
+										  Semantics semantics );
 
 }

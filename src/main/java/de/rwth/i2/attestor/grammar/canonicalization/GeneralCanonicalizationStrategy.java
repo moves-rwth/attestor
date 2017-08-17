@@ -8,8 +8,6 @@ import java.util.Set;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.Matching;
-import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -40,19 +38,18 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 		Set<ProgramState> result = new HashSet<>();
 
-		boolean isConfluent = grammar.isConfluent();
 		boolean success = false;
 
 		for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
 
-			if( success && isConfluent ) { break; }
+			if( success ) { break; }
 
 			for( HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs) ){
 
-				if( success && isConfluent ) { break; }
+				if( success ) { break; }
 
 				Set<ProgramState> abstractedStates = 
-						matchingHandler.tryReplaceMatching(state, rhs, lhs, semantics, isConfluent);
+						matchingHandler.tryReplaceMatching(state, rhs, lhs, semantics );
 				if( !abstractedStates.isEmpty() ) {
 					success = true;
 					for( ProgramState abstracted : abstractedStates) {

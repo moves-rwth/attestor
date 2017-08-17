@@ -3,9 +3,7 @@ package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingReplacer;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -29,8 +27,9 @@ public class DefaultMatchingHandler implements MatchingHandler {
 	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
 	 */
 	@Override
-	public Set<ProgramState> tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
-			Semantics semantics, boolean isConfluent ) {
+	public Set<ProgramState> tryReplaceMatching( ProgramState state, 
+												 HeapConfiguration rhs, Nonterminal lhs,
+												 Semantics semantics) {
 		
 		boolean success = false;
 		Set<ProgramState> result  = new HashSet<>();
@@ -38,7 +37,7 @@ public class DefaultMatchingHandler implements MatchingHandler {
 		AbstractMatchingChecker checker = 
 				provider.getEmbeddingChecker(state.getHeap(), rhs, semantics);
 
-		while( checker.hasNext() && ( !isConfluent || !success ) ) {
+		while( checker.hasNext() && ( !success ) ) {
 
 			success = true;
 

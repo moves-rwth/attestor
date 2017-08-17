@@ -27,8 +27,9 @@ public class IndexedMatchingHandler implements MatchingHandler {
 	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
 	 */
 	@Override
-	public Set<ProgramState> tryReplaceMatching( ProgramState state, HeapConfiguration rhs, Nonterminal lhs,
-			Semantics semantics, boolean isConfluent ) {
+	public Set<ProgramState> tryReplaceMatching( ProgramState state, 
+												 HeapConfiguration rhs, Nonterminal lhs,
+												Semantics semantics ) {
 		
 		boolean success = false;
 		Set<ProgramState> result  = new HashSet<>();
@@ -36,7 +37,7 @@ public class IndexedMatchingHandler implements MatchingHandler {
 		AbstractMatchingChecker checker = 
 				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs, semantics);
 
-		while( checker.hasNext() && ( !isConfluent || !success ) ) {
+		while( checker.hasNext() && !success  ) {
 		
 			ProgramState toAbstract  = state;
 
