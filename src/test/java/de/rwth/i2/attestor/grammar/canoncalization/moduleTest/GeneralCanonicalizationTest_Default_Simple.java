@@ -10,10 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.canoncalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
-import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingReplacer;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -35,8 +33,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	@Before
 	public void setUp() throws Exception {
 		EmbeddingCheckerProvider provider = new EmbeddingCheckerProvider(10, false);
-		MatchingReplacer replacer = new DefaultMatchingReplacer();
-		matchingHandler = new DefaultMatchingHandler( provider, replacer );
+		matchingHandler = new DefaultMatchingHandler( provider );
 	}
 
 	@Test

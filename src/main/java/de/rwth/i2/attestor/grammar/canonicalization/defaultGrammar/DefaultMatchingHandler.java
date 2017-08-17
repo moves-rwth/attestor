@@ -3,7 +3,8 @@ package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
+import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -14,13 +15,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 public class DefaultMatchingHandler implements MatchingHandler {
 	
 	public EmbeddingCheckerProvider provider;
-	public MatchingReplacer replacer;
 
 	
-	public DefaultMatchingHandler(EmbeddingCheckerProvider provider, MatchingReplacer replacer) {
+	public DefaultMatchingHandler( EmbeddingCheckerProvider provider ) {
 		super();
 		this.provider = provider;
-		this.replacer = replacer;
 	}
 
 	/* (non-Javadoc)
