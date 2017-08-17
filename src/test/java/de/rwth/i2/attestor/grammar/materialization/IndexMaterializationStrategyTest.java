@@ -15,10 +15,10 @@ import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 public class IndexMaterializationStrategyTest {
@@ -361,7 +361,7 @@ public class IndexMaterializationStrategyTest {
 	private HeapConfiguration graphWithOneNonterminalAndStack(List<IndexSymbol> stack) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
 
@@ -380,7 +380,7 @@ public class IndexMaterializationStrategyTest {
 			List<IndexSymbol> stack2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 
 		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
 		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);
@@ -404,7 +404,7 @@ public class IndexMaterializationStrategyTest {
 			List<IndexSymbol> stackForIndexedNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
 												 REDUCTION_TENTACLES, 
@@ -426,5 +426,4 @@ public class IndexMaterializationStrategyTest {
 					.build()
 				.build();
 	}
-
 }

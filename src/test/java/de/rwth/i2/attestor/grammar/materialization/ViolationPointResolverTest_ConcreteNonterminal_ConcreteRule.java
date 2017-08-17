@@ -13,11 +13,11 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
@@ -93,7 +93,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 	private static HeapConfiguration getRule_notCreateNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = TypeFactory.getInstance().getType("type");
+		Type nodeType = Settings.getInstance().factory().getType("type");
 		
 		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
 		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
@@ -114,7 +114,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 	private static HeapConfiguration getRule_createNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = TypeFactory.getInstance().getType("type");
+		Type nodeType = Settings.getInstance().factory().getType("type");
 		
 		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
 		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );

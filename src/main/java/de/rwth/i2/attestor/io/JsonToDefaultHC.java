@@ -1,20 +1,18 @@
 package de.rwth.i2.attestor.io;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class JsonToDefaultHC {
 	
@@ -92,7 +90,7 @@ public class JsonToDefaultHC {
 		TIntArrayList nodes = new TIntArrayList();
 		for( int i = 0; i < jsonNodes.length(); i++ ){
 			String typeName = jsonNodes.getJSONObject( i ).getString( "type" );
-			Type type = TypeFactory.getInstance().getType(typeName);
+			Type type = Settings.getInstance().factory().getType(typeName);
 			int number = jsonNodes.getJSONObject( i ).getInt( "number" );
 			builder.addNodes( type, number, nodes );
 		}

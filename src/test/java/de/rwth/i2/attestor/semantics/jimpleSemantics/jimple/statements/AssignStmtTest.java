@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class AssignStmtTest {
 		
 		String test = testGraph.toString();
 		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("right");
-		Type type = TypeFactory.getInstance().getType( "node" );
+		Type type = Settings.getInstance().factory().getType( "node" );
 
 		SettableValue lhs = new Local( type, "XYZ" );		
 		Value origin = new Local( type, "ZYX" );

@@ -18,6 +18,7 @@ import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -26,7 +27,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 public class GeneralCanonicalizationStrategy_Indexed_Confluent {
@@ -34,7 +34,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	private static final String NT_LABEL = "GeneralCanonicalizationStrategyIC";
 	private static final int RANK = 2;
 	private static final boolean[] isReductionTentacle = new boolean[RANK];
-	private static final Type TYPE = TypeFactory.getInstance().getType("type");
+	private static final Type TYPE = Settings.getInstance().factory().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
 	
 	private static final int sizeOfChain = 10;

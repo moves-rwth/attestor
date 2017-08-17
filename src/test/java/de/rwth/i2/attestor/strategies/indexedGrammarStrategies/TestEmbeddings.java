@@ -4,8 +4,8 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,19 +28,19 @@ public class TestEmbeddings {
 		
 		rhs1 = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		rhs1 = rhs1.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
+		rhs1 = rhs1.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
 						.setExternal( nodes.get(0))
 						.setExternal(nodes.get(1))
 						.addSelector(nodes.get(0), leftLabel, nodes.get(1))
 						.addSelector(nodes.get(0), rightLabel, nodes.get(1))
 						.build();
 		
-		Type zType = TypeFactory.getInstance().getType("int_0");
+		Type zType = Settings.getInstance().factory().getType("int_0");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
 		rhs2 = new InternalHeapConfiguration();
 		TIntArrayList nodes2 = new TIntArrayList();
-		rhs2 = rhs2.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes2)
+		rhs2 = rhs2.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes2)
 						.addNodes(zType, 1, nodes2 )
 						.setExternal( nodes2.get(0))
 						.setExternal(nodes2.get(1))

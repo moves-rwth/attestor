@@ -29,7 +29,7 @@ local.properties
 .classpath
 
 # Java annotation processor (APT)
-.factorypath
+.factory()()path
 
 # PDT-specific (PHP Development Tools)
 .buildpath

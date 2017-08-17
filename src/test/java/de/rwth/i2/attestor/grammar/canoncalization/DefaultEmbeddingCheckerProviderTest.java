@@ -9,9 +9,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 public class DefaultEmbeddingCheckerProviderTest {
@@ -114,7 +114,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	private HeapConfiguration getPattern() {
 	HeapConfiguration hc =  new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("someType");
+		Type type = Settings.getInstance().factory().getType("someType");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 1, nodes).build();
@@ -123,7 +123,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	private HeapConfiguration getGraphSmallerThan( int aggressiveAbstractionThreshold ) {
 		HeapConfiguration hc =  new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("someType");
+		Type type = Settings.getInstance().factory().getType("someType");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, aggressiveAbstractionThreshold - 1, nodes).build();
@@ -132,7 +132,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	private HeapConfiguration getGraphBiggerThan(int aggressiveAbstractionThreshold) {
 		HeapConfiguration hc =  new InternalHeapConfiguration();
 		
-		Type type = TypeFactory.getInstance().getType("someType");
+		Type type = Settings.getInstance().factory().getType("someType");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, aggressiveAbstractionThreshold + 2, nodes).build();

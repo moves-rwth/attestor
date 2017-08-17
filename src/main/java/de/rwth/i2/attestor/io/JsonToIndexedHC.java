@@ -15,7 +15,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelector
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -135,7 +134,7 @@ public class JsonToIndexedHC {
 		TIntArrayList nodes = new TIntArrayList();
 		for( int i = 0; i < jsonNodes.length(); i++ ){
 			String typeName = jsonNodes.getJSONObject( i ).getString( "type" );
-			Type type = TypeFactory.getInstance().getType(typeName);
+			Type type = Settings.getInstance().factory().getType(typeName);
 			int number = jsonNodes.getJSONObject( i ).getInt( "number" );
 			builder.addNodes( type, number, nodes );
 		}

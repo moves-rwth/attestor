@@ -1,15 +1,18 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExampleIndexedGraphFactory {
 
@@ -36,7 +39,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
 
-		Type nodeType = TypeFactory.getInstance().getType("tree");
+		Type nodeType = Settings.getInstance().factory().getType("tree");
 
 		TIntArrayList nodes = new TIntArrayList();
 		builder.addNodes(nodeType, 4, nodes)
@@ -74,7 +77,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
 
-		Type nodeType = TypeFactory.getInstance().getType("tree");
+		Type nodeType = Settings.getInstance().factory().getType("tree");
 
 		TIntArrayList nodes = new TIntArrayList();
 		builder.addNodes(nodeType, 4, nodes)
@@ -97,7 +100,7 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
+		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
 						.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
 						.addVariableEdge("x", nodes.get(0))
 						.build();
@@ -111,7 +114,7 @@ public class ExampleIndexedGraphFactory {
 		
 		HeapConfiguration res = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		res = res.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
+		res = res.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
 						.addSelector(nodes.get(0), leftLabel, nodes.get(1))
 						.addSelector(nodes.get(0), rightLabel, nodes.get(1))
 						.addVariableEdge("x", nodes.get(0))
@@ -131,7 +134,7 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 2, nodes)
+		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
 						 .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
 						 .addVariableEdge("x", nodes.get(0))
 						 .build();
@@ -152,7 +155,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 3, nodes)
+		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 3, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
 				.addSelector(nodes.get(0), right, nodes.get(2))
@@ -175,7 +178,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 3, nodes)
+		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 3, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(2))
 				.addSelector(nodes.get(0), right, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
@@ -201,7 +204,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(TypeFactory.getInstance().getType("AVLTree"), 4, nodes)
+		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 4, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
 				.addSelector(nodes.get(0), right, nodes.get(2))
@@ -231,7 +234,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
@@ -262,7 +265,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 5, nodes)
 				.addSelector(nodes.get(0), leftM, nodes.get(1))
@@ -298,7 +301,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 5, nodes)
 				.addSelector(nodes.get(0), leftM, nodes.get(1))
@@ -337,7 +340,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -381,7 +384,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -423,7 +426,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -448,7 +451,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -464,7 +467,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add( AbstractIndexSymbol.get("X"));
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -488,7 +491,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), leftZ, nodes.get(1))
@@ -510,7 +513,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -530,7 +533,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -556,7 +559,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -582,7 +585,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -610,7 +613,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -646,7 +649,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), leftZ, nodes.get(1))
@@ -667,7 +670,7 @@ public class ExampleIndexedGraphFactory {
 		stack.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -690,8 +693,8 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "");
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
-		Type nullType = TypeFactory.getInstance().getType("NULL");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type nullType = Settings.getInstance().factory().getType("NULL");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		HeapConfigurationBuilder builder = hc.builder();
@@ -713,8 +716,8 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type nodeType = TypeFactory.getInstance().getType("AVLTree");
-		Type nullType = TypeFactory.getInstance().getType("NULL");
+		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
+		Type nullType = Settings.getInstance().factory().getType("NULL");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(nodeType, 2, nodes)
@@ -737,9 +740,9 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = TypeFactory.getInstance().getType("AVLTree");
-		Type nullType = TypeFactory.getInstance().getType("NULL");
-		Type zType = TypeFactory.getInstance().getType("int_0");
+		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
+		Type nullType = Settings.getInstance().factory().getType("NULL");
+		Type zType = Settings.getInstance().factory().getType("int_0");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(nodeType, 2, nodes)
@@ -773,12 +776,12 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = TypeFactory.getInstance().getType("AVLTree");
-		Type nullType = TypeFactory.getInstance().getType("NULL");
+		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
+		Type nullType = Settings.getInstance().factory().getType("NULL");
 
-		Type mType = TypeFactory.getInstance().getType("int_-1");
-		Type zType = TypeFactory.getInstance().getType("int_0");
-		Type pType = TypeFactory.getInstance().getType( "int_1" );
+		Type mType = Settings.getInstance().factory().getType("int_-1");
+		Type zType = Settings.getInstance().factory().getType("int_0");
+		Type pType = Settings.getInstance().factory().getType( "int_1" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( nodeType, 3, nodes )
@@ -817,12 +820,12 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = TypeFactory.getInstance().getType("AVLTree");
-		Type nullType = TypeFactory.getInstance().getType("NULL");
+		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
+		Type nullType = Settings.getInstance().factory().getType("NULL");
 
-		Type mType = TypeFactory.getInstance().getType("int_-1");
-		Type zType = TypeFactory.getInstance().getType("int_0");
-		Type pType = TypeFactory.getInstance().getType( "int_1" );
+		Type mType = Settings.getInstance().factory().getType("int_-1");
+		Type zType = Settings.getInstance().factory().getType("int_0");
+		Type pType = Settings.getInstance().factory().getType( "int_1" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( nodeType, 2, nodes )
@@ -878,11 +881,11 @@ public class ExampleIndexedGraphFactory {
 		pStack.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -939,11 +942,11 @@ public class ExampleIndexedGraphFactory {
 		pStack.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -992,11 +995,11 @@ public class ExampleIndexedGraphFactory {
 		pStack.add( var );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1048,11 +1051,11 @@ public class ExampleIndexedGraphFactory {
 		pStack.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1096,11 +1099,11 @@ public class ExampleIndexedGraphFactory {
 		rightStack.add( abs );
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1143,11 +1146,11 @@ public class ExampleIndexedGraphFactory {
 		rightStack.add( abs );
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightStack );
 		
-		Type int_m = TypeFactory.getInstance().getType( "int_-1" );
-		Type int_z = TypeFactory.getInstance().getType( "int_0" );
-		Type int_p = TypeFactory.getInstance().getType( "int_1" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
-		Type nodeType = TypeFactory.getInstance().getType( "AVLTree" );
+		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
+		Type int_z = Settings.getInstance().factory().getType( "int_0" );
+		Type int_p = Settings.getInstance().factory().getType( "int_1" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
+		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )

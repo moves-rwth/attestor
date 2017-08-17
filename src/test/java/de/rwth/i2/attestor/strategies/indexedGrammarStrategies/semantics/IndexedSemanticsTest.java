@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.semantics;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.ExampleIndexedGraphFactory;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.ExampleIndexedGraphFactory;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class IndexedSemanticsTest {
 		IndexedState expected = new IndexedState( ExampleIndexedGraphFactory.getExpected_FieldAccess() );
 		expected.prepareHeap();
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
@@ -58,7 +58,7 @@ public class IndexedSemanticsTest {
 		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_newNode() );
 		expected.prepareHeap();
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		
 		Local varTmp = new Local(type, "tmp");
 		NewExpr expr = new NewExpr(type);
@@ -80,7 +80,7 @@ public class IndexedSemanticsTest {
 		IndexedState expected = new IndexedState( ExampleIndexedGraphFactory.getExpected_fieldAssign() );
 		expected.prepareHeap();
 		
-		Type type = TypeFactory.getInstance().getType("AVLTree");
+		Type type = Settings.getInstance().factory().getType("AVLTree");
 		Local varTmp = new Local(type, "tmp");
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");

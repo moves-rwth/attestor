@@ -4,9 +4,9 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,7 +33,7 @@ public class FieldTest {
 		testGraph = ExampleHcImplFactory.getListAndConstants();
 		sel = GeneralSelectorLabel.getSelectorLabel("next");
 
-		Type type = TypeFactory.getInstance().getType("List");		
+		Type type = Settings.getInstance().factory().getType("List");
 		local = new Local( type, "x");
 		expr = new Field( type, local, "next");
 	}

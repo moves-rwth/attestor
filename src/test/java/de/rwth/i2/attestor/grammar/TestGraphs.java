@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.grammar;
 
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategyTest_getActualViolationPoint;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 class TestGraphs {
@@ -14,7 +14,7 @@ class TestGraphs {
 	public static HeapConfiguration getInput_getActualViolationPoints_Default(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR);
 		
@@ -28,7 +28,7 @@ class TestGraphs {
 	public static HeapConfiguration getInput_getActualViolationPoints_Indexed(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
@@ -43,7 +43,7 @@ class TestGraphs {
 	public static HeapConfiguration getInput_getActualViolationPoints_Mixed(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = TypeFactory.getInstance().getType("type");
+		Type type = Settings.getInstance().factory().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );

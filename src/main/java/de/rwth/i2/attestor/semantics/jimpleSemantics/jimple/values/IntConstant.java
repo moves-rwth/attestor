@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +17,7 @@ public class IntConstant implements Value {
 	private static final Logger logger = LogManager.getLogger( "IntConstant" );
 
 	private final int intValue;
-	private final Type type = TypeFactory.getInstance().getType( "int" );
+	private final Type type = Settings.getInstance().factory().getType( "int" );
 
 	public IntConstant( int value ){
 		this.intValue = value;

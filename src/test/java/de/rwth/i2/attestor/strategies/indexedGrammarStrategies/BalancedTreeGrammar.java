@@ -6,9 +6,9 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.list.array.TIntArrayList;
 
 public class BalancedTreeGrammar{
@@ -20,7 +20,7 @@ public class BalancedTreeGrammar{
 	public static final AnnotatedSelectorLabel SELECTOR_RIGHT_M1 = new AnnotatedSelectorLabel("right", "-1");
 	public static final AnnotatedSelectorLabel SELECTOR_LEFT_1 = new AnnotatedSelectorLabel("left", "1");
 	public static final AnnotatedSelectorLabel SELECTOR_LEFT_0 = new AnnotatedSelectorLabel("left", "0");
-	public static final Type TYPE = TypeFactory.getInstance().getType("AVLTree");
+	public static final Type TYPE = Settings.getInstance().factory().getType("AVLTree");
 	public static final boolean[] IS_REDUCTION_TENTACLE = new boolean[]{false, true};
 	public static final int NT_RANK = 2;
 	public static final String NT_LABEL = "B";

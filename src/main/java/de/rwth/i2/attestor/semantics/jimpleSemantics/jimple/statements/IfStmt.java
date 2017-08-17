@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
@@ -8,7 +9,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.types.TypeFactory;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -90,7 +90,7 @@ public class IfStmt extends Statement {
 		if( concreteCondition.isUndefined() ){
 			return defaultRes;
 		}
-		if( !concreteCondition.type().equals( TypeFactory.getInstance().getType( "int" ) ) ){
+		if( !concreteCondition.type().equals( Settings.getInstance().factory().getType( "int" ) ) ){
 			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
 		}
 

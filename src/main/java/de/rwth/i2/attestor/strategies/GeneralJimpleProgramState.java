@@ -2,12 +2,12 @@ package de.rwth.i2.attestor.strategies;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -207,8 +207,8 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			}
 		}
 		
-		Type booleanType =  TypeFactory.getInstance().getType( "int" );
-		Type nullType = TypeFactory.getInstance().getType( "NULL" );
+		Type booleanType =  Settings.getInstance().factory().getType( "int" );
+		Type nullType = Settings.getInstance().factory().getType( "NULL" );
 		
 		int trueNode;
 

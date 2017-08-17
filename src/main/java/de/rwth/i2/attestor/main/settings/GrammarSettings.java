@@ -139,7 +139,7 @@ public class GrammarSettings {
             String location = Settings.getInstance().output().getLocationForGrammar();
             
             //TODO
-            //Settings.getInstance().factory().getGrammarExporter(location).export(grammar);
+            //Settings.getInstance().factory()()().getGrammarExporter(location).export(grammar);
             logger.debug("Exported grammar to " + location );
         }
     }

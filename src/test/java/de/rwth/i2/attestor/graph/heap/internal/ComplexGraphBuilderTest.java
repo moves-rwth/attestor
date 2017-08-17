@@ -1,34 +1,33 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.morphism.Morphism;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.types.Type;
+import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.Matching;
-import de.rwth.i2.attestor.graph.morphism.Morphism;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class ComplexGraphBuilderTest {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "GraphBuilderTest" );
 
-	private static final Type type = TypeFactory.getInstance().getType("type");
+	private static final Type type = Settings.getInstance().factory().getType("type");
 	private static final SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("selector");
 	private static final SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
 	private static final SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");

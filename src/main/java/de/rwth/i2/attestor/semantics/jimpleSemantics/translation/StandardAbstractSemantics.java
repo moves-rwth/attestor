@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.TypeFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
@@ -157,7 +156,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Type translateType( soot.Type input ){
 
-		return TypeFactory.getInstance().getType( input.getEscapedName() );
+		return Settings.getInstance().factory().getType( input.getEscapedName() );
 	}
 	
 	/**
