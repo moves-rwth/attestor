@@ -62,7 +62,7 @@ public class DefaultMatchingHandler implements MatchingHandler {
 	 */
 	private ProgramState replaceEmbeddingBy( ProgramState stateToAbstract, Matching embedding, Nonterminal nonterminal) {
 		HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
-		HeapConfiguration abstracted = replacer.replaceIn(toAbstract, nonterminal, embedding );
+		HeapConfiguration abstracted = toAbstract.clone().builder().replaceMatching( embedding, nonterminal ).build();
 		return stateToAbstract.shallowCopyWithUpdateHeap( abstracted );
 	}
 
