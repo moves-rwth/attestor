@@ -29,7 +29,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
-public class GeneralCanonicalizationStrategy_Indexed_Confluent {
+public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
 	private static final String NT_LABEL = "GeneralCanonicalizationStrategyIC";
 	private static final int RANK = 2;
@@ -43,7 +43,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	
 	@Before
 	public void init() {
-		IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
+		IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
 		
 		final int minDereferenceDepth = 1;
 		final int aggressiveAbstractionThreshold = 10;
@@ -59,7 +59,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 				new EmbeddingStackChecker( stackMatcher, 
 											materializer );
 		
-		matchingHandler = new IndexedMatchingHandler( fakeIndexStrategy, checkerProvider, stackChecker);
+		matchingHandler = new IndexedMatchingHandler( indexStrategy, checkerProvider, stackChecker);
 		
 	}
 
@@ -199,11 +199,8 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 
 	private List<IndexSymbol> getExpectedStack() {
 		List<IndexSymbol> stack = getEmptyStack();
-		for( int i = 0; i < sizeOfChain - 1; i++ ) {
-			stack.add( DefaultIndexMaterialization.SYMBOL_s );
-		}
-		return makeConcrete( stack );
+		stack.add( DefaultIndexMaterialization.SYMBOL_X );
+		return stack;
 	}
-
 
 }

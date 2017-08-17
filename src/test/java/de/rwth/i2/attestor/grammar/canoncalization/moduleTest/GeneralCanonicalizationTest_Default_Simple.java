@@ -28,7 +28,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	private static final int RANK = 3;
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
-	MatchingHandler matchingHandler;
+	CanonicalizationHelper matchingHandler;
 	
 	@Before
 	public void setUp() throws Exception {final int minDereferenceDepth = 1;

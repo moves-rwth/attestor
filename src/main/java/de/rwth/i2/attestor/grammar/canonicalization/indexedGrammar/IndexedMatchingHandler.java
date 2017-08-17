@@ -7,15 +7,20 @@ import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 
-public class IndexedMatchingHandler implements MatchingHandler {
+public class IndexedMatchingHandler implements CanonicalizationHelper {
 
+	public IndexCanonizationStrategy indexCanonizationStrategy;
 	public EmbeddingCheckerProvider checkerProvider;
 	public EmbeddingStackChecker stackChecker;
 
 	
-	public IndexedMatchingHandler(EmbeddingCheckerProvider checkerProvider, EmbeddingStackChecker stackChecker) {
+	public IndexedMatchingHandler( IndexCanonizationStrategy indexCanonicalization,
+								   EmbeddingCheckerProvider checkerProvider, 
+								   EmbeddingStackChecker stackChecker ) {
 		super();
+		this.indexCanonizationStrategy = indexCanonicalization;
 		this.checkerProvider = checkerProvider;
 		this.stackChecker = stackChecker;
 	}
@@ -67,6 +72,13 @@ public class IndexedMatchingHandler implements MatchingHandler {
 											     .replaceMatching(embedding, nonterminal)
 											     .build();
 		return abstracted;
+	}
+
+	@Override
+	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
+		HeapConfiguration heap = toAbstract.getHeap().clone();
+		indexCanonizationStrategy.canonizeStack( heap );
+		return toAbstract.shallowCopyWithUpdateHeap( heap );
 	}
 
 

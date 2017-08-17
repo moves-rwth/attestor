@@ -40,6 +40,8 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 	
 	@Before
 	public void init() {
+		IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
+		
 		final int minDereferenceDepth = 1;
 		final int aggressiveAbstractionThreshold = 10;
 		final boolean aggressiveReturnAbstraction = false;
@@ -54,7 +56,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 				new EmbeddingStackChecker( stackMatcher, 
 											materializer );
 		
-		matchingHandler = new IndexedMatchingHandler(checkerProvider, stackChecker);
+		matchingHandler = new IndexedMatchingHandler(fakeIndexStrategy,checkerProvider, stackChecker);
 		
 	}
 

@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
-public class DefaultMatchingHandler implements MatchingHandler {
+public class DefaultMatchingHandler implements CanonicalizationHelper {
 
 	public EmbeddingCheckerProvider provider;
 
@@ -50,6 +50,11 @@ public class DefaultMatchingHandler implements MatchingHandler {
 		HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
 		HeapConfiguration abstracted = toAbstract.clone().builder().replaceMatching( embedding, nonterminal ).build();
 		return stateToAbstract.shallowCopyWithUpdateHeap( abstracted );
+	}
+
+	@Override
+	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
+		return toAbstract;
 	}
 
 

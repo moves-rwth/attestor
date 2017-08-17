@@ -14,13 +14,13 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
 	private Grammar grammar; 
-	private MatchingHandler matchingHandler;
+	private CanonicalizationHelper canonicalizationHelper;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
-											MatchingHandler matchingHandler ) {
+											CanonicalizationHelper matchingHandler ) {
 
 		this.grammar = grammar;
-		this.matchingHandler = matchingHandler;
+		this.canonicalizationHelper = matchingHandler;
 	}
 
 	@Override
@@ -36,6 +36,8 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 	private Set<ProgramState> performCanonicalization(Semantics semantics, ProgramState state) {
 
+		state = canonicalizationHelper.prepareHeapForCanonicalization( state );
+		
 		Set<ProgramState> result = new HashSet<>();
 
 		boolean success = false;
@@ -49,7 +51,7 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 				if( success ) { break; }
 
 				ProgramState abstractedState = 
-						matchingHandler.tryReplaceMatching(state, rhs, lhs, semantics );
+						canonicalizationHelper.tryReplaceMatching(state, rhs, lhs, semantics );
 				if( abstractedState != null ) {
 					success = true;	
 					result.addAll( performCanonicalization( semantics, abstractedState ) );
