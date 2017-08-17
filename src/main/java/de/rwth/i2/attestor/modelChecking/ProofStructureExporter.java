@@ -1,6 +1,4 @@
-package de.rwth.i2.attestor.export;
-
-import de.rwth.i2.attestor.modelChecking.ProofStructure;
+package de.rwth.i2.attestor.modelChecking;
 
 import java.io.IOException;
 
