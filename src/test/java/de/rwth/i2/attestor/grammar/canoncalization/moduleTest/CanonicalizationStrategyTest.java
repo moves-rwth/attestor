@@ -1,24 +1,24 @@
-package de.rwth.i2.attestor.abstraction;
+package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import gnu.trove.list.array.TIntArrayList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class CanonicalizationStrategyTest {
@@ -26,7 +26,7 @@ public class CanonicalizationStrategyTest {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "CanonicalizationStrategyTest" );
 	
-	private DefaultCanonicalizationStrategy canonicalizationStrategy;
+	private GeneralCanonicalizationStrategy canonicalizationStrategy;
 
 	@BeforeClass
     public static void init() {
@@ -45,9 +45,15 @@ public class CanonicalizationStrategyTest {
 				.addRule( listLabel , ExampleHcImplFactory.getListRule3() )
 				.build();
 		
-		canonicalizationStrategy = new DefaultCanonicalizationStrategy(grammar, true,
-				1000, false, 0);
-		canonicalizationStrategy.setIgnoreUniqueSuccessorStatements(false);
+		final int minDereferenceDepth = 0;
+		final int aggressiveAbstractionThreshold = 10;
+		final boolean aggressiveReturnAbstraction = false;
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
+																				aggressiveAbstractionThreshold, 
+																				aggressiveReturnAbstraction);
+		CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
+		
+		canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
 	}
 
 	@Test
@@ -95,7 +101,7 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest3();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(null, testExec);
+		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest3(), test );
 		assertEquals("There is only one embedding.", resStates.size(), 1);

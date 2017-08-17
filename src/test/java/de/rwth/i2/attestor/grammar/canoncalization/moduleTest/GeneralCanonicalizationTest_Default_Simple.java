@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
-import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -28,7 +28,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	private static final int RANK = 3;
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
-	CanonicalizationHelper matchingHandler;
+	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before
 	public void setUp() throws Exception {final int minDereferenceDepth = 1;
@@ -37,7 +37,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
 																			aggressiveAbstractionThreshold, 
 																			aggressiveReturnAbstraction);
-		matchingHandler = new DefaultMatchingHandler( checkerProvider );
+		canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 		Grammar grammar = Grammar.builder().addRule( lhs, rhs ).build();
 		
 		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
+				= new GeneralCanonicalizationStrategy( grammar, canonicalizationHelper );
 		
 		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );

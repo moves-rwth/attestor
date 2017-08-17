@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.materialization;
+package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

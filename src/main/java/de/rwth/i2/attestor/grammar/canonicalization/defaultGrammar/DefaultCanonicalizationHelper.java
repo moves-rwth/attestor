@@ -9,12 +9,12 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
-public class DefaultMatchingHandler implements CanonicalizationHelper {
+public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 
 	public EmbeddingCheckerProvider provider;
 
 
-	public DefaultMatchingHandler( EmbeddingCheckerProvider provider ) {
+	public DefaultCanonicalizationHelper( EmbeddingCheckerProvider provider ) {
 		super();
 		this.provider = provider;
 	}

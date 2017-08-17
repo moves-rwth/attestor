@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
-import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultMatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -28,7 +28,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	private static int RANK = 2;
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
 	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
-	CanonicalizationHelper matchingHandler;
+	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -38,7 +38,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
 																				aggressiveAbstractionThreshold, 
 																				aggressiveReturnAbstraction);
-		matchingHandler = new DefaultMatchingHandler( checkerProvider );
+		canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 										   .build();
 		
 		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
+				= new GeneralCanonicalizationStrategy( grammar, canonicalizationHelper );
 		
 		ProgramState inputState = new DefaultProgramState( getInputGraph() );
 		Statement stmt = new Skip( 0 );
