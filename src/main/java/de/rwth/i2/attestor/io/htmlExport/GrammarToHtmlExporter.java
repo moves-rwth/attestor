@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
-public class GrammarToHtmlExport {
+public class GrammarToHtmlExporter {
 	 /**
      * The directory into which a file for each grammar rule will be written.
      */
@@ -14,7 +14,7 @@ public class GrammarToHtmlExport {
      * Creates a new GrammarHtmlExporter.
      * @param directory The directory into which grammars should be exported.
      */
-	public GrammarToHtmlExport( String directory ) {
+	public GrammarToHtmlExporter( String directory ) {
 		this.directory = directory;
 	}
 
@@ -23,10 +23,8 @@ public class GrammarToHtmlExport {
      * @param grammar The grammar that should be exported.
      */
 	public void export(Grammar grammar) {
-        HCtoHtmlExport exporter =
-                new HCtoHtmlExport(
-                       directory
-                );
+        HCtoHtmlExporter exporter =
+                HCtoHtmlExporter.getInstance(directory);
 
 		for( Nonterminal lhs : grammar.getAllLeftHandSides() ) {
 			int index = 0;
@@ -35,6 +33,7 @@ public class GrammarToHtmlExport {
 				index++;
 			}
 		}
+		exporter.close();
 	}
 
     /**
