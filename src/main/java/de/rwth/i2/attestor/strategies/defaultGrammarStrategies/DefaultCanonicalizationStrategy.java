@@ -62,7 +62,7 @@ public class DefaultCanonicalizationStrategy implements CanonicalizationStrategy
 
 		this.grammar = grammar;
 		this.isConfluent = isConfluent;
-		this.ignoreUniqueSuccessorStatements = false;
+		this.ignoreUniqueSuccessorStatements = true;
 		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
 		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 		this.minAbstractionDistance = minAbstractionDistance;
