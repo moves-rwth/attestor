@@ -25,7 +25,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
-import de.rwth.i2.attestor.io.htmlExport.GrammarToHtmlExport;
+import de.rwth.i2.attestor.io.htmlExport.GrammarToHtmlExporter;
 import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.main.settings.*;
@@ -543,7 +543,7 @@ public class Attestor {
         }
 		if( settings.output().isExportGrammar() ) {
 			String locationForGrammar = settings.output().getLocationForGrammar();
-			GrammarToHtmlExport exporter = new GrammarToHtmlExport( locationForGrammar );
+			GrammarToHtmlExporter exporter = new GrammarToHtmlExporter( locationForGrammar );
 			Grammar grammar = settings.grammar().getGrammar();
 			exporter.export( grammar );
 			logger.info("Grammar exported to '" + locationForGrammar + "'");

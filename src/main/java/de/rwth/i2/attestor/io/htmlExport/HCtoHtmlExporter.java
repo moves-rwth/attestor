@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,22 +18,84 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
 
-public class HCtoHtmlExport {
+public class HCtoHtmlExporter {
 	private final static Logger logger = LogManager
 			.getLogger( "HcToCytoscapeExporter" );
 
 	private final static String filePrefix = "hc_";
 	private final static String fileSuffix = ".html";
+	private final static String navigationName = "navigation.html";
+	private final static String indexName = "index.html";
 
-	private final List<String> exportedHcNames = new ArrayList<>();
+	private static Map<String, HCtoHtmlExporter> knownExporters = new HashMap<>();
+
+	private List<String> exportedHcNames = new ArrayList<>();
 	
 	private final String directory;
 
-	public HCtoHtmlExport(String directory) {
+	private HCtoHtmlExporter( String directory) {
 		this.directory = directory;
 	}
 
-	public void export( String name, HeapConfiguration hc ) {
+	public static 
+	HCtoHtmlExporter getInstance( String directory  ) {
+
+		if( knownExporters.containsKey( directory ) ) {
+			
+			return knownExporters.get( directory );
+			
+		} else {
+			
+			HCtoHtmlExporter newExporter = new HCtoHtmlExporter( directory);
+			knownExporters.put( directory, newExporter );
+			return newExporter;
+		}
+	}
+
+	public void close() {
+
+		StringBuilder builder = new StringBuilder();
+
+		for( int i = 0; i < exportedHcNames.size(); i++ ) {
+			builder.append( "<p><a href=\"" );
+			builder.append( filePrefix );
+			builder.append( i + 1 );
+			builder.append( fileSuffix );
+			builder.append( "\" target=\"graph\">" );
+			builder.append( exportedHcNames.get( i ) );
+			builder.append( "</a></p>\n" );
+		}
+
+		try {
+			Writer writer = new BufferedWriter( new OutputStreamWriter(
+					new FileOutputStream( directory + File.separator
+							+ navigationName ) ) );
+
+			writer.write( builder.toString() );
+			writer.close();
+		} catch( IOException ex ) {
+			logger.error( "Unable to write to file: " + directory
+					+ File.separator + navigationName );
+		}
+
+		try {
+			Writer writer = new BufferedWriter( new OutputStreamWriter(
+					new FileOutputStream( directory + File.separator
+							+ indexName ) ) );
+
+			writer.write( htmlIndex );
+			writer.close();
+		} catch( IOException ex ) {
+			logger.error( "Unable to write to file: " + directory
+					+ File.separator + indexName );
+		}
+
+		logger.info( "HeapConfigurations exported to " + directory
+				+ File.separator + indexName );
+	}
+
+	
+	public String export( String name, HeapConfiguration hc ) {
 
 		String filename = prepareExport( name );
 
@@ -41,8 +105,7 @@ public class HCtoHtmlExport {
 							+ File.separator + filename ) ) );
 
 			writer.write( htmlTemplateHead );
-            assert filename != null;
-            writer.write( filename );
+			writer.write( filename );
 			writer.write( htmlTemplateBody );
 			writer.write( hcToJson( hc ) );
 			writer.write( htmlTemplateFooter );
@@ -50,7 +113,10 @@ public class HCtoHtmlExport {
 		} catch( IOException ex ) {
 			logger.error( "Unable to write to file: " + directory
 					+ File.separator + filename );
+			return null;
 		}
+
+		return filename;
 	}
 
 	private String prepareExport( String name ) {
@@ -184,6 +250,18 @@ public class HCtoHtmlExport {
 		return result.toString();
 	}
 
+	private final static String htmlIndex = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\"\n"
+			+ "  \"http://www.w3.org/TR/html4/frameset.dtd\">\n"
+			+ "<html>\n"
+			+ "  <head>\n"
+			+ "    <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\n"
+			+ "    <title>Attestor Heap Configurations</title>\n"
+			+ "  </head>\n"
+			+ "  <frameset rows=\"30%, *\">\n"
+			+ "    <frame src=\"navigation.html\" name=\"navigation\">\n"
+			+ "    <frame id=\"hc_graph\" src=\"hc_1.html\" name=\"graph\">\n"
+			+ "  </frameset>\n" + "</html>";
+
 	private final static String htmlTemplateHead = "<!DOCTYPE>\n" + "\n"
 			+ "<html>\n" + "\n" + "	<head>\n" + "		<title>";
 
@@ -262,5 +340,4 @@ public class HCtoHtmlExport {
 	private final static String htmlTemplateFooter = "  });\n" + "});\n"
 			+ "</script>\n" + "</head>\n" + "\n" + "<body>\n"
 			+ "  <div id=\"cy\"></div>\n" + "</body>\n" + "\n" + "</html>\n";
-
 }
