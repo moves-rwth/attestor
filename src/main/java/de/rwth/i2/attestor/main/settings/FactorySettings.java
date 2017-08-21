@@ -21,6 +21,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * A factory()() class to create all commonly used objects that depend on previously defined settings.
@@ -28,6 +31,11 @@ import java.util.List;
  * @author Christoph
  */
 public class FactorySettings {
+	
+	/**
+	 * The logger of this class.
+	 */
+	private static final Logger logger = LogManager.getLogger( "FactorySettings");
 
     /**
      * The total number of states that has been generated since running the tool.
@@ -47,9 +55,10 @@ public class FactorySettings {
      * @return The Nonterminal.
      */
     public Nonterminal getNonterminal(String label) {
-
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
+        	logger.warn("Refinement of indexed grammars is not supported yet.");
+        	return new IndexedNonterminalImpl(label, new ArrayList<>());
+            //throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
@@ -88,7 +97,9 @@ public class FactorySettings {
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
         if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-            throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
+        	logger.warn("Refinement of indexed grammars is not supported yet.");
+        	return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+           // throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
