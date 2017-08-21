@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCan
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
+import de.rwth.i2.attestor.util.SingleElementUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
@@ -74,6 +75,11 @@ public class IndexedCanonicalizationStrategy implements CanonicalizationStrategy
 	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state) {
 
 		IndexedState conf = ((IndexedState) state).clone();
+		
+		if(  !semantics.permitsCanonicalization() ) {
+
+			return SingleElementUtil.createSet( conf );
+		}
 
 		if( conf.getHeap().countNodes() > aggressiveAbstractionThreshold) {
 
