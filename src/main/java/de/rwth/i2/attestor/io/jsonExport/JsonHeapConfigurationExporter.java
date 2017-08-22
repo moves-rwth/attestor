@@ -11,7 +11,7 @@ import java.io.Writer;
 
 public class JsonHeapConfigurationExporter implements HeapConfigurationExporter {
 
-    private Writer writer;
+    protected Writer writer;
 
     public JsonHeapConfigurationExporter(Writer writer) {
 
@@ -60,7 +60,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         }
     }
 
-    private void writeNonterminalHyperedges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+    public void writeNonterminalHyperedges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
         while(iter.hasNext()) {
@@ -74,7 +74,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         }
     }
 
-    private void writeVariables(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+    public void writeVariables(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         while(iter.hasNext()) {
@@ -87,7 +87,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         }
     }
 
-    private void writeSelectors(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+    public void writeSelectors(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
         while(iter.hasNext()) {
@@ -99,7 +99,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         }
     }
 
-    private void writeNonterminalTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+    public void writeNonterminalTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
         while (iter.hasNext()) {
@@ -113,7 +113,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         }
     }
 
-    private void writeVariableTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+    public void writeVariableTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         while(iter.hasNext()) {
