@@ -24,7 +24,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
-public class EmbeddingStackCheckerTest {
+public class EmbeddingIndexCheckerTest {
 
 	EmbeddingIndexChecker checker;
 	

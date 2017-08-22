@@ -18,12 +18,12 @@ public interface IndexedNonterminal extends Nonterminal {
     IndexedNonterminal getWithInstantiation();
 
     /**
-     * removes the last symbol (stackVariable () or abstractStackSymbol) and
+     * removes the last symbol (indexVariable () or abstractIndexSymbol) and
      * adds all elements in postfix
      * @param postfix The postfix to prolong the index
      * @return The nonterminal with prolonged index
      */
     IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix);
 
-    IndexedNonterminal getWithIndex(List<IndexSymbol> stack);
+    IndexedNonterminal getWithIndex(List<IndexSymbol> index);
 }

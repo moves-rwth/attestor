@@ -362,8 +362,8 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		String label = BalancedTreeGrammar.NT_LABEL;
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
-		List<IndexSymbol> stack_Z = getIndex_Z();
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack_Z);
+		List<IndexSymbol> index_Z = getIndex_Z();
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
 		IndexedNonterminal referenceNt = 
 				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
 		

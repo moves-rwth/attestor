@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
- * Data class holding the result of a stack matching between two graphs
+ * Data class holding the result of a index matching between two graphs
  * (embedding of one graph in another).
  * @author Hannah
  *

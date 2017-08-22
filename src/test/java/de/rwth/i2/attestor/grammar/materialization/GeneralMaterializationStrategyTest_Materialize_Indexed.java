@@ -27,9 +27,9 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
-	private static final AbstractIndexSymbol ABSTRACT_STACK_SYMBOL = AbstractIndexSymbol.get("X");
-	private static final ConcreteIndexSymbol STACK_SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-	private static final ConcreteIndexSymbol STACK_SYMBOL_S = ConcreteIndexSymbol.getIndexSymbol("s", false);
+	private static final AbstractIndexSymbol ABSTRACT_INDEX_SYMBOL = AbstractIndexSymbol.get("X");
+	private static final ConcreteIndexSymbol INDEX_SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+	private static final ConcreteIndexSymbol INDEX_SYMBOL_S = ConcreteIndexSymbol.getIndexSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	GeneralMaterializationStrategy materializer;
 
@@ -198,35 +198,35 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 	
 
 	private List<IndexSymbol> getIndex_Z() {
-		return SingleElementUtil.createList( STACK_SYMBOL_Z );
+		return SingleElementUtil.createList( INDEX_SYMBOL_Z );
 	}
 	
 
 	private List<IndexSymbol> getIndex_sZ() {
 		List<IndexSymbol> index = new ArrayList<>();
-		index.add(STACK_SYMBOL_S);
-		index.add(STACK_SYMBOL_Z);
+		index.add(INDEX_SYMBOL_S);
+		index.add(INDEX_SYMBOL_Z);
 		return index;
 	}
 	
 	private List<IndexSymbol> getIndex_X() {
 		List<IndexSymbol> index = new ArrayList<>();
-		index.add(ABSTRACT_STACK_SYMBOL);
+		index.add(ABSTRACT_INDEX_SYMBOL);
 		return index;
 	}
 	
 	private List<IndexSymbol> getIndex_sX() {
 		List<IndexSymbol> index = new ArrayList<>();
-		index.add(STACK_SYMBOL_S);
-		index.add(ABSTRACT_STACK_SYMBOL);
+		index.add(INDEX_SYMBOL_S);
+		index.add(ABSTRACT_INDEX_SYMBOL);
 		return index;
 	}
 	
 	private List<IndexSymbol> getIndex_ssX() {
 		List<IndexSymbol> index = new ArrayList<>();
-		index.add(STACK_SYMBOL_S);
-		index.add(STACK_SYMBOL_S);
-		index.add(ABSTRACT_STACK_SYMBOL);
+		index.add(INDEX_SYMBOL_S);
+		index.add(INDEX_SYMBOL_S);
+		index.add(ABSTRACT_INDEX_SYMBOL);
 		return index;
 		
 	}

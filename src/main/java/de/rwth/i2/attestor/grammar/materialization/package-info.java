@@ -30,7 +30,7 @@
  * only of a {@link de.rwth.i2.attestor.grammar.materialization.GraphMaterializer} which replaces
  * the nonterminal by the rule graph. The {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier}
  * additionally consists of a {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy}
- * which applies the materilaization to stacks.
+ * which applies the materilaization to indices.
  * <br>
  * Note that you may get an error if you combine an {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}
  * with a {@link de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier} since

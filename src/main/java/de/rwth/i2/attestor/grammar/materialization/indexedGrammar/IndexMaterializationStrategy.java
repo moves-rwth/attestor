@@ -12,10 +12,10 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol
 import gnu.trove.iterator.TIntIterator;
 
 /**
- * Responsible for applying the materialization rules to the stacks of the nonterminals
+ * Responsible for applying the materialization rules to the indices of the nonterminals
  * in the graph.
  * 
- * For input rule X &#8594; ssZ it replaces the stacksymbol X in all nonterminals where it occures
+ * For input rule X &#8594; ssZ it replaces the indexsymbol X in all nonterminals where it occures
  * by ssZ.
  * 
  * @author Hannah
@@ -28,11 +28,11 @@ public class IndexMaterializationStrategy {
 	 * copy of the graph.
 	 * 
 	 * @param inputGraph the graph to materialize
-	 * @param symbolToMaterialize The abstract stack symbol which shall be materialized
-	 * @param inputMaterializationPostfix the sequence of stack symbols for materialization
+	 * @param symbolToMaterialize The abstract index symbol which shall be materialized
+	 * @param inputMaterializationPostfix the sequence of index symbols for materialization
 	 * @return a materialized copy of the graph if the mateterialization is non empty.
 	 * The graph itself otherwise.
-	 * @throws CannotMaterializeException if a nonterminal unexpectedly has a concrete stack
+	 * @throws CannotMaterializeException if a nonterminal unexpectedly has a concrete index
 	 */
 	public HeapConfiguration getMaterializedCloneWith(HeapConfiguration inputGraph,
 			AbstractIndexSymbol symbolToMaterialize, List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
@@ -54,12 +54,12 @@ public class IndexMaterializationStrategy {
 	 * all indexed nonterminals in this clone
 	 * 
 	 * @param inputGraph the original graph
-	 * @param symbolToMaterialize The abstract stack symbol which shall be materialized
-	 * @param inputMaterializationPostfix the sequence of stack symbols 
+	 * @param symbolToMaterialize The abstract index symbol which shall be materialized
+	 * @param inputMaterializationPostfix the sequence of index symbols 
 	 * with which to materialize
 	 * @return a clone of the original graph with applied materialization
 	 * @throws CannotMaterializeException if one of the indexed nonterminals in the
-	 * graph has a concrete stack and can therefore not be materialized
+	 * graph has a concrete index and can therefore not be materialized
 	 */
 	private HeapConfiguration computeCloneWithAppliedMaterializationOf(HeapConfiguration inputGraph,
 			AbstractIndexSymbol symbolToMaterialize, List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
@@ -73,14 +73,14 @@ public class IndexMaterializationStrategy {
 
 	/**
 	 * replaces all indexed nonterminals in the graph with a copy containing
-	 * the materialized stack
+	 * the materialized index
 	 * 
 	 * @param inputGraph the graph in which the nonterminals will be replaced
 	 * @param symbolToMaterialize 
-	 * @param inputMaterializationPostfix the sequence of stack symbols with which to materialize
+	 * @param inputMaterializationPostfix the sequence of index symbols with which to materialize
 	 * @return the graph with all indexed nonterminals properly replaced 
 	 * @throws CannotMaterializeException if one of the indexed nonterminals in the graph
-	 * as a concrete stack and can therefore not be materialized
+	 * as a concrete index and can therefore not be materialized
 	 */
 	private HeapConfiguration applyMaterializationToIndexedNonterminalsOf(
 			final HeapConfiguration inputGraph,
@@ -112,17 +112,17 @@ public class IndexMaterializationStrategy {
 	 * 
 	 * @param nonterminalToMaterialize the indexed nonterminal to which the materialization 
 	 * shall be applied
-	 * @param inputMaterializationPostfix the sequence of stack symbols with which the 
-	 * stack shall be materialized
+	 * @param inputMaterializationPostfix the sequence of index symbols with which the 
+	 * index shall be materialized
 	 * @return a copy indexed nonterminal with the given materialization applied 
-	 * @throws CannotMaterializeException if the nonterminal has a concrete stack
+	 * @throws CannotMaterializeException if the nonterminal has a concrete index
 	 */
 	private Nonterminal computeMaterializedCopyOf( IndexedNonterminal nonterminalToMaterialize,
 			List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
 		if( nonterminalToMaterialize.getIndex().hasConcreteIndex() ){
-			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
+			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete index" );
 		}
 
 		return	nonterminalToMaterialize.getWithProlongedIndex( inputMaterializationPostfix );

@@ -22,13 +22,13 @@ public class EmbeddingIndexChecker {
 	private static final Logger logger = LogManager.getLogger( "EmbeddingIndexChecker" );
 
 
-	IndexMatcher stackMatcher;
-	IndexMaterializationStrategy stackMaterializer;
+	IndexMatcher indexMatcher;
+	IndexMaterializationStrategy indexMaterializer;
 
 
 	public EmbeddingIndexChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
-		this.stackMatcher = matcher;
-		this.stackMaterializer = materializer;
+		this.indexMatcher = matcher;
+		this.indexMaterializer = materializer;
 	}
 
 	public IndexEmbeddingResult getIndexEmbeddingResult( HeapConfiguration toAbstract, 
@@ -53,18 +53,18 @@ public class EmbeddingIndexChecker {
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
 				instantiable = applyInstantiationTo( instantiation, instantiable );
 
-				if(! stackMatcher.canMatch( materializable, instantiable ) ){
+				if(! indexMatcher.canMatch( materializable, instantiable ) ){
 					throw new CannotMatchException();
 				}else{
 					Pair<AbstractIndexSymbol, List<IndexSymbol>> materializationRule = 
-							stackMatcher.getMaterializationRule(materializable, instantiable);
+							indexMatcher.getMaterializationRule(materializable, instantiable);
 
-					if( stackMatcher.needsMaterialization(materializable, instantiable) ) {
+					if( indexMatcher.needsMaterialization(materializable, instantiable) ) {
 						updateMaterializations( materializations, materializationRule );
 						updateInstantiation( instantiation, materializationRule );
 					}
-					if( stackMatcher.needsInstantiation(materializable, instantiable) ) {
-						updateInstantiation( instantiation, stackMatcher.getNecessaryInstantiation(materializable, instantiable) );
+					if( indexMatcher.needsInstantiation(materializable, instantiable) ) {
+						updateInstantiation( instantiation, indexMatcher.getNecessaryInstantiation(materializable, instantiable) );
 					}
 				}
 			}
@@ -85,12 +85,12 @@ public class EmbeddingIndexChecker {
 
 	/**
 	 * To avoid checking corner cases in the original compuation of matchings,
-	 * the stacks with applied materialization and instantiation are checked for
+	 * the indices with applied materialization and instantiation are checked for
 	 * equality.
 	 * @param toAbstract the outer graph
 	 * @param embedding the matching from pattern to outer graph elements
 	 * @param pattern the embedded graph
-	 * @throws CannotMatchException if one of the stacks does not match
+	 * @throws CannotMatchException if one of the indices does not match
 	 */
 	private void checkAppliedResult(HeapConfiguration toAbstract, Matching embedding, HeapConfiguration pattern)
 			throws CannotMatchException {
@@ -129,9 +129,9 @@ public class EmbeddingIndexChecker {
 			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations) {
 		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> rule : materializations.entrySet() ){
 			try {
-				hc = this.stackMaterializer.getMaterializedCloneWith(hc, rule.getKey(), rule.getValue() );
+				hc = this.indexMaterializer.getMaterializedCloneWith(hc, rule.getKey(), rule.getValue() );
 			} catch (CannotMaterializeException e) {
-				logger.error( "materialization after stack matching faild." );
+				logger.error( "materialization after index matching faild." );
 				e.printStackTrace();
 			}
 		}
@@ -140,7 +140,7 @@ public class EmbeddingIndexChecker {
 	
 	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<IndexSymbol> instantiation) {
 		
-		IndexSymbol stackVariable = IndexVariable.getGlobalInstance();
+		IndexSymbol indexVariable = IndexVariable.getGlobalInstance();
 		pattern = pattern.clone();
 		HeapConfigurationBuilder builder = pattern.builder();
 		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();
@@ -149,11 +149,11 @@ public class EmbeddingIndexChecker {
 			Nonterminal nonterminal = pattern.labelOf( indexOfNonterminal );
 			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getIndex().getLastIndexSymbol().equals( stackVariable ) ) {
+				if( nonterminalToMaterialize.getIndex().getLastIndexSymbol().equals( indexVariable ) ) {
 					
-					Nonterminal nonterminalWithMaterializedStack = 
+					Nonterminal nonterminalWithMaterializedIndex = 
 							applyInstantiationTo(instantiation, nonterminalToMaterialize);
-					builder.replaceNonterminal(indexOfNonterminal, nonterminalWithMaterializedStack );
+					builder.replaceNonterminal(indexOfNonterminal, nonterminalWithMaterializedIndex );
 				}
 
 			}
@@ -217,28 +217,28 @@ public class EmbeddingIndexChecker {
 	}
 
 	/**
-	 * returns the last element in the stack, i.e. c in [a,b,c].
-	 * @param stack the stack containing the elements
-	 * @return the last symbol of stack
+	 * returns the last element in the index, i.e. c in [a,b,c].
+	 * @param index the index containing the elements
+	 * @return the last symbol of index
 	 */
-	private IndexSymbol getLastSymbolOf(List<IndexSymbol> stack) {
-		return stack.get( stack.size() - 1 );
+	private IndexSymbol getLastSymbolOf(List<IndexSymbol> index) {
+		return index.get( index.size() - 1 );
 	}
 
 	/**
-	 * materializes the given stack using the rule lhs -> rhs.
-	 * For example if stack = ssX, lhs = X, rhs = Z stack is afterwards ssZ.
-	 * If the last symbol of stack does not equal lhs nothing happens,
-	 * so for example calling stack = ssY, lhs = X, rhs = Z will leave stack unchanged.
-	 * @param stack the stack to materialize
-	 * @param lhs the abstract stack symbol to materialized
-	 * @param rhs the sequence of stack symbols with which to materialize
+	 * materializes the given index using the rule lhs -> rhs.
+	 * For example if index = ssX, lhs = X, rhs = Z index is afterwards ssZ.
+	 * If the last symbol of index does not equal lhs nothing happens,
+	 * so for example calling index = ssY, lhs = X, rhs = Z will leave index unchanged.
+	 * @param index the index to materialize
+	 * @param lhs the abstract index symbol to materialized
+	 * @param rhs the sequence of index symbols with which to materialize
 	 */
-	private void materializeIn(List<IndexSymbol> stack, IndexSymbol lhs, List<IndexSymbol> rhs) {
+	private void materializeIn(List<IndexSymbol> index, IndexSymbol lhs, List<IndexSymbol> rhs) {
 
-		if( getLastSymbolOf(stack).equals(lhs) ){
-			stack.remove( stack.size() -1 );
-			stack.addAll( rhs );
+		if( getLastSymbolOf(index).equals(lhs) ){
+			index.remove( index.size() -1 );
+			index.addAll( rhs );
 		}
 	}
 
@@ -247,10 +247,10 @@ public class EmbeddingIndexChecker {
 			IndexedNonterminal materializable ) 
 	{
 
-		IndexSymbol lastStackSymbol = materializable.getIndex().getLastIndexSymbol();
-		if( lastStackSymbol instanceof AbstractIndexSymbol ){
-			if( currentMaterializations.containsKey(lastStackSymbol) ){
-				return materializable.getWithProlongedIndex( currentMaterializations.get(lastStackSymbol) );
+		IndexSymbol lastIndexSymbol = materializable.getIndex().getLastIndexSymbol();
+		if( lastIndexSymbol instanceof AbstractIndexSymbol ){
+			if( currentMaterializations.containsKey(lastIndexSymbol) ){
+				return materializable.getWithProlongedIndex( currentMaterializations.get(lastIndexSymbol) );
 			}
 		}
 		return materializable;

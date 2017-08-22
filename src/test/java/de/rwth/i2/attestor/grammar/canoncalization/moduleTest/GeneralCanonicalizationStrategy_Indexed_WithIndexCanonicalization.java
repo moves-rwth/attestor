@@ -181,11 +181,11 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 	private ProgramState expectedSimpleAbstraction() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		List<IndexSymbol> expectedStack = getExpectedIndex();
+		List<IndexSymbol> expectedIndex = getExpectedIndex();
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc =  hc.builder().addNodes(TYPE, 2, nodes)
-				.addNonterminalEdge( getNonterminal(expectedStack ))
+				.addNonterminalEdge( getNonterminal(expectedIndex ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()

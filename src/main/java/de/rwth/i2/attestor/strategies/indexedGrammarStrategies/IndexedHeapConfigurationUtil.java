@@ -6,7 +6,7 @@ import gnu.trove.iterator.TIntIterator;
 
 public class IndexedHeapConfigurationUtil {
 
-	public static boolean hasInstantiatiatedStacks( HeapConfiguration hc ){
+	public static boolean hasInstantiatiatedIndices( HeapConfiguration hc ){
 		TIntIterator ntIterator = hc.nonterminalEdges().iterator();
 		while( ntIterator.hasNext() ){
 			int ntId = ntIterator.next();

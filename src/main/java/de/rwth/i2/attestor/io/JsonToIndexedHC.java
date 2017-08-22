@@ -88,7 +88,7 @@ public class JsonToIndexedHC {
 				assert( i == index.length() -1 ) : "abstract index symbols may only occur at the end of index";
 			}else if( Character.isLowerCase(symbol.codePointAt(0)) ){
 				res.add( ConcreteIndexSymbol.getIndexSymbol(symbol, false) );
-				assert( i < index.length() -1 ) : "stacks cannot end with a concrete non-bottom symbol";
+				assert( i < index.length() -1 ) : "indices cannot end with a concrete non-bottom symbol";
 			}else if( Character.isUpperCase( symbol.codePointAt(0)) ){
 				res.add( ConcreteIndexSymbol.getIndexSymbol(symbol, true) );
 

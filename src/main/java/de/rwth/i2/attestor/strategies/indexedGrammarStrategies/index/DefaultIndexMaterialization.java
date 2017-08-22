@@ -29,7 +29,7 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
 	public static IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getIndexSymbol( "C", true );
 
 	@Override
-	public void materializeStacks(HeapConfiguration heapConfiguration, 
+	public void materializeIndices(HeapConfiguration heapConfiguration, 
 								  IndexSymbol originalIndexSymbol,
                                   IndexSymbol desiredIndexSymbol) {
 
@@ -43,7 +43,7 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
 			IndexedNonterminal indexedNonterminal = (IndexedNonterminal) heapConfiguration.labelOf(edge);
 			if(indexedNonterminal.getIndex().endsWith(originalIndexSymbol)) {
 
-			    IndexedNonterminal updatedNt = getNonterminalWithUpdatedStack(indexedNonterminal,
+			    IndexedNonterminal updatedNt = getNonterminalWithUpdatedIndex(indexedNonterminal,
 						desiredIndexSymbol, originalIndexSymbol);
 
                 heapConfiguration.builder()
@@ -63,7 +63,7 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
      * @param originalIndexSymbol The IndexSymbol that is materialized.
      * @return A new IndexedNonterminal with an updated index.
      */
-    private IndexedNonterminal getNonterminalWithUpdatedStack(IndexedNonterminal nonterminal,
+    private IndexedNonterminal getNonterminalWithUpdatedIndex(IndexedNonterminal nonterminal,
                                                               IndexSymbol desiredIndexSymbol,
                                                               IndexSymbol originalIndexSymbol) {
 
@@ -115,7 +115,7 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
 
 
     @Override
-	public IndexedNonterminal materializeStack( IndexedNonterminal nt, IndexSymbol s ) {
+	public IndexedNonterminal materializeIndex( IndexedNonterminal nt, IndexSymbol s ) {
 		assert( ! nt.getIndex().hasConcreteIndex() );
 		nt = nt.getWithShortenedIndex().getWithProlongedIndex( s );
 		if( ! s.isBottom() ){

@@ -115,13 +115,13 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			}
 		}
 		
-		AbstractIndexSymbol stackSymbolToMaterialize = getStackSymbolToMaterialize( toReplace );
+		AbstractIndexSymbol indexSymbolToMaterialize = getIndexSymbolToMaterialize( toReplace );
 		
 		return new MaterializationAndRuleResponse( allMaterializationsAndRules, 
-												   stackSymbolToMaterialize );
+												   indexSymbolToMaterialize );
 	}
 
-	private AbstractIndexSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
+	private AbstractIndexSymbol getIndexSymbolToMaterialize(IndexedNonterminal toReplace) {
 
 		IndexSymbol lastSymbol = toReplace.getIndex().getLastIndexSymbol();
 		if( lastSymbol instanceof AbstractIndexSymbol){
@@ -208,7 +208,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 	 * 
 	 * @param necessaryInstantiation the instantiation which will be applied
 	 * @param uninstantiatedRules the rules that (may) require instantiation
-	 * @return a collection containing all graphs, now with fully instantiated stacks.
+	 * @return a collection containing all graphs, now with fully instantiated indices.
 	 */
 	private Collection<HeapConfiguration> instantiateRhs(List<IndexSymbol> necessaryInstantiation,
 			Collection<HeapConfiguration> uninstantiatedRules) {
