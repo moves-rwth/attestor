@@ -25,7 +25,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	}
 
 	private static List<IndexSymbol> createInstantiation() {
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("Y");
 		
 		List<IndexSymbol> res = new ArrayList<>();
@@ -35,7 +35,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	}
 
 	private static List<IndexSymbol> createMaterialization() {
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("a", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("Y");
 		
 		List<IndexSymbol> res = new ArrayList<>();
@@ -61,7 +61,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 																				IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastStackSymbol();
+			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastIndexSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );

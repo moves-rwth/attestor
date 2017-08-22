@@ -78,7 +78,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 
 
 	private static Nonterminal createNonterminal_Z() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		List<IndexSymbol> stack = SingleElementUtil.createList( bottom );
 				
 		boolean[] reductionTentacles = new boolean[]{false,false};
@@ -94,7 +94,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	}
 	
 	private static Nonterminal createNonterminal_s() {
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol var = IndexVariable.getGlobalInstance();
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);

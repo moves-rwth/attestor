@@ -11,7 +11,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
@@ -55,8 +55,8 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
 		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();
 		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
-		EmbeddingStackChecker stackChecker = 
-				new EmbeddingStackChecker( stackMatcher, 
+		EmbeddingIndexChecker stackChecker = 
+				new EmbeddingIndexChecker( stackMatcher, 
 											materializer );
 		
 		matchingHandler = new IndexedMatchingHandler( indexStrategy, checkerProvider, stackChecker);

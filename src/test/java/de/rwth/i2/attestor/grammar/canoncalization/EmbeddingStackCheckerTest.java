@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingStackChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -26,13 +26,13 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class EmbeddingStackCheckerTest {
 
-	EmbeddingStackChecker checker;
+	EmbeddingIndexChecker checker;
 	
 	@Before
 	public void setUp() throws Exception {
 		IndexMatcher stackMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
 		IndexMaterializationStrategy stackMaterializer = new IndexMaterializationStrategy();
-		 checker = new EmbeddingStackChecker( stackMatcher, stackMaterializer );
+		 checker = new EmbeddingIndexChecker( stackMatcher, stackMaterializer );
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class EmbeddingStackCheckerTest {
 		Nonterminal lhs = getInstantiableNonterminal();
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getSimpleInput(), res.getMaterializedToAbstract() );
 		assertEquals( getInstantiableNonterminal(), res.getInstantiatedLhs() );
@@ -65,7 +65,7 @@ public class EmbeddingStackCheckerTest {
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getInputWithStack( concreteStack ), res.getMaterializedToAbstract() );
 		assertEquals( getMatchingNonterminalWithStack( concreteStack), res.getInstantiatedLhs() );
@@ -91,7 +91,7 @@ public class EmbeddingStackCheckerTest {
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeConcrete( otherPrefix) ), 
 					  res.getMaterializedToAbstract() );
@@ -123,7 +123,7 @@ public class EmbeddingStackCheckerTest {
 		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack1 );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeOtherConcrete( somePrefix ),
 										  makeConcrete( otherPrefix), makeOtherConcrete( otherPrefix ) ), 
@@ -156,7 +156,7 @@ public class EmbeddingStackCheckerTest {
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		try {
-			StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+			IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 			fail("Expected CannotMatchException");
 		} catch (CannotMatchException e) {
 			//expected
@@ -179,7 +179,7 @@ public class EmbeddingStackCheckerTest {
 		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
 		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
 		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
@@ -202,7 +202,7 @@ public class EmbeddingStackCheckerTest {
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		try {
-			checker.getStackEmbeddingResult( toAbstract, embedding, lhs );
+			checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 			fail("Expected CannotMatchException");
 		} catch (CannotMatchException e) {
 			// expected
@@ -225,7 +225,7 @@ public class EmbeddingStackCheckerTest {
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult(toAbstract, embedding, lhs);
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
 		
 		assertEquals( toAbstract, 
 					  res.getMaterializedToAbstract() );
@@ -249,7 +249,7 @@ public class EmbeddingStackCheckerTest {
 		
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
-		StackEmbeddingResult res = checker.getStackEmbeddingResult(toAbstract, embedding, lhs);
+		IndexEmbeddingResult res = checker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
 		
 		assertEquals( getInputWithStacks(matching2, matching2, matching2, matching2), 
 					  res.getMaterializedToAbstract() );
@@ -272,7 +272,7 @@ public class EmbeddingStackCheckerTest {
 	
 	private List<IndexSymbol> getOtherStackPrefix() {
 		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
-		IndexSymbol other = ConcreteIndexSymbol.getStackSymbol("other", false);
+		IndexSymbol other = ConcreteIndexSymbol.getIndexSymbol("other", false);
 		
 		ArrayList<IndexSymbol> prefix = getEmptyStack();
 		prefix.add( s );

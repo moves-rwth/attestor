@@ -28,8 +28,8 @@ import gnu.trove.list.array.TIntArrayList;
 public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
 	private static final AbstractIndexSymbol ABSTRACT_STACK_SYMBOL = AbstractIndexSymbol.get("X");
-	private static final ConcreteIndexSymbol STACK_SYMBOL_Z = ConcreteIndexSymbol.getStackSymbol("Z", true);
-	private static final ConcreteIndexSymbol STACK_SYMBOL_S = ConcreteIndexSymbol.getStackSymbol("s", false);
+	private static final ConcreteIndexSymbol STACK_SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+	private static final ConcreteIndexSymbol STACK_SYMBOL_S = ConcreteIndexSymbol.getIndexSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	GeneralMaterializationStrategy materializer;
 

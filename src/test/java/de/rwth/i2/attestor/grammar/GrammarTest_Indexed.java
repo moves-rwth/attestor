@@ -53,7 +53,7 @@ public class GrammarTest_Indexed {
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_Z() 
 												throws UnexpectedNonterminalTypeException {
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -74,8 +74,8 @@ public class GrammarTest_Indexed {
 	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_sZ() 
 			throws UnexpectedNonterminalTypeException {
 				
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);

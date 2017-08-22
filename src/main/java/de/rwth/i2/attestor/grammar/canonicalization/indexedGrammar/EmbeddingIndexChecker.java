@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.StackEmbeddingResult;
+import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -18,20 +18,20 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 
-public class EmbeddingStackChecker {
-	private static final Logger logger = LogManager.getLogger( "EmbeddingStackChecker" );
+public class EmbeddingIndexChecker {
+	private static final Logger logger = LogManager.getLogger( "EmbeddingIndexChecker" );
 
 
 	IndexMatcher stackMatcher;
 	IndexMaterializationStrategy stackMaterializer;
 
 
-	public EmbeddingStackChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
+	public EmbeddingIndexChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
 		this.stackMatcher = matcher;
 		this.stackMaterializer = materializer;
 	}
 
-	public StackEmbeddingResult getStackEmbeddingResult( HeapConfiguration toAbstract, 
+	public IndexEmbeddingResult getIndexEmbeddingResult( HeapConfiguration toAbstract, 
 			Matching embedding, 
 			Nonterminal lhs ) throws CannotMatchException{
 
@@ -79,7 +79,7 @@ public class EmbeddingStackChecker {
 		}
 		
 		checkAppliedResult(toAbstract, embedding, pattern);
-		return new StackEmbeddingResult( toAbstract, lhs );
+		return new IndexEmbeddingResult( toAbstract, lhs );
 	}
 
 
@@ -149,7 +149,7 @@ public class EmbeddingStackChecker {
 			Nonterminal nonterminal = pattern.labelOf( indexOfNonterminal );
 			if( nonterminal instanceof IndexedNonterminal){
 				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
-				if( nonterminalToMaterialize.getIndex().getLastStackSymbol().equals( stackVariable ) ) {
+				if( nonterminalToMaterialize.getIndex().getLastIndexSymbol().equals( stackVariable ) ) {
 					
 					Nonterminal nonterminalWithMaterializedStack = 
 							applyInstantiationTo(instantiation, nonterminalToMaterialize);
@@ -247,7 +247,7 @@ public class EmbeddingStackChecker {
 			IndexedNonterminal materializable ) 
 	{
 
-		IndexSymbol lastStackSymbol = materializable.getIndex().getLastStackSymbol();
+		IndexSymbol lastStackSymbol = materializable.getIndex().getLastIndexSymbol();
 		if( lastStackSymbol instanceof AbstractIndexSymbol ){
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
 				return materializable.getWithProlongedStack( currentMaterializations.get(lastStackSymbol) );
@@ -258,7 +258,7 @@ public class EmbeddingStackChecker {
 
 	private IndexedNonterminal applyInstantiationTo(List<IndexSymbol> instantiation, IndexedNonterminal instantiable) {
 
-		IndexSymbol lastSymbol = instantiable.getIndex().getLastStackSymbol();
+		IndexSymbol lastSymbol = instantiable.getIndex().getLastIndexSymbol();
 		if( ! instantiation.isEmpty() && lastSymbol instanceof IndexVariable ) {
 			return instantiable.getWithProlongedStack(instantiation);
 		}else {

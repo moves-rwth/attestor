@@ -205,9 +205,9 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	private static Collection<Nonterminal> createExampleNts() {
 		
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom1 = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom1 = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		IndexSymbol var = IndexVariable.getGlobalInstance();
 		
 		List<IndexSymbol> stack1 = new ArrayList<>();
@@ -284,8 +284,8 @@ public class IndexedMaterializationRuleManagerTest {
 	//------ Non-Empty Instantiable Index ------
 	
 	private List<IndexSymbol> nonEmptyStack(){
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(a);
@@ -310,8 +310,8 @@ public class IndexedMaterializationRuleManagerTest {
 	//---------- Concrete Index --------------------------
 	
 	private List<IndexSymbol> concreteStack(){
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);

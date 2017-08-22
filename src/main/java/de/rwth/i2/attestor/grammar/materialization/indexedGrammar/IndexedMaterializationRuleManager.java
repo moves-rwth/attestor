@@ -123,7 +123,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 
 	private AbstractIndexSymbol getStackSymbolToMaterialize(IndexedNonterminal toReplace) {
 
-		IndexSymbol lastSymbol = toReplace.getIndex().getLastStackSymbol();
+		IndexSymbol lastSymbol = toReplace.getIndex().getLastIndexSymbol();
 		if( lastSymbol instanceof AbstractIndexSymbol){
 			return (AbstractIndexSymbol) lastSymbol;
 		}else{

@@ -36,7 +36,7 @@ public class Index {
     }
 
 
-    public IndexSymbol getLastStackSymbol(){
+    public IndexSymbol getLastIndexSymbol(){
         assert( indexSymbols.size() > 0 );
         return indexSymbols.get( indexSymbols.size() -1 );
     }
@@ -56,7 +56,7 @@ public class Index {
 
     public Index getWithInstantiation(){
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
-        if( indexSymbols.size() > 0 && this.getLastStackSymbol() instanceof IndexVariable){
+        if( indexSymbols.size() > 0 && this.getLastIndexSymbol() instanceof IndexVariable){
             IndexVariable lastSymbol = (IndexVariable)indexCopy.get(indexCopy.size() - 1);
             indexCopy.remove( indexCopy.size() - 1 );
             lastSymbol.getInstantiation().forEach(indexCopy::add);
@@ -66,7 +66,7 @@ public class Index {
 
     public Index getWithProlongedStack(List<IndexSymbol> postfix ){
         assert( this.size() > 0 );
-        IndexSymbol lastSymbol = this.getLastStackSymbol();
+        IndexSymbol lastSymbol = this.getLastIndexSymbol();
         assert( !( lastSymbol instanceof ConcreteIndexSymbol) );
 
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);

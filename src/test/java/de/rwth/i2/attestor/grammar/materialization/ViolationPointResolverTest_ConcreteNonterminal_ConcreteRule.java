@@ -132,8 +132,8 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 
 	private static Nonterminal createIndexedNonterminalWithStack_sZ() {
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
@@ -143,7 +143,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	}
 
 	private static Nonterminal createIndexedNonterminalWithStack_Z() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);

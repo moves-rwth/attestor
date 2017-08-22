@@ -204,7 +204,7 @@ public class IndexMaterializationStrategyTest {
 	}
 
 	private List<IndexSymbol> abstractMaterialization() {
-		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
+		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("b", false);
 		IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("Y");
 
 		List<IndexSymbol> abstractMaterialization = new ArrayList<>();
@@ -215,8 +215,8 @@ public class IndexMaterializationStrategyTest {
 	}
 
 	private List<IndexSymbol> concreteMaterialization() {
-		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
-		IndexSymbol someBottomIndexSymbol = ConcreteIndexSymbol.getStackSymbol("Z", true );
+		IndexSymbol someConcreteIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("b", false);
+		IndexSymbol someBottomIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("Z", true );
 
 		List<IndexSymbol> abstractMaterialization = new ArrayList<>();
 		abstractMaterialization.add(someConcreteIndexSymbol);
@@ -229,8 +229,8 @@ public class IndexMaterializationStrategyTest {
 	}
 	
 	private List<IndexSymbol> nonEmptyStack(){
-		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getStackSymbol("c", false);
-		IndexSymbol otherIndexSymbol = ConcreteIndexSymbol.getStackSymbol("b", false);
+		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("c", false);
+		IndexSymbol otherIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("b", false);
 
 		List<IndexSymbol> nonEmptyStack = new ArrayList<>();
 		nonEmptyStack.add(someIndexSymbol);
@@ -241,8 +241,8 @@ public class IndexMaterializationStrategyTest {
 	}
 	
 	private List<IndexSymbol> concreteStack() {
-		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol someBottomSymbol = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol someIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol someBottomSymbol = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		List<IndexSymbol> concreteStack = new ArrayList<>();
 		concreteStack.add(someIndexSymbol);

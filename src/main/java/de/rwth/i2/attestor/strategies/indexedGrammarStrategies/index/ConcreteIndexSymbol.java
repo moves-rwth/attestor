@@ -8,7 +8,7 @@ public class ConcreteIndexSymbol implements IndexSymbol {
 
 	private static final Map<String, ConcreteIndexSymbol> existingStackSymbols = new HashMap<>();
 	
-	public static ConcreteIndexSymbol getStackSymbol(String label, boolean isBottom ){
+	public static ConcreteIndexSymbol getIndexSymbol(String label, boolean isBottom ){
 		if(! existingStackSymbols.containsKey(label) ){
 			existingStackSymbols.put(label, new ConcreteIndexSymbol(label, isBottom));
 		}

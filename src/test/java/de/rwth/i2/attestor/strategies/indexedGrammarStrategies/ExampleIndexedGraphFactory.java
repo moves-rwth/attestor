@@ -20,8 +20,8 @@ public class ExampleIndexedGraphFactory {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		HeapConfigurationBuilder builder = hc.builder();
 
-		ConcreteIndexSymbol s =  ConcreteIndexSymbol.getStackSymbol("s", false);
-		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ConcreteIndexSymbol s =  ConcreteIndexSymbol.getIndexSymbol("s", false);
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
 		leftStack.add(s);
@@ -57,8 +57,8 @@ public class ExampleIndexedGraphFactory {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		HeapConfigurationBuilder builder = hc.builder();
 
-		ConcreteIndexSymbol s =  ConcreteIndexSymbol.getStackSymbol("s", false);
-		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ConcreteIndexSymbol s =  ConcreteIndexSymbol.getIndexSymbol("s", false);
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
@@ -94,7 +94,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getInput_MaterializeSmall_Z(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -126,8 +126,8 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getInput_MaterializeSmall_sZ(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
@@ -145,7 +145,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeSmall2_Res1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", stack);
@@ -168,7 +168,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeSmall2_Res2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", stack);
@@ -191,7 +191,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeSmall2_Res3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stackL = new ArrayList<>();
 		stackL.add(bottom);
 		IndexedNonterminal leftNt = new IndexedNonterminalImpl("B", stackL);
@@ -219,7 +219,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getInput_MaterializeBig(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
@@ -251,7 +251,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeBig_Res1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
 		leftStack.add(bottom);
@@ -285,7 +285,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeBig_Res2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
 		leftStack.add(bottom);
@@ -362,7 +362,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeBig_Res4(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
@@ -406,7 +406,7 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getExpected_MaterializeBig_Res5(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
 		
 		ArrayList<IndexSymbol> leftStack = new ArrayList<>();
@@ -528,7 +528,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -554,7 +554,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -580,7 +580,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -608,7 +608,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, stack);
@@ -631,8 +631,8 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getInput_stackCanonization_longStack(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		ConcreteIndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false );
-		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false );
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> stackLeft = new ArrayList<>();
 		stackLeft.add(s);
@@ -681,8 +681,8 @@ public class ExampleIndexedGraphFactory {
 	public static HeapConfiguration getInput_stackCanonization_Blocked(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		ConcreteIndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
@@ -765,7 +765,7 @@ public class ExampleIndexedGraphFactory {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add( ConcreteIndexSymbol.getStackSymbol( "Z", true ) );
+		stack.add( ConcreteIndexSymbol.getIndexSymbol( "Z", true ) );
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
 		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, stack );
 		
@@ -811,7 +811,7 @@ public class ExampleIndexedGraphFactory {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add( ConcreteIndexSymbol.getStackSymbol( "Z", true ) );
+		stack.add( ConcreteIndexSymbol.getIndexSymbol( "Z", true ) );
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
 		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, stack );
 		
@@ -858,7 +858,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
@@ -924,7 +924,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
@@ -979,7 +979,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol var = IndexVariable.getGlobalInstance();
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
@@ -1030,7 +1030,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
@@ -1086,7 +1086,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
@@ -1133,7 +1133,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		

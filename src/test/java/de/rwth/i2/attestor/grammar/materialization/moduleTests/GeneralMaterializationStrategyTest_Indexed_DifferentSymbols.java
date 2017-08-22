@@ -146,7 +146,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 	private List<IndexSymbol> stackForLhs(){
 		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add( ConcreteIndexSymbol.getStackSymbol("s", true) );
+		stack.add( ConcreteIndexSymbol.getIndexSymbol("s", true) );
 		return stack;
 	}
 	

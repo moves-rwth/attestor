@@ -21,9 +21,9 @@ public class IndexMatcherTest {
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{false,false};
 	private static final int NONTERMINAL_RANK = 2;
 	private static final String NONTERMINAL_LABEL = "StackMatcherTest";
-	static final IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-	static final IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
-	static final IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+	static final IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+	static final IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
+	static final IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 	
 	IndexMatcher stackMatcher;
 

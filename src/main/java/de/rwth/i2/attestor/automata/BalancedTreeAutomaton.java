@@ -1,15 +1,13 @@
 package de.rwth.i2.attestor.automata;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import java.util.*;
+
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
 
 public class BalancedTreeAutomaton extends HeapAutomaton {
 
@@ -179,7 +177,7 @@ class BalancednessHelper {
             if(nt.getLabel().equals(btLabel.getLabel())) {
 
                 int sourceNode = hc.attachedNodesOf(ntEdge).get(4);
-                //assume stacks of form s*Z if something is linked to null and s*X otherwise
+                //assume indices of form s*Z if something is linked to null and s*X otherwise
                 heights.put(sourceNode, nt.getIndex().size() -1 );
 
                 addParentToQueue(hc, sourceNode, queue, visited );

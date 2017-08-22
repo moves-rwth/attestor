@@ -9,12 +9,12 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  * @author Hannah
  *
  */
-public class StackEmbeddingResult {
+public class IndexEmbeddingResult {
 
 	private final HeapConfiguration materializedToAbstract;
 	private final Nonterminal instantiatedLhs;
 	
-	public StackEmbeddingResult( HeapConfiguration materializedToAbstract,
+	public IndexEmbeddingResult( HeapConfiguration materializedToAbstract,
 							     Nonterminal instantiatedLhs ){
 		
 		this.materializedToAbstract = materializedToAbstract;

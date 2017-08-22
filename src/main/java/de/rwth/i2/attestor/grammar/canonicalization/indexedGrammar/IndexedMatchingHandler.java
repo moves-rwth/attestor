@@ -13,16 +13,16 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 
 	public IndexCanonizationStrategy indexCanonizationStrategy;
 	public EmbeddingCheckerProvider checkerProvider;
-	public EmbeddingStackChecker stackChecker;
+	public EmbeddingIndexChecker indexChecker;
 
 	
 	public IndexedMatchingHandler( IndexCanonizationStrategy indexCanonicalization,
 								   EmbeddingCheckerProvider checkerProvider, 
-								   EmbeddingStackChecker stackChecker ) {
+								   EmbeddingIndexChecker indexChecker ) {
 		super();
 		this.indexCanonizationStrategy = indexCanonicalization;
 		this.checkerProvider = checkerProvider;
-		this.stackChecker = stackChecker;
+		this.indexChecker = indexChecker;
 	}
 
 	/* (non-Javadoc)
@@ -44,8 +44,8 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 
 			Matching embedding = checker.getNext();
 			try {
-				StackEmbeddingResult res = 
-						stackChecker.getStackEmbeddingResult(toAbstract.getHeap(), embedding, lhs);
+				IndexEmbeddingResult res = 
+						indexChecker.getIndexEmbeddingResult(toAbstract.getHeap(), embedding, lhs);
 	
 				HeapConfiguration abstracted = replaceEmbeddingBy( res.getMaterializedToAbstract(), 
 															  embedding, res.getInstantiatedLhs() );
@@ -77,7 +77,7 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 	@Override
 	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
 		HeapConfiguration heap = toAbstract.getHeap().clone();
-		indexCanonizationStrategy.canonizeStack( heap );
+		indexCanonizationStrategy.canonizeIndex( heap );
 		return toAbstract.shallowCopyWithUpdateHeap( heap );
 	}
 

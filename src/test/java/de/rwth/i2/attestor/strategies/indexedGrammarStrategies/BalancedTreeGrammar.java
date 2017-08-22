@@ -39,7 +39,7 @@ public class BalancedTreeGrammar{
 	private static void addRuleBalanced(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getGlobalInstance();
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( ConcreteIndexSymbol.getStackSymbol("s", false));
+		lhsStack.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
 		lhsStack.add(var);
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
 		
@@ -76,7 +76,7 @@ public class BalancedTreeGrammar{
 	
 	private static void addUnbalancedRuleLeft(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getGlobalInstance();
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
@@ -92,7 +92,7 @@ public class BalancedTreeGrammar{
 	public static HeapConfiguration createUnbalancedRuleLeft() {
 		
 		IndexVariable var = IndexVariable.getGlobalInstance();
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
@@ -122,7 +122,7 @@ public class BalancedTreeGrammar{
 	
 	private static void addUnbalancedRuleRight(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getGlobalInstance();
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
@@ -137,7 +137,7 @@ public class BalancedTreeGrammar{
 
 	public static HeapConfiguration createUnbalancedRuleRight() {
 		IndexVariable var = IndexVariable.getGlobalInstance();
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(s);
@@ -166,7 +166,7 @@ public class BalancedTreeGrammar{
 	}
 
 	private static void addBalancedLeafRule(GrammarBuilder builder){
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
@@ -194,8 +194,8 @@ public class BalancedTreeGrammar{
 	
 	private static void addLeftLeafRule(GrammarBuilder builder){
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		lhsStack.add( s );
 		lhsStack.add(bottom);
 		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
@@ -206,7 +206,7 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createLeftLeafRule() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(bottom);
@@ -229,8 +229,8 @@ public class BalancedTreeGrammar{
 	}
 
 	private static void addRightLeafRule(GrammarBuilder builder){
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s );
@@ -243,7 +243,7 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createRightLeafRule() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(bottom);

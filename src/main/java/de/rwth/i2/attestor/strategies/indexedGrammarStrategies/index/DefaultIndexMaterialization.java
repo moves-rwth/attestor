@@ -24,9 +24,9 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
 	
 	public static AbstractIndexSymbol SYMBOL_X = AbstractIndexSymbol.get("X");
 	public static AbstractIndexSymbol SYMBOL_Y = AbstractIndexSymbol.get("Y");
-	public static IndexSymbol SYMBOL_s = ConcreteIndexSymbol.getStackSymbol( "s", false);
-	public static IndexSymbol SYMBOL_Z = ConcreteIndexSymbol.getStackSymbol( "Z", true );
-	public static IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getStackSymbol( "C", true );
+	public static IndexSymbol SYMBOL_s = ConcreteIndexSymbol.getIndexSymbol( "s", false);
+	public static IndexSymbol SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol( "Z", true );
+	public static IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getIndexSymbol( "C", true );
 
 	@Override
 	public void materializeStacks(HeapConfiguration heapConfiguration, 

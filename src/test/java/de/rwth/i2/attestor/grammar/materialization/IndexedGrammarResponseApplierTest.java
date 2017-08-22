@@ -99,7 +99,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private List<IndexSymbol> createNonEmptyMaterialization() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		return SingleElementUtil.createList( bottom );
 	}

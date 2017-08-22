@@ -29,7 +29,7 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_Bottom(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, stack);
@@ -45,8 +45,8 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_TwoElementStack(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
 		stack.add(bottom);
@@ -63,7 +63,7 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_StackWithVar(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol var = IndexVariable.getGlobalInstance();
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
@@ -81,7 +81,7 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_StackWithAbs(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);
@@ -99,7 +99,7 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_AbstractStack(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("X");
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(s);

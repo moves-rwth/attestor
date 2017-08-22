@@ -13,18 +13,18 @@ public class MaterializationAndRuleResponse implements GrammarResponse {
 	private Map<List<IndexSymbol>, Collection<HeapConfiguration>> materializationsAndRules;
 
 	public MaterializationAndRuleResponse(Map<List<IndexSymbol>, Collection<HeapConfiguration>> rules,
-			AbstractIndexSymbol stackSymbolToMaterialize ) {
+			AbstractIndexSymbol indexSymbolToMaterialize ) {
 		super();
 		this.materializationsAndRules = rules;
-		this.symbolToMaterialize = stackSymbolToMaterialize;
+		this.symbolToMaterialize = indexSymbolToMaterialize;
 	}
 	
 
-	public boolean hasStackSymbolToMaterialize(){
+	public boolean hasIndexSymbolToMaterialize(){
 		return symbolToMaterialize != null;
 	}
 	
-	public AbstractIndexSymbol getStackSymbolToMaterialize(){
+	public AbstractIndexSymbol getIndexSymbolToMaterialize(){
 		return symbolToMaterialize;
 	}
 	

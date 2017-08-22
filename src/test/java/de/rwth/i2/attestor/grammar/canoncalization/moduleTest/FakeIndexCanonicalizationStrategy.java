@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanoni
 public class FakeIndexCanonicalizationStrategy implements IndexCanonizationStrategy {
 
 	@Override
-	public void canonizeStack(HeapConfiguration hc) {
+	public void canonizeIndex(HeapConfiguration hc) {
 		// do nothing
 	}
 

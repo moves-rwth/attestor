@@ -47,7 +47,7 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 				try {
 					materializedStacks = indexMaterializationStrategy
 							.getMaterializedCloneWith(inputGraph, 
-													  indexedRespose.getStackSymbolToMaterialize(), 
+													  indexedRespose.getIndexSymbolToMaterialize(), 
 													  materialization );
 					 materializedGraphs.addAll( super.applyGrammarResponseTo(materializedStacks, 
 							 edgeId, 

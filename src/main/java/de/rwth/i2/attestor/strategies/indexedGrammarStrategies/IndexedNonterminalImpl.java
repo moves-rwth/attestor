@@ -69,7 +69,7 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	}
 
 	@Override
-    public IndexedNonterminal getWithStack(List<IndexSymbol> stack){
+    public IndexedNonterminal getWithIndex(List<IndexSymbol> stack){
         return new IndexedNonterminalImpl(generalNonterminal, stack);
     }
 

@@ -1403,7 +1403,7 @@ public final class ExampleHcImplFactory {
 	
 	public static HeapConfiguration getInput_DifferentStacks_2() {
 
-		IndexSymbol concreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("s", false);
+		IndexSymbol concreteIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
 		List<IndexSymbol> stack = new ArrayList<>();
 		stack.add(concreteIndexSymbol);

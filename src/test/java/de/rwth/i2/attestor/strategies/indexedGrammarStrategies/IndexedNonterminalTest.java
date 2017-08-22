@@ -28,8 +28,8 @@ public class IndexedNonterminalTest {
 
 	@Before
 	public void testIndexedNonterminal() {
-		s = ConcreteIndexSymbol.getStackSymbol( "s", false );
-		bottom = ConcreteIndexSymbol.getStackSymbol( "Z", true );
+		s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
+		bottom = ConcreteIndexSymbol.getIndexSymbol( "Z", true );
 		ArrayList<IndexSymbol> stack = new ArrayList<>();
 		stack.add( s );
 		stack.add( s );
@@ -58,7 +58,7 @@ public class IndexedNonterminalTest {
 	
 	@Test
 	public void testStackStartsWithDifferent() {
-		ConcreteIndexSymbol s2 = ConcreteIndexSymbol.getStackSymbol( "s2", false );
+		ConcreteIndexSymbol s2 = ConcreteIndexSymbol.getIndexSymbol( "s2", false );
 		List<IndexSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
 		prefix.add( s2 );

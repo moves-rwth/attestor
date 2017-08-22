@@ -212,7 +212,7 @@ public class GrammarTest {
 	}
 
 	private static IndexedNonterminal constructConcreteIndexedNonterminal() {
-		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( bottom );
 		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
@@ -226,7 +226,7 @@ public class GrammarTest {
 
 	private static Nonterminal constructInstantiableIndexedNonterminal() {
 		final IndexVariable var = IndexVariable.getGlobalInstance();
-		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
+		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
 		lhsStack.add( s);
 		lhsStack.add(var);

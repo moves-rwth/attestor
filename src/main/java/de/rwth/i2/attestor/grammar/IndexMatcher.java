@@ -1,33 +1,30 @@
 package de.rwth.i2.attestor.grammar;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.Pair;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class IndexMatcher {
 	
 	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<IndexSymbol>, List<IndexSymbol>>>
 		knownMatches = new HashMap<>();
 
-	private IndexMaterializationStrategy stackGrammar;
+	private IndexMaterializationStrategy indexGrammar;
 	
-	public IndexMatcher(IndexMaterializationStrategy stackGrammar) {
-		this.stackGrammar = stackGrammar;
+	public IndexMatcher(IndexMaterializationStrategy indexGrammar) {
+		this.indexGrammar = indexGrammar;
 	}
 
 	/**
 	 * Determines whether there is a materialization and an instantiation such that the
-	 * stacks of the given nonterminals are equal.
+	 * indices of the given nonterminals are equal.
 	 * 
 	 * @param materializableNonterminal a nonterminal with a (possibly) abstract index
 	 * @param instantiableNonterminal a nonterminal with a (possibly) instantiable index
 	 * @return true if there is a materialization and an instantiation such that the
-	 * stacks of the given nonterminals are equal.
+	 * indices of the given nonterminals are equal.
 	 */
 	public boolean canMatch(IndexedNonterminal materializableNonterminal, 
 								   IndexedNonterminal instantiableNonterminal ) {
@@ -41,7 +38,7 @@ public class IndexMatcher {
 	}
 
 	/**
-	 * Determines whether the materializableNonterminal has to be materialized to achieve equal stacks
+	 * Determines whether the materializableNonterminal has to be materialized to achieve equal indices
 	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
 	 * @return true, if the materialization is non-empty
@@ -61,7 +58,7 @@ public class IndexMatcher {
 
 	/**
 	 * The sequence of symbols with which to replace the abstract index symbol at the end
-	 * of the index of the materializableNonterminal in order to achieve equal stacks
+	 * of the index of the materializableNonterminal in order to achieve equal indices
 	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
 	 * @return a list of index symbols
@@ -84,7 +81,7 @@ public class IndexMatcher {
 																				IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastStackSymbol();
+			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastIndexSymbol();
 
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
@@ -93,8 +90,8 @@ public class IndexMatcher {
 	}
 
 	/**
-	 * Determines whether the materializableNonterminal has to be instantiated to achieve equal stacks
-	 * (can be false for concrete stacks)
+	 * Determines whether the materializableNonterminal has to be instantiated to achieve equal indices
+	 * (can be false for concrete indices)
 	 * @param materializableNonterminal the nonterminal in the graph which shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs of a rule
 	 * @return true, if the instantiationSequence is non-empty
@@ -113,7 +110,7 @@ public class IndexMatcher {
 
 	/**
 	  The sequence of symbols with which to replace the index variable at the end
-	 * of the index of the instantiableNonterminal in order to achieve equal stacks
+	 * of the index of the instantiableNonterminal in order to achieve equal indices
 	 * @param materializableNonterminal the nonterminal in the graph that shall be replaced
 	 * @param instantiableNonterminal the nonterminal representing the lhs in the grammar
 	 * @return The list of index symbols
@@ -166,8 +163,8 @@ public class IndexMatcher {
 					if( ! necessaryMaterialization.isEmpty() ){
 						necessaryMaterialization.remove( necessaryMaterialization.size() -1 );
 					}
-					if( stackGrammar.canCreateSymbolFor( s1, s2 ) ){
-					necessaryMaterialization.addAll( stackGrammar.getRuleCreatingSymbolFor( s1, s2 ) );
+					if( indexGrammar.canCreateSymbolFor( s1, s2 ) ){
+					necessaryMaterialization.addAll( indexGrammar.getRuleCreatingSymbolFor( s1, s2 ) );
 					}else{
 						addNegativeResultToKnownMatches( requestPair );
 						return;
