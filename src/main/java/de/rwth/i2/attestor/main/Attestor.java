@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
@@ -26,6 +27,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
 import de.rwth.i2.attestor.io.htmlExport.GrammarToHtmlExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.main.settings.*;
@@ -510,6 +512,28 @@ public class Attestor {
 	}
 
 	private void reportPhase() throws IOException {
+
+	    if(settings.output().isExportGrammar() ){
+	        String location = settings.output().getLocationForGrammar();
+
+            // Copy necessary libraries
+            // TODO: create zip
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
+                    ".zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            // Generate JSON files
+            GrammarExporter exporter = new JsonGrammarExporter();
+           exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
+
+            logger.info("Grammar exported to '"
+                    + location
+            );
+
+
+        }
 
 		if(settings.output().isExportStateSpace() ) {
 
