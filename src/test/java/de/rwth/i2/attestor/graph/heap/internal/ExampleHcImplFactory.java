@@ -1383,17 +1383,17 @@ public final class ExampleHcImplFactory {
 				.build();
 	}
 
-	public static HeapConfiguration getInput_DifferentStacks_1() {
+	public static HeapConfiguration getInput_DifferentIndices_1() {
 
 		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(abstractIndexSymbol);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(abstractIndexSymbol);
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1401,19 +1401,19 @@ public final class ExampleHcImplFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_DifferentStacks_2() {
+	public static HeapConfiguration getInput_DifferentIndices_2() {
 
 		IndexSymbol concreteIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(concreteIndexSymbol);
-		stack.add(abstractIndexSymbol);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(concreteIndexSymbol);
+		index.add(abstractIndexSymbol);
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)

@@ -30,16 +30,16 @@ public class IndexedNonterminalTest {
 	public void testIndexedNonterminal() {
 		s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		bottom = ConcreteIndexSymbol.getIndexSymbol( "Z", true );
-		ArrayList<IndexSymbol> stack = new ArrayList<>();
-		stack.add( s );
-		stack.add( s );
-		stack.add( s );
-		stack.add( bottom );
-		testNonterminal = new IndexedNonterminalImpl( "Test", 3, new boolean [] {false,false,false}, stack );
+		ArrayList<IndexSymbol> index = new ArrayList<>();
+		index.add( s );
+		index.add( s );
+		index.add( s );
+		index.add( bottom );
+		testNonterminal = new IndexedNonterminalImpl( "Test", 3, new boolean [] {false,false,false}, index );
 	}
 
 	@Test
-	public void testStackStartsWithPrefix() {
+	public void testIndexStartsWithPrefix() {
 		List<IndexSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
 		prefix.add( s );
@@ -47,7 +47,7 @@ public class IndexedNonterminalTest {
 	}
 	
 	@Test
-	public void testStackStartsWithSame() {
+	public void testIndexStartsWithSame() {
 		List<IndexSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
 		prefix.add( s );
@@ -57,7 +57,7 @@ public class IndexedNonterminalTest {
 	}
 	
 	@Test
-	public void testStackStartsWithDifferent() {
+	public void testIndexStartsWithDifferent() {
 		ConcreteIndexSymbol s2 = ConcreteIndexSymbol.getIndexSymbol( "s2", false );
 		List<IndexSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
@@ -67,7 +67,7 @@ public class IndexedNonterminalTest {
 	}
 	
 	@Test
-	public void testStackStartsWithLong() {
+	public void testIndexStartsWithLong() {
 		List<IndexSymbol> prefix = new ArrayList<>();
 		prefix.add( s );
 		prefix.add( s );
@@ -78,15 +78,15 @@ public class IndexedNonterminalTest {
 	}
 
 	@Test
-	public void testStackEndsWith() {
+	public void testIndexEndsWith() {
 		assertTrue( testNonterminal.getIndex().endsWith( bottom ) );
 		assertFalse( testNonterminal.getIndex().endsWith( s ));
 		
 	}
 	
 	@Test
-	public void testGetWithShortendedStack(){
-		IndexedNonterminal res = testNonterminal.getWithShortenedStack();
+	public void testGetWithShortendedIndex(){
+		IndexedNonterminal res = testNonterminal.getWithShortenedIndex();
 
 		assertTrue(testNonterminal.getIndex().endsWith(bottom));
 		assertTrue(res.getIndex().endsWith(s));
@@ -99,8 +99,8 @@ public class IndexedNonterminalTest {
 	}
 	
 	@Test
-	public void testGetWithProlongedStack(){
-		IndexedNonterminal res = testNonterminal.getWithProlongedStack( s );
+	public void testGetWithProlongedIndex(){
+		IndexedNonterminal res = testNonterminal.getWithProlongedIndex( s );
 
 		assertTrue(testNonterminal.getIndex().endsWith(bottom));
 		assertTrue(res.getIndex().endsWith(s));
@@ -116,14 +116,14 @@ public class IndexedNonterminalTest {
 
 
 	@Test
-	public void testHasConcreteStack() {
-		assertTrue( testNonterminal.getIndex().hasConcreteStack() );
-		IndexedNonterminal res = testNonterminal.getWithShortenedStack();
-		assertFalse( res.getIndex().hasConcreteStack() );
+	public void testHasConcreteIndex() {
+		assertTrue( testNonterminal.getIndex().hasConcreteIndex() );
+		IndexedNonterminal res = testNonterminal.getWithShortenedIndex();
+		assertFalse( res.getIndex().hasConcreteIndex() );
 	}
 
 	@Test
-	public void testStackSize() {
+	public void testIndexSize() {
 		assertEquals( 4, testNonterminal.getIndex().size() );
 	}
 }

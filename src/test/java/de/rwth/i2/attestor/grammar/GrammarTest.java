@@ -213,9 +213,9 @@ public class GrammarTest {
 
 	private static IndexedNonterminal constructConcreteIndexedNonterminal() {
 		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( bottom );
-		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( bottom );
+		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
 	}
 
 	private static Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal(){
@@ -227,10 +227,10 @@ public class GrammarTest {
 	private static Nonterminal constructInstantiableIndexedNonterminal() {
 		final IndexVariable var = IndexVariable.getGlobalInstance();
 		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( s);
-		lhsStack.add(var);
-		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( s);
+		lhsIndex.add(var);
+		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
 	}
 
 	private static Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {

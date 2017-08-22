@@ -7,21 +7,18 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 
 public class IndexMatcherTest {
 
-	private static final AbstractIndexSymbol ABSTRACT_STACK_SYMBOL = AbstractIndexSymbol.get("X");
+	private static final AbstractIndexSymbol ABSTRACT_INDEX_SYMBOL = AbstractIndexSymbol.get("X");
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{false,false};
 	private static final int NONTERMINAL_RANK = 2;
 	private static final String NONTERMINAL_LABEL = "IndexMatcherTest";
@@ -40,12 +37,12 @@ public class IndexMatcherTest {
 
 	@Before
 	public void setUp() throws Exception {
-		IndexMaterializationStrategy stackGrammar = new IndexGrammarForTests();
-		indexMatcher = new IndexMatcher( stackGrammar );
+		IndexMaterializationStrategy indexGrammar = new IndexGrammarForTests();
+		indexMatcher = new IndexMatcher( indexGrammar );
 	}
 
 	@Test
-	public void testIdenticalStacks() {
+	public void testIdenticalIndices() {
 		IndexedNonterminal nt1  = createConcreteNonterminal();
 		IndexedNonterminal nt2 = createConcreteNonterminal();
 		
@@ -58,7 +55,7 @@ public class IndexMatcherTest {
 	}
 	
 	@Test
-	public void testInstantiableStack(){
+	public void testInstantiableIndex(){
 		IndexedNonterminal nt1 = createConcreteNonterminal();
 		IndexedNonterminal instantiableNonterminal = createInstantiableNonterminal();
 		
@@ -73,13 +70,13 @@ public class IndexMatcherTest {
 	}
 	
 	@Test
-	public void testMaterializableStack(){
+	public void testMaterializableIndex(){
 		IndexedNonterminal materializableNonterminal = createMaterializableNonterminal();
 		IndexedNonterminal nt2 = createConcreteNonterminal();
 		
 		assertTrue( indexMatcher.canMatch(materializableNonterminal, nt2) );
 		assertTrue( indexMatcher.needsMaterialization(materializableNonterminal, nt2) );
-		assertEquals( ABSTRACT_STACK_SYMBOL, 
+		assertEquals( ABSTRACT_INDEX_SYMBOL, 
 					  indexMatcher.getMaterializationRule(materializableNonterminal, nt2).first());
 		assertThat( indexMatcher.getMaterializationRule(materializableNonterminal, nt2).second(),
 				contains( a, s, bottom ));
@@ -89,44 +86,44 @@ public class IndexMatcherTest {
 	}
 	
 	@Test
-	public void testMaterializableAndInstantiableStack(){
+	public void testMaterializableAndInstantiableIndex(){
 		IndexedNonterminal materializableNonterminal = createMaterializableNonterminal();
 		IndexedNonterminal nt2 = createInstantiableNonterminal();
 		
 		assertTrue( indexMatcher.canMatch(materializableNonterminal, nt2) );
 		assertTrue( indexMatcher.needsMaterialization(materializableNonterminal, nt2) );
-		assertEquals( ABSTRACT_STACK_SYMBOL, 
+		assertEquals( ABSTRACT_INDEX_SYMBOL, 
 					  indexMatcher.getMaterializationRule(materializableNonterminal, nt2).first());
 		assertThat( indexMatcher.getMaterializationRule(materializableNonterminal, nt2).second(),
-				contains( a, ABSTRACT_STACK_SYMBOL ));
+				contains( a, ABSTRACT_INDEX_SYMBOL ));
 		assertTrue( indexMatcher.needsInstantiation(materializableNonterminal, nt2) );
 		assertThat( indexMatcher.getNecessaryInstantiation(materializableNonterminal, nt2),
-				      contains( ABSTRACT_STACK_SYMBOL));
+				      contains( ABSTRACT_INDEX_SYMBOL));
 	}
 
 	private IndexedNonterminal createMaterializableNonterminal() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add( ABSTRACT_STACK_SYMBOL );
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add( ABSTRACT_INDEX_SYMBOL );
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
 	}
 
 	private IndexedNonterminal createInstantiableNonterminal() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(a);
-		stack.add( IndexVariable.getGlobalInstance() );
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(a);
+		index.add( IndexVariable.getGlobalInstance() );
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
 	}
 
 	private IndexedNonterminal createConcreteNonterminal() {
 			
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(a);
-		stack.add(s);
-		stack.add(bottom);
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, REDUCTION_TENTACLES, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(a);
+		index.add(s);
+		index.add(bottom);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, REDUCTION_TENTACLES, index);
 	}
 
 }

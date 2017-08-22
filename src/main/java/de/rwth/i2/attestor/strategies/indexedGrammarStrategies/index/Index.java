@@ -41,14 +41,14 @@ public class Index {
         return indexSymbols.get( indexSymbols.size() -1 );
     }
 
-    public Index getWithShortenedStack(){
+    public Index getWithShortenedIndex(){
         assert( indexSymbols.size() > 0 );
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
         indexCopy.remove(indexCopy.size() -1 );
         return new Index(indexCopy);
     }
 
-    public Index getWithProlongedStack(IndexSymbol s ){
+    public Index getWithProlongedIndex(IndexSymbol s ){
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
         indexCopy.add(s);
         return new Index(indexCopy);
@@ -64,7 +64,7 @@ public class Index {
         return new Index(indexCopy);
     }
 
-    public Index getWithProlongedStack(List<IndexSymbol> postfix ){
+    public Index getWithProlongedIndex(List<IndexSymbol> postfix ){
         assert( this.size() > 0 );
         IndexSymbol lastSymbol = this.getLastIndexSymbol();
         assert( !( lastSymbol instanceof ConcreteIndexSymbol) );
@@ -76,7 +76,7 @@ public class Index {
         return new Index(indexCopy);
     }
 
-    public boolean hasConcreteStack(){
+    public boolean hasConcreteIndex(){
         return (! indexSymbols.isEmpty() ) && this.indexSymbols.get( indexSymbols.size() -1 ).isBottom();
     }
 
@@ -88,13 +88,13 @@ public class Index {
         return indexSymbols.isEmpty();
     }
 
-    public boolean matchStack( Index other ){
-        List<IndexSymbol> otherStack = other.indexSymbols;
-        for( int i = 0; i < this.size() && i < otherStack.size(); i++ ){
+    public boolean matchIndex( Index other ){
+        List<IndexSymbol> otherIndex = other.indexSymbols;
+        for( int i = 0; i < this.size() && i < otherIndex.size(); i++ ){
             IndexSymbol s1 = this.get( i );
-            IndexSymbol s2 = otherStack.get( i );
+            IndexSymbol s2 = otherIndex.get( i );
             if( s1 instanceof IndexVariable){
-                return ( (IndexVariable) s1 ).matchInstantiation( otherStack.subList( i, otherStack.size() ) );
+                return ( (IndexVariable) s1 ).matchInstantiation( otherIndex.subList( i, otherIndex.size() ) );
             }else if( s2 instanceof IndexVariable){
                 return ( (IndexVariable) s2 ).matchInstantiation( this.indexSymbols.subList( i, indexSymbols.size() ) );
             }
@@ -103,7 +103,7 @@ public class Index {
             }
         }
 
-        return otherStack.size() == this.size();
+        return otherIndex.size() == this.size();
     }
 
     public IndexSymbol get(int pos ){

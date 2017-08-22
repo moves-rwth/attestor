@@ -221,8 +221,8 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 				int e = edgeIter.next();
 				
 				IndexedNonterminal label = (IndexedNonterminal) uninstantiatedRhs.labelOf(e);
-				if( ! label.getIndex().hasConcreteStack() ){
-					builder.replaceNonterminal(e, label.getWithProlongedStack( necessaryInstantiation ));
+				if( ! label.getIndex().hasConcreteIndex() ){
+					builder.replaceNonterminal(e, label.getWithProlongedIndex( necessaryInstantiation ));
 				}
 			}
 			HeapConfiguration instantiatedRule = builder.build();

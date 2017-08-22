@@ -30,9 +30,9 @@ class ExpectedHCs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(bottom);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
@@ -42,15 +42,15 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_TwoElementStack(){
+	public static HeapConfiguration getExpected_TwoElementIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(bottom);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
@@ -60,15 +60,15 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_StackWithVar(){
+	public static HeapConfiguration getExpected_IndexWithVar(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol var = IndexVariable.getGlobalInstance();
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(var);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(var);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
@@ -78,15 +78,15 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_StackWithAbs(){
+	public static HeapConfiguration getExpected_IndexWithAbs(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(abs);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
@@ -96,15 +96,15 @@ class ExpectedHCs {
 					.build();
 	}
 
-	public static HeapConfiguration getExpected_AbstractStack(){
+	public static HeapConfiguration getExpected_AbstractIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(abs);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
@@ -133,9 +133,9 @@ class ExpectedHCs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		IndexSymbol var = IndexVariable.getGlobalInstance();
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(var);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, stack);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(var);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		

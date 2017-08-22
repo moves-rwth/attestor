@@ -50,21 +50,21 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 																				aggressiveReturnAbstraction);
 		
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
-		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();
-		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
-		EmbeddingIndexChecker stackChecker = 
-				new EmbeddingIndexChecker( stackMatcher, 
+		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
+		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+		EmbeddingIndexChecker indexChecker = 
+				new EmbeddingIndexChecker( indexMatcher, 
 											materializer );
 		
-		matchingHandler = new IndexedMatchingHandler(fakeIndexStrategy,checkerProvider, stackChecker);
+		matchingHandler = new IndexedMatchingHandler(fakeIndexStrategy,checkerProvider, indexChecker);
 		
 	}
 
 	@Test
 	public void test() {
 		
-		List<IndexSymbol> lhsStack = makeInstantiable(getStackPrefix());
-		Nonterminal lhs = getNonterminal( lhsStack  );
+		List<IndexSymbol> lhsIndex = makeInstantiable(getIndexPrefix());
+		Nonterminal lhs = getNonterminal( lhsIndex  );
 		HeapConfiguration rhs = getPattern();
 		Grammar grammar = Grammar.builder().addRule( lhs, rhs ).build();
 		
@@ -82,32 +82,32 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 
 
 
-	private List<IndexSymbol> getEmptyStack() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		return stack;
+	private List<IndexSymbol> getEmptyIndex() {
+		List<IndexSymbol> index = new ArrayList<>();
+		return index;
 	}
 	
-	private List<IndexSymbol> getStackPrefix() {
-		List<IndexSymbol> stack = getEmptyStack();
-		stack.add( DefaultIndexMaterialization.SYMBOL_s );
-		return stack;
+	private List<IndexSymbol> getIndexPrefix() {
+		List<IndexSymbol> index = getEmptyIndex();
+		index.add( DefaultIndexMaterialization.SYMBOL_s );
+		return index;
 	}
 
-	private List<IndexSymbol> makeConcrete( List<IndexSymbol> stack ){
-		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
-		return stackCopy;
+	private List<IndexSymbol> makeConcrete( List<IndexSymbol> index ){
+		List<IndexSymbol> indexCopy = new ArrayList<>( index );
+		indexCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
+		return indexCopy;
 	}
 	
-	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> stack ){
-		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( IndexVariable.getGlobalInstance() );
-		return stackCopy;
+	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> index ){
+		List<IndexSymbol> indexCopy = new ArrayList<>( index );
+		indexCopy.add( IndexVariable.getGlobalInstance() );
+		return indexCopy;
 	}
 
 
-	private Nonterminal getNonterminal( List<IndexSymbol> stack ) {
-		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, stack);
+	private Nonterminal getNonterminal( List<IndexSymbol> index ) {
+		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, index);
 	}
 
 
@@ -117,7 +117,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(TYPE, 3, nodes)
-				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyStack()) ))
+				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyIndex()) ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()
@@ -133,7 +133,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(TYPE, 3, nodes)
-				.addNonterminalEdge( getNonterminal( makeConcrete(getEmptyStack()) ))
+				.addNonterminalEdge( getNonterminal( makeConcrete(getEmptyIndex()) ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()
@@ -146,7 +146,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc =  hc.builder().addNodes(TYPE, 2, nodes)
-				.addNonterminalEdge( getNonterminal( makeConcrete(getStackPrefix()) ))
+				.addNonterminalEdge( getNonterminal( makeConcrete(getIndexPrefix()) ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()

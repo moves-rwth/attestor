@@ -137,28 +137,28 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 
 	    if(last.equals("Z")) {
 	        return originalNonterminal
-                    .getWithShortenedStack() // Z
-                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
+                    .getWithShortenedIndex() // Z
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("X")) {
 	        return originalNonterminal
-                    .getWithShortenedStack() // X
-                    .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
+                    .getWithShortenedIndex() // X
+                    .getWithShortenedIndex() // s
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("C")) {
             return originalNonterminal
-                    .getWithShortenedStack() // C
-                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
+                    .getWithShortenedIndex() // C
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         if(last.equals("Y")) {
             return originalNonterminal
-                    .getWithShortenedStack() // Y
-                    .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
+                    .getWithShortenedIndex() // Y
+                    .getWithShortenedIndex() // s
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         throw new IllegalStateException("Unknown index symbol.");

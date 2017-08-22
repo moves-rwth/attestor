@@ -2,10 +2,10 @@ package de.rwth.i2.attestor.graph.morphism;
 
 import static org.junit.Assert.assertFalse;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -131,12 +131,12 @@ public class IsomorphismCheckerTest {
 	}
 	
 	@Test
-	public void testHeapsWithDifferentStacks(){
-		HeapConfiguration oneStack = ExampleHcImplFactory.getInput_DifferentStacks_1();
-		HeapConfiguration otherStack = ExampleHcImplFactory.getInput_DifferentStacks_2();
+	public void testHeapsWithDifferentIndices(){
+		HeapConfiguration oneIndex = ExampleHcImplFactory.getInput_DifferentIndices_1();
+		HeapConfiguration otherIndex = ExampleHcImplFactory.getInput_DifferentIndices_2();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
-		checker.run( (Graph) oneStack, (Graph) otherStack);
+		checker.run( (Graph) oneIndex, (Graph) otherIndex);
 		assertFalse(checker.hasMorphism());
 	}
 	

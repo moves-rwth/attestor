@@ -121,11 +121,11 @@ public class IndexMaterializationStrategy {
 			List<IndexSymbol> inputMaterializationPostfix) throws CannotMaterializeException {
 		
 		
-		if( nonterminalToMaterialize.getIndex().hasConcreteStack() ){
+		if( nonterminalToMaterialize.getIndex().hasConcreteIndex() ){
 			throw new CannotMaterializeException( nonterminalToMaterialize.toString()+ "has a concrete stack" );
 		}
 
-		return	nonterminalToMaterialize.getWithProlongedStack( inputMaterializationPostfix );
+		return	nonterminalToMaterialize.getWithProlongedIndex( inputMaterializationPostfix );
 	}
 
 

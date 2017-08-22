@@ -67,10 +67,10 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
                                                               IndexSymbol desiredIndexSymbol,
                                                               IndexSymbol originalIndexSymbol) {
 
-        IndexedNonterminal result = nonterminal.getWithShortenedStack().
-        											getWithProlongedStack(desiredIndexSymbol);
+        IndexedNonterminal result = nonterminal.getWithShortenedIndex().
+        											getWithProlongedIndex(desiredIndexSymbol);
         if(!desiredIndexSymbol.isBottom()) {
-            result = result.getWithProlongedStack(originalIndexSymbol);
+            result = result.getWithProlongedIndex(originalIndexSymbol);
         }
         return  result;
     }
@@ -109,17 +109,17 @@ public class DefaultIndexMaterialization implements IndexMaterializationStrategy
             int edge = iter.next();
             IndexedNonterminal l = (IndexedNonterminal) heapConfiguration.labelOf(edge);
 
-            assert( !l.getIndex().hasConcreteStack() || !l.getIndex().endsWith(indexSymbol) );
+            assert( !l.getIndex().hasConcreteIndex() || !l.getIndex().endsWith(indexSymbol) );
         }
     }
 
 
     @Override
 	public IndexedNonterminal materializeStack( IndexedNonterminal nt, IndexSymbol s ) {
-		assert( ! nt.getIndex().hasConcreteStack() );
-		nt = nt.getWithShortenedStack().getWithProlongedStack( s );
+		assert( ! nt.getIndex().hasConcreteIndex() );
+		nt = nt.getWithShortenedIndex().getWithProlongedIndex( s );
 		if( ! s.isBottom() ){
-			nt = nt.getWithProlongedStack( AbstractIndexSymbol.get("X") );
+			nt = nt.getWithProlongedIndex( AbstractIndexSymbol.get("X") );
 		}
 		return nt;		
 	}

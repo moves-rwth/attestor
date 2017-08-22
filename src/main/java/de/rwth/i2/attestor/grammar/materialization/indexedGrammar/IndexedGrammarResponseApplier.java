@@ -43,13 +43,13 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 			 
 			 for( List<IndexSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
 				 	 
-				 HeapConfiguration materializedStacks;
+				 HeapConfiguration materializedIndices;
 				try {
-					materializedStacks = indexMaterializationStrategy
+					materializedIndices = indexMaterializationStrategy
 							.getMaterializedCloneWith(inputGraph, 
 													  indexedRespose.getIndexSymbolToMaterialize(), 
 													  materialization );
-					 materializedGraphs.addAll( super.applyGrammarResponseTo(materializedStacks, 
+					 materializedGraphs.addAll( super.applyGrammarResponseTo(materializedIndices, 
 							 edgeId, 
 							 new DefaultGrammarResponse( indexedRespose
 									 .getRulesForMaterialization(materialization))) ); 

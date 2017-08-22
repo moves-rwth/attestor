@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.Pair;
 
 /**
- * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in stackVariable).
+ * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in indexVariable).
  * In this case, always returns materialization: MATERIALIZATION and instantiation INSTANTIATION
  * both globally accessible.
  * @author Hannah
@@ -47,7 +47,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	public boolean canMatch(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal ){
 		
-		return ! instantiableNonterminal.getIndex().hasConcreteStack();
+		return ! instantiableNonterminal.getIndex().hasConcreteIndex();
 	}
 	
 	public boolean needsMaterialization(IndexedNonterminal materializableNonterminal, 

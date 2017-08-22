@@ -38,10 +38,10 @@ public class BalancedTreeGrammar{
 	
 	private static void addRuleBalanced(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getGlobalInstance();
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
-		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
+		lhsIndex.add(var);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 		
 		HeapConfiguration rhs = createRuleBalanced();
 		
@@ -78,11 +78,11 @@ public class BalancedTreeGrammar{
 		IndexVariable var = IndexVariable.getGlobalInstance();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( s );
-		lhsStack.add( s );
-		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( s );
+		lhsIndex.add( s );
+		lhsIndex.add(var);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 		
 		HeapConfiguration rhs = createUnbalancedRuleLeft();
 		
@@ -124,11 +124,11 @@ public class BalancedTreeGrammar{
 		IndexVariable var = IndexVariable.getGlobalInstance();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( s );
-		lhsStack.add( s );
-		lhsStack.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( s );
+		lhsIndex.add( s );
+		lhsIndex.add(var);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 		
 		HeapConfiguration rhs = createUnbalancedRuleRight();
 		
@@ -168,9 +168,9 @@ public class BalancedTreeGrammar{
 	private static void addBalancedLeafRule(GrammarBuilder builder){
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( bottom );
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( bottom );
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 		
 		HeapConfiguration rhs = createBalancedLeafRule();
 		
@@ -193,12 +193,12 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addLeftLeafRule(GrammarBuilder builder){
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		lhsStack.add( s );
-		lhsStack.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		lhsIndex.add( s );
+		lhsIndex.add(bottom);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 
 		HeapConfiguration rhs = createLeftLeafRule();
 		
@@ -232,10 +232,10 @@ public class BalancedTreeGrammar{
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
-		ArrayList<IndexSymbol> lhsStack = new ArrayList<>();
-		lhsStack.add( s );
-		lhsStack.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsStack );
+		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
+		lhsIndex.add( s );
+		lhsIndex.add(bottom);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
 
 		HeapConfiguration rhs = createRightLeafRule();
 		

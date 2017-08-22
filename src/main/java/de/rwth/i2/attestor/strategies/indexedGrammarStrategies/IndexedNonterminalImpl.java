@@ -16,11 +16,11 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	public IndexedNonterminalImpl(String label,
                                   int rank,
                                   boolean[] isReductionTentacle,
-                                  List<IndexSymbol> stack){
+                                  List<IndexSymbol> index){
 
 		this.generalNonterminal = GeneralNonterminal.getNonterminal( label, rank, isReductionTentacle );
 
-		this.index = new Index(stack);
+		this.index = new Index(index);
 	}
 
 
@@ -47,14 +47,14 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
     }
 
     @Override
-    public IndexedNonterminal getWithShortenedStack(){
-	    return new IndexedNonterminalImpl(generalNonterminal, index.getWithShortenedStack());
+    public IndexedNonterminal getWithShortenedIndex(){
+	    return new IndexedNonterminalImpl(generalNonterminal, index.getWithShortenedIndex());
 	}
 
 	@Override
-    public IndexedNonterminal getWithProlongedStack(IndexSymbol s){
+    public IndexedNonterminal getWithProlongedIndex(IndexSymbol s){
 
-		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedStack(s));
+		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(s));
 	}
 
 	@Override
@@ -63,14 +63,14 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	}
 
 	@Override
-    public IndexedNonterminal getWithProlongedStack(List<IndexSymbol> postfix){
+    public IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix){
 
-        return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedStack(postfix));
+        return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(postfix));
 	}
 
 	@Override
-    public IndexedNonterminal getWithIndex(List<IndexSymbol> stack){
-        return new IndexedNonterminalImpl(generalNonterminal, stack);
+    public IndexedNonterminal getWithIndex(List<IndexSymbol> index){
+        return new IndexedNonterminalImpl(generalNonterminal, index);
     }
 
 	@Override

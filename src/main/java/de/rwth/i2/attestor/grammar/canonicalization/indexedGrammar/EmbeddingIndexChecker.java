@@ -75,7 +75,7 @@ public class EmbeddingIndexChecker {
 		pattern = applyInstantiationTo( pattern, instantiation );
 		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
 			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-			lhs = iLhs.getWithProlongedStack(instantiation);
+			lhs = iLhs.getWithProlongedIndex(instantiation);
 		}
 		
 		checkAppliedResult(toAbstract, embedding, pattern);
@@ -107,7 +107,7 @@ public class EmbeddingIndexChecker {
 				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
 				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
 				
-				if( ! materializable.getIndex().matchStack(instantiable.getIndex() ) ) {
+				if( ! materializable.getIndex().matchIndex(instantiable.getIndex() ) ) {
 					throw new CannotMatchException();
 				}
 			}
@@ -250,7 +250,7 @@ public class EmbeddingIndexChecker {
 		IndexSymbol lastStackSymbol = materializable.getIndex().getLastIndexSymbol();
 		if( lastStackSymbol instanceof AbstractIndexSymbol ){
 			if( currentMaterializations.containsKey(lastStackSymbol) ){
-				return materializable.getWithProlongedStack( currentMaterializations.get(lastStackSymbol) );
+				return materializable.getWithProlongedIndex( currentMaterializations.get(lastStackSymbol) );
 			}
 		}
 		return materializable;
@@ -260,7 +260,7 @@ public class EmbeddingIndexChecker {
 
 		IndexSymbol lastSymbol = instantiable.getIndex().getLastIndexSymbol();
 		if( ! instantiation.isEmpty() && lastSymbol instanceof IndexVariable ) {
-			return instantiable.getWithProlongedStack(instantiation);
+			return instantiable.getWithProlongedIndex(instantiation);
 		}else {
 			return instantiable;
 		}

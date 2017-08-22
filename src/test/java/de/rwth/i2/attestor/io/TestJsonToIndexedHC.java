@@ -3,15 +3,13 @@ package de.rwth.i2.attestor.io;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 
 public class TestJsonToIndexedHC {
 
@@ -84,7 +82,7 @@ public class TestJsonToIndexedHC {
 	}
 	
 	@Test
-	public void testTwoElementStack() {
+	public void testTwoElementIndex() {
 		String graphEncoding = "{\n"
 				+"	\"nodes\":[\n"
 				+"		{\n"
@@ -106,11 +104,11 @@ public class TestJsonToIndexedHC {
 		HeapConfiguration parsed 
 		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
 	
-		assertEquals( ExpectedHCs.getExpected_TwoElementStack(), parsed );
+		assertEquals( ExpectedHCs.getExpected_TwoElementIndex(), parsed );
 	}
 	
 	@Test
-	public void testStackWithVar() {
+	public void testIndexWithVar() {
 		String graphEncoding = "{\n"
 				+"	\"nodes\":[\n"
 				+"		{\n"
@@ -131,11 +129,11 @@ public class TestJsonToIndexedHC {
 		
 		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
 	
-		assertEquals( ExpectedHCs.getExpected_StackWithVar(), parsed );
+		assertEquals( ExpectedHCs.getExpected_IndexWithVar(), parsed );
 	}
 	
 	@Test
-	public void testAbstractStack() {
+	public void testAbstractIndex() {
 		String graphEncoding = "{\n"
 				+"	\"nodes\":[\n"
 				+"		{\n"
@@ -156,11 +154,11 @@ public class TestJsonToIndexedHC {
 		
 		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
 	
-		assertEquals( ExpectedHCs.getExpected_StackWithAbs(), parsed );
+		assertEquals( ExpectedHCs.getExpected_IndexWithAbs(), parsed );
 	}
 	
 	@Test
-	public void testFail_AbstractStack() {
+	public void testFail_AbstractIndex() {
 		try{
 		String graphEncoding = "{\n"
 				+"	\"nodes\":[\n"
@@ -216,7 +214,7 @@ public class TestJsonToIndexedHC {
 	}
 	
 	@Test
-	public void testFail_StackVariable() {
+	public void testFail_IndexVariable() {
 		try{
 		String graphEncoding = "{\n"
 				+"	\"nodes\":[\n"

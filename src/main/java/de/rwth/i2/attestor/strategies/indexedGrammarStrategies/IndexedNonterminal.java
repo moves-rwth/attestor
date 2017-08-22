@@ -11,9 +11,9 @@ public interface IndexedNonterminal extends Nonterminal {
 
     Index getIndex();
 
-    IndexedNonterminal getWithShortenedStack();
+    IndexedNonterminal getWithShortenedIndex();
 
-    IndexedNonterminal getWithProlongedStack(IndexSymbol s);
+    IndexedNonterminal getWithProlongedIndex(IndexSymbol s);
 
     IndexedNonterminal getWithInstantiation();
 
@@ -23,7 +23,7 @@ public interface IndexedNonterminal extends Nonterminal {
      * @param postfix The postfix to prolong the index
      * @return The nonterminal with prolonged index
      */
-    IndexedNonterminal getWithProlongedStack(List<IndexSymbol> postfix);
+    IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix);
 
     IndexedNonterminal getWithIndex(List<IndexSymbol> stack);
 }

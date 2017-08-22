@@ -59,16 +59,16 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testWithIdenticalStacks() throws CannotMatchException{
-		List<IndexSymbol> concreteStack = getConcreteStack();
-		HeapConfiguration toAbstract = getInputWithStack( concreteStack );
-		HeapConfiguration pattern = getInputWithStack( concreteStack );
-		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
+		List<IndexSymbol> concreteStack = getConcreteIndex();
+		HeapConfiguration toAbstract = getInputWithIndex( concreteStack );
+		HeapConfiguration pattern = getInputWithIndex( concreteStack );
+		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertEquals( getInputWithStack( concreteStack ), res.getMaterializedToAbstract() );
-		assertEquals( getMatchingNonterminalWithStack( concreteStack), res.getInstantiatedLhs() );
+		assertEquals( getInputWithIndex( concreteStack ), res.getMaterializedToAbstract() );
+		assertEquals( getMatchingNonterminalWithIndex( concreteStack), res.getInstantiatedLhs() );
 		
 	}
 	
@@ -79,23 +79,23 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testOnlyMaterialization() throws CannotMatchException{
-		List<IndexSymbol> somePrefix = getStackPrefix();
-		List<IndexSymbol> otherPrefix = getOtherStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
+		List<IndexSymbol> otherPrefix = getOtherIndexPrefix();
 		
 		List<IndexSymbol> toMatch = makeAbstract( somePrefix);
 		List<IndexSymbol> reference = makeAbstract( otherPrefix );
-		HeapConfiguration toAbstract = getInputWithStacks( toMatch, reference );
+		HeapConfiguration toAbstract = getInputWithIndices( toMatch, reference );
 		
 		List<IndexSymbol> concreteStack = makeConcrete( somePrefix );		
-		HeapConfiguration pattern = getInputWithStack( concreteStack );
-		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack );
+		HeapConfiguration pattern = getInputWithIndex( concreteStack );
+		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack );
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeConcrete( otherPrefix) ), 
+		assertEquals( getInputWithIndices( makeConcrete( somePrefix ), makeConcrete( otherPrefix) ), 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getMatchingNonterminalWithStack(concreteStack), res.getInstantiatedLhs() );
+		assertEquals( getMatchingNonterminalWithIndex(concreteStack), res.getInstantiatedLhs() );
 	}
 	
 	/**
@@ -106,29 +106,29 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testMaterializationWithDifferentAbstractSymbols() throws CannotMatchException{
-		List<IndexSymbol> somePrefix = getStackPrefix();
-		List<IndexSymbol> otherPrefix = getOtherStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
+		List<IndexSymbol> otherPrefix = getOtherIndexPrefix();
 		
 		List<IndexSymbol> toMatch1 = makeAbstract( somePrefix);
 		List<IndexSymbol> reference1 = makeAbstract( otherPrefix );
 		
 		List<IndexSymbol> toMatch2 = makeOtherAbstract( somePrefix );
 		List<IndexSymbol> reference2 = makeOtherAbstract( otherPrefix );
-		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
+		HeapConfiguration toAbstract = getInputWithIndices( toMatch1, toMatch2, 
 															reference1, reference2 );
 		
 		List<IndexSymbol> concreteStack1 = makeConcrete( somePrefix );
 		List<IndexSymbol> concreteStack2 = makeOtherConcrete( somePrefix );
-		HeapConfiguration pattern = getPatternWithStacks( concreteStack1, concreteStack2 );
-		Nonterminal lhs = getMatchingNonterminalWithStack( concreteStack1 );
+		HeapConfiguration pattern = getPatternWithIndices( concreteStack1, concreteStack2 );
+		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack1 );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertEquals( getInputWithStacks( makeConcrete( somePrefix ), makeOtherConcrete( somePrefix ),
+		assertEquals( getInputWithIndices( makeConcrete( somePrefix ), makeOtherConcrete( somePrefix ),
 										  makeConcrete( otherPrefix), makeOtherConcrete( otherPrefix ) ), 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getMatchingNonterminalWithStack(concreteStack1), res.getInstantiatedLhs() );
+		assertEquals( getMatchingNonterminalWithIndex(concreteStack1), res.getInstantiatedLhs() );
 	}
 	
 	/**
@@ -139,20 +139,20 @@ public class EmbeddingStackCheckerTest {
 	 */
 	@Test
 	public void testIncopatibleMaterialization() {
-		List<IndexSymbol> somePrefix = getStackPrefix();
-		List<IndexSymbol> longerPrefix = getLongerStackPrefix( somePrefix );
+		List<IndexSymbol> somePrefix = getIndexPrefix();
+		List<IndexSymbol> longerPrefix = getLongerIndexPrefix( somePrefix );
 		
-		List<IndexSymbol> toMatch1 = makeAbstract( getEmptyStack() );
-		List<IndexSymbol> toMatch2 = makeAbstract( getEmptyStack() );
-		List<IndexSymbol> reference1 = makeAbstract( getEmptyStack() );
-		List<IndexSymbol> reference2 = makeOtherAbstract( getEmptyStack() );
-		HeapConfiguration toAbstract = getInputWithStacks( toMatch1, toMatch2, 
+		List<IndexSymbol> toMatch1 = makeAbstract( getEmptyIndex() );
+		List<IndexSymbol> toMatch2 = makeAbstract( getEmptyIndex() );
+		List<IndexSymbol> reference1 = makeAbstract( getEmptyIndex() );
+		List<IndexSymbol> reference2 = makeOtherAbstract( getEmptyIndex() );
+		HeapConfiguration toAbstract = getInputWithIndices( toMatch1, toMatch2, 
 															reference1, reference2 );
 		
 		List<IndexSymbol> instantiable1 = makeInstantiable( somePrefix );
 		List<IndexSymbol> instantiable2 = makeInstantiable( longerPrefix );
-		HeapConfiguration pattern = getPatternWithStacks( instantiable1, instantiable2 );
-		Nonterminal lhs = getMatchingNonterminalWithStack( instantiable1 );
+		HeapConfiguration pattern = getPatternWithIndices( instantiable1, instantiable2 );
+		Nonterminal lhs = getMatchingNonterminalWithIndex( instantiable1 );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		try {
@@ -169,35 +169,35 @@ public class EmbeddingStackCheckerTest {
 
 	@Test
 	public void testInstantiation() throws CannotMatchException{
-		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
 		
 		List<IndexSymbol> toMatch = makeConcrete( somePrefix );
-		HeapConfiguration toAbstract = getInputWithStack( toMatch );
+		HeapConfiguration toAbstract = getInputWithIndex( toMatch );
 		
 		List<IndexSymbol> matching = makeInstantiable( somePrefix );
-		HeapConfiguration pattern = getInputWithStack( matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
+		HeapConfiguration pattern = getInputWithIndex( matching );
+		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
-		assertEquals( getInputWithStack(toMatch), res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
+		assertEquals( getInputWithIndex(toMatch), res.getMaterializedToAbstract() );
+		assertEquals( getReferenceNonterminalWithIndex( makeConcrete( getEmptyIndex())),
 					  res.getInstantiatedLhs() );
 	}
 
 	@Test
 	public void testIncompatibleInstantiation() {
-		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
 		
 		List<IndexSymbol> toMatch1 = makeConcrete( somePrefix );
 		List<IndexSymbol> toMatch2 = makeOtherConcrete(somePrefix);
 		List<IndexSymbol> reference = makeAbstract(somePrefix);
-		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
+		HeapConfiguration toAbstract = getInputWithIndices(toMatch1, toMatch2, reference, reference);
 		
 		List<IndexSymbol> matching = makeInstantiable(somePrefix);
-		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
+		HeapConfiguration pattern = getPatternWithIndices( matching, matching );
+		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
 		
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
@@ -211,16 +211,16 @@ public class EmbeddingStackCheckerTest {
 	
 	@Test
 	public void testTwoIdenticalInstantiations() throws CannotMatchException {
-		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
 		
 		List<IndexSymbol> toMatch1 = makeConcrete( somePrefix );
 		List<IndexSymbol> toMatch2 = makeConcrete(somePrefix);
 		List<IndexSymbol> reference = makeAbstract(somePrefix);
-		HeapConfiguration toAbstract = getInputWithStacks(toMatch1, toMatch2, reference, reference);
+		HeapConfiguration toAbstract = getInputWithIndices(toMatch1, toMatch2, reference, reference);
 		
 		List<IndexSymbol> matching = makeInstantiable(somePrefix);
-		HeapConfiguration pattern = getPatternWithStacks( matching, matching );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable(getEmptyStack()) );
+		HeapConfiguration pattern = getPatternWithIndices( matching, matching );
+		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
 		
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
@@ -229,58 +229,58 @@ public class EmbeddingStackCheckerTest {
 		
 		assertEquals( toAbstract, 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
+		assertEquals( getReferenceNonterminalWithIndex( makeConcrete( getEmptyIndex())),
 					  res.getInstantiatedLhs() );
 		
 	}
 	
 	@Test
 	public void testMixedInstantiationAndMaterialization() throws CannotMatchException {
-		List<IndexSymbol> somePrefix = getStackPrefix();
+		List<IndexSymbol> somePrefix = getIndexPrefix();
 		
 		List<IndexSymbol> toMatch = makeAbstract(somePrefix);
 		List<IndexSymbol> reference = toMatch;
-		HeapConfiguration toAbstract = getInputWithStacks(toMatch, toMatch, reference, reference);
+		HeapConfiguration toAbstract = getInputWithIndices(toMatch, toMatch, reference, reference);
 		
 		List<IndexSymbol> matching1 = makeInstantiable(somePrefix);
 		List<IndexSymbol> matching2 = makeConcrete(somePrefix);
-		HeapConfiguration pattern = getPatternWithStacks( matching1, matching2 );
-		Nonterminal lhs = getReferenceNonterminalWithStack( makeInstantiable( getEmptyStack() ));
+		HeapConfiguration pattern = getPatternWithIndices( matching1, matching2 );
+		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable( getEmptyIndex() ));
 		
 		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
 		
-		assertEquals( getInputWithStacks(matching2, matching2, matching2, matching2), 
+		assertEquals( getInputWithIndices(matching2, matching2, matching2, matching2), 
 					  res.getMaterializedToAbstract() );
-		assertEquals( getReferenceNonterminalWithStack( makeConcrete( getEmptyStack())),
+		assertEquals( getReferenceNonterminalWithIndex( makeConcrete( getEmptyIndex())),
 					  res.getInstantiatedLhs() );
 	}
 
 	
-	private ArrayList<IndexSymbol> getEmptyStack() {
+	private ArrayList<IndexSymbol> getEmptyIndex() {
 		return new ArrayList<>();
 	}
 
-	private List<IndexSymbol> getStackPrefix() {
+	private List<IndexSymbol> getIndexPrefix() {
 		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
-		ArrayList<IndexSymbol> prefix = getEmptyStack();
+		ArrayList<IndexSymbol> prefix = getEmptyIndex();
 		prefix.add( s );
 		prefix.add( s );
 		return prefix;
 	}
 	
-	private List<IndexSymbol> getOtherStackPrefix() {
+	private List<IndexSymbol> getOtherIndexPrefix() {
 		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
 		IndexSymbol other = ConcreteIndexSymbol.getIndexSymbol("other", false);
 		
-		ArrayList<IndexSymbol> prefix = getEmptyStack();
+		ArrayList<IndexSymbol> prefix = getEmptyIndex();
 		prefix.add( s );
 		prefix.add( other );
 		return prefix;
 	}
 	
-	private List<IndexSymbol> getLongerStackPrefix(List<IndexSymbol> prefix) {
+	private List<IndexSymbol> getLongerIndexPrefix(List<IndexSymbol> prefix) {
 		IndexSymbol s = DefaultIndexMaterialization.SYMBOL_s;
 		return addSymbol( prefix, s );
 	}
@@ -311,49 +311,49 @@ public class EmbeddingStackCheckerTest {
 	}
 
 	private List<IndexSymbol> addSymbol(List<IndexSymbol> prefix, IndexSymbol abs) {
-		ArrayList<IndexSymbol> stack = new ArrayList<>( prefix );
-		stack.add( abs );
-		return stack;
+		ArrayList<IndexSymbol> index = new ArrayList<>( prefix );
+		index.add( abs );
+		return index;
 	}
 
-	private List<IndexSymbol> getConcreteStack() {
-		List<IndexSymbol> stack = getStackPrefix();
-		return makeConcrete(stack);
+	private List<IndexSymbol> getConcreteIndex() {
+		List<IndexSymbol> index = getIndexPrefix();
+		return makeConcrete(index);
 	}
 
 	private Nonterminal getInstantiableNonterminal() {
-		List<IndexSymbol> stack = getStackWithStackVariable();
-		return getMatchingNonterminalWithStack(stack);
+		List<IndexSymbol> index = getIndexWithIndexVariable();
+		return getMatchingNonterminalWithIndex(index);
 	}
 
-	private Nonterminal getMatchingNonterminalWithStack(List<IndexSymbol> stack) {
-		String label = "matching_EmbeddingStackChecker";
+	private Nonterminal getMatchingNonterminalWithIndex(List<IndexSymbol> index) {
+		String label = "matching_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		return nt;
 	}
 	
-	private Nonterminal getOtherMatchingNonterminalWithStack(List<IndexSymbol> stack) {
-		String label = "matching2_EmbeddingStackChecker";
+	private Nonterminal getOtherMatchingNonterminalWithIndex(List<IndexSymbol> index) {
+		String label = "matching2_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle, index );
 		return nt;
 	}
 	
-	private Nonterminal getReferenceNonterminalWithStack(List<IndexSymbol> stack) {
-		String label = "reference_EmbeddingStackChecker";
+	private Nonterminal getReferenceNonterminalWithIndex(List<IndexSymbol> index) {
+		String label = "reference_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		return nt;
 	}
 
-	private List<IndexSymbol> getStackWithStackVariable() {
-		List<IndexSymbol> stack = getEmptyStack();
-		stack.add( IndexVariable.getGlobalInstance() );
-		return stack;
+	private List<IndexSymbol> getIndexWithIndexVariable() {
+		List<IndexSymbol> index = getEmptyIndex();
+		index.add( IndexVariable.getGlobalInstance() );
+		return index;
 	}
 
 	private HeapConfiguration getSimpleInput() {
@@ -369,13 +369,13 @@ public class EmbeddingStackCheckerTest {
 				.build();
 	}
 	
-	private HeapConfiguration getInputWithStack(List<IndexSymbol> stack) {
+	private HeapConfiguration getInputWithIndex(List<IndexSymbol> index) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 		
-		Nonterminal nt = getMatchingNonterminalWithStack( stack );
+		Nonterminal nt = getMatchingNonterminalWithIndex( index );
 
 	
 		TIntArrayList nodes = new TIntArrayList();
@@ -390,14 +390,14 @@ public class EmbeddingStackCheckerTest {
 				.build();
 	}
 	
-	private HeapConfiguration getInputWithStacks(List<IndexSymbol> toMatch, List<IndexSymbol> reference) {
+	private HeapConfiguration getInputWithIndices(List<IndexSymbol> toMatch, List<IndexSymbol> reference) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 		
-		Nonterminal matchingNt = getMatchingNonterminalWithStack( toMatch );
-		Nonterminal referenceNt = getReferenceNonterminalWithStack( reference );
+		Nonterminal matchingNt = getMatchingNonterminalWithIndex( toMatch );
+		Nonterminal referenceNt = getReferenceNonterminalWithIndex( reference );
 
 	
 		TIntArrayList nodes = new TIntArrayList();
@@ -415,7 +415,7 @@ public class EmbeddingStackCheckerTest {
 	}
 	
 
-	private HeapConfiguration getInputWithStacks(
+	private HeapConfiguration getInputWithIndices(
 			List<IndexSymbol> toMatch1, List<IndexSymbol> toMatch2,
 			List<IndexSymbol> reference1, List<IndexSymbol> reference2) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -423,11 +423,11 @@ public class EmbeddingStackCheckerTest {
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 		
-		Nonterminal matchingNt1 = getMatchingNonterminalWithStack( toMatch1 );
-		Nonterminal referenceNt1 = getReferenceNonterminalWithStack( reference1 );
+		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( toMatch1 );
+		Nonterminal referenceNt1 = getReferenceNonterminalWithIndex( reference1 );
 		
-		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithStack( toMatch2 );
-		Nonterminal referenceNt2 = getReferenceNonterminalWithStack( reference2 );
+		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithIndex( toMatch2 );
+		Nonterminal referenceNt2 = getReferenceNonterminalWithIndex( reference2 );
 
 	
 		TIntArrayList nodes = new TIntArrayList();
@@ -452,8 +452,8 @@ public class EmbeddingStackCheckerTest {
 				.build();
 	}
 
-	private HeapConfiguration getPatternWithStacks(
-			List<IndexSymbol> stack1, List<IndexSymbol> stack2) 
+	private HeapConfiguration getPatternWithIndices(
+			List<IndexSymbol> index1, List<IndexSymbol> index2) 
 	{
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
@@ -461,9 +461,9 @@ public class EmbeddingStackCheckerTest {
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
 		
-		Nonterminal matchingNt1 = getMatchingNonterminalWithStack( stack1 );
+		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( index1 );
 		
-		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithStack( stack2 );
+		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithIndex( index2 );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)

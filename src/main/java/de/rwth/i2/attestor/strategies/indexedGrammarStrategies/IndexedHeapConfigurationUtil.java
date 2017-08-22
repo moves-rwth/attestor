@@ -13,7 +13,7 @@ public class IndexedHeapConfigurationUtil {
 			Nonterminal nt = hc.labelOf( ntId );
 			if( nt instanceof IndexedNonterminal){
 				IndexedNonterminal indexedNt = (IndexedNonterminal) nt ;
-				if( ! indexedNt.getIndex().hasConcreteStack() ){
+				if( ! indexedNt.getIndex().hasConcreteIndex() ){
 					return false;
 				}
 			}

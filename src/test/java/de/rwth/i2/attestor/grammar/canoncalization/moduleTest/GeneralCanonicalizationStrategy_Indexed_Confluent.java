@@ -53,24 +53,21 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 																				aggressiveReturnAbstraction);
 		
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
-		DefaultIndexMaterialization stackGrammar = new DefaultIndexMaterialization();
-		IndexMatcher stackMatcher = new IndexMatcher( stackGrammar);
-		EmbeddingIndexChecker stackChecker = 
-				new EmbeddingIndexChecker( stackMatcher, 
+		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
+		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+		EmbeddingIndexChecker indexChecker = 
+				new EmbeddingIndexChecker( indexMatcher, 
 											materializer );
 		
-		matchingHandler = new IndexedMatchingHandler( fakeIndexStrategy, checkerProvider, stackChecker);
+		matchingHandler = new IndexedMatchingHandler( fakeIndexStrategy, checkerProvider, indexChecker);
 		
 	}
 
 	@Test
 	public void test() {
-//		List<StackSymbol> lhsStack0 = makeConcrete( getEmptyStack() );
-//		Nonterminal lhs0 = getNonterminal( lhsStack0 );
-//		HeapConfiguration rhs0 = getPattern0();
 		
-		List<IndexSymbol> lhsStack1 = makeInstantiable(getStackPrefix());
-		Nonterminal lhs1 = getNonterminal( lhsStack1  );
+		List<IndexSymbol> lhsIndex1 = makeInstantiable(getIndexPrefix());
+		Nonterminal lhs1 = getNonterminal( lhsIndex1  );
 		HeapConfiguration rhs1 = getPattern1();
 		HeapConfiguration rhs2 = getPattern2();
 		Grammar grammar = Grammar.builder().addRule( lhs1, rhs1 )
@@ -91,32 +88,32 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 
 
 
-	private List<IndexSymbol> getEmptyStack() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		return stack;
+	private List<IndexSymbol> getEmptyIndex() {
+		List<IndexSymbol> index = new ArrayList<>();
+		return index;
 	}
 	
-	private List<IndexSymbol> getStackPrefix() {
-		List<IndexSymbol> stack = getEmptyStack();
-		stack.add( DefaultIndexMaterialization.SYMBOL_s );
-		return stack;
+	private List<IndexSymbol> getIndexPrefix() {
+		List<IndexSymbol> index = getEmptyIndex();
+		index.add( DefaultIndexMaterialization.SYMBOL_s );
+		return index;
 	}
 
-	private List<IndexSymbol> makeConcrete( List<IndexSymbol> stack ){
-		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
-		return stackCopy;
+	private List<IndexSymbol> makeConcrete( List<IndexSymbol> index ){
+		List<IndexSymbol> indexCopy = new ArrayList<>( index );
+		indexCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
+		return indexCopy;
 	}
 	
-	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> stack ){
-		List<IndexSymbol> stackCopy = new ArrayList<>( stack );
-		stackCopy.add( IndexVariable.getGlobalInstance() );
-		return stackCopy;
+	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> index ){
+		List<IndexSymbol> indexCopy = new ArrayList<>( index );
+		indexCopy.add( IndexVariable.getGlobalInstance() );
+		return indexCopy;
 	}
 
 
-	private Nonterminal getNonterminal( List<IndexSymbol> stack ) {
-		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, stack);
+	private Nonterminal getNonterminal( List<IndexSymbol> index ) {
+		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, index);
 	}
 
 	private HeapConfiguration getPattern0() {
@@ -136,7 +133,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(TYPE, 3, nodes)
-				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyStack()) ))
+				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyIndex()) ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()
@@ -154,7 +151,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(TYPE, 3, nodes)
 				.addSelector(nodes.get(2), SEL , nodes.get(1) )
-				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyStack()) ))
+				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyIndex()) ))
 					.addTentacle(nodes.get(1))
 					.addTentacle(nodes.get(2))
 					.build()
@@ -173,7 +170,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		for( int i = 1; i < sizeOfChain ; i++ ) {
 				builder.addSelector(nodes.get(i), SEL , nodes.get(i+1) );
 		}
-		builder.addNonterminalEdge( getNonterminal( makeConcrete(getEmptyStack())))
+		builder.addNonterminalEdge( getNonterminal( makeConcrete(getEmptyIndex())))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build();
@@ -184,11 +181,11 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	private ProgramState expectedSimpleAbstraction() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		List<IndexSymbol> expectedStack = getExpectedStack();
+		List<IndexSymbol> expectedIndex = getExpectedIndex();
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc =  hc.builder().addNodes(TYPE, 2, nodes)
-				.addNonterminalEdge( getNonterminal(expectedStack ))
+				.addNonterminalEdge( getNonterminal(expectedIndex ))
 					.addTentacle(nodes.get(0))
 					.addTentacle(nodes.get(1))
 					.build()
@@ -197,12 +194,12 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		return new IndexedState( hc );
 	}
 
-	private List<IndexSymbol> getExpectedStack() {
-		List<IndexSymbol> stack = getEmptyStack();
+	private List<IndexSymbol> getExpectedIndex() {
+		List<IndexSymbol> index = getEmptyIndex();
 		for( int i = 0; i < sizeOfChain - 1; i++ ) {
-			stack.add( DefaultIndexMaterialization.SYMBOL_s );
+			index.add( DefaultIndexMaterialization.SYMBOL_s );
 		}
-		return makeConcrete( stack );
+		return makeConcrete( index );
 	}
 
 

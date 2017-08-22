@@ -76,14 +76,14 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createInputGraph() {
-		List<IndexSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someIndex = new ArrayList<>();
 		
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
 		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 												 RANK, 
 												 REDUCTION_TENTACLES,
-												 someStack );
+												 someIndex );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -119,7 +119,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createBigRule() {
-		List<IndexSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someIndex = new ArrayList<>();
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
@@ -127,7 +127,7 @@ public class IndexedGrammarResponseApplierTest {
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 				 RANK, 
 				 REDUCTION_TENTACLES,
-				 someStack );
+				 someIndex );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
