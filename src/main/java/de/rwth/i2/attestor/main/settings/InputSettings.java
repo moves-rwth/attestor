@@ -36,10 +36,17 @@ public class InputSettings {
      * The name of the file of the graph grammar underlying the analysis.
      */
 	private String userDefinedGrammarName = null;
-
-	// The list of predefined grammars used by the current analysis
+	
+	/**
+	 * The list of predefined grammars used by the current analysis
+	 */
 	private ArrayList<String> usedPredefinedGrammars;
 
+	/**
+	 * The paths to the file specifying the renaming used for the 
+	 * predefined grammars
+	 */
+	private HashMap<String,String> pathToGrammar2RenameDefininition = new HashMap<>();
 	// The mapping from predefined grammars to their rename mapping
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 

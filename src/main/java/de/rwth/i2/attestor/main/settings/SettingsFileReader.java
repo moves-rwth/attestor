@@ -1,19 +1,15 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Scanner;
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 
 /**
  * Populates {@link Settings} from a settings file.
@@ -114,7 +110,7 @@ public class SettingsFileReader {
 			// Check if corresponding grammar exists
 			if(SettingsFileReader.class.getClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 
-					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);
+					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);//TODO move to parsing phase
 					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
 					logger.debug("Adding predefined grammar " + grammarType);
 			} else {
@@ -144,6 +140,7 @@ public class SettingsFileReader {
 		return input;
 	}
 
+	//TODO: move from settings file reader somewhere else (e.g. io) -> call in parsing phase
 	private HashMap<String,String> extractMapping(JSONObject predefinedGrammarSetting) {
 
 		HashMap<String, String> rename = null;
