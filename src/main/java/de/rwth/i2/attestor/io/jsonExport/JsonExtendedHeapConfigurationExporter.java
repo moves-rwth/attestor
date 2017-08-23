@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import gnu.trove.iterator.TIntIterator;
+import java.io.Writer;
+
 import org.json.JSONWriter;
 
-import java.io.Writer;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import gnu.trove.iterator.TIntIterator;
 
 /**
  * Created by christina on 22.08.17.
@@ -28,7 +27,7 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
                 .array();
 
         writeNodes(jsonWriter, heapConfiguration);
-        writeNonterminalHyperedges(jsonWriter, heapConfiguration);
+        super.writeNonterminalHyperedges(jsonWriter, heapConfiguration);
         super.writeVariables(jsonWriter, heapConfiguration);
 
         jsonWriter.endArray()
@@ -65,20 +64,6 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
             }
             jsonWriter.key("label").value(nodeInfo);
             jsonWriter.key("nodeType").value( heapConfiguration.nodeTypeOf(node).toString() );
-            jsonWriter.endObject().endObject();
-        }
-    }
-
-    public void writeNonterminalHyperedges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
-
-        TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
-        while(iter.hasNext()) {
-            int edge= iter.next();
-            jsonWriter.object().key("data").object();
-            jsonWriter.key("id").value(edge);
-            jsonWriter.key("type").value("hyperedge");
-            jsonWriter.key("label").value( heapConfiguration.labelOf(edge).toString());
-            jsonWriter.key("annotation").value( heapConfiguration.labelOf(edge).toString() );
             jsonWriter.endObject().endObject();
         }
     }
