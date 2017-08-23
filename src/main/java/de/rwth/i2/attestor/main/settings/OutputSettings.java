@@ -1,6 +1,13 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.HcLabelPair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All settings related to exporting artifacts.
@@ -8,6 +15,11 @@ import java.io.File;
  * @author Hannah Arndt, Christoph
  */
 public class OutputSettings {
+
+	/**
+	 * The logger of this class.
+	 */
+	private static final Logger logger = LogManager.getLogger( "OutputSettings" );
 
     /**
      * True if and only if the generated state space should be exported to a file.
@@ -74,6 +86,26 @@ public class OutputSettings {
      */
 	private String folderForGrammar;
 
+	/**
+	 * True if and only if custom hcs should be exported (for debugging purpose).
+	 */
+	private boolean exportCustomHcs = false;
+
+	/**
+	 * The path where the exported custom hcs are stored.
+	 */
+	private String pathForCustomHcs;
+
+	/**
+	 * The directory that is created and contains the exported custom hcs.
+	 */
+	private String folderForCustomHcs;
+
+	/**
+	 * Holds the prebooked Hcs, that should be exported (for debugging purpose).
+	 */
+	private List<HcLabelPair> customHcList;
+
     /**
      * Sets the default path for all exports.
      * @param path The default path.
@@ -83,6 +115,7 @@ public class OutputSettings {
 		pathForBigStates = path;
 		pathForTerminalStates = path;
 		pathForGrammar = path;
+		pathForCustomHcs = path;
 	}
 
     /**
@@ -241,6 +274,63 @@ public class OutputSettings {
 		return pathForGrammar + File.separator + folderForGrammar;
 	}
 
+
+	/**
+	 * @return True if and only if custom HCs should be exported (for debugging purpose).
+	 */
+	public boolean isExportCustomHcs() {
+		return exportCustomHcs;
+	}
+
+	/**
+	 * @param exportCustomHcs True if and only if the generated state space should be exported.
+	 */
+	public void setExportCustomHcs(boolean exportCustomHcs) {
+
+		this.exportCustomHcs = exportCustomHcs;
+
+		if(exportCustomHcs){
+			this.customHcList = new ArrayList<HcLabelPair>();
+		}
+	}
+
+	/**
+	 * Adds a new graph to the list of custom graphs, that should be exported for debugging purpose.
+	 * @param label, the identifier of the graphs
+	 * @param hc, the graph itself
+	 */
+	public void addCustomHc(String label, HeapConfiguration hc){
+
+		if(customHcList != null){
+			customHcList.add(new HcLabelPair(label, hc));
+		} else {
+			logger.warn("Adding an HC for custom debug export, although the corresponding export options is disabled!");
+		}
+	}
+
+	/**
+	 *
+	 * @param pathForCustomHcs The path where exported custom hcs are stored.
+	 */
+	public void setPathForCustomHcs(String pathForCustomHcs) {
+		this.pathForCustomHcs = pathForCustomHcs;
+	}
+
+	/**
+	 * @param folderForCustomHcs The directory that is created and contains the exported custom hcs.
+	 */
+	public void setFolderForCustomHcs(String folderForCustomHcs) {
+		this.folderForCustomHcs = folderForCustomHcs;
+	}
+
+	/**
+	 * @return The directory that is created and contains the exported state space.
+	 */
+	public String getLocationForCustomHcs(){
+		return pathForCustomHcs + File.separator + folderForCustomHcs;
+	}
+
+
     /**
      * Checks whether all necessary paths and names are present for objects that should be exported.
      * @return True if and only if the current settings are consistent in the above sense.
@@ -266,6 +356,11 @@ public class OutputSettings {
 				return false;
 			}
 		}
+		if( exportCustomHcs ){
+			if( pathForCustomHcs == null || folderForCustomHcs == null ){
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -274,6 +369,12 @@ public class OutputSettings {
 		this.folderForGrammar = rootPath + File.separator + this.folderForGrammar;
 		this.folderForStateSpace = rootPath + File.separator + this.folderForStateSpace;
 		this.folderForTerminalStates = rootPath + File.separator + this.folderForTerminalStates;
+		this.folderForCustomHcs = rootPath + File.separator + this.folderForCustomHcs;
 	}
-	
+
+	public List<HcLabelPair> getCustomHcSet() {
+		return this.customHcList;
+	}
+
+
 }

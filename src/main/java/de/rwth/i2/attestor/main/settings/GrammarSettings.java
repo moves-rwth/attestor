@@ -129,21 +129,6 @@ public class GrammarSettings {
         }
     }
 
-    /**
-     * Exports the grammar to a file.
-     */
-    public void exportGrammar() {
-
-        if( Settings.getInstance().output().isExportGrammar() ) {
-
-            String location = Settings.getInstance().output().getLocationForGrammar();
-            
-            //TODO
-            //Settings.getInstance().factory()()().getGrammarExporter(location).export(grammar);
-            logger.debug("Exported grammar to " + location );
-        }
-    }
-
     public void loadGrammarFromURL(URL resource, HashMap<String, String> rename) {
 
         if(grammar != null)  {
