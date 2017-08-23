@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.HcLabelPair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.HcLabelPair;
 
 /**
  * All settings related to exporting artifacts.
@@ -84,7 +85,7 @@ public class OutputSettings {
     /**
      * The directory that is created and contains exported grammars.
      */
-	private String folderForGrammar;
+	private String folderForGrammar = "grammar";
 
 	/**
 	 * True if and only if custom hcs should be exported (for debugging purpose).
@@ -99,7 +100,7 @@ public class OutputSettings {
 	/**
 	 * The directory that is created and contains the exported custom hcs.
 	 */
-	private String folderForCustomHcs;
+	private String folderForCustomHcs = "debug";
 
 	/**
 	 * Holds the prebooked Hcs, that should be exported (for debugging purpose).
@@ -365,11 +366,11 @@ public class OutputSettings {
 	}
 
 	public void setRootPath(String rootPath) {
-		this.folderForBigStates = rootPath + File.separator + this.folderForBigStates;
-		this.folderForGrammar = rootPath + File.separator + this.folderForGrammar;
-		this.folderForStateSpace = rootPath + File.separator + this.folderForStateSpace;
-		this.folderForTerminalStates = rootPath + File.separator + this.folderForTerminalStates;
-		this.folderForCustomHcs = rootPath + File.separator + this.folderForCustomHcs;
+		this.pathForBigStates = rootPath + File.separator + this.pathForBigStates;
+		this.pathForGrammar = rootPath + File.separator + this.pathForGrammar;
+		this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
+		this.pathForTerminalStates = rootPath + File.separator + this.pathForTerminalStates;
+		this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
 	}
 
 	public List<HcLabelPair> getCustomHcSet() {
