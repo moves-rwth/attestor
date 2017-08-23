@@ -3,17 +3,13 @@ package de.rwth.i2.attestor.main;
 import java.io.*;
 import java.util.*;
 
-import de.rwth.i2.attestor.io.CustomHcListExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonCustomHcListExporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.GrammarExporter;
-import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.*;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
@@ -26,12 +22,8 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammar
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.JsonToDefaultHC;
-import de.rwth.i2.attestor.io.JsonToIndexedHC;
-import de.rwth.i2.attestor.io.htmlExport.GrammarToHtmlExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonGrammarExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.io.*;
+import de.rwth.i2.attestor.io.jsonExport.*;
 import de.rwth.i2.attestor.main.settings.*;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
