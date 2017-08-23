@@ -565,13 +565,6 @@ public class Attestor {
                     + "'"
             );
         }
-		if( settings.output().isExportGrammar() ) {
-			String locationForGrammar = settings.output().getLocationForGrammar();
-			GrammarToHtmlExporter exporter = new GrammarToHtmlExporter( locationForGrammar );
-			Grammar grammar = settings.grammar().getGrammar();
-			exporter.export( grammar );
-			logger.info("Grammar exported to '" + locationForGrammar + "'");
-		}
 	}
 
     private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)

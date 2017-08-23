@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import org.json.JSONWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -31,7 +32,7 @@ public class JsonGrammarExporter implements GrammarExporter {
         for(Nonterminal nt : grammar.getAllLeftHandSides()){
             int count = 1;
             for(HeapConfiguration hc : grammar.getRightHandSidesFor(nt)){
-                exportHeapConfiguration(directory + File.separator + nt.getLabel() + "Rule" + count + ".json",
+                exportHeapConfiguration(directory + File.separator + nt.toString() + "Rule" + count + ".json",
                         hc);
                 count++;
             }
@@ -51,7 +52,6 @@ public class JsonGrammarExporter implements GrammarExporter {
 
             String nonterminalName = nonterminal.toString();
             int ruleNumber = grammar.getRightHandSidesFor(nonterminal).size();
-
 
             jsonWriter.object()
                     .key("nonterminal").value(nonterminalName)
