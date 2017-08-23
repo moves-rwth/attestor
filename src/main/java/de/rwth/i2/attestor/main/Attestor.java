@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.main;
 import java.io.*;
 import java.util.*;
 
+import de.rwth.i2.attestor.io.CustomHcListExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonCustomHcListExporter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -374,6 +376,7 @@ public class Attestor {
 	    stateSpace = stateSpaceGenerator.generate();
 	    logger.info("State space generation finished. #states: "
                 + settings.factory().getTotalNumberOfStates());
+
 	}
 
     private void printAnalyzedMethod() {
@@ -517,7 +520,6 @@ public class Attestor {
 	        String location = settings.output().getLocationForGrammar();
 
             // Copy necessary libraries
-            // TODO: create zip
             InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
                     ".zip");
 
@@ -526,7 +528,7 @@ public class Attestor {
 
             // Generate JSON files
             GrammarExporter exporter = new JsonGrammarExporter();
-           exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
+            exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
 
             logger.info("Grammar exported to '"
                     + location
@@ -565,6 +567,27 @@ public class Attestor {
                     + "'"
             );
         }
+
+        if(settings.output().isExportCustomHcs()){
+	        String location = settings.output().getLocationForCustomHcs();
+
+            // Copy necessary libraries
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
+                    ".zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            // Generate JSON files for prebooked HCs and their summary
+            CustomHcListExporter exporter = new JsonCustomHcListExporter();
+            exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
+
+            logger.info("Custom HCs exported to '"
+                    + location
+            );
+
+        }
+
 	}
 
     private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)

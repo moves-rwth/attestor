@@ -282,6 +282,17 @@ public class SettingsFileReader {
 				output.setFolderForGrammar( jsonGrammar.getString( "folder" ) );
 			}
 		}
+
+		if( jsonOutput.has( "customHCs" ) ){
+			output.setExportCustomHcs( true );
+			JSONObject jsonGrammar = jsonOutput.getJSONObject( "customHCs" );
+			if( jsonGrammar.has( "path" ) ){
+				output.setPathForCustomHcs( jsonGrammar.getString( "path" ) );
+			}
+			if( jsonGrammar.has( "folder" ) ){
+				output.setFolderForCustomHcs( jsonGrammar.getString( "folder" ) );
+			}
+		}
 		
 		if( jsonOutput.has( "bigStates" ) ){
 			output.setExportBigStates( true );
