@@ -219,23 +219,74 @@ public class Attestor {
 
 	private void parsingPhase() throws IOException {
 
-		// Load the user-defined grammar
-		if(settings.input().getUserDefinedGrammarName() != null) {
-			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
-		}
-
-		// Load the requested predefined grammars
-		if(settings.input().getUsedPredefinedGrammars() != null) {
-			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
-				logger.debug("Loading predefined grammar " + predefinedGrammar);
-				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
-                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
-			}
-		}
+	
+		loadUserDefinedGrammar();
+		loadPredefinedGrammars();
 
 		loadInput();
 		loadProgram();
+	}
+
+	private void loadPredefinedGrammars() {
+		
+		if(settings.input().getUsedPredefinedGrammars() != null) {
+			for ( String predefinedGrammar : settings.input().getUsedPredefinedGrammars() ) {
+				logger.debug("Loading predefined grammar " + predefinedGrammar);
+				//HashMap<String, String> renamingMap = settings.input().getRenaming( predefinedGrammar );
+				String locationOfRenamingMap = settings.input().getRenamingLocation( predefinedGrammar );
+				try{
+				HashMap<String,String> renamingMap = parseRenamingMap( locationOfRenamingMap );
+				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
+                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
+				}catch( FileNotFoundException e ){
+					logger.warn( "Skipping predefined grammar "
+								+ predefinedGrammar + ".");
+				}
+			}
+		}
+	}
+
+	private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
+		HashMap<String, String> rename = new HashMap<String, String>();
+		// Read in the type and field name mapping
+		try {
+			BufferedReader br = new BufferedReader(new java.io.FileReader( locationOfRenamingMap ));
+			String definitionsLine = null;
+			try {
+				definitionsLine = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			while(definitionsLine != null){
+				if(definitionsLine.startsWith("@Rename")){
+					String[] map = definitionsLine.replace("@Rename", "").split("->");
+					assert map.length == 2;
+
+					rename.put(map[0].trim(), map[1].trim());
+				}
+
+				try {
+					definitionsLine = br.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			logger.warn("File " + locationOfRenamingMap + " not found. ");
+			throw e;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return rename;
+	}
+
+	private void loadUserDefinedGrammar() {
+		if(settings.input().getUserDefinedGrammarName() != null) {
+			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
+		}
 	}
 
 	private void loadInput() throws IOException {

@@ -46,7 +46,7 @@ public class InputSettings {
 	 * The paths to the file specifying the renaming used for the 
 	 * predefined grammars
 	 */
-	private HashMap<String,String> pathToGrammar2RenameDefininition = new HashMap<>();
+	private HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
 	// The mapping from predefined grammars to their rename mapping
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 
@@ -195,6 +195,9 @@ public class InputSettings {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
 		this.pathToInput = rootPath + File.separator + this.pathToInput;
+		for( java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefininition.entrySet() ){
+			entry.setValue( rootPath + File.separator + entry.getValue() );
+		}
 	}
 
 	/**
@@ -203,14 +206,14 @@ public class InputSettings {
 	 * @param name, the name of the predefined grammar
 	 * @param correspondences, the map from fields of the predefined grammar to those of the analysed data structure.
 	 */
-	public void addPredefinedGrammar(String name, HashMap<String, String> correspondences){
+	public void addPredefinedGrammar(String name, String renameFileLocation){
 		if(this.usedPredefinedGrammars == null){
 			this.usedPredefinedGrammars = new ArrayList<String>();
 			this.grammar2RenameMap = new HashMap<>();
 		}
 
-		this.usedPredefinedGrammars.add(name);
-		this.grammar2RenameMap.put(name, correspondences);
+		this.usedPredefinedGrammars.add( name );
+		this.pathsToGrammar2RenameDefininition.put(name, renameFileLocation);
 	}
 
 	public ArrayList<String> getUsedPredefinedGrammars() {
@@ -224,5 +227,9 @@ public class InputSettings {
 
 	public void setInitialStatesURL(URL resource) {
 		this.initialStatesURL = resource;
+	}
+
+	public String getRenamingLocation(String predefinedGrammar) {
+		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
 }

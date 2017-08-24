@@ -105,16 +105,16 @@ public class SettingsFileReader {
 		JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( "predefinedGrammars" );
 		for(int i = 0; i < predefinedGrammarSettings.length(); i++){
 			JSONObject predefinedGrammarSetting = predefinedGrammarSettings.getJSONObject(i);
-			String grammarType = predefinedGrammarSetting.getString("type");
+			final String grammarType = predefinedGrammarSetting.getString("type");
 
 			// Check if corresponding grammar exists
 			if(SettingsFileReader.class.getClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 
-					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);//TODO move to parsing phase
-					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
-					logger.debug("Adding predefined grammar " + grammarType);
+					String renameFileLocation = predefinedGrammarSetting.getString("definition");
+					input.addPredefinedGrammar( grammarType, renameFileLocation );
+					logger.debug( "Adding predefined grammar " + grammarType );
 			} else {
-				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type")
+				logger.warn("No predefined grammar of type " + grammarType
 						+ " available. Skipping it.");
 			}
 
