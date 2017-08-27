@@ -99,17 +99,29 @@ public class EmbeddingIndexChecker {
 
 			Nonterminal patternLabel = pattern.labelOf( nt );
 			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
-			if( patternLabel instanceof IndexedNonterminal 
-					&& targetLabel instanceof IndexedNonterminal ){
-
-				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-				
-				if( ! materializable.getIndex().matchIndex(instantiable.getIndex() ) ) {
-					throw new CannotMatchException();
-				}
+			if( ! checkIndicesOf(patternLabel, targetLabel) ) {
+				throw new CannotMatchException();
 			}
 		}
+	}
+
+	/**
+	 * If both Nonterminals are indexed, checks whether their indices are equal.
+	 * @param patternLabel one nonterminal
+	 * @param targetLabel second nonterminal
+	 * @return false if both are indexed but with different index. In all other cases true.
+	 */
+	private boolean checkIndicesOf(Nonterminal patternLabel, Nonterminal targetLabel){
+		if( patternLabel instanceof IndexedNonterminal 
+				&& targetLabel instanceof IndexedNonterminal ){
+
+			IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+			IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+			
+			return materializable.getIndex().matchIndex(instantiable.getIndex() );
+		}
+		
+		return true;
 	}
 
 
