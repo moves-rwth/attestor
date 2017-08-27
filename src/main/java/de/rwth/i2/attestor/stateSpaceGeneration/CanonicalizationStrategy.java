@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.Set;
-
 /**
  * The strategy performed to canonicalize (abstract) a ProgramState, which results in one or more
  * abstract program states.

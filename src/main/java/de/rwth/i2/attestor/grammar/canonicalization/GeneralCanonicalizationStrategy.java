@@ -2,14 +2,12 @@
 
 package de.rwth.i2.attestor.grammar.canonicalization;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.util.SingleElementUtil;
+import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 

@@ -2,7 +2,8 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,9 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -25,7 +28,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -113,17 +119,6 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 
 	private Nonterminal getNonterminal( List<IndexSymbol> index ) {
 		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, index);
-	}
-
-	private HeapConfiguration getPattern0() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(TYPE, 2, nodes)
-				.addSelector(nodes.get(0), SEL , nodes.get(1) )
-				.setExternal(nodes.get(0))
-				.setExternal(nodes.get(1))
-				.build();
 	}
 
 

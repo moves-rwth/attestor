@@ -1,19 +1,17 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.GrammarExporter;
-
 import java.io.File;
 import java.io.FileWriter;
-
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import org.json.JSONWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.json.JSONWriter;
+
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.GrammarExporter;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.util.FileUtils;
 
 /**

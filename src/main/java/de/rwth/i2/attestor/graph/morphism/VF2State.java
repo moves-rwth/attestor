@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Captures a current, possibly incomplete, candidate for a graph morphism that is constructed step by step
@@ -18,6 +18,7 @@ public class VF2State {
 	/**
 	 * Used for debug output and error reporting.
 	 */
+	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "VF2State" );
 
 	/**
