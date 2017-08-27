@@ -9,7 +9,7 @@
  * Specialized versions based on standard hyperedge replacement grammars
  * and indexed hyperedge replacement grammars, respectively, are found in the subpackages
  * {@link de.rwth.i2.attestor.strategies.defaultGrammarStrategies}
- * and {@link de.rwth.i2.attestor.strategies.indexedGrammarStrategies.}.
+ * and {@link de.rwth.i2.attestor.strategies.indexedGrammarStrategies}.
  *
  * @author Christoph
  *

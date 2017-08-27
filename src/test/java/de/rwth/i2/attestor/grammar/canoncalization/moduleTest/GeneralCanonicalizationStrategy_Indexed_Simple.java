@@ -74,10 +74,9 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
 		
-		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
-		
-		assertEquals( 1, res.size() );
-		assertEquals( res.iterator().next().getHeap(), expectedSimpleAbstraction().getHeap() );
+		ProgramState res = canonizer.canonicalize(stmt, inputState);
+
+		assertEquals( expectedSimpleAbstraction().getHeap(), res.getHeap() );
 	}
 
 

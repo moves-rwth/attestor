@@ -230,9 +230,9 @@ public class StateSpaceGenerator {
 	private void applySuccessorStatePhases(ProgramState previousState, ProgramState state) {
 
 		ProgramState refinedState = refinementPhase(state);
-		Set<ProgramState> canonicalizationStates = canonicalizationPhase(refinedState);
-		canonicalizationStates.forEach(s -> stateLabelingStrategy.computeAtomicPropositions(s));
-		canonicalizationStates.forEach(s -> addingPhase(previousState, s));
+		ProgramState canonicalizationState = canonicalizationPhase(refinedState);
+		stateLabelingStrategy.computeAtomicPropositions( canonicalizationState );
+		addingPhase(previousState, canonicalizationState );
     }
 
     /**
@@ -248,7 +248,7 @@ public class StateSpaceGenerator {
      * @param state The state to canonicalize.
      * @return The set of canoncialized states.
      */
-    private Set<ProgramState> canonicalizationPhase(ProgramState state) {
+    private ProgramState canonicalizationPhase(ProgramState state) {
 
 	    Semantics semantics = program.getStatement(state.getProgramCounter());
         return canonicalizationStrategy.canonicalize(semantics, state);

@@ -138,6 +138,7 @@ public class InputSettings {
 
     /**
      * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
+     * @return the location of the userDefinedGrammar
      */
 	public String getUserDefinedGrammarName() {
 		return this.userDefinedGrammarName;
@@ -204,7 +205,8 @@ public class InputSettings {
 	 * Adds a new predefined grammar (including its field maps) to the list of utilised grammars.
 	 * If no predefined grammar is set so far, the necessary list and map is created.
 	 * @param name, the name of the predefined grammar
-	 * @param correspondences, the map from fields of the predefined grammar to those of the analysed data structure.
+	 * @param renameFileLocation, the location of the file defining the map from fields of the predefined 
+	 *  grammar to those of the analysed data structure.
 	 */
 	public void addPredefinedGrammar(String name, String renameFileLocation){
 		if(this.usedPredefinedGrammars == null){

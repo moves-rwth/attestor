@@ -137,8 +137,11 @@ public class FactorySettings {
 
     /**
      * Creates an object to export state spaces.
+     * @param directory the directory to which the exportet files are written
      * @param filename The name of the file the state space should be exported to.
      * @param stateSpace The state space to export.
+     * @param program the program that was analyzed
+     * @throws IOException if the writing to the directory failes
      */
     public void export(String directory, String filename, StateSpace stateSpace, Program program) throws IOException {
 

@@ -17,7 +17,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class DefaultEmbeddingCheckerProviderTest {
 
 	/**
-	 * aggressiveAbstractionThreshold > graphSize.
+	 * aggressiveAbstractionThreshold &gt; graphSize.
 	 * aggressiveReturnAbstraction = true, statement != return
 	 * expect DepthEmbeddingChecker
 	 */
@@ -36,7 +36,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	}
 	
 	/**
-	 * aggressiveAbstractionThreshold < graphSize.
+	 * aggressiveAbstractionThreshold &lt; graphSize.
 	 * aggressiveReturnAbstraction = false, statement != return
 	 * expect  aggressive EmbeddingChecker
 	 */
@@ -56,7 +56,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 
 	
 	/**
-	 * aggressiveAbstractionThreshold > graphSize.
+	 * aggressiveAbstractionThreshold &gt; graphSize.
 	 * aggressiveReturnAbstraction = true, statement == return
 	 * expect aggressive EmbeddingChecker
 	 */
@@ -75,7 +75,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 	}
 
 	/**
-	 * aggressiveAbstractionThreshold > graphSize.
+	 * aggressiveAbstractionThreshold &gt; graphSize.
 	 * aggressiveReturnAbstraction = false, statement == return
 	 * expect DepthEmbeddingChecker
 	 */

@@ -38,7 +38,7 @@ public class EmbeddingIndexCheckerTest {
 	/**
 	 * This test uses graphs without any nonterminals as inputs,
 	 * i.e. it doesn't test any logic.
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testSimple() throws CannotMatchException {
@@ -55,7 +55,7 @@ public class EmbeddingIndexCheckerTest {
 	
 	/**
 	 * This tests verifies that the graphs are not modified, if the stacks match directly
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testWithIdenticalStacks() throws CannotMatchException{
@@ -75,7 +75,7 @@ public class EmbeddingIndexCheckerTest {
 	/**
 	 * This test verifies that materialization is applied correctly in a simple case
 	 * (No instantiation, no different abstract symbols)
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testOnlyMaterialization() throws CannotMatchException{
@@ -102,7 +102,7 @@ public class EmbeddingIndexCheckerTest {
 	 * still requires no instantiation, but uses embeds two nonterminals
 	 * which have different abstract symbols (ensures that they are materialized
 	 * independently)
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testMaterializationWithDifferentAbstractSymbols() throws CannotMatchException{
@@ -135,7 +135,7 @@ public class EmbeddingIndexCheckerTest {
 	 * Input: X -- s()<br>
 	 *        X -- ss()
 	 *        
-	 * -> should fail!
+	 * &#8594; should not be able to match
 	 */
 	@Test
 	public void testIncopatibleMaterialization() {

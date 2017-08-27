@@ -76,6 +76,7 @@ public class GrammarSettings {
      * the previously loaded grammar (if present).
      *
      * @param filename The file storing the graph grammar.
+     * @param rename defines the renaming of labels for this analysis
      */
     public void loadGrammarFromFile(String filename, HashMap<String, String> rename) {
 

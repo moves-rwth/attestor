@@ -80,10 +80,9 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 		ProgramState inputState = new DefaultProgramState( getInputGraph() );
 		Statement stmt = new Skip( 0 );
 		
-		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
+		ProgramState res = canonizer.canonicalize(stmt, inputState);
 		
-		assertEquals( 1, res.size() );
-		assertEquals( expectedSimpleAbstraction().getHeap(), res.iterator().next().getHeap() );
+		assertEquals( expectedSimpleAbstraction().getHeap(), res.getHeap() );
 	}
 
 

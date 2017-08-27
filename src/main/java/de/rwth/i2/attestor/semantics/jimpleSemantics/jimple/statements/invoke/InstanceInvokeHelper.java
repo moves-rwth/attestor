@@ -33,19 +33,17 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 */
 	private final Value baseValue;
 
+
+	
 	/**
 	 * creates a helper class for a specific invoke statement.
 	 * 
-	 * @see InvokeHelper
-	 * 
-	 * @param baseValue
-	 *            the value on which the method is called (i.e. "this")
-	 * @param argumentValues
-	 *            the values which form the arguments of the method in the
+	 * @param baseValue  the value on which the method is called (i.e. "this")
+	 * @param argumentValues  the values which form the arguments of the method in the
 	 *            correct ordering
-	 * @param namesOfLocals
-	 *            the names of all locals which occur within the method (so they
+	 * @param namesOfLocals  the names of all locals which occur within the method (so they
 	 *            can be removed afterwards).
+	 * @param removeDeadVariables true, if dead variables shall be removed
 	 */
 	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues,
 								 List<String> namesOfLocals, boolean removeDeadVariables ){
