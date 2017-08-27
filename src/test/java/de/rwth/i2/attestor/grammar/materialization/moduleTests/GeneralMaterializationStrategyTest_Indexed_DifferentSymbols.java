@@ -151,7 +151,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	
 	private Nonterminal getNonterminalWithIndexVariable() {
 		List<IndexSymbol> index = indexForLhs();
-		index.add( IndexVariable.getGlobalInstance() );
+		index.add( IndexVariable.getIndexVariable() );
 		return getNonterminalWithIndex( index );
 	}
 	

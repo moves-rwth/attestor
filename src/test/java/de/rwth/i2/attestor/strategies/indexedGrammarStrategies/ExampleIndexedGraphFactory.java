@@ -977,7 +977,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		boolean [] reductionTentacles = new boolean []{true,true,true,true,false};
 		
 		

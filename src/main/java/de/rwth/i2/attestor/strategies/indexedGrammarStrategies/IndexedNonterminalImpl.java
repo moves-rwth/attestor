@@ -57,10 +57,6 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(s));
 	}
 
-	@Override
-    public IndexedNonterminal getWithInstantiation(){
-        return new IndexedNonterminalImpl(generalNonterminal, index.getWithInstantiation());
-	}
 
 	@Override
     public IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix){

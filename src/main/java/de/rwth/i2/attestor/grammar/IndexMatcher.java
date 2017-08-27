@@ -185,7 +185,7 @@ public class IndexMatcher {
 		if( i < instantiableNonterminal.getIndex().size() ){
 		    s2 = instantiableNonterminal.getIndex().get(i);
 		}else{
-			s2 = IndexVariable.getGlobalInstance();
+			s2 = IndexVariable.getIndexVariable();
 		}
 		return s2;
 	}

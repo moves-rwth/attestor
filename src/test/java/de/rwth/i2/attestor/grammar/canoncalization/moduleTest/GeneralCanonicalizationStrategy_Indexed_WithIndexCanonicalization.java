@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -39,7 +39,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 	
 	private static final int sizeOfChain = 10;
 
-	private IndexedMatchingHandler matchingHandler;
+	private IndexedCanonicalizationHelper matchingHandler;
 	
 	@Before
 	public void init() {
@@ -59,7 +59,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 				new EmbeddingIndexChecker( indexMatcher, 
 											materializer );
 		
-		matchingHandler = new IndexedMatchingHandler( indexStrategy, checkerProvider, indexChecker);
+		matchingHandler = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
 		
 	}
 
@@ -107,7 +107,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 	
 	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> index ){
 		List<IndexSymbol> indexCopy = new ArrayList<>( index );
-		indexCopy.add( IndexVariable.getGlobalInstance() );
+		indexCopy.add( IndexVariable.getIndexVariable() );
 		return indexCopy;
 	}
 

@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.canonicalization;
+package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
 @SuppressWarnings("serial")
 public class CannotMatchException extends Exception {

@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -301,7 +301,7 @@ public class EmbeddingIndexCheckerTest {
 	}
 	
 	private List<IndexSymbol> makeInstantiable(List<IndexSymbol> prefix) {
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		return addSymbol( prefix, var );
 	}
 	
@@ -352,7 +352,7 @@ public class EmbeddingIndexCheckerTest {
 
 	private List<IndexSymbol> getIndexWithIndexVariable() {
 		List<IndexSymbol> index = getEmptyIndex();
-		index.add( IndexVariable.getGlobalInstance() );
+		index.add( IndexVariable.getIndexVariable() );
 		return index;
 	}
 

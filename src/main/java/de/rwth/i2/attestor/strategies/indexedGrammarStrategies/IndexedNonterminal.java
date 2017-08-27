@@ -15,7 +15,6 @@ public interface IndexedNonterminal extends Nonterminal {
 
     IndexedNonterminal getWithProlongedIndex(IndexSymbol s);
 
-    IndexedNonterminal getWithInstantiation();
 
     /**
      * removes the last symbol (indexVariable () or abstractIndexSymbol) and

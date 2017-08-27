@@ -208,7 +208,7 @@ public class IndexedMaterializationRuleManagerTest {
 		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom1 = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		
 		List<IndexSymbol> index1 = new ArrayList<>();
 		index1.add(a);
@@ -271,7 +271,7 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	private HeapConfiguration uninstantiatedRhs_OneNonterminal_EmptyIndex(){
 		List<IndexSymbol> uninstantiatedEmptyIndex = emptyIndex();
-		uninstantiatedEmptyIndex.add( IndexVariable.getGlobalInstance() );
+		uninstantiatedEmptyIndex.add( IndexVariable.getIndexVariable() );
 		return graphWithOneNonterminalWithIndex( uninstantiatedEmptyIndex );
 	}
 	
@@ -297,7 +297,7 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	private HeapConfiguration uninstantiatedRhs_OneNonterminal_NonEmptyIndex(){
 		List<IndexSymbol> uninstantiatedNonEmptyIndex = nonEmptyIndex();
-		uninstantiatedNonEmptyIndex.add( IndexVariable.getGlobalInstance() );
+		uninstantiatedNonEmptyIndex.add( IndexVariable.getIndexVariable() );
 		return graphWithOneNonterminalWithIndex( uninstantiatedNonEmptyIndex );
 	}
 	
@@ -358,9 +358,9 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	private HeapConfiguration uninstantiatedRhs_TwoNonterminals(){
 		List<IndexSymbol> index1 = emptyIndex();
-		index1.add( IndexVariable.getGlobalInstance() );
+		index1.add( IndexVariable.getIndexVariable() );
 		List<IndexSymbol> index2 = nonEmptyIndex();
-		index2.add( IndexVariable.getGlobalInstance() );
+		index2.add( IndexVariable.getIndexVariable() );
 		return graphWithTwoNonterminalsWithIndices( index1, index2 );
 	}
 	

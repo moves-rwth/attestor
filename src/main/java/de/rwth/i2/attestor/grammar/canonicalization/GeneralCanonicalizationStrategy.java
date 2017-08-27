@@ -17,10 +17,10 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	private CanonicalizationHelper canonicalizationHelper;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
-											CanonicalizationHelper matchingHandler ) {
+											CanonicalizationHelper canonicalizationHelper ) {
 
 		this.grammar = grammar;
-		this.canonicalizationHelper = matchingHandler;
+		this.canonicalizationHelper = canonicalizationHelper;
 	}
 
 	@Override

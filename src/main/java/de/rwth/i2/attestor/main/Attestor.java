@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.grammar.*;
 import de.rwth.i2.attestor.grammar.canonicalization.*;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
@@ -498,7 +498,7 @@ public class Attestor {
 				new EmbeddingIndexChecker( indexMatcher, 
 											materializer );
 		
-		canonicalizationHelper = new IndexedMatchingHandler( indexStrategy, checkerProvider, indexChecker);
+		canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
 		return canonicalizationHelper;
 	}
 

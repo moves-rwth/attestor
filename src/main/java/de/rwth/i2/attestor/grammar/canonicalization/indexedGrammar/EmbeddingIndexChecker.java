@@ -7,8 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -140,7 +138,7 @@ public class EmbeddingIndexChecker {
 	
 	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<IndexSymbol> instantiation) {
 		
-		IndexSymbol indexVariable = IndexVariable.getGlobalInstance();
+		IndexSymbol indexVariable = IndexVariable.getIndexVariable();
 		pattern = pattern.clone();
 		HeapConfigurationBuilder builder = pattern.builder();
 		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();

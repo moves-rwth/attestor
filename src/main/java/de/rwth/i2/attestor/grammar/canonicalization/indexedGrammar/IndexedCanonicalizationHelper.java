@@ -9,14 +9,14 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 
-public class IndexedMatchingHandler implements CanonicalizationHelper {
+public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 
 	public IndexCanonizationStrategy indexCanonizationStrategy;
 	public EmbeddingCheckerProvider checkerProvider;
 	public EmbeddingIndexChecker indexChecker;
 
 	
-	public IndexedMatchingHandler( IndexCanonizationStrategy indexCanonicalization,
+	public IndexedCanonicalizationHelper( IndexCanonizationStrategy indexCanonicalization,
 								   EmbeddingCheckerProvider checkerProvider, 
 								   EmbeddingIndexChecker indexChecker ) {
 		super();
@@ -30,8 +30,8 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 	 */
 	@Override
 	public ProgramState tryReplaceMatching( ProgramState state, 
-												 HeapConfiguration rhs, Nonterminal lhs,
-												Semantics semantics ) {
+											HeapConfiguration rhs, Nonterminal lhs,
+											Semantics semantics ) {
 		
 		ProgramState result = null;
 
@@ -74,6 +74,9 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 		return abstracted;
 	}
 
+	/**
+	 * For indexed HeapConfigurations this canonizes the indices.
+	 */
 	@Override
 	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
 		HeapConfiguration heap = toAbstract.getHeap().clone();

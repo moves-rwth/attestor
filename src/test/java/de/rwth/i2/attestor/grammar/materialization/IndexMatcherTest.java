@@ -112,7 +112,7 @@ public class IndexMatcherTest {
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(a);
-		index.add( IndexVariable.getGlobalInstance() );
+		index.add( IndexVariable.getIndexVariable() );
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
 	}
 

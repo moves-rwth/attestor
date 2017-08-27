@@ -37,7 +37,7 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addRuleBalanced(GrammarBuilder builder){
-		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexVariable var = IndexVariable.getIndexVariable();
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
 		lhsIndex.add(var);
@@ -50,7 +50,7 @@ public class BalancedTreeGrammar{
 
 	public static HeapConfiguration createRuleBalanced() {
 		
-		IndexVariable var =  IndexVariable.getGlobalInstance();
+		IndexVariable var =  IndexVariable.getIndexVariable();
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
@@ -75,7 +75,7 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addUnbalancedRuleLeft(GrammarBuilder builder){
-		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
@@ -91,7 +91,7 @@ public class BalancedTreeGrammar{
 
 	public static HeapConfiguration createUnbalancedRuleLeft() {
 		
-		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
@@ -121,7 +121,7 @@ public class BalancedTreeGrammar{
 	}
 	
 	private static void addUnbalancedRuleRight(GrammarBuilder builder){
-		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
@@ -136,7 +136,7 @@ public class BalancedTreeGrammar{
 	}
 
 	public static HeapConfiguration createUnbalancedRuleRight() {
-		IndexVariable var = IndexVariable.getGlobalInstance();
+		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
