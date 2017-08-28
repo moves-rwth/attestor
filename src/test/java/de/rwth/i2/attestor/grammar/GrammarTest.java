@@ -225,7 +225,7 @@ public class GrammarTest {
 	}
 
 	private static Nonterminal constructInstantiableIndexedNonterminal() {
-		final IndexVariable var = IndexVariable.getGlobalInstance();
+		final IndexVariable var = IndexVariable.getIndexVariable();
 		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( s);

@@ -64,7 +64,7 @@ class ExpectedHCs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(var);
@@ -132,7 +132,7 @@ class ExpectedHCs {
 	public static HeapConfiguration getExpected_Rule1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(var);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);

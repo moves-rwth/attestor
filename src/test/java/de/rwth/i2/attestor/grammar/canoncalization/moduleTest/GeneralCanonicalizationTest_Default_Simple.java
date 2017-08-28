@@ -1,19 +1,22 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
+import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
-import de.rwth.i2.attestor.graph.*;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.NonterminalEdgeBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
@@ -52,10 +55,9 @@ public class GeneralCanonicalizationTest_Default_Simple {
 		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
 		Statement stmt = new Skip( 0 );
 		
-		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
-		
-		assertEquals( 1, res.size() );
-		assertThat( res, contains( expectedSimpleAbstraction(lhs) ) );
+		ProgramState res = canonizer.canonicalize(stmt, inputState);
+
+		assertEquals( expectedSimpleAbstraction(lhs), res);
 		
 	}
 

@@ -10,17 +10,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -38,7 +46,7 @@ public class EmbeddingIndexCheckerTest {
 	/**
 	 * This test uses graphs without any nonterminals as inputs,
 	 * i.e. it doesn't test any logic.
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testSimple() throws CannotMatchException {
@@ -55,7 +63,7 @@ public class EmbeddingIndexCheckerTest {
 	
 	/**
 	 * This tests verifies that the graphs are not modified, if the stacks match directly
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testWithIdenticalStacks() throws CannotMatchException{
@@ -75,7 +83,7 @@ public class EmbeddingIndexCheckerTest {
 	/**
 	 * This test verifies that materialization is applied correctly in a simple case
 	 * (No instantiation, no different abstract symbols)
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testOnlyMaterialization() throws CannotMatchException{
@@ -102,7 +110,7 @@ public class EmbeddingIndexCheckerTest {
 	 * still requires no instantiation, but uses embeds two nonterminals
 	 * which have different abstract symbols (ensures that they are materialized
 	 * independently)
-	 * @throws CannotMatchException 
+	 * @throws CannotMatchException unexpected (means the indexEmbeddingChecker has found a false negative)
 	 */
 	@Test
 	public void testMaterializationWithDifferentAbstractSymbols() throws CannotMatchException{
@@ -135,7 +143,7 @@ public class EmbeddingIndexCheckerTest {
 	 * Input: X -- s()<br>
 	 *        X -- ss()
 	 *        
-	 * -> should fail!
+	 * &#8594; should not be able to match
 	 */
 	@Test
 	public void testIncopatibleMaterialization() {
@@ -156,16 +164,12 @@ public class EmbeddingIndexCheckerTest {
 		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
 		
 		try {
-			IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
+			checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 			fail("Expected CannotMatchException");
 		} catch (CannotMatchException e) {
 			//expected
 		}
-		
-		
 	}
-
-
 
 	@Test
 	public void testInstantiation() throws CannotMatchException{
@@ -301,7 +305,7 @@ public class EmbeddingIndexCheckerTest {
 	}
 	
 	private List<IndexSymbol> makeInstantiable(List<IndexSymbol> prefix) {
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		return addSymbol( prefix, var );
 	}
 	
@@ -352,7 +356,7 @@ public class EmbeddingIndexCheckerTest {
 
 	private List<IndexSymbol> getIndexWithIndexVariable() {
 		List<IndexSymbol> index = getEmptyIndex();
-		index.add( IndexVariable.getGlobalInstance() );
+		index.add( IndexVariable.getIndexVariable() );
 		return index;
 	}
 

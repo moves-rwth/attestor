@@ -1,19 +1,18 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.CustomHcListExporter;
-import de.rwth.i2.attestor.io.HcLabelPair;
-import de.rwth.i2.attestor.util.FileUtils;
-import org.json.JSONWriter;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+
+import org.json.JSONWriter;
+
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.io.CustomHcListExporter;
+import de.rwth.i2.attestor.io.HcLabelPair;
+import de.rwth.i2.attestor.util.FileUtils;
 
 /**
  * Created by christina on 23.08.17.

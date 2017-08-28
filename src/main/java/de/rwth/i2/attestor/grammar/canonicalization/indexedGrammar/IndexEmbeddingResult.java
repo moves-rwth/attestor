@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.canonicalization;
+package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

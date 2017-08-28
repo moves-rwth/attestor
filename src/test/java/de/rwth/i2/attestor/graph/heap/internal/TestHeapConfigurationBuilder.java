@@ -20,7 +20,7 @@ public class TestHeapConfigurationBuilder extends InternalHeapConfigurationBuild
 			throw new IllegalArgumentException("The rank of the provided label and the size of the list of attached nodes do not coincide.");
 		}
 		
-		int publicId = addPrivatePublicIdPair( desiredId );
+		addPrivatePublicIdPair( desiredId );
 		int privateId = getPrivateId( desiredId );
 		
 		heapConf.graph.addNode(label, attachedNodes.size(), 0);
@@ -36,15 +36,14 @@ public class TestHeapConfigurationBuilder extends InternalHeapConfigurationBuild
 		return this;
 	}
 	
+    private int addPrivatePublicIdPair(int desiredId) {
+        int privateId = getNextPrivateId();
+        assert( desiredId < 0 );
+        assert( ! heapConf.publicToPrivateIDs.containsKey( desiredId ) );
+        heapConf.publicToPrivateIDs.put( desiredId, privateId );
+        
+        return desiredId;
+    }
 
-	
-	private int addPrivatePublicIdPair(int desiredId) {
-		int privateId = getNextPrivateId();
-		assert( desiredId < 0 );
-		assert( ! heapConf.publicToPrivateIDs.containsKey( desiredId ) );
-		heapConf.publicToPrivateIDs.put( desiredId, privateId );
-		
-		return desiredId;
-	}
 
 }

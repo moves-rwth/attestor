@@ -1,10 +1,12 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,7 +45,6 @@ public class SettingsFileReader {
 			scan.close();
 
 			jsonSettings = new JSONObject(str.toString());
-			Settings settings = Settings.getInstance();
 			
 			//this.input = settings.getJSONObject("input");
 			//initializeOptionsFromJson( settings.getJSONObject("options") );
@@ -138,44 +139,6 @@ public class SettingsFileReader {
 		}
 
 		return input;
-	}
-
-	//TODO: move from settings file reader somewhere else (e.g. io) -> call in parsing phase
-	private HashMap<String,String> extractMapping(JSONObject predefinedGrammarSetting) {
-
-		HashMap<String, String> rename = null;
-		// Read in the type and field name mapping
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(predefinedGrammarSetting.getString("definition")));
-			String definitionsLine = null;
-			rename = new HashMap<String, String>();
-			try {
-				definitionsLine = br.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			while(definitionsLine != null){
-				if(definitionsLine.startsWith("@Rename")){
-					String[] map = definitionsLine.replace("@Rename", "").split("->");
-					assert map.length == 2;
-
-					rename.put(map[0].trim(), map[1].trim());
-				}
-
-				try {
-					definitionsLine = br.readLine();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		} catch (FileNotFoundException e) {
-			logger.warn("File " + predefinedGrammarSetting.getString("definition") + " not found. "
-					+ "Skipping predefined grammar "
-					+ predefinedGrammarSetting.getString("type") + ".");
-		}
-
-		return rename;
 	}
 
 	/**

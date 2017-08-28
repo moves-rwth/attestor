@@ -120,7 +120,7 @@ public class IndexMatcherTest {
 	private IndexedNonterminal createInstantiableNonterminal() {
 		List<IndexSymbol> index = getIndexPrefix();
 		index.add(a);
-		index.add( IndexVariable.getGlobalInstance() );
+		index.add( IndexVariable.getIndexVariable() );
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
 	}
 

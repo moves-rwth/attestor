@@ -88,7 +88,7 @@ public class TestJsonToIndexedGrammar {
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		IndexSymbol var = IndexVariable.getGlobalInstance();
+		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index1 = new ArrayList<>();
 		index1.add(s);
 		index1.add(var);

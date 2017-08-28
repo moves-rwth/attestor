@@ -7,8 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
-import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -43,43 +41,67 @@ public class EmbeddingIndexChecker {
 		while( iterator.hasNext() ){
 			int nt = iterator.next();
 
-			Nonterminal patternLabel = pattern.labelOf( nt );
-			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
-			if( patternLabel instanceof IndexedNonterminal 
-					&& targetLabel instanceof IndexedNonterminal ){
-
-				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-				materializable = applyCurrentMaterializationTo( materializations, materializable );
-				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-				instantiable = applyInstantiationTo( instantiation, instantiable );
-
-				if(! indexMatcher.canMatch( materializable, instantiable ) ){
-					throw new CannotMatchException();
-				}else{
-					Pair<AbstractIndexSymbol, List<IndexSymbol>> materializationRule = 
-							indexMatcher.getMaterializationRule(materializable, instantiable);
-
-					if( indexMatcher.needsMaterialization(materializable, instantiable) ) {
-						updateMaterializations( materializations, materializationRule );
-						updateInstantiation( instantiation, materializationRule );
-					}
-					if( indexMatcher.needsInstantiation(materializable, instantiable) ) {
-						updateInstantiation( instantiation, indexMatcher.getNecessaryInstantiation(materializable, instantiable) );
-					}
-				}
-			}
+			computeNecessaryChangesFor(nt, toAbstract, embedding, materializations, instantiation, pattern);
 
 		}
 
 		toAbstract = applyMaterializationsTo( toAbstract, materializations );
 		pattern = applyInstantiationTo( pattern, instantiation );
+		checkAppliedResult(toAbstract, embedding, pattern);
+		
+		lhs = applyInstantiationTo(lhs, instantiation);
+	
+		return new IndexEmbeddingResult( toAbstract, lhs );
+	}
+
+	private void computeNecessaryChangesFor(int nt, HeapConfiguration toAbstract, Matching embedding,
+			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations, List<IndexSymbol> instantiation,
+			HeapConfiguration pattern) throws CannotMatchException {
+		
+		Nonterminal patternLabel = pattern.labelOf( nt );
+		Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
+		
+		if( patternLabel instanceof IndexedNonterminal 
+				&& targetLabel instanceof IndexedNonterminal ){
+
+			IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+			materializable = applyCurrentMaterializationTo( materializations, materializable );
+			IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+			instantiable = applyInstantiationTo( instantiation, instantiable );
+
+			if( ! indexMatcher.canMatch( materializable, instantiable ) ){
+				throw new CannotMatchException();
+			}else{
+			
+				updateWithNecessaryMaterialization(materializations, instantiation, materializable, instantiable);
+				updateWithNecessaryInstantiation(instantiation, materializable, instantiable);
+			}
+		}
+	}
+
+	private void updateWithNecessaryInstantiation(List<IndexSymbol> instantiation, IndexedNonterminal materializable,
+			IndexedNonterminal instantiable) throws CannotMatchException {
+		if( indexMatcher.needsInstantiation(materializable, instantiable) ) {
+			updateInstantiation( instantiation, indexMatcher.getNecessaryInstantiation(materializable, instantiable) );
+		}
+	}
+
+	private void updateWithNecessaryMaterialization(Map<AbstractIndexSymbol, List<IndexSymbol>> materializations,
+			List<IndexSymbol> instantiation, IndexedNonterminal materializable, IndexedNonterminal instantiable) {
+		if( indexMatcher.needsMaterialization(materializable, instantiable) ) {
+			Pair<AbstractIndexSymbol, List<IndexSymbol>> materializationRule = 
+					indexMatcher.getMaterializationRule(materializable, instantiable);
+			updateMaterializations( materializations, materializationRule );
+			updateInstantiation( instantiation, materializationRule );
+		}
+	}
+
+	private Nonterminal applyInstantiationTo(Nonterminal lhs, List<IndexSymbol> instantiation) {
 		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
 			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
 			lhs = iLhs.getWithProlongedIndex(instantiation);
 		}
-		
-		checkAppliedResult(toAbstract, embedding, pattern);
-		return new IndexEmbeddingResult( toAbstract, lhs );
+		return lhs;
 	}
 
 
@@ -101,32 +123,23 @@ public class EmbeddingIndexChecker {
 
 			Nonterminal patternLabel = pattern.labelOf( nt );
 			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
-			if( patternLabel instanceof IndexedNonterminal 
-					&& targetLabel instanceof IndexedNonterminal ){
-
-				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
-				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
-				
-				if( ! materializable.getIndex().matchIndex(instantiable.getIndex() ) ) {
-					throw new CannotMatchException();
-				}
+			if( ! patternLabel.equals(targetLabel) ) {
+				throw new CannotMatchException();
 			}
 		}
 	}
-
-
-
 
 
 	/**
 	 * Applies all the materialization rules in materializations to the
 	 * graph hc.
 	 * @param hc the graph to which to apply the materializations
-	 * @param materializations the rules for materialization, e.g. X -> ssX, Y -> sZ
+	 * @param materializations the rules for materialization, e.g. X &#8594; ssX, Y &#8594; sZ
 	 * @return
 	 */
-	private HeapConfiguration applyMaterializationsTo(HeapConfiguration hc,
+	private HeapConfiguration applyMaterializationsTo( HeapConfiguration hc,
 			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations) {
+		
 		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> rule : materializations.entrySet() ){
 			try {
 				hc = this.indexMaterializer.getMaterializedCloneWith(hc, rule.getKey(), rule.getValue() );
@@ -138,9 +151,15 @@ public class EmbeddingIndexChecker {
 		return hc;
 	}
 	
-	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<IndexSymbol> instantiation) {
+	/**
+	 * Applies the instantiation rule to the graph pattern
+	 * @param pattern the graph to which the instantiation is applied
+	 * @param the instantiation sequence
+	 * @return
+	 */
+	private HeapConfiguration applyInstantiationTo( HeapConfiguration pattern, List<IndexSymbol> instantiation) {
 		
-		IndexSymbol indexVariable = IndexVariable.getGlobalInstance();
+		IndexSymbol indexVariable = IndexVariable.getIndexVariable();
 		pattern = pattern.clone();
 		HeapConfigurationBuilder builder = pattern.builder();
 		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();

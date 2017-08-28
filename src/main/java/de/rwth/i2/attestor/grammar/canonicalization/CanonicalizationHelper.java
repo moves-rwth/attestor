@@ -11,6 +11,7 @@ public interface CanonicalizationHelper {
 										  HeapConfiguration rhs, Nonterminal lhs,
 										  Semantics semantics );
 	
+	
 	ProgramState prepareHeapForCanonicalization( ProgramState toAbstract );
 
 }

@@ -80,7 +80,7 @@ public class JsonToIndexedHC {
 		for( int i = 0; i < index.length(); i++ ){
 			String symbol = index.getString(i);
 			if( symbol.equals("()") ){
-				res.add( IndexVariable.getGlobalInstance() );
+				res.add( IndexVariable.getIndexVariable() );
 
 				assert( i == index.length() -1 ) : "variables should be the last symbol of a index";
 			}else if( symbol.startsWith("_") ){

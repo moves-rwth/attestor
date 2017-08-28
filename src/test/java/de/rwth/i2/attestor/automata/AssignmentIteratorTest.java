@@ -1,18 +1,15 @@
 package de.rwth.i2.attestor.automata;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.main.settings.Settings;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertNotEquals;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
 public class AssignmentIteratorTest {
 

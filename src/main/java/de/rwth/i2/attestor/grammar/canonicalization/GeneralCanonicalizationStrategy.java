@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,46 +18,38 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	private CanonicalizationHelper canonicalizationHelper;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
-											CanonicalizationHelper matchingHandler ) {
+											CanonicalizationHelper canonicalizationHelper ) {
 
 		this.grammar = grammar;
-		this.canonicalizationHelper = matchingHandler;
+		this.canonicalizationHelper = canonicalizationHelper;
 	}
 
 	@Override
-	public Set<ProgramState> canonicalize(Semantics semantics, ProgramState state ) {
+	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
 
 		if( !semantics.permitsCanonicalization() ) { 
 
-			return SingleElementUtil.createSet( state );
+			return  state;
 		}
 
 		return performCanonicalization( semantics, state );
 	}
 
-	private Set<ProgramState> performCanonicalization(Semantics semantics, ProgramState state) {
+	private ProgramState performCanonicalization(Semantics semantics, ProgramState state) {
 
 		state = canonicalizationHelper.prepareHeapForCanonicalization( state );
 		
-		Set<ProgramState> result = new HashSet<>();
-
-		abstractionFound:
-        for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
+		for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
 			for( HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs) ){
 				ProgramState abstractedState =
 						canonicalizationHelper.tryReplaceMatching(state, rhs, lhs, semantics );
 				if( abstractedState != null ) {
-					result.addAll( performCanonicalization( semantics, abstractedState ) );
-					break abstractionFound;
+					return performCanonicalization( semantics, abstractedState );
 				}
 			}			
 		}
 
-		if(result.isEmpty()) {
-			result.add(state);
-		}
-
-		return result;
+		return state;
 	}
 
 

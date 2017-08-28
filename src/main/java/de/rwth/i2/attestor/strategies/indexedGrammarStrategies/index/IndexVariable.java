@@ -7,7 +7,7 @@ public class IndexVariable implements IndexSymbol {
 
 	private static final IndexVariable instance = new IndexVariable();
 	
-	public static IndexVariable getGlobalInstance(){
+	public static IndexVariable getIndexVariable(){
 		return instance;
 	}
 	
@@ -18,28 +18,6 @@ public class IndexVariable implements IndexSymbol {
 		return false;
 	}
 	
-	public void prolongInstantiation( IndexSymbol instantiation ){
-		this.instantiation.add(instantiation);
-	}
-	
-	public boolean matchInstantiation( List<IndexSymbol> matchAgainst ){
-		if( matchAgainst.size() < instantiation.size() ){
-			return false;
-		}
-		for( int i = 0; i < instantiation.size(); i++ ){
-			if( ! matchAgainst.get( i ).equals( instantiation.get( i ) ) ){
-				return false;
-			}
-		}
-		for( int j = instantiation.size(); j < matchAgainst.size(); j++  ){
-			prolongInstantiation( matchAgainst.get( j ) );
-		}
-		return true;
-	}
-	
-	public Iterable<IndexSymbol> getInstantiation(){
-		return this.instantiation;
-	}
 	
 	public void resetInstantiation(){
 		this.instantiation.clear();

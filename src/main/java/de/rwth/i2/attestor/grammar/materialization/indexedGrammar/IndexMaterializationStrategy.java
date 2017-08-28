@@ -39,9 +39,9 @@ public class IndexMaterializationStrategy {
 
 		if( ! inputMaterializationPostfix.isEmpty() ){
 
-			return computeCloneWithAppliedMaterializationOf(inputGraph, 
+			return computeCloneWithAppliedMaterializationOf( inputGraph, 
 															symbolToMaterialize,
-															inputMaterializationPostfix);
+															inputMaterializationPostfix );
 
 		}else{
 			return inputGraph;

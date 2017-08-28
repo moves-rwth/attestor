@@ -2,15 +2,17 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
+import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -62,18 +64,11 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest1();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest1(), test );
 		
-		assertEquals("There is only one embedding.", resStates.size(), 1);
-		
-		for(ProgramState state : resStates) {
-			
-			assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
-		}
-		
-		
+		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
 	}
 	
 	@Test
@@ -83,16 +78,11 @@ public class CanonicalizationStrategyTest {
 		
 	
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest2(), test );
-		
-		assertEquals("There is only one embedding.", resStates.size(), 1);
-		
-		for(ProgramState state : resStates) {
-				
-			assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
-		}
+
+		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
 	}
 	
 	@Test
@@ -101,15 +91,10 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest3();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest3(), test );
-		assertEquals("There is only one embedding.", resStates.size(), 1);
-		
-		for(ProgramState state : resStates) {
-		
-			assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes3(), state.getHeap() );
-		}
+		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes3(), state.getHeap() );
 	}
 	
 	@Test
@@ -117,15 +102,11 @@ public class CanonicalizationStrategyTest {
 		
 		HeapConfiguration test = ExampleHcImplFactory.getLongConcreteSLL();
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
-		
-		assertEquals(1, resStates.size());
-		
-		for(ProgramState state : resStates) {
-			assertEquals(expected, state.getHeap());
-		}
+
+		assertEquals(expected, state.getHeap());
 	}
 	
 	@Test
@@ -142,7 +123,7 @@ public class CanonicalizationStrategyTest {
 		
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		Set<ProgramState> resStates = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
 		TIntArrayList expectedNodes = expected.nodes();
@@ -151,11 +132,7 @@ public class CanonicalizationStrategyTest {
 			.addVariableEdge("x", expectedNodes.get(0))
 			.addVariableEdge("y", expectedNodes.get(1))
 			.build();
-		
-		assertEquals(1, resStates.size());
-		
-		for(ProgramState state : resStates) {
+
 			assertEquals(expected, state.getHeap());
-		}
 	}
 }

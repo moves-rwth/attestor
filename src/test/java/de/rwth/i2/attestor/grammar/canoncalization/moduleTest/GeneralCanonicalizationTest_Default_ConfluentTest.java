@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,10 +53,9 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 		ProgramState inputState = new DefaultProgramState( getInputGraph() );
 		Statement stmt = new Skip( 0 );
 		
-		Set<ProgramState> res = canonizer.canonicalize(stmt, inputState);
+		ProgramState res = canonizer.canonicalize(stmt, inputState);
 		
-		assertEquals( 1, res.size() );
-		assertThat( res, contains( expectedFullAbstraction(lhs) ) );
+		assertEquals( expectedFullAbstraction(lhs), res );
 	}
 
 

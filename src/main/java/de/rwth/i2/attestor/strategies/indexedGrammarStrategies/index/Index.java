@@ -54,15 +54,15 @@ public class Index {
         return new Index(indexCopy);
     }
 
-    public Index getWithInstantiation(){
-        List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
-        if( indexSymbols.size() > 0 && this.getLastIndexSymbol() instanceof IndexVariable){
-            IndexVariable lastSymbol = (IndexVariable)indexCopy.get(indexCopy.size() - 1);
-            indexCopy.remove( indexCopy.size() - 1 );
-            lastSymbol.getInstantiation().forEach(indexCopy::add);
-        }
-        return new Index(indexCopy);
-    }
+//    public Index getWithInstantiation(){
+//        List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
+//        if( indexSymbols.size() > 0 && this.getLastIndexSymbol() instanceof IndexVariable){
+//            IndexVariable lastSymbol = (IndexVariable)indexCopy.get(indexCopy.size() - 1);
+//            indexCopy.remove( indexCopy.size() - 1 );
+//            lastSymbol.getInstantiation().forEach(indexCopy::add);
+//        }
+//        return new Index(indexCopy);
+//    }
 
     public Index getWithProlongedIndex(List<IndexSymbol> postfix ){
         assert( this.size() > 0 );
@@ -93,11 +93,7 @@ public class Index {
         for( int i = 0; i < this.size() && i < otherIndex.size(); i++ ){
             IndexSymbol s1 = this.get( i );
             IndexSymbol s2 = otherIndex.get( i );
-            if( s1 instanceof IndexVariable){
-                return ( (IndexVariable) s1 ).matchInstantiation( otherIndex.subList( i, otherIndex.size() ) );
-            }else if( s2 instanceof IndexVariable){
-                return ( (IndexVariable) s2 ).matchInstantiation( this.indexSymbols.subList( i, indexSymbols.size() ) );
-            }
+      
             if( ! s1.equals( s2 )){
                 return false;
             }

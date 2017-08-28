@@ -1,9 +1,7 @@
 package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
-import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -12,14 +10,14 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 
-public class IndexedMatchingHandler implements CanonicalizationHelper {
+public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 
 	public IndexCanonizationStrategy indexCanonizationStrategy;
 	public EmbeddingCheckerProvider checkerProvider;
 	public EmbeddingIndexChecker indexChecker;
 
 	
-	public IndexedMatchingHandler( IndexCanonizationStrategy indexCanonicalization,
+	public IndexedCanonicalizationHelper( IndexCanonizationStrategy indexCanonicalization,
 								   EmbeddingCheckerProvider checkerProvider, 
 								   EmbeddingIndexChecker indexChecker ) {
 		super();
@@ -76,6 +74,9 @@ public class IndexedMatchingHandler implements CanonicalizationHelper {
 		return abstracted;
 	}
 
+	/**
+	 * For indexed HeapConfigurations this canonizes the indices.
+	 */
 	@Override
 	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
 		HeapConfiguration heap = toAbstract.getHeap().clone();
