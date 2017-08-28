@@ -20,7 +20,7 @@ public class TerminalStatement implements Semantics {
 	 * Stores whether canonicalization may be performed
      * after executing this statement.
 	 */
-	private boolean isCanonicalizationPermitted;
+	private boolean isCanonicalizationPermitted = true;
 	
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState executable) {

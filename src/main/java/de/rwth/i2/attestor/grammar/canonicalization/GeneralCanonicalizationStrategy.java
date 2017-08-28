@@ -2,14 +2,16 @@
 
 package de.rwth.i2.attestor.grammar.canonicalization;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
@@ -40,27 +42,19 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 		
 		Set<ProgramState> result = new HashSet<>();
 
-		boolean success = false;
-
-		for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
-
-			if( success ) { break; }
-
+		abstractionFound:
+        for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
 			for( HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs) ){
-
-				if( success ) { break; }
-
-				ProgramState abstractedState = 
+				ProgramState abstractedState =
 						canonicalizationHelper.tryReplaceMatching(state, rhs, lhs, semantics );
 				if( abstractedState != null ) {
-					success = true;	
 					result.addAll( performCanonicalization( semantics, abstractedState ) );
+					break abstractionFound;
 				}
 			}			
 		}
 
-		if(result.isEmpty()) {	
-
+		if(result.isEmpty()) {
 			result.add(state);
 		}
 

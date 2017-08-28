@@ -47,7 +47,7 @@ public class ReturnValueStmt extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors( ProgramState programState )
 			throws NotSufficientlyMaterializedException{
-		
+
 		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState);
 
 		ConcreteValue concreteReturn;

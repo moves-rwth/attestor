@@ -23,7 +23,7 @@ public class CompatibleNodeTypes implements FeasibilityFunction {
 		NodeLabel patternLabel = patternGraph.getNodeLabel(candidate.p);
 		NodeLabel targetLabel = targetGraph.getNodeLabel(candidate.t);
 
-		if( patternLabel instanceof GeneralType && targetLabel instanceof GeneralType){
+		if(patternLabel instanceof GeneralType && targetLabel instanceof GeneralType){
 			GeneralType patternType = (GeneralType) patternLabel;
 			GeneralType targetType = (GeneralType) targetLabel;
 			return patternType.typeEquals(targetType)
