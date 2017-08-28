@@ -65,10 +65,24 @@ import de.rwth.i2.attestor.util.ZipUtils;
  */
 public class Attestor {
 
+    /**
+     * Green color for log messages.
+     */
     private static final String ANSI_GREEN = "\u001B[32m";
-	private static final String ANSI_RED = "\u001B[31m";
+
+    /**
+     * Red color for log messages
+     */
+    private static final String ANSI_RED = "\u001B[31m";
+
+    /**
+     * Resets previously set colors in log messages.
+     */
     private static final String ANSI_RESET = "\u001B[0m";
 
+    /**
+     * Project properties, such as the current version number.
+     */
     private final Properties properties = new Properties();
 
     /**
@@ -110,6 +124,10 @@ public class Attestor {
 	 * Runs attestor to perform a program analysis.
 	 *
 	 * @param args The command line arguments determining settings and analysis customizations.
+     *
+     * @see <a href="https://github.com/moves-rwth/attestor/wiki/Command-Line-Options">
+     *          Explanation of all command line options
+     *      </a>
 	 */
 	public void run(String[] args) {
 
