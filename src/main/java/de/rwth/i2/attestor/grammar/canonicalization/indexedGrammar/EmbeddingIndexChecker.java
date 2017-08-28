@@ -1,0 +1,270 @@
+package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
+
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.canonicalization.CannotMatchException;
+import de.rwth.i2.attestor.grammar.canonicalization.IndexEmbeddingResult;
+import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.util.Pair;
+import gnu.trove.iterator.TIntIterator;
+
+public class EmbeddingIndexChecker {
+	private static final Logger logger = LogManager.getLogger( "EmbeddingIndexChecker" );
+
+
+	IndexMatcher indexMatcher;
+	IndexMaterializationStrategy indexMaterializer;
+
+
+	public EmbeddingIndexChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
+		this.indexMatcher = matcher;
+		this.indexMaterializer = materializer;
+	}
+
+	public IndexEmbeddingResult getIndexEmbeddingResult( HeapConfiguration toAbstract, 
+			Matching embedding, 
+			Nonterminal lhs ) throws CannotMatchException{
+
+		Map<AbstractIndexSymbol, List<IndexSymbol>> materializations = new HashMap<>();
+		List<IndexSymbol> instantiation = new ArrayList<>();
+
+		HeapConfiguration pattern = embedding.pattern();
+		TIntIterator iterator =  pattern.nonterminalEdges().iterator();
+		while( iterator.hasNext() ){
+			int nt = iterator.next();
+
+			Nonterminal patternLabel = pattern.labelOf( nt );
+			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
+			if( patternLabel instanceof IndexedNonterminal 
+					&& targetLabel instanceof IndexedNonterminal ){
+
+				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+				materializable = applyCurrentMaterializationTo( materializations, materializable );
+				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+				instantiable = applyInstantiationTo( instantiation, instantiable );
+
+				if(! indexMatcher.canMatch( materializable, instantiable ) ){
+					throw new CannotMatchException();
+				}else{
+					Pair<AbstractIndexSymbol, List<IndexSymbol>> materializationRule = 
+							indexMatcher.getMaterializationRule(materializable, instantiable);
+
+					if( indexMatcher.needsMaterialization(materializable, instantiable) ) {
+						updateMaterializations( materializations, materializationRule );
+						updateInstantiation( instantiation, materializationRule );
+					}
+					if( indexMatcher.needsInstantiation(materializable, instantiable) ) {
+						updateInstantiation( instantiation, indexMatcher.getNecessaryInstantiation(materializable, instantiable) );
+					}
+				}
+			}
+
+		}
+
+		toAbstract = applyMaterializationsTo( toAbstract, materializations );
+		pattern = applyInstantiationTo( pattern, instantiation );
+		if( ! instantiation.isEmpty() && lhs instanceof IndexedNonterminal ) {
+			IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
+			lhs = iLhs.getWithProlongedIndex(instantiation);
+		}
+		
+		checkAppliedResult(toAbstract, embedding, pattern);
+		return new IndexEmbeddingResult( toAbstract, lhs );
+	}
+
+
+	/**
+	 * To avoid checking corner cases in the original compuation of matchings,
+	 * the indices with applied materialization and instantiation are checked for
+	 * equality.
+	 * @param toAbstract the outer graph
+	 * @param embedding the matching from pattern to outer graph elements
+	 * @param pattern the embedded graph
+	 * @throws CannotMatchException if one of the indices does not match
+	 */
+	private void checkAppliedResult(HeapConfiguration toAbstract, Matching embedding, HeapConfiguration pattern)
+			throws CannotMatchException {
+		
+		TIntIterator iterator =  pattern.nonterminalEdges().iterator();
+		while( iterator.hasNext() ){
+			int nt = iterator.next();
+
+			Nonterminal patternLabel = pattern.labelOf( nt );
+			Nonterminal targetLabel = toAbstract.labelOf( embedding.match( nt ) );
+			if( patternLabel instanceof IndexedNonterminal 
+					&& targetLabel instanceof IndexedNonterminal ){
+
+				IndexedNonterminal materializable = (IndexedNonterminal) targetLabel;
+				IndexedNonterminal instantiable = (IndexedNonterminal) patternLabel;
+				
+				if( ! materializable.getIndex().matchIndex(instantiable.getIndex() ) ) {
+					throw new CannotMatchException();
+				}
+			}
+		}
+	}
+
+
+
+
+
+	/**
+	 * Applies all the materialization rules in materializations to the
+	 * graph hc.
+	 * @param hc the graph to which to apply the materializations
+	 * @param materializations the rules for materialization, e.g. X -> ssX, Y -> sZ
+	 * @return
+	 */
+	private HeapConfiguration applyMaterializationsTo(HeapConfiguration hc,
+			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations) {
+		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> rule : materializations.entrySet() ){
+			try {
+				hc = this.indexMaterializer.getMaterializedCloneWith(hc, rule.getKey(), rule.getValue() );
+			} catch (CannotMaterializeException e) {
+				logger.error( "materialization after index matching faild." );
+				e.printStackTrace();
+			}
+		}
+		return hc;
+	}
+	
+	private HeapConfiguration applyInstantiationTo(HeapConfiguration pattern, List<IndexSymbol> instantiation) {
+		
+		IndexSymbol indexVariable = IndexVariable.getGlobalInstance();
+		pattern = pattern.clone();
+		HeapConfigurationBuilder builder = pattern.builder();
+		TIntIterator edgeIter = pattern.nonterminalEdges().iterator();
+		while(edgeIter.hasNext()) {
+			int indexOfNonterminal = edgeIter.next();
+			Nonterminal nonterminal = pattern.labelOf( indexOfNonterminal );
+			if( nonterminal instanceof IndexedNonterminal){
+				IndexedNonterminal nonterminalToMaterialize = (IndexedNonterminal) nonterminal;
+				if( nonterminalToMaterialize.getIndex().getLastIndexSymbol().equals( indexVariable ) ) {
+					
+					Nonterminal nonterminalWithMaterializedIndex = 
+							applyInstantiationTo(instantiation, nonterminalToMaterialize);
+					builder.replaceNonterminal(indexOfNonterminal, nonterminalWithMaterializedIndex );
+				}
+
+			}
+		}
+		HeapConfiguration materializedGraph = builder.build();
+		return materializedGraph;
+	}
+
+
+
+	private void updateMaterializations(Map<AbstractIndexSymbol, List<IndexSymbol>> materializations,
+			Pair<AbstractIndexSymbol,List<IndexSymbol>> newMaterializationRule) {
+
+		applyNewMaterialiationTo(materializations,  newMaterializationRule);
+
+		if( !materializations.containsKey(newMaterializationRule.first()) ){
+			materializations.put(newMaterializationRule.first(), newMaterializationRule.second());
+		}
+
+	}
+	
+	private void updateInstantiation( List<IndexSymbol> instantiation,
+			Pair<AbstractIndexSymbol, List<IndexSymbol>> newMaterializationRule ) {
+		
+		if( !instantiation.isEmpty() ) {
+			materializeIn( instantiation, newMaterializationRule.first(), newMaterializationRule.second() );
+		}
+	}
+	
+	private void updateInstantiation(List<IndexSymbol> instantiation, List<IndexSymbol> necessaryInstantiation) throws CannotMatchException {
+		
+		if( ! instantiation.isEmpty() && ! instantiation.equals( necessaryInstantiation ) ) {
+			throw new CannotMatchException();
+		}
+		else instantiation.addAll( necessaryInstantiation );
+	}
+
+	/**
+	 * applies the new materialization to all the current materializations.
+	 * For example if materializations contains the rules
+	 * X -> sX,
+	 * Y -> ssX and
+	 * A -> ssB
+	 * and newMaterializations is (X,sZ),
+	 * materializations will afterwards consist of
+	 * X -> ssZ,
+	 * Y -> sssZ and
+	 * > -> ssB. 
+	 * @param materializations
+	 * @param newMaterialization
+	 */
+	private void applyNewMaterialiationTo(
+			Map<AbstractIndexSymbol, List<IndexSymbol>> materializations,
+			Pair<AbstractIndexSymbol,List<IndexSymbol>> newMaterialization) 
+	{
+
+		for( Entry<AbstractIndexSymbol, List<IndexSymbol>> materializationRule : materializations.entrySet() ){
+			List<IndexSymbol> rhs = materializationRule.getValue();
+			materializeIn( rhs, newMaterialization.first(), newMaterialization.second() );
+		}
+	}
+
+	/**
+	 * returns the last element in the index, i.e. c in [a,b,c].
+	 * @param index the index containing the elements
+	 * @return the last symbol of index
+	 */
+	private IndexSymbol getLastSymbolOf(List<IndexSymbol> index) {
+		return index.get( index.size() - 1 );
+	}
+
+	/**
+	 * materializes the given index using the rule lhs -> rhs.
+	 * For example if index = ssX, lhs = X, rhs = Z index is afterwards ssZ.
+	 * If the last symbol of index does not equal lhs nothing happens,
+	 * so for example calling index = ssY, lhs = X, rhs = Z will leave index unchanged.
+	 * @param index the index to materialize
+	 * @param lhs the abstract index symbol to materialized
+	 * @param rhs the sequence of index symbols with which to materialize
+	 */
+	private void materializeIn(List<IndexSymbol> index, IndexSymbol lhs, List<IndexSymbol> rhs) {
+
+		if( getLastSymbolOf(index).equals(lhs) ){
+			index.remove( index.size() -1 );
+			index.addAll( rhs );
+		}
+	}
+
+	private IndexedNonterminal applyCurrentMaterializationTo( 
+			Map<AbstractIndexSymbol, List<IndexSymbol>> currentMaterializations,
+			IndexedNonterminal materializable ) 
+	{
+
+		IndexSymbol lastIndexSymbol = materializable.getIndex().getLastIndexSymbol();
+		if( lastIndexSymbol instanceof AbstractIndexSymbol ){
+			if( currentMaterializations.containsKey(lastIndexSymbol) ){
+				return materializable.getWithProlongedIndex( currentMaterializations.get(lastIndexSymbol) );
+			}
+		}
+		return materializable;
+	}
+
+	private IndexedNonterminal applyInstantiationTo(List<IndexSymbol> instantiation, IndexedNonterminal instantiable) {
+
+		IndexSymbol lastSymbol = instantiable.getIndex().getLastIndexSymbol();
+		if( ! instantiation.isEmpty() && lastSymbol instanceof IndexVariable ) {
+			return instantiable.getWithProlongedIndex(instantiation);
+		}else {
+			return instantiable;
+		}
+
+	}
+
+}

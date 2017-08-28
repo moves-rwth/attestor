@@ -4,5 +4,5 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 public interface IndexCanonizationStrategy {
 
-	void canonizeStack(HeapConfiguration hc);
+	void canonizeIndex(HeapConfiguration hc);
 }

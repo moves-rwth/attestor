@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.io;
 
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -31,7 +32,7 @@ public class JsonToIndexedGrammar {
 
 			int rank = getRank(grammarFragment);
 			String label = getLabel(grammarFragment);
-			List<IndexSymbol> stack = getStack(grammarFragment);
+			List<IndexSymbol> index = getIndex(grammarFragment);
 			IndexedNonterminal nt;
 
 			if( hasDefinedTentacles(grammarFragment) ) {
@@ -40,7 +41,7 @@ public class JsonToIndexedGrammar {
 						.getInstance()
 						.factory()
 						.createNonterminal(label, rank, getReductionTentacles(grammarFragment));
-				nt = nt.getWithStack(stack);
+				nt = nt.getWithIndex(index);
 
 			} else {
 
@@ -51,7 +52,7 @@ public class JsonToIndexedGrammar {
 						.getInstance()
 						.factory()
 						.createNonterminal(label, rank, rts);
-				nt = nt.getWithStack(stack);
+				nt = nt.getWithIndex(index);
 
 				ntsWithoutReductionTentacles.add(nt);
 			}
@@ -74,9 +75,10 @@ public class JsonToIndexedGrammar {
 		return grammarFragment.getString( "nonterminal" );
 	}
 	
-	private static List<IndexSymbol> getStack(JSONObject grammarFragment ){
-		JSONArray stack = grammarFragment.getJSONArray("index");
-		return JsonToIndexedHC.parseStack(stack);
+
+	private static List<IndexSymbol> getIndex(JSONObject grammarFragment ){
+		JSONArray index = grammarFragment.getJSONArray("index");
+		return JsonToIndexedHC.parseIndex(index);
 	}
 
 	private static boolean hasDefinedTentacles(JSONObject grammarFragment) {

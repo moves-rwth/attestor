@@ -15,24 +15,24 @@ public class IndexGrammarForTests implements IndexMaterializationStrategy {
 	}
 
 	@Override
-	public IndexedNonterminal materializeStack(IndexedNonterminal nt, IndexSymbol s) {
+	public IndexedNonterminal materializeIndex(IndexedNonterminal nt, IndexSymbol s) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol originalIndexSymbol,
-													  IndexSymbol desiredIndexSymbol) {
+	public List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol originalIndexSymbol, 
+													  IndexSymbol desiredIndexSymbol ) {
 		List<IndexSymbol> result = new ArrayList<>();
 		result.add(desiredIndexSymbol);
 		if( ! desiredIndexSymbol.isBottom() ){
-			result.add(originalIndexSymbol);
+			result.add( originalIndexSymbol );
 		}
 		return result;
 	}
 
 	@Override
-	public void materializeStacks(HeapConfiguration heapConfiguration, IndexSymbol originalIndexSymbol,
+	public void materializeIndices(HeapConfiguration heapConfiguration, IndexSymbol originalIndexSymbol,
 			IndexSymbol desiredIndexSymbol) {
 	}
 

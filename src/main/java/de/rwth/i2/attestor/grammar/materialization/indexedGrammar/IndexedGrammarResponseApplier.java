@@ -1,14 +1,15 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+
 
 /**
  * Capable of handling {@link MaterializationAndRuleResponse}
@@ -20,11 +21,11 @@ import java.util.List;
 public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier {
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );
-	
+
 	IndexMaterializationStrategy indexMaterializationStrategy;
 
-	public IndexedGrammarResponseApplier(IndexMaterializationStrategy indexMaterializationStrategy,
-			GraphMaterializer graphMaterializer) {
+	public IndexedGrammarResponseApplier( IndexMaterializationStrategy indexMaterializationStrategy,
+										  GraphMaterializer graphMaterializer) {
 		super( graphMaterializer );
 		this.indexMaterializationStrategy = indexMaterializationStrategy;
 	}
@@ -42,13 +43,13 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 			 
 			 for( List<IndexSymbol> materialization : indexedRespose.getPossibleMaterializations() ){
 				 	 
-				 HeapConfiguration materializedStacks;
+				 HeapConfiguration materializedIndices;
 				try {
-					materializedStacks = indexMaterializationStrategy
+					materializedIndices = indexMaterializationStrategy
 							.getMaterializedCloneWith(inputGraph, 
-													  indexedRespose.getStackSymbolToMaterialize(), 
+													  indexedRespose.getIndexSymbolToMaterialize(), 
 													  materialization );
-					 materializedGraphs.addAll( super.applyGrammarResponseTo(materializedStacks, 
+					 materializedGraphs.addAll( super.applyGrammarResponseTo(materializedIndices, 
 							 edgeId, 
 							 new DefaultGrammarResponse( indexedRespose
 									 .getRulesForMaterialization(materialization))) ); 

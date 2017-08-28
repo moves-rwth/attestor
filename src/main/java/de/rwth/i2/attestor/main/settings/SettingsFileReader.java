@@ -1,19 +1,15 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Scanner;
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
 
 /**
  * Populates {@link Settings} from a settings file.
@@ -72,7 +68,8 @@ public class SettingsFileReader {
 	public InputSettings getInputSettings( Settings settings ){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
 		InputSettings input = settings.input();
-		
+
+		// path to class and json files to be analyzed
 		if( jsonInput.has( "defaultPath" ) ){
 			input.setDefaultPath( jsonInput.getString( "defaultPath" ) );
 		}
@@ -83,58 +80,67 @@ public class SettingsFileReader {
 		}else if( !jsonInput.has( "defaultPath" )){
 			logger.error("You must define a default path or a classpath");
 		}
-		input.setClassName( programSettings.getString( "class" ) );
-		input.setMethodName( programSettings.getString( "method" ) );
+		if(programSettings.has("class")) {
+			input.setClassName(programSettings.getString("class"));
+		} else {
+			logger.error("Please provide a class to be analysed.");
+		}
+		if(programSettings.has("method")) {
+			input.setMethodName(programSettings.getString("method"));
+		} else {
+			logger.error("Please provide a method to be analysed.");
+		}
 		
-		JSONObject grammarSettings = jsonInput.getJSONObject( "grammar" );
+		JSONObject grammarSettings = jsonInput.getJSONObject( "userDefinedGrammar" );
 		if(grammarSettings.has("file")) {
 			if (grammarSettings.has("path")) {
 				input.setPathToGrammar(grammarSettings.getString("path"));
 			} else if (!jsonInput.has("defaultPath")) {
-				logger.error("You must define a default path or a path for grammar");
+				logger.error("You must define a default path or a path for the grammar");
 			}
-			input.setGrammarName(grammarSettings.getString("file"));
+			input.setUserDefinedGrammarName(grammarSettings.getString("file"));
 		}
 
 		// Add requested predefined grammars
 		JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( "predefinedGrammars" );
 		for(int i = 0; i < predefinedGrammarSettings.length(); i++){
 			JSONObject predefinedGrammarSetting = predefinedGrammarSettings.getJSONObject(i);
-			String grammarType = predefinedGrammarSetting.getString("type");
+			final String grammarType = predefinedGrammarSetting.getString("type");
 
 			// Check if corresponding grammar exists
 			if(SettingsFileReader.class.getClassLoader().getResource("predefinedGrammars/" + grammarType + ".json") != null){
 
-					HashMap<String, String> rename = extractMapping(predefinedGrammarSetting);
-					input.addPredefinedGrammar(predefinedGrammarSetting.getString("type"), rename);
-					logger.debug("Adding predefined grammar " + grammarType);
+					String renameFileLocation = predefinedGrammarSetting.getString("definition");
+					input.addPredefinedGrammar( grammarType, renameFileLocation );
+					logger.debug( "Adding predefined grammar " + grammarType );
 			} else {
-				logger.warn("No predefined grammar of type " + predefinedGrammarSetting.getString("type")
+				logger.warn("No predefined grammar of type " + grammarType
 						+ " available. Skipping it.");
 			}
 
 
 		}
 
-			JSONObject initialSettings = jsonInput.getJSONObject("initialState");
-			if( initialSettings.has( "path" ) ){
-				input.setPathToInput( initialSettings.getString( "path" ) );
-			}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
-				logger.error("You must define a default path or a path for the initial state");
+		JSONObject initialSettings = jsonInput.getJSONObject("initialState");
+		if( initialSettings.has( "path" ) ){
+			input.setPathToInput( initialSettings.getString( "path" ) );
+		}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
+			logger.error("You must define a default path or a path for the initial state");
+		}
+		if(initialSettings.has("file")) {
+			input.setInputName(initialSettings.getString("file"));
+		} else if(input.getInputName() == null) {
+			if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
+				throw new IllegalStateException("Default initial states location not found.");
+			} else {
+				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
 			}
-			if(initialSettings.has("file")) {
-				input.setInputName(initialSettings.getString("file"));
-			} else if(input.getInputName() == null) {
-				if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
-					throw new IllegalStateException("Default initial states location not found.");
-				} else {
-					input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
-				}
-			}
+		}
 
 		return input;
 	}
 
+	//TODO: move from settings file reader somewhere else (e.g. io) -> call in parsing phase
 	private HashMap<String,String> extractMapping(JSONObject predefinedGrammarSetting) {
 
 		HashMap<String, String> rename = null;
@@ -185,8 +191,8 @@ public class SettingsFileReader {
 			options.setIndexedMode( jsonOptions.get( "mode" ).equals( "indexed" ) );
 		}
 
-		if( jsonOptions.has( "depth" )) {
-			options.setMinDereferenceDepth( jsonOptions.getInt( "depth" ) );
+		if( jsonOptions.has( "abstractionDistance" )) {
+			options.setAbstractionDistance( jsonOptions.getInt( "abstractionDistance" ) );
 		}
 
 		if( jsonOptions.has( "maximalStateSpace") ) {
@@ -197,8 +203,8 @@ public class SettingsFileReader {
 			options.setMaxStateSize( jsonOptions.getInt( "maximalHeap" ) );
 		}
 
-		if( jsonOptions.has( "aggressiveThreshold" )) {
-			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveThreshold" ));
+		if( jsonOptions.has( "aggressiveAbstractionThreshold" )) {
+			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveAbstractionThreshold" ));
 		}
 
 		if( jsonOptions.has( "aggressiveReturn" ) ){
@@ -220,6 +226,10 @@ public class SettingsFileReader {
             JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateRefinementSettings);
             options.setStateRefinementAutomaton( parser.getHeapAutomaton() );
         }
+
+        if( jsonOptions.has("aggressiveNullAbstraction") ){
+			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
+		}
 
 		return options;
 	}
@@ -267,6 +277,17 @@ public class SettingsFileReader {
 			}
 			if( jsonGrammar.has( "folder" ) ){
 				output.setFolderForGrammar( jsonGrammar.getString( "folder" ) );
+			}
+		}
+
+		if( jsonOutput.has( "customHCs" ) ){
+			output.setExportCustomHcs( true );
+			JSONObject jsonGrammar = jsonOutput.getJSONObject( "customHCs" );
+			if( jsonGrammar.has( "path" ) ){
+				output.setPathForCustomHcs( jsonGrammar.getString( "path" ) );
+			}
+			if( jsonGrammar.has( "folder" ) ){
+				output.setFolderForCustomHcs( jsonGrammar.getString( "folder" ) );
 			}
 		}
 		

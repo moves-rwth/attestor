@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.automata;
 
+import static junit.framework.TestCase.*;
+
+import java.util.*;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -8,16 +14,6 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static junit.framework.TestCase.*;
 
 /**
  * Test grammar refinement and property checks for heap configurations using a heap automaton.
@@ -93,7 +89,7 @@ public class HeapAutomatonTest {
         Set<HeapConfiguration> rhs = new HashSet<>();
         rhs.add(hc);
         rules.put(nt, rhs);
-        Grammar grammar = new Grammar(rules);
+        Grammar grammar = new Grammar( rules);
 
         Grammar result = automaton.refine(grammar);
         assertEquals(1, result.getAllLeftHandSides().size());

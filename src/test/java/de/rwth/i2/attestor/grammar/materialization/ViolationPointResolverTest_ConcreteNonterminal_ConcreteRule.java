@@ -1,10 +1,16 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import java.util.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -13,22 +19,12 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteInd
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 	public static final String NONTERMINAL_LABEL = "GrammarLogikTest_ConcreteNonterminal_ConcreteRule";
-	public static final Nonterminal NT_STACK_Z = createIndexedNonterminalWithStack_Z();
-	public static final Nonterminal NT_STACK_sZ = createIndexedNonterminalWithStack_sZ();
+	public static final Nonterminal NT_INDEX_Z = createIndexedNonterminalWithIndex_Z();
+	public static final Nonterminal NT_INDEX_sZ = createIndexedNonterminalWithIndex_sZ();
 	private static final HeapConfiguration RHS_CREATING_NEXT = getRule_createNext();
 	private static final HeapConfiguration RHS_NOT_CREATING_NEXT = getRule_notCreateNext();
 	private static final String SELECTOR_NAME_NEXT = "next";
@@ -45,52 +41,52 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 	@Test
 	public void testGetRuleGraphsCreatingSelectors_Success(){
-		Grammar testGrammar = Grammar.builder().addRule(NT_STACK_Z, RHS_CREATING_NEXT)
-				.addRule( NT_STACK_Z, RHS_NOT_CREATING_NEXT)
+		Grammar testGrammar = Grammar.builder().addRule(NT_INDEX_Z, RHS_CREATING_NEXT)
+				.addRule( NT_INDEX_Z, RHS_NOT_CREATING_NEXT)
 				.build();
 		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
 
 		Map<Nonterminal, Collection<HeapConfiguration>> selectedRules = 
-				grammarLogik.getRulesCreatingSelectorFor( NT_STACK_Z, TENTACLE_WITH_NEXT, SELECTOR_NAME_NEXT );
+				grammarLogik.getRulesCreatingSelectorFor( NT_INDEX_Z, TENTACLE_WITH_NEXT, SELECTOR_NAME_NEXT );
 		
 		assertThat( selectedRules.keySet(), hasSize(1) );
-		assertThat( selectedRules.get( NT_STACK_Z ), contains( RHS_CREATING_NEXT) );
+		assertThat( selectedRules.get( NT_INDEX_Z ), contains( RHS_CREATING_NEXT) );
 		
 	}
 	
 	@Test
-	public void testGetRuleGraphsCreatingSelectors_OtherStack(){
-		Grammar testGrammar = Grammar.builder().addRule(NT_STACK_Z, RHS_CREATING_NEXT)
-				.addRule( NT_STACK_Z, RHS_NOT_CREATING_NEXT)
+	public void testGetRuleGraphsCreatingSelectors_OtherIndex(){
+		Grammar testGrammar = Grammar.builder().addRule(NT_INDEX_Z, RHS_CREATING_NEXT)
+				.addRule( NT_INDEX_Z, RHS_NOT_CREATING_NEXT)
 				.build();
 		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
 
 		Map<Nonterminal, Collection<HeapConfiguration> > selectedRules = 
-				grammarLogik.getRulesCreatingSelectorFor(NT_STACK_sZ, TENTACLE_WITH_NEXT, SELECTOR_NAME_NEXT);
+				grammarLogik.getRulesCreatingSelectorFor(NT_INDEX_sZ, TENTACLE_WITH_NEXT, SELECTOR_NAME_NEXT);
 		assertThat( selectedRules.keySet(), hasSize(1) );
-		assertThat( selectedRules.get( NT_STACK_Z ), contains( RHS_CREATING_NEXT) );
+		assertThat( selectedRules.get( NT_INDEX_Z ), contains( RHS_CREATING_NEXT) );
 	}
 
 	@Test
 	public void testGetRuleGraphsCreatingSelectors_WrongTentacle(){
-		Grammar testGrammar = Grammar.builder().addRule(NT_STACK_Z, RHS_CREATING_NEXT)
+		Grammar testGrammar = Grammar.builder().addRule(NT_INDEX_Z, RHS_CREATING_NEXT)
 				.build();
 		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
 
 		Map<Nonterminal, Collection<HeapConfiguration> > selectedRules = 
-				grammarLogik.getRulesCreatingSelectorFor(NT_STACK_Z, TENTACLE_NOT_CREATING_NEXT, SELECTOR_NAME_NEXT);
+				grammarLogik.getRulesCreatingSelectorFor(NT_INDEX_Z, TENTACLE_NOT_CREATING_NEXT, SELECTOR_NAME_NEXT);
 		assertThat( selectedRules.keySet(),
 				empty() );
 	}
 
 	@Test
 	public void testGetRuleGraphsCreatingSelectors_WrongSelector(){
-		Grammar testGrammar = Grammar.builder().addRule(NT_STACK_Z, RHS_CREATING_NEXT)
+		Grammar testGrammar = Grammar.builder().addRule(NT_INDEX_Z, RHS_CREATING_NEXT)
 				.build();
 		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
 
 		Map<Nonterminal, Collection<HeapConfiguration> > selectedRules = 
-				grammarLogik.getRulesCreatingSelectorFor(NT_STACK_Z, TENTACLE_WITH_NEXT, OTHER_SELECTOR_NAME);
+				grammarLogik.getRulesCreatingSelectorFor(NT_INDEX_Z, TENTACLE_WITH_NEXT, OTHER_SELECTOR_NAME);
 		assertThat( selectedRules.keySet(),	
 				empty() );
 	}
@@ -109,7 +105,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 				.setExternal( nodes.get(1) )
 				.addSelector( TENTACLE_NOT_CREATING_NEXT, next, nodes.get(1) )
 				.addSelector( nodes.get( TENTACLE_WITH_NEXT), prev, nodes.get(2) )
-				.addNonterminalEdge(NT_STACK_sZ)
+				.addNonterminalEdge(NT_INDEX_sZ)
 					.addTentacle( nodes.get(0) )
 					.addTentacle( nodes.get(2) )
 					.build()
@@ -135,24 +131,24 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 
 
-	private static Nonterminal createIndexedNonterminalWithStack_sZ() {
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol( "s", false );
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+	private static Nonterminal createIndexedNonterminalWithIndex_sZ() {
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(bottom);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(bottom);
 
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack );
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, index );
 	}
 
-	private static Nonterminal createIndexedNonterminalWithStack_Z() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+	private static Nonterminal createIndexedNonterminalWithIndex_Z() {
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(bottom);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(bottom);
 
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, stack);
+		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, index);
 	}
 
 

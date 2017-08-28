@@ -1,21 +1,17 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ExampleHcImplFactory {
 	
@@ -1387,16 +1383,17 @@ public final class ExampleHcImplFactory {
 				.build();
 	}
 
-	public static HeapConfiguration getInput_DifferentStacks_1() {
+	public static HeapConfiguration getInput_DifferentIndices_1() {
+
 		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(abstractIndexSymbol);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(abstractIndexSymbol);
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1404,18 +1401,19 @@ public final class ExampleHcImplFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_DifferentStacks_2() {
-		IndexSymbol concreteIndexSymbol = ConcreteIndexSymbol.getStackSymbol("s", false);
+	public static HeapConfiguration getInput_DifferentIndices_2() {
+
+		IndexSymbol concreteIndexSymbol = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(concreteIndexSymbol);
-		stack.add(abstractIndexSymbol);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(concreteIndexSymbol);
+		index.add(abstractIndexSymbol);
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentStacks", 1, new boolean[]{false}, stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)

@@ -570,6 +570,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
 		if(minAbstractionDepth > 0) {
 			return new MinDepthEmbeddingChecker(pattern, this, minAbstractionDepth);
+
 		} else {
 			return new EmbeddingChecker(pattern, this);
 		}
@@ -619,7 +620,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
 	@Override
 	public String toString(){
-		StringBuilder res = new StringBuilder();
+		StringBuilder res = new StringBuilder("\n");
 		
 		res.append(this.nodes().toString() );
 	
@@ -653,11 +654,13 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		final TIntArrayList nonterminalEdges = nonterminalEdges();
 		for( int i = 0; i < nonterminalEdges.size(); i++ ){
 			int ntId = nonterminalEdges.get(i);
-			ntListString.add( labelOf( ntId ).toString() );
+			ntListString.add( ntId + ":" + labelOf( ntId ).toString() );
+			ntListString.add( attachedNodesOf(ntId).toString() );
+			ntListString.add("\n");
 		
 		}
 		res.append( ntListString.toString() );
-		res.append( nonterminalEdges.toString() );
+		//res.append( nonterminalEdges.toString() );
 
 		res.append("\n\n");
 		return res.toString();

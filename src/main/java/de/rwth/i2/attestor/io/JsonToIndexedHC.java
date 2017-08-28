@@ -1,23 +1,21 @@
 package de.rwth.i2.attestor.io;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
-import de.rwth.i2.attestor.types.Type;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.types.Type;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * 
@@ -63,10 +61,10 @@ public class JsonToIndexedHC {
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
 			String label = hyperedge.getString( "label" );
 			
-			List<IndexSymbol> stack = parseStack( hyperedge.getJSONArray("index") );
+			List<IndexSymbol> index = parseIndex( hyperedge.getJSONArray("index") );
 			
 			IndexedNonterminal nt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
-			nt = nt.getWithStack(stack);
+			nt = nt.getWithIndex(index);
 
 			TIntArrayList tentacles = new TIntArrayList(nt.getRank());
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){
@@ -77,22 +75,24 @@ public class JsonToIndexedHC {
 		}
 	}
 	
-	static List<IndexSymbol>  parseStack(JSONArray stack){
+	static List<IndexSymbol>  parseIndex(JSONArray index){
 		List<IndexSymbol> res = new ArrayList<>();
-		for( int i = 0; i < stack.length(); i++ ){
-			String symbol = stack.getString(i);
+		for( int i = 0; i < index.length(); i++ ){
+			String symbol = index.getString(i);
 			if( symbol.equals("()") ){
 				res.add( IndexVariable.getGlobalInstance() );
-				assert( i == stack.length() -1 ) : "variables should be the last symbol of a index";
+
+				assert( i == index.length() -1 ) : "variables should be the last symbol of a index";
 			}else if( symbol.startsWith("_") ){
 				res.add( AbstractIndexSymbol.get(symbol.substring(1)) );
-				assert( i == stack.length() -1 ) : "abstract index symbols may only occur at the end of index";
+				assert( i == index.length() -1 ) : "abstract index symbols may only occur at the end of index";
 			}else if( Character.isLowerCase(symbol.codePointAt(0)) ){
-				res.add( ConcreteIndexSymbol.getStackSymbol(symbol, false) );
-				assert( i < stack.length() -1 ) : "stacks cannot end with a concrete non-bottom symbol";
+				res.add( ConcreteIndexSymbol.getIndexSymbol(symbol, false) );
+				assert( i < index.length() -1 ) : "indices cannot end with a concrete non-bottom symbol";
 			}else if( Character.isUpperCase( symbol.codePointAt(0)) ){
-				res.add( ConcreteIndexSymbol.getStackSymbol(symbol, true) );
-				assert( i == stack.length() -1 ) : "bottom symbols have to be the last element of a index";
+				res.add( ConcreteIndexSymbol.getIndexSymbol(symbol, true) );
+
+				assert( i == index.length() -1 ) : "bottom symbols have to be the last element of a index";
 			}
 		}
 		return res;

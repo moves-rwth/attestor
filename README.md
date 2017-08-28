@@ -30,6 +30,10 @@ The following software has to be installed prior to the installation of Attestor
 
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
+  
+## Running Attestor
+
+Instructions on running attestor from the command-line can be found in the [wiki](https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line).
 
 ## Examples and Benchmarks
 

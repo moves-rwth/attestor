@@ -1,37 +1,41 @@
 package de.rwth.i2.attestor.main;
 
+import java.io.*;
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.*;
+import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
+import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedMatchingHandler;
 import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.JsonToDefaultHC;
-import de.rwth.i2.attestor.io.JsonToIndexedHC;
-import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.io.*;
+import de.rwth.i2.attestor.io.jsonExport.*;
+import de.rwth.i2.attestor.main.settings.*;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedCanonicalizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
 
-import java.io.*;
-import java.util.*;
 
 
 /**
@@ -233,23 +237,74 @@ public class Attestor {
 
 	private void parsingPhase() throws IOException {
 
-		// Load the user-defined grammar
-		if(settings.input().getGrammarName() != null) {
-			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
-		}
-
-		// Load the requested predefined grammars
-		if(settings.input().getUsedPredefinedGrammars() != null) {
-			for (String predefinedGrammar : settings.input().getUsedPredefinedGrammars()) {
-				logger.debug("Loading predefined grammar " + predefinedGrammar);
-				HashMap<String, String> renamingMap = settings.input().getRenaming(predefinedGrammar);
-				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
-                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
-			}
-		}
+	
+		loadUserDefinedGrammar();
+		loadPredefinedGrammars();
 
 		loadInput();
 		loadProgram();
+	}
+
+	private void loadPredefinedGrammars() {
+		
+		if(settings.input().getUsedPredefinedGrammars() != null) {
+			for ( String predefinedGrammar : settings.input().getUsedPredefinedGrammars() ) {
+				logger.debug("Loading predefined grammar " + predefinedGrammar);
+				//HashMap<String, String> renamingMap = settings.input().getRenaming( predefinedGrammar );
+				String locationOfRenamingMap = settings.input().getRenamingLocation( predefinedGrammar );
+				try{
+				HashMap<String,String> renamingMap = parseRenamingMap( locationOfRenamingMap );
+				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
+                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
+				}catch( FileNotFoundException e ){
+					logger.warn( "Skipping predefined grammar "
+								+ predefinedGrammar + ".");
+				}
+			}
+		}
+	}
+
+	private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
+		HashMap<String, String> rename = new HashMap<String, String>();
+		// Read in the type and field name mapping
+		try {
+			BufferedReader br = new BufferedReader(new java.io.FileReader( locationOfRenamingMap ));
+			String definitionsLine = null;
+			try {
+				definitionsLine = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			while(definitionsLine != null){
+				if(definitionsLine.startsWith("@Rename")){
+					String[] map = definitionsLine.replace("@Rename", "").split("->");
+					assert map.length == 2;
+
+					rename.put(map[0].trim(), map[1].trim());
+				}
+
+				try {
+					definitionsLine = br.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			logger.warn("File " + locationOfRenamingMap + " not found. ");
+			throw e;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return rename;
+	}
+
+	private void loadUserDefinedGrammar() {
+		if(settings.input().getUserDefinedGrammarName() != null) {
+			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
+		}
 	}
 
 	private void loadInput() throws IOException {
@@ -382,6 +437,7 @@ public class Attestor {
 	    stateSpace = stateSpaceGenerator.generate();
 	    logger.info("State space generation finished. #states: "
                 + settings.factory().getTotalNumberOfStates());
+
 	}
 
     private void printAnalyzedMethod() {
@@ -404,6 +460,7 @@ public class Attestor {
 
         if(settings.options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+
             IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
             MaterializationRuleManager grammarManager =
                     new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
@@ -430,28 +487,48 @@ public class Attestor {
     private void setupCanonicalization() {
 
         Grammar grammar = settings.grammar().getGrammar();
-        CanonicalizationStrategy strategy;
+        EmbeddingCheckerProvider checkerProvider = getEmbeddingCheckerProvider();
+        CanonicalizationHelper canonicalizationHelper;
+         
         if(settings.options().isIndexedMode()) {
-            strategy = new IndexedCanonicalizationStrategy(
-                    grammar,
-                    true,
-                    settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getMinDereferenceDepth()
-            );
+        	
+        	canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
             logger.info("Setup canonicalization using indexed grammar.");
+            
         } else {
-            strategy = new DefaultCanonicalizationStrategy(
-                    grammar,
-                    true,
-                    settings.options().getAggressiveAbstractionThreshold(),
-                    settings.options().isAggressiveReturnAbstraction(),
-                    settings.options().getMinDereferenceDepth()
-            );
+        	canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
             logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
         }
+        CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper); 
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
     }
+
+	private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+		CanonicalizationHelper canonicalizationHelper;
+		IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
+		
+		
+		
+		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
+		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
+		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+		EmbeddingIndexChecker indexChecker = 
+				new EmbeddingIndexChecker( indexMatcher, 
+											materializer );
+		
+		canonicalizationHelper = new IndexedMatchingHandler( indexStrategy, checkerProvider, indexChecker);
+		return canonicalizationHelper;
+	}
+
+	private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {
+		final int abstractionDifference = settings.options().getAbstractionDistance();
+		final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
+		final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference ,
+																				aggressiveAbstractionThreshold, 
+																				aggressiveReturnAbstraction);
+		return checkerProvider;
+	}
 
     private void setupInclusionTest() {
 
@@ -500,6 +577,27 @@ public class Attestor {
 
 	private void reportPhase() throws IOException {
 
+	    if(settings.output().isExportGrammar() ){
+	        String location = settings.output().getLocationForGrammar();
+
+            // Copy necessary libraries
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
+                    ".zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            // Generate JSON files
+            GrammarExporter exporter = new JsonGrammarExporter();
+            exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
+
+            logger.info("Grammar exported to '"
+                    + location
+            );
+
+
+        }
+
 		if(settings.output().isExportStateSpace() ) {
 
 		    String location = settings.output().getLocationForStateSpace();
@@ -530,6 +628,27 @@ public class Attestor {
                     + "'"
             );
         }
+
+        if(settings.output().isExportCustomHcs()){
+	        String location = settings.output().getLocationForCustomHcs();
+
+            // Copy necessary libraries
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
+                    ".zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            // Generate JSON files for prebooked HCs and their summary
+            CustomHcListExporter exporter = new JsonCustomHcListExporter();
+            exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
+
+            logger.info("Custom HCs exported to '"
+                    + location
+            );
+
+        }
+
 	}
 
     private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)

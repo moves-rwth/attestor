@@ -3,10 +3,10 @@ package de.rwth.i2.attestor.graph.morphism;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
@@ -131,12 +131,12 @@ public class EmbeddingTest {
 	}
 	
 	@Test
-	public void testHeapsWithDifferentStacks(){
-		HeapConfiguration oneStack = ExampleHcImplFactory.getInput_DifferentStacks_1();
-		HeapConfiguration otherStack = ExampleHcImplFactory.getInput_DifferentStacks_2();
+	public void testHeapsWithDifferentIndices(){
+		HeapConfiguration oneIndex = ExampleHcImplFactory.getInput_DifferentIndices_1();
+		HeapConfiguration otherIndex = ExampleHcImplFactory.getInput_DifferentIndices_2();
 		
 		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run( (Graph) oneStack, (Graph) otherStack);
+		checker.run( (Graph) oneIndex, (Graph) otherIndex);
 		assertTrue(checker.hasMorphism());
 	}
 	

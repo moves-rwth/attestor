@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * All global settings regarding input files.
@@ -36,11 +35,18 @@ public class InputSettings {
     /**
      * The name of the file of the graph grammar underlying the analysis.
      */
-	private String grammarName = null;
-
-	// The list of predefined grammars used by the current analysis
+	private String userDefinedGrammarName = null;
+	
+	/**
+	 * The list of predefined grammars used by the current analysis
+	 */
 	private ArrayList<String> usedPredefinedGrammars;
 
+	/**
+	 * The paths to the file specifying the renaming used for the 
+	 * predefined grammars
+	 */
+	private HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
 	// The mapping from predefined grammars to their rename mapping
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 
@@ -133,23 +139,23 @@ public class InputSettings {
     /**
      * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
      */
-	public String getGrammarName() {
-		return this.grammarName;
+	public String getUserDefinedGrammarName() {
+		return this.userDefinedGrammarName;
 	}
 
 	/**
-	 * Sets the name of the file containing the graph grammar underlying the analysis.
-	 * @param grammarName The name of the file containing the graph grammar.
+	 * Sets the name of the file containing the user-defined graph grammar underlying the analysis.
+	 * @param userDefinedGrammarName The name of the file containing the graph grammar.
 	 */
-	public void setGrammarName(String grammarName) {
-		this.grammarName = grammarName;
+	public void setUserDefinedGrammarName(String userDefinedGrammarName) {
+		this.userDefinedGrammarName = userDefinedGrammarName;
 	}
 
     /**
      * @return The fully qualified path to the file holding the graph grammar underlying the analysis.
      */
 	public String getGrammarLocation(){
-		return pathToGrammar + File.separator + grammarName;
+		return pathToGrammar + File.separator + userDefinedGrammarName;
 	}
 
     /**
@@ -181,7 +187,7 @@ public class InputSettings {
      */
 	public boolean isComplete() {
 		return className != null && classpath != null && methodName != null
-				&& pathToGrammar != null && grammarName != null
+				&& pathToGrammar != null && userDefinedGrammarName != null
 				&& pathToInput != null && inputName != null;
 	}
 
@@ -189,6 +195,9 @@ public class InputSettings {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
 		this.pathToInput = rootPath + File.separator + this.pathToInput;
+		for( java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefininition.entrySet() ){
+			entry.setValue( rootPath + File.separator + entry.getValue() );
+		}
 	}
 
 	/**
@@ -197,14 +206,14 @@ public class InputSettings {
 	 * @param name, the name of the predefined grammar
 	 * @param correspondences, the map from fields of the predefined grammar to those of the analysed data structure.
 	 */
-	public void addPredefinedGrammar(String name, HashMap<String, String> correspondences){
+	public void addPredefinedGrammar(String name, String renameFileLocation){
 		if(this.usedPredefinedGrammars == null){
 			this.usedPredefinedGrammars = new ArrayList<String>();
 			this.grammar2RenameMap = new HashMap<>();
 		}
 
-		this.usedPredefinedGrammars.add(name);
-		this.grammar2RenameMap.put(name, correspondences);
+		this.usedPredefinedGrammars.add( name );
+		this.pathsToGrammar2RenameDefininition.put(name, renameFileLocation);
 	}
 
 	public ArrayList<String> getUsedPredefinedGrammars() {
@@ -218,5 +227,9 @@ public class InputSettings {
 
 	public void setInitialStatesURL(URL resource) {
 		this.initialStatesURL = resource;
+	}
+
+	public String getRenamingLocation(String predefinedGrammar) {
+		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
 }

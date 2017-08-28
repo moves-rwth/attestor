@@ -22,11 +22,6 @@ public class StateSpaceBoundedAbortStrategy implements AbortStrategy {
 	private static final Logger logger = LogManager.getLogger( "BoundedAbortStrategy" );
 
     /**
-     * The last time this strategy has been called.
-     */
-	private static long timeStamp = 0;
-
-    /**
      * The value representing an infinite threshold.
      */
 	private static final int NO_MAXIMUM = -1;

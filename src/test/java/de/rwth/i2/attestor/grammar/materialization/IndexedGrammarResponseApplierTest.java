@@ -1,34 +1,26 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigImplementation;
-import de.rwth.i2.attestor.graph.heap.internal.TestHeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.SingleElementUtil;
-import gnu.trove.list.array.TIntArrayList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.*;
-
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+
+import java.util.*;
+
+import org.junit.*;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
+import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.*;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.SingleElementUtil;
+import gnu.trove.list.array.TIntArrayList;
 
 public class IndexedGrammarResponseApplierTest {
 
@@ -51,6 +43,7 @@ public class IndexedGrammarResponseApplierTest {
 
 	@Test
 	public void testDelegation() throws WrongResponseTypeException, CannotMaterializeException {
+
 		IndexMaterializationStrategy indexMaterializationStrategyMock = mock( IndexMaterializationStrategy.class );
 		GraphMaterializer graphMaterializerMock = mock( GraphMaterializer.class );
 		
@@ -83,14 +76,14 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createInputGraph() {
-		List<IndexSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someIndex = new ArrayList<>();
 		
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
 		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 												 RANK, 
 												 REDUCTION_TENTACLES,
-												 someStack );
+												 someIndex );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -106,7 +99,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private List<IndexSymbol> createNonEmptyMaterialization() {
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		return SingleElementUtil.createList( bottom );
 	}
@@ -126,7 +119,7 @@ public class IndexedGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration createBigRule() {
-		List<IndexSymbol> someStack = new ArrayList<>();
+		List<IndexSymbol> someIndex = new ArrayList<>();
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
@@ -134,7 +127,7 @@ public class IndexedGrammarResponseApplierTest {
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 				 RANK, 
 				 REDUCTION_TENTACLES,
-				 someStack );
+				 someIndex );
 		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();

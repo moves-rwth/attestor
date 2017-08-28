@@ -1,17 +1,15 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
-import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.util.Pair;
+
 /**
- * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in stackVariable).
+ * matches if and only if instantiableNonterminal is actualy intantiable (i.e. ends in indexVariable).
  * In this case, always returns materialization: MATERIALIZATION and instantiation INSTANTIATION
  * both globally accessible.
  * @author Hannah
@@ -27,7 +25,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	}
 
 	private static List<IndexSymbol> createInstantiation() {
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("Y");
 		
 		List<IndexSymbol> res = new ArrayList<>();
@@ -37,7 +35,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	}
 
 	private static List<IndexSymbol> createMaterialization() {
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("a", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol abs = AbstractIndexSymbol.get("Y");
 		
 		List<IndexSymbol> res = new ArrayList<>();
@@ -49,7 +47,7 @@ public class FakeIndexMatcher extends IndexMatcher {
 	public boolean canMatch(IndexedNonterminal materializableNonterminal, 
 			   IndexedNonterminal instantiableNonterminal ){
 		
-		return ! instantiableNonterminal.getIndex().hasConcreteStack();
+		return ! instantiableNonterminal.getIndex().hasConcreteIndex();
 	}
 	
 	public boolean needsMaterialization(IndexedNonterminal materializableNonterminal, 
@@ -58,11 +56,12 @@ public class FakeIndexMatcher extends IndexMatcher {
 		return canMatch(materializableNonterminal, instantiableNonterminal);
 	}
 	
+    
 	public Pair<AbstractIndexSymbol, List<IndexSymbol> > getMaterializationRule(IndexedNonterminal materializableNonterminal,
 																				IndexedNonterminal instantiableNonterminal )  {
 		
 		if( needsMaterialization( materializableNonterminal, instantiableNonterminal ) ) {
-			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastStackSymbol();
+			AbstractIndexSymbol lhs = (AbstractIndexSymbol) materializableNonterminal.getIndex().getLastIndexSymbol();
 			return new Pair<>( lhs, getNecessaryMaterialization(materializableNonterminal, instantiableNonterminal) );
 		}else {
 			return new Pair<>( null, new ArrayList<>() );

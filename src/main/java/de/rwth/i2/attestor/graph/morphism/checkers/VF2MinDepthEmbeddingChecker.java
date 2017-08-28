@@ -109,7 +109,7 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 				.addFeasibilityCondition( compatibleNodeTypes )
 				.addFeasibilityCondition( embeddingEdgeLabels )
 				.addFeasibilityCondition( new VariableDereferenceDepth(depth,
-						Settings.getInstance().options().isNullDistanceEnabled()) )
+						Settings.getInstance().options().getAggressiveNullAbstraction()) )
 				.build()
 			);
 	}

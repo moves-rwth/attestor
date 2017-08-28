@@ -28,7 +28,7 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 	 * This method assumes that index abstraction is sound (e.g. it doesn't check whether anything is linked to null)
 	 */
 	@Override
-	public void canonizeStack( HeapConfiguration heapConfiguration ) {
+	public void canonizeIndex( HeapConfiguration heapConfiguration ) {
 
 	   if(!isCanonicalizationAllowed(heapConfiguration))  {
 	       return;
@@ -79,7 +79,7 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
      */
     private boolean isAbstractionPossible(IndexedNonterminal edgeLabel, String indexLabel) {
 
-	    String endEdge = edgeLabel.getIndex().getLastStackSymbol().toString();
+	    String endEdge = edgeLabel.getIndex().getLastIndexSymbol().toString();
 
 	    return (
                 (indexLabel.equals("Z") && !endEdge.equals("X"))
@@ -97,7 +97,7 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
      */
     private boolean isAbstractionApplicable(IndexedNonterminal edgeLabel, String indexLabel) {
 
-	    return edgeLabel.getIndex().getLastStackSymbol().toString().equals(indexLabel)
+	    return edgeLabel.getIndex().getLastIndexSymbol().toString().equals(indexLabel)
                 && (indexLabel.equals("Z") || indexLabel.equals("C") || edgeLabel.getIndex().size() > 1);
     }
 
@@ -133,32 +133,32 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
      */
     private IndexedNonterminal updateNonterminal(IndexedNonterminal originalNonterminal) {
 
-	    String last = originalNonterminal.getIndex().getLastStackSymbol().toString();
+	    String last = originalNonterminal.getIndex().getLastIndexSymbol().toString();
 
 	    if(last.equals("Z")) {
 	        return originalNonterminal
-                    .getWithShortenedStack() // Z
-                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
+                    .getWithShortenedIndex() // Z
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("X")) {
 	        return originalNonterminal
-                    .getWithShortenedStack() // X
-                    .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractIndexSymbol.get("X")); // -> X
+                    .getWithShortenedIndex() // X
+                    .getWithShortenedIndex() // s
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("X")); // -> X
         }
 
         if(last.equals("C")) {
             return originalNonterminal
-                    .getWithShortenedStack() // C
-                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
+                    .getWithShortenedIndex() // C
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         if(last.equals("Y")) {
             return originalNonterminal
-                    .getWithShortenedStack() // Y
-                    .getWithShortenedStack() // s
-                    .getWithProlongedStack(AbstractIndexSymbol.get("Y")); // -> Y
+                    .getWithShortenedIndex() // Y
+                    .getWithShortenedIndex() // s
+                    .getWithProlongedIndex(AbstractIndexSymbol.get("Y")); // -> Y
         }
 
         throw new IllegalStateException("Unknown index symbol.");

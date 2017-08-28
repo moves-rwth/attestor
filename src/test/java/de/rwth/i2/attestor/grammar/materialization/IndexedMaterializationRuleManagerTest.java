@@ -1,33 +1,27 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
-import de.rwth.i2.attestor.grammar.testUtil.FakeIndexMatcher;
-import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolver;
-import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.testUtil.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class IndexedMaterializationRuleManagerTest {
 
@@ -61,14 +55,14 @@ public class IndexedMaterializationRuleManagerTest {
 	}
 	
 	@Test
-	public void checkInRhsWithConcreteStack(){
+	public void checkInRhsWithConcreteIndex(){
 		Collection<Nonterminal> expectedViolationPointResultLhs = createExampleNts();
 		
 		List<HeapConfiguration> hardCodedViolationPointResolverResult = new ArrayList<>();
-		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_ConcreteStack() );
+		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_ConcreteIndex() );
 		
 		List<HeapConfiguration> expectedInstantiatedGraphs = new ArrayList<>();
-		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_ConcreteStack() );
+		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_ConcreteIndex() );
 		
 		performCheckFor( expectedViolationPointResultLhs,
 						 hardCodedViolationPointResolverResult,
@@ -76,14 +70,14 @@ public class IndexedMaterializationRuleManagerTest {
 	}
 	
 	@Test
-	public void checkOnRhsWithInstantiableEmptyStack(){
+	public void checkOnRhsWithInstantiableEmptyIndex(){
 		Collection<Nonterminal> expectedViolationPointResultLhs = createExampleNts();
 		
 		List<HeapConfiguration> hardCodedViolationPointResolverResult = new ArrayList<>();
-		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_EmptyStack() );
+		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_EmptyIndex() );
 		
 		List<HeapConfiguration> expectedInstantiatedGraphs = new ArrayList<>();
-		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_EmptyStack() );
+		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_EmptyIndex() );
 		
 		performCheckFor( expectedViolationPointResultLhs,
 						 hardCodedViolationPointResolverResult,
@@ -91,14 +85,14 @@ public class IndexedMaterializationRuleManagerTest {
 	}
 	
 	@Test
-	public void checkOnRhsWithInstantiableNonEmptyStack(){
+	public void checkOnRhsWithInstantiableNonEmptyIndex(){
 		Collection<Nonterminal> expectedViolationPointResultLhs = createExampleNts();
 		
 		List<HeapConfiguration> hardCodedViolationPointResolverResult = new ArrayList<>();
-		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_NonEmptyStack() );
+		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_NonEmptyIndex() );
 		
 		List<HeapConfiguration> expectedInstantiatedGraphs = new ArrayList<>();
-		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_NonEmptyStack() );
+		expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_NonEmptyIndex() );
 		
 		performCheckFor( expectedViolationPointResultLhs,
 						 hardCodedViolationPointResolverResult,
@@ -129,10 +123,10 @@ public class IndexedMaterializationRuleManagerTest {
 		
 		hardCodedViolationPointResolverResult.add( uninstantiatedRhsWithoutNonterminal() );
 		             expectedInstantiatedGraphs.add( instantiatedRhsWihtoutNonterminal() );
-		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_EmptyStack() );
-					expectedInstantiatedGraphs.add(  instantiatedRhs_OneNonterminal_EmptyStack() );
-		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_ConcreteStack() );
-		            expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_ConcreteStack() );
+		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_EmptyIndex() );
+					expectedInstantiatedGraphs.add(  instantiatedRhs_OneNonterminal_EmptyIndex() );
+		hardCodedViolationPointResolverResult.add( uninstantiatedRhs_OneNonterminal_ConcreteIndex() );
+		            expectedInstantiatedGraphs.add( instantiatedRhs_OneNonterminal_ConcreteIndex() );
 		
 		performCheckFor( expectedViolationPointResultLhs,
 						 hardCodedViolationPointResolverResult,
@@ -174,6 +168,7 @@ public class IndexedMaterializationRuleManagerTest {
 		fakeVioResolver.defineReturnedLhsForTest( expectedViolationPointResultLhs );
 		fakeVioResolver.defineRhsForAllNonterminals( hardCodedViolationPointResoverResult );
 		
+
 		IndexMatcher fakeIndexMatcher = new FakeIndexMatcher();
 		
 		IndexedMaterializationRuleManager ruleManager = 
@@ -201,29 +196,30 @@ public class IndexedMaterializationRuleManagerTest {
 
 		
 	private IndexedNonterminal createRequestNonterminal() {
-		final ArrayList<IndexSymbol> stack = new ArrayList<>();
-		final IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("SomeAbstractStackSymbol");
-		stack.add(someAbstractIndexSymbol);
-		return new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
+		final ArrayList<IndexSymbol> index = new ArrayList<>();
+
+		final IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("SomeAbstractIndexSymbol");
+		index.add(someAbstractIndexSymbol);
+		return new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
 	}
 	
 	private static Collection<Nonterminal> createExampleNts() {
 		
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom1 = ConcreteIndexSymbol.getStackSymbol("Z", true);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom1 = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		IndexSymbol var = IndexVariable.getGlobalInstance();
 		
-		List<IndexSymbol> stack1 = new ArrayList<>();
-		stack1.add(a);
-		stack1.add(s);
-		stack1.add(bottom1);
-		IndexedNonterminal nt1 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
+		List<IndexSymbol> index1 = new ArrayList<>();
+		index1.add(a);
+		index1.add(s);
+		index1.add(bottom1);
+		IndexedNonterminal nt1 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
 		
-		List<IndexSymbol> stack2 = new ArrayList<>();
-		stack2.add(s);
-		stack2.add(var);
-		IndexedNonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack2);
+		List<IndexSymbol> index2 = new ArrayList<>();
+		index2.add(s);
+		index2.add(var);
+		IndexedNonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index2);
 		
 		Set<Nonterminal> result = new HashSet<>();
 		result.add( nt1 );
@@ -250,12 +246,12 @@ public class IndexedMaterializationRuleManagerTest {
 	
 //##### One Nonterminal #######
 	
-	private static HeapConfiguration graphWithOneNonterminalWithStack( List<IndexSymbol> stack) {
+	private static HeapConfiguration graphWithOneNonterminalWithIndex( List<IndexSymbol> index) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack);
+		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -269,81 +265,81 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	//----- Empty Instantiable Index ----------
 
-	private List<IndexSymbol> emptyStack(){
+	private List<IndexSymbol> emptyIndex(){
 		return new ArrayList<>();
 	}
 	
-	private HeapConfiguration uninstantiatedRhs_OneNonterminal_EmptyStack(){
-		List<IndexSymbol> uninstantiatedEmptyStack = emptyStack();
-		uninstantiatedEmptyStack.add( IndexVariable.getGlobalInstance() );
-		return graphWithOneNonterminalWithStack( uninstantiatedEmptyStack );
+	private HeapConfiguration uninstantiatedRhs_OneNonterminal_EmptyIndex(){
+		List<IndexSymbol> uninstantiatedEmptyIndex = emptyIndex();
+		uninstantiatedEmptyIndex.add( IndexVariable.getGlobalInstance() );
+		return graphWithOneNonterminalWithIndex( uninstantiatedEmptyIndex );
 	}
 	
-	private HeapConfiguration instantiatedRhs_OneNonterminal_EmptyStack(){
-		List<IndexSymbol> instantiatedEmptyStack = emptyStack();
-		instantiatedEmptyStack.addAll( FakeIndexMatcher.INSTANTIATION );
-		return graphWithOneNonterminalWithStack( instantiatedEmptyStack );
+	private HeapConfiguration instantiatedRhs_OneNonterminal_EmptyIndex(){
+		List<IndexSymbol> instantiatedEmptyIndex = emptyIndex();
+		instantiatedEmptyIndex.addAll( FakeIndexMatcher.INSTANTIATION );
+		return graphWithOneNonterminalWithIndex( instantiatedEmptyIndex );
 	}
 	
 	//------ Non-Empty Instantiable Index ------
 	
-	private List<IndexSymbol> nonEmptyStack(){
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol a = ConcreteIndexSymbol.getStackSymbol("a", false);
+	private List<IndexSymbol> nonEmptyIndex(){
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(a);
-		stack.add(s);
-		stack.add(s);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(a);
+		index.add(s);
+		index.add(s);
 		
-		return stack;
+		return index;
 	}
 	
-	private HeapConfiguration uninstantiatedRhs_OneNonterminal_NonEmptyStack(){
-		List<IndexSymbol> uninstantiatedNonEmptyStack = nonEmptyStack();
-		uninstantiatedNonEmptyStack.add( IndexVariable.getGlobalInstance() );
-		return graphWithOneNonterminalWithStack( uninstantiatedNonEmptyStack );
+	private HeapConfiguration uninstantiatedRhs_OneNonterminal_NonEmptyIndex(){
+		List<IndexSymbol> uninstantiatedNonEmptyIndex = nonEmptyIndex();
+		uninstantiatedNonEmptyIndex.add( IndexVariable.getGlobalInstance() );
+		return graphWithOneNonterminalWithIndex( uninstantiatedNonEmptyIndex );
 	}
 	
-	private HeapConfiguration instantiatedRhs_OneNonterminal_NonEmptyStack(){
-		List<IndexSymbol> instantiatedNonEmptyStack = nonEmptyStack();
-		instantiatedNonEmptyStack.addAll( FakeIndexMatcher.INSTANTIATION );
-		return graphWithOneNonterminalWithStack( instantiatedNonEmptyStack );
+	private HeapConfiguration instantiatedRhs_OneNonterminal_NonEmptyIndex(){
+		List<IndexSymbol> instantiatedNonEmptyIndex = nonEmptyIndex();
+		instantiatedNonEmptyIndex.addAll( FakeIndexMatcher.INSTANTIATION );
+		return graphWithOneNonterminalWithIndex( instantiatedNonEmptyIndex );
 	}
 	
 	//---------- Concrete Index --------------------------
 	
-	private List<IndexSymbol> concreteStack(){
-		IndexSymbol s = ConcreteIndexSymbol.getStackSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getStackSymbol("Z", true);
+	private List<IndexSymbol> concreteIndex(){
+		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(s);
-		stack.add(s);
-		stack.add(bottom);
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(s);
+		index.add(s);
+		index.add(bottom);
 		
-		return stack;
+		return index;
 	}
 	
-	private HeapConfiguration uninstantiatedRhs_OneNonterminal_ConcreteStack(){
-		List<IndexSymbol> concreteStack = concreteStack();
-		return graphWithOneNonterminalWithStack( concreteStack );
+	private HeapConfiguration uninstantiatedRhs_OneNonterminal_ConcreteIndex(){
+		List<IndexSymbol> concreteIndex = concreteIndex();
+		return graphWithOneNonterminalWithIndex( concreteIndex );
 	}
 	
-	private HeapConfiguration instantiatedRhs_OneNonterminal_ConcreteStack(){
-		return uninstantiatedRhs_OneNonterminal_ConcreteStack();
+	private HeapConfiguration instantiatedRhs_OneNonterminal_ConcreteIndex(){
+		return uninstantiatedRhs_OneNonterminal_ConcreteIndex();
 	}
 	
 	//=============== Two Nonterminals ======================
-	
-	private HeapConfiguration graphWithTwoNonterminalsWithStacks( List<IndexSymbol> stack1,
-																  List<IndexSymbol> stack2 ){
+
+	private HeapConfiguration graphWithTwoNonterminalsWithIndices( List<IndexSymbol> index1,
+																  List<IndexSymbol> index2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
-		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, stack1);
-		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, stack2);
+		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, index2);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -361,19 +357,19 @@ public class IndexedMaterializationRuleManagerTest {
 	}
 	
 	private HeapConfiguration uninstantiatedRhs_TwoNonterminals(){
-		List<IndexSymbol> stack1 = emptyStack();
-		stack1.add( IndexVariable.getGlobalInstance() );
-		List<IndexSymbol> stack2 = nonEmptyStack();
-		stack2.add( IndexVariable.getGlobalInstance() );
-		return graphWithTwoNonterminalsWithStacks( stack1, stack2 );
+		List<IndexSymbol> index1 = emptyIndex();
+		index1.add( IndexVariable.getGlobalInstance() );
+		List<IndexSymbol> index2 = nonEmptyIndex();
+		index2.add( IndexVariable.getGlobalInstance() );
+		return graphWithTwoNonterminalsWithIndices( index1, index2 );
 	}
 	
 	private HeapConfiguration instantiatedRhs_TwoNonterminals(){
-		List<IndexSymbol> stack1 = emptyStack();
-		stack1.addAll( FakeIndexMatcher.INSTANTIATION  );
-		List<IndexSymbol> stack2 = nonEmptyStack();
-		stack2.addAll( FakeIndexMatcher.INSTANTIATION );
-		return graphWithTwoNonterminalsWithStacks( stack1, stack2 );
+		List<IndexSymbol> index1 = emptyIndex();
+		index1.addAll( FakeIndexMatcher.INSTANTIATION  );
+		List<IndexSymbol> index2 = nonEmptyIndex();
+		index2.addAll( FakeIndexMatcher.INSTANTIATION );
+		return graphWithTwoNonterminalsWithIndices( index1, index2 );
 	}
 	
 }

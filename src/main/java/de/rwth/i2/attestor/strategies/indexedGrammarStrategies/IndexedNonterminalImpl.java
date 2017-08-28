@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import java.util.List;
+
+import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.Index;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-
-import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
+
 
 	protected Index index;
 	protected  final GeneralNonterminal generalNonterminal;
@@ -15,10 +16,11 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	public IndexedNonterminalImpl(String label,
                                   int rank,
                                   boolean[] isReductionTentacle,
-                                  List<IndexSymbol> stack){
+                                  List<IndexSymbol> index){
 
 		this.generalNonterminal = GeneralNonterminal.getNonterminal( label, rank, isReductionTentacle );
-		this.index = new Index(stack);
+
+		this.index = new Index(index);
 	}
 
 
@@ -29,10 +31,12 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 	private IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, List<IndexSymbol> index ){
 		this.generalNonterminal = generalNonterminal;
+
         this.index = new Index(index);
 	}
 
 	protected IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Index index) {
+
 	    this.generalNonterminal = generalNonterminal;
 	    this.index = index;
     }
@@ -43,13 +47,14 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
     }
 
     @Override
-    public IndexedNonterminal getWithShortenedStack(){
-	    return new IndexedNonterminalImpl(generalNonterminal, index.getWithShortenedStack());
+    public IndexedNonterminal getWithShortenedIndex(){
+	    return new IndexedNonterminalImpl(generalNonterminal, index.getWithShortenedIndex());
 	}
 
 	@Override
-    public IndexedNonterminal getWithProlongedStack(IndexSymbol s){
-		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedStack(s));
+    public IndexedNonterminal getWithProlongedIndex(IndexSymbol s){
+
+		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(s));
 	}
 
 	@Override
@@ -58,13 +63,14 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	}
 
 	@Override
-    public IndexedNonterminal getWithProlongedStack(List<IndexSymbol> postfix){
-        return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedStack(postfix));
+    public IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix){
+
+        return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(postfix));
 	}
 
 	@Override
-    public IndexedNonterminal getWithStack(List<IndexSymbol> stack){
-        return new IndexedNonterminalImpl(generalNonterminal, stack);
+    public IndexedNonterminal getWithIndex(List<IndexSymbol> index){
+        return new IndexedNonterminalImpl(generalNonterminal, index);
     }
 
 	@Override
@@ -72,6 +78,7 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((generalNonterminal == null) ? 0 : generalNonterminal.hashCode());
+
 		for(int i = 0; i < index.size(); i++) {
 		    IndexSymbol symb = index.get(i);
 			result = prime * symb.hashCode();
@@ -133,4 +140,5 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	public String getLabel() {
 		return generalNonterminal.getLabel();
 	}
+
 }

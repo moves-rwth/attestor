@@ -6,14 +6,14 @@ import java.util.Map;
 public class ConcreteIndexSymbol implements IndexSymbol {
 	//private static final Logger logger = LogManager.getLogger( "IndexSymbol" );
 
-	private static final Map<String, ConcreteIndexSymbol> existingStackSymbols = new HashMap<>();
+	private static final Map<String, ConcreteIndexSymbol> existingIndexSymbols = new HashMap<>();
 	
-	public static ConcreteIndexSymbol getStackSymbol(String label, boolean isBottom ){
-		if(! existingStackSymbols.containsKey(label) ){
-			existingStackSymbols.put(label, new ConcreteIndexSymbol(label, isBottom));
+	public static ConcreteIndexSymbol getIndexSymbol(String label, boolean isBottom ){
+		if(! existingIndexSymbols.containsKey(label) ){
+			existingIndexSymbols.put(label, new ConcreteIndexSymbol(label, isBottom));
 		}
 		
-		return existingStackSymbols.get(label);
+		return existingIndexSymbols.get(label);
 	}
 	
 	private final String label;
@@ -29,7 +29,7 @@ public class ConcreteIndexSymbol implements IndexSymbol {
 	}
 	
 	/* (non-Javadoc)
-	 * @see de.rwth.i2.attestor.strategies.indexedGrammarStrategies.StackSymbol2#toString()
+	 * @see de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexSymbol2#toString()
 	 */
 	@Override
 	public String toString(){

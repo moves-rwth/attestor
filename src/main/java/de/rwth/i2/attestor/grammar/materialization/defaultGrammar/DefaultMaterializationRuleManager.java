@@ -1,5 +1,7 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.defaultGrammar;
 
+import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;

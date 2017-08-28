@@ -1,40 +1,36 @@
 package de.rwth.i2.attestor.grammar.materialization.moduleTests;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 
-	private static final AbstractIndexSymbol ABSTRACT_STACK_SYMBOL = AbstractIndexSymbol.get("X");
-	private static final ConcreteIndexSymbol STACK_SYMBOL_Z = ConcreteIndexSymbol.getStackSymbol("Z", true);
-	private static final ConcreteIndexSymbol STACK_SYMBOL_S = ConcreteIndexSymbol.getStackSymbol("s", false);
+	private static final AbstractIndexSymbol ABSTRACT_INDEX_SYMBOL = AbstractIndexSymbol.get("X");
+	private static final ConcreteIndexSymbol INDEX_SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+	private static final ConcreteIndexSymbol INDEX_SYMBOL_S = ConcreteIndexSymbol.getIndexSymbol("s", false);
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	private GeneralMaterializationStrategy materializer;
 
@@ -64,14 +60,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	 * Materialization: No
 	 */
 	@Test
-	public void testMaterialize_ConcreteStack_OneRule(){
-		List<IndexSymbol> stackForReferenceNt = getStack_sX();
+	public void testMaterialize_ConcreteIndex_OneRule(){
+		List<IndexSymbol> indexForReferenceNt = getIndex_sX();
 		
 		final HeapConfiguration inputHeap = 
-				getInputWithStackZ( stackForReferenceNt );
+				getInputWithIndexZ( indexForReferenceNt );
 		ProgramState inputState = new IndexedState( inputHeap ).prepareHeap();
 		final HeapConfiguration expectedHeap = 
-				getAppliedBalancedLeafRule_WithReferenceStack( stackForReferenceNt );
+				getAppliedBalancedLeafRule_WithReferenceIndex( indexForReferenceNt );
 		ProgramState expectedState = new IndexedState( expectedHeap ).prepareHeap();
 		
 		ViolationPoints vioPoints = new ViolationPoints();
@@ -89,21 +85,21 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	 * Materialization: No <br>
 	 */
 	@Test
-	public void testMaterialize_ConcreteStack_MoreRules(){
-		List<IndexSymbol> stackForReferenceNt = getStack_sZ();
+	public void testMaterialize_ConcreteIndex_MoreRules(){
+		List<IndexSymbol> indexForReferenceNt = getIndex_sZ();
 		
 		final HeapConfiguration inputHeap = 
-				getInputWithStack_sZ( stackForReferenceNt );
+				getInputWithIndex_sZ( indexForReferenceNt );
 		ProgramState inputState = new IndexedState( inputHeap ).prepareHeap();
 		
 		final HeapConfiguration expectedHeap1 = 
-				getExpected_sZ_BalancedRule( stackForReferenceNt );
+				getExpected_sZ_BalancedRule( indexForReferenceNt );
 		ProgramState expectedState1 = new IndexedState( expectedHeap1 ).prepareHeap();
 		final HeapConfiguration expectedHeap2 = 
-				getAppliedLeftLeafRuleWithReferenceStack( stackForReferenceNt );
+				getAppliedLeftLeafRuleWithReferenceIndex( indexForReferenceNt );
 		ProgramState expectedState2 = new IndexedState( expectedHeap2 ).prepareHeap();
 		final HeapConfiguration expectedHeap3 = 
-				getAppliedRightLeafRuleWithReferenceStack( stackForReferenceNt );
+				getAppliedRightLeafRuleWithReferenceIndex( indexForReferenceNt );
 		ProgramState expectedState3 = new IndexedState( expectedHeap3 ).prepareHeap();
 		
 		ViolationPoints vioPoints = new ViolationPoints();
@@ -123,21 +119,21 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	 * Materialization: no
 	 */
 	@Test
-	public void testMaterialize_AbstractStack_OnlyInstantiation(){
-		List<IndexSymbol> stackForReferenceNt = getStack_sX();
+	public void testMaterialize_AbstractIndex_OnlyInstantiation(){
+		List<IndexSymbol> indexForReferenceNt = getIndex_sX();
 		
 		final HeapConfiguration inputHeap = 
-				getInputWithStack_ssX( stackForReferenceNt);
+				getInputWithIndex_ssX( indexForReferenceNt);
 		ProgramState inputState = new IndexedState( inputHeap ).prepareHeap();
 		
 		final HeapConfiguration expectedHeap1 = 
-				getExpectedOneNonterminal_ssX_BalancedRule( stackForReferenceNt );
+				getExpectedOneNonterminal_ssX_BalancedRule( indexForReferenceNt );
 		ProgramState expectedState1 = new IndexedState( expectedHeap1 ).prepareHeap();
 		final HeapConfiguration expectedHeap2 = 
-				getExpected_ssX_LeftRule( stackForReferenceNt );
+				getExpected_ssX_LeftRule( indexForReferenceNt );
 		ProgramState expectedState2 = new IndexedState( expectedHeap2 ).prepareHeap();
 		final HeapConfiguration expectedHeap3 = 
-				getExpected_ssX_RightRule( stackForReferenceNt );
+				getExpected_ssX_RightRule( indexForReferenceNt );
 		ProgramState expectedState3 = new IndexedState( expectedHeap3 ).prepareHeap();
 		
 		ViolationPoints vioPoints = new ViolationPoints();
@@ -157,27 +153,27 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	 * Materialization: yes
 	 */
 	@Test
-	public void testMaterialize_AbstractStack_WithMaterializationApplicable(){
-		List<IndexSymbol> stackForReferenceNt = getStack_X();
+	public void testMaterialize_AbstractIndex_WithMaterializationApplicable(){
+		List<IndexSymbol> indexForReferenceNt = getIndex_X();
 		
 		final HeapConfiguration inputHeap = 
-				getInputWithStack_sX( stackForReferenceNt );
+				getInputWithIndex_sX( indexForReferenceNt );
 		ProgramState inputState = new IndexedState( inputHeap ).prepareHeap();
 		
 		final HeapConfiguration expectedHeap1 = 
-				getExpected_sX_BalancedRule( getStack_X() );//no materialization 
+				getExpected_sX_BalancedRule( getIndex_X() );//no materialization 
 		ProgramState expectedState1 = new IndexedState( expectedHeap1 ).prepareHeap();
 		final HeapConfiguration expectedHeap2 = 
-				getExpected_ssX_LeftRule( getStack_sX() );//materialization: X -> sX
+				getExpected_ssX_LeftRule( getIndex_sX() );//materialization: X -> sX
 		ProgramState expectedState2 = new IndexedState( expectedHeap2 ).prepareHeap();
 		final HeapConfiguration expectedHeap3 = 
-				getExpected_ssX_RightRule( getStack_sX() );//materialization X -> sX
+				getExpected_ssX_RightRule( getIndex_sX() );//materialization X -> sX
 		ProgramState expectedState3 = new IndexedState( expectedHeap3 ).prepareHeap();
 		final HeapConfiguration expectedHeap4 = 
-				getAppliedLeftLeafRuleWithReferenceStack(getStack_Z());//materialization X -> Z
+				getAppliedLeftLeafRuleWithReferenceIndex(getIndex_Z());//materialization X -> Z
 		ProgramState expectedState4 = new IndexedState(expectedHeap4).prepareHeap();
 		final HeapConfiguration expectedHeap5 = 
-				getAppliedRightLeafRuleWithReferenceStack( getStack_Z() );//materialization X->Z
+				getAppliedRightLeafRuleWithReferenceIndex( getIndex_Z() );//materialization X->Z
 		ProgramState expectedState5 = new IndexedState(expectedHeap5).prepareHeap();
 		
 		ViolationPoints vioPoints = new ViolationPoints();
@@ -193,97 +189,95 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		}
 	
 
-	private HeapConfiguration getExpectedOneNonterminal_ssX_BalancedRule(List<IndexSymbol> stackForReferenceNt) {
-		return getAppliedBalancedRuleWithStack( getStack_sX(), stackForReferenceNt );
+	private HeapConfiguration getExpectedOneNonterminal_ssX_BalancedRule(List<IndexSymbol> indexForReferenceNt) {
+		return getAppliedBalancedRuleWithIndex( getIndex_sX(), indexForReferenceNt );
 	}
 
 	
 
-	private List<IndexSymbol> getStack_Z() {
-		return SingleElementUtil.createList( STACK_SYMBOL_Z );
+	private List<IndexSymbol> getIndex_Z() {
+		return SingleElementUtil.createList( INDEX_SYMBOL_Z );
+	}
+	private List<IndexSymbol> getIndex_sZ() {
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(INDEX_SYMBOL_S);
+		index.add(INDEX_SYMBOL_Z);
+		return index;
 	}
 	
-	private List<IndexSymbol> getStack_sZ() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(STACK_SYMBOL_S);
-		stack.add(STACK_SYMBOL_Z);
-		return stack;
+	private List<IndexSymbol> getIndex_X() {
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(ABSTRACT_INDEX_SYMBOL);
+		return index;
 	}
 	
-	private List<IndexSymbol> getStack_X() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(ABSTRACT_STACK_SYMBOL);
-		return stack;
+	private List<IndexSymbol> getIndex_sX() {
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(INDEX_SYMBOL_S);
+		index.add(ABSTRACT_INDEX_SYMBOL);
+		return index;
 	}
 	
-	private List<IndexSymbol> getStack_sX() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(STACK_SYMBOL_S);
-		stack.add(ABSTRACT_STACK_SYMBOL);
-		return stack;
-	}
-	
-	private List<IndexSymbol> getStack_ssX() {
-		List<IndexSymbol> stack = new ArrayList<>();
-		stack.add(STACK_SYMBOL_S);
-		stack.add(STACK_SYMBOL_S);
-		stack.add(ABSTRACT_STACK_SYMBOL);
-		return stack;
+	private List<IndexSymbol> getIndex_ssX() {
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(INDEX_SYMBOL_S);
+		index.add(INDEX_SYMBOL_S);
+		index.add(ABSTRACT_INDEX_SYMBOL);
+		return index;
 		
 	}
 	
 
 
 
-	private HeapConfiguration getInputWithStackZ(List<IndexSymbol> stackForReferenceNt) {
-		return getGraphWithReferenzNonterminalWithStack( getStack_Z(), stackForReferenceNt );
+	private HeapConfiguration getInputWithIndexZ(List<IndexSymbol> indexForReferenceNt) {
+		return getGraphWithReferenzNonterminalWithIndex( getIndex_Z(), indexForReferenceNt );
 	}
 	
-	private HeapConfiguration getInputWithStack_sZ(List<IndexSymbol> stackForReferenceNt) {
-		return getGraphWithReferenzNonterminalWithStack( getStack_sZ(), stackForReferenceNt );
-	}
-	
-
-	private HeapConfiguration getInputWithStack_sX(List<IndexSymbol> stackForReferenceNt) {
-		return getGraphWithReferenzNonterminalWithStack(getStack_sX(), stackForReferenceNt);
-	}
-	
-	private HeapConfiguration getInputWithStack_ssX(List<IndexSymbol> stackForReferenceNt) {
-		return getGraphWithReferenzNonterminalWithStack( getStack_ssX(), stackForReferenceNt );
+	private HeapConfiguration getInputWithIndex_sZ(List<IndexSymbol> indexForReferenceNt) {
+		return getGraphWithReferenzNonterminalWithIndex( getIndex_sZ(), indexForReferenceNt );
 	}
 	
 
+	private HeapConfiguration getInputWithIndex_sX(List<IndexSymbol> indexForReferenceNt) {
+		return getGraphWithReferenzNonterminalWithIndex(getIndex_sX(), indexForReferenceNt);
+	}
+	
+	private HeapConfiguration getInputWithIndex_ssX(List<IndexSymbol> indexForReferenceNt) {
+		return getGraphWithReferenzNonterminalWithIndex( getIndex_ssX(), indexForReferenceNt );
+	}
 	
 
 	
 
+	
 
-	private HeapConfiguration getExpected_sZ_BalancedRule(List<IndexSymbol> stackForReferenceNt) {
-		List<IndexSymbol> stack_Z = getStack_Z();
-		return getAppliedBalancedRuleWithStack(stack_Z, stackForReferenceNt );
+
+	private HeapConfiguration getExpected_sZ_BalancedRule(List<IndexSymbol> indexForReferenceNt) {
+		List<IndexSymbol> index_Z = getIndex_Z();
+		return getAppliedBalancedRuleWithIndex(index_Z, indexForReferenceNt );
 	}
 	
-	private HeapConfiguration getExpected_sX_BalancedRule(List<IndexSymbol> stackForReferenceNt) {
-		return getAppliedBalancedRuleWithStack(getStack_X(), stackForReferenceNt);
+	private HeapConfiguration getExpected_sX_BalancedRule(List<IndexSymbol> indexForReferenceNt) {
+		return getAppliedBalancedRuleWithIndex(getIndex_X(), indexForReferenceNt);
 	}
 
-	private HeapConfiguration getExpected_ssX_LeftRule(List<IndexSymbol> stackForReferenceNt) {
-		return getAppliedLeftRuleWithStacks( getStack_sX(), getStack_X(), stackForReferenceNt );
+	private HeapConfiguration getExpected_ssX_LeftRule(List<IndexSymbol> indexForReferenceNt) {
+		return getAppliedLeftRuleWithIndices( getIndex_sX(), getIndex_X(), indexForReferenceNt );
 	}
 	
-	private HeapConfiguration getExpected_ssX_RightRule(List<IndexSymbol> stackForReferenceNt) {
-		return getAppliedRightRuleWithStacks( getStack_X(), getStack_sX(), stackForReferenceNt );
+	private HeapConfiguration getExpected_ssX_RightRule(List<IndexSymbol> indicesForReferenceNt) {
+		return getAppliedRightRuleWithIndices( getIndex_X(), getIndex_sX(), indicesForReferenceNt );
 	}
-	
-	private HeapConfiguration getGraphWithReferenzNonterminalWithStack(List<IndexSymbol> stack,
-			List<IndexSymbol> stackForReferenceNt) {
+	private HeapConfiguration getGraphWithReferenzNonterminalWithIndex(List<IndexSymbol> index,
+			List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		String label = BalancedTreeGrammar.NT_LABEL;
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, stackForReferenceNt );
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt );
 		Type type = BalancedTreeGrammar.TYPE;
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -300,11 +294,11 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();			
 	}
 	
-	private HeapConfiguration getAppliedBalancedLeafRule_WithReferenceStack(List<IndexSymbol> stackForReferenceNt) {
+	private HeapConfiguration getAppliedBalancedLeafRule_WithReferenceIndex(List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		String label = BalancedTreeGrammar.NT_LABEL;
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label , stackForReferenceNt  );
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label , indexForReferenceNt  );
 		
 		Type type = BalancedTreeGrammar.TYPE;
 		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_0;
@@ -324,7 +318,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 
 
 
-	private HeapConfiguration getAppliedLeftLeafRuleWithReferenceStack(List<IndexSymbol> stackForReferenceNt) {
+	private HeapConfiguration getAppliedLeftLeafRuleWithReferenceIndex(List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -335,9 +329,9 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		String label = BalancedTreeGrammar.NT_LABEL;
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
-		List<IndexSymbol> stack_Z = getStack_Z();
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack_Z);
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, stackForReferenceNt  );
+		List<IndexSymbol> index_Z = getIndex_Z();
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt  );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -356,8 +350,8 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 	
-	private HeapConfiguration getAppliedRightLeafRuleWithReferenceStack(
-			List<IndexSymbol> stackForReferenceNonterminal) {
+	private HeapConfiguration getAppliedRightLeafRuleWithReferenceIndex(
+			List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -368,10 +362,10 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		String label = BalancedTreeGrammar.NT_LABEL;
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
-		List<IndexSymbol> stack_Z = getStack_Z();
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack_Z);
+		List<IndexSymbol> index_Z = getIndex_Z();
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -390,8 +384,8 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 	
-	private HeapConfiguration getAppliedBalancedRuleWithStack(List<IndexSymbol> stack,
-						List<IndexSymbol> stackForReferenceNonterminal ) {
+	private HeapConfiguration getAppliedBalancedRuleWithIndex(List<IndexSymbol> index,
+						List<IndexSymbol> indexForReferenceNonterminal ) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -403,9 +397,9 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		int rank = BalancedTreeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,stack);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -429,9 +423,9 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 	
-	private HeapConfiguration getAppliedLeftRuleWithStacks( List<IndexSymbol> leftStack,
-															List<IndexSymbol> rightStack,
-															List<IndexSymbol> stackForReferenceNonterminal) {
+	private HeapConfiguration getAppliedLeftRuleWithIndices( List<IndexSymbol> leftIndex,
+															List<IndexSymbol> rightIndex,
+															List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -444,11 +438,11 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
-				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftStack);
+				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminalImpl(label, rightStack );
+				new IndexedNonterminalImpl(label, rightIndex );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -472,8 +466,8 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 				.build();
 	}
 
-	private HeapConfiguration getAppliedRightRuleWithStacks(List<IndexSymbol> leftStack,
-															List<IndexSymbol> rightStack, List<IndexSymbol> stackForReferenceNonterminal) {
+	private HeapConfiguration getAppliedRightRuleWithIndices(List<IndexSymbol> leftIndex,
+															List<IndexSymbol> rightIndex, List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
@@ -486,11 +480,11 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
-				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftStack);
+				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminalImpl(label, rightStack );
+				new IndexedNonterminalImpl(label, rightIndex );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, stackForReferenceNonterminal );
+				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -513,8 +507,4 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 					.build()
 				.build();
 	}
-
-	
-	
-
 }
