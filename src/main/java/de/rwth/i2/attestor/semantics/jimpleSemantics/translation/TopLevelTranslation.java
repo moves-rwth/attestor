@@ -16,10 +16,7 @@ import soot.Unit;
 import soot.jimple.Stmt;
 import soot.util.Chain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class organizes the actual translation process by splitting a Jimple program
@@ -94,22 +91,20 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 */
 	public void translate() {
 
-		List<SootMethod> methods;
+		ArrayList<SootMethod> methods = new ArrayList<SootMethod>();
 
 		SootClass mainClass = Scene.v().getMainClass();
-		methods = mainClass.getMethods();
 
-		// should translate the methods of all basic (i.e. non-library) classes)
-		// - doesn't work yet.
-		// Set<String> basicClasses = Scene.v().getBasicClasses();
-		// for( String className : basicClasses ){
-		// methods.addAll( Scene.v().getSootClass( className ).getMethods() );
-		// }
-
+		// Determine all necessary (non-library) classes and its methods
+		Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();
+		for( SootClass sootClass : sootClasses ){
+			methods.addAll( sootClass.getMethods() );
+		}
 		methodMapping = new HashMap<>();
 		
 
 		for (SootMethod method : methods) {
+			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
 			methodMapping.put(signature, new AbstractMethod(signature, shortName, getStateSpaceFactory()));
