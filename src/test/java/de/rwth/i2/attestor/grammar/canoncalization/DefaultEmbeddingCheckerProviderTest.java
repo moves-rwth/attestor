@@ -1,18 +1,21 @@
 package de.rwth.i2.attestor.grammar.canoncalization;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DefaultEmbeddingCheckerProviderTest {
 
@@ -66,12 +69,12 @@ public class DefaultEmbeddingCheckerProviderTest {
 		boolean aggressiveReturnAbstraction = true;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
 		HeapConfiguration pattern = getPattern();
-		Statement statement = new ReturnVoidStmt();
+		Semantics semantics = new TerminalStatement();
 		
 		AbstractMatchingChecker expected = new EmbeddingChecker(pattern, graph );
 		
 		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, statement, expected );
+					 graph, pattern, semantics, expected );
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 
 
 	private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
-			HeapConfiguration graph, HeapConfiguration pattern, Statement statement, AbstractMatchingChecker expected) {
+			HeapConfiguration graph, HeapConfiguration pattern, Semantics semantics, AbstractMatchingChecker expected) {
 		
 		final int minDereferenceDepth = 1;
 		EmbeddingCheckerProvider checkerProvider = 
@@ -104,7 +107,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 											  aggressiveReturnAbstraction 	);
 		
 	
-		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern, statement );
+		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern, semantics);
 		
 		assertEquals( expected.getClass(), checker.getClass() );
 		assertEquals( expected.getPattern(), checker.getPattern());

@@ -42,7 +42,7 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 	/**
 	 * replaces the embedding in  abstracted by the given nonterminal
 	 * 
-	 * @param abstracted the outer graph.
+	 * @param stateToAbstract the outer graph.
 	 * @param embedding the embedding of the inner graph in the outer graph
 	 * @param nonterminal the nonterminal to replace the embedding
 	 */
