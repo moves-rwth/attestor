@@ -253,7 +253,14 @@ public class StateSpaceGenerator {
 		}
 
 		Semantics semantics = program.getStatement(previousState.getProgramCounter());
-		ProgramState subsumingState = findSubsumingState(state);
+
+		// This is an optimization that avoids search for an already existing state in the state space
+		// whenever a state has only a single successor and is not the result of executing a statement
+		// that allows for canonicalization.
+		// While this shortcut leads to an increased number of states, it avoids several isomorphism checks.
+		ProgramState subsumingState = (semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization())
+				? state : findSubsumingState(state);
+
 		if(subsumingState == state) {
 			stateSpace.addState(state);
 			unexploredConfigurations.add(state);

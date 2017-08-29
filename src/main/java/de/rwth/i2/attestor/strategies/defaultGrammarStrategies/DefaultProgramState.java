@@ -160,17 +160,27 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	@Override
 	public boolean equals(Object other) {
 
-		if(other instanceof DefaultProgramState) {
+		if(other == this) {
+			return true;
+		}
 
-            DefaultProgramState state = (DefaultProgramState) other;
+		if(other == null) {
+			return false;
+		}
 
-            return !(programCounter != state.programCounter || scopeDepth != state.scopeDepth)
-                    && heap.equals(state.getHeap())
-					&& atomicPropositions.equals(state.getAPs());
+		if(other.getClass() != DefaultProgramState.class) {
+			return false;
+		}
 
-        }
-		
-		return false;
+        DefaultProgramState state = (DefaultProgramState) other;
+
+        return programCounter == state.programCounter
+					&& scopeDepth == state.scopeDepth
+					&& heap.countNodes() == state.getHeap().countNodes()
+					&& heap.countNonterminalEdges() == state.getHeap().countNonterminalEdges()
+					&& heap.countVariableEdges() == state.getHeap().countVariableEdges()
+					&& atomicPropositions.equals(state.getAPs())
+                    && heap.equals(state.getHeap());
 	}
 
 	@Override
