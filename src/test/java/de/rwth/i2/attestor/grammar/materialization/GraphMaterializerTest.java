@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -54,7 +54,7 @@ public class GraphMaterializerTest {
 		String uniqueLabel = "GraphMaterializerTest";
 		boolean [] reductionTentacles = new boolean[]{true,false};
 		
-		return GeneralNonterminal.getNonterminal(uniqueLabel, RANK, reductionTentacles);
+		return BasicNonterminal.getNonterminal(uniqueLabel, RANK, reductionTentacles);
 	}
 	
 	private HeapConfiguration createOneNonterminalInput(Nonterminal toReplace) {
@@ -75,7 +75,7 @@ public class GraphMaterializerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -90,7 +90,7 @@ public class GraphMaterializerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)

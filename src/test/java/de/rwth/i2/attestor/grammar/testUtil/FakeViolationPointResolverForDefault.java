@@ -3,9 +3,9 @@ package de.rwth.i2.attestor.grammar.testUtil;
 import java.util.*;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 
 public class FakeViolationPointResolverForDefault extends ViolationPointResolver {
 
@@ -14,7 +14,7 @@ public class FakeViolationPointResolverForDefault extends ViolationPointResolver
 			TestGraphs.getRuleGraph_CreatingNext();
 	public static final HeapConfiguration RHS_CREATING_NEXT_PREV = 
 			TestGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
-	public static final GeneralNonterminal DEFAULT_NONTERMINAL =
+	public static final BasicNonterminal DEFAULT_NONTERMINAL =
 			createDefaultNonterminal();
 	
 	public FakeViolationPointResolverForDefault() {
@@ -34,10 +34,10 @@ public class FakeViolationPointResolverForDefault extends ViolationPointResolver
 		return res;
 	}
 	
-	private static GeneralNonterminal createDefaultNonterminal() {
+	private static BasicNonterminal createDefaultNonterminal() {
 		int rank = 3;
 		final boolean[] isReductionTentacle = new boolean[]{true, false};
 		final String uniqueLabel = "DefaultMaterializationRuleManagerTest";
-		return GeneralNonterminal.getNonterminal(uniqueLabel, rank, isReductionTentacle);
+		return BasicNonterminal.getNonterminal(uniqueLabel, rank, isReductionTentacle);
 	}
 }

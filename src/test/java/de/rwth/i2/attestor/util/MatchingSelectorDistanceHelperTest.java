@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class MatchingSelectorDistanceHelperTest {
 
@@ -36,7 +36,7 @@ public class MatchingSelectorDistanceHelperTest {
 	@Test
 	public void testHasMatch_OnSelectors(){
 		List<SelectorLabel> selectorList = new ArrayList<>();
-		selectorList.add( GeneralSelectorLabel.getSelectorLabel("a") );
+		selectorList.add( BasicSelectorLabel.getSelectorLabel("a") );
 		selectorList.add( new AnnotatedSelectorLabel("b", "a") );
 		selectorList.add( new AnnotatedSelectorLabel("c","c") );
 		
@@ -50,7 +50,7 @@ public class MatchingSelectorDistanceHelperTest {
 	@Test
 	public void testHasMatch_OnCollection(){
 		Collection<SelectorLabel> selectorCollection = new HashSet<>();
-		selectorCollection.add( GeneralSelectorLabel.getSelectorLabel("a") );
+		selectorCollection.add( BasicSelectorLabel.getSelectorLabel("a") );
 		selectorCollection.add( new AnnotatedSelectorLabel("b", "a") );
 		selectorCollection.add( new AnnotatedSelectorLabel("c", "c") );
 		

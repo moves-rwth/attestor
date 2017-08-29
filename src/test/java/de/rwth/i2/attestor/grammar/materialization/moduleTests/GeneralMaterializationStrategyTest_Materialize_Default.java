@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 
 		UnitTestGlobalSettings.reset();
 
-		GeneralNonterminal listLabel = GeneralNonterminal
+		BasicNonterminal listLabel = BasicNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
@@ -69,7 +69,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 			int t = hc.targetOf(x);
 			
 			
-			assertTrue(hc.selectorLabelsOf(t).contains(GeneralSelectorLabel.getSelectorLabel("next")));
+			assertTrue(hc.selectorLabelsOf(t).contains(BasicSelectorLabel.getSelectorLabel("next")));
 		}
 		
 		List<HeapConfiguration> resHCs = new ArrayList<>();

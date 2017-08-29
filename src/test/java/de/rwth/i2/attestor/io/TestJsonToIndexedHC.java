@@ -3,11 +3,11 @@ package de.rwth.i2.attestor.io;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.json.JSONObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 
@@ -23,7 +23,7 @@ public class TestJsonToIndexedHC {
 
 	@Before
 	public void initClass() {
-		GeneralNonterminal.getNonterminal("TestJson", 2, new boolean[]{false,false});
+		BasicNonterminal.getNonterminal("TestJson", 2, new boolean[]{false,false});
 	}
 	
 	@Test

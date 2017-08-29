@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar;
 
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategyTest_getActualViolationPoint;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -15,7 +15,7 @@ class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel(
+		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -47,7 +47,7 @@ class TestGraphs {
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
-		GeneralSelectorLabel defaultSel = GeneralSelectorLabel.getSelectorLabel(
+		BasicSelectorLabel defaultSel = BasicSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR );
 		
 		TIntArrayList nodes = new TIntArrayList();

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,8 +11,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -30,7 +30,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	
 	private static final int RANK = 3;
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
-	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
+	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before
@@ -64,7 +64,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 
 	private Nonterminal getNonterminal() {
 		boolean[] isReductionTentacle = new boolean[RANK];
-		return GeneralNonterminal.getNonterminal("GeneralCanonicalizationDS", RANK, isReductionTentacle );
+		return BasicNonterminal.getNonterminal("GeneralCanonicalizationDS", RANK, isReductionTentacle );
 	}
 
 	private HeapConfiguration getPattern() {

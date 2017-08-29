@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
 
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
@@ -84,7 +84,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 				return dFrom;
 			}
 			
-			GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel(selectorName);
+			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
 			
 			int node = dFrom.getNode();
 			node = heap.selectorTargetOf(node, sel);
@@ -118,7 +118,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			GeneralConcreteValue dTo = (GeneralConcreteValue) to;
 			
-			GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel(selectorName);
+			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
 			
 			int fromNode = dFrom.getNode();
 			

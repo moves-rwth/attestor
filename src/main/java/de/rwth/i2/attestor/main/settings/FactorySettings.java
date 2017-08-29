@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -61,9 +61,9 @@ public class FactorySettings {
         } else if(requiresIndexedSymbols()) {
             return new IndexedNonterminalImpl(label, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
-            return new RefinedDefaultNonterminal(GeneralNonterminal.getNonterminal(label), null);
+            return new RefinedDefaultNonterminal(BasicNonterminal.getNonterminal(label), null);
         } else {
-            return GeneralNonterminal.getNonterminal(label);
+            return BasicNonterminal.getNonterminal(label);
         }
     }
 
@@ -102,11 +102,11 @@ public class FactorySettings {
             return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
         } else if(requiresRefinedSymbols()) {
             return new RefinedDefaultNonterminal(
-                    GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle),
+                    BasicNonterminal.getNonterminal(label, rank, isReductionTentacle),
                     null
             );
         } else {
-            return GeneralNonterminal.getNonterminal(label, rank, isReductionTentacle);
+            return BasicNonterminal.getNonterminal(label, rank, isReductionTentacle);
         }
     }
 
@@ -120,7 +120,7 @@ public class FactorySettings {
         if(requiresIndexedSymbols()) {
             return new AnnotatedSelectorLabel(label, "");
         } else {
-            return GeneralSelectorLabel.getSelectorLabel(label);
+            return BasicSelectorLabel.getSelectorLabel(label);
         }
     }
 

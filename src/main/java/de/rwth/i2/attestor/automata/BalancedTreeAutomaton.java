@@ -1,13 +1,15 @@
 package de.rwth.i2.attestor.automata;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.*;
 
 public class BalancedTreeAutomaton extends HeapAutomaton {
 
@@ -164,7 +166,7 @@ class BalancednessHelper {
                                                 Set<Integer> visited,
                                                 Queue<Integer> queue ) {
 
-        Nonterminal btLabel = GeneralNonterminal.getNonterminal("BT");
+        Nonterminal btLabel = BasicNonterminal.getNonterminal("BT");
 
         TIntArrayList ntEdges = hc.nonterminalEdges();
 

@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -15,8 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class ParseTest {
 	private static final Logger logger = LogManager.getLogger( "ParseTest.java" );
@@ -47,7 +47,7 @@ public class ParseTest {
 			/*
 			 * store nonterminal for sake of testing. Normally the nonterminals should be created by reading a grammar
 			 */
-			GeneralNonterminal.getNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
+			BasicNonterminal.getNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
 
 			HeapConfiguration res = JsonToDefaultHC.jsonToHC( obj );
 
@@ -59,7 +59,7 @@ public class ParseTest {
 			assertEquals( "nr of variables",  2, res.countVariableEdges() );
 			assertEquals( "selector at 0", 1, res.selectorLabelsOf( res.externalNodeAt( 0 ) ).size() );
 			assertEquals( "selector at 0 is next", 
-					GeneralSelectorLabel.getSelectorLabel("next"),
+					BasicSelectorLabel.getSelectorLabel("next"),
 					res.selectorLabelsOf( res.externalNodeAt(0) ).get(0) );
 
 		}catch( FileNotFoundException e ){

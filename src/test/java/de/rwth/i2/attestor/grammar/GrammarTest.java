@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -201,7 +201,7 @@ public class GrammarTest {
 		final boolean[] reductionTentacles = new boolean[]{false,true};
 		final int rank = 2;
 		final String label = "List";
-		return GeneralNonterminal.getNonterminal(label, rank, reductionTentacles);
+		return BasicNonterminal.getNonterminal(label, rank, reductionTentacles);
 	}
 
 	private static Set<HeapConfiguration> constructRhsForDefaultNonterminal(){

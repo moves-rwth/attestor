@@ -95,8 +95,8 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
-		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
+		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
+		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()
@@ -116,8 +116,8 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
-		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
+		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
+		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()

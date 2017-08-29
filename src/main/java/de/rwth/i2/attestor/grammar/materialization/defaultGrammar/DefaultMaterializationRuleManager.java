@@ -5,9 +5,9 @@ import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class DefaultMaterializationRuleManager implements MaterializationRuleMan
 			throws UnexpectedNonterminalTypeException {
 
 		// TODO The second type of nonterminals might be incorrect. Please check this again.
-		if( !(toReplace instanceof GeneralNonterminal) && !(toReplace instanceof RefinedDefaultNonterminal)  ){
+		if( !(toReplace instanceof BasicNonterminal) && !(toReplace instanceof RefinedDefaultNonterminal)  ){
 			throw new UnexpectedNonterminalTypeException("DefaultMaterializationRuleManager can only deal with " +
 					"DefaultNonterminal and RefinedNonterminalImpl");
 		}

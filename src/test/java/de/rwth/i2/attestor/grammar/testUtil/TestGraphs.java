@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.grammar.testUtil;
 
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategyTest_getActualViolationPoint;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolverTest_Default;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -18,7 +18,7 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = Settings.getInstance().factory().getType("type");
-		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel(
+		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -50,7 +50,7 @@ public class TestGraphs {
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
-		GeneralSelectorLabel defaultSel = GeneralSelectorLabel.getSelectorLabel(
+		BasicSelectorLabel defaultSel = BasicSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -78,8 +78,8 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()
@@ -95,10 +95,10 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
-		GeneralNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
+		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()
@@ -118,10 +118,10 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		SelectorLabel next = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = GeneralSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
-		GeneralNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
+		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()
@@ -141,7 +141,7 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = Settings.getInstance().factory().getType("type");
 		
-		GeneralNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
+		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()

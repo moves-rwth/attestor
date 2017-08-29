@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.Index;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
@@ -11,33 +11,33 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 
 	protected Index index;
-	protected  final GeneralNonterminal generalNonterminal;
+	protected  final BasicNonterminal basicNonterminal;
 
 	public IndexedNonterminalImpl(String label,
                                   int rank,
                                   boolean[] isReductionTentacle,
                                   List<IndexSymbol> index){
 
-		this.generalNonterminal = GeneralNonterminal.getNonterminal( label, rank, isReductionTentacle );
+		this.basicNonterminal = BasicNonterminal.getNonterminal( label, rank, isReductionTentacle );
 
 		this.index = new Index(index);
 	}
 
 
 	public IndexedNonterminalImpl(String label, List<IndexSymbol> index ){
-		this.generalNonterminal = GeneralNonterminal.getNonterminal(label);
+		this.basicNonterminal = BasicNonterminal.getNonterminal(label);
 		this.index = new Index(index);
 	}
 
-	private IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, List<IndexSymbol> index ){
-		this.generalNonterminal = generalNonterminal;
+	private IndexedNonterminalImpl(BasicNonterminal basicNonterminal, List<IndexSymbol> index ){
+		this.basicNonterminal = basicNonterminal;
 
         this.index = new Index(index);
 	}
 
-	protected IndexedNonterminalImpl(GeneralNonterminal generalNonterminal, Index index) {
+	protected IndexedNonterminalImpl(BasicNonterminal basicNonterminal, Index index) {
 
-	    this.generalNonterminal = generalNonterminal;
+	    this.basicNonterminal = basicNonterminal;
 	    this.index = index;
     }
 
@@ -48,32 +48,32 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
     @Override
     public IndexedNonterminal getWithShortenedIndex(){
-	    return new IndexedNonterminalImpl(generalNonterminal, index.getWithShortenedIndex());
+	    return new IndexedNonterminalImpl(basicNonterminal, index.getWithShortenedIndex());
 	}
 
 	@Override
     public IndexedNonterminal getWithProlongedIndex(IndexSymbol s){
 
-		return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(s));
+		return new IndexedNonterminalImpl(basicNonterminal, index.getWithProlongedIndex(s));
 	}
 
 
 	@Override
     public IndexedNonterminal getWithProlongedIndex(List<IndexSymbol> postfix){
 
-        return new IndexedNonterminalImpl(generalNonterminal, index.getWithProlongedIndex(postfix));
+        return new IndexedNonterminalImpl(basicNonterminal, index.getWithProlongedIndex(postfix));
 	}
 
 	@Override
     public IndexedNonterminal getWithIndex(List<IndexSymbol> index){
-        return new IndexedNonterminalImpl(generalNonterminal, index);
+        return new IndexedNonterminalImpl(basicNonterminal, index);
     }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((generalNonterminal == null) ? 0 : generalNonterminal.hashCode());
+		result = prime * result + ((basicNonterminal == null) ? 0 : basicNonterminal.hashCode());
 
 		for(int i = 0; i < index.size(); i++) {
 		    IndexSymbol symb = index.get(i);
@@ -109,32 +109,32 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 	@Override
 	public int getRank() {
-		return generalNonterminal.getRank();
+		return basicNonterminal.getRank();
 	}
 
 	@Override
 	public boolean isReductionTentacle(int tentacle) {
-		return generalNonterminal.isReductionTentacle(tentacle);
+		return basicNonterminal.isReductionTentacle(tentacle);
 	}
 
 	@Override
 	public void setReductionTentacle( int tentacle ){
-		generalNonterminal.setReductionTentacle(tentacle);
+		basicNonterminal.setReductionTentacle(tentacle);
 	}
 
 	@Override
 	public void unsetReductionTentacle( int tentacle ){
-		generalNonterminal.unsetReductionTentacle(tentacle);
+		basicNonterminal.unsetReductionTentacle(tentacle);
 	}
 
 	@Override
 	public String toString(){
-		return generalNonterminal.toString() + this.index.toString();
+		return basicNonterminal.toString() + this.index.toString();
 	}
 
 	@Override
 	public String getLabel() {
-		return generalNonterminal.getLabel();
+		return basicNonterminal.getLabel();
 	}
 
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class GeneralMaterializationStrategyTest_Materialize_Default {
 
@@ -30,7 +30,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 
 		UnitTestGlobalSettings.reset();
 
-		GeneralNonterminal listLabel = GeneralNonterminal
+		BasicNonterminal listLabel = BasicNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
@@ -68,7 +68,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 			int t = hc.targetOf(x);
 			
 			
-			assertTrue(hc.selectorLabelsOf(t).contains(GeneralSelectorLabel.getSelectorLabel("next")));
+			assertTrue(hc.selectorLabelsOf(t).contains(BasicSelectorLabel.getSelectorLabel("next")));
 		}
 		
 		List<HeapConfiguration> resHCs = new ArrayList<>();

@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.io;
 
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.util.Pair;
@@ -33,12 +33,12 @@ public class JsonToGrammar {
 
 			if( hasDefinedTentacles(grammarFragment) ) {
 
-				GeneralNonterminal.getNonterminal(label, rank, getReductionTentacles(grammarFragment));
+				BasicNonterminal.getNonterminal(label, rank, getReductionTentacles(grammarFragment));
 			} else {
 
 				boolean[] rts = new boolean[rank];
 				Arrays.fill(rts, false);
-				Nonterminal nt = GeneralNonterminal.getNonterminal( label, rank, rts);
+				Nonterminal nt = BasicNonterminal.getNonterminal( label, rank, rts);
 				ntsWithoutReductionTentacles.add(nt);
 			}
 
@@ -47,7 +47,7 @@ public class JsonToGrammar {
 		for(int i=0; i < input.length(); i++) {
 			JSONObject grammarFragment = input.getJSONObject( i );
 			String label = getLabel(grammarFragment);
-			Nonterminal nt = GeneralNonterminal.getNonterminal(label);
+			Nonterminal nt = BasicNonterminal.getNonterminal(label);
 			res.put( nt,  getGraphs(nt, grammarFragment) );
 		}
 

@@ -24,7 +24,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
 	private static int RANK = 2;
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
-	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
+	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before
@@ -61,7 +61,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
 	private Nonterminal getNonterminal() {
 		boolean[] isReductionTentacle = new boolean[RANK];
-		return GeneralNonterminal.getNonterminal("some label", RANK, isReductionTentacle );
+		return BasicNonterminal.getNonterminal("some label", RANK, isReductionTentacle );
 	}
 	
 	private HeapConfiguration getPattern1() {

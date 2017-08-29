@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.CannotMatchEx
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexEmbeddingResult;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -359,7 +359,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 
 	
 		TIntArrayList nodes = new TIntArrayList();
@@ -372,7 +372,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 		
 		Nonterminal nt = getMatchingNonterminalWithIndex( index );
 
@@ -393,7 +393,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 		
 		Nonterminal matchingNt = getMatchingNonterminalWithIndex( toMatch );
 		Nonterminal referenceNt = getReferenceNonterminalWithIndex( reference );
@@ -420,7 +420,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 		
 		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( toMatch1 );
 		Nonterminal referenceNt1 = getReferenceNonterminalWithIndex( reference1 );
@@ -458,7 +458,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel label = GeneralSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 		
 		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( index1 );
 		

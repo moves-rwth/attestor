@@ -5,13 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -409,7 +409,7 @@ public class IndexMaterializationStrategyTest {
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
 												 REDUCTION_TENTACLES, 
 												 indexForIndexedNonterminal);
-		GeneralNonterminal defaultNt = GeneralNonterminal.getNonterminal(UNIQUE_NT_LABEL,
+		BasicNonterminal defaultNt = BasicNonterminal.getNonterminal(UNIQUE_NT_LABEL,
 																RANK, REDUCTION_TENTACLES);
 		
 		TIntArrayList nodes = new TIntArrayList();

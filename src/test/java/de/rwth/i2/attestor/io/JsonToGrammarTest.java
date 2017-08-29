@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -44,7 +44,7 @@ public class JsonToGrammarTest {
 			
 			JsonToGrammar.parseForwardGrammar( array );
 			
-			Nonterminal nt = GeneralNonterminal.getNonterminal("DLList");
+			Nonterminal nt = BasicNonterminal.getNonterminal("DLList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertFalse( nt.isReductionTentacle( 1 ) );			
@@ -70,7 +70,7 @@ public class JsonToGrammarTest {
 			
 			JsonToGrammar.parseForwardGrammar( array );
 			
-			Nonterminal nt = GeneralNonterminal.getNonterminal("SinglyLinkedList");
+			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertTrue( nt.isReductionTentacle( 1 ) );
@@ -97,7 +97,7 @@ public class JsonToGrammarTest {
 			
 			JsonToGrammar.parseForwardGrammar( array );
 			
-			Nonterminal nt = GeneralNonterminal.getNonterminal("SinglyLinkedList");
+			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertTrue( nt.isReductionTentacle( 1 ) );

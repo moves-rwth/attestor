@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -19,7 +19,7 @@ public class FieldTest {
 	private Field expr;
 	private Local local;
 	private HeapConfiguration testGraph;
-	private GeneralSelectorLabel sel;
+	private BasicSelectorLabel sel;
 
 	@BeforeClass
 	public static void init()
@@ -31,7 +31,7 @@ public class FieldTest {
 	public void setUp() throws Exception {
 		
 		testGraph = ExampleHcImplFactory.getListAndConstants();
-		sel = GeneralSelectorLabel.getSelectorLabel("next");
+		sel = BasicSelectorLabel.getSelectorLabel("next");
 
 		Type type = Settings.getInstance().factory().getType("List");
 		local = new Local( type, "x");

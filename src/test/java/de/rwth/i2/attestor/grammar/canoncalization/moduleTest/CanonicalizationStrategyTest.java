@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -14,7 +15,6 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
@@ -39,7 +39,7 @@ public class CanonicalizationStrategyTest {
 	public void setUp() throws Exception {
 
 
-		GeneralNonterminal listLabel = GeneralNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
+		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
 				.addRule( listLabel , ExampleHcImplFactory.getListRule1() )

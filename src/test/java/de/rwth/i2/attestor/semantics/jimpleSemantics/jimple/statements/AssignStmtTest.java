@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -42,7 +42,7 @@ public class AssignStmtTest {
 		testGraph = tmp.getHeap();
 		
 		String test = testGraph.toString();
-		GeneralSelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("right");
+		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel("right");
 		Type type = Settings.getInstance().factory().getType( "node" );
 
 		SettableValue lhs = new Local( type, "XYZ" );		

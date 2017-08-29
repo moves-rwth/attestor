@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.automata;
 
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -44,8 +44,8 @@ public class PointsToAutomatonTest {
     @Test
     public void testConcreteHc() {
 
-        SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
-        SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");
+        SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
+        SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
         Type type = GeneralType.getType("type");
 
         HeapConfiguration hc = new InternalHeapConfiguration();
@@ -80,11 +80,11 @@ public class PointsToAutomatonTest {
     @Test
     public void testAbstractHc() {
 
-        SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
-        SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");
+        SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
+        SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
         Type type = GeneralType.getType("type");
 
-        Nonterminal nt = GeneralNonterminal.getNonterminal("Y", 2, new boolean[]{false, false});
+        Nonterminal nt = BasicNonterminal.getNonterminal("Y", 2, new boolean[]{false, false});
 
         HeapConfiguration hc = new InternalHeapConfiguration();
         TIntArrayList nodes = new TIntArrayList();
@@ -132,8 +132,8 @@ public class PointsToAutomatonTest {
     @Test
     public void testConcreteWithVariables() {
 
-        SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
-        SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");
+        SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
+        SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
         Type type = GeneralType.getType("type");
 
         HeapConfiguration hc = new InternalHeapConfiguration();

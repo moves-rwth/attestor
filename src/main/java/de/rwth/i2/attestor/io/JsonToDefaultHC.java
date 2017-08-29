@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.io;
 
 
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
@@ -46,7 +46,7 @@ public class JsonToDefaultHC {
 		for( int i = 0; i < hyperedges.length(); i++ ){
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
 			String label = hyperedge.getString( "label" );
-			Nonterminal nt = GeneralNonterminal.getNonterminal(label);
+			Nonterminal nt = BasicNonterminal.getNonterminal(label);
 			
 			TIntArrayList tentacles = new TIntArrayList();
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){
@@ -64,7 +64,7 @@ public class JsonToDefaultHC {
 			int originID = selectors.getJSONObject( i ).getInt( "origin" );
 			int targetID = selectors.getJSONObject( i ).getInt( "target" );
 			builder.addSelector( nodes.get( originID ), 
-					GeneralSelectorLabel.getSelectorLabel(name),
+					BasicSelectorLabel.getSelectorLabel(name),
 					nodes.get( targetID ) );
 		}
 	}

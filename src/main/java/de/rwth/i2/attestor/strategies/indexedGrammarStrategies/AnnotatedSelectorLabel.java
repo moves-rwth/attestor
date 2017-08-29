@@ -1,16 +1,16 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class AnnotatedSelectorLabel implements SelectorLabel {
 	//private static final Logger logger = LogManager.getLogger( "AnnotatedSelectorLabel" );
 
-	private final GeneralSelectorLabel generalSelectorLabel;
+	private final BasicSelectorLabel basicSelectorLabel;
 	private final String annotation;
 	
 	public AnnotatedSelectorLabel( String label, String annotation ) {
-		generalSelectorLabel = GeneralSelectorLabel.getSelectorLabel(label);
+		basicSelectorLabel = BasicSelectorLabel.getSelectorLabel(label);
 		this.annotation = annotation;
 	}
 
@@ -28,7 +28,7 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
-		result = prime * result + ((generalSelectorLabel == null) ? 0 : generalSelectorLabel.hashCode());
+		result = prime * result + ((basicSelectorLabel == null) ? 0 : basicSelectorLabel.hashCode());
 		return result;
 	}
 
@@ -46,26 +46,26 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 				return false;
 		} else if (!annotation.equals(other.annotation))
 			return false;
-		if (generalSelectorLabel == null) {
-			if (other.generalSelectorLabel != null)
+		if (basicSelectorLabel == null) {
+			if (other.basicSelectorLabel != null)
 				return false;
-		} else if (!generalSelectorLabel.equals(other.generalSelectorLabel))
+		} else if (!basicSelectorLabel.equals(other.basicSelectorLabel))
 			return false;
 		return true;
 	}
 
 	public boolean hasLabel( String label ){
-		return this.generalSelectorLabel.equals( GeneralSelectorLabel.getSelectorLabel(label) );
+		return this.basicSelectorLabel.equals( BasicSelectorLabel.getSelectorLabel(label) );
 	}
 	
 	@Override
 	public String getLabel( ){
-		return this.generalSelectorLabel.toString();
+		return this.basicSelectorLabel.toString();
 	}
 	
 	@Override
 	public String toString(){
-		return generalSelectorLabel.toString() + "[" + this.annotation + "]";
+		return basicSelectorLabel.toString() + "[" + this.annotation + "]";
 	}
 
     public String getAnnotation() {

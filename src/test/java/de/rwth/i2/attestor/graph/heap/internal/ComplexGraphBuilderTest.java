@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -28,14 +28,14 @@ public class ComplexGraphBuilderTest {
 	private static final Logger logger = LogManager.getLogger( "GraphBuilderTest" );
 
 	private static final Type type = Settings.getInstance().factory().getType("type");
-	private static final SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("selector");
-	private static final SelectorLabel selA = GeneralSelectorLabel.getSelectorLabel("a");
-	private static final SelectorLabel selB = GeneralSelectorLabel.getSelectorLabel("b");
-	private static final GeneralSelectorLabel next = GeneralSelectorLabel.getSelectorLabel("next");
-	private static final GeneralSelectorLabel prev = GeneralSelectorLabel.getSelectorLabel("prev");
+	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("selector");
+	private static final SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
+	private static final SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
+	private static final BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+	private static final BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
 	
-	private static final GeneralNonterminal nt = GeneralNonterminal.getNonterminal("3", 3, new boolean[]{false,false,false});
-	private static final GeneralNonterminal nt2 = GeneralNonterminal.getNonterminal("2", 2, new boolean[]{false,false});
+	private static final BasicNonterminal nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false,false,false});
+	private static final BasicNonterminal nt2 = BasicNonterminal.getNonterminal("2", 2, new boolean[]{false,false});
 	
 	private HeapConfiguration result;
 	private TIntArrayList nodes;

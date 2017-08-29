@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -111,7 +111,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	
 	private HeapConfiguration getExpected() {
 		Type someType = Settings.getInstance().factory().getType("type");
-		GeneralSelectorLabel selectorLabel = GeneralSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
+		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		List<IndexSymbol> materializedIndex = indexForLhs();
 		materializedIndex.add(oneAbstractSymbol);
@@ -161,7 +161,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	
 	private HeapConfiguration someRhs() {
 		Type someType = Settings.getInstance().factory().getType("type");
-		GeneralSelectorLabel selectorLabel = GeneralSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
+		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return new InternalHeapConfiguration().builder()

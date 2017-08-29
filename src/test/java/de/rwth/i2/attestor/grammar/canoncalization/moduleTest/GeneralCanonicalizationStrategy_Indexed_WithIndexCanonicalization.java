@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -42,7 +42,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 	private static final int RANK = 2;
 	private static final boolean[] isReductionTentacle = new boolean[RANK];
 	private static final Type TYPE = Settings.getInstance().factory().getType("type");
-	private static final SelectorLabel SEL = GeneralSelectorLabel.getSelectorLabel("sel");
+	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	
 	private static final int sizeOfChain = 10;
 

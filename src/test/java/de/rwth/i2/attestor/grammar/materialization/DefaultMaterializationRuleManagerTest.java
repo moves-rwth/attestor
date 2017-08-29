@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonte
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class DefaultMaterializationRuleManagerTest {
 		final int tentacle = 3;
 		final boolean[] isReductionTentacle = new boolean[]{true, false};
 		final String uniqueLabel = "testDelegationOfRequest";
-		final Nonterminal toReplace = GeneralNonterminal.getNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
+		final Nonterminal toReplace = BasicNonterminal.getNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
 		
 		final String requestedSelector = "someSelector";
 		

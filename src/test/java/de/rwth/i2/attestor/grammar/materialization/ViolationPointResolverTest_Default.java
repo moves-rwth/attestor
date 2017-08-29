@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 import java.util.Collection;
 import java.util.Map;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -13,13 +14,12 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.GeneralNonterminal;
 
 import org.junit.BeforeClass;
 
 public class ViolationPointResolverTest_Default {
 
-	public static final GeneralNonterminal DEFAULT_NONTERMINAL =
+	public static final BasicNonterminal DEFAULT_NONTERMINAL =
 			createDefaultNonterminal();
 	public static final int TENTACLE_FOR_NEXT = 0;
 	public static final int TENTACLE_WITHOUT_NEXT = 1;
@@ -106,7 +106,7 @@ public class ViolationPointResolverTest_Default {
 	}
 
 
-	private static GeneralNonterminal createDefaultNonterminal(){
-		return GeneralNonterminal.getNonterminal("GrammarLogikTest", 2, new boolean[]{false,false});
+	private static BasicNonterminal createDefaultNonterminal(){
+		return BasicNonterminal.getNonterminal("GrammarLogikTest", 2, new boolean[]{false,false});
 	}
 }

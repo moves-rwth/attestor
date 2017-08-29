@@ -6,16 +6,16 @@ import java.util.Map;
 /**
  * A general implementation of selector labels that consists of a single label.
  * There exists exactly one object for every selector label. These should be created and accessed through the static
- * method {@link GeneralSelectorLabel#getSelectorLabel(String)}.
+ * method {@link BasicSelectorLabel#getSelectorLabel(String)}.
  *
  * @author Christoph
  */
-public class GeneralSelectorLabel implements SelectorLabel {
+public class BasicSelectorLabel implements SelectorLabel {
 
     /**
      * Stores all created selector label objects.
      */
-	private static final Map<String, GeneralSelectorLabel> existingSelectors = new HashMap<>();
+	private static final Map<String, BasicSelectorLabel> existingSelectors = new HashMap<>();
 
     /**
      * Provides a selector label with the requested label.
@@ -24,9 +24,9 @@ public class GeneralSelectorLabel implements SelectorLabel {
      * @param label The requested label.
      * @return The selector label object with the requested label.
      */
-	public static synchronized GeneralSelectorLabel getSelectorLabel(String label ){
+	public static synchronized BasicSelectorLabel getSelectorLabel(String label ){
 		if( !existingSelectors.containsKey( label ) ){
-			existingSelectors.put( label, new GeneralSelectorLabel( label ) );
+			existingSelectors.put( label, new BasicSelectorLabel( label ) );
 		}
 		return existingSelectors.get( label );
 	}
@@ -40,7 +40,7 @@ public class GeneralSelectorLabel implements SelectorLabel {
      * Creates a selector label.
      * @param label The name of the label.
      */
-	private GeneralSelectorLabel(String label) {
+	private BasicSelectorLabel(String label) {
 		this.label = label;
 	}
 	

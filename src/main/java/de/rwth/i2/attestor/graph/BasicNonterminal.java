@@ -11,31 +11,31 @@ import java.util.Map;
  * A simple standard implementation of nonterminal symbols.
  *
  * Exactly one object is created for every label. These objects can be accessed through
- * {@link GeneralNonterminal#getNonterminal(String)}.
+ * {@link BasicNonterminal#getNonterminal(String)}.
  *
  * New nonterminals should be created through
- * {@link GeneralNonterminal#getNonterminal(String, int, boolean[])}.
+ * {@link BasicNonterminal#getNonterminal(String, int, boolean[])}.
  *
  * @author Christoph
  */
-public class GeneralNonterminal implements Nonterminal {
+public class BasicNonterminal implements Nonterminal {
 
 	/**
 	 * The logger used by this class.
 	 */
-	private static final Logger logger = LogManager.getLogger( "GeneralNonterminal" );
+	private static final Logger logger = LogManager.getLogger( "BasicNonterminal" );
 
 	/**
 	 * Stores the unique nonterminal object corresponding to each label.
 	 */
-	private static final Map<String, GeneralNonterminal> existingNonterminals = new HashMap<>();
+	private static final Map<String, BasicNonterminal> existingNonterminals = new HashMap<>();
 
 	/**
 	 * Method to access already existing nonterminal symbols.
 	 * @param label The label of a requested already existing nonterminal symbol.
 	 * @return The nonterminal symbol with the requested label.
 	 */
-	public static synchronized GeneralNonterminal getNonterminal(String label ){
+	public static synchronized BasicNonterminal getNonterminal(String label ){
 
 		if( !existingNonterminals.containsKey( label ) ){
 			logger.fatal( "requested nonterminal does not exist" );
@@ -54,13 +54,13 @@ public class GeneralNonterminal implements Nonterminal {
 	 *                            reduction tentacle (value true) or not (value false).
 	 * @return The requested nonterminal symbol. If this object does not exist, it will be created first.
 	 */
-	public static synchronized GeneralNonterminal getNonterminal(String label, int rank, boolean [] isReductionTentacle ){
+	public static synchronized BasicNonterminal getNonterminal(String label, int rank, boolean [] isReductionTentacle ){
 
-		GeneralNonterminal res;
+		BasicNonterminal res;
 		
 		if( !existingNonterminals.containsKey( label ) ){
 			
-			res = new GeneralNonterminal( label, rank, isReductionTentacle );
+			res = new BasicNonterminal( label, rank, isReductionTentacle );
 			existingNonterminals.put( label, res );
 		}else{
 			res = existingNonterminals.get( label );
@@ -97,7 +97,7 @@ public class GeneralNonterminal implements Nonterminal {
 	 * @param isReductionTentacle An array of length rank that determines for every tentacle whether it is a
 	 *                            reduction tentacle (value true) or not (value false).
 	 */
-	private GeneralNonterminal(String label, int rank, boolean[] isReductionTentacle){
+	private BasicNonterminal(String label, int rank, boolean[] isReductionTentacle){
 		
 		this.label = label;
 		this.isReductionTentacle = Arrays.copyOf(isReductionTentacle, rank);

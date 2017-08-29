@@ -23,7 +23,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.Materialization
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.graph.GeneralSelectorLabel;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -123,7 +123,7 @@ public class IndexedGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -143,7 +143,7 @@ public class IndexedGrammarResponseApplierTest {
 				 RANK, 
 				 REDUCTION_TENTACLES,
 				 someIndex );
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)

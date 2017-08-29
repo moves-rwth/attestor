@@ -132,7 +132,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration getInputGraph() {
 		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
 		Type type = Settings.getInstance().factory().getType("type");
-		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL,
+		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL,
 															RANK, 
 															REDUCTION_TENTACLES );
 
@@ -149,7 +149,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -163,7 +163,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -176,8 +176,8 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -195,8 +195,8 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -212,8 +212,8 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -231,8 +231,8 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("type");
-		Nonterminal nt = GeneralNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = GeneralSelectorLabel.getSelectorLabel("someSelectorLabel");
+		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
