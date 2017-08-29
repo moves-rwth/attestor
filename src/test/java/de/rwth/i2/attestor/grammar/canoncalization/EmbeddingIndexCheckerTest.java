@@ -1,14 +1,5 @@
 package de.rwth.i2.attestor.grammar.canoncalization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.CannotMatchException;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
@@ -24,13 +15,17 @@ import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.BalancedTreeGrammar;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class EmbeddingIndexCheckerTest {
 
@@ -53,7 +48,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration toAbstract = getSimpleInput();
 		HeapConfiguration pattern = getSimpleInput();
 		Nonterminal lhs = getInstantiableNonterminal();
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -71,7 +66,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration toAbstract = getInputWithIndex( concreteStack );
 		HeapConfiguration pattern = getInputWithIndex( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack );
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -97,7 +92,7 @@ public class EmbeddingIndexCheckerTest {
 		List<IndexSymbol> concreteStack = makeConcrete( somePrefix );		
 		HeapConfiguration pattern = getInputWithIndex( concreteStack );
 		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack );
-		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
+		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -129,7 +124,7 @@ public class EmbeddingIndexCheckerTest {
 		List<IndexSymbol> concreteStack2 = makeOtherConcrete( somePrefix );
 		HeapConfiguration pattern = getPatternWithIndices( concreteStack1, concreteStack2 );
 		Nonterminal lhs = getMatchingNonterminalWithIndex( concreteStack1 );
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -161,7 +156,7 @@ public class EmbeddingIndexCheckerTest {
 		List<IndexSymbol> instantiable2 = makeInstantiable( longerPrefix );
 		HeapConfiguration pattern = getPatternWithIndices( instantiable1, instantiable2 );
 		Nonterminal lhs = getMatchingNonterminalWithIndex( instantiable1 );
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		try {
 			checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
@@ -181,7 +176,7 @@ public class EmbeddingIndexCheckerTest {
 		List<IndexSymbol> matching = makeInstantiable( somePrefix );
 		HeapConfiguration pattern = getInputWithIndex( matching );
 		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
 		
@@ -203,7 +198,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration pattern = getPatternWithIndices( matching, matching );
 		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
 		
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		try {
 			checker.getIndexEmbeddingResult( toAbstract, embedding, lhs );
@@ -226,7 +221,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration pattern = getPatternWithIndices( matching, matching );
 		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable(getEmptyIndex()) );
 		
-		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getNext();
+		Matching embedding = new EmbeddingChecker( pattern, toAbstract ).getMatching();
 		
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
@@ -251,7 +246,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration pattern = getPatternWithIndices( matching1, matching2 );
 		Nonterminal lhs = getReferenceNonterminalWithIndex( makeInstantiable( getEmptyIndex() ));
 		
-		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getNext();
+		Matching embedding = new EmbeddingChecker(pattern, toAbstract).getMatching();
 		
 		IndexEmbeddingResult res = checker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
 		

@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import java.io.Writer;
-
-import org.json.JSONWriter;
-
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+import org.json.JSONWriter;
+
+import java.io.Writer;
 
 public class JsonHeapConfigurationExporter implements HeapConfigurationExporter {
 
@@ -95,7 +94,7 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
             int source = iter.next();
             for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(source)) {
                 int target = heapConfiguration.selectorTargetOf(source, sel);
-                writeEdge(jsonWriter, source, target, sel.getLabel(), "selector");
+                writeEdge(jsonWriter, source, target, sel.toString(), "selector");
             }
         }
     }

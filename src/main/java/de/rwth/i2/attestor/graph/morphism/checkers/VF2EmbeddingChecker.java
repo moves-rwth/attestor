@@ -28,7 +28,6 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 	 * Specification of the algorithm used to determine embeddings.
 	 */
 	private static final VF2Algorithm matchingAlgorithm= VF2Algorithm.builder()
-					.setCheckExistence(true)
 					.setMatchingCondition( new MorphismFound() )
 					.setMatchingImpossibleCondition( new NoMorphismPossible() )
 					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(

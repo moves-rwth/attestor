@@ -39,10 +39,9 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 		AbstractMatchingChecker checker = 
 				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs, semantics);
 
-		while( checker.hasNext() && result == null  ) {
+		if(checker.hasMatching()) {
 			ProgramState toAbstract  = state;
-
-			Matching embedding = checker.getNext();
+			Matching embedding = checker.getMatching();
 			try {
 				IndexEmbeddingResult res = 
 						indexChecker.getIndexEmbeddingResult(toAbstract.getHeap(), embedding, lhs);
@@ -52,9 +51,8 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 				result = toAbstract.shallowCopyWithUpdateHeap( abstracted );
 				
 			}catch( CannotMatchException e ) {
-				//this may happen. loop will continue.
+				//this may happen. continue as if no matching has been found.
 			}
-	
 		}
 		return result;
 	}

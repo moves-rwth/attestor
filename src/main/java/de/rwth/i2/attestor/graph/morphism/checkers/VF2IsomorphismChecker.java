@@ -19,7 +19,6 @@ public class VF2IsomorphismChecker extends AbstractVF2MorphismChecker {
 	 * Specification of the algorithm used to determine isomorphisms.
 	 */
 	private static final VF2Algorithm matchingAlgorithm = VF2Algorithm.builder()
-					.setCheckExistence(true)
 					.setMatchingCondition( new IsomorphismFound() )
 					.setMatchingImpossibleCondition( new NoMorphismPossible() )
 					.addFeasibilityCondition( new CompatiblePredecessors(true) )

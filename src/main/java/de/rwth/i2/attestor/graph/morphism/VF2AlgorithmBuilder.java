@@ -57,16 +57,4 @@ public final class VF2AlgorithmBuilder {
 		algorithm.feasibilityChecks.add(condition);
 		return this;
 	}
-	
-	/**
-	 * Determines whether the constructed algorithm should determine whether a morphism exists or should determine
-	 * all existing morphisms.
-	 * @param checkExistence true if and only if it suffices to check whether a morphism exists.
-	 * @return The builder.
-	 */
-	public VF2AlgorithmBuilder setCheckExistence(boolean checkExistence) {
-		algorithm.checkExistence = checkExistence;
-		return this;
-	}
-	
 }

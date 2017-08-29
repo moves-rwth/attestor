@@ -22,16 +22,9 @@ public interface MorphismChecker {
 	 * @return True if and only if at least one Morphism has been found after calling run().
 	 */
 	boolean hasMorphism();
-	
+
 	/**
-	 * @return True if and only if there exists another Morphism that has not been available
-     *         through getNext() yet.
+	 * @return The found Morphism or null if no Morphism has been found (yet).
 	 */
-	boolean hasNext();
-	
-	/**
-	 * @return The next Morphism that could be found.
-	 */
-	Morphism getNext();
-	
+	Morphism getMorphism();
 }
