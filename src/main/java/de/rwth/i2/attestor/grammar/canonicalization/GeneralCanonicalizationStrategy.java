@@ -24,10 +24,6 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
 
-		if( !semantics.permitsCanonicalization() ) {
-			return  state;
-		}
-
 		return performCanonicalization( semantics, state );
 	}
 

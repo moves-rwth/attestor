@@ -42,7 +42,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 
 		for(int var=0; var < graph.size(); var++) {
 			
-			if(graph.getNodeLabel(var) instanceof Variable) {
+			if(graph.getNodeLabel(var).getClass() == Variable.class) {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
 

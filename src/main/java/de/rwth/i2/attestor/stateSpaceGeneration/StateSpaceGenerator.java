@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -232,7 +231,9 @@ public class StateSpaceGenerator {
 
 		state = stateRefinementStrategy.refine(state);
         Semantics semantics = program.getStatement(state.getProgramCounter());
-        state = canonicalizationStrategy.canonicalize(semantics, state);
+        if(semantics.permitsCanonicalization()) {
+			state = canonicalizationStrategy.canonicalize(semantics, state);
+		}
 		stateLabelingStrategy.computeAtomicPropositions(state);
 		addingPhase(previousState, state);
     }

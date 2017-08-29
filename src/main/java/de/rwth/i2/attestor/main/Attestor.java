@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.main;
 
-import java.io.*;
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
-
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.automata.HeapAutomaton;
-import de.rwth.i2.attestor.grammar.*;
-import de.rwth.i2.attestor.grammar.canonicalization.*;
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.GrammarExporter;
+import de.rwth.i2.attestor.grammar.IndexMatcher;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
+import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
@@ -22,19 +19,34 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammar
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.*;
-import de.rwth.i2.attestor.io.jsonExport.*;
-import de.rwth.i2.attestor.main.settings.*;
+import de.rwth.i2.attestor.io.CustomHcListExporter;
+import de.rwth.i2.attestor.io.JsonToDefaultHC;
+import de.rwth.i2.attestor.io.JsonToIndexedHC;
+import de.rwth.i2.attestor.io.jsonExport.JsonCustomHcListExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonGrammarExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.main.settings.CommandLineReader;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.util.FileReader;
 import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.util.*;
 
 
 
@@ -131,7 +143,7 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
-	    printVersion();
+		printVersion();
 
 	    try {
 			setupPhase(args);

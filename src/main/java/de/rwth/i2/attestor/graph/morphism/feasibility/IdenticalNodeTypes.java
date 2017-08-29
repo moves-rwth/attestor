@@ -16,7 +16,7 @@ public class IdenticalNodeTypes implements FeasibilityFunction {
 		Graph patternGraph = state.getPattern().getGraph();
 		Graph targetGraph = state.getTarget().getGraph();
 
-		if( patternGraph.getNodeLabel(candidate.p) instanceof GeneralType){
+		if( patternGraph.getNodeLabel(candidate.p).getClass() == GeneralType.class){
 			GeneralType nodeType = (GeneralType) patternGraph.getNodeLabel(candidate.p);
 			return nodeType.typeEquals( targetGraph.getNodeLabel(candidate.t) );
 		}else{

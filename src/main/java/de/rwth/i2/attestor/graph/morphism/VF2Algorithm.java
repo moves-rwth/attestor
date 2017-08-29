@@ -146,6 +146,7 @@ public class VF2Algorithm {
 	private boolean isFeasible(VF2State state, CandidatePair candidate) {
 
 		for(FeasibilityFunction f : feasibilityChecks) {
+
 			if(!f.eval(state, candidate)) {
 				return false;
 			}
