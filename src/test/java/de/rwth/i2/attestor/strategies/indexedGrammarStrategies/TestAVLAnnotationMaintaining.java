@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.automata.BalancedTreeAutomaton;
+import de.rwth.i2.attestor.strategies.stateRefinement.BalancednessStateRefinementStrategy;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,8 +27,8 @@ public class TestAVLAnnotationMaintaining {
 		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_AnnotationMaintaining() );
 		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_AnnotationMaintaining());
 
-		BalancedTreeAutomaton automaton = new BalancedTreeAutomaton();
-		automaton.move(input.getHeap());
+		BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy();
+		strategy.refine(input);
 
 		assertEquals(expected, input);
 	}

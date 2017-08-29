@@ -41,8 +41,6 @@ public class JsonToHeapAutomatonParser {
         switch (automatonName) {
             case "reach":
                 return new ReachabilityAutomaton();
-            case "balance":
-                return new BalancedTreeAutomaton();
             case "points-to":
                 return new PointsToAutomaton( () -> Settings.getInstance().factory().createEmptyHeapConfiguration() );
             default:

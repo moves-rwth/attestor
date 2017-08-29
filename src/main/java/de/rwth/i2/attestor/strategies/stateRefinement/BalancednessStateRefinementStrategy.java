@@ -1,9 +1,11 @@
-package de.rwth.i2.attestor.automata;
+package de.rwth.i2.attestor.strategies.stateRefinement;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
@@ -11,122 +13,17 @@ import gnu.trove.list.array.TIntArrayList;
 
 import java.util.*;
 
-public class BalancedTreeAutomaton extends HeapAutomaton {
-
+public class BalancednessStateRefinementStrategy implements StateRefinementStrategy {
 
     @Override
-    protected AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
+    public ProgramState refine(ProgramState state) {
 
-        BalancednessHelper.updateSelectorAnnotations(heapConfiguration);
-        TIntArrayList potentialRoots = determineRoots(heapConfiguration);
-        return new BalancedTreeState( isBalancedTree(heapConfiguration, potentialRoots) );
-    }
-
-    private TIntArrayList determineRoots(HeapConfiguration heapConfiguration) {
-
-        TIntArrayList result = new TIntArrayList();
-        int nullNode = getNullNode(heapConfiguration);
-        if(nullNode == HeapConfiguration.INVALID_ELEMENT) {
-            return result;
-        }
-
-        TIntIterator rootsIter = heapConfiguration.predecessorNodesOf(nullNode).iterator();
-        while(rootsIter.hasNext()) {
-            int potentialRoot = rootsIter.next();
-            List<SelectorLabel> selectorLabels = heapConfiguration.selectorLabelsOf(potentialRoot);
-            for(SelectorLabel sel : selectorLabels) {
-                if(sel.hasLabel("parent") && heapConfiguration.selectorTargetOf(potentialRoot, sel) == nullNode) {
-                    result.add(potentialRoot);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private int getNullNode(HeapConfiguration heapConfiguration)  {
-
-        int nullVariable = heapConfiguration.variableWith("null");
-        if(nullVariable == HeapConfiguration.INVALID_ELEMENT) {
-            return nullVariable;
-        }
-        return heapConfiguration.targetOf(nullVariable);
-    }
-
-    private boolean isBalancedTree(HeapConfiguration heapConfiguration, TIntArrayList potentialRoots) {
-
-        if(potentialRoots.size() != 1) {
-            return false;
-        }
-
-        int root = potentialRoots.get(0);
-        boolean foundLeft = false;
-        boolean foundRight = false;
-
-        List<SelectorLabel> selectorLabels = heapConfiguration.selectorLabelsOf(root);
-        for(SelectorLabel sel : selectorLabels) {
-            if (sel.hasLabel("left")) {
-                String annotation = ((AnnotatedSelectorLabel) sel).getAnnotation();
-                foundLeft = annotation.equals("-1") || annotation.equals("0") || annotation.equals("1");
-            } else if (sel.hasLabel("right")) {
-                String annotation = ((AnnotatedSelectorLabel) sel).getAnnotation();
-                foundRight = annotation.equals("-1") || annotation.equals("0") || annotation.equals("1");
-            }
-        }
-
-        return foundLeft && foundRight;
+        BalancednessHelper.updateSelectorAnnotations(state.getHeap());
+        return state;
     }
 }
 
-class BalancedTreeState implements AutomatonState {
 
-    private static final String AP_BALANCED = "balanced";
-
-    private final boolean isFinal;
-
-    BalancedTreeState(boolean isFinal) {
-
-        this.isFinal = isFinal;
-    }
-
-    @Override
-    public boolean isFinal() {
-
-        return this.isFinal;
-    }
-
-    @Override
-    public Set<String> getAtomicPropositions() {
-
-        Set<String> result = new HashSet<>();
-        if(isFinal) {
-            result.add(AP_BALANCED);
-        }
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return other instanceof BalancedTreeState;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-
-    public String toString() {
-        return "BTS";
-    }
-
-
-}
-
-/**
- * Auxiliary class annotate selectors pointing to children of a binary tree with balancedness information.
- *
- * @author Christoph
- */
 class BalancednessHelper {
 
     static void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
@@ -264,18 +161,6 @@ class BalancednessHelper {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-        return obj instanceof BalancedTreeState;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return 0;
     }
 
 }

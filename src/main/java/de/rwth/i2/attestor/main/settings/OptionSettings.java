@@ -62,9 +62,6 @@ public class OptionSettings {
 
 	private HeapAutomaton stateLabelingAutomaton = null;
 
-	private HeapAutomaton stateRefinementAutomaton = null;
-
-
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
 	 */
@@ -200,13 +197,4 @@ public class OptionSettings {
 		return stateLabelingAutomaton;
 	}
 
-	public void setStateRefinementAutomaton(HeapAutomaton stateRefinementAutomaton)	{
-
-		this.stateRefinementAutomaton = stateRefinementAutomaton;
-	}
-
-	public HeapAutomaton getStateRefinementAutomaton() {
-
-		return stateRefinementAutomaton;
-	}
 }

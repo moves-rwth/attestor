@@ -406,17 +406,7 @@ public class Attestor {
 
     private void setupStateRefinement() {
 
-        HeapAutomaton stateRefinementAutomaton = settings.options().getStateRefinementAutomaton();
-        if(stateRefinementAutomaton != null) {
-            settings.stateSpaceGeneration()
-                    .setStateRefinementStrategy(
-                            state -> {
-                                stateRefinementAutomaton.move(state.getHeap());
-                                return state;
-                            }
-                    );
-            logger.info("Initialized state refinement.");
-        } else {
+		if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
             settings.stateSpaceGeneration()
                     .setStateRefinementStrategy(
                             state -> state
