@@ -1,6 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
@@ -9,10 +14,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Set;
 
 /**
  * AssignStmts model assignments of locals or fields to values e.g. x.y = z
@@ -85,11 +86,7 @@ public class AssignStmt extends Statement {
 		}
 
 		if( concreteRHS.isUndefined() ){
-			if(rhs instanceof Field)  {
-				logger.warn( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
-			} else {
-				logger.debug( "The value of rhs '" + rhs + "' is undefined. Ignoring Assign." );
-			}
+				logger.debug( "The value of the right hand side is undefined. Ignoring Assign." );
 		}else{
 			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
 				String msg = "The type of the resulting ConcreteValue for rhs does not match ";

@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -9,11 +9,21 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
+/**
+ * This class provides the methods to canonicalisation which are specific for
+ * default (non-indexed) grammars.
+ * 
+ * @author Hannah
+ *
+ */
 public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 
 	public EmbeddingCheckerProvider provider;
-
-
+	
+	/**
+	 * @param checkerProvider generates a EmbeddingChecker for given graph and pattern. Responsible
+	 * to generate the correct one for given settings and semantics.
+	 */
 	public DefaultCanonicalizationHelper( EmbeddingCheckerProvider provider ) {
 		super();
 		this.provider = provider;
