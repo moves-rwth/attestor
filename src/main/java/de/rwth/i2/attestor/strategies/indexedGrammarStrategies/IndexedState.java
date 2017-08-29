@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -7,8 +10,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcre
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
 import de.rwth.i2.attestor.types.Type;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class IndexedState extends GeneralJimpleProgramState {
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
@@ -86,7 +87,7 @@ public class IndexedState extends GeneralJimpleProgramState {
 					
 				}
 			}
-			logger.warn("getSelectorTarget: source node did not have selector " + selectorName);
+			logger.debug("getSelectorTarget: source node did not have requested selector");
 
 		} else {
 			logger.warn("getSelectorTarget got invalid source");
