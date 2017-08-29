@@ -57,17 +57,10 @@ public class VF2Algorithm {
      */
 	TerminationFunction morphismImpossibleCheck;
 
-    /**
-     * This flag is true if and only if it suffices to search whether one desired graph morphism exists.
-     * In other words, it is not required to list all possible morphisms from pattern into target.
-     */
-	boolean checkExistence;
-
-    /**
-     * A list that stores all Morphisms from the pattern graph into the target graph that have been found so far.
-     */
-	private List<Morphism> foundMorphisms;
-
+	/**
+	 * The morphism that has been found by the algorithm. Null otherwise.
+	 */
+	private Morphism foundMorphism = null;
 
     /**
      * @return A builder to create a customized VF2Algorithm.
@@ -83,8 +76,6 @@ public class VF2Algorithm {
 		feasibilityChecks = new ArrayList<>();
 		morphismFoundCheck = null;
 		morphismImpossibleCheck = null;
-		checkExistence = false;
-		foundMorphisms = new ArrayList<>();
 	}
 
     /**
@@ -94,7 +85,6 @@ public class VF2Algorithm {
      * @return true if and only if at least one Morphism exists.
      */
 	public boolean match(Graph pattern, Graph target) {
-		foundMorphisms = new ArrayList<>();
 		VF2State initialState = new VF2State(pattern, target);
 		return match(initialState);
 	}
@@ -120,25 +110,17 @@ public class VF2Algorithm {
            pairs (patternNode, targetNode) of candidates that might be
            added to the partial morphism.
         */
-		boolean morphismFound = false;
 		for(CandidatePair c : state.computeCandidates()) {
 
 			if(isFeasible(state, c)) {
 				
-				logger.trace("found feasible candidate " + c);
-
 				/* A shallow copy only copies data required for backtracking
 				   such as the last candidate. After that we move further
 				   down in the search tree.
                 */
 				VF2State nextState = state.shallowCopy();
 				nextState.addCandidate(c);
-				morphismFound |= match(nextState);
-				
-				/* if we are only interested in finding a single morphism
-				   we can stop here, because at least one morphism has been found.
-				*/
-				if(checkExistence && morphismFound) {
+				if(match(nextState)) {
 					return true;
 				}
 			}
@@ -150,7 +132,7 @@ public class VF2Algorithm {
         */
 		state.backtrack();
 		
-		return morphismFound;
+		return false;
 	}
 
     /**
@@ -159,13 +141,13 @@ public class VF2Algorithm {
      *
      * @param state The current position in the search tree.
      * @param candidate A pair of nodes that should be added to the current state of the algorithm.
-     * @return true if and only if addding candidate to state might still result in a desired morphism.
+     * @return true if and only if adding candidate to state might still result in a desired morphism.
      */
 	private boolean isFeasible(VF2State state, CandidatePair candidate) {
+
 		for(FeasibilityFunction f : feasibilityChecks) {
+
 			if(!f.eval(state, candidate)) {
-				
-				logger.trace(f.getClass().getSimpleName() + " rejected candidate " + candidate);
 				return false;
 			}
 		}
@@ -178,13 +160,15 @@ public class VF2Algorithm {
      * @param state A state representing a found morphism.
      */
 	private void storeMorphism(VF2State state) {
-		foundMorphisms.add( new Morphism(state.getPattern().getMatching()) );
+
+		foundMorphism = new Morphism( state.getPattern().getMatching() );
 	}
 
-    /**
-     * @return A list of all morphisms that have been found so far.
-     */
-	public List<Morphism> getFoundMorphisms() {
-		return foundMorphisms;
+	/**
+	 * @return The morphism that has been found. Null otherwise.
+	 */
+	public Morphism getMorphism() {
+
+		return foundMorphism;
 	}
 }

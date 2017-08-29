@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism.checkers;
 
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
 import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
@@ -28,9 +26,9 @@ public abstract class AbstractVF2MorphismChecker implements MorphismChecker {
 	private boolean hasMorphism;
 	
 	/**
-	 * A list of all morphisms that could be found.
+	 * The morphism that could be found. Null otherwise.
 	 */
-	private List<Morphism> foundMorphisms;
+	private Morphism foundMorphism;
 	
 	/**
 	 * The algorithm that is used to determine graph morphisms.
@@ -56,7 +54,7 @@ public abstract class AbstractVF2MorphismChecker implements MorphismChecker {
 	public void run(Graph pattern, Graph target) {
 		
 		hasMorphism = matchingAlgorithm.match(pattern, target);
-		foundMorphisms = matchingAlgorithm.getFoundMorphisms();
+		foundMorphism = matchingAlgorithm.getMorphism();
 	}
 	
 	@Override
@@ -65,18 +63,8 @@ public abstract class AbstractVF2MorphismChecker implements MorphismChecker {
 	}
 
 	@Override
-	public boolean hasNext() {	
-		return foundMorphisms != null && !foundMorphisms.isEmpty();
-	}
+	public Morphism getMorphism() {
 
-	@Override
-	public Morphism getNext() {
-		
-		if(hasNext()) {
-			return foundMorphisms.remove(0);
-		}
-		
-		throw new IndexOutOfBoundsException("no further morphism exists");
-		
+		return foundMorphism;
 	}
 }

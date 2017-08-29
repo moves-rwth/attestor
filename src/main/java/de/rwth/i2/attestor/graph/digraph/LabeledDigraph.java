@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.graph.digraph;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -292,7 +292,7 @@ public class LabeledDigraph {
 	 *         If 'from' is no predecessor of 'to' then -1 is returned.
 	 */
 	private int predecessorPosOf(int to, int from) {
-		
+
 		TIntArrayList pred = predecessors.get(to);
 		for(int i=0; i < pred.size(); i++) {
 			

@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.Comparator;
@@ -37,7 +37,7 @@ class SelectorDistanceHelper {
 			TIntArrayList succ = graph.getSuccessorsOf(u);
 			for(int i=0; i < succ.size(); i++) {
 				int v = succ.get(i);
-				if(graph.getNodeLabel(v) instanceof Type) {
+				if(graph.getNodeLabel(v).getClass() == GeneralType.class) {
 					int upd = dist.get(u) + 1;
 					if(upd < dist.get(v)) {
 						dist.set(v, upd);

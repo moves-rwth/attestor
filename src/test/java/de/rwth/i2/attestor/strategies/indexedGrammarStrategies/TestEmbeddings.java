@@ -56,7 +56,7 @@ public class TestEmbeddings {
 		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_practicalCanonize() );
 		input.prepareHeap();
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0);
-		assertTrue( checker.hasNext() );
+		assertTrue( checker.hasMatching() );
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class TestEmbeddings {
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0);
-		assertTrue( checker.hasNext() );
+		assertTrue( checker.hasMatching() );
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class TestEmbeddings {
 		        ExampleIndexedGraphFactory.getEmbedding_practicalCanonize3(), 0
 		);
 
-		assertTrue( checker.hasNext() );
+		assertTrue( checker.hasMatching() );
 	}
 	
 	@Test
@@ -89,7 +89,7 @@ public class TestEmbeddings {
                 ExampleIndexedGraphFactory.getRule_Cononize_withInstNecessary(), 0
         );
 
-		assertTrue( checker.hasNext() );
+		assertTrue( checker.hasMatching() );
 	}
 	
 	@Test
@@ -102,6 +102,6 @@ public class TestEmbeddings {
                 ExampleIndexedGraphFactory.getRule_Cononize_withInstNecessary(), 0
         );
 
-		assertTrue( checker.hasNext() );
+		assertTrue( checker.hasMatching() );
 	}
 }

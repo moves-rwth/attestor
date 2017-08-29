@@ -97,7 +97,6 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 
 		super(
 				VF2Algorithm.builder()
-				.setCheckExistence(true)
 				.setMatchingCondition( matchingCondition )
 				.setMatchingImpossibleCondition( matchingImpossibleCondition )
 				.addFeasibilityCondition( compatiblePredecessors )

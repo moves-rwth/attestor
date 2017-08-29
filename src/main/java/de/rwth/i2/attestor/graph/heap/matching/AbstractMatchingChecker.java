@@ -88,21 +88,12 @@ public abstract class AbstractMatchingChecker {
 		
 		return checker.hasMorphism();
 	}
-	
+
 	/**
-	 * @return True if and only if there exists at least one further matching that
-	 * has not been requested by {@link AbstractMatchingChecker#getNext()} yet.
+	 * @return The matching that has been found or null if no matching has been found
 	 */
-	public boolean hasNext() {
-		
-		return checker.hasNext();
-	}
-	
-	/**
-	 * @return The next matching that has been found.
-	 */
-	public Matching getNext() {
-		
-		return new InternalMatching(pattern, checker.getNext(), target);			
+	public Matching getMatching() {
+
+		return new InternalMatching(pattern, checker.getMorphism(), target);
 	}
 }

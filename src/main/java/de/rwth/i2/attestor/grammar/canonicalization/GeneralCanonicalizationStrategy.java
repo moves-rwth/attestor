@@ -9,9 +9,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
 	private Grammar grammar; 
@@ -26,11 +23,6 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 
 	@Override
 	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
-
-		if( !semantics.permitsCanonicalization() ) { 
-
-			return  state;
-		}
 
 		return performCanonicalization( semantics, state );
 	}

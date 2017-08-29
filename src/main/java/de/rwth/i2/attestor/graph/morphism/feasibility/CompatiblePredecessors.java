@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -35,34 +32,35 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 		
 		VF2GraphData pattern = state.getPattern();
 		VF2GraphData target = state.getTarget();
-		
+		Graph patternGraph = pattern.getGraph();
+		Graph targetGraph = target.getGraph();
 
-		TIntArrayList predsOfP = pattern.getGraph().getPredecessorsOf(candidate.p);
+		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(candidate.p);
 		for(int i=0; i < predsOfP.size(); i++) {
 		
 			int p = predsOfP.get(i);
 			if(pattern.containsMatch(p)) {
 			
 				int match = pattern.getMatch(p);
-				TIntArrayList targetPredecessors = target.getGraph().getPredecessorsOf(candidate.t);
+				TIntArrayList targetPredecessors = targetGraph.getPredecessorsOf(candidate.t);
 				if(!targetPredecessors.contains(match)) {
 					
-					return !checkEquality && (target.getGraph().isExternal(candidate.t) && target.getGraph().isExternal(match));
+					return !checkEquality && (targetGraph.isExternal(candidate.t) && targetGraph.isExternal(match));
 				}
 			}
 		}
 		
-		TIntArrayList predsOfT = target.getGraph().getPredecessorsOf(candidate.t);
+		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(candidate.t);
 		for(int i=0; i < predsOfT.size(); i++) {
 			
 			int t = predsOfT.get(i);
 			if(target.containsMatch(t)) {
 			
 				int match = target.getMatch(t);
-				TIntArrayList patternPredecessors = pattern.getGraph().getPredecessorsOf(candidate.p);
+				TIntArrayList patternPredecessors = patternGraph.getPredecessorsOf(candidate.p);
 				if(!patternPredecessors.contains(match)) {
 					
-					return !checkEquality && (pattern.getGraph().isExternal(candidate.p) && pattern.getGraph().isExternal(match));
+					return !checkEquality && (patternGraph.isExternal(candidate.p) && patternGraph.isExternal(match));
 
 				}
 			}

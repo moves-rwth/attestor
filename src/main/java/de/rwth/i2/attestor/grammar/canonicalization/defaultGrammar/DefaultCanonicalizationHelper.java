@@ -41,9 +41,9 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 		AbstractMatchingChecker checker = 
 				provider.getEmbeddingChecker(toAbstract.getHeap(), rhs, semantics);
 
-		if( checker.hasNext() ) {
+		if( checker.hasMatching() ) {
 
-			Matching embedding = checker.getNext();
+			Matching embedding = checker.getMatching();
 			return replaceEmbeddingBy( toAbstract, embedding, lhs );
 		}
 		return null;
