@@ -10,18 +10,31 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
 
+/**
+ * This class provides the methods to canonicalisation which are specific for
+ * indexed grammars.
+ * 
+ * @author Hannah
+ *
+ */
 public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 
 	public IndexCanonizationStrategy indexCanonizationStrategy;
 	public EmbeddingCheckerProvider checkerProvider;
 	public EmbeddingIndexChecker indexChecker;
 
-	
-	public IndexedCanonicalizationHelper( IndexCanonizationStrategy indexCanonicalization,
+	/**
+	 * @param indexCanonicalizer canonicalises the indices before the graph is canonicalised.
+	 * Also responsible to canonicalise them only when admissible
+	 * @param checkerProvider generates a EmbeddingChecker for given graph and pattern. Responsible
+	 * to generate the correct one for given settings and semantics.
+	 * @param indexChecker responsible to match the indices of embeddings provided my the embeddingChecker
+	 */
+	public IndexedCanonicalizationHelper( IndexCanonizationStrategy indexCanonicalizer,
 								   EmbeddingCheckerProvider checkerProvider, 
 								   EmbeddingIndexChecker indexChecker ) {
 		super();
-		this.indexCanonizationStrategy = indexCanonicalization;
+		this.indexCanonizationStrategy = indexCanonicalizer;
 		this.checkerProvider = checkerProvider;
 		this.indexChecker = indexChecker;
 	}
@@ -75,7 +88,7 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 	}
 
 	/**
-	 * For indexed HeapConfigurations this canonizes the indices.
+	 * For indexed HeapConfigurations this canonicalises the indices.
 	 */
 	@Override
 	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {

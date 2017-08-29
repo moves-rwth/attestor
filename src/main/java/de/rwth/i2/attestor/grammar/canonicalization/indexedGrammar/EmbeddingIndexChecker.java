@@ -16,6 +16,23 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 
+/**
+ * This class can be used to match the indices of already matched graphs.
+ * To this end it can instantiate the index variable with any sequence (such a variable may
+ * exist in the "pattern" graph) and by materialising any occurring abstract index symbols (which
+ * may exist in the "target" graph and if applicable in the instantiation sequence.
+ * 
+ * For determining the matches between single indices you must provide an IndexMatcher which is 
+ * also responsible for managing the index grammar.
+ * You must also provide an indexMaterializer which is able to apply materialization rules to a
+ * heapConfiguration.
+ * 
+ * This class will then take care that a consistent materialization is found for all nonterminals
+ * and will fail if this is impossible.
+ * 
+ * @author Hannah
+ *
+ */
 public class EmbeddingIndexChecker {
 	private static final Logger logger = LogManager.getLogger( "EmbeddingIndexChecker" );
 
@@ -29,6 +46,16 @@ public class EmbeddingIndexChecker {
 		this.indexMaterializer = materializer;
 	}
 
+	/**
+	 * Computes the necessary materialization and instantiation to match the nonterminals of the
+	 * embedding in toAbstract. If this is possible it returns a appropriately materialised copy
+	 * of toAbstract and and instantiated copy of lhs
+	 * @param toAbstract The "outer" graph 
+	 * @param embedding the embedding of the pattern into the graph toAbstract
+	 * @param lhs the nonterminal with which the embedded pattern will be replaced
+	 * @return an IndexEmbeddingResult containing the materialised graph and the instantiated lhs
+	 * @throws CannotMatchException if the indices of the matched endges cannot be matched.
+	 */
 	public IndexEmbeddingResult getIndexEmbeddingResult( HeapConfiguration toAbstract, 
 			Matching embedding, 
 			Nonterminal lhs ) throws CannotMatchException{

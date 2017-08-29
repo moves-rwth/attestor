@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
+/**
+ * Implies that the indices of aligned nonterminal edges cannot match
+ * by materialization and instantiation
+ * @author Hannah
+ *
+ */
 @SuppressWarnings("serial")
 public class CannotMatchException extends Exception {
 

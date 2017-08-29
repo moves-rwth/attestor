@@ -183,7 +183,7 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 				
 				for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(node)) {
 					
-					if(sel.hasLabel("left") || sel.hasLabel("right")) {
+					if( sel.hasLabel("left") || sel.hasLabel("right") ) {
 						if(heapConfiguration.selectorTargetOf(node, sel) == nullNode) {
 							return false;
 						}
