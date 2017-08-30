@@ -232,11 +232,11 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	public HeapConfigurationBuilder replaceSelector(int node, SelectorLabel oldSel, SelectorLabel newSel) {
 		
 		int privateId = getPrivateId(node);
-		
+
 		if(!isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
-		
+
 		if(oldSel == null || newSel == null) {
 			throw new NullPointerException();
 		}
@@ -587,7 +587,23 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		return this;
 	}
 
-    /**
+	@Override
+	public HeapConfigurationBuilder replaceNodeType(int node, Type newType) {
+
+		if(newType == null) {
+			throw new NullPointerException();
+		}
+
+		int privateId = getPrivateId(node);
+		if(!isNode(privateId)) {
+			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
+		}
+
+		heapConf.graph.replaceNodeLabel(privateId, newType);
+		return this;
+	}
+
+	/**
      * Removes all selector and tentacle edges in the underlying HeapConfiguration that belong to the provided
      * HeapConfiguration according to the provided matching.
      * @param matching A mapping from the provided HeapConfiguration to elements of the underlying HeapConfiguration.

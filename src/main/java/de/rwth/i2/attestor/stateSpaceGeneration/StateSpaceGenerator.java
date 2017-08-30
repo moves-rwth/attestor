@@ -156,7 +156,12 @@ public class StateSpaceGenerator {
 				if(successorStates.isEmpty()) {
 					stateSpace.setFinal(state);
 				} else {
-					successorStates.forEach(s -> applySuccessorStatePhases(state, s));
+					successorStates.forEach(nextState -> {
+						nextState = stateRefinementStrategy.refine(nextState);
+						nextState = canonicalizationPhase(nextState);
+						stateLabelingStrategy.computeAtomicPropositions(nextState);
+						addingPhase(state, nextState);
+					});
 				}
 			}
 		}
@@ -214,29 +219,14 @@ public class StateSpaceGenerator {
 		}
 	}
 
-	/**
-	 * The remaining phases for each successor state:
-	 * <ol>
-	 * <li>Refine the state to extract additional information that may be used to guide abstraction.</li>
-	 * <li>Apply canonicalization to compute a (set of) more abstract states.</li>
-	 * <li>Compute the atomic propositions for each resulting state.</li>
-	 * <li>Apply an inclusion check to determine the resulting states that are not subsumed by
-	 *     a state in the state space.</li>
-	 * <li>Add the new states (that are not subsumed) to the state space and mark them as unexplored.</li>
-	 * </ol>
-	 * @param previousState The state whose successor is the given state.
-	 * @param state The state to which all phases should be applied.
-	 */
-	private void applySuccessorStatePhases(ProgramState previousState, ProgramState state) {
+	private ProgramState canonicalizationPhase(ProgramState state) {
 
-		state = stateRefinementStrategy.refine(state);
-        Semantics semantics = program.getStatement(state.getProgramCounter());
-        if(semantics.permitsCanonicalization()) {
+		Semantics semantics = program.getStatement(state.getProgramCounter());
+		if(semantics.permitsCanonicalization()) {
 			state = canonicalizationStrategy.canonicalize(semantics, state);
 		}
-		stateLabelingStrategy.computeAtomicPropositions(state);
-		addingPhase(previousState, state);
-    }
+		return state;
+	}
 
 	/**
 	 * Adds a state as a successor of the given previous state to the state space

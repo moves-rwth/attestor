@@ -159,5 +159,12 @@ public interface HeapConfigurationBuilder {
 	 */
 	HeapConfigurationBuilder replaceMatching(Matching matching, Nonterminal nonterminal);
 
+	/**
+	 * Sets the node type of the given node to newType.
+	 * @param node The node whose type should be changed.
+	 * @param newType The new type assigned to the node.
+	 * @return the builder
+	 */
+	HeapConfigurationBuilder replaceNodeType(int node, Type newType);
 
 }
