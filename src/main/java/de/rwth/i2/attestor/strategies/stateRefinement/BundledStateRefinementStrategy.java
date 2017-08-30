@@ -5,11 +5,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 import java.util.List;
 
-public class CollectiveStateRefinementStrategy implements StateRefinementStrategy {
+public class BundledStateRefinementStrategy implements StateRefinementStrategy {
 
     private List<StateRefinementStrategy> strategies;
 
-    public CollectiveStateRefinementStrategy(List<StateRefinementStrategy> strategies) {
+    public BundledStateRefinementStrategy(List<StateRefinementStrategy> strategies) {
 
         this.strategies = strategies;
     }

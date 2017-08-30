@@ -34,7 +34,7 @@ public class JsonStateRefinementStrategyParser {
             return null;
         }
 
-        return new CollectiveStateRefinementStrategy(strategies);
+        return new BundledStateRefinementStrategy(strategies);
     }
 
     private StateRefinementStrategy parseStrategy(String name) {
