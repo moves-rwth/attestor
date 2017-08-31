@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
@@ -50,7 +51,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * which is either the abstract semantic translation for this method or a
 	 * default method for those methods we do not translate.
 	 */
-	private Map<String, AbstractMethod> methodMapping;
+	private Map<String, SimpleAbstractMethod> methodMapping;
 
 	/**
 	 * The next level in the translation hierarchy. This level is the first one
@@ -83,9 +84,9 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Assumes that soot.Scene already contains the Jimple code that should be
 	 * translated.
 	 * 
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#AbstractMethod(String, AbstractMethod.StateSpaceFactory)
+	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#AbstractMethod(String, SimpleAbstractMethod.StateSpaceFactory)
 	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory()())
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod#setControlFlow(List)
+	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#setControlFlow(List)
 	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)
 	 */
@@ -107,7 +108,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
-			methodMapping.put(signature, new AbstractMethod(signature, shortName, getStateSpaceFactory()));
+			methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName, getStateSpaceFactory()));
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);
@@ -217,7 +218,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			return res;
 		} else {
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );
-			AbstractMethod defaultMethod = new AbstractMethod(signature + " (only default - empty Method)",
+			SimpleAbstractMethod defaultMethod = new SimpleAbstractMethod(signature + " (only default - empty Method)",
 					displayName, getStateSpaceFactory());
 			methodMapping.put(signature, defaultMethod);
 			List<Semantics> defaultControlFlow = new ArrayList<>();
@@ -230,7 +231,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		}
 	}
 
-	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() {
+	private SimpleAbstractMethod.StateSpaceFactory getStateSpaceFactory() {
 
 		return (program, input, scopeDepth) -> {
 			return Settings.getInstance()

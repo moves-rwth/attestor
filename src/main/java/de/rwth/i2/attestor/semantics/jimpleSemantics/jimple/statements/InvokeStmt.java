@@ -42,7 +42,7 @@ public class InvokeStmt extends Statement {
 
 	/**
 	 * gets the fixpoint from the
-	 * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod
+	 * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod
 	 * AbstractMethod} for the input heap and returns it for the successor
 	 * location.<br>
 	 * 
