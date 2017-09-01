@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
@@ -30,6 +29,8 @@ import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
+import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
+import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -351,39 +352,44 @@ public class Attestor {
 
 	private void preprocessingPhase() {
 
-        if(!settings.options().isIndexedMode()
-                && settings.options().getStateLabelingAutomaton() != null) {
+        if(!settings.options().isIndexedMode()) {
             setupStateLabeling();
         } else {
             inputs.add(originalInput);
             settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
-            if(settings.options().getStateLabelingAutomaton() == null) {
-                logger.info("Skipped refinement, because no atomic propositions are required.");
-            } else if(settings.options().isIndexedMode()) {
-                logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
-            }
+            logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
         }
-
-        setupStateRefinement();
 	}
 
 	private void setupStateLabeling() {
 
-        logger.info("Refining grammar...");
-        HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
-        settings.grammar().setGrammar(
-                stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
-        );
+		de.rwth.i2.attestor.refinement.HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
+		if(refinementAutomaton == null) {
+			logger.info("No grammar refinement is required.");
+			inputs.add(originalInput);
+			return;
+		}
+
+		logger.info("Refining grammar...");
+		GrammarRefinement grammarRefinement = new GrammarRefinement(
+				settings.grammar().getGrammar(),
+				refinementAutomaton
+		);
+		settings.grammar().setGrammar(grammarRefinement.getRefinedGrammar());
+
         logger.info("done. Number of refined nonterminals: "
                 + settings.grammar().getGrammar().getAllLeftHandSides().size());
         logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
 
         logger.info("Refining input heap configuration...");
-        inputs = stateLabelingAutomaton.refineHeapConfiguration(
-                originalInput,
-                settings.grammar().getGrammar(),
-                new HashSet<>()
-        );
+
+        InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
+        		originalInput,
+				settings.grammar().getGrammar(),
+				refinementAutomaton
+		);
+
+        inputs = inputRefinement.getRefinements();
 
         if(inputs.isEmpty())	{
             logger.fatal("No refined initial state exists.");
@@ -392,27 +398,6 @@ public class Attestor {
 
         logger.info("done. Number of refined heap configurations: "
                 + inputs.size());
-
-        settings.stateSpaceGeneration()
-                .setStateLabelingStrategy(
-                        programState -> {
-                            for(String ap : stateLabelingAutomaton
-                                    .move(programState.getHeap()).getAtomicPropositions()) {
-                                programState.addAP(ap);
-                            }
-                        }
-                );
-    }
-
-    private void setupStateRefinement() {
-
-		if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
-            settings.stateSpaceGeneration()
-                    .setStateRefinementStrategy(
-                            state -> state
-                    );
-            logger.info("No additional state refinement is used.");
-        }
     }
 
 	private void stateSpaceGenerationPhase() {

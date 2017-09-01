@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.automata;
+package de.rwth.i2.attestor.refinement.grammarRefinement;
 
 import gnu.trove.list.array.TIntArrayList;
 

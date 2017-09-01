@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.automata.visited;
+package de.rwth.i2.attestor.refinement.visitedNodes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -24,8 +24,8 @@ public class VisitedStateRefinementStrategy implements StateRefinementStrategy {
             int var = varIter.next();
             int node = heapConf.targetOf(var);
             Type type = heapConf.nodeTypeOf(node);
-            if(!VisitedTypes.isVisited(type)) {
-                Type newType = VisitedTypes.getVisited(type);
+            if(!VisitedTypeHelper.isVisited(type)) {
+                Type newType = VisitedTypeHelper.getVisitedType(type);
                 heapConf.builder().replaceNodeType(node, newType).build();
             }
         }

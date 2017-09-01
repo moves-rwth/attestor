@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.strategies.stateRefinement.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

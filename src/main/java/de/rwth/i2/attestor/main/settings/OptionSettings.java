@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.automata.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +60,10 @@ public class OptionSettings {
 	 */
 	private boolean indexedMode = false;
 
-	private HeapAutomaton stateLabelingAutomaton = null;
+	/**
+	 * Heap automaton used for grammar refinement.
+	 */
+	private HeapAutomaton refinementAutomaton = null;
 
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
@@ -187,14 +190,18 @@ public class OptionSettings {
 		this.indexedMode = indexedMode;
 	}
 
-	public void setStateLabelingAutomaton(HeapAutomaton stateLabelingAutomaton)	{
-
-		this.stateLabelingAutomaton = stateLabelingAutomaton;
+	/**
+	 * @param automaton The heap automaton to be used for grammar refinement.
+	 */
+	public void setRefinementAutomaton(HeapAutomaton automaton) {
+		this.refinementAutomaton = automaton;
 	}
 
-	public HeapAutomaton getStateLabelingAutomaton() {
+	/**
+	 * @return The heap automaton to be used for grammar refinement.
+	 */
+	public HeapAutomaton getRefinementAutomaton() {
 
-		return stateLabelingAutomaton;
+		return refinementAutomaton;
 	}
-
 }

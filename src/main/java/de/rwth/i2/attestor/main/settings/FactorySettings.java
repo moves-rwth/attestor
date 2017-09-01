@@ -79,7 +79,7 @@ public class FactorySettings {
      */
     private boolean requiresRefinedSymbols() {
 
-        return Settings.getInstance().options().getStateLabelingAutomaton() != null;
+        return Settings.getInstance().options().getRefinementAutomaton() != null;
     }
 
     /**

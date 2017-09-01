@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.strategies.stateRefinement;
 
+import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

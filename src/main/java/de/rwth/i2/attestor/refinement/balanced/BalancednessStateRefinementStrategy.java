@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.strategies.stateRefinement;
+package de.rwth.i2.attestor.refinement.balanced;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;

@@ -1,52 +1,39 @@
-package de.rwth.i2.attestor.automata;
-
-import java.util.*;
+package de.rwth.i2.attestor.refinement.pointsTo;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
-/**
- * A simple heap automaton to determine all variables that point via a single selector to each other.
- * In other words, it determines all triples (s,l,t) in a heap configuration, where s and t are variable
- * names and l is the name of a selector such that s.l = a holds.
- *
- * @author Christoph
- */
-public class PointsToAutomaton extends HeapAutomaton {
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-    @FunctionalInterface
-    public interface HeapConfigurationFactory {
-
-        HeapConfiguration createEmptyHc();
-    }
-
-    private HeapConfigurationFactory hcFactory;
-
-    public PointsToAutomaton(HeapConfigurationFactory hcFactory) {
-
-        this.hcFactory = hcFactory;
-    }
+public class PointsToHeapAutomaton implements HeapAutomaton {
 
     @Override
-    protected AutomatonState move(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
+    public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
+                                         List<HeapAutomatonState> statesOfNonterminals) {
 
-        HeapConfiguration composedHc = composeHc(ntAssignment, heapConfiguration);
+        HeapConfiguration composedHc = composeHc(heapConfiguration, statesOfNonterminals);
         HeapConfiguration kernel = computeKernel(composedHc);
-        return new PointsToState(kernel);
+        return new PointsToHeapAutomatonState(kernel);
     }
 
-    private HeapConfiguration composeHc(List<AutomatonState> ntAssignment, HeapConfiguration heapConfiguration) {
+    private HeapConfiguration composeHc(HeapConfiguration heapConfiguration,
+                                        List<HeapAutomatonState> statesOfNonterminals) {
 
         heapConfiguration = heapConfiguration.clone();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-
-        for(int i=0; i < ntAssignment.size(); i++) {
+        for(int i=0; i < statesOfNonterminals.size(); i++) {
             int edge = ntEdges.get(i);
-            PointsToState state = (PointsToState) ntAssignment.get(i);
+            PointsToHeapAutomatonState state = (PointsToHeapAutomatonState) statesOfNonterminals.get(i);
             HeapConfiguration stateKernel = state.kernel;
             builder.replaceNonterminalEdge(edge, stateKernel);
         }
@@ -55,7 +42,7 @@ public class PointsToAutomaton extends HeapAutomaton {
 
     private HeapConfiguration computeKernel(HeapConfiguration heapConfiguration) {
 
-        HeapConfigurationBuilder builder = hcFactory.createEmptyHc().builder();
+        HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
         int countExt = heapConfiguration.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList( countExt );
 
@@ -129,60 +116,51 @@ public class PointsToAutomaton extends HeapAutomaton {
         }
     }
 
+    @Override
+    public boolean isInitialState(HeapAutomatonState heapAutomatonState) {
+
+        return true;
+    }
+
+    @Override
+    public List<HeapConfiguration> getPossibleHeapRewritings(HeapConfiguration heapConfiguration) {
+
+        return Collections.singletonList(heapConfiguration);
+    }
 }
 
-
-class PointsToState implements AutomatonState {
+class PointsToHeapAutomatonState extends HeapAutomatonState {
 
     final HeapConfiguration kernel;
 
-    PointsToState(HeapConfiguration kernel) {
+    PointsToHeapAutomatonState(HeapConfiguration kernel) {
 
         this.kernel = kernel;
     }
 
     @Override
-    public boolean isFinal() {
+    public Set<String> toAtomicPropositions() {
 
-        return kernel.countVariableEdges() > 0;
+        return null;
     }
 
     @Override
-    public Set<String> getAtomicPropositions() {
+    public boolean equals(Object otherObject) {
 
-        Set<String> aps = new HashSet<>();
-        TIntArrayList variables = kernel.variableEdges();
-        TIntArrayList variableTargets = new TIntArrayList(variables.size());
-        for(int i=0; i < variables.size(); i++) {
-            variableTargets.add(kernel.targetOf(variables.get(i)));
+        if(otherObject == this) {
+            return true;
         }
-        for(int i=0; i < variables.size(); i++) {
-            int source = variableTargets.get(i);
-            for(SelectorLabel sel : kernel.selectorLabelsOf(source)) {
-                int target = kernel.selectorTargetOf(source, sel);
-                if(variableTargets.contains(target)) {
-                    aps.add(
-                            "("
-                            + kernel.nameOf(variables.get(i))
-                            + ","
-                            + sel.getLabel()
-                            + ","
-                            + kernel.nameOf(variables.get(variableTargets.indexOf(target)))
-                            + ")"
-                    );
-                }
-            }
-        }
-        return aps;
-    }
 
-    @Override
-    public boolean equals(Object other) {
-
-        if(other instanceof PointsToState) {
-            return kernel.equals( ((PointsToState) other).kernel );
+        if(otherObject == null) {
+            return false;
         }
-        return false;
+
+        if(otherObject.getClass() != PointsToHeapAutomatonState.class) {
+            return false;
+        }
+
+        PointsToHeapAutomatonState other = (PointsToHeapAutomatonState) otherObject;
+        return kernel != null && kernel.equals(other.kernel);
     }
 
     @Override

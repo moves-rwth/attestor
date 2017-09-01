@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
-import de.rwth.i2.attestor.automata.AutomatonState;
-import de.rwth.i2.attestor.automata.RefinedNonterminal;
+import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 
 /**
  * A nonterminal symbol that is additionally annotated with a state of a heap automaton.
@@ -19,21 +19,21 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
     /**
      * The state the nonterminal is annotated with.
      */
-    private AutomatonState state;
+    private HeapAutomatonState state;
 
-    public RefinedDefaultNonterminal(Nonterminal nonterminal, AutomatonState state) {
+    public RefinedDefaultNonterminal(Nonterminal nonterminal, HeapAutomatonState state) {
        this.nonterminal = nonterminal;
        this.state = state;
     }
 
     @Override
-    public AutomatonState getState() {
+    public HeapAutomatonState getState() {
 
         return state;
     }
 
     @Override
-    public RefinedNonterminal withState(AutomatonState state) {
+    public RefinedNonterminal withState(HeapAutomatonState state) {
 
         return new RefinedDefaultNonterminal(nonterminal, state);
     }

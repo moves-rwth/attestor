@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.strategies.stateRefinement;
+package de.rwth.i2.attestor.refinement;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
