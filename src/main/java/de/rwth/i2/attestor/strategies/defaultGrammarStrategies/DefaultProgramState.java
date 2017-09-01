@@ -173,14 +173,15 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 		}
 
         DefaultProgramState state = (DefaultProgramState) other;
+		HeapConfiguration otherHeap = state.getHeap();
 
         return programCounter == state.programCounter
 					&& scopeDepth == state.scopeDepth
-					&& heap.countNodes() == state.getHeap().countNodes()
-					&& heap.countNonterminalEdges() == state.getHeap().countNonterminalEdges()
-					&& heap.countVariableEdges() == state.getHeap().countVariableEdges()
+					&& heap.countNodes() == otherHeap.countNodes()
+					&& heap.countNonterminalEdges() == otherHeap.countNonterminalEdges()
+					&& heap.countVariableEdges() == otherHeap.countVariableEdges()
 					&& atomicPropositions.equals(state.getAPs())
-                    && heap.equals(state.getHeap());
+                    && heap.equals(otherHeap);
 	}
 
 	@Override
