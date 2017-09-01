@@ -69,16 +69,18 @@ public class UnequalExpr implements Value {
 			return programState.getUndefined();
 		}
 		if( rightRes.isUndefined() ){
-			logger.debug( "rightExpr evaluated to undefined. Returning undefined." );
+			//logger.debug( "rightExpr evaluated to undefined. Returning undefined." );
 			return programState.getUndefined();
 		}
 
 		ConcreteValue res = programState.getConstant( "" + ( !leftRes.equals( rightRes ) ) );
+		/*
 		if( !( res.type().equals( this.type ) ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
 			logger.debug( msg );
 		}
+		*/
 		return res;
 	}
 

@@ -56,6 +56,8 @@ public class IdentityStmt extends Statement {
 		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
 
 		ConcreteValue concreteRHS = jimpleProgramState.removeIntermediate( rhs );
+
+		/*
 		if( concreteRHS.isUndefined() ){
 			logger.debug( rhs + " is not attached to the heap. (Continued by ignoring." );
 		}else{
@@ -66,6 +68,8 @@ public class IdentityStmt extends Statement {
 				logger.debug( msg );
 			}
 		}
+		*/
+
 		try {
 			lhs.setValue( jimpleProgramState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {

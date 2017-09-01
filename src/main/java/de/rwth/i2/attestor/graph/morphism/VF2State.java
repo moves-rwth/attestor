@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import gnu.trove.list.TIntList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,43 +83,39 @@ public class VF2State {
 
 	/**
 	 * Adds a new candidate to the underlying partial matching.
-	 * @param candidate The candidate to add to the matching described by this state.
+	 * @param p The pattern candidate to add to the matching described by this state.
+	 * @param t The target candidate to add to the matching described by this state.
 	 */
-	public void addCandidate(CandidatePair candidate) {
-		pattern.setMatch(candidate.p, candidate.t);
-		target.setMatch(candidate.t, candidate.p);
+	public void addCandidate(int p, int t) {
+		pattern.setMatch(p, t);
+		target.setMatch(t, p);
 	}
 
 	/**
 	 * Computes a list of possible candidates that should be tested for suitable pairs
 	 * that can be added to the current partial matching.
-	 * @return A list of possible candidate pairs consisting of a node from the pattern graph and a node
-	 *         from the target graph.
+	 * @param patternCandidates A list storing all pattern candidates
+	 * @param targetCandidates A list storing all target candidates
 	 */
-	public List<CandidatePair> computeCandidates() {
+	public void computeCandidates(TIntList patternCandidates, TIntList targetCandidates) {
 		
 		if(!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
-			
-			return computeOutgoingCandidates();
+			computeOutgoingCandidates(patternCandidates, targetCandidates);
+		} else if(!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
+			computeIngoingCandidates(patternCandidates, targetCandidates);
+		} else {
+			computeAllCandidates(patternCandidates, targetCandidates);
 		}
-		
-		if(!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
-
-			return computeIngoingCandidates();
-		}
-		
-		return computeAllCandidates();
-		
 	}
 
 	/**
 	 * Computes possible candidate pairs based on nodes reachable via outgoing edges from nodes that already have
 	 * been matched.
-	 * @return The list of candidates found.
+	 * @param patternCandidates A list storing all pattern candidates
+	 * @param targetCandidates A list storing all target candidates
 	 */
-	private List<CandidatePair> computeOutgoingCandidates() {
+	private void computeOutgoingCandidates(TIntList patternCandidates, TIntList targetCandidates) {
 		
-		List<CandidatePair> result = new LinkedList<>();
 		int countPatternNodes = pattern.getGraph().size();
 		int countTargetNodes = target.getGraph().size();
 		int patternMin = VF2GraphData.NULL_NODE;
@@ -133,24 +127,23 @@ public class VF2State {
 				for(int t = 0; t < countTargetNodes; t++) {
 				
 					if(target.containsOutgoing(t)) {
-						result.add(  new CandidatePair(p, t) );
+						patternCandidates.add(p);
+						targetCandidates.add(t);
 						patternMin = p;
 					}
 				}
 			}
 		}
-		
-		return result;
 	}
 
 
 	/**
 	 * Computes possible candidate pairs based on nodes reachable via ingoing edges from nodes that already have
 	 * been matched.
-	 * @return The list of candidates found.
+	 * @param patternCandidates A list storing all pattern candidates
+	 * @param targetCandidates A list storing all target candidates
 	 */
-	private List<CandidatePair> computeIngoingCandidates() {
-		List<CandidatePair> result = new LinkedList<>();
+	private void computeIngoingCandidates(TIntList patternCandidates, TIntList targetCandidates) {
 		int countPatternNodes = pattern.getGraph().size();
 		int countTargetNodes = target.getGraph().size();
 		int patternMin = VF2GraphData.NULL_NODE;
@@ -161,22 +154,21 @@ public class VF2State {
 				for(int t = 0; t < countTargetNodes; t++) {
 				
 					if(target.containsIngoing(t)) {
-						result.add(  new CandidatePair(p, t) );
+						patternCandidates.add(p);
+						targetCandidates.add(t);
 						patternMin = p;
 					}
 				}
 			}
 		}
-		
-		return result;
 	}
 
 	/**
 	 * Computes all possible candidate pairs based on nodes that have not been matched yet.
-	 * @return The list of candidates found.
+	 * @param patternCandidates A list storing all pattern candidates
+	 * @param targetCandidates A list storing all target candidates
 	 */
-	private List<CandidatePair> computeAllCandidates() {
-		List<CandidatePair> result = new LinkedList<>();
+	private void computeAllCandidates(TIntList patternCandidates, TIntList targetCandidates) {
 		int countPatternNodes = pattern.getGraph().size();
 		int countTargetNodes = target.getGraph().size();
 		int patternMin = VF2GraphData.NULL_NODE;
@@ -188,14 +180,13 @@ public class VF2State {
 				for(int t = 0; t < countTargetNodes; t++) {
 				
 					if(!target.containsMatch(t)) {
-						result.add(  new CandidatePair(p, t) );
+						patternCandidates.add(p);
+						targetCandidates.add(t);
 						patternMin = p;
 					}
 				}
 			}
 		}
-		
-		return result;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism;
 
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +42,7 @@ public class VF2Algorithm {
 	private static final Logger logger = LogManager.getLogger( "VF2Algorithm" );
 
     /**
-     * A list that determines the FeasibilityFunctions that are evaluated to determine whether a CandidatePair
+     * A list that determines the FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
      * the Morphism we search for.
      */
@@ -110,16 +112,24 @@ public class VF2Algorithm {
            pairs (patternNode, targetNode) of candidates that might be
            added to the partial morphism.
         */
-		for(CandidatePair c : state.computeCandidates()) {
 
-			if(isFeasible(state, c)) {
+		int size = state.getPattern().getGraph().size();
+		TIntList patternCandidates = new TIntArrayList(size);
+		TIntList targetCandidates = new TIntArrayList(size);
+		state.computeCandidates(patternCandidates, targetCandidates);
+
+		for(int i=0; i < patternCandidates.size(); i++) {
+			int p = patternCandidates.get(i);
+			int t = targetCandidates.get(i);
+
+			if(isFeasible(state, p, t)) {
 				
 				/* A shallow copy only copies data required for backtracking
 				   such as the last candidate. After that we move further
 				   down in the search tree.
                 */
 				VF2State nextState = state.shallowCopy();
-				nextState.addCandidate(c);
+				nextState.addCandidate(p, t);
 				if(match(nextState)) {
 					return true;
 				}
@@ -140,14 +150,15 @@ public class VF2Algorithm {
      * results in a state that might still lead to a desired Morphism.
      *
      * @param state The current position in the search tree.
-     * @param candidate A pair of nodes that should be added to the current state of the algorithm.
+	 * @param p The pattern candidate node that should be added to the current state of the algorithm.
+	 * @param t The target candidate node that should be added to the current state of the algorithm.
      * @return true if and only if adding candidate to state might still result in a desired morphism.
      */
-	private boolean isFeasible(VF2State state, CandidatePair candidate) {
+	private boolean isFeasible(VF2State state, int p, int t) {
 
 		for(FeasibilityFunction f : feasibilityChecks) {
 
-			if(!f.eval(state, candidate)) {
+			if(!f.eval(state, p, t)) {
 				return false;
 			}
 		}

@@ -11,18 +11,18 @@ import de.rwth.i2.attestor.types.GeneralType;
 public class IdenticalNodeTypes implements FeasibilityFunction {
 
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 
 		Graph patternGraph = state.getPattern().getGraph();
 		Graph targetGraph = state.getTarget().getGraph();
 
-		if( patternGraph.getNodeLabel(candidate.p).getClass() == GeneralType.class){
-			GeneralType nodeType = (GeneralType) patternGraph.getNodeLabel(candidate.p);
-			return nodeType.typeEquals( targetGraph.getNodeLabel(candidate.t) );
+		if( patternGraph.getNodeLabel(p).getClass() == GeneralType.class){
+			GeneralType nodeType = (GeneralType) patternGraph.getNodeLabel(p);
+			return nodeType.typeEquals( targetGraph.getNodeLabel(t) );
 		}else{
-			return patternGraph.getNodeLabel(candidate.p)
+			return patternGraph.getNodeLabel(p)
 					.equals(
-							targetGraph.getNodeLabel(candidate.t)
+							targetGraph.getNodeLabel(t)
 							);
 		}
 	}

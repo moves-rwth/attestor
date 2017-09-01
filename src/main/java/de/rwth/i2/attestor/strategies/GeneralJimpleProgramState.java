@@ -300,7 +300,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			Type type = heap.nodeTypeOf(node);
 			return new GeneralConcreteValue( type, node );
 		} catch( NullPointerException | IllegalArgumentException e ) {
-			logger.trace("Variable " + variableName + " could not be found. Returning undefined.");
+			//logger.trace("Variable " + variableName + " could not be found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}
@@ -319,7 +319,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 		try {
 			heap.builder().removeVariableEdge(varEdge).build();
 		} catch(IllegalArgumentException e) {
-			logger.trace("Variable '" + variableName + "' could not be removed as it does not exist.");
+			//logger.trace("Variable '" + variableName + "' could not be removed as it does not exist.");
 		}
 	}
 

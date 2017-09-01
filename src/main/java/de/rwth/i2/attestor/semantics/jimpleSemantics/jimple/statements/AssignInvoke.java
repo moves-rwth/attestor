@@ -93,6 +93,7 @@ public class AssignInvoke extends Statement {
 
 			invokePrepare.cleanHeap( jimpleResState );
 
+			/*
 			if( concreteRHS.isUndefined() ){
 					logger.debug( "rhs evaluated to undefined (no return attached to heap)" );
 			}else{
@@ -103,6 +104,8 @@ public class AssignInvoke extends Statement {
 					logger.debug( msg );
 				}
 			}
+			*/
+
 			try {
 				lhs.setValue( jimpleResState, concreteRHS );
 			} catch (NullPointerDereferenceException e) {
