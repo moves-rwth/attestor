@@ -87,7 +87,7 @@ public class VF2Algorithm {
 		if(morphismImpossibleCheck.eval(state)) {
 			return false;
 		}
-	
+
 		if(morphismFoundCheck.eval(state)) {
 			storeMorphism(state);
 			return true;
@@ -115,13 +115,13 @@ public class VF2Algorithm {
 				}
 			}
 		}
-		
+
 		/* We stored all morphisms found so far and finished going through all search trees
 		   after adding all available candidate pairs to the current state.
            Hence, we backtrack and remove the last pair added to the current state before.
         */
 		state.backtrack();
-		
+
 		return false;
 	}
 

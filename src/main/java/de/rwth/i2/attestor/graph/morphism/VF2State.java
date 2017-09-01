@@ -96,9 +96,6 @@ public class VF2State {
 	public void backtrack() {		
 		pattern.backtrack();
 		target.backtrack();
-		patternCandidate = 0;
-		targetCandidate = -1;
-		patternMin = VF2GraphData.NULL_NODE;
 	}
 
 	/**
