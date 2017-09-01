@@ -2,11 +2,6 @@ package de.rwth.i2.attestor.graph.morphism;
 
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
@@ -37,16 +32,11 @@ import java.util.List;
 public class VF2Algorithm {
 
     /**
-     * The logger for this class.
-     */
-	private static final Logger logger = LogManager.getLogger( "VF2Algorithm" );
-
-    /**
-     * A list that determines the FeasibilityFunctions that are evaluated to determine whether a candidate pair
+     * The FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
      * the Morphism we search for.
      */
-	final List<FeasibilityFunction> feasibilityChecks;
+	FeasibilityFunction[] feasibilityChecks;
 
     /**
      * A function that determines whether we found a complete Morphism and can thus successfully terminate.
@@ -75,7 +65,6 @@ public class VF2Algorithm {
      * Construct a useless VF2Algorithm that has to be customized by a {@link VF2AlgorithmBuilder}.
      */
 	VF2Algorithm() {
-		feasibilityChecks = new ArrayList<>();
 		morphismFoundCheck = null;
 		morphismImpossibleCheck = null;
 	}
@@ -156,8 +145,8 @@ public class VF2Algorithm {
      */
 	private boolean isFeasible(VF2State state, int p, int t) {
 
-		for(FeasibilityFunction f : feasibilityChecks) {
-
+		for(int i=0; i < feasibilityChecks.length; i++)  {
+			FeasibilityFunction f = feasibilityChecks[i];
 			if(!f.eval(state, p, t)) {
 				return false;
 			}

@@ -3,15 +3,7 @@ package de.rwth.i2.attestor.graph.morphism.checkers;
 
 import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatibleNodeTypes;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatiblePredecessors;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatibleSuccessors;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingBranchOnPatternExternal;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingEdgeLabels;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingExternalNodes;
-import de.rwth.i2.attestor.graph.morphism.feasibility.OneStepLookaheadIn;
-import de.rwth.i2.attestor.graph.morphism.feasibility.OneStepLookaheadOut;
-import de.rwth.i2.attestor.graph.morphism.feasibility.TwoStepLookahead;
+import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
 
@@ -30,6 +22,7 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 	private static final VF2Algorithm matchingAlgorithm= VF2Algorithm.builder()
 					.setMatchingCondition( new MorphismFound() )
 					.setMatchingImpossibleCondition( new NoMorphismPossible() )
+					.addFeasibilityCondition( new CompatibleNodeTypes() )
 					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
 							new CompatiblePredecessors(false), new CompatiblePredecessors(true)
 							))
@@ -46,7 +39,6 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 							new TwoStepLookahead(false), new TwoStepLookahead(true)
 							))
 					.addFeasibilityCondition( new EmbeddingExternalNodes() )
-					.addFeasibilityCondition( new CompatibleNodeTypes() )
 					.addFeasibilityCondition( new EmbeddingEdgeLabels() )
 					.build();
 
