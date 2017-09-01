@@ -98,13 +98,13 @@ public class VF2GraphData {
 		out = new int[noNodes];
 		
 		this.nodeOrder = new int[noNodes];
-		
-		
+
+
 		for(int i=0; i < noNodes; i++) {
 			match[i] = NULL_NODE;
 			in[i] = NULL_NODE;
 			out[i] = NULL_NODE;
-			
+
 			if(nodeOrder == null) {
 				this.nodeOrder[i] = i;
 			} else {

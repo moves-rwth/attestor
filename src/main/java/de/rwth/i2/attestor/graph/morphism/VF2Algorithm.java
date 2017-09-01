@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
  * between two Graphs.
@@ -101,15 +98,9 @@ public class VF2Algorithm {
            pairs (patternNode, targetNode) of candidates that might be
            added to the partial morphism.
         */
-
-		int size = state.getPattern().getGraph().size();
-		TIntList patternCandidates = new TIntArrayList(size);
-		TIntList targetCandidates = new TIntArrayList(size);
-		state.computeCandidates(patternCandidates, targetCandidates);
-
-		for(int i=0; i < patternCandidates.size(); i++) {
-			int p = patternCandidates.get(i);
-			int t = targetCandidates.get(i);
+		while(state.nextCandidate()) {
+			int p = state.getPatternCandidate();
+			int t = state.getTargetCandidate();
 
 			if(isFeasible(state, p, t)) {
 				
