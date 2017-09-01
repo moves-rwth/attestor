@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism;
 
+import java.util.Stack;
+
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
  * between two Graphs.
@@ -84,44 +86,49 @@ public class VF2Algorithm {
      */
 	private boolean match(VF2State state) {
 
-		if(morphismImpossibleCheck.eval(state)) {
-			return false;
-		}
+		Stack<VF2State>	stateStack = new Stack<>();
+		stateStack.push(state);
 
-		if(morphismFoundCheck.eval(state)) {
-			storeMorphism(state);
-			return true;
-		}
+		mainLoop:
+		while(!stateStack.isEmpty()) {
 
-		/* Since it is possible that some Morphism exists, we continue
-           searching for one. To this end we go through all (reachable)
-           pairs (patternNode, targetNode) of candidates that might be
-           added to the partial morphism.
-        */
-		while(state.nextCandidate()) {
-			int p = state.getPatternCandidate();
-			int t = state.getTargetCandidate();
+			state = stateStack.peek();
 
-			if(isFeasible(state, p, t)) {
-				
-				/* A shallow copy only copies data required for backtracking
-				   such as the last candidate. After that we move further
-				   down in the search tree.
-                */
-				VF2State nextState = state.shallowCopy();
-				nextState.addCandidate(p, t);
-				if(match(nextState)) {
-					return true;
+			if (morphismImpossibleCheck.eval(state)) {
+				stateStack.pop();
+				continue;
+			}
+
+			if (morphismFoundCheck.eval(state)) {
+				storeMorphism(state);
+				return true;
+			}
+
+			/* Since it is possible that some Morphism exists, we continue
+           	   searching for one. To this end we go through all (reachable)
+               pairs (patternNode, targetNode) of candidates that might be
+               added to the partial morphism. */
+			while (state.nextCandidate()) {
+				int p = state.getPatternCandidate();
+				int t = state.getTargetCandidate();
+				if (isFeasible(state, p, t)) {
+
+					/* A shallow copy only copies data required for backtracking
+				       such as the last candidate. After that we move further
+				       down in the search tree. */
+					VF2State nextState = state.shallowCopy();
+					nextState.addCandidate(p, t);
+					stateStack.push(nextState);
+					continue mainLoop; // simulate recursion by adjusting stack and jumping to the outer loop.
 				}
 			}
+
+			/* We stored all morphisms found so far and finished going through all search trees
+		   	   after adding all available candidate pairs to the current state.
+               Hence, we backtrack and remove the last pair added to the current state before. */
+			state.backtrack();
+			stateStack.pop();
 		}
-
-		/* We stored all morphisms found so far and finished going through all search trees
-		   after adding all available candidate pairs to the current state.
-           Hence, we backtrack and remove the last pair added to the current state before.
-        */
-		state.backtrack();
-
 		return false;
 	}
 
