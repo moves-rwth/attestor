@@ -262,29 +262,12 @@ public class StateSpaceGenerator {
 		// whenever a state has only a single successor and is not the result of executing a statement
 		// that allows for canonicalization.
 		// While this shortcut leads to an increased number of states, it avoids several isomorphism checks.
-		ProgramState subsumingState = (semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization())
-				? state : findSubsumingState(state);
-
-		if(subsumingState == state) {
+		if((semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization()) || !stateSpace.contains(state))	{
 			stateSpace.addState(state);
 			unexploredConfigurations.add(state);
 		}
-		stateSpace.addControlFlowTransition(previousState, subsumingState);
-	}
 
-	/**
-	 * Find a state in the state space that semantically subsumes the given state.
-	 * @param state The state that shall be subsumed.
-	 * @return The subsuming state or state if no such state exists in the state space.
-	 */
-	private ProgramState findSubsumingState(ProgramState state) {
-
-		for (ProgramState s : stateSpace.getStates()) {
-			if(inclusionStrategy.isIncludedIn(state, s)) {
-				return s;
-			}
-		}
-		return state;
+		stateSpace.addControlFlowTransition(previousState, state);
 	}
 
 	/**

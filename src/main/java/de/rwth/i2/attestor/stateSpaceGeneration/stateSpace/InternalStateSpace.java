@@ -116,6 +116,8 @@ public class InternalStateSpace implements StateSpace {
     public void addState(ProgramState state) {
 
         state.setStateSpaceId(nextStateId);
+        materializationSuccessors.put(nextStateId, new TIntArrayList());
+        controlFlowSuccessors.put(nextStateId, new TIntArrayList());
         ++nextStateId;
         allStates.add(state);
         maximalStateSize = Math.max(maximalStateSize, state.getSize());
@@ -137,7 +139,6 @@ public class InternalStateSpace implements StateSpace {
 
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
-        materializationSuccessors.putIfAbsent(fId, new TIntArrayList());
         materializationSuccessors.get(fId).add(tId);
     }
 
@@ -146,7 +147,6 @@ public class InternalStateSpace implements StateSpace {
 
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
-        controlFlowSuccessors.putIfAbsent(fId, new TIntArrayList());
         controlFlowSuccessors.get(fId).add(tId);
     }
 
