@@ -27,9 +27,10 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
-public class OldStateSpaceGeneratorTest {
-	//private static final Logger logger = LogManager.getLogger( "OldStateSpaceGeneratorTest" );
+public class StateSpaceGeneratorTest {
+	//private static final Logger logger = LogManager.getLogger( "StateSpaceGeneratorTest" );
 
 	private SSGBuilder ssgBuilder;
 
@@ -108,17 +109,33 @@ public class OldStateSpaceGeneratorTest {
 		HeapConfiguration expectedState = ExampleHcImplFactory.getExpectedResultTestGenerateNew();
 		assertEquals(expectedState, res.getFinalStates().iterator().next().getHeap());
 
-		// TODO
-		/*
-		DefaultProgramState firstState = (DefaultProgramState)  res.getStates().get( 0 );
-		assertEquals( skipStmt.toString() , res.getSuccessors().get( firstState ).get( 0 ).getLabel() );
-		DefaultProgramState secondState = (DefaultProgramState) res.getStates().get( 1 );
-		assertEquals( assignStmt.toString(), res.getSuccessors().get( secondState ).get( 0 ).getLabel() );
-		DefaultProgramState thirdState = (DefaultProgramState) res.getStates().get( 2 );
-		assertEquals( returnStmt.toString(), res.getSuccessors().get( thirdState ).get( 0 ).getLabel() );
-		DefaultProgramState fourthState = (DefaultProgramState) res.getStates().get( 3 );
-		assertFalse( res.getSuccessors().containsKey( fourthState ) );
-		 */
+		for(ProgramState state : res.getStates()) {
+
+			int controlSuccSize = res.getControlFlowSuccessorsOf(state).size();
+			int materSuccSize = res.getMaterializationSuccessorsOf(state).size();
+
+			switch(state.getProgramCounter()) {
+				case 0:
+					assertEquals(1, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					assertFalse(res.getControlFlowSuccessorsOf(state).contains(state));
+					break;
+				case 1:
+					assertEquals(1, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					break;
+				case 2:
+					assertEquals(1, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					break;
+				case -1:
+					assertEquals(0, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					break;
+				default:
+					fail("Unknown state with PC " + state.getProgramCounter());
+			}
+		}
 	}
 	
 	@Test
@@ -145,15 +162,29 @@ public class OldStateSpaceGeneratorTest {
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
 		assertEquals( initialGraph,  res.getFinalStates().iterator().next().getHeap()  );
-		// TODO
-		/*
-		DefaultProgramState firstState = (DefaultProgramState) res.getStates().get( 0 );
-		assertEquals( ifStmt.toString(), res.getSuccessors().get( firstState ).get( 0 ).getLabel() );
-		DefaultProgramState secondState = (DefaultProgramState) res.getStates().get( 1 );
-		assertFalse( secondReturn.toString().equals( res.getSuccessors().get( secondState ).get( 0 ).getLabel() ) );
-		assertEquals( firstReturn.toString(), res.getSuccessors().get( secondState ).get( 0 ).getLabel() );
-		DefaultProgramState thirdState = (DefaultProgramState) res.getStates().get( 2 );
-		assertFalse( res.getSuccessors().containsKey( thirdState ) );
-		*/
+
+		for(ProgramState state : res.getStates()) {
+
+			int controlSuccSize = res.getControlFlowSuccessorsOf(state).size();
+			int materSuccSize = res.getMaterializationSuccessorsOf(state).size();
+
+			switch(state.getProgramCounter()) {
+				case 0:
+					assertEquals(1, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					assertFalse(res.getControlFlowSuccessorsOf(state).contains(state));
+					break;
+				case 1:
+					assertEquals(1, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					break;
+				case -1:
+					assertEquals(0, controlSuccSize);
+					assertEquals(0, materSuccSize);
+					break;
+				default:
+					fail("Unknown state with PC " + state.getProgramCounter());
+			}
+		}
 	}
 }

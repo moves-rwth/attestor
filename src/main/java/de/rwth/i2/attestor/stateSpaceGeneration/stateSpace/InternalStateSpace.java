@@ -99,7 +99,7 @@ public class InternalStateSpace implements StateSpace {
     public Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state) {
 
         int stateSpaceId = state.getStateSpaceId();
-        TIntArrayList successors = controlFlowSuccessors.get(stateSpaceId);
+        TIntArrayList successors = materializationSuccessors.get(stateSpaceId);
 
         if(successors.isEmpty()) {
             return Collections.emptySet();

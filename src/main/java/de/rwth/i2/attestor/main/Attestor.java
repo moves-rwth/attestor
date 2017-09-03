@@ -568,15 +568,13 @@ public class Attestor {
 	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
 
 	        logger.info("Checking formula: " + formula.toString() + "...");
-	        // TODO
-            /*ProofStructure proofStructure = new ProofStructure();
+            ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
                 logger.info("Formula is satisfied.");
             } else {
                 logger.warn("Formula is not satisfied.");
             }
-            */
         }
 	}
 

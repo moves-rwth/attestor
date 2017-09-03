@@ -5,8 +5,8 @@ import de.rwth.i2.attestor.generated.node.ANextLtlform;
 import de.rwth.i2.attestor.generated.node.AReleaseLtlform;
 import de.rwth.i2.attestor.generated.node.Node;
 import de.rwth.i2.attestor.generated.node.Start;
-import de.rwth.i2.attestor.stateSpaceGeneration.OldStateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,7 +64,7 @@ public class ProofStructure {
 	 * @param statespace, the (labelled) state space we want to check the formula for
 	 * @param formula, the ltl formula to check
 	 */
-	public void build(OldStateSpace statespace, LTLFormula formula){
+	public void build(StateSpace statespace, LTLFormula formula){
 		
 		logger.trace("Building proof structure for formula " + formula.toString());
 		
@@ -107,7 +107,7 @@ public class ProofStructure {
 					// Generate an assertion for each successor state of the current state in the state space 
 					// with formula set equal to the next successor formulae generated before
 					ProgramState currentState = currentVertex.getProgramState();
-					for(ProgramState succState : statespace.getSuccessorsWithoutMaterialisation(currentState)){
+					for(ProgramState succState : statespace.getControlFlowSuccessorsOf(currentState)){
 						Assertion newAssertion = new Assertion(succState);
 						
 						for(Node succFormula : nextSuccessors){

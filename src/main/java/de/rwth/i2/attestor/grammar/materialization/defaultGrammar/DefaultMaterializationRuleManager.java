@@ -36,7 +36,6 @@ public class DefaultMaterializationRuleManager implements MaterializationRuleMan
 	public GrammarResponse getRulesFor(Nonterminal toReplace, int tentacle, String requestedSelector) 
 			throws UnexpectedNonterminalTypeException {
 
-		// TODO The second type of nonterminals might be incorrect. Please check this again.
 		if( !(toReplace instanceof BasicNonterminal) && !(toReplace instanceof RefinedDefaultNonterminal)  ){
 			throw new UnexpectedNonterminalTypeException("DefaultMaterializationRuleManager can only deal with " +
 					"DefaultNonterminal and RefinedNonterminalImpl");

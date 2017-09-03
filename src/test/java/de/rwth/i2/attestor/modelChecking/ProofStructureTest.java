@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.OldStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.InternalStateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,12 +12,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ProofStructureTest extends OldStateSpace {
+public class ProofStructureTest extends InternalStateSpace {
 
 	private HeapConfiguration hc;
 
 	public ProofStructureTest(){
-		super();
+		super(0);
 	}
 
 	@BeforeClass
@@ -50,7 +50,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", state1);
+		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -88,7 +88,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", state1);
+		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -122,7 +122,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", state1);
+		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -157,7 +157,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", state1);
+		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -188,7 +188,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		//this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", initialState);
+		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -218,7 +218,7 @@ public class ProofStructureTest extends OldStateSpace {
 
 		this.addState(initialState);
 		this.addInitialState(initialState);
-		this.addControlFlowSuccessor(initialState, "stmt1", initialState);
+		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -249,7 +249,7 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addState(initialState);
 		this.addInitialState(initialState);
 		//this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", initialState);
+		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -288,12 +288,12 @@ public class ProofStructureTest extends OldStateSpace {
 		this.addInitialState(initialState);
 		state1.setProgramCounter(1);
 		this.addState(state1);
-		this.addControlFlowSuccessor(initialState, "stmt1", state1);
-		this.addControlFlowSuccessor(state1, "stmt2", state1);
+		this.addControlFlowTransition(initialState, state1);
+		this.addControlFlowTransition(state1, state1);
 		state2.setProgramCounter(2);
 		this.addState(state2);
-		this.addControlFlowSuccessor(state1, "stmt3", state2);
-		this.addControlFlowSuccessor(state2, "stmt4", initialState);
+		this.addControlFlowTransition(state1, state2);
+		this.addControlFlowTransition(state2, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
