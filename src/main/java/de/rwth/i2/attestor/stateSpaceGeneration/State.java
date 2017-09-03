@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.stateSpaceGeneration.stateSpace;
+package de.rwth.i2.attestor.stateSpaceGeneration;
 
 public interface State {
 

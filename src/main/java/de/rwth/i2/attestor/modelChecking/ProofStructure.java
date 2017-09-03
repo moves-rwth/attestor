@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.generated.node.AReleaseLtlform;
 import de.rwth.i2.attestor.generated.node.Node;
 import de.rwth.i2.attestor.generated.node.Start;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

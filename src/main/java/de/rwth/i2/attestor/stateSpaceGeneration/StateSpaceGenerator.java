@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.InternalStateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +18,7 @@ import java.util.Stack;
  * This yields a builder object to configure the analysis used during
  * state space generation.
  * <br>
- *  The generation of a OldStateSpace itself is started by invoking generate().
+ *  The generation of a StateSpace itself is started by invoking generate().
  *  
  * @author christoph
  *
@@ -48,7 +46,6 @@ public class StateSpaceGenerator {
 	 * this generator.
 	 */
 	StateSpace stateSpace = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
-	//final OldStateSpace stateSpace = new OldStateSpace();
 
 	/**
 	 * Stores the program configurations that still have
@@ -146,9 +143,9 @@ public class StateSpaceGenerator {
 	}
 
 	/**
-	 * Attempts to generate a OldStateSpace according to the
+	 * Attempts to generate a StateSpace according to the
 	 * underlying analysis.
-	 * @return The generated OldStateSpace.
+	 * @return The generated StateSpace.
 	 */
 	public StateSpace generate() {
 

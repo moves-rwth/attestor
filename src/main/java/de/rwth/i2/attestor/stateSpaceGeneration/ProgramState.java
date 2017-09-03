@@ -1,10 +1,9 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.State;
 
 /**
- * An abstraction of a single state in a OldStateSpace.
+ * An abstraction of a single state in a StateSpace.
  * This comprises information about the current program location, that is the value of the program counter,
  * of the state and the program's heap.
  */

@@ -1,6 +1,4 @@
-package de.rwth.i2.attestor.stateSpaceGeneration.stateSpace;
-
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import java.util.Set;
 

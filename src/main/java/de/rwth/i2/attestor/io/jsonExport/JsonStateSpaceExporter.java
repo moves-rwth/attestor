@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         jsonWriter.endArray().key("edges").array();
         addStateSpaceEdges();
         addTransitiveEdges();
-        jsonWriter.endArray().endObject().endObject();;
+        jsonWriter.endArray().endObject().endObject();
         writer.close();
     }
 
@@ -120,9 +120,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             for (ProgramState succ : stateSpace.getControlFlowSuccessorsOf(predState)) {
 
                 int target = succ.getStateSpaceId();
-                String label = "" ; // TODO stateSuccessor.getLabel();
+                String label = "" ;
                 String type = "execution";
-                // String type = (label.isEmpty()) ? "materialization" : "execution";
 
                 jsonWriter.object().key("data").object()
                         .key("source").value(source)
@@ -134,9 +133,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             for (ProgramState succ : stateSpace.getMaterializationSuccessorsOf(predState)) {
 
                 int target = succ.getStateSpaceId();
-                String label = "" ; // TODO stateSuccessor.getLabel();
+                String label = "" ;
                 String type = "materialization";
-                // String type = (label.isEmpty()) ? "materialization" : "execution";
 
                 jsonWriter.object().key("data").object()
                         .key("source").value(source)

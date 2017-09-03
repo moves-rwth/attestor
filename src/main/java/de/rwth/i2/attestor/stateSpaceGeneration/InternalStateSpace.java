@@ -1,6 +1,5 @@
-package de.rwth.i2.attestor.stateSpaceGeneration.stateSpace;
+package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
