@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.InternalStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +20,7 @@ import java.util.Stack;
  * This yields a builder object to configure the analysis used during
  * state space generation.
  * <br>
- *  The generation of a StateSpace itself is started by invoking generate().
+ *  The generation of a OldStateSpace itself is started by invoking generate().
  *  
  * @author christoph
  *
@@ -44,7 +47,8 @@ public class StateSpaceGenerator {
 	 * Stores the state space generated upon instantiation of
 	 * this generator.
 	 */
-	final StateSpace stateSpace = new StateSpace();
+	StateSpace stateSpace = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
+	//final OldStateSpace stateSpace = new OldStateSpace();
 
 	/**
 	 * Stores the program configurations that still have
@@ -142,9 +146,9 @@ public class StateSpaceGenerator {
 	}
 
 	/**
-	 * Attempts to generate a StateSpace according to the
+	 * Attempts to generate a OldStateSpace according to the
 	 * underlying analysis.
-	 * @return The generated StateSpace.
+	 * @return The generated OldStateSpace.
 	 */
 	public StateSpace generate() {
 
@@ -191,7 +195,7 @@ public class StateSpaceGenerator {
 		for(ProgramState m : materialized) {
 			if(!stateSpace.contains(m)) {
 				stateSpace.addState(m);
-				stateSpace.addMaterializedSuccessor(state, m);
+				stateSpace.addMaterializationTransition(state, m);
 				unexploredConfigurations.add(m);
 			}
 		}
@@ -265,7 +269,7 @@ public class StateSpaceGenerator {
 			stateSpace.addState(state);
 			unexploredConfigurations.add(state);
 		}
-		stateSpace.addControlFlowSuccessor(previousState, semantics.toString(), subsumingState);
+		stateSpace.addControlFlowTransition(previousState, subsumingState);
 	}
 
 	/**
@@ -286,7 +290,7 @@ public class StateSpaceGenerator {
 	/**
 	 * @return The initial state of the generated state space.
 	 */
-	public List<ProgramState> getInitialStates() {
+	public Set<ProgramState> getInitialStates() {
 		return stateSpace.getInitialStates();
 	}
 }

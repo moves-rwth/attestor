@@ -33,6 +33,7 @@ import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
 import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
@@ -567,13 +568,15 @@ public class Attestor {
 	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
 
 	        logger.info("Checking formula: " + formula.toString() + "...");
-            ProofStructure proofStructure = new ProofStructure();
+	        // TODO
+            /*ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
                 logger.info("Formula is satisfied.");
             } else {
                 logger.warn("Formula is not satisfied.");
             }
+            */
         }
 	}
 
@@ -611,13 +614,15 @@ public class Attestor {
                     program
             );
 
-            List<ProgramState> states = stateSpace.getStates();
-            for(int i=0; i < states.size(); i++) {
+            Set<ProgramState> states = stateSpace.getStates();
+            int i=0;
+            for(ProgramState state : states) {
                 exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
-                        states.get(i).getHeap()
+                        state.getHeap()
                 );
+                ++i;
             }
 
             InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");

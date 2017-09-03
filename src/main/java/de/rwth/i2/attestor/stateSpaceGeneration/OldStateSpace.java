@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 import java.util.*;
 
 /**
- * A StateSpace is an edge-labeled transition system.
+ * A OldStateSpace is an edge-labeled transition system.
  * States are of type {@link ProgramState} and correspond an abstract program state that comprises one or more
  * heap configurations at a given program location.
  *
@@ -20,7 +20,7 @@ import java.util.*;
  * @author Christoph
  *
  */
-public class StateSpace {
+public class OldStateSpace {
 
 	/**
      * A list of all program states that belong to the state space.
@@ -55,7 +55,7 @@ public class StateSpace {
     /**
      * Initializes an empty state space.
      */
-	public StateSpace(){
+	public OldStateSpace(){
 
 		states = new ArrayList<>();
 		successors = new HashMap<>();

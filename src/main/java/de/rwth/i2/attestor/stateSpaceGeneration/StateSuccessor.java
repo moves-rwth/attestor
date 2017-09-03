@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 /**
- * In a {@link StateSpace} the transition relation of the underlying transition system
+ * In a {@link OldStateSpace} the transition relation of the underlying transition system
  * consists of a list of StateSuccessor objects for each state.
  * A StateSuccessor models a target state together with the label of a transition to that state.
  *

@@ -154,7 +154,14 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	@Override
     public int hashCode() {
 
-	    return Objects.hash(heap, programCounter, scopeDepth);
+	    return Objects.hash(
+	    		programCounter,
+				scopeDepth,
+				heap.countNodes(),
+				heap.countNonterminalEdges(),
+				heap.countVariableEdges(),
+				heap
+		);
     }
 
 	@Override

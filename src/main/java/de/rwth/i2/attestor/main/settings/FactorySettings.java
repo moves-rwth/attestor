@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.stateSpace.StateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;

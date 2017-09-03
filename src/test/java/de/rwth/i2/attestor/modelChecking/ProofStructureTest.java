@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.OldStateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ProofStructureTest extends StateSpace {
+public class ProofStructureTest extends OldStateSpace {
 
 	private HeapConfiguration hc;
 
