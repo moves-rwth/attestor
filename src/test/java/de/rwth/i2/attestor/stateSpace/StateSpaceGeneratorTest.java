@@ -13,8 +13,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import org.junit.Before;
@@ -25,9 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class StateSpaceGeneratorTest {
 	//private static final Logger logger = LogManager.getLogger( "StateSpaceGeneratorTest" );
@@ -50,7 +46,6 @@ public class StateSpaceGeneratorTest {
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(s -> s)
-                .setInclusionStrategy(new GeneralInclusionStrategy())
 				.setStateCounter(s -> {})
 				;
 	}

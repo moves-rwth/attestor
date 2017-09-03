@@ -33,8 +33,6 @@ import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
@@ -422,7 +420,6 @@ public class Attestor {
 
 	    setupMaterialization();
 	    setupCanonicalization();
-	    setupInclusionTest();
 	    setupAbortTest();
 
 	    assert(!inputs.isEmpty());
@@ -532,15 +529,6 @@ public class Attestor {
 																				aggressiveReturnAbstraction);
 		return checkerProvider;
 	}
-
-    private void setupInclusionTest() {
-
-	    settings.stateSpaceGeneration()
-                .setInclusionStrategy(
-                        new GeneralInclusionStrategy()
-                );
-	    logger.info("Setup state inclusion test: Isomorphism.");
-    }
 
     private void setupAbortTest() {
 

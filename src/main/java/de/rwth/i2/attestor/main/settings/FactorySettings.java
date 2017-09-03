@@ -213,9 +213,6 @@ public class FactorySettings {
                 .setMaterializationStrategy(
                         settings.getMaterializationStrategy()
                 )
-                .setInclusionStrategy(
-                        settings.getInclusionStrategy()
-                )
                 .setCanonizationStrategy(
                         settings.getCanonicalizationStrategy()
                 )

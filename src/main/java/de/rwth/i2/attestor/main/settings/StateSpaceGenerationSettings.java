@@ -13,8 +13,6 @@ public class StateSpaceGenerationSettings {
 
     private CanonicalizationStrategy canonicalizationStrategy = null;
 
-    private InclusionStrategy inclusionStrategy = null;
-
     private MaterializationStrategy materializationStrategy = null;
 
     private StateLabelingStrategy stateLabelingStrategy = null;
@@ -39,16 +37,6 @@ public class StateSpaceGenerationSettings {
     public void setCanonicalizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
-    }
-
-    public InclusionStrategy getInclusionStrategy() {
-
-        return inclusionStrategy;
-    }
-
-    public void setInclusionStrategy(InclusionStrategy inclusionStrategy) {
-
-        this.inclusionStrategy = inclusionStrategy;
     }
 
     public MaterializationStrategy getMaterializationStrategy() {

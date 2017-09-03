@@ -80,12 +80,6 @@ public class StateSpaceGenerator {
 	AbortStrategy abortStrategy = null;
 
 	/**
-	 * Strategy determining which (approximation of) an inclusion
-	 * check is used.
-	 */
-	InclusionStrategy inclusionStrategy = null;
-
-	/**
 	 * Strategy determining the labels of states in the state space
 	 */
 	StateLabelingStrategy stateLabelingStrategy = null;
@@ -119,13 +113,6 @@ public class StateSpaceGenerator {
 	 */
 	public CanonicalizationStrategy getCanonizationStrategy() {
 		return canonicalizationStrategy;
-	}
-
-	/**
-	 * @return The strategy determining how the inclusion problem between heap configurations is discharged.
-	 */
-	public InclusionStrategy getInclusionStrategy() {
-		return inclusionStrategy;
 	}
 
 	/**
