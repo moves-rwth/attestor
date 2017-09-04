@@ -31,14 +31,11 @@ public class MockupNonterminal implements Nonterminal {
 
 	@Override
 	public void setReductionTentacle(int tentacle) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void unsetReductionTentacle(int tentacle) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

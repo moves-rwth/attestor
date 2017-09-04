@@ -71,10 +71,6 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No state refinement strategy.");
 		}
 
-		if(generator.inclusionStrategy == null) {
-			throw new IllegalStateException("StateSpaceGenerator: No inclusion strategy.");
-		}
-
 		if(generator.totalStatesCounter == null) {
 			throw new IllegalStateException("StateSpaceGenerator: No state counter.");
 		}
@@ -141,15 +137,6 @@ public class SSGBuilder {
      */
 	public SSGBuilder setAbortStrategy(AbortStrategy abortStrategy) {
 		generator.abortStrategy = abortStrategy;
-		return this;
-	}
-
-    /**
-     * @param inclusionStrategy The strategy used for discharging the inclusion problem.
-     * @return The builder.
-     */
-	public SSGBuilder setInclusionStrategy(InclusionStrategy inclusionStrategy) {
-		generator.inclusionStrategy = inclusionStrategy;
 		return this;
 	}
 

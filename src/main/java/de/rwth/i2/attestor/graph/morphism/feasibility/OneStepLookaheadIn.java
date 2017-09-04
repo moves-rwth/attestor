@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
@@ -33,18 +32,18 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 	}
 	
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 		
 		VF2GraphData pattern = state.getPattern();
 		VF2GraphData target = state.getTarget();
 		
 		int patternSucc = computeLookahead(
-				pattern.getGraph().getSuccessorsOf(candidate.p),
+				pattern.getGraph().getSuccessorsOf(p),
 				pattern
 				);
 		
 		int targetSucc = computeLookahead(
-				target.getGraph().getSuccessorsOf(candidate.t),
+				target.getGraph().getSuccessorsOf(t),
 				target
 				);
 		
@@ -63,12 +62,12 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 		}
 		
 		int patternPred = computeLookahead(
-				pattern.getGraph().getPredecessorsOf(candidate.p),
+				pattern.getGraph().getPredecessorsOf(p),
 				pattern
 				);
 		
 		int targetPred = computeLookahead(
-				target.getGraph().getPredecessorsOf(candidate.t),
+				target.getGraph().getPredecessorsOf(t),
 				target
 				);
 		

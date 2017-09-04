@@ -16,10 +16,6 @@
  *         determines how states are abstracted
  *     </li>
  *     <li>
- *         {@link de.rwth.i2.attestor.stateSpaceGeneration.InclusionStrategy}
- *         determines how to decide whether one state is subsumed by another one.
- *     </li>
- *     <li>
  *         {@link de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy}
  *         determines how to materialize states to make concrete semantics applicable.
  *     </li>

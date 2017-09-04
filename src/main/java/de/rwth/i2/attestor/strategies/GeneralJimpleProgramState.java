@@ -44,6 +44,11 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
      */
 	protected int scopeDepth;
 
+	/**
+	 * Id of this state in a state space
+	 */
+	private int stateSpaceId;
+
     /**
      * The atomic propositions assigned to this state.
      */
@@ -56,8 +61,6 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	protected GeneralJimpleProgramState(HeapConfiguration heap) {
 		
 		this.heap = heap;
-		this.programCounter = 0;
-		this.scopeDepth = 0;
 		atomicPropositions = new HashSet<>();
 	}
 
@@ -300,7 +303,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			Type type = heap.nodeTypeOf(node);
 			return new GeneralConcreteValue( type, node );
 		} catch( NullPointerException | IllegalArgumentException e ) {
-			logger.trace("Variable " + variableName + " could not be found. Returning undefined.");
+			//logger.trace("Variable " + variableName + " could not be found. Returning undefined.");
 			return GeneralConcreteValue.getUndefined();
 		}
 	}
@@ -319,7 +322,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 		try {
 			heap.builder().removeVariableEdge(varEdge).build();
 		} catch(IllegalArgumentException e) {
-			logger.trace("Variable '" + variableName + "' could not be removed as it does not exist.");
+			//logger.trace("Variable '" + variableName + "' could not be removed as it does not exist.");
 		}
 	}
 
@@ -460,6 +463,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	public ProgramState shallowCopyWithUpdateHeap(HeapConfiguration newHeap) {
 		GeneralJimpleProgramState copy = (GeneralJimpleProgramState) shallowCopy();
 		copy.heap = newHeap;
+		copy.stateSpaceId = stateSpaceId;
 		return copy;
 	}
 
@@ -476,5 +480,22 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	@Override
 	public Set<String> getAPs() {
 		return atomicPropositions;
+	}
+
+	@Override
+	public int getSize() {
+		return heap.countNodes();
+	}
+
+	@Override
+	public void setStateSpaceId(int id) {
+
+		stateSpaceId = id;
+	}
+
+	@Override
+	public int getStateSpaceId() {
+
+		return stateSpaceId;
 	}
 }

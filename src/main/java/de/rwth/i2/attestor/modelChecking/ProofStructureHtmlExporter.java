@@ -106,9 +106,6 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 
 	@Override
 	public void close() {
-		
-		// TODO Auto-generated method stub
-		
 	}
 
 	private final static String htmlTemplateHead1 = "<head>\n" + "		<title>";

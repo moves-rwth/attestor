@@ -34,7 +34,6 @@ import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfiguration
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
@@ -406,7 +405,6 @@ public class Attestor {
 
 	    setupMaterialization();
 	    setupCanonicalization();
-	    setupInclusionTest();
 	    setupAbortTest();
 
 	    assert(!inputs.isEmpty());
@@ -517,15 +515,6 @@ public class Attestor {
 		return checkerProvider;
 	}
 
-    private void setupInclusionTest() {
-
-	    settings.stateSpaceGeneration()
-                .setInclusionStrategy(
-                        new GeneralInclusionStrategy()
-                );
-	    logger.info("Setup state inclusion test: Isomorphism.");
-    }
-
     private void setupAbortTest() {
 
         int stateSpaceBound = Settings.getInstance().options().getMaxStateSpaceSize();
@@ -596,13 +585,15 @@ public class Attestor {
                     program
             );
 
-            List<ProgramState> states = stateSpace.getStates();
-            for(int i=0; i < states.size(); i++) {
+            Set<ProgramState> states = stateSpace.getStates();
+            int i=0;
+            for(ProgramState state : states) {
                 exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
-                        states.get(i).getHeap()
+                        state.getHeap()
                 );
+                ++i;
             }
 
             InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");

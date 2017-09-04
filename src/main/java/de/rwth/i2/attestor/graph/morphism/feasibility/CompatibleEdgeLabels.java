@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
@@ -17,7 +16,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class CompatibleEdgeLabels implements FeasibilityFunction {
 
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 		
 		VF2GraphData pattern = state.getPattern();
 		VF2GraphData target = state.getTarget();
@@ -25,7 +24,7 @@ public class CompatibleEdgeLabels implements FeasibilityFunction {
 		Graph patternGraph = pattern.getGraph();
 		Graph targetGraph = target.getGraph();
 		
-		TIntArrayList succsOfP = patternGraph.getSuccessorsOf(candidate.p);
+		TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
 		for(int i=0; i< succsOfP.size(); i++) {
 			
 			int succ = succsOfP.get(i);
@@ -33,15 +32,15 @@ public class CompatibleEdgeLabels implements FeasibilityFunction {
 				int match = pattern.getMatch(succ);
 				
 				if(!ListUtil.isEqualAsMultiset( 
-						patternGraph.getEdgeLabel(candidate.p, succ),
-						targetGraph.getEdgeLabel(candidate.t, match))
+						patternGraph.getEdgeLabel(p, succ),
+						targetGraph.getEdgeLabel(t, match))
 						) {
 					return false;
 				}	
 			}
 		}
 		
-		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(candidate.p);
+		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(p);
 		for(int i=0; i < predsOfP.size(); i++) {
 			
 			int pred = predsOfP.get(i);
@@ -49,8 +48,8 @@ public class CompatibleEdgeLabels implements FeasibilityFunction {
 				int match = pattern.getMatch(pred);
 				
 				if(!ListUtil.isEqualAsMultiset( 
-						patternGraph.getEdgeLabel(pred, candidate.p),
-						targetGraph.getEdgeLabel(match, candidate.t))
+						patternGraph.getEdgeLabel(pred, p),
+						targetGraph.getEdgeLabel(match, t))
 						) {
 					return false;
 				}	

@@ -73,12 +73,15 @@ public class Field implements SettableValue {
 			}
 			
 			ConcreteValue res = programState.getSelectorTarget( concreteOrigin, fieldName );
+
+			/*
 			if( !res.type().equals( this.type ) ){
 				
 				String msg = "The type of the resulting ConcreteValue does not match.";
 				msg += "\n expected: " + this.type + " got: " + res.type();
 				logger.debug( msg );
 			}
+			*/
 
 			return res;
 		}
@@ -97,12 +100,14 @@ public class Field implements SettableValue {
 	@Override
 	public void setValue(JimpleProgramState programState, ConcreteValue concreteTarget )
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException{
-		
+
+		/*
 		if( !concreteTarget.type().equals( this.type ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + concreteTarget.type();
 			logger.debug( msg );
 		}
+		*/
 
 		ConcreteValue concreteOrigin = originValue.evaluateOn( programState );
 		if( concreteOrigin.isUndefined() ){

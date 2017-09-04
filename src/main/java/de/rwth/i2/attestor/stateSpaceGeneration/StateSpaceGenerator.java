@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,7 @@ public class StateSpaceGenerator {
 	 * Stores the state space generated upon instantiation of
 	 * this generator.
 	 */
-	final StateSpace stateSpace = new StateSpace();
+	StateSpace stateSpace = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
 
 	/**
 	 * Stores the program configurations that still have
@@ -77,12 +78,6 @@ public class StateSpaceGenerator {
 	 * exploration.
 	 */
 	AbortStrategy abortStrategy = null;
-
-	/**
-	 * Strategy determining which (approximation of) an inclusion
-	 * check is used.
-	 */
-	InclusionStrategy inclusionStrategy = null;
 
 	/**
 	 * Strategy determining the labels of states in the state space
@@ -118,13 +113,6 @@ public class StateSpaceGenerator {
 	 */
 	public CanonicalizationStrategy getCanonizationStrategy() {
 		return canonicalizationStrategy;
-	}
-
-	/**
-	 * @return The strategy determining how the inclusion problem between heap configurations is discharged.
-	 */
-	public InclusionStrategy getInclusionStrategy() {
-		return inclusionStrategy;
 	}
 
 	/**
@@ -196,7 +184,7 @@ public class StateSpaceGenerator {
 		for(ProgramState m : materialized) {
 			if(!stateSpace.contains(m)) {
 				stateSpace.addState(m);
-				stateSpace.addMaterializedSuccessor(state, m);
+				stateSpace.addMaterializationTransition(state, m);
 				unexploredConfigurations.add(m);
 			}
 		}
@@ -248,35 +236,18 @@ public class StateSpaceGenerator {
 		// whenever a state has only a single successor and is not the result of executing a statement
 		// that allows for canonicalization.
 		// While this shortcut leads to an increased number of states, it avoids several isomorphism checks.
-		ProgramState subsumingState = (semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization())
-				? state : findSubsumingState(state);
-
-		if(subsumingState == state) {
+		if((semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization()) || !stateSpace.contains(state))	{
 			stateSpace.addState(state);
 			unexploredConfigurations.add(state);
 		}
-		stateSpace.addControlFlowSuccessor(previousState, semantics.toString(), subsumingState);
-	}
 
-	/**
-	 * Find a state in the state space that semantically subsumes the given state.
-	 * @param state The state that shall be subsumed.
-	 * @return The subsuming state or state if no such state exists in the state space.
-	 */
-	private ProgramState findSubsumingState(ProgramState state) {
-
-		for (ProgramState s : stateSpace.getStates()) {
-			if(inclusionStrategy.isIncludedIn(state, s)) {
-				return s;
-			}
-		}
-		return state;
+		stateSpace.addControlFlowTransition(previousState, state);
 	}
 
 	/**
 	 * @return The initial state of the generated state space.
 	 */
-	public List<ProgramState> getInitialStates() {
+	public Set<ProgramState> getInitialStates() {
 		return stateSpace.getInitialStates();
 	}
 }

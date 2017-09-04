@@ -83,11 +83,13 @@ public class EqualExpr implements Value {
 			res = programState.getConstant( "false" );
 		}
 
+		/*
 		if( !( res.type().equals( this.type ) ) ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
 			logger.debug( msg );
 		}
+		*/
 
 		return res;
 	}

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
@@ -31,38 +30,38 @@ public class CompatibleSuccessors implements FeasibilityFunction {
 	}
 	
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 
 		VF2GraphData pattern = state.getPattern();
 		VF2GraphData target = state.getTarget();
 		
 
-		TIntArrayList succsOfP = pattern.getGraph().getSuccessorsOf(candidate.p);
+		TIntArrayList succsOfP = pattern.getGraph().getSuccessorsOf(p);
 		for(int i=0; i < succsOfP.size(); i++) {
 
-			int p = succsOfP.get(i);
-			if(pattern.containsMatch(p)) {
+			int succP = succsOfP.get(i);
+			if(pattern.containsMatch(succP)) {
 			
-				int match = pattern.getMatch(p);
-				TIntArrayList targetSuccessors = target.getGraph().getSuccessorsOf(candidate.t);
+				int match = pattern.getMatch(succP);
+				TIntArrayList targetSuccessors = target.getGraph().getSuccessorsOf(t);
 				if(!targetSuccessors.contains(match)) {
 					
-					return !checkEquality && (target.getGraph().isExternal(candidate.t) && target.getGraph().isExternal(match));
+					return !checkEquality && (target.getGraph().isExternal(t) && target.getGraph().isExternal(match));
 				}
 			}
 		}
 		
-		TIntArrayList succsOfT = target.getGraph().getSuccessorsOf(candidate.t);
+		TIntArrayList succsOfT = target.getGraph().getSuccessorsOf(t);
 		for(int i=0; i < succsOfT.size(); i++) {
 			
-			int t = succsOfT.get(i);
-			if(target.containsMatch(t)) {
+			int succT = succsOfT.get(i);
+			if(target.containsMatch(succT)) {
 			
-				int match = target.getMatch(t);
-				TIntArrayList patternSuccessors = pattern.getGraph().getSuccessorsOf(candidate.p);
+				int match = target.getMatch(succT);
+				TIntArrayList patternSuccessors = pattern.getGraph().getSuccessorsOf(p);
 				if(!patternSuccessors.contains(match)) {
 
-					return !checkEquality && (pattern.getGraph().isExternal(candidate.p) && pattern.getGraph().isExternal(match));
+					return !checkEquality && (pattern.getGraph().isExternal(p) && pattern.getGraph().isExternal(match));
 				}
 			}
 		}

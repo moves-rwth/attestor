@@ -43,7 +43,8 @@ public class Local implements SettableValue {
 	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue res = programState.getVariableTarget( this.getName() );
-		
+
+		/*
 		if( !( this.type.equals( res.type() ) ) ){
 			
 			String msg = "The type of the resulting ConcreteValue ";
@@ -52,6 +53,7 @@ public class Local implements SettableValue {
 			msg += "\n expected: " + this.type + " got: " + res.type();
 			logger.debug( msg );
 		}
+		*/
 
 		return res;
 	}

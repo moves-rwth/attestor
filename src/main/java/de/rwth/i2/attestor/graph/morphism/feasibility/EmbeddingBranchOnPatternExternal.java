@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 
@@ -32,13 +31,13 @@ public class EmbeddingBranchOnPatternExternal implements FeasibilityFunction {
 	}
 	
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 		
-		if( state.getPattern().getGraph().isExternal(candidate.p) ) {
+		if( state.getPattern().getGraph().isExternal(p) ) {
 	
-			return onExternal.eval(state, candidate);
+			return onExternal.eval(state, p, t);
 		} else {
-			return onInternal.eval(state, candidate);
+			return onInternal.eval(state, p, t);
 		}
 	}
 }
