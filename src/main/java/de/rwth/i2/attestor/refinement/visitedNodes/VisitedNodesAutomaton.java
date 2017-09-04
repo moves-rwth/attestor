@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.BitSequence;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
@@ -31,17 +32,16 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
             }
         }
 
+        BitSet externalNodesVisited = new BitSet(heapConfiguration.countExternalNodes());
         TIntSet nodesVisitedThroughNts = new TIntHashSet();
         int internalsVisited = checkNonterminals(heapConfiguration, statesOfNonterminals, nodesVisitedThroughNts);
-
-        BitSet externalNodesVisited = new BitSet(heapConfiguration.countExternalNodes());
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
         while(iter.hasNext()) {
             int node = iter.next();
             int extIndex = heapConfiguration.externalIndexOf(node);
             boolean isVisited = VisitedTypeHelper.isVisited(heapConfiguration.nodeTypeOf(node))
-                    && nodesVisitedThroughNts.contains(node);
+                    || nodesVisitedThroughNts.contains(node);
             if(extIndex != HeapConfiguration.INVALID_ELEMENT) {
                 externalNodesVisited.set(extIndex, isVisited);
             } else {
@@ -52,10 +52,10 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
             }
         }
 
-        if(internalsVisited == ALL_VISITED) {
-            return new VisitedNodesAutomatonState(externalNodesVisited, true);
-        } else {
+        if(internalsVisited == ALL_NOT_VISITED) {
             return new VisitedNodesAutomatonState(externalNodesVisited, false);
+        } else {
+            return new VisitedNodesAutomatonState(externalNodesVisited, true);
         }
 
     }
@@ -78,6 +78,11 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
                 }
             }
         }
+
+        if(result == UNKNOWN)  {
+            result = ALL_VISITED;
+        }
+
         return result;
     }
 
@@ -128,48 +133,36 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
     public List<HeapConfiguration> getPossibleHeapRewritings(HeapConfiguration heapConfiguration) {
 
         List<HeapConfiguration> result = new ArrayList<>();
-        BitSet set = new BitSet(heapConfiguration.countExternalNodes()+1);
-        while(set.nextClearBit(0) != set.length()) {
 
-            int bit = set.nextClearBit(0);
-            set.set(bit, true);
-            set.clear(0, bit-1);
-            result.add( rewriteHeap(heapConfiguration, set) );
+        for(BitSequence possibleVisits : new BitSequence(heapConfiguration.countExternalNodes()+1)) {
+            result.add(rewriteHeap(heapConfiguration, possibleVisits));
         }
         return result;
     }
 
-    private HeapConfiguration rewriteHeap(HeapConfiguration heapConfiguration, BitSet visitedSet) {
+    private HeapConfiguration rewriteHeap(HeapConfiguration heapConfiguration, BitSequence possibleVisits) {
 
-       boolean visitedInternals = visitedSet.get(visitedSet.length()-1);
-       HeapConfigurationBuilder builder = heapConfiguration.builder();
-       if(visitedInternals) {
-           TIntIterator nodeIter = heapConfiguration.nodes().iterator();
-           while(nodeIter.hasNext()) {
-               int node = nodeIter.next();
-               int extIndex = heapConfiguration.externalIndexOf(node);
-               if(extIndex == HeapConfiguration.INVALID_ELEMENT
-                       || visitedSet.get(extIndex)) {
-                   Type type = VisitedTypeHelper.getVisitedType(heapConfiguration.nodeTypeOf(node));
-                   builder.replaceNodeType(node, type);
-               }
-           }
-       } else {
-           TIntArrayList extNodes = heapConfiguration.externalNodes();
-           for(int i=0; i < extNodes.size(); i++) {
-               if(visitedSet.get(i)) {
-                   int node = extNodes.get(i);
-                   Type type = VisitedTypeHelper.getVisitedType(heapConfiguration.nodeTypeOf(node));
-                   builder.replaceNodeType(node, type);
-               }
-           }
-       }
-
+        HeapConfigurationBuilder builder = heapConfiguration.builder();
+        boolean visitedInternals = possibleVisits.isSet(heapConfiguration.countExternalNodes());
+        TIntIterator nodeIter = heapConfiguration.nodes().iterator();
+        while(nodeIter.hasNext()) {
+            int node = nodeIter.next();
+            int extIndex = heapConfiguration.externalIndexOf(node);
+            if( (visitedInternals && extIndex == HeapConfiguration.INVALID_ELEMENT)
+                || possibleVisits.isSet(extIndex) ) {
+                Type type = VisitedTypeHelper.getVisitedType(heapConfiguration.nodeTypeOf(node));
+                builder.replaceNodeType(node, type);
+            }
+        }
        return builder.build();
     }
 }
 
 final class VisitedNodesAutomatonState extends HeapAutomatonState {
+
+    private static final Set<String> AP_VISITED = Collections.singleton("visited");
+    private static final Set<String> AP_DEFAULT = Collections.emptySet();
+
 
     private final BitSet visitedExternals;
     private boolean visitedInternals;
@@ -199,9 +192,9 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
     public Set<String> toAtomicPropositions() {
 
         if(visitedInternals && allExternalsVisited()) {
-            return Collections.singleton("visited");
+            return AP_VISITED;
         }
-        return Collections.singleton("not visited");
+        return AP_DEFAULT;
     }
 
     private boolean allExternalsVisited() {
