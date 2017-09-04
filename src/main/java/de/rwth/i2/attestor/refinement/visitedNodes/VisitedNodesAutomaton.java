@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.refinement.visitedNodes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.Type;
@@ -14,13 +15,25 @@ import java.util.*;
 
 public final class VisitedNodesAutomaton implements HeapAutomaton {
 
+
+    private static final int UNKNOWN = 0;
+    private static final int ALL_VISITED = 1;
+    private static final int ALL_NOT_VISITED = 2;
+    private static final int ERROR = 3;
+
     @Override
-    public VisitedNodesAutomatonState transition(HeapConfiguration heapConfiguration,
+    public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
                                                  List<HeapAutomatonState> statesOfNonterminals) {
 
-        TIntSet nodesVisitedThroughNts = computeNodesVisitedThroughNts(heapConfiguration, statesOfNonterminals);
+        for(HeapAutomatonState s : statesOfNonterminals) {
+            if(s.getClass() == ErrorHeapAutomatonState.class) {
+                return s;
+            }
+        }
 
-        boolean allInternalsVisited = true;
+        TIntSet nodesVisitedThroughNts = new TIntHashSet();
+        int internalsVisited = checkNonterminals(heapConfiguration, statesOfNonterminals, nodesVisitedThroughNts);
+
         BitSet externalNodesVisited = new BitSet(heapConfiguration.countExternalNodes());
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
@@ -32,32 +45,61 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
             if(extIndex != HeapConfiguration.INVALID_ELEMENT) {
                 externalNodesVisited.set(extIndex, isVisited);
             } else {
-                allInternalsVisited &= isVisited;
+                internalsVisited = updateVisited(internalsVisited, isVisited);
+                if(internalsVisited == ERROR) {
+                    return new ErrorHeapAutomatonState();
+                }
             }
         }
 
-        // TODO we should move to an error state if there is a mix of internal nodes (possibly hidden inside of
-        // TODO hyperedges) that are visited and not visited.
+        if(internalsVisited == ALL_VISITED) {
+            return new VisitedNodesAutomatonState(externalNodesVisited, true);
+        } else {
+            return new VisitedNodesAutomatonState(externalNodesVisited, false);
+        }
 
-        return new VisitedNodesAutomatonState(externalNodesVisited, allInternalsVisited);
     }
 
-    private TIntSet computeNodesVisitedThroughNts(HeapConfiguration heapConfiguration,
-                                                  List<HeapAutomatonState> statesOfNonterminals) {
+    private int checkNonterminals(HeapConfiguration heapConfiguration,
+                                      List<HeapAutomatonState> statesOfNonterminals,
+                                      TIntSet nodesVisitedThroughNts) {
 
-        TIntSet result = new TIntHashSet(statesOfNonterminals.size());
+        int result = UNKNOWN;
+
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
         for(int i=0; i < ntEdges.size(); i++) {
             int edge = ntEdges.get(i);
             VisitedNodesAutomatonState state = (VisitedNodesAutomatonState) statesOfNonterminals.get(i);
+            result = updateVisited(result, state.isVisitedInternals());
             TIntArrayList att = heapConfiguration.attachedNodesOf(edge);
             for(int j=0; j < att.size(); j++) {
                 if(state.hasVisitedExternal(j)) {
-                    result.add(att.get(j));
+                    nodesVisitedThroughNts.add(att.get(j));
                 }
             }
         }
         return result;
+    }
+
+    private int updateVisited(int allVisited, boolean nodeVisited) {
+
+        if(nodeVisited) {
+            switch(allVisited) {
+                case UNKNOWN:
+                case ALL_VISITED:
+                    return ALL_VISITED;
+                default:
+                    return ERROR;
+            }
+        } else {
+            switch(allVisited) {
+                case UNKNOWN:
+                case ALL_NOT_VISITED:
+                    return ALL_NOT_VISITED;
+                default:
+                    return ERROR;
+            }
+        }
     }
 
     @Override
