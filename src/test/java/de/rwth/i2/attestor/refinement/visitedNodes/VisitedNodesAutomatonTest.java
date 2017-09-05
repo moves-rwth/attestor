@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 
 public class VisitedNodesAutomatonTest {
 
@@ -27,7 +27,7 @@ public class VisitedNodesAutomatonTest {
 
     private VisitedNodesAutomaton automaton;
     private HeapConfiguration hc;
-    private HeapAutomatonState state;
+    private TIntArrayList nodes;
 
 
     @Before
@@ -35,55 +35,190 @@ public class VisitedNodesAutomatonTest {
 
         automaton = new VisitedNodesAutomaton();
         hc = new InternalHeapConfiguration();
+        nodes = new TIntArrayList();
     }
 
     @Test
     public void testEmptyHc() {
 
-        state = automaton.transition(hc, Collections.emptyList());
+        VisitedNodesAutomatonState state = automaton.transition(hc, Collections.emptyList());
+        assertEquals(VisitedStatus.EMPTY, state.getInternalNodesStatus());
+        assertEquals(0, state.rank());
         assertEquals(AP_VISITED, state.toAtomicPropositions());
     }
 
     @Test
-    public void testSimpleErrorHc() {
+    public void testExternalNodesOnly() {
 
-
-        TIntArrayList nodes = new TIntArrayList(3);
         hc = hc.builder()
-                .addNodes(NON_VISITED_TYPE, 2, nodes)
+                .addNodes(NON_VISITED_TYPE, 1, nodes)
                 .addNodes(VISITED_TYPE, 1, nodes)
+                .setExternal(0)
                 .setExternal(1)
                 .build();
 
-        state = automaton.transition(hc, Collections.emptyList());
-        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
 
-        assertEquals(ErrorHeapAutomatonState.class, state.getClass());
+        VisitedNodesAutomatonState state = automaton.transition(hc, Collections.emptyList());
+        assertEquals(VisitedStatus.EMPTY, state.getInternalNodesStatus());
+        assertEquals(2, state.rank());
+        assertEquals(false, state.hasVisitedExternal(0));
+        assertEquals(true, state.hasVisitedExternal(1));
+        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
     }
 
     @Test
-    public void testVisitedWithNonterminals() {
+    public void testMixedInternalNodes() {
 
-        Nonterminal nt = BasicNonterminal.getNonterminal("VisitedNodesAutomatonTestNt",
-                2, new boolean[]{true, true});
-
-        TIntArrayList nodes = new TIntArrayList(2);
         hc = hc.builder()
-                .addNodes(NON_VISITED_TYPE, 2, nodes)
-                .addNonterminalEdge(nt).addTentacle(nodes.get(0)).addTentacle(nodes.get(1)).build()
-                .addNonterminalEdge(nt).addTentacle(nodes.get(1)).addTentacle(nodes.get(0)).build()
+                .addNodes(NON_VISITED_TYPE, 1, nodes)
+                .addNodes(VISITED_TYPE, 1, nodes)
                 .build();
 
-        BitSet visited = new BitSet(2);
-        visited.set(0, true);
-        visited.set(1, false);
+
+        VisitedNodesAutomatonState state = automaton.transition(hc, Collections.emptyList());
+        assertEquals(VisitedStatus.ERROR, state.getInternalNodesStatus());
+        assertEquals(0, state.rank());
+        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
+    }
+
+    @Test
+    public void testWithNonterminalsVisited() {
+
+        Nonterminal nt = BasicNonterminal.getNonterminal("X", 3, new boolean[]{false,false,false});
+
+        hc = hc.builder()
+                .addNodes(NON_VISITED_TYPE, 3, nodes)
+                .addNodes(VISITED_TYPE, 3, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(3))
+                .setExternal(nodes.get(4))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(2))
+                .build()
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(3))
+                .addTentacle(nodes.get(1))
+                .build()
+                .build();
+
+        BitSet visitedExternals = new BitSet(3);
+        visitedExternals.set(1);
+        visitedExternals.set(2);
+
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED);
         List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
-        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(visited, true);
+        statesOfNonterminals.add(ntState);
+        statesOfNonterminals.add(ntState);
+
+        VisitedNodesAutomatonState state = automaton.transition(hc, statesOfNonterminals);
+        assertEquals(VisitedStatus.ALL_VISITED, state.getInternalNodesStatus());
+        assertEquals(3, state.rank());
+        assertEquals(true, state.hasVisitedExternal(0));
+        assertEquals(true, state.hasVisitedExternal(1));
+        assertEquals(true, state.hasVisitedExternal(2));
+        assertEquals(AP_VISITED, state.toAtomicPropositions());
+
+        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY);
+        statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);
 
         state = automaton.transition(hc, statesOfNonterminals);
+        assertEquals(VisitedStatus.ALL_VISITED, state.getInternalNodesStatus());
+        assertEquals(3, state.rank());
         assertEquals(AP_VISITED, state.toAtomicPropositions());
+
+    }
+
+    @Test
+    public void testWithNonterminalsError() {
+
+        Nonterminal nt = BasicNonterminal.getNonterminal("X", 3, new boolean[]{false,false,false});
+
+        hc = hc.builder()
+                .addNodes(NON_VISITED_TYPE, 3, nodes)
+                .addNodes(VISITED_TYPE, 3, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(3))
+                .setExternal(nodes.get(4))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(2))
+                .build()
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(3))
+                .addTentacle(nodes.get(1))
+                .build()
+                .build();
+
+        BitSet visitedExternals = new BitSet(3);
+        visitedExternals.set(1);
+
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED);
+        List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
+        statesOfNonterminals.add(ntState);
+        statesOfNonterminals.add(ntState);
+
+        VisitedNodesAutomatonState state = automaton.transition(hc, statesOfNonterminals);
+        assertEquals(VisitedStatus.ERROR, state.getInternalNodesStatus());
+        assertEquals(0, state.rank());
+        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
+
+    }
+
+    @Test
+    public void testWithNonterminalsNotVisited() {
+
+        Nonterminal nt = BasicNonterminal.getNonterminal("X", 3, new boolean[]{false,false,false});
+
+        hc = hc.builder()
+                .addNodes(NON_VISITED_TYPE, 6, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(3))
+                .setExternal(nodes.get(4))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(2))
+                .build()
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(3))
+                .addTentacle(nodes.get(1))
+                .build()
+                .build();
+
+        BitSet visitedExternals = new BitSet(3);
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_NOT_VISITED);
+        List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
+        statesOfNonterminals.add(ntState);
+        statesOfNonterminals.add(ntState);
+
+        VisitedNodesAutomatonState state = automaton.transition(hc, statesOfNonterminals);
+        assertEquals(VisitedStatus.ALL_NOT_VISITED, state.getInternalNodesStatus());
+        assertEquals(3, state.rank());
+        assertEquals(false, state.hasVisitedExternal(0));
+        assertEquals(false, state.hasVisitedExternal(1));
+        assertEquals(false, state.hasVisitedExternal(2));
+        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
+
+        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY);
+        statesOfNonterminals = new ArrayList<>(2);
+        statesOfNonterminals.add(ntState);
+        statesOfNonterminals.add(ntState);
+
+        state = automaton.transition(hc, statesOfNonterminals);
+        assertEquals(VisitedStatus.ALL_NOT_VISITED, state.getInternalNodesStatus());
+        assertEquals(3, state.rank());
+        assertEquals(false, state.hasVisitedExternal(0));
+        assertEquals(false, state.hasVisitedExternal(1));
+        assertEquals(false, state.hasVisitedExternal(2));
+        assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
     }
 
     @Test
@@ -103,5 +238,8 @@ public class VisitedNodesAutomatonTest {
 
         List<HeapConfiguration> rewritings = automaton.getPossibleHeapRewritings(hc);
         assertEquals(8, rewritings.size());
+        for(int i=0; i < rewritings.size()-1; i++) {
+            assertFalse(rewritings.get(i).equals(rewritings.get(i+1)));
+        }
     }
 }

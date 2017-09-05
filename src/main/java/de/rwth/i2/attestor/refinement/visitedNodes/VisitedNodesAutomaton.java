@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.refinement.visitedNodes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.Type;
@@ -14,27 +13,27 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.*;
 
+import static de.rwth.i2.attestor.refinement.visitedNodes.VisitedStatus.*;
+
+
+enum VisitedStatus {
+    EMPTY,
+    ALL_VISITED,
+    ALL_NOT_VISITED,
+    ERROR,
+}
+
 public final class VisitedNodesAutomaton implements HeapAutomaton {
 
 
-    private static final int UNKNOWN = 0;
-    private static final int ALL_VISITED = 1;
-    private static final int ALL_NOT_VISITED = 2;
-    private static final int ERROR = 3;
-
     @Override
-    public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
+    public VisitedNodesAutomatonState transition(HeapConfiguration heapConfiguration,
                                                  List<HeapAutomatonState> statesOfNonterminals) {
-
-        for(HeapAutomatonState s : statesOfNonterminals) {
-            if(s.getClass() == ErrorHeapAutomatonState.class) {
-                return s;
-            }
-        }
 
         BitSet externalNodesVisited = new BitSet(heapConfiguration.countExternalNodes());
         TIntSet nodesVisitedThroughNts = new TIntHashSet();
-        int internalsVisited = checkNonterminals(heapConfiguration, statesOfNonterminals, nodesVisitedThroughNts);
+        VisitedStatus internalNodesStatus = checkNonterminals(heapConfiguration,
+                statesOfNonterminals, nodesVisitedThroughNts);
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
         while(iter.hasNext()) {
@@ -45,32 +44,32 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
             if(extIndex != HeapConfiguration.INVALID_ELEMENT) {
                 externalNodesVisited.set(extIndex, isVisited);
             } else {
-                internalsVisited = updateVisited(internalsVisited, isVisited);
-                if(internalsVisited == ERROR) {
-                    return new ErrorHeapAutomatonState();
+                if(isVisited) {
+                    internalNodesStatus = updateVisited(internalNodesStatus, ALL_VISITED);
+                } else {
+                    internalNodesStatus = updateVisited(internalNodesStatus, ALL_NOT_VISITED);
+                }
+                if(internalNodesStatus == ERROR) {
+                    return VisitedNodesAutomatonState.ERROR_STATE;
                 }
             }
         }
 
-        if(internalsVisited == ALL_NOT_VISITED) {
-            return new VisitedNodesAutomatonState(externalNodesVisited, false);
-        } else {
-            return new VisitedNodesAutomatonState(externalNodesVisited, true);
-        }
-
+        return new VisitedNodesAutomatonState(heapConfiguration.countExternalNodes(),
+                externalNodesVisited, internalNodesStatus);
     }
 
-    private int checkNonterminals(HeapConfiguration heapConfiguration,
+    private VisitedStatus checkNonterminals(HeapConfiguration heapConfiguration,
                                       List<HeapAutomatonState> statesOfNonterminals,
                                       TIntSet nodesVisitedThroughNts) {
 
-        int result = UNKNOWN;
+        VisitedStatus result = EMPTY;
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
         for(int i=0; i < ntEdges.size(); i++) {
             int edge = ntEdges.get(i);
             VisitedNodesAutomatonState state = (VisitedNodesAutomatonState) statesOfNonterminals.get(i);
-            result = updateVisited(result, state.isVisitedInternals());
+            result = updateVisited(result, state.getInternalNodesStatus());
             TIntArrayList att = heapConfiguration.attachedNodesOf(edge);
             for(int j=0; j < att.size(); j++) {
                 if(state.hasVisitedExternal(j)) {
@@ -79,31 +78,32 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
             }
         }
 
-        if(result == UNKNOWN)  {
-            result = ALL_VISITED;
-        }
-
         return result;
     }
 
-    private int updateVisited(int allVisited, boolean nodeVisited) {
+    private VisitedStatus updateVisited(VisitedStatus allVisited, VisitedStatus nodeVisited) {
 
-        if(nodeVisited) {
-            switch(allVisited) {
-                case UNKNOWN:
-                case ALL_VISITED:
-                    return ALL_VISITED;
-                default:
-                    return ERROR;
-            }
-        } else {
-            switch(allVisited) {
-                case UNKNOWN:
-                case ALL_NOT_VISITED:
-                    return ALL_NOT_VISITED;
-                default:
-                    return ERROR;
-            }
+        switch (allVisited) {
+            case ALL_VISITED:
+                switch(nodeVisited) {
+                    case EMPTY:
+                    case ALL_VISITED:
+                        return ALL_VISITED;
+                    default:
+                        return ERROR;
+                }
+            case ALL_NOT_VISITED:
+                switch(nodeVisited) {
+                    case EMPTY:
+                    case ALL_NOT_VISITED:
+                        return ALL_NOT_VISITED;
+                    default:
+                        return ERROR;
+                }
+            case EMPTY:
+                return nodeVisited;
+            default:
+                return ERROR;
         }
     }
 
@@ -116,7 +116,7 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
 
         VisitedNodesAutomatonState state = (VisitedNodesAutomatonState) heapAutomatonState;
 
-        if(state.isVisitedInternals()) {
+        if(state.getInternalNodesStatus() == ALL_VISITED) {
             return false;
         }
 
@@ -142,7 +142,7 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
 
     private HeapConfiguration rewriteHeap(HeapConfiguration heapConfiguration, BitSequence possibleVisits) {
 
-        HeapConfigurationBuilder builder = heapConfiguration.builder();
+        HeapConfigurationBuilder builder = heapConfiguration.clone().builder();
         boolean visitedInternals = possibleVisits.isSet(heapConfiguration.countExternalNodes());
         TIntIterator nodeIter = heapConfiguration.nodes().iterator();
         while(nodeIter.hasNext()) {
@@ -158,32 +158,43 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
     }
 }
 
+
 final class VisitedNodesAutomatonState extends HeapAutomatonState {
 
     private static final Set<String> AP_VISITED = Collections.singleton("visited");
     private static final Set<String> AP_DEFAULT = Collections.emptySet();
 
+    static final VisitedNodesAutomatonState ERROR_STATE = new VisitedNodesAutomatonState(0,null, ERROR);
 
+    private final int rank;
     private final BitSet visitedExternals;
-    private boolean visitedInternals;
+    private VisitedStatus visitedInternals;
 
-    VisitedNodesAutomatonState(BitSet visitedExternals, boolean visitedInternals) {
+    VisitedNodesAutomatonState(int rank, BitSet visitedExternals, VisitedStatus visitedInternals) {
 
+        this.rank = rank;
         this.visitedExternals = visitedExternals;
         this.visitedInternals = visitedInternals;
     }
 
-    public int rank() {
-
-        return visitedExternals.length();
+    public boolean isError() {
+        return visitedInternals == ERROR;
     }
 
     boolean hasVisitedExternal(int i) {
 
+        if(isError())  {
+            return false;
+        }
+
         return visitedExternals.get(i);
     }
 
-    boolean isVisitedInternals() {
+    int rank() {
+        return  rank;
+    }
+
+    VisitedStatus getInternalNodesStatus() {
 
         return visitedInternals;
     }
@@ -191,7 +202,7 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
     @Override
     public Set<String> toAtomicPropositions() {
 
-        if(visitedInternals && allExternalsVisited()) {
+        if((visitedInternals == ALL_VISITED || visitedInternals == EMPTY) && allExternalsVisited()) {
             return AP_VISITED;
         }
         return AP_DEFAULT;
@@ -230,5 +241,10 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
     @Override
     public int hashCode() {
         return Objects.hash(visitedInternals, visitedExternals);
+    }
+
+    @Override
+    public String toString() {
+        return visitedInternals + ":" + visitedExternals;
     }
 }
