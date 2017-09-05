@@ -367,6 +367,7 @@ public class Attestor {
 		if(refinementAutomaton == null) {
 			logger.info("No grammar refinement is required.");
 			inputs.add(originalInput);
+			settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
 			return;
 		}
 

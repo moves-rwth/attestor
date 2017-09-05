@@ -77,7 +77,8 @@ public class InternalStateSpace implements StateSpace {
                 return result;
             }
         }
-        logger.warn("Not all state ids could be found. Got " + result.size() + ", expected " + size);
+
+        logger.warn("Not all successor state IDs could be found");
         return result;
     }
 
