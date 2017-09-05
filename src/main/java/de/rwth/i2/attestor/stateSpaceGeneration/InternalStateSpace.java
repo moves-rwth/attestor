@@ -5,6 +5,8 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.Set;
 import java.util.function.IntPredicate;
 
 public class InternalStateSpace implements StateSpace {
+
+    private Logger logger = LogManager.getLogger("InternalStateSpace");
 
     private Set<ProgramState> allStates;
     private Set<ProgramState> initialStates;
@@ -75,7 +79,9 @@ public class InternalStateSpace implements StateSpace {
                 return result;
             }
         }
-        throw new IllegalStateException("Not all state ids could be found.");
+
+        logger.warn("Not all successor state IDs could be found");
+        return result;
     }
 
     @Override
@@ -114,12 +120,13 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public void addState(ProgramState state) {
 
-        state.setStateSpaceId(nextStateId);
-        materializationSuccessors.put(nextStateId, new TIntArrayList());
-        controlFlowSuccessors.put(nextStateId, new TIntArrayList());
-        ++nextStateId;
-        allStates.add(state);
-        maximalStateSize = Math.max(maximalStateSize, state.getSize());
+        if(allStates.add(state)) {
+            state.setStateSpaceId(nextStateId);
+            materializationSuccessors.put(nextStateId, new TIntArrayList());
+            controlFlowSuccessors.put(nextStateId, new TIntArrayList());
+            ++nextStateId;
+            maximalStateSize = Math.max(maximalStateSize, state.getSize());
+        }
     }
 
     @Override

@@ -184,11 +184,14 @@ public class SettingsFileReader {
             options.setStateLabelingAutomaton( parser.getHeapAutomaton() );
         }
 
+
         if( jsonOptions.has("stateRefinement") ) {
             JSONArray stateRefinementSettings = jsonOptions.getJSONArray("stateRefinement");
 			JsonStateRefinementStrategyParser parser = new JsonStateRefinementStrategyParser(stateRefinementSettings);
 			settings.stateSpaceGeneration().setStateRefinementStrategy( parser.getStrategy() );
-        }
+        } else {
+			settings.stateSpaceGeneration().setStateRefinementStrategy( s -> s );
+		}
 
         if( jsonOptions.has("aggressiveNullAbstraction") ){
 			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
