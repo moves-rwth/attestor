@@ -90,7 +90,8 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 			node = heap.selectorTargetOf(node, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				logger.warn("getSelectorTarget got invalid value");
+				// this is not an error, because assignments to fields might first check whether
+				// a selector exists.
 				return GeneralConcreteValue.getUndefined();
 			}
 			
