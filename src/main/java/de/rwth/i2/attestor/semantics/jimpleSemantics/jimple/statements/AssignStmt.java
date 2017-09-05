@@ -101,7 +101,6 @@ public class AssignStmt extends Statement {
 		*/
 		
 		try {
-			lhs.evaluateOn( jimpleProgramState );
 			lhs.setValue( jimpleProgramState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));

@@ -47,7 +47,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	/**
 	 * Id of this state in a state space
 	 */
-	private int stateSpaceId;
+	private int stateSpaceId = -1;
 
     /**
      * The atomic propositions assigned to this state.
@@ -72,7 +72,6 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	protected GeneralJimpleProgramState(HeapConfiguration heap, int scopeDepth) {
 		
 		this.heap = heap;
-		this.programCounter = 0;
 		this.scopeDepth = scopeDepth;
 		atomicPropositions = new HashSet<>();
 	}
@@ -463,7 +462,6 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	public ProgramState shallowCopyWithUpdateHeap(HeapConfiguration newHeap) {
 		GeneralJimpleProgramState copy = (GeneralJimpleProgramState) shallowCopy();
 		copy.heap = newHeap;
-		copy.stateSpaceId = stateSpaceId;
 		return copy;
 	}
 

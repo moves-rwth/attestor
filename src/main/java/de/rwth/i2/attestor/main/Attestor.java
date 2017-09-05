@@ -588,14 +588,13 @@ public class Attestor {
             );
 
             Set<ProgramState> states = stateSpace.getStates();
-            int i=0;
             for(ProgramState state : states) {
+            	int i = state.getStateSpaceId();
                 exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
                         state.getHeap()
                 );
-                ++i;
             }
 
             InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");

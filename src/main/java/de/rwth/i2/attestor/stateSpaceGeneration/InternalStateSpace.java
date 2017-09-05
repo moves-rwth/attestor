@@ -15,7 +15,7 @@ public class InternalStateSpace implements StateSpace {
 
     private final static Logger logger = LogManager.getLogger("InternalStateSpace");
 
-    private Set<ProgramState> allStates;
+    private Map<ProgramState, ProgramState> allStates;
     private Set<ProgramState> initialStates;
 
     private TIntSet finalStateIds;
@@ -27,7 +27,7 @@ public class InternalStateSpace implements StateSpace {
 
     public InternalStateSpace(int capacity) {
 
-        allStates = new HashSet<>(capacity);
+        allStates = new HashMap<>(capacity);
         initialStates = new HashSet<>(100);
         finalStateIds = new TIntHashSet(100);
         materializationSuccessors = new TIntObjectHashMap<>(capacity);
@@ -37,13 +37,13 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public boolean contains(ProgramState state) {
 
-        return allStates.contains(state);
+        return allStates.containsKey(state);
     }
 
     @Override
     public Set<ProgramState> getStates() {
 
-        return Collections.unmodifiableSet(allStates);
+        return allStates.keySet();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InternalStateSpace implements StateSpace {
             return result;
         }
 
-        for(ProgramState s : allStates) {
+        for(ProgramState s : allStates.keySet()) {
             if(filter.test(s.getStateSpaceId())) {
                 result.add(s);
             }
@@ -115,17 +115,18 @@ public class InternalStateSpace implements StateSpace {
         );
     }
 
-
     @Override
-    public void addState(ProgramState state) {
+    public boolean addState(ProgramState state) {
 
-        if(allStates.add(state)) {
+        if(allStates.putIfAbsent(state, state) == null) {
             state.setStateSpaceId(nextStateId);
             materializationSuccessors.put(nextStateId, new TIntArrayList());
             controlFlowSuccessors.put(nextStateId, new TIntArrayList());
-            ++nextStateId;
             maximalStateSize = Math.max(maximalStateSize, state.getSize());
+            ++nextStateId;
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -144,7 +145,19 @@ public class InternalStateSpace implements StateSpace {
 
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
-        materializationSuccessors.get(fId).add(tId);
+
+        if(fId < 0) {
+            fId = getId(from);
+        }
+
+        if(tId < 0) {
+            tId = getId(to);
+        }
+
+        TIntArrayList succ = materializationSuccessors.get(fId);
+        if(!succ.contains(tId)) {
+           succ.add(tId);
+        }
     }
 
     @Override
@@ -152,7 +165,24 @@ public class InternalStateSpace implements StateSpace {
 
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
-        controlFlowSuccessors.get(fId).add(tId);
+
+        if(fId < 0) {
+            fId = getId(from);
+        }
+
+        if(tId < 0) {
+            tId = getId(to);
+        }
+
+        TIntArrayList succ = controlFlowSuccessors.get(fId);
+        if(succ != null && !succ.contains(tId)) {
+            succ.add(tId);
+        }
+    }
+
+    private int getId(ProgramState state) {
+
+        return allStates.get(state).getStateSpaceId();
     }
 
     @Override

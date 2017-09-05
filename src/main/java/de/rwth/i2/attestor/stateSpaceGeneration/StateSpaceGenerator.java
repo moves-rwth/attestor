@@ -236,8 +236,8 @@ public class StateSpaceGenerator {
 		// whenever a state has only a single successor and is not the result of executing a statement
 		// that allows for canonicalization.
 		// While this shortcut leads to an increased number of states, it avoids several isomorphism checks.
-		if((semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization()) || !stateSpace.contains(state))	{
-			stateSpace.addState(state);
+		//if((semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization()) || !stateSpace.contains(state))	{
+		if(stateSpace.addState(state)) {
 			unexploredConfigurations.add(state);
 		}
 

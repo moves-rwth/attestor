@@ -157,9 +157,6 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	    return Objects.hash(
 	    		programCounter,
 				scopeDepth,
-				heap.countNodes(),
-				heap.countNonterminalEdges(),
-				heap.countVariableEdges(),
 				heap
 		);
     }
