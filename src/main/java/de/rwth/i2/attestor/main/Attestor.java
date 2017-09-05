@@ -29,6 +29,7 @@ import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
+import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
@@ -362,7 +363,7 @@ public class Attestor {
 
 	private void setupStateLabeling() {
 
-		de.rwth.i2.attestor.refinement.HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
+		HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
 		if(refinementAutomaton == null) {
 			logger.info("No grammar refinement is required.");
 			inputs.add(originalInput);
