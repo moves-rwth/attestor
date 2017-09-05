@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
@@ -15,22 +16,23 @@ import java.util.*;
 public class GrammarRefinement {
 
     private Set<Nonterminal> oldLeftHandSides;
-    private Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides;
+    private Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides = new HashMap<>();
 
     private HeapAutomaton heapAutomaton;
 
     private Map<Nonterminal, List<HeapAutomatonState>> foundStates = new HashMap<>();
 
-    private Map<Nonterminal, Set<HeapConfiguration>> refinedRules;
+    private Map<Nonterminal, Set<HeapConfiguration>> refinedRules = new HashMap<>();
 
     private boolean newRulesFound;
 
     public GrammarRefinement(Grammar grammar, HeapAutomaton heapAutomaton) {
 
         this.oldLeftHandSides = grammar.getAllLeftHandSides();
-        determineRewrittenOriginalRightHandSides(grammar);
         this.heapAutomaton = heapAutomaton;
+        determineRewrittenOriginalRightHandSides(grammar);
 
+        refineBaseRules();
         do {
             newRulesFound = false;
             refineAllRules();
@@ -42,7 +44,8 @@ public class GrammarRefinement {
         for(Nonterminal lhs : oldLeftHandSides) {
             Set<HeapConfiguration> rewrittenRhs = new HashSet<>();
             for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                rewrittenRhs.addAll(heapAutomaton.getPossibleHeapRewritings(rhs));
+                List<HeapConfiguration> rewritings = heapAutomaton.getPossibleHeapRewritings(rhs);
+                rewrittenRhs.addAll(rewritings);
             }
             oldRightHandSides.put(lhs, rewrittenRhs);
         }
@@ -52,15 +55,26 @@ public class GrammarRefinement {
         return new Grammar(refinedRules);
     }
 
-    private void refineAllRules() {
+    private void refineBaseRules() {
+        for(Nonterminal lhs : oldLeftHandSides) {
+            for (HeapConfiguration rhs : oldRightHandSides.get(lhs)) {
+                if (rhs.countNonterminalEdges() == 0) {
+                    refineRuleAccordingToAssignment(lhs, rhs, Collections.emptyList());
+                }
+            }
+        }
+    }
 
+    private void refineAllRules() {
         for(Nonterminal lhs : oldLeftHandSides) {
             for(HeapConfiguration rhs : oldRightHandSides.get(lhs)) {
-                List<List<HeapAutomatonState>> possibleStates = possibleStateAssignments(rhs);
-                AssignmentIterator<HeapAutomatonState> iterator = new AssignmentIterator<>(possibleStates);
-                while(iterator.hasNext()) {
-                    List<HeapAutomatonState> assignment = iterator.next();
-                    refineRuleAccordingToAssignment(lhs, rhs, assignment);
+                if(rhs.countNonterminalEdges() > 0) {
+                    List<List<HeapAutomatonState>> possibleStates = possibleStateAssignments(rhs);
+                    AssignmentIterator<HeapAutomatonState> iterator = new AssignmentIterator<>(possibleStates);
+                    while (iterator.hasNext()) {
+                        List<HeapAutomatonState> assignment = iterator.next();
+                        refineRuleAccordingToAssignment(lhs, rhs, assignment);
+                    }
                 }
             }
         }
@@ -82,13 +96,23 @@ public class GrammarRefinement {
                                                  List<HeapAutomatonState> assignment) {
 
         HeapAutomatonState assignedState = heapAutomaton.transition(rhs, assignment);
-        foundStates.getOrDefault(lhs, new ArrayList<>()).add(assignedState);
+
+        if(assignedState.equals(ErrorHeapAutomatonState.instance)) {
+            return;
+        }
+
+        foundStates.putIfAbsent(lhs, new ArrayList<>());
+        foundStates.get(lhs).add(assignedState);
 
         Nonterminal refinedLhs = new RefinedDefaultNonterminal(lhs, assignedState);
         HeapConfiguration refinedRhs = refineRightSide(rhs, assignment);
 
-        Set<HeapConfiguration> allRefinedRhsOfLhs = refinedRules.getOrDefault(refinedLhs, new HashSet<>());
-        newRulesFound |= allRefinedRhsOfLhs.add(refinedRhs);
+        if(!refinedRules.containsKey(refinedLhs)) {
+            newRulesFound = true;
+            refinedRules.put(refinedLhs, new HashSet<>());
+        }
+        Set<HeapConfiguration> allRefinedRhsOfLhs = refinedRules.get(refinedLhs);
+        allRefinedRhsOfLhs.add(refinedRhs);
     }
 
     private HeapConfiguration refineRightSide(HeapConfiguration rhs, List<HeapAutomatonState> assignment) {

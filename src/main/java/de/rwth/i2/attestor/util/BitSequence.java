@@ -13,7 +13,7 @@ public class BitSequence implements Iterable<BitSequence> {
     }
 
     public boolean isSet(int bit) {
-        return (current & (1 << bit)) == 1;
+        return (current & (1 << bit)) > 0;
     }
 
     public int getLength() {

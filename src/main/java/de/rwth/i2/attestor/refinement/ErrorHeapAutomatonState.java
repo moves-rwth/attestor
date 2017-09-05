@@ -5,6 +5,8 @@ import java.util.Set;
 
 public class ErrorHeapAutomatonState extends HeapAutomatonState {
 
+    public final static ErrorHeapAutomatonState instance = new ErrorHeapAutomatonState();
+
     @Override
     public Set<String> toAtomicPropositions() {
 
@@ -14,12 +16,22 @@ public class ErrorHeapAutomatonState extends HeapAutomatonState {
     @Override
     public boolean equals(Object otherObject) {
 
-        return otherObject == this;
+        if(otherObject == null) {
+            return false;
+        }
+
+        return otherObject.getClass() == ErrorHeapAutomatonState.class;
     }
 
     @Override
     public int hashCode() {
 
         return 0;
+    }
+
+    @Override
+    public String toString() {
+
+        return "sink";
     }
 }

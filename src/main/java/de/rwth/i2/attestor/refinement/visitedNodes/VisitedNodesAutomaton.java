@@ -116,7 +116,7 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
 
         VisitedNodesAutomatonState state = (VisitedNodesAutomatonState) heapAutomatonState;
 
-        if(state.getInternalNodesStatus() == ALL_VISITED) {
+        if(state.getInternalNodesStatus() != ALL_NOT_VISITED && state.getInternalNodesStatus() != EMPTY) {
             return false;
         }
 
@@ -235,6 +235,7 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
 
         VisitedNodesAutomatonState other = (VisitedNodesAutomatonState) otherObject;
         return visitedInternals == other.visitedInternals
+                && rank == other.rank
                 && visitedExternals.equals(other.visitedExternals);
     }
 
