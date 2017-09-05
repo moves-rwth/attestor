@@ -6,6 +6,8 @@ public abstract class HeapAutomatonState {
 
     public abstract Set<String> toAtomicPropositions();
 
+    public abstract boolean isError();
+
     @Override
     public abstract boolean equals(Object otherObject);
 

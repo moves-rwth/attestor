@@ -177,13 +177,14 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
         this.visitedInternals = visitedInternals;
     }
 
+    @Override
     public boolean isError() {
         return visitedInternals == ERROR;
     }
 
     boolean hasVisitedExternal(int i) {
 
-        if(isError())  {
+        if(i >= rank) {
             return false;
         }
 

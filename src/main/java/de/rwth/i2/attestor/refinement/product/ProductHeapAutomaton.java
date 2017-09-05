@@ -99,6 +99,17 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     }
 
     @Override
+    public boolean isError() {
+
+        for(HeapAutomatonState state : states) {
+            if(state.isError()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean equals(Object otherObject) {
 
         if(otherObject == this) {

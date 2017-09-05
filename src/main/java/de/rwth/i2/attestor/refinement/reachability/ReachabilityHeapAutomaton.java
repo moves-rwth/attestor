@@ -101,6 +101,12 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
     }
 
     @Override
+    public boolean isError() {
+
+        return false;
+    }
+
+    @Override
     public boolean equals(Object otherObject) {
 
         if(otherObject == this) {

@@ -44,7 +44,9 @@ public class GrammarRefinementTest {
                 }
             }
         }
-        assertEquals(13, refinedGrammar.getAllLeftHandSides().size());
-        assertEquals(108, noRules);
+
+        // All combinations but error
+        assertEquals(12, refinedGrammar.getAllLeftHandSides().size());
+        assertEquals(68, noRules);
     }
 }

@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.refinement.ErrorHeapAutomatonState;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
@@ -97,7 +96,7 @@ public class GrammarRefinement {
 
         HeapAutomatonState assignedState = heapAutomaton.transition(rhs, assignment);
 
-        if(assignedState.equals(ErrorHeapAutomatonState.instance)) {
+        if(assignedState.isError()) {
             return;
         }
 
