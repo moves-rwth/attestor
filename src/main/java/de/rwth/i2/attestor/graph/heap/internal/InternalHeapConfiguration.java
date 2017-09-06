@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
 import de.rwth.i2.attestor.graph.heap.matching.MinDepthEmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -600,17 +601,23 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		hash = (hash << 1) ^ countExternalNodes();
 		hash = ( hash << 1) ^ countVariableEdges();
 		hash = ( hash << 1) ^ countNonterminalEdges();
-		
+
 		int variableHash = 0;
 		int ntHash = 0;
+		int nodeHash = 0;
 		for( int i = 0; i < graph.size(); i++ ){
-			if( isVariable(i) ){
-				variableHash =  variableHash ^ nameOf( getPublicId(i) ).hashCode();
-			}else if( isNonterminalEdge(i) ){
-				ntHash = ntHash ^ labelOf( getPublicId(i) ).hashCode();
+			Object label = graph.nodeLabelOf(i);
+			int labelHash = label.hashCode();
+			if(label.getClass() == Variable.class) {
+				variableHash ^= labelHash;
+			} else if(label.getClass() == GeneralType.class) {
+				ntHash ^= labelHash;
+			} else {
+				nodeHash ^= labelHash;
 			}
 		}
-		
+
+		hash = ( hash << 1 ) ^ nodeHash;
 		hash = ( hash << 1 ) ^ variableHash;
 		hash = ( hash << 1 ) ^ ntHash;
 		

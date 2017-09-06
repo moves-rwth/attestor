@@ -183,7 +183,7 @@ public class StateSpaceGenerator {
 
 		for(ProgramState m : materialized) {
 			if(!stateSpace.contains(m)) {
-				stateSpace.addState(m);
+				stateSpace.addStateIfAbsent(m);
 				stateSpace.addMaterializationTransition(state, m);
 				unexploredConfigurations.add(m);
 			}
@@ -230,14 +230,7 @@ public class StateSpaceGenerator {
 			return;
 		}
 
-		Semantics semantics = program.getStatement(previousState.getProgramCounter());
-
-		// This is an optimization that avoids search for an already existing state in the state space
-		// whenever a state has only a single successor and is not the result of executing a statement
-		// that allows for canonicalization.
-		// While this shortcut leads to an increased number of states, it avoids several isomorphism checks.
-		//if((semantics.hasUniqueSuccessor() && !semantics.permitsCanonicalization()) || !stateSpace.contains(state))	{
-		if(stateSpace.addState(state)) {
+		if(stateSpace.addStateIfAbsent(state)) {
 			unexploredConfigurations.add(state);
 		}
 

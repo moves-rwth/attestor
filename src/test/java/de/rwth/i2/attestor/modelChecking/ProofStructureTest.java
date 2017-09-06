@@ -47,9 +47,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
+		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -85,9 +85,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
+		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -119,9 +119,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 		
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
+		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -154,9 +154,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		this.addState(state1);
+		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -185,9 +185,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		//this.addState(state1);
+		//this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -216,7 +216,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ sll }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addControlFlowTransition(initialState, initialState);
 		
@@ -246,9 +246,9 @@ public class ProofStructureTest extends InternalStateSpace {
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ sll }");
 
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
-		//this.addState(state1);
+		//this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
@@ -281,17 +281,17 @@ public class ProofStructureTest extends InternalStateSpace {
 		state2.addAP("{ tree }");
 		
 		
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 
 		initialState.setProgramCounter(0);
-		this.addState(initialState);
+		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		state1.setProgramCounter(1);
-		this.addState(state1);
+		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
 		this.addControlFlowTransition(state1, state1);
 		state2.setProgramCounter(2);
-		this.addState(state2);
+		this.addStateIfAbsent(state2);
 		this.addControlFlowTransition(state1, state2);
 		this.addControlFlowTransition(state2, initialState);
 		

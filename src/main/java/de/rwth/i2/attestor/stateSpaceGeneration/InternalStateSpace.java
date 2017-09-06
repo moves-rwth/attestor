@@ -116,7 +116,7 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
-    public boolean addState(ProgramState state) {
+    public boolean addStateIfAbsent(ProgramState state) {
 
         if(allStates.putIfAbsent(state, state) == null) {
             state.setStateSpaceId(nextStateId);
@@ -130,8 +130,25 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public boolean addState(ProgramState state) {
+
+        ProgramState old = allStates.put(state, state);
+        if(old == null) {
+            state.setStateSpaceId(nextStateId);
+            materializationSuccessors.put(nextStateId, new TIntArrayList());
+            controlFlowSuccessors.put(nextStateId, new TIntArrayList());
+            maximalStateSize = Math.max(maximalStateSize, state.getSize());
+            ++nextStateId;
+            return true;
+        } else {
+            state.setStateSpaceId( old.getStateSpaceId() );
+            return false;
+        }
+    }
+
+    @Override
     public void addInitialState(ProgramState state) {
-        addState(state);
+        addStateIfAbsent(state);
         initialStates.add(state);
     }
 

@@ -419,7 +419,7 @@ public class Attestor {
                     0
                 );
 
-	    printAnalyzedMethod();
+		printAnalyzedMethod();
 
 	    stateSpace = stateSpaceGenerator.generate();
 	    logger.info("State space generation finished. #states: "

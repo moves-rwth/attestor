@@ -44,8 +44,8 @@ public class VF2State {
 	 * @param targetGraph The target graph.
 	 */
 	public VF2State(Graph patternGraph, Graph targetGraph) {
-		pattern = new VF2GraphData(patternGraph, null);
-		target = new VF2GraphData(targetGraph, null);
+		pattern = new VF2GraphData(patternGraph);
+		target = new VF2GraphData(targetGraph);
 		countPatternNodes = pattern.getGraph().size();
 		countTargetNodes = target.getGraph().size();
 		patternCandidate = 0;
