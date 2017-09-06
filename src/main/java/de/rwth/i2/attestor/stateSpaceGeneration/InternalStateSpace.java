@@ -118,21 +118,7 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public boolean addStateIfAbsent(ProgramState state) {
 
-        if(allStates.putIfAbsent(state, state) == null) {
-            state.setStateSpaceId(nextStateId);
-            materializationSuccessors.put(nextStateId, new TIntArrayList());
-            controlFlowSuccessors.put(nextStateId, new TIntArrayList());
-            maximalStateSize = Math.max(maximalStateSize, state.getSize());
-            ++nextStateId;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean addState(ProgramState state) {
-
-        ProgramState old = allStates.put(state, state);
+        ProgramState old = allStates.putIfAbsent(state, state);
         if(old == null) {
             state.setStateSpaceId(nextStateId);
             materializationSuccessors.put(nextStateId, new TIntArrayList());
@@ -142,8 +128,8 @@ public class InternalStateSpace implements StateSpace {
             return true;
         } else {
             state.setStateSpaceId( old.getStateSpaceId() );
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -163,18 +149,7 @@ public class InternalStateSpace implements StateSpace {
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
 
-        if(fId < 0) {
-            fId = getId(from);
-        }
-
-        if(tId < 0) {
-            tId = getId(to);
-        }
-
-        TIntArrayList succ = materializationSuccessors.get(fId);
-        if(!succ.contains(tId)) {
-           succ.add(tId);
-        }
+        materializationSuccessors.get(fId).add(tId);
     }
 
     @Override
@@ -183,23 +158,7 @@ public class InternalStateSpace implements StateSpace {
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
 
-        if(fId < 0) {
-            fId = getId(from);
-        }
-
-        if(tId < 0) {
-            tId = getId(to);
-        }
-
-        TIntArrayList succ = controlFlowSuccessors.get(fId);
-        if(succ != null && !succ.contains(tId)) {
-            succ.add(tId);
-        }
-    }
-
-    private int getId(ProgramState state) {
-
-        return allStates.get(state).getStateSpaceId();
+        controlFlowSuccessors.get(fId).add(tId);
     }
 
     @Override

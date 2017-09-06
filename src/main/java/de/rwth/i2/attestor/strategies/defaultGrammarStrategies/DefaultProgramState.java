@@ -179,9 +179,6 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 
         return programCounter == state.programCounter
 					&& scopeDepth == state.scopeDepth
-					&& heap.countNodes() == otherHeap.countNodes()
-					&& heap.countNonterminalEdges() == otherHeap.countNonterminalEdges()
-					&& heap.countVariableEdges() == otherHeap.countVariableEdges()
 					&& atomicPropositions.equals(state.getAPs())
                     && heap.equals(otherHeap);
 	}
