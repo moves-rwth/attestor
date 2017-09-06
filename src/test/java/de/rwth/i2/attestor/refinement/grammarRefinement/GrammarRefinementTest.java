@@ -32,6 +32,7 @@ public class GrammarRefinementTest {
         Set<HeapConfiguration> rhs = new HashSet<>();
         rhs.add(ExampleHcImplFactory.getListRule1());
         rhs.add(ExampleHcImplFactory.getListRule2());
+        rhs.add(ExampleHcImplFactory.getListRule3());
         grammar = new Grammar(Collections.singletonMap(listLabel, rhs));
 
         automaton = new VisitedNodesAutomaton();
@@ -46,8 +47,10 @@ public class GrammarRefinementTest {
         assertNotNull(refinedGrammar);
         int noRules = 0;
         for(Nonterminal nt : refinedGrammar.getAllLeftHandSides()) {
-            noRules += refinedGrammar.getRightHandSidesFor(nt).size();
-            for(HeapConfiguration hc : refinedGrammar.getRightHandSidesFor(nt)) {
+            Set<HeapConfiguration> rhs = refinedGrammar.getRightHandSidesFor(nt);
+            noRules += rhs.size();
+            assert(rhs.size() > 0);
+            for(HeapConfiguration hc : rhs) {
                 for(HeapConfiguration hc2 : refinedGrammar.getRightHandSidesFor(nt)) {
                     if(hc != hc2) {
                         assertFalse(hc.equals(hc2));
@@ -57,7 +60,7 @@ public class GrammarRefinementTest {
         }
         // All combinations but error
         assertEquals(12, refinedGrammar.getAllLeftHandSides().size());
-        assertEquals(68, noRules);
+        assertEquals(580, noRules);
     }
 
     @Test

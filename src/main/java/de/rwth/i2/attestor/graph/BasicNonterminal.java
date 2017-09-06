@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author Christoph
  */
-public class BasicNonterminal implements Nonterminal {
+public final class BasicNonterminal implements Nonterminal {
 
 	/**
 	 * The logger used by this class.
@@ -136,4 +136,9 @@ public class BasicNonterminal implements Nonterminal {
 		return this.label;
 	}
 
+	@Override
+	public int hashCode() {
+
+		return label.hashCode();
+	}
 }

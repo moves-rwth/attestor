@@ -101,7 +101,10 @@ public class GrammarRefinement {
         }
 
         foundStates.putIfAbsent(lhs, new ArrayList<>());
-        foundStates.get(lhs).add(assignedState);
+        List<HeapAutomatonState> states = foundStates.get(lhs);
+        if(!states.contains(assignedState)) {
+           states.add(assignedState);
+        }
 
         Nonterminal refinedLhs = new RefinedDefaultNonterminal(lhs, assignedState);
         HeapConfiguration refinedRhs = refineRightSide(rhs, assignment);
