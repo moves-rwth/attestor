@@ -11,8 +11,6 @@ import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Objects;
-
 /**
  * Simple implementation of program states for HRG-based analysis.
  *
@@ -75,8 +73,8 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	@Override
 	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
 		
-		if(from instanceof GeneralConcreteValue) {
-			
+		if(from != null && from.getClass() == GeneralConcreteValue.class) {
+
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			
 			if(dFrom.isUndefined()) {
@@ -114,7 +112,7 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 			return;
 		}
 		
-		if(from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
+		if(from.getClass() == GeneralConcreteValue.class && to.getClass() == GeneralConcreteValue.class) {
 
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			GeneralConcreteValue dTo = (GeneralConcreteValue) to;
@@ -155,11 +153,10 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	@Override
     public int hashCode() {
 
-	    return Objects.hash(
-	    		programCounter,
-				scopeDepth,
-				heap
-		);
+	    int hash = programCounter;
+	    hash = (hash << 1) ^ scopeDepth;
+	    hash = (hash << 1) ^ heap.hashCode();
+	    return hash;
     }
 
 	@Override

@@ -11,7 +11,7 @@ import de.rwth.i2.attestor.types.Type;
  *
  * @author Christoph, Hannah Arndt
  */
-public class GeneralConcreteValue implements ConcreteValue {
+public final class GeneralConcreteValue implements ConcreteValue {
 
     /**
      * The logger of this class.

@@ -195,7 +195,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
     boolean isNode(int id) {
 
-		return graph.nodeLabelOf(id) instanceof Type;
+		return graph.nodeLabelOf(id).getClass() == GeneralType.class;
 	}
 
 	/**
@@ -527,7 +527,8 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
 	private boolean isVariable(int privateId) {
 
-		return graph.nodeLabelOf(privateId) instanceof Variable;
+		Object v = graph.nodeLabelOf(privateId);
+		return v != null && v.getClass() == Variable.class;
 	}
 
 	@Override
@@ -578,20 +579,19 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(Object otherObject) {
 
-		if(other == this) {
+		if(otherObject == this) {
 			return true;
 		}
-
-		if(other instanceof InternalHeapConfiguration) {
-
-			InternalHeapConfiguration hc = (InternalHeapConfiguration) other;
-			IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
-			return isoChecker.hasMatching();
+		
+		if(otherObject == null) {
+			return false;
 		}
 
-		return false;
+		InternalHeapConfiguration hc = (InternalHeapConfiguration) otherObject;
+		IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
+		return isoChecker.hasMatching();
 	}
 	
 	@Override
