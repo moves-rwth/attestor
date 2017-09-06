@@ -195,7 +195,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
     boolean isNode(int id) {
 
-		return graph.nodeLabelOf(id).getClass() == GeneralType.class;
+    	return graph.nodeLabelOf(id) instanceof Type;
 	}
 
 	/**
