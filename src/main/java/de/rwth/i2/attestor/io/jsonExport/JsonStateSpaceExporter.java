@@ -42,7 +42,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         states = stateSpace.getStates();
         initialStates = stateSpace.getInitialStates();
         finalStates = stateSpace.getFinalStates();
-        computeIdsAndIncomingEdges();
+        computeNumberOfIncomingEdges();
 
         jsonWriter.object()
                 .key("elements")
@@ -57,7 +57,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         writer.close();
     }
 
-    private void computeIdsAndIncomingEdges() {
+    private void computeNumberOfIncomingEdges() {
 
         for(ProgramState s : states) {
             for(ProgramState succ : stateSpace.getControlFlowSuccessorsOf(s)) {
@@ -102,8 +102,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             jsonWriter.key("essential");
             boolean essential = !incomingEdges.containsKey(s)
                     || incomingEdges.get(s) != 1
-                    || stateSpace.getMaterializationSuccessorsOf(s).size() != 1
-                    || stateSpace.getControlFlowSuccessorsOf(s).size() != 1;
+                    || (stateSpace.getMaterializationSuccessorsOf(s).size()
+                        + stateSpace.getControlFlowSuccessorsOf(s).size()) != 1;
             if(essential) {
                 isEssentialState.add(s);
             }
