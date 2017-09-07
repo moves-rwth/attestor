@@ -41,35 +41,59 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
 
     private HeapConfiguration computeKernel(HeapConfiguration canonicalHc) {
 
+        int varCount = canonicalHc.countVariableEdges();
+        if (varCount == 0) {
+            return constructExternalKernel(canonicalHc);
+        } else {
+            return constructVariableKernel(canonicalHc);
+        }
+    }
+
+    private HeapConfiguration constructExternalKernel(HeapConfiguration canonicalHc) {
+
         ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc);
         FactorySettings factory = Settings.getInstance().factory();
+        HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
+        Type type = factory.getType("kernelNode");
+        int rank = canonicalHc.countExternalNodes();
+        TIntArrayList nodes = new TIntArrayList(rank);
+        builder.addNodes(type, rank, nodes);
+        for (int i = 0; i < rank; i++) {
+            builder.setExternal(i);
+            int from = canonicalHc.externalNodeAt(i);
+            for (int j = 0; j < rank; j++) {
+                int to = canonicalHc.externalNodeAt(j);
+                if (reachabilityHelper.isReachable(from, to)) {
+                    builder.addSelector(nodes.get(i), factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
+                }
+            }
+        }
 
+        return builder.build();
+    }
+
+    private HeapConfiguration constructVariableKernel(HeapConfiguration canonicalHc) {
+
+        ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc);
+        FactorySettings factory = Settings.getInstance().factory();
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
         Type type = factory.getType("kernelNode");
         int varCount = canonicalHc.countVariableEdges();
-
-        if(varCount == 0) {
-            int rank = canonicalHc.countExternalNodes();
-            TIntArrayList nodes = new TIntArrayList(rank);
-            builder.addNodes(type, rank, nodes);
-            for (int i = 0; i < rank; i++) {
-                builder.setExternal(i);
-                int from = canonicalHc.externalNodeAt(i);
-                for (int j = 0; j < rank; j++) {
-                    int to = canonicalHc.externalNodeAt(j);
-                    if (reachabilityHelper.isReachable(from, to)) {
-                        builder.addSelector(nodes.get(i), factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
-                    }
+        TIntArrayList nodes = new TIntArrayList(varCount);
+        builder.addNodes(type, varCount, nodes);
+        TIntArrayList variables = canonicalHc.variableEdges();
+        for (int i = 0; i < varCount; i++) {
+            int varFrom = variables.get(i);
+            int from = canonicalHc.targetOf(varFrom);
+            int kernelFrom = nodes.get(i);
+            String varName = canonicalHc.nameOf(varFrom);
+            builder.addVariableEdge(varName, kernelFrom);
+            for (int j = 0; j < varCount; j++) {
+                int varTo = variables.get(j);
+                int to = canonicalHc.targetOf(varTo);
+                if (reachabilityHelper.isReachable(from, to)) {
+                    builder.addSelector(kernelFrom, factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
                 }
-            }
-        } else {
-            // TODO
-            TIntArrayList nodes = new TIntArrayList(varCount);
-            builder.addNodes(type, varCount, nodes);
-            TIntArrayList variables = canonicalHc.variableEdges();
-            for(int i=0; i < varCount; i++) {
-                int varFrom = variables.get(i);
-                int from = canonicalHc.targetOf(varFrom);
             }
         }
         return builder.build();
@@ -101,15 +125,29 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
     public Set<String> toAtomicPropositions() {
 
         Set<String> result = new HashSet<>();
-        TIntArrayList nodes = kernel.nodes();
-        for(int i=0; i < nodes.size(); i++) {
-            int u = nodes.get(i);
-            TIntIterator iter = kernel.successorNodesOf(u).iterator();
+        TIntArrayList variables = kernel.variableEdges();
+        for(int i=0; i < variables.size(); i++) {
+            int var = variables.get(i);
+            String varName = kernel.nameOf(var);
+            if(varName.contains("-")) {
+                varName = varName.split("-",2)[1];
+            }
+
+            int varFrom = kernel.targetOf(var);
+            TIntIterator iter = kernel.successorNodesOf(varFrom).iterator();
             while(iter.hasNext()) {
-                int v = iter.next();
-                result.add("isReachable(" + u + "," + v + ")");
+                int to = iter.next();
+                TIntArrayList attVars = kernel.attachedVariablesOf(to);
+                for(int j=0; j < attVars.size(); j++) {
+                    String toName = kernel.nameOf(attVars.get(j));
+                    if(toName.contains("-")) {
+                        toName = toName.split("-", 2)[1];
+                    }
+                    result.add("isReachable(" + varName + "," + toName + ")");
+                }
             }
         }
+
         return result;
     }
 
