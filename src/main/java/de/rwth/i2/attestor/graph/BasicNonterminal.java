@@ -31,6 +31,13 @@ public final class BasicNonterminal implements Nonterminal {
 	private static final Map<String, BasicNonterminal> existingNonterminals = new HashMap<>();
 
 	/**
+	 * Method to remove all stored existing nonterminals.
+	 */
+	public static synchronized void clearExistingNonterminals() {
+		existingNonterminals.clear();
+	}
+
+	/**
 	 * Method to access already existing nonterminal symbols.
 	 * @param label The label of a requested already existing nonterminal symbol.
 	 * @return The nonterminal symbol with the requested label.

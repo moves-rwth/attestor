@@ -1,15 +1,20 @@
 package de.rwth.i2.attestor.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class ExpectedHCs {
 	
@@ -135,7 +140,7 @@ class ExpectedHCs {
 		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(var);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
+		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,true}, index);
 		
 		Type type = Settings.getInstance().factory().getType("type");
 		
