@@ -7,7 +7,7 @@ import gnu.trove.list.array.TIntArrayList;
  * Checks whether all already matched predecessors of the pattern candidate node are matched to predecessors
  * the the target candidate node.
  * Alternatively, this class can also check whether both nodes have the same predecessors if
- * the flag checkEquality is set.
+ * the flag checkEqualityOnExternal is set.
  *
  * @author Christoph
  */
@@ -18,13 +18,13 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 	 * already matched predecessor nodes. Otherwise, it suffices that all already matched predecessors of the pattern
 	 * node have matching predecessors of the target node.
 	 */
-	private final boolean checkEquality;
+	private final boolean checkEqualityOnExternal;
 
     /**
-     * @param checkEquality True if and only if exactly the same predecessors are required.
+     * @param checkEqualityOnExternal True if and only if exactly the same predecessors are required.
      */
-	public CompatiblePredecessors(boolean checkEquality) {
-		this.checkEquality = checkEquality;
+	public CompatiblePredecessors(boolean checkEqualityOnExternal) {
+		this.checkEqualityOnExternal = checkEqualityOnExternal;
 	}
 	
 	@Override
@@ -34,6 +34,8 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 		VF2GraphData target = state.getTarget();
 		Graph patternGraph = pattern.getGraph();
 		Graph targetGraph = target.getGraph();
+
+		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
 
 		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(p);
 		for(int i=0; i < predsOfP.size(); i++) {

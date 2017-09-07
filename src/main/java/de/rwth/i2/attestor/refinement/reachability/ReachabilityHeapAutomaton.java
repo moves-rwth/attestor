@@ -45,18 +45,31 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
         FactorySettings factory = Settings.getInstance().factory();
 
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
-        int rank = canonicalHc.countExternalNodes();
-        TIntArrayList nodes = new TIntArrayList(rank);
         Type type = factory.getType("kernelNode");
-        builder.addNodes(type, rank, nodes);
-        for(int i=0; i < rank; i++) {
-            builder.setExternal(i);
-            int from = canonicalHc.externalNodeAt(i);
-            for(int j=0; j < rank; j++) {
-                int to = canonicalHc.externalNodeAt(j);
-                if(reachabilityHelper.isReachable(from, to)) {
-                    builder.addSelector(from, factory.getSelectorLabel(String.valueOf(j)), to);
+        int varCount = canonicalHc.countVariableEdges();
+
+        if(varCount == 0) {
+            int rank = canonicalHc.countExternalNodes();
+            TIntArrayList nodes = new TIntArrayList(rank);
+            builder.addNodes(type, rank, nodes);
+            for (int i = 0; i < rank; i++) {
+                builder.setExternal(i);
+                int from = canonicalHc.externalNodeAt(i);
+                for (int j = 0; j < rank; j++) {
+                    int to = canonicalHc.externalNodeAt(j);
+                    if (reachabilityHelper.isReachable(from, to)) {
+                        builder.addSelector(nodes.get(i), factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
+                    }
                 }
+            }
+        } else {
+            // TODO
+            TIntArrayList nodes = new TIntArrayList(varCount);
+            builder.addNodes(type, varCount, nodes);
+            TIntArrayList variables = canonicalHc.variableEdges();
+            for(int i=0; i < varCount; i++) {
+                int varFrom = variables.get(i);
+                int from = canonicalHc.targetOf(varFrom);
             }
         }
         return builder.build();
@@ -94,10 +107,29 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
             TIntIterator iter = kernel.successorNodesOf(u).iterator();
             while(iter.hasNext()) {
                 int v = iter.next();
-                result.add("(" + u + "," + v + ")");
+                result.add("isReachable(" + u + "," + v + ")");
             }
         }
         return result;
+    }
+
+    public String toString() {
+
+        StringBuilder result = new StringBuilder();
+        TIntArrayList nodes = kernel.nodes();
+        for(int i=0; i < nodes.size(); i++) {
+            int u = nodes.get(i);
+            TIntIterator iter = kernel.successorNodesOf(u).iterator();
+            while(iter.hasNext()) {
+                int v = iter.next();
+                result.append("(");
+                result.append(u);
+                result.append(",");
+                result.append(v);
+                result.append(")");
+            }
+        }
+        return result.toString();
     }
 
     @Override

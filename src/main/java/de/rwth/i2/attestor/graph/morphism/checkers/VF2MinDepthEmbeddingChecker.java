@@ -5,16 +5,7 @@ import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
 import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatibleNodeTypes;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatiblePredecessors;
-import de.rwth.i2.attestor.graph.morphism.feasibility.CompatibleSuccessors;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingBranchOnPatternExternal;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingEdgeLabels;
-import de.rwth.i2.attestor.graph.morphism.feasibility.EmbeddingExternalNodes;
-import de.rwth.i2.attestor.graph.morphism.feasibility.OneStepLookaheadIn;
-import de.rwth.i2.attestor.graph.morphism.feasibility.OneStepLookaheadOut;
-import de.rwth.i2.attestor.graph.morphism.feasibility.TwoStepLookahead;
-import de.rwth.i2.attestor.graph.morphism.feasibility.VariableDereferenceDepth;
+import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -41,42 +32,38 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 	/**
 	 * Specification of all compatible predecessor nodes.
 	 */
-	private static final FeasibilityFunction compatiblePredecessors = new EmbeddingBranchOnPatternExternal(
-			new CompatiblePredecessors(false), new CompatiblePredecessors(true)
-			);
-	
+	private static final FeasibilityFunction
+			compatiblePredecessors = new CompatiblePredecessors(false);
+
 	/**
 	 * Specification of all compatible successor nodes.
 	 */
-	private static final FeasibilityFunction compatibleSuccessors = new EmbeddingBranchOnPatternExternal(
-			new CompatibleSuccessors(false), new CompatibleSuccessors(true)
-			);
-	
+	private static final FeasibilityFunction
+			compatibleSuccessors = new CompatibleSuccessors(false);
+
 	/**
 	 * Specification of a feasibility function with a one-edge lookahead for incoming edges.
 	 */
-	private static final FeasibilityFunction oneStepLookaheadIn = new EmbeddingBranchOnPatternExternal(
-			new OneStepLookaheadIn(false), new OneStepLookaheadIn(true)
-			);
-	
+	private static final FeasibilityFunction
+			oneStepLookaheadIn = new OneStepLookaheadIn(false);
+
 	/**
 	 * Specification of a feasibility function with a one-edge lookahead for outgoing edges.
 	 */
-	private static final FeasibilityFunction oneStepLookaheadOut = new EmbeddingBranchOnPatternExternal(
-			new OneStepLookaheadOut(false), new OneStepLookaheadOut(true)
-			);
-	
+	private static final FeasibilityFunction
+			oneStepLookaheadOut = new OneStepLookaheadOut(false);
+
 	/**
 	 * Specification of a feasibility function with a two-edge lookahead.
 	 */
-	private static final FeasibilityFunction twoStepLookahead = new EmbeddingBranchOnPatternExternal(
-			new TwoStepLookahead(false), new TwoStepLookahead(true)
-			);
-	
+	private static final FeasibilityFunction
+			twoStepLookahead = new TwoStepLookahead(false);
+
 	/**
 	 * Specification of a feasibility function to check external nodes.
 	 */
-	private static final FeasibilityFunction embeddingExternalNodes = new EmbeddingExternalNodes();
+	private static final FeasibilityFunction
+			embeddingExternalNodes = new EmbeddingExternalNodes();
 	
 	/**
 	 * Specification of a feasibility function to check node types.

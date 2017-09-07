@@ -23,21 +23,11 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 					.setMatchingCondition( new MorphismFound() )
 					.setMatchingImpossibleCondition( new NoMorphismPossible() )
 					.addFeasibilityCondition( new CompatibleNodeTypes() )
-					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
-							new CompatiblePredecessors(false), new CompatiblePredecessors(true)
-							))
-					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
-							new CompatibleSuccessors(false), new CompatibleSuccessors(true)
-							))
-					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
-							new OneStepLookaheadIn(false), new OneStepLookaheadIn(true)
-							))
-					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
-							new OneStepLookaheadOut(false), new OneStepLookaheadOut(true)
-							))
-					.addFeasibilityCondition( new EmbeddingBranchOnPatternExternal(
-							new TwoStepLookahead(false), new TwoStepLookahead(true)
-							))
+					.addFeasibilityCondition( new CompatiblePredecessors(false) )
+					.addFeasibilityCondition( new CompatibleSuccessors(false) )
+					.addFeasibilityCondition( new OneStepLookaheadIn(false) )
+					.addFeasibilityCondition( new OneStepLookaheadOut(false) )
+					.addFeasibilityCondition( new TwoStepLookahead(false) )
 					.addFeasibilityCondition( new EmbeddingExternalNodes() )
 					.addFeasibilityCondition( new EmbeddingEdgeLabels() )
 					.build();

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
@@ -10,8 +11,8 @@ import gnu.trove.list.array.TIntArrayList;
  * in the ingoing lookahead sets in the successors or predecessors of one of the candidate nodes.
  * This set corresponds to the number of nodes in the predecessors or successors of a candidate node
  * that have not been matched yet, but that are reachable from the candidate node via a single ingoing edge.
- * A mismatch may either consist of less ingoing edges in the target than in the pattern (checkEquality=false)
- * or an unequal number (checkEquality=true).
+ * A mismatch may either consist of less ingoing edges in the target than in the pattern (checkEqualityOnExternal=false)
+ * or an unequal number (checkEqualityOnExternal=true).
  *
  * @author Christoph
  */
@@ -21,29 +22,33 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 	 * Determines whether the ingoing lookahead sets of pattern and target
 	 * have to be equal or target sets are allowed to be larger.
  	 */
-	private final boolean checkEquality;
+	private final boolean checkEqualityOnExternal;
 
     /**
-     * @param checkEquality Determines whether equal lookahead sets are required.
+     * @param checkEqualityOnExternal Determines whether equal lookahead sets are required.
      */
-	public OneStepLookaheadIn(boolean checkEquality) {
+	public OneStepLookaheadIn(boolean checkEqualityOnExternal) {
 		
-		this.checkEquality = checkEquality;
+		this.checkEqualityOnExternal = checkEqualityOnExternal;
 	}
 	
 	@Override
 	public boolean eval(VF2State state, int p, int t) {
 		
 		VF2GraphData pattern = state.getPattern();
+		Graph patternGraph = pattern.getGraph();
 		VF2GraphData target = state.getTarget();
-		
+		Graph targetGraph = target.getGraph();
+
+		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
+
 		int patternSucc = computeLookahead(
-				pattern.getGraph().getSuccessorsOf(p),
+				patternGraph.getSuccessorsOf(p),
 				pattern
 				);
 		
 		int targetSucc = computeLookahead(
-				target.getGraph().getSuccessorsOf(t),
+				targetGraph.getSuccessorsOf(t),
 				target
 				);
 		
@@ -62,12 +67,12 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 		}
 		
 		int patternPred = computeLookahead(
-				pattern.getGraph().getPredecessorsOf(p),
+				patternGraph.getPredecessorsOf(p),
 				pattern
 				);
 		
 		int targetPred = computeLookahead(
-				target.getGraph().getPredecessorsOf(t),
+				targetGraph.getPredecessorsOf(t),
 				target
 				);
 		
