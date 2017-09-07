@@ -139,6 +139,7 @@ public class StateSpaceGenerator {
 		while( hasUnexploredStates() ){
 			ProgramState state = unexploredConfigurations.pop();
 			boolean isSufficientlyMaterialized = materializationPhase(state);
+
 			if(isSufficientlyMaterialized) {
 				Set<ProgramState> successorStates = executionPhase(state);
 				if(successorStates.isEmpty()) {
@@ -182,11 +183,11 @@ public class StateSpaceGenerator {
 				);
 
 		for(ProgramState m : materialized) {
-			if(!stateSpace.contains(m)) {
-				stateSpace.addStateIfAbsent(m);
-				stateSpace.addMaterializationTransition(state, m);
+
+			if(stateSpace.addStateIfAbsent(m)) {
 				unexploredConfigurations.add(m);
 			}
+			stateSpace.addMaterializationTransition(state, m);
 		}
 		return materialized.isEmpty();
 	}

@@ -4,6 +4,8 @@ import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 
+import java.util.Objects;
+
 /**
  * A nonterminal symbol that is additionally annotated with a state of a heap automaton.
  *
@@ -74,28 +76,28 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof RefinedDefaultNonterminal) {
-           RefinedDefaultNonterminal n = (RefinedDefaultNonterminal) o;
-           if(!nonterminal.equals(n.nonterminal)) {
-               return false;
-           }
-           if(state == null) {
-               if(n.getState() != null)
-                   return false;
-           } else {
-               return n.getState().equals(state);
-           }
-           return true;
+    public boolean equals(Object otherObject) {
+
+        if(otherObject == this) {
+            return true;
         }
-        return false;
+
+        if(otherObject == null) {
+            return false;
+        }
+
+        if(otherObject.getClass() != RefinedDefaultNonterminal.class) {
+            return false;
+        }
+
+        RefinedDefaultNonterminal other = (RefinedDefaultNonterminal) otherObject;
+        return nonterminal.equals(other.nonterminal)
+                && state.equals(other.state);
     }
 
     @Override
     public int hashCode() {
 
-        final int prime = 31;
-        return prime * ((nonterminal == null) ? 0 : nonterminal.hashCode())
-                + ((state == null) ? 0 : state.hashCode());
+        return Objects.hash(nonterminal, state);
     }
 }

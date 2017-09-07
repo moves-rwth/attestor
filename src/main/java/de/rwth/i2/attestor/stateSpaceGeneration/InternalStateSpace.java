@@ -35,12 +35,6 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
-    public boolean contains(ProgramState state) {
-
-        return allStates.containsKey(state);
-    }
-
-    @Override
     public Set<ProgramState> getStates() {
 
         return allStates.keySet();

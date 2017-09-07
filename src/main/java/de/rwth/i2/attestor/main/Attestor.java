@@ -359,6 +359,10 @@ public class Attestor {
             settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
             logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
         }
+
+        setupMaterialization();
+		setupCanonicalization();
+		setupAbortTest();
 	}
 
 	private void setupStateLabeling() {
@@ -405,9 +409,6 @@ public class Attestor {
 
 	    settings.factory().resetTotalNumberOfStates();
 
-	    setupMaterialization();
-	    setupCanonicalization();
-	    setupAbortTest();
 
 	    assert(!inputs.isEmpty());
 

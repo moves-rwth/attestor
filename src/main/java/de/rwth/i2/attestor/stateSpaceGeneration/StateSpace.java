@@ -4,8 +4,6 @@ import java.util.Set;
 
 public interface StateSpace {
 
-    boolean contains(ProgramState state);
-
     Set<ProgramState> getStates();
     Set<ProgramState> getInitialStates();
     Set<ProgramState> getFinalStates();
