@@ -140,19 +140,24 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public void addMaterializationTransition(ProgramState from, ProgramState to) {
 
-        int fId = from.getStateSpaceId();
-        int tId = to.getStateSpaceId();
-
-        materializationSuccessors.get(fId).add(tId);
+        addTransition(from, to, materializationSuccessors);
     }
 
     @Override
     public void addControlFlowTransition(ProgramState from, ProgramState to) {
 
+        addTransition(from, to, controlFlowSuccessors);
+    }
+
+    private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {
+
         int fId = from.getStateSpaceId();
         int tId = to.getStateSpaceId();
 
-        controlFlowSuccessors.get(fId).add(tId);
+        TIntArrayList succ = successors.get(fId);
+        if(!succ.contains(tId)) {
+           succ.add(tId);
+        }
     }
 
     @Override
