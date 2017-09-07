@@ -91,6 +91,16 @@ public class AbstractMethodIPATest {
 		performTest( input, expectedFragment, expectedReplace );
 	}
 
+	@Test
+	public void testPrepareInput_reachableFragmentWithNonterminalEdge(){
+		HeapConfiguration input = reachableNodeThroughNonterminal();
+		HeapConfiguration expectedFragment = reachableNodeThroughNonterminal_HeadExternal();
+		HeapConfiguration expectedReplace = singleNodeAttached();
+		
+		performTest( input, expectedFragment, expectedReplace );
+	}
+
+
 
 	private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
 			HeapConfiguration expectedReplace) {
@@ -98,7 +108,33 @@ public class AbstractMethodIPATest {
 		assertEquals("reachable Fragment", expectedFragment, result.first());
 		assertEquals("replaced Fragment", expectedReplace, result.second());
 	}
+	
+	private HeapConfiguration reachableNodeThroughNonterminal() {
+		TIntArrayList nodes = new TIntArrayList();
+		return reachableNodeThroughNonterminalHelper(nodes);
+	}
 
+	private HeapConfiguration reachableNodeThroughNonterminal_HeadExternal() {
+		TIntArrayList nodes = new TIntArrayList();
+		return reachableNodeThroughNonterminalHelper(nodes).builder().setExternal(nodes.get(0)).build();
+	}
+
+	private HeapConfiguration reachableNodeThroughNonterminalHelper(TIntArrayList nodes) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+
+		Type type = Settings.getInstance().factory().getType("someType");
+		final int rank = 2;
+		final boolean[] isReductionTentacle = new boolean[rank];
+		Nonterminal nt = BasicNonterminal.getNonterminal("AbstractMethodIpaTest", rank, isReductionTentacle);
+
+		return hc.builder().addNodes(type, rank, nodes)
+				.addVariableEdge("@this", nodes.get(0))
+				.addNonterminalEdge(nt)
+				.addTentacle(nodes.get(0))
+				.addTentacle(nodes.get(1))
+				.build()
+				.build();
+	}
 
 	private HeapConfiguration partlyReachableList(int reachableListSize, int unreachableListSize) {
 		TIntArrayList nodes = new TIntArrayList();

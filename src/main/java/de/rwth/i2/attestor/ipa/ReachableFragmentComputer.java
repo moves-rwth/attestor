@@ -16,6 +16,8 @@ public class ReachableFragmentComputer {
 	
 	Queue<Integer> queue;
 	Map<Integer, Integer> idMapping;
+	Set<Integer> visitedNonterminalEdges;
+	
 	HeapConfiguration input;
 	
 
@@ -32,6 +34,7 @@ public class ReachableFragmentComputer {
 		
 		queue = new ArrayDeque<>();
 		idMapping = new HashMap<>();
+		visitedNonterminalEdges = new HashSet<>();
 		this.input = input;
 		
 		findParameterNodes(input, reachableFragmentBuilder, replaceBuilder);
@@ -124,7 +127,11 @@ public class ReachableFragmentComputer {
 		TIntArrayList nonterminalEdges = input.attachedNonterminalEdgesOf(nodeId);
 		for( int i = 0; i < nonterminalEdges.size(); i++ ){
 			int nonterminalEdge = nonterminalEdges.get(i);
+			if( visitedNonterminalEdges.contains(nonterminalEdge)){
+				continue; //each nonterminalEdge should only be considered once.
+			}
 			TIntArrayList attachedNodes = input.attachedNodesOf(nonterminalEdge);
+			TIntArrayList translatedAttachedNodes = new TIntArrayList();
 			for( int n = 0; n < attachedNodes.size(); n++ ){
 				int attachedNode = attachedNodes.get( n );
 				if( ! idOfInsertedNode.containsKey(attachedNode) ){
@@ -132,8 +139,11 @@ public class ReachableFragmentComputer {
 					
 					addNodeToReachableFragment(attachedNode, reachableFragmentBuilder, input, idOfInsertedNode);
 				}
+				translatedAttachedNodes.add(idOfInsertedNode.get(attachedNode));
 			}
+			reachableFragmentBuilder.addNonterminalEdge(input.labelOf(nonterminalEdge), translatedAttachedNodes);
 			replaceBuilder.removeNonterminalEdge( nonterminalEdge );
+			visitedNonterminalEdges.add( nonterminalEdge );
 		}
 	}
 }
