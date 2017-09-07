@@ -54,7 +54,7 @@ public class JsonToStateRefinementStrategies {
             case "visited":
                 return new VisitedStateRefinementStrategy();
             default:
-                if(name.startsWith("visited(") && name.endsWith(")")) {
+                if(name.startsWith("visitedBy(") && name.endsWith(")")) {
                     String varName = name.split("[\\(\\)]")[1];
                     return new VisitedVariableStateRefinementStrategy(varName);
                 } else {
