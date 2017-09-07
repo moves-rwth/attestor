@@ -99,7 +99,17 @@ public class AbstractMethodIPATest {
 		
 		performTest( input, expectedFragment, expectedReplace );
 	}
-
+	
+	@Test
+	public void testPrepareInput_WithExternalsInInput(){
+		int listSize = 3;
+		int externalPosition = 2;
+		HeapConfiguration input = reachableList_ExternalNode( listSize, externalPosition );
+		HeapConfiguration expectedFragment = reachableList_HeadExternal_VarExternal(listSize, externalPosition);
+		HeapConfiguration expectedReplace = twoNodesAttached_SecondExternal();
+		
+		performTest( input, expectedFragment, expectedReplace );
+	}
 
 
 	private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
@@ -203,6 +213,12 @@ public class AbstractMethodIPATest {
 		HeapConfiguration config = reachableListHelper( listSize , nodes);
 		return config.builder().setExternal(nodes.get(0)).setExternal(nodes.get(variablePosition)).build();
 	}
+	
+	private HeapConfiguration reachableList_ExternalNode(int listSize, int externalPosition) {
+		TIntArrayList nodes = new TIntArrayList();
+		HeapConfiguration config = reachableListHelper( listSize , nodes);
+		return config.builder().setExternal(nodes.get(externalPosition)).build();
+	}
 
 	private HeapConfiguration reachableList( int size ) {
 		TIntArrayList nodes = new TIntArrayList();
@@ -249,8 +265,22 @@ public class AbstractMethodIPATest {
 	}
 
 
+	private HeapConfiguration twoNodesAttached_SecondExternal() {
+	TIntArrayList nodes = new TIntArrayList();
+		
+		return twoNodesAttachedHelper( nodes ).builder()
+				.setExternal( nodes.get(1) ).build();
+	}
 
-	private HeapConfiguration twoNodesAttached(String variableName) {
+
+	private HeapConfiguration twoNodesAttached( String variableName ) {
+		TIntArrayList nodes = new TIntArrayList();
+		
+		return twoNodesAttachedHelper( nodes ).builder()
+				.addVariableEdge( variableName, nodes.get(1) ).build();
+	}
+
+	private HeapConfiguration twoNodesAttachedHelper( TIntArrayList nodes) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = Settings.getInstance().factory().getType("someType");
@@ -258,15 +288,15 @@ public class AbstractMethodIPATest {
 		final boolean[] isReductionTentacle = new boolean[rank];
 		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
 
-		TIntArrayList nodes = new TIntArrayList();
+		
 		return hc.builder().addNodes(type, rank, nodes)
-				.addVariableEdge(variableName, nodes.get(1))
 				.addNonterminalEdge(nt)
 				.addTentacle(nodes.get(0))
 				.addTentacle(nodes.get(1))
 				.build()
 				.build();
 	}
+	
 
 
 	private HeapConfiguration singleNodeHeap(String variableName) {

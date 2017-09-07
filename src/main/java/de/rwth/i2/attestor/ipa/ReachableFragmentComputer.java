@@ -66,7 +66,7 @@ public class ReachableFragmentComputer {
 			handleNonterminalEdges(input, reachableFragmentBuilder, replaceBuilder, queue, idMapping, nodeId);		
 			handleSelectorEdges(input, reachableFragmentBuilder, replaceBuilder, queue, idMapping, nodeId);
 			
-			if( ! input.attachedVariablesOf(nodeId).isEmpty() ){
+			if( ! input.attachedVariablesOf(nodeId).isEmpty() || input.isExternalNode(nodeId) ){
 				reachableFragmentBuilder.setExternal( idMapping.get(nodeId ) );
 				externals.add(nodeId);
 			}else{
