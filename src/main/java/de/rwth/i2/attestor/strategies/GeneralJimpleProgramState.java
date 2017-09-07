@@ -28,6 +28,22 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
      */
     private static final Logger logger = LogManager.getLogger( "GeneralJimpleProgramState" );
 
+	/**
+	 * A counter that stores the next value added onto a hash code in order obtain a hash value that is guaranteed
+	 * to be different from all existing ones.
+	 */
+	private static int hashDisambiguationCounter = 1;
+
+	/**
+	 * A magic value that is added on the hash value of this object.
+	 */
+    protected int hashDisambiguationValue = 0;
+
+    @Override
+    public void disambiguateHashCode() {
+		hashDisambiguationValue = hashDisambiguationCounter++;
+	}
+
     /**
      * The heap configuration that determines the shape of the heap and the assignment of
      * program variables underlying this program state.

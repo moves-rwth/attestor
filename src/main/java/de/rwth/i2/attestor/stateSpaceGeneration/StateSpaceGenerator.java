@@ -184,6 +184,10 @@ public class StateSpaceGenerator {
 
 		for(ProgramState m : materialized) {
 
+			// performance optimization that prevents isomorphism checks against states in the state space.
+			// This is achieved by making the hash code of the materialized state different from existing states.
+			m.disambiguateHashCode();
+
 			if(stateSpace.addStateIfAbsent(m)) {
 				unexploredConfigurations.add(m);
 			}
@@ -229,6 +233,13 @@ public class StateSpaceGenerator {
 		// before hitting the top of the state space generation loop again.
 		if(!abortStrategy.isAllowedToContinue(stateSpace)) {
 			return;
+		}
+
+		// performance optimization that prevents isomorphism checks against states in the state space.
+		// This is achieved by making the hash code of the materialized state different from existing states.
+		Semantics semantics = program.getStatement(state.getProgramCounter());
+		if(semantics.hasUniqueSuccessor() || !semantics.permitsCanonicalization()) {
+			state.disambiguateHashCode();
 		}
 
 		if(stateSpace.addStateIfAbsent(state)) {
