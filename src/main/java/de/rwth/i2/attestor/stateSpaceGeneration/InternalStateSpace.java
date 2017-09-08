@@ -15,7 +15,8 @@ public class InternalStateSpace implements StateSpace {
 
     private final static Logger logger = LogManager.getLogger("InternalStateSpace");
 
-    private Map<ProgramState, ProgramState> allStates;
+    private Map<ProgramState, ProgramState> potentialMergeStates;
+    private List<ProgramState> otherStates; // states that are never checked for isomorphism
     private Set<ProgramState> initialStates;
 
     private TIntSet finalStateIds;
@@ -27,20 +28,14 @@ public class InternalStateSpace implements StateSpace {
 
     public InternalStateSpace(int capacity) {
 
-        allStates = new HashMap<>(capacity);
+        potentialMergeStates = new HashMap<>(capacity);
+        otherStates = new ArrayList<>(capacity);
         initialStates = new HashSet<>(100);
         finalStateIds = new TIntHashSet(100);
         materializationSuccessors = new TIntObjectHashMap<>(capacity);
         controlFlowSuccessors = new TIntObjectHashMap<>(capacity);
     }
 
-    @Override
-    public Set<ProgramState> getStates() {
-
-        return allStates.keySet();
-    }
-
-    @Override
     public Set<ProgramState> getInitialStates() {
 
         return Collections.unmodifiableSet(initialStates);
@@ -63,7 +58,15 @@ public class InternalStateSpace implements StateSpace {
             return result;
         }
 
-        for(ProgramState s : allStates.keySet()) {
+        for(ProgramState s : potentialMergeStates.keySet()) {
+            if(filter.test(s.getStateSpaceId())) {
+                result.add(s);
+            }
+            if(result.size() == size) {
+                return result;
+            }
+        }
+        for(ProgramState s : otherStates) {
             if(filter.test(s.getStateSpaceId())) {
                 result.add(s);
             }
@@ -110,20 +113,32 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public boolean addState(ProgramState state) {
+
+        otherStates.add(state);
+        updateAddedState(state);
+        return true;
+    }
+
+    @Override
     public boolean addStateIfAbsent(ProgramState state) {
 
-        ProgramState old = allStates.putIfAbsent(state, state);
+        ProgramState old = potentialMergeStates.putIfAbsent(state, state);
         if(old == null) {
-            state.setStateSpaceId(nextStateId);
-            materializationSuccessors.put(nextStateId, new TIntArrayList());
-            controlFlowSuccessors.put(nextStateId, new TIntArrayList());
-            maximalStateSize = Math.max(maximalStateSize, state.getSize());
-            ++nextStateId;
+            updateAddedState(state);
             return true;
         } else {
             state.setStateSpaceId( old.getStateSpaceId() );
         }
         return false;
+    }
+
+    private void updateAddedState(ProgramState state) {
+        state.setStateSpaceId(nextStateId);
+        materializationSuccessors.put(nextStateId, new TIntArrayList());
+        controlFlowSuccessors.put(nextStateId, new TIntArrayList());
+        maximalStateSize = Math.max(maximalStateSize, state.getSize());
+        ++nextStateId;
     }
 
     @Override
@@ -165,4 +180,117 @@ public class InternalStateSpace implements StateSpace {
 
         return maximalStateSize;
     }
+
+    @Override
+    public Set<ProgramState> getStates() {
+
+        return new Set<ProgramState>() {
+
+            private Iterator<ProgramState> mergerIter = potentialMergeStates.keySet().iterator();
+            private Iterator<ProgramState> otherIter = otherStates.iterator();
+
+            @Override
+            public int size() {
+
+                return potentialMergeStates.size() + otherStates.size();
+            }
+
+            @Override
+            public boolean isEmpty() {
+
+                return potentialMergeStates.isEmpty() && otherStates.isEmpty();
+            }
+
+            @Override
+            public boolean contains(Object o) {
+
+                return potentialMergeStates.containsKey(o)
+                        || otherStates.contains(o);
+            }
+
+            @Override
+            public Iterator<ProgramState> iterator() {
+
+                return new Iterator<ProgramState>() {
+                    @Override
+                    public boolean hasNext() {
+
+                        return mergerIter.hasNext() || otherIter.hasNext();
+                    }
+
+                    @Override
+                    public ProgramState next() {
+
+                        if(mergerIter.hasNext()) {
+                            return mergerIter.next();
+                        }
+                        return otherIter.next();
+                    }
+                };
+            }
+
+            @Deprecated
+            @Override
+            public Object[] toArray() {
+
+                return new Object[0];
+            }
+
+            @Deprecated
+            @Override
+            public <T> T[] toArray(T[] ts) {
+
+                return null;
+            }
+
+            @Deprecated
+            @Override
+            public boolean add(ProgramState programState) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public boolean remove(Object o) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public boolean containsAll(Collection<?> collection) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public boolean addAll(Collection<? extends ProgramState> collection) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public boolean retainAll(Collection<?> collection) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public boolean removeAll(Collection<?> collection) {
+
+                return false;
+            }
+
+            @Deprecated
+            @Override
+            public void clear() {
+
+            }
+        };
+    }
+
 }

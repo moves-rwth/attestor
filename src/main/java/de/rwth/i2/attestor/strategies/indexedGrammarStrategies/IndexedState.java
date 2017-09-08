@@ -43,7 +43,6 @@ public class IndexedState extends GeneralJimpleProgramState {
 		int hash = programCounter;
 		hash = (hash << 1) ^ scopeDepth;
 		hash = (hash << 1) ^ heap.hashCode();
-		hash = (hash << 16) + hashDisambiguationValue;
 		return hash;
 	}
 	

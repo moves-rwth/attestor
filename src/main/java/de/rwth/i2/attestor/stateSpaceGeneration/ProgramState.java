@@ -75,11 +75,4 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 * @return A shallow copy of this program state with the given program counter.
 	 */
 	ProgramState shallowCopyUpdatePC(int newPC);
-
-	/**
-	 * Ensures that the hashCode of this object is different from hash codes of existing ProgramState instances.
-	 * This method is purely for optimization in large hash tables where expensive equals() calls should be avoided
-	 * for certain ProgramState objects.
-	 */
-	void disambiguateHashCode();
 }

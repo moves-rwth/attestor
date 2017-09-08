@@ -11,6 +11,7 @@ public interface StateSpace {
     Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state);
     Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state);
 
+    boolean addState(ProgramState state);
     boolean addStateIfAbsent(ProgramState state);
     void addInitialState(ProgramState state);
     void setFinal(ProgramState state);
