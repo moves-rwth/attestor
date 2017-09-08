@@ -184,6 +184,10 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getStates() {
 
+        // This creates a combined view on both data structures storing
+        // states without creating a new set first.
+        // Note that the returned set cannot be modified without copying it
+        // into a modifiable collection first.
         return new Set<ProgramState>() {
 
             private Iterator<ProgramState> mergerIter = potentialMergeStates.keySet().iterator();
