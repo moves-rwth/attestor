@@ -190,8 +190,6 @@ public class InternalStateSpace implements StateSpace {
         // into a modifiable collection first.
         return new Set<ProgramState>() {
 
-            private Iterator<ProgramState> mergerIter = potentialMergeStates.keySet().iterator();
-            private Iterator<ProgramState> otherIter = otherStates.iterator();
 
             @Override
             public int size() {
@@ -214,6 +212,9 @@ public class InternalStateSpace implements StateSpace {
 
             @Override
             public Iterator<ProgramState> iterator() {
+
+                Iterator<ProgramState> mergerIter = potentialMergeStates.keySet().iterator();
+                Iterator<ProgramState> otherIter = otherStates.iterator();
 
                 return new Iterator<ProgramState>() {
                     @Override
