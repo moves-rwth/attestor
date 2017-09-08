@@ -2,7 +2,7 @@
 <Configuration status="ERROR">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%-6r [%highlight{%level}{STYLE=Logback}] %msg%n"/>
+            <PatternLayout pattern="[%highlight{%level}{STYLE=Logback}] %msg%n"/>
     </Console>
   </Appenders>
   <Loggers>

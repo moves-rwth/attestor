@@ -129,10 +129,21 @@ public class Attestor {
 	 */
 	private StateSpace stateSpace;
 
+	private List<String> ltlFormulas = new ArrayList<>();
+	private List<String> ltlFormulaResults = new ArrayList<>();
+
     /**
 	 * A parser for command line arguments.
 	 */
 	private final CommandLineReader commandLineReader = new CommandLineReader();
+
+	private long startupTime;
+	private long setupTime;
+	private long parsingTime;
+	private long preprocessingTime;
+	private long stateSpaceGenerationTime;
+	private long modelCheckingTime;
+	private long reportGenerationTime;
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -145,6 +156,8 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
+		startupTime = System.nanoTime();
+
 		printVersion();
 
 	    try {
@@ -153,6 +166,7 @@ public class Attestor {
 	    	failPhase(e, "Setup");
 		}
         leavePhase("Setup");
+		setupTime = System.nanoTime();
 
 	    try {
 			parsingPhase();
@@ -160,6 +174,7 @@ public class Attestor {
 	    	failPhase(e,"Parsing");
 		}
         leavePhase("Parsing");
+		parsingTime = System.nanoTime();
 
 	    try {
 			preprocessingPhase();
@@ -167,6 +182,7 @@ public class Attestor {
 	    	failPhase(e,"Preprocessing");
 		}
         leavePhase("Preprocessing");
+		preprocessingTime = System.nanoTime();
 
         try {
 			stateSpaceGenerationPhase();
@@ -174,6 +190,7 @@ public class Attestor {
         	failPhase(e,"State space generation");
 		}
         leavePhase("State space generation");
+		stateSpaceGenerationTime = System.nanoTime();
 
         try {
         	modelCheckingPhase();
@@ -181,6 +198,7 @@ public class Attestor {
         	failPhase(e,"Model-checking");
 		}
         leavePhase("Model-checking");
+		modelCheckingTime = System.nanoTime();
 
         try {
         	reportPhase();
@@ -188,6 +206,7 @@ public class Attestor {
         	failPhase(e,"Report generation");
 		}
         leavePhase("Report generation");
+		reportGenerationTime = System.nanoTime();
 
 		printSummary();
 	}
@@ -560,12 +579,15 @@ public class Attestor {
 
 	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
 
+	    	ltlFormulas.add(formula.toString());
 	        logger.info("Checking formula: " + formula.toString() + "...");
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
+            	ltlFormulaResults.add(ANSI_GREEN + "satisfied" + ANSI_RESET);
                 logger.info("Formula is satisfied.");
             } else {
+				ltlFormulaResults.add(ANSI_RED + "violated" + ANSI_RESET);
                 logger.warn("Formula is not satisfied.");
             }
         }
@@ -672,14 +694,37 @@ public class Attestor {
 
 	private void printSummary() {
 
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info("|           |  w/ procedure calls  |  w/o procedure calls  | final  |");
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
-                Settings.getInstance().factory().getTotalNumberOfStates(),
-                stateSpace.getStates().size(),
-                stateSpace.getFinalStates().size()
-        ));
-        logger.info("+-----------+----------------------+-----------------------+--------+");
+		double elapsedSetup = (setupTime - startupTime) / 1e9;
+		double elapsedParsing = (parsingTime - setupTime) / 1e9;
+		double elapsedPreprocessing = (preprocessingTime - parsingTime) / 1e9;
+		double elapsedStateSpaceGeneration = (stateSpaceGenerationTime - preprocessingTime) / 1e9;
+		double elapsedModelChecking = (modelCheckingTime - stateSpaceGenerationTime) / 1e9;
+		double elapsedReportGeneration = (reportGenerationTime - modelCheckingTime) / 1e9;
+		double elapsedTotal = (reportGenerationTime - startupTime) / 1e9;
+
+		logger.info("Summary");
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| Setup                            | %28.3f s |", elapsedSetup));
+		logger.info(String.format("| Parser                           | %28.3f s |", elapsedParsing));
+		logger.info(String.format("| Preprocessing                    | %28.3f s |", elapsedPreprocessing));
+		logger.info(String.format("| State space generation           | %28.3f s |", elapsedStateSpaceGeneration));
+		logger.info(String.format("| Model checking                   | %28.3f s |", elapsedModelChecking));
+		logger.info(String.format("| Report generation                | %28.3f s |", elapsedReportGeneration));
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| # states w/ procedure calls      | %30d |",
+				Settings.getInstance().factory().getTotalNumberOfStates()));
+		logger.info(String.format("| # states w/o procedure calls     | %30d |",
+        		stateSpace.getStates().size()));
+		logger.info(String.format("| # final states                   | %30d |",
+				stateSpace.getFinalStates().size()));
+        logger.info("+-----------+----------------------+--------------------------------+");
+        if(!ltlFormulas.isEmpty()) {
+        	for(int i=0; i < ltlFormulas.size(); i++) {
+				logger.info(String.format("| %18s | %s", ltlFormulaResults.get(i), ltlFormulas.get(i)));
+			}
+			logger.info("+-----------+-------------------------------------------------------+");
+		}
     }
 }
