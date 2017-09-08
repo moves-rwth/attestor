@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.refinement.JsonToStateLabelingStrategies;
-import de.rwth.i2.attestor.refinement.JsonToStateRefinementStrategies;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -176,22 +174,6 @@ public class SettingsFileReader {
 
 		if( jsonOptions.has( "removeDeadVariables" ) ){
 			options.setRemoveDeadVariables( jsonOptions.getBoolean( "removeDeadVariables" ) );
-		}
-
-		if( jsonOptions.has("stateLabeling") ) {
-            JSONArray stateLabelingSettings = jsonOptions.getJSONArray("stateLabeling");
-			JsonToStateLabelingStrategies parser = new JsonToStateLabelingStrategies(stateLabelingSettings);
-			settings.stateSpaceGeneration().setStateLabelingStrategy(parser.getStateLabelingStrategy());
-			options.setRefinementAutomaton(parser.getHeapAutomaton());
-        }
-
-
-        if( jsonOptions.has("stateRefinement") ) {
-            JSONArray stateRefinementSettings = jsonOptions.getJSONArray("stateRefinement");
-			JsonToStateRefinementStrategies parser = new JsonToStateRefinementStrategies(stateRefinementSettings);
-			settings.stateSpaceGeneration().setStateRefinementStrategy(parser.getStateRefinementStrategy());
-        } else {
-			settings.stateSpaceGeneration().setStateRefinementStrategy( s -> s );
 		}
 
         if( jsonOptions.has("aggressiveNullAbstraction") ){

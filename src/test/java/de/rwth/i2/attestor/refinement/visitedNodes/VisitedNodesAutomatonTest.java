@@ -108,7 +108,7 @@ public class VisitedNodesAutomatonTest {
         visitedExternals.set(1);
         visitedExternals.set(2);
 
-        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED);
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED, "visited");
         List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);
@@ -121,7 +121,7 @@ public class VisitedNodesAutomatonTest {
         assertEquals(true, state.hasVisitedExternal(2));
         assertEquals(AP_VISITED, state.toAtomicPropositions());
 
-        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY);
+        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY, "visited");
         statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);
@@ -159,7 +159,7 @@ public class VisitedNodesAutomatonTest {
         BitSet visitedExternals = new BitSet(3);
         visitedExternals.set(1);
 
-        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED);
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_VISITED, "visited");
         List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);
@@ -194,7 +194,7 @@ public class VisitedNodesAutomatonTest {
                 .build();
 
         BitSet visitedExternals = new BitSet(3);
-        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_NOT_VISITED);
+        VisitedNodesAutomatonState ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.ALL_NOT_VISITED, "visted");
         List<HeapAutomatonState> statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);
@@ -207,7 +207,7 @@ public class VisitedNodesAutomatonTest {
         assertEquals(false, state.hasVisitedExternal(2));
         assertEquals(AP_NOT_VISITED, state.toAtomicPropositions());
 
-        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY);
+        ntState = new VisitedNodesAutomatonState(3, visitedExternals, VisitedStatus.EMPTY, "visited");
         statesOfNonterminals = new ArrayList<>(2);
         statesOfNonterminals.add(ntState);
         statesOfNonterminals.add(ntState);

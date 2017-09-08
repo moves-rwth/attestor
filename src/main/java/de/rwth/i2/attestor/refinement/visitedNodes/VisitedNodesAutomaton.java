@@ -25,6 +25,17 @@ enum VisitedStatus {
 
 public final class VisitedNodesAutomaton implements HeapAutomaton {
 
+    final String atomicPropositionName;
+
+    public VisitedNodesAutomaton() {
+
+        atomicPropositionName = "visited";
+    }
+
+    public VisitedNodesAutomaton(String atomicPropositionsName) {
+
+        this.atomicPropositionName = atomicPropositionsName;
+    }
 
     @Override
     public VisitedNodesAutomatonState transition(HeapConfiguration heapConfiguration,
@@ -56,7 +67,7 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
         }
 
         return new VisitedNodesAutomatonState(heapConfiguration.countExternalNodes(),
-                externalNodesVisited, internalNodesStatus);
+                externalNodesVisited, internalNodesStatus, atomicPropositionName);
     }
 
     private VisitedStatus checkNonterminals(HeapConfiguration heapConfiguration,
@@ -161,20 +172,21 @@ public final class VisitedNodesAutomaton implements HeapAutomaton {
 
 final class VisitedNodesAutomatonState extends HeapAutomatonState {
 
-    private static final Set<String> AP_VISITED = Collections.singleton("visited");
     private static final Set<String> AP_DEFAULT = Collections.emptySet();
 
-    static final VisitedNodesAutomatonState ERROR_STATE = new VisitedNodesAutomatonState(0,null, ERROR);
+    static final VisitedNodesAutomatonState ERROR_STATE = new VisitedNodesAutomatonState(0,null, ERROR, "");
 
+    private final String AP_VISITED;
     private final int rank;
     private final BitSet visitedExternals;
     private VisitedStatus visitedInternals;
 
-    VisitedNodesAutomatonState(int rank, BitSet visitedExternals, VisitedStatus visitedInternals) {
+    VisitedNodesAutomatonState(int rank, BitSet visitedExternals, VisitedStatus visitedInternals, String AP_VISITED) {
 
         this.rank = rank;
         this.visitedExternals = visitedExternals;
         this.visitedInternals = visitedInternals;
+        this.AP_VISITED = AP_VISITED;
     }
 
     @Override
@@ -204,7 +216,7 @@ final class VisitedNodesAutomatonState extends HeapAutomatonState {
     public Set<String> toAtomicPropositions() {
 
         if((visitedInternals == ALL_VISITED || visitedInternals == EMPTY) && allExternalsVisited()) {
-            return AP_VISITED;
+            return Collections.singleton(AP_VISITED);
         }
         return AP_DEFAULT;
     }

@@ -30,6 +30,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.RefinementParser;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
@@ -352,6 +353,8 @@ public class Attestor {
 
 	private void preprocessingPhase() {
 
+		determineRequiredRefinements();
+
         if(!settings.options().isIndexedMode()) {
             setupStateLabeling();
         } else {
@@ -363,6 +366,21 @@ public class Attestor {
         setupMaterialization();
 		setupCanonicalization();
 		setupAbortTest();
+	}
+
+	private void determineRequiredRefinements() {
+
+		HashSet<String> requiredAPs = new HashSet<>();
+		for(LTLFormula formula : settings.modelChecking().getFormulae()) {
+			requiredAPs.addAll(formula.getApList());
+		}
+
+		logger.info("Setup refinements for " + requiredAPs.size() + " atomic proposition(s).");
+
+		RefinementParser refinementParser = new RefinementParser(requiredAPs);
+		settings.options().setRefinementAutomaton(refinementParser.getRefinementAutomaton());
+		settings.stateSpaceGeneration().setStateRefinementStrategy(refinementParser.getStateRefinementStrategy());
+		settings.stateSpaceGeneration().setStateLabelingStrategy(refinementParser.getStateLabelingStrategy());
 	}
 
 	private void setupStateLabeling() {
@@ -384,7 +402,6 @@ public class Attestor {
 
         logger.info("done. Number of refined nonterminals: "
                 + settings.grammar().getGrammar().getAllLeftHandSides().size());
-        logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
 
         logger.info("Refining input heap configuration...");
 
