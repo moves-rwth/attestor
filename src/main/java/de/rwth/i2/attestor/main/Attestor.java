@@ -31,6 +31,7 @@ import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.RefinementParser;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
@@ -379,6 +380,7 @@ public class Attestor {
         } else {
             inputs.add(originalInput);
             settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
+            settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
             logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
         }
 
