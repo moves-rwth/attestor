@@ -621,7 +621,6 @@ public class Attestor {
 
 		    exportStateSpace(
                     location + File.separator + "data",
-                    "statespace.json",
                     stateSpace,
                     program
             );
@@ -679,12 +678,12 @@ public class Attestor {
         writer.close();
     }
 
-    private void exportStateSpace(String directory, String filename, StateSpace stateSpace, Program program)
+    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
             throws IOException {
 
         FileUtils.createDirectories(directory);
         Writer writer = new BufferedWriter(
-                new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
+                new OutputStreamWriter( new FileOutputStream(directory + File.separator + "statespace.json") )
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
         exporter.export(stateSpace, program);
