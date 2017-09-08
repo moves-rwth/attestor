@@ -298,7 +298,7 @@ public class Attestor {
 	}
 
 	private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
-		HashMap<String, String> rename = new HashMap<String, String>();
+		HashMap<String, String> rename = new HashMap<>();
 		// Read in the type and field name mapping
 		try {
 			BufferedReader br = new BufferedReader(new java.io.FileReader( locationOfRenamingMap ));
@@ -548,10 +548,9 @@ public class Attestor {
 		final int abstractionDifference = settings.options().getAbstractionDistance();
 		final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
 		final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference ,
-																				aggressiveAbstractionThreshold, 
-																				aggressiveReturnAbstraction);
-		return checkerProvider;
+		return new EmbeddingCheckerProvider(abstractionDifference ,
+				aggressiveAbstractionThreshold,
+				aggressiveReturnAbstraction);
 	}
 
     private void setupAbortTest() {
