@@ -71,6 +71,7 @@ public final class BasicNonterminal implements Nonterminal {
 			existingNonterminals.put( label, res );
 		}else{
 			res = existingNonterminals.get( label );
+			/*
 			if( res.getRank() != rank ){
 				logger.warn( label + ": rank of stored nonterminal does not match. got: " + res.getRank() + " request: " + rank );
 			}
@@ -79,7 +80,7 @@ public final class BasicNonterminal implements Nonterminal {
 					logger.warn( label +  ": " + i + "th  reduction tentacle of stored nonterminal does not match. got: " + res.isReductionTentacle[i] + " request: " + isReductionTentacle[i] );
 				}
 			}
-			
+			*/
 		}
 		
 		return res;

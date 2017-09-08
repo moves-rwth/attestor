@@ -156,7 +156,7 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
-		startupTime = System.nanoTime();
+        startupTime = System.nanoTime();
 
 		printVersion();
 
