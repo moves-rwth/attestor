@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -186,7 +184,7 @@ public class StateSpaceGenerator {
 
 			// performance optimization that prevents isomorphism checks against states in the state space.
 			// This is achieved by making the hash code of the materialized state different from existing states.
-			stateSpace.addState(m);
+			stateSpace.addState(m); 
 			unexploredConfigurations.add(m);
 			stateSpace.addMaterializationTransition(state, m);
 		}
@@ -235,7 +233,7 @@ public class StateSpaceGenerator {
 		// performance optimization that prevents isomorphism checks against states in the state space.
 		// This is achieved by making the hash code of the materialized state different from existing states.
 		Semantics semantics = program.getStatement(state.getProgramCounter());
-		if(semantics.hasUniqueSuccessor() || !semantics.permitsCanonicalization()) {
+		if( ! semantics.permitsCanonicalization()) { 
 			stateSpace.addState(state);
 			unexploredConfigurations.add(state);
 		} else if(stateSpace.addStateIfAbsent(state)) {
