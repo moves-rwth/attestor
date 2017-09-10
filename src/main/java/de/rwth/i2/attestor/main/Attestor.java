@@ -212,6 +212,18 @@ public class Attestor {
 		printSummary();
 	}
 
+	public long getTotalNumberOfStates() {
+		return settings.factory().getTotalNumberOfStates();
+	}
+
+	public int getNumberOfStatesWithoutProcedureCalls() {
+		return stateSpace.getStates().size();
+	}
+
+	public int getNumberOfFinalStates() {
+		return stateSpace.getFinalStates().size();
+	}
+
     /**
      * Prints the currently running version of attestor.
      */
@@ -702,7 +714,12 @@ public class Attestor {
 		double elapsedReportGeneration = (reportGenerationTime - modelCheckingTime) / 1e9;
 		double elapsedTotal = (reportGenerationTime - startupTime) / 1e9;
 
-		logger.info("Summary");
+		logger.info("Summary for '"
+				+ settings.input().getClassName()
+				+ "."
+				+ settings.input().getMethodName()
+				+ "':"
+		);
 		logger.info("+----------------------------------+--------------------------------+");
 		logger.info(String.format("| Setup                            | %28.3f s |", elapsedSetup));
 		logger.info(String.format("| Parser                           | %28.3f s |", elapsedParsing));
@@ -714,11 +731,11 @@ public class Attestor {
 		logger.info(String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
 		logger.info("+----------------------------------+--------------------------------+");
 		logger.info(String.format("| # states w/ procedure calls      | %30d |",
-				Settings.getInstance().factory().getTotalNumberOfStates()));
+					getTotalNumberOfStates()));
 		logger.info(String.format("| # states w/o procedure calls     | %30d |",
-        		stateSpace.getStates().size()));
+        			getNumberOfStatesWithoutProcedureCalls()));
 		logger.info(String.format("| # final states                   | %30d |",
-				stateSpace.getFinalStates().size()));
+        			getNumberOfFinalStates()));
         logger.info("+-----------+----------------------+--------------------------------+");
         if(!ltlFormulas.isEmpty()) {
         	for(int i=0; i < ltlFormulas.size(); i++) {
