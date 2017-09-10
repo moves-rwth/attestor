@@ -7,10 +7,13 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import org.json.JSONWriter;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+
+import org.json.JSONWriter;
+
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * Exports a state space to a JSON file.
@@ -108,7 +111,9 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 jsonWriter.value(ap);
             }
             jsonWriter.endArray();
-            jsonWriter.key("statement").value(program.getStatement(s.getProgramCounter()).toString());
+            final int pc = s.getProgramCounter();
+            final String statement = program.getStatement( pc ).toString();
+			jsonWriter.key("statement").value("("+pc+")"+statement);
             jsonWriter.key("essential");
             boolean essential = !incomingEdgesOfStates.containsKey(i)
                     || incomingEdgesOfStates.get(i) != 1
