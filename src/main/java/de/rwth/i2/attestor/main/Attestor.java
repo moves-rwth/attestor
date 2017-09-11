@@ -608,6 +608,10 @@ public class Attestor {
 
 	private void reportPhase() throws IOException {
 
+		if(settings.options().isNoExport()) {
+			return;
+		}
+
 	    if(settings.output().isExportGrammar() ){
 	        String location = settings.output().getLocationForGrammar();
 

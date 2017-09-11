@@ -66,6 +66,11 @@ public class OptionSettings {
 	private HeapAutomaton refinementAutomaton = null;
 
 	/**
+	 * If true, no export happens.
+	 */
+	private boolean noExport = false;
+
+	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
 	 */
 	public int getMaxStateSpaceSize() {
@@ -203,5 +208,19 @@ public class OptionSettings {
 	public HeapAutomaton getRefinementAutomaton() {
 
 		return refinementAutomaton;
+	}
+
+	/**
+	 * @return True if and only if no export should be performed.
+	 */
+	public boolean isNoExport() {
+		return noExport;
+	}
+
+	/**
+	 * @param enabled True if no export should be performed.
+	 */
+	public void setNoExport(boolean enabled) {
+		noExport = enabled;
 	}
 }
