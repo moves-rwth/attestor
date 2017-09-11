@@ -2,6 +2,10 @@ package de.rwth.i2.attestor.io.jsonExport;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -24,8 +28,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     private Set<ProgramState> initialStates;
     private Set<ProgramState> finalStates;
 
-    private Map<ProgramState, Integer> incomingEdges = new HashMap<>();
-    private Set<ProgramState> isEssentialState = new HashSet<>();
+    private TIntIntMap incomingEdgesOfStates;
+    private TIntSet isEssentialStateId;
 
     public JsonStateSpaceExporter(Writer writer) {
 
@@ -42,6 +46,10 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         states = stateSpace.getStates();
         initialStates = stateSpace.getInitialStates();
         finalStates = stateSpace.getFinalStates();
+
+        incomingEdgesOfStates = new TIntIntHashMap(states.size());
+        isEssentialStateId = new TIntHashSet(states.size());
+
         computeNumberOfIncomingEdges();
 
         jsonWriter.object()
@@ -61,17 +69,19 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
 
         for(ProgramState s : states) {
             for(ProgramState succ : stateSpace.getControlFlowSuccessorsOf(s)) {
-                if(incomingEdges.containsKey(succ)) {
-                    incomingEdges.put(succ, incomingEdges.get(succ) + 1);
+                int succId = succ.getStateSpaceId();
+                if(incomingEdgesOfStates.containsKey(succId)) {
+                    incomingEdgesOfStates.put(succId, incomingEdgesOfStates.get(succId) + 1);
                 } else {
-                    incomingEdges.put(succ, 1);
+                    incomingEdgesOfStates.put(succId, 1);
                 }
             }
             for(ProgramState succ : stateSpace.getMaterializationSuccessorsOf(s)) {
-                if(incomingEdges.containsKey(succ)) {
-                    incomingEdges.put(succ, incomingEdges.get(succ) + 1);
+                int succId = succ.getStateSpaceId();
+                if(incomingEdgesOfStates.containsKey(succId)) {
+                    incomingEdgesOfStates.put(succId, incomingEdgesOfStates.get(succId) + 1);
                 } else {
-                    incomingEdges.put(succ, 1);
+                    incomingEdgesOfStates.put(succId, 1);
                 }
             }
         }
@@ -88,7 +98,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 jsonWriter.value("initialState");
             } else if(finalStates.contains(s)) {
                 jsonWriter.value("finalState");
-            } else if(incomingEdges.containsKey(s) && incomingEdges.get(s) > 1) {
+            } else if(incomingEdgesOfStates.containsKey(i) && incomingEdgesOfStates.get(i) > 1) {
                 jsonWriter.value("mergeState");
             } else {
                 jsonWriter.value("state");
@@ -100,12 +110,12 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             jsonWriter.endArray();
             jsonWriter.key("statement").value(program.getStatement(s.getProgramCounter()).toString());
             jsonWriter.key("essential");
-            boolean essential = !incomingEdges.containsKey(s)
-                    || incomingEdges.get(s) != 1
+            boolean essential = !incomingEdgesOfStates.containsKey(i)
+                    || incomingEdgesOfStates.get(i) != 1
                     || (stateSpace.getMaterializationSuccessorsOf(s).size()
                         + stateSpace.getControlFlowSuccessorsOf(s).size()) != 1;
             if(essential) {
-                isEssentialState.add(s);
+                isEssentialStateId.add(i);
             }
             jsonWriter.value(essential);
             jsonWriter.key("size").value(s.getHeap().countNodes());
@@ -149,8 +159,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     private void addTransitiveEdges() {
 
         for(ProgramState s : stateSpace.getStates()) {
-            if(isEssentialState.contains(s)) {
-                int source = s.getStateSpaceId();
+            int source = s.getStateSpaceId();
+            if(isEssentialStateId.contains(source)) {
                 for(ProgramState succ : computeEssentialSuccessors(s)) {
                     int target = succ.getStateSpaceId();
                     jsonWriter.object().key("data").object()
@@ -168,14 +178,16 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
 
         List<ProgramState> reachableEssentials = new ArrayList<>();
         for(ProgramState succ : stateSpace.getControlFlowSuccessorsOf(state)) {
-            if(isEssentialState.contains(succ)) {
+            int succId = succ.getStateSpaceId();
+            if(isEssentialStateId.contains(succId)) {
                 reachableEssentials.add(succ);
             } else {
                 reachableEssentials.addAll( computeEssentialSuccessors(succ)  );
             }
         }
         for(ProgramState succ : stateSpace.getMaterializationSuccessorsOf(state)) {
-            if(isEssentialState.contains(succ)) {
+            int succId = succ.getStateSpaceId();
+            if(isEssentialStateId.contains(succId)) {
                 reachableEssentials.add(succ);
             } else {
                 reachableEssentials.addAll( computeEssentialSuccessors(succ)  );
