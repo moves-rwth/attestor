@@ -1,9 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -45,14 +43,14 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
 
-				boolean isNull = aggressiveNullAbstraction
-						|| label.endsWith("null")
+				boolean isNull = aggressiveNullAbstraction && (
+						   label.endsWith("null")
 						|| label.endsWith("1")
 						|| label.endsWith("0")
 						|| label.endsWith("-1")
 						|| label.endsWith("false")
 						|| label.endsWith("true")
-						;
+						);
 
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				
@@ -65,7 +63,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 							&& dist.get(state.getPattern().getMatch(i)) < minAbstractionDistance
 							) {
 						
-						if (isNull || pattern.getSuccessorsOf(i).size() > 0) {							
+						if ( ! isNull && pattern.getSuccessorsOf(i).size() > 0) {							
 							
 							return false;
 						}
