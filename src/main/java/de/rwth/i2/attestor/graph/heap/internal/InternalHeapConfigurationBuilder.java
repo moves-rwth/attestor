@@ -74,6 +74,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
                 return value;
             }
         });
+
+		// TODO does this solve the problem?
+		heapConf.publicToPrivateIDs.retainEntries( (key,value) -> heapConf.graph.containsNode(value));
 	}
 
 	@Override
