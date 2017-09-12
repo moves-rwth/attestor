@@ -21,7 +21,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	/**
 	 * The HeapConfiguration that is manipulated by this InternalHeapConfigurationBuilder.
 	 */
-	protected InternalHeapConfiguration heapConf;
+	private InternalHeapConfiguration heapConf;
 	
 	/**
 	 * Creates a new InternalHeapConfigurationBuilder for the provided InternalHeapConfiguration.
@@ -115,7 +115,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	/**
 	 * @return The next private ID available in the graph.
 	 */
-	protected int getNextPrivateId() {
+	private int getNextPrivateId() {
 		
 		return heapConf.graph.size();
 	}
@@ -169,7 +169,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * @param publicId the public ID 
 	 * @return the private ID corresponding to publicId if it exists.
 	 */
-	protected int getPrivateId(int publicId) {
+	private int getPrivateId(int publicId) {
 		
 		return heapConf.getPrivateId(publicId);
 	}
@@ -207,7 +207,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * @param privateId A privateId belonging to the underlyin InternalHeapConfiguration.
 	 * @return True if and only if the provided private ID corresponds to a node.
 	 */
-	protected boolean isNode(int privateId) {
+	private boolean isNode(int privateId) {
 		
 		return heapConf.isNode(privateId);
 	}
