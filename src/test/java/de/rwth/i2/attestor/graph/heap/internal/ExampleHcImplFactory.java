@@ -1421,57 +1421,75 @@ public final class ExampleHcImplFactory {
 	}
 
 	public static HeapConfiguration getInput_AbstractionDistance() {
-		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(abstractIndexSymbol);
-		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("AbstractionDistance", 2, new boolean[]{false, false}, index);
-	
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("sel");
+		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
+		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
 		
 		return result.builder()
-				.addNodes(type, 4, nodes)
-				.addSelector( nodes.get(1), sel, nodes.get(0) )
-				.addSelector( nodes.get(2), sel, nodes.get(1) )
-				.addSelector(nodes.get(3), sel, nodes.get(2) )
-				.addNonterminalEdge(nt)
+				.addNodes(type, 9, nodes)
+				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge("0-x", nodes.get(3))
+				.addSelector(nodes.get(3), left, nodes.get(1))
+				.addSelector(nodes.get(3), right, nodes.get(2))
+				.addSelector(nodes.get(4), left, nodes.get(3))
+				.addSelector(nodes.get(4), right, nodes.get(0))
+				.addNonterminalEdge(tree)
+					.addTentacle(nodes.get(1))
+					.addTentacle(nodes.get(0))
+					.build()
+				.addNonterminalEdge(tree)
 					.addTentacle(nodes.get(2))
 					.addTentacle(nodes.get(0))
 					.build()
-				.addNonterminalEdge(nt)
-					.addTentacle( nodes.get(3) )
-					.addTentacle( nodes.get(0) )
+				.addNonterminalEdge(path)
+					.addTentacle(nodes.get(4))
+					.addTentacle(nodes.get(5))
+					.addTentacle(nodes.get(0))
 					.build()
-				.addVariableEdge("x", nodes.get(1) )
+				.addNonterminalEdge(path)
+					.addTentacle(nodes.get(5))
+					.addTentacle(nodes.get(6))
+					.addTentacle(nodes.get(0))
+					.build()
+				.addNonterminalEdge(path)
+					.addTentacle(nodes.get(6))
+					.addTentacle(nodes.get(7))
+					.addTentacle(nodes.get(0))
+					.build()
 				.build();
+				
 	}
 
 	public static HeapConfiguration getPattern_AbstractionDistance() {
-		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(abstractIndexSymbol);
-		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = Settings.getInstance().factory().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("AbstractionDistance", 2, new boolean[]{false, false}, index);
-	
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("sel");
+		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
 		
+
 		return result.builder()
-				.addNodes(type, 3, nodes)
-				.setExternal(nodes.get(0))
-				.setExternal(nodes.get(1))
-				.addSelector( nodes.get(2), sel, nodes.get(1) )
-				.addNonterminalEdge(nt)
-					.addTentacle(nodes.get(2))
-					.addTentacle(nodes.get(0))
-					.build()
-				.build();
+			.addNodes(type, 4, nodes)
+			.setExternal(nodes.get(3))
+			.setExternal(nodes.get(1))
+			.setExternal(nodes.get(0))
+			.addNonterminalEdge(path)
+				.addTentacle(nodes.get(3))
+				.addTentacle(nodes.get(2))
+				.addTentacle(nodes.get(0))
+				.build()
+			.addNonterminalEdge(path)
+				.addTentacle(nodes.get(2))
+				.addTentacle(nodes.get(1))
+				.addTentacle(nodes.get(0))
+				.build()
+			.build();
+				
 	}
 }
