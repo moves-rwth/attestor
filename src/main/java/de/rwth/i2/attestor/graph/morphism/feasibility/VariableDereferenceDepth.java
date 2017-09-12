@@ -45,9 +45,15 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
 
-				boolean isNull = aggressiveNullAbstraction || label.contains("null");
+				boolean isNull = aggressiveNullAbstraction
+						|| label.endsWith("null")
+						|| label.endsWith("1")
+						|| label.endsWith("0")
+						|| label.endsWith("-1")
+						|| label.endsWith("false")
+						|| label.endsWith("true")
+						;
 
-				
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				
 				TIntArrayList dist = SelectorDistanceHelper.getSelectorDistances(graph, attachedNode);
