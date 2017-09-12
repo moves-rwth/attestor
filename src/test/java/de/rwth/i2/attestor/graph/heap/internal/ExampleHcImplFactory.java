@@ -4,8 +4,7 @@ package de.rwth.i2.attestor.graph.heap.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
@@ -1418,6 +1417,61 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(type, 1, nodes)
 				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0)}))
+				.build();
+	}
+
+	public static HeapConfiguration getInput_AbstractionDistance() {
+		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(abstractIndexSymbol);
+		
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		IndexedNonterminal nt = new IndexedNonterminalImpl("AbstractionDistance", 2, new boolean[]{false, false}, index);
+	
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("sel");
+		
+		return result.builder()
+				.addNodes(type, 4, nodes)
+				.addSelector( nodes.get(1), sel, nodes.get(0) )
+				.addSelector( nodes.get(2), sel, nodes.get(1) )
+				.addSelector(nodes.get(3), sel, nodes.get(2) )
+				.addNonterminalEdge(nt)
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(0))
+					.build()
+				.addNonterminalEdge(nt)
+					.addTentacle( nodes.get(3) )
+					.addTentacle( nodes.get(0) )
+					.build()
+				.addVariableEdge("x", nodes.get(1) )
+				.build();
+	}
+
+	public static HeapConfiguration getPattern_AbstractionDistance() {
+		IndexSymbol abstractIndexSymbol = AbstractIndexSymbol.get("X");
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add(abstractIndexSymbol);
+		
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		IndexedNonterminal nt = new IndexedNonterminalImpl("AbstractionDistance", 2, new boolean[]{false, false}, index);
+	
+		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("sel");
+		
+		return result.builder()
+				.addNodes(type, 3, nodes)
+				.setExternal(nodes.get(0))
+				.setExternal(nodes.get(1))
+				.addSelector( nodes.get(2), sel, nodes.get(1) )
+				.addNonterminalEdge(nt)
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(0))
+					.build()
 				.build();
 	}
 }

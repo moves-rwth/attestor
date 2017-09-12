@@ -10,6 +10,8 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
+import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.main.settings.Settings;
 
 public class EmbeddingTest {
 
@@ -138,6 +140,18 @@ public class EmbeddingTest {
 		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
 		checker.run( (Graph) oneIndex, (Graph) otherIndex);
 		assertTrue(checker.hasMorphism());
+	}
+	
+	@Test
+	public void testAbstractionDistance(){
+		Settings.getInstance().options().setAggressiveNullAbstraction(true);
+		
+		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_AbstractionDistance();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_AbstractionDistance();
+		
+		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+		assertTrue( checker.hasMorphism() );
 	}
 	
 	
