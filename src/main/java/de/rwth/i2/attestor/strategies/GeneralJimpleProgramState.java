@@ -129,7 +129,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
      */
     public String toString() {
 
-        return "pc: " + String.valueOf(programCounter) + "\nscope: " + String.valueOf(scopeDepth) + "\n" + heap;
+        return "ssid: " + String.valueOf(stateSpaceId) + "\npc: " + String.valueOf(programCounter) + "\nscope: " + String.valueOf(scopeDepth) + "\n" + heap;
     }
 
     /**
