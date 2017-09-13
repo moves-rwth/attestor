@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.graph.morphism;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.*;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,7 +13,10 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.io.CustomHcListExporter;
+import de.rwth.i2.attestor.io.jsonExport.JsonCustomHcListExporter;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.util.ZipUtils;
 
 public class EmbeddingTest {
 
@@ -164,6 +169,38 @@ public class EmbeddingTest {
 		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
 		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
 		assertFalse( checker.hasMorphism() );
+	}
+	
+	@Test
+	public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding() throws IOException{
+final Settings settings = Settings.getInstance();
+settings.options().setAggressiveNullAbstraction(true);
+		
+		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
+		
+		settings.output().setExportCustomHcs(true);
+		settings.output().addCustomHc( "target", inputWithEnoughDistance );
+		settings.output().addCustomHc( "pattern", matchingPattern );
+		
+
+	        String location = settings.output().getLocationForCustomHcs();
+
+            // Copy necessary libraries
+            InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
+                    ".zip");
+
+            File targetDirectory = new File(location + File.separator);
+            ZipUtils.unzip(zis, targetDirectory);
+
+            // Generate JSON files for prebooked HCs and their summary
+            CustomHcListExporter exporter = new JsonCustomHcListExporter();
+            exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
+
+           
+		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+		assertTrue( checker.hasMorphism() );
 	}
 	
 	
