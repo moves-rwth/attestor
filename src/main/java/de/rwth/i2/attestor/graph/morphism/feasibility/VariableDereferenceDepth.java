@@ -48,6 +48,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 					int attachedNode = graph.getSuccessorsOf(i).get(0);
 					if(dist.get(attachedNode) < minAbstractionDistance)	{
 						return false;
+
 					}
 				}
 			}
