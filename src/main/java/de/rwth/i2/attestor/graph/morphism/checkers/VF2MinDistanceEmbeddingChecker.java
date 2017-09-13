@@ -17,7 +17,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
  * @author Christoph
  *
  */
-public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
+public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
 
 	/**
 	 * Specification of the condition that an embedding has been found.
@@ -80,7 +80,7 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 	 * Initializes this checker for a given minimal distance.
 	 * @param depth The minimal distance of all variables to a found embedding.
 	 */
-	public VF2MinDepthEmbeddingChecker(int depth) {
+	public VF2MinDistanceEmbeddingChecker(int depth) {
 
 		super(
 				VF2Algorithm.builder()
@@ -94,7 +94,7 @@ public class VF2MinDepthEmbeddingChecker extends AbstractVF2MorphismChecker {
 				.addFeasibilityCondition( twoStepLookahead )
 				.addFeasibilityCondition( embeddingExternalNodes )
 				.addFeasibilityCondition( embeddingEdgeLabels )
-				.addFeasibilityCondition( new VariableDereferenceDepth(depth,
+				.addFeasibilityCondition( new MinAbstractionDistance(depth,
 						Settings.getInstance().options().getAggressiveNullAbstraction()) )
 				.build()
 			);

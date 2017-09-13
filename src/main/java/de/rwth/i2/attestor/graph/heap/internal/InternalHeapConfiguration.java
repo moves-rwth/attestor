@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
-import de.rwth.i2.attestor.graph.heap.matching.MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.graph.heap.matching.MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -571,7 +571,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDepth) {
 
 		if(minAbstractionDepth > 0) {
-			return new MinDepthEmbeddingChecker(pattern, this, minAbstractionDepth);
+			return new MinDistanceEmbeddingChecker(pattern, this, minAbstractionDepth);
 
 		} else {
 			return new EmbeddingChecker(pattern, this);

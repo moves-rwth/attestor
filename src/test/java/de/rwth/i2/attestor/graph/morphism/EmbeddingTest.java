@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
-import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.main.settings.Settings;
 
 public class EmbeddingTest {
@@ -151,7 +151,7 @@ public class EmbeddingTest {
 		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_EnoughAbstractionDistance();
 		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
 		
-		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
 		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
 		assertTrue( checker.hasMorphism() );
 	}
@@ -163,7 +163,7 @@ public class EmbeddingTest {
 		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_NotEnoughAbstractionDistance();
 		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_GraphAbstraction();
 		
-		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
 		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
 		assertFalse( checker.hasMorphism() );
 	}
@@ -176,7 +176,7 @@ public class EmbeddingTest {
 		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
 		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
 	   
-		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
 		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
 		assertTrue( checker.hasMorphism() );
 	}

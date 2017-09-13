@@ -15,7 +15,7 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Christoph
  */
-public class VariableDereferenceDepth implements FeasibilityFunction {
+public class MinAbstractionDistance implements FeasibilityFunction {
 
 	/**
 	 * The minimal distance of variables to nodes belonging to the morphism we are searching for.
@@ -29,7 +29,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 	 * @param aggressiveNullAbstraction True if and only if the minimal distance should be ignored
 	 *                                         for the null node.
 	 */
-	public VariableDereferenceDepth(int minAbstractionDistance, boolean aggressiveNullAbstraction
+	public MinAbstractionDistance(int minAbstractionDistance, boolean aggressiveNullAbstraction
 	) {
 		
 		this.minAbstractionDistance = minAbstractionDistance;

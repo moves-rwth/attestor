@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.heap.matching;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDepthEmbeddingChecker;
+import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
 
 /**
  * 
@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDepthEmbeddingChecker;
  * @author Christoph
  *
  */
-public class MinDepthEmbeddingChecker extends AbstractMatchingChecker{
+public class MinDistanceEmbeddingChecker extends AbstractMatchingChecker{
 
 	/**
 	 * Initializes an EmbeddingChecker with a minimal distance between variables and found embeddings.
@@ -24,7 +24,7 @@ public class MinDepthEmbeddingChecker extends AbstractMatchingChecker{
 	 * @param depth The minimal distance between an element of a found embedding and a variable in the pattern
      *              HeapConfiguration.
 	 */
-	public MinDepthEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target, int depth) {
-		super(pattern, target, new VF2MinDepthEmbeddingChecker(depth));
+	public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target, int depth) {
+		super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth));
 	}
 }
