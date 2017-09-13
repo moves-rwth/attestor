@@ -1,7 +1,9 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
-import de.rwth.i2.attestor.graph.morphism.*;
+import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -35,44 +37,32 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 	public boolean eval(VF2State state, int p, int t) {
 	
 		Graph graph = state.getTarget().getGraph();
-		Graph pattern = state.getPattern().getGraph();
 
-		for(int var=0; var < graph.size(); var++) {
-			
-			if(graph.getNodeLabel(var).getClass() == Variable.class) {
-				
-				String label = ((Variable) graph.getNodeLabel(var)).getName();
+		TIntArrayList dist = SelectorDistanceHelper.getSelectorDistances(graph, t);
 
-				boolean isNull = aggressiveNullAbstraction && (
-						   label.endsWith("null")
-						|| label.endsWith("1")
-						|| label.endsWith("0")
-						|| label.endsWith("-1")
-						|| label.endsWith("false")
-						|| label.endsWith("true")
-						);
-
-				int attachedNode = graph.getSuccessorsOf(var).get(0);
-				
-				TIntArrayList dist = SelectorDistanceHelper.getSelectorDistances(graph, attachedNode);
-				
-				for(int i=0; i < pattern.size(); i++) {
-					
-					if(state.getPattern().containsMatch(i) 
-							&& pattern.isExternal(i) 
-							&& dist.get(state.getPattern().getMatch(i)) < minAbstractionDistance
-							) {
-						
-						if ( ! isNull && pattern.getSuccessorsOf(i).size() > 0) {							
-							
-							return false;
-						}
+		for(int i=0; i < graph.size();i++) {
+			Object nodeLabel = graph.getNodeLabel(i);
+			if (nodeLabel.getClass() == Variable.class) {
+				String label = ((Variable) nodeLabel).getName();
+				if(!(aggressiveNullAbstraction && isConstant(label))) {
+					int attachedNode = graph.getSuccessorsOf(i).get(0);
+					if(dist.get(attachedNode) < minAbstractionDistance)	{
+						return false;
 					}
 				}
 			}
 		}
-		
+
 		return true;
+	}
+
+	private boolean isConstant(String label) {
+		return label.endsWith("null")
+				|| label.endsWith("1")
+				|| label.endsWith("0")
+				|| label.endsWith("-1")
+				|| label.endsWith("false")
+				|| label.endsWith("true");
 	}
 }
 
