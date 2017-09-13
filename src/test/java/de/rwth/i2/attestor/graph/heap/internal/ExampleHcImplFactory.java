@@ -1420,7 +1420,7 @@ public final class ExampleHcImplFactory {
 				.build();
 	}
 
-	public static HeapConfiguration getInput_AbstractionDistance() {
+	public static HeapConfiguration getInput_EnoughAbstractionDistance() {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -1466,7 +1466,7 @@ public final class ExampleHcImplFactory {
 				
 	}
 
-	public static HeapConfiguration getPattern_AbstractionDistance() {
+	public static HeapConfiguration getPattern_PathAbstraction() {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -1491,5 +1491,63 @@ public final class ExampleHcImplFactory {
 				.build()
 			.build();
 				
+	}
+
+	public static HeapConfiguration getInput_NotEnoughAbstractionDistance() {
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		
+		return result.builder()
+				.addNodes(type, 2, nodes)
+				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge("0-y", nodes.get(1))
+				.addSelector(nodes.get(1), left, nodes.get(0))
+				.build();
+	}
+
+	public static HeapConfiguration getPattern_GraphAbstraction() {
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		
+		return result.builder()
+				.addNodes(type, 2, nodes)
+				.setExternal(nodes.get(1))
+				.setExternal(nodes.get(0))
+				.addSelector(nodes.get(1), left, nodes.get(0))
+				.build();
+	}
+
+	public static HeapConfiguration getInput_OnlyNonterminalEdgesToAbstract() {
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		return result.builder()
+				.addNodes(type, 4, nodes)
+				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge("0-x", nodes.get(1))
+				.addSelector(nodes.get(1), left, nodes.get(0))
+				.addNonterminalEdge(path)
+					.addTentacle(nodes.get(1))
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(0))
+					.build()
+				.addNonterminalEdge(path)
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(3))
+					.addTentacle(nodes.get(0))
+					.build()
+				.build();
 	}
 }

@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.graph.morphism;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -143,12 +145,37 @@ public class EmbeddingTest {
 	}
 	
 	@Test
-	public void testAbstractionDistance(){
+	public void testAbstractionDistance_shouldFindEmbedding(){
 		Settings.getInstance().options().setAggressiveNullAbstraction(true);
 		
-		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_AbstractionDistance();
-		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_AbstractionDistance();
+		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_EnoughAbstractionDistance();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
 		
+		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+		assertTrue( checker.hasMorphism() );
+	}
+	
+	@Test
+	public void testAbstractionDistance_shouldNotFindEmbedding(){
+		Settings.getInstance().options().setAggressiveNullAbstraction( true );
+		
+		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_NotEnoughAbstractionDistance();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_GraphAbstraction();
+		
+		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
+		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
+		assertFalse( checker.hasMorphism() );
+	}
+	
+	@Test
+	public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding() throws IOException{
+		final Settings settings = Settings.getInstance();
+		settings.options().setAggressiveNullAbstraction(true);
+		
+		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
+	   
 		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
 		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
 		assertTrue( checker.hasMorphism() );
