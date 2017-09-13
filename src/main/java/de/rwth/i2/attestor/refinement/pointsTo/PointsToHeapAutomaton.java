@@ -9,10 +9,7 @@ import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class PointsToHeapAutomaton implements HeapAutomaton {
 
@@ -141,7 +138,26 @@ class PointsToHeapAutomatonState extends HeapAutomatonState {
     @Override
     public Set<String> toAtomicPropositions() {
 
-        return null;
+        Set<String> result = new HashSet<>();
+
+        TIntArrayList variables = kernel.variableEdges();
+        for(int i=0; i < variables.size(); i++) {
+            int varFrom = variables.get(i);
+            int from = kernel.targetOf(varFrom);
+            String fromLabel = kernel.nameOf(from);
+            for (int j = 0; i < variables.size(); i++) {
+                int varTo = variables.get(j);
+                int to = kernel.targetOf(varTo);
+                String toLabel = kernel.nameOf(to);
+                if(to == from) {
+                   result.add(fromLabel + " == " + toLabel);
+                } else {
+                   result.add(fromLabel + " != " + toLabel);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
