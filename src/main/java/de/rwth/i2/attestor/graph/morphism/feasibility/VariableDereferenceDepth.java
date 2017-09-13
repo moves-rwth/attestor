@@ -4,11 +4,14 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.types.GeneralType;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
- * Restricts the considered morphisms to ones in which the distance from variables to nodes belonging to a morphism
- * is at least the given depth. The only exception is the node representing null.
+ * Restricts the considered morphisms to ones in which the distance from variables to nodes with outgoing selector
+ * edges belonging to a morphism is at least the given minAbstractionDistance.
+ * If aggressiveNullAbstraction is set to true, variables that model constants, such as null, are ignored.
  *
  * @author Christoph
  */
@@ -35,9 +38,12 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 
 	@Override
 	public boolean eval(VF2State state, int p, int t) {
-	
-		Graph graph = state.getTarget().getGraph();
 
+		if(!hasOutgoingSelectorEdges(state, p))	{
+			return true;
+		}
+
+		Graph graph = state.getTarget().getGraph();
 		TIntArrayList dist = SelectorDistanceHelper.getSelectorDistances(graph, t);
 
 		for(int i=0; i < graph.size();i++) {
@@ -55,6 +61,19 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 		}
 
 		return true;
+	}
+
+	private boolean hasOutgoingSelectorEdges(VF2State state, int p) {
+
+		Graph graph = state.getPattern().getGraph();
+		TIntIterator iter = graph.getSuccessorsOf(p).iterator();
+		while(iter.hasNext()) {
+			int succ = iter.next();
+			if(graph.getNodeLabel(succ).getClass() == GeneralType.class) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isConstant(String label) {
