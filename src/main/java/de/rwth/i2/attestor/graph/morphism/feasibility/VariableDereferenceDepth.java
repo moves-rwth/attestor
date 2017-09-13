@@ -43,7 +43,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 				
 				String label = ((Variable) graph.getNodeLabel(var)).getName();
 
-				boolean isNull = aggressiveNullAbstraction && (
+				boolean ignoreLabel = aggressiveNullAbstraction && (
 						   label.endsWith("null")
 						|| label.endsWith("1")
 						|| label.endsWith("0")
@@ -51,6 +51,9 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 						|| label.endsWith("false")
 						|| label.endsWith("true")
 						);
+				if( ignoreLabel ){
+					continue;
+				}
 
 				int attachedNode = graph.getSuccessorsOf(var).get(0);
 				
@@ -63,7 +66,7 @@ public class VariableDereferenceDepth implements FeasibilityFunction {
 							&& dist.get(state.getPattern().getMatch(i)) < minAbstractionDistance
 							) {
 						
-						if ( ! isNull && pattern.getSuccessorsOf(i).size() > 0) {							
+						if ( pattern.getSuccessorsOf(i).size() > 0) {							
 							
 							return false;
 						}

@@ -158,11 +158,11 @@ public class EmbeddingTest {
 	public void testAbstractionDistance_shouldNotFindEmbedding(){
 		Settings.getInstance().options().setAggressiveNullAbstraction( true );
 		
-		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_NotEnoughAbstractionDistance();
+		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_NotEnoughAbstractionDistance();
 		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_GraphAbstraction();
 		
 		VF2MinDepthEmbeddingChecker checker = new VF2MinDepthEmbeddingChecker( 1 );
-		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
 		assertFalse( checker.hasMorphism() );
 	}
 	
