@@ -3,8 +3,6 @@ package de.rwth.i2.attestor.graph.morphism;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -169,7 +167,7 @@ public class EmbeddingTest {
 	}
 	
 	@Test
-	public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding() throws IOException{
+	public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding(){
 		final Settings settings = Settings.getInstance();
 		settings.options().setAggressiveNullAbstraction(true);
 		
@@ -181,7 +179,17 @@ public class EmbeddingTest {
 		assertTrue( checker.hasMorphism() );
 	}
 	
-	
-	
-	
+	@Test
+	public void testAbstractionDistance_variableContains0_shouldNotFindEmbedding(){
+		final Settings settings = Settings.getInstance();
+		settings.options().setAggressiveNullAbstraction(true);
+		
+		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_variableContains0();
+		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_variableContains0();
+		
+		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
+		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
+		assertFalse( checker.hasMorphism() );
+	}
+
 }

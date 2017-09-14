@@ -1550,4 +1550,48 @@ public final class ExampleHcImplFactory {
 					.build()
 				.build();
 	}
+
+	public static HeapConfiguration getInput_variableContains0() {
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+				
+		return result.builder().addNodes(type, 3, nodes)
+				.addVariableEdge("some-variable0", nodes.get(1))
+				.addVariableEdge("null", nodes.get(0))
+				.addSelector(nodes.get(1), right, nodes.get(2))
+				.addSelector(nodes.get(1), left, nodes.get(0))
+				.addNonterminalEdge(tree)
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(0))
+					.build()
+				.build();
+	}
+
+	public static HeapConfiguration getPattern_variableContains0() {
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		
+		Type type = Settings.getInstance().factory().getType("List");
+		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
+		
+		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+				
+		return result.builder().addNodes(type, 3, nodes)
+				.setExternal(nodes.get(1))
+				.setExternal(nodes.get(0))
+				.addSelector(nodes.get(1), right, nodes.get(2))
+				.addSelector(nodes.get(1), left, nodes.get(0))
+				.addNonterminalEdge(tree)
+					.addTentacle(nodes.get(2))
+					.addTentacle(nodes.get(0))
+					.build()
+				.build();
+	}
 }

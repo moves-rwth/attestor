@@ -1,9 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.heap.Variable;
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -77,12 +75,12 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 	}
 
 	private boolean isConstant(String label) {
-		return label.endsWith("null")
-				|| label.endsWith("1")
-				|| label.endsWith("0")
-				|| label.endsWith("-1")
-				|| label.endsWith("false")
-				|| label.endsWith("true");
+		return label.equals("null")
+				|| label.equals("1")
+				|| label.equals("0")
+				|| label.equals("-1")
+				|| label.equals("false")
+				|| label.equals("true");
 	}
 }
 
