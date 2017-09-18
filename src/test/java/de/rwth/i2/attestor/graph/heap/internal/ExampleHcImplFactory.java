@@ -1,18 +1,29 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ExampleHcImplFactory {
+
+	public static HeapConfiguration getEmptyHc() {
+
+		return new InternalHeapConfiguration();
+	}
 	
 	public static HeapConfiguration getSimpleDLL() {
 		
@@ -531,7 +542,7 @@ public final class ExampleHcImplFactory {
 		Type listType = Settings.getInstance().factory().getType("List");
 		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
-		
+
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()
