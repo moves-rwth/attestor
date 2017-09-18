@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -78,9 +79,9 @@ public class EqualExpr implements Value {
 		ConcreteValue res;
 		
 		if(leftRes.equals( rightRes )) {
-			res = programState.getConstant( "true" );
+			res = programState.getConstant(Constants.TRUE);
 		} else {
-			res = programState.getConstant( "false" );
+			res = programState.getConstant(Constants.FALSE);
 		}
 
 		/*

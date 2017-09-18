@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
@@ -89,30 +90,9 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	}
 
     /**
-      * @return An array of the names of all constants that should be created.
-     */
-	protected abstract String[] getConstants();
-
-    /**
      * @return A deep copy of this program state.
      */
     public abstract GeneralJimpleProgramState clone();
-
-    /**
-     * Checks whether a given name corresponds to a constant.
-     * @param name The name to check.
-     * @return True if and only if the name corresponds to a constant that belongs to
-     *         this state.
-     */
-	public boolean isConstantName(String name) {
-
-        for(String s : getConstants() ) {
-            if(name.equals(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * @param name The name of a variable or constant.
@@ -199,7 +179,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			    // intended
             }
 
-			if(!isConstantName(name) && !name.startsWith("@")) {			
+			if(!Constants.isConstant(name) && !name.startsWith("@")) {
 				
 				int target = heap.targetOf(var);
 				copy.builder()
@@ -214,57 +194,57 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 		
 		int trueNode;
 
-	    if(heap.variableWith("true") == HeapConfiguration.INVALID_ELEMENT) {
-	    	if( heap.variableWith( "1" ) == HeapConfiguration.INVALID_ELEMENT ){
+	    if(heap.variableWith(Constants.TRUE) == HeapConfiguration.INVALID_ELEMENT) {
+	    	if( heap.variableWith( Constants.ONE) == HeapConfiguration.INVALID_ELEMENT ){
 	    		
 	    		TIntArrayList nodes = new TIntArrayList(1);
 	    		copy.builder()
 	    			.addNodes(booleanType, 1, nodes)
-	    			.addVariableEdge("1", nodes.get(0))
+	    			.addVariableEdge(Constants.ONE, nodes.get(0))
 	    			.build();
 	    		trueNode = nodes.get(0);
 	    	}else{
-	    		trueNode = heap.targetOf(heap.variableWith( "1" ));
+	    		trueNode = heap.targetOf(heap.variableWith( Constants.ONE ));
 	    	}
-			copy.builder().addVariableEdge("true", trueNode).build();	
+			copy.builder().addVariableEdge(Constants.TRUE, trueNode).build();
 	    }else{
-	    	trueNode = heap.targetOf(heap.variableWith("true"));
-	    	if( heap.variableWith( "1" ) == HeapConfiguration.INVALID_ELEMENT ){
-	    		copy.builder().addVariableEdge("1", trueNode).build();
-	    	}else if(heap.targetOf(heap.variableWith( "1" )) != trueNode ){
+	    	trueNode = heap.targetOf(heap.variableWith( Constants.TRUE ));
+	    	if( heap.variableWith( Constants.ONE ) == HeapConfiguration.INVALID_ELEMENT ){
+	    		copy.builder().addVariableEdge(Constants.ONE, trueNode).build();
+	    	}else if(heap.targetOf(heap.variableWith( Constants.ONE )) != trueNode ){
 	    		logger.warn( "true and 1 do not point to the same node" );
 	    	}
 	    }
 	    
-	    if(heap.variableWith("false") == HeapConfiguration.INVALID_ELEMENT) {
-	    	if( heap.variableWith( "0" ) == HeapConfiguration.INVALID_ELEMENT ){
+	    if(heap.variableWith(Constants.FALSE) == HeapConfiguration.INVALID_ELEMENT) {
+	    	if( heap.variableWith(Constants.ZERO) == HeapConfiguration.INVALID_ELEMENT ){
 	    		
 	    		TIntArrayList nodes = new TIntArrayList(1);
 	    		copy.builder()
 	    			.addNodes(booleanType, 1, nodes)
-	    			.addVariableEdge("0", nodes.get(0))
+	    			.addVariableEdge(Constants.ZERO, nodes.get(0))
 	    			.build();
 	    		trueNode = nodes.get(0);
 	    	}else{
-	    		trueNode = heap.targetOf(heap.variableWith( "0" ));
+	    		trueNode = heap.targetOf(heap.variableWith(Constants.ZERO));
 	    	}
-			copy.builder().addVariableEdge("false", trueNode).build();	
+			copy.builder().addVariableEdge(Constants.FALSE, trueNode).build();
 	    }else{
-	    	trueNode = heap.targetOf(heap.variableWith( "false" ));
-	    	if( heap.variableWith( "0" ) == HeapConfiguration.INVALID_ELEMENT ){
-	    		copy.builder().addVariableEdge("0", trueNode).build();
-	    	}else if(heap.targetOf(heap.variableWith( "0" )) != trueNode ){
+	    	trueNode = heap.targetOf(heap.variableWith(Constants.FALSE ));
+	    	if( heap.variableWith(Constants.ZERO) == HeapConfiguration.INVALID_ELEMENT ){
+	    		copy.builder().addVariableEdge(Constants.ZERO, trueNode).build();
+	    	}else if(heap.targetOf(heap.variableWith( Constants.ZERO )) != trueNode ){
 	    		logger.warn( "false and 0 do not point to the same node" );
 	    	}
 	    }
 	  
 	    
-	    if(heap.variableWith("null") == HeapConfiguration.INVALID_ELEMENT) {
+	    if(heap.variableWith(Constants.NULL) == HeapConfiguration.INVALID_ELEMENT) {
 	    	
 	    	TIntArrayList nodes = new TIntArrayList(1);
 	    	copy.builder()
 	    		.addNodes(nullType, 1, nodes)
-	    		.addVariableEdge("null", nodes.get(0))
+	    		.addVariableEdge(Constants.NULL, nodes.get(0))
 	    		.build();
 	    }
 		
@@ -310,7 +290,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	@Override
 	public void removeVariable(String variableName) {
 		
-		if(isConstantName(variableName)) {
+		if(Constants.isConstant(variableName)) {
 			logger.error("Illegal attempt to remove constant " + variableName);
 			return;
 		}
@@ -328,7 +308,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	@Override
 	public void setVariable(String variableName, ConcreteValue value) {
 		
-		if(isConstantName(variableName)) {
+		if(Constants.isConstant(variableName)) {
 			logger.error("Illegal attempt to set value of constant " + variableName);
 			return;
 		}

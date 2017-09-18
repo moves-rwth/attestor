@@ -1,15 +1,19 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExampleIndexedGraphFactory {
 
@@ -701,7 +705,7 @@ public class ExampleIndexedGraphFactory {
 				.addSelector(nodes.get(0), right, nodes.get(2))
 				.addSelector(nodes.get(1), right, nodes.get(3))
 				.addSelector(nodes.get(1), left, nodes.get(3))
-				.addVariableEdge("null", nodes.get(3))
+				.addVariableEdge(Constants.NULL, nodes.get(3))
 				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(2), nodes.get(3)}))
 				.build();			
 	}
@@ -725,7 +729,7 @@ public class ExampleIndexedGraphFactory {
 					.addSelector(nodes.get(1), parent, nodes.get(2))
 					.addSelector(nodes.get(1), right, nodes.get(2))
 					.addSelector(nodes.get(1), left, nodes.get(2))
-					.addVariableEdge("null", nodes.get(2) )
+					.addVariableEdge(Constants.NULL, nodes.get(2) )
 					.build();
 	}
 	
@@ -753,8 +757,8 @@ public class ExampleIndexedGraphFactory {
 					.addSelector(nodes.get(1), right, nodes.get(2))
 					.addSelector(nodes.get(1), left, nodes.get(2))
 					.addSelector(nodes.get(1), balance, nodes.get(3))
-					.addVariableEdge("null", nodes.get(2) )
-					.addVariableEdge("0", nodes.get(3))
+					.addVariableEdge(Constants.NULL, nodes.get(2) )
+					.addVariableEdge(Constants.ZERO, nodes.get(3))
 					.build();
 	}
 	
@@ -786,10 +790,10 @@ public class ExampleIndexedGraphFactory {
 				.addNodes( mType, 1, nodes )
 				.addNodes( zType, 1, nodes )
 				.addNodes( pType, 1, nodes )
-				.addVariableEdge( "null", nodes.get( 3 ) )
-				.addVariableEdge( "-1", nodes.get( 4 ) )
-				.addVariableEdge( "0", nodes.get( 5 ) )
-				.addVariableEdge( "1", nodes.get( 6 ) )
+				.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
+				.addVariableEdge( Constants.MINUS_ONE, nodes.get( 4 ) )
+				.addVariableEdge( Constants.ZERO, nodes.get( 5 ) )
+				.addVariableEdge( Constants.ONE, nodes.get( 6 ) )
 				.addSelector( nodes.get( 0 ), leftZ, nodes.get( 1 ) )
 				.addSelector( nodes.get( 0 ),rightZ, nodes.get( 1 ) )
 				.addSelector( nodes.get( 0 ), parent, nodes.get( 3 ) )
@@ -835,10 +839,10 @@ public class ExampleIndexedGraphFactory {
 				.setExternal( nodes.get( 3 ) )
 				.setExternal( nodes.get( 4 ) )
 				.setExternal( nodes.get( 5 ) )
-				.addVariableEdge( "null", nodes.get( 2 ) )
-				.addVariableEdge( "-1", nodes.get( 3 ) )
-				.addVariableEdge( "0", nodes.get( 4 ) )
-				.addVariableEdge( "1", nodes.get( 5 ) )
+				.addVariableEdge(Constants.NULL, nodes.get( 2 ) )
+				.addVariableEdge(Constants.MINUS_ONE, nodes.get( 3 ) )
+				.addVariableEdge(Constants.ZERO, nodes.get( 4 ) )
+				.addVariableEdge(Constants.ONE, nodes.get( 5 ) )
 				.addSelector( nodes.get( 0 ), leftP, nodes.get( 1 ) )
 				.addSelector( nodes.get( 0 ), rightM, nodes.get( 2 ) )
 				.addSelector( nodes.get( 0 ), balance, nodes.get( 3 ) )
@@ -890,10 +894,10 @@ public class ExampleIndexedGraphFactory {
 							.addNodes( int_p, 1, nodes )
 							.addNodes( nullType, 1, nodes )
 							.addNodes( nodeType, 5, nodes )
-							.addVariableEdge( "-1", nodes.get( 0 ) )
-							.addVariableEdge( "0", nodes.get( 1 ) )
-							.addVariableEdge( "1", nodes.get( 2 ) )
-							.addVariableEdge( "null", nodes.get( 3 ) )
+							.addVariableEdge( Constants.MINUS_ONE, nodes.get( 0 ) )
+							.addVariableEdge( Constants.ZERO, nodes.get( 1 ) )
+							.addVariableEdge( Constants.ONE, nodes.get( 2 ) )
+							.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 							.addSelector( nodes.get( 4 ), left, nodes.get( 5 ) )
 							.addSelector( nodes.get( 5 ), parent, nodes.get( 4 ) )
 							.addSelector( nodes.get( 4 ), right, nodes.get( 6 ) )
@@ -951,10 +955,10 @@ public class ExampleIndexedGraphFactory {
 							.addNodes( int_p, 1, nodes )
 							.addNodes( nullType, 1, nodes )
 							.addNodes( nodeType, 3, nodes )
-							.addVariableEdge( "-1", nodes.get( 0 ) )
-							.addVariableEdge( "0", nodes.get( 1 ) )
-							.addVariableEdge( "1", nodes.get( 2 ) )
-							.addVariableEdge( "null", nodes.get( 3 ) )
+							.addVariableEdge( Constants.MINUS_ONE, nodes.get( 0 ) )
+							.addVariableEdge( Constants.ZERO, nodes.get( 1 ) )
+							.addVariableEdge( Constants.ONE, nodes.get( 2 ) )
+							.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 							.addSelector( nodes.get( 4 ), left, nodes.get( 5 ) )
 							.addSelector( nodes.get( 5 ), parent, nodes.get( 4 ) )
 							.addSelector( nodes.get( 4 ), right, nodes.get( 6 ) )
@@ -1060,10 +1064,10 @@ public class ExampleIndexedGraphFactory {
 							.addNodes( int_p, 1, nodes )
 							.addNodes( nullType, 1, nodes )
 							.addNodes( nodeType, 3, nodes )
-							.addVariableEdge( "-1", nodes.get( 0 ) )
-							.addVariableEdge( "0", nodes.get( 1 ) )
-							.addVariableEdge( "1", nodes.get( 2 ) )
-							.addVariableEdge( "null", nodes.get( 3 ) )
+							.addVariableEdge( Constants.MINUS_ONE, nodes.get( 0 ) )
+							.addVariableEdge( Constants.ZERO, nodes.get( 1 ) )
+							.addVariableEdge( Constants.ONE, nodes.get( 2 ) )
+							.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 							.addSelector( nodes.get( 4 ), left, nodes.get( 5 ) )
 							.addSelector( nodes.get( 5 ), parent, nodes.get( 4 ) )
 							.addSelector( nodes.get( 4 ), right, nodes.get( 6 ) )
@@ -1108,10 +1112,10 @@ public class ExampleIndexedGraphFactory {
 							.addNodes( int_p, 1, nodes )
 							.addNodes( nullType, 1, nodes )
 							.addNodes( nodeType, 3, nodes )
-							.addVariableEdge( "-1", nodes.get( 0 ) )
-							.addVariableEdge( "0", nodes.get( 1 ) )
-							.addVariableEdge( "1", nodes.get( 2 ) )
-							.addVariableEdge( "null", nodes.get( 3 ) )
+							.addVariableEdge( Constants.MINUS_ONE, nodes.get( 0 ) )
+							.addVariableEdge( Constants.ZERO, nodes.get( 1 ) )
+							.addVariableEdge( Constants.ONE, nodes.get( 2 ) )
+							.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 							.addSelector( nodes.get( 4 ), left, nodes.get( 5 ) )
 							.addSelector( nodes.get( 5 ), parent, nodes.get( 4 ) )
 							.addSelector( nodes.get( 4 ), right, nodes.get( 6 ) )
@@ -1155,10 +1159,10 @@ public class ExampleIndexedGraphFactory {
 							.addNodes( int_p, 1, nodes )
 							.addNodes( nullType, 1, nodes )
 							.addNodes( nodeType, 3, nodes )
-							.addVariableEdge( "-1", nodes.get( 0 ) )
-							.addVariableEdge( "0", nodes.get( 1 ) )
-							.addVariableEdge( "1", nodes.get( 2 ) )
-							.addVariableEdge( "null", nodes.get( 3 ) )
+							.addVariableEdge( Constants.MINUS_ONE, nodes.get( 0 ) )
+							.addVariableEdge( Constants.ZERO, nodes.get( 1 ) )
+							.addVariableEdge( Constants.ONE, nodes.get( 2 ) )
+							.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 							.addSelector( nodes.get( 4 ), left, nodes.get( 5 ) )
 							.addSelector( nodes.get( 5 ), parent, nodes.get( 4 ) )
 							.addSelector( nodes.get( 4 ), right, nodes.get( 6 ) )

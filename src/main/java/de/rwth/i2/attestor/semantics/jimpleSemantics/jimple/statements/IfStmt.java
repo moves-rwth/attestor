@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -76,8 +77,8 @@ public class IfStmt extends Statement {
 
 		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 
-		ConcreteValue trueValue = jimpleProgramState.getConstant( "true" );
-		ConcreteValue falseValue = jimpleProgramState.getConstant( "false" );
+		ConcreteValue trueValue = jimpleProgramState.getConstant(Constants.TRUE);
+		ConcreteValue falseValue = jimpleProgramState.getConstant(Constants.FALSE);
 
 		ConcreteValue concreteCondition;
 		try {
