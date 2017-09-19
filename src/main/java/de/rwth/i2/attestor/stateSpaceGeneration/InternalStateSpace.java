@@ -113,6 +113,18 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId) {
+
+        return controlFlowSuccessors.get(stateSpaceId);
+    }
+
+    @Override
+    public TIntArrayList getMaterializationSuccessorsIdsOf(int stateSpaceId) {
+
+        return materializationSuccessors.get(stateSpaceId);
+    }
+
+    @Override
     public boolean addState(ProgramState state) {
 
         otherStates.add(state);

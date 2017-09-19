@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import gnu.trove.list.array.TIntArrayList;
+
 import java.util.Set;
 
 public interface StateSpace {
@@ -10,6 +12,9 @@ public interface StateSpace {
 
     Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state);
     Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state);
+
+    TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId);
+    TIntArrayList getMaterializationSuccessorsIdsOf(int stateSpaceId);
 
     boolean addState(ProgramState state);
     boolean addStateIfAbsent(ProgramState state);
