@@ -15,6 +15,7 @@ import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIntIterator;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -576,6 +577,38 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		} else {
 			return new EmbeddingChecker(pattern, this);
 		}
+	}
+
+	@Override
+	public int variableTargetOf(String variableName) {
+
+		int varEdge = variableWith(variableName);
+		if(varEdge != HeapConfiguration.INVALID_ELEMENT) {
+			return targetOf(varEdge);
+		}
+		return HeapConfiguration.INVALID_ELEMENT;
+	}
+
+	@Override
+	public TIntIntMap attachedNonterminalEdgesWithNonReductionTentacle(int node) {
+
+		int privateId = checkNodeAndGetPrivateId(node);
+		TIntIntMap result = new TIntIntHashMap(graph.predecessorSizeOf(privateId));
+		TIntIterator predIter = graph.predecessorsOf(privateId)	.iterator();
+		while(predIter.hasNext()) {
+			int pred = predIter.next();
+			if(isNonterminalEdge(pred)) {
+				TIntArrayList att = graph.successorsOf(pred);
+				Nonterminal label = labelOf(pred);
+				for(int tentacle = 0; tentacle < att.size(); tentacle++) {
+					if(att.get(tentacle) == privateId && !label.isReductionTentacle(tentacle)) {
+						result.put(pred, tentacle);
+						break;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override
