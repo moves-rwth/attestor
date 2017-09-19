@@ -1,20 +1,28 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
-import java.util.*;
-import java.util.function.IntPredicate;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.graph.heap.*;
-import de.rwth.i2.attestor.graph.heap.matching.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.Variable;
+import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
+import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
+import de.rwth.i2.attestor.graph.heap.matching.MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.function.IntPredicate;
 
 /**
  * 
@@ -187,7 +195,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
     boolean isNode(int id) {
 
-		return graph.nodeLabelOf(id) instanceof Type;
+    	return graph.nodeLabelOf(id) instanceof Type;
 	}
 
 	/**
@@ -519,7 +527,8 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
 	private boolean isVariable(int privateId) {
 
-		return graph.nodeLabelOf(privateId) instanceof Variable;
+		Object v = graph.nodeLabelOf(privateId);
+		return v != null && v.getClass() == Variable.class;
 	}
 
 	@Override
@@ -562,7 +571,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDepth) {
 
 		if(minAbstractionDepth > 0) {
-			return new MinDepthEmbeddingChecker(pattern, this, minAbstractionDepth);
+			return new MinDistanceEmbeddingChecker(pattern, this, minAbstractionDepth);
 
 		} else {
 			return new EmbeddingChecker(pattern, this);
@@ -570,45 +579,49 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(Object otherObject) {
 
-		if(other == this) {
+		if(otherObject == this) {
 			return true;
 		}
-
-		if(other instanceof InternalHeapConfiguration) {
-
-			InternalHeapConfiguration hc = (InternalHeapConfiguration) other;
-			IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
-			return isoChecker.hasMatching();
+		
+		if(otherObject == null) {
+			return false;
 		}
 
-		return false;
+		InternalHeapConfiguration hc = (InternalHeapConfiguration) otherObject;
+		IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
+		return isoChecker.hasMatching();
 	}
 	
 	@Override
 	public int hashCode() {
+
 		int hash = countNodes();
 		hash = (hash << 1) ^ countExternalNodes();
 		hash = ( hash << 1) ^ countVariableEdges();
 		hash = ( hash << 1) ^ countNonterminalEdges();
-		
+
 		int variableHash = 0;
 		int ntHash = 0;
+		int nodeHash = 0;
 		for( int i = 0; i < graph.size(); i++ ){
-			if( isVariable(i) ){
-				variableHash =  variableHash ^ nameOf( getPublicId(i) ).hashCode();
-			}else if( isNonterminalEdge(i) ){
-				ntHash = ntHash ^ labelOf( getPublicId(i) ).hashCode();
+			Object label = graph.nodeLabelOf(i);
+			int labelHash = label.hashCode();
+			if(label.getClass() == Variable.class) {
+				variableHash ^= labelHash;
+			} else if(label.getClass() == GeneralType.class) {
+				ntHash ^= labelHash;
+			} else {
+				nodeHash ^= labelHash;
 			}
 		}
-		
+
+		hash = ( hash << 1 ) ^ nodeHash;
 		hash = ( hash << 1 ) ^ variableHash;
 		hash = ( hash << 1 ) ^ ntHash;
 		
 		return hash;
-
-		
 	}
 
 	@Override

@@ -13,6 +13,6 @@ public interface AbortStrategy {
      * @param stateSpace The StateSpace that has been generated so far.
      * @return true if and only if further states may be generated.
      */
-	boolean isAllowedToContinue( StateSpace stateSpace );
+	boolean isAllowedToContinue(StateSpace stateSpace);
 
 }

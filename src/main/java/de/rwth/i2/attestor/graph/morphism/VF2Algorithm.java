@@ -1,10 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
@@ -35,16 +31,11 @@ import java.util.List;
 public class VF2Algorithm {
 
     /**
-     * The logger for this class.
-     */
-	private static final Logger logger = LogManager.getLogger( "VF2Algorithm" );
-
-    /**
-     * A list that determines the FeasibilityFunctions that are evaluated to determine whether a CandidatePair
+     * The FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
      * the Morphism we search for.
      */
-	final List<FeasibilityFunction> feasibilityChecks;
+	FeasibilityFunction[] feasibilityChecks;
 
     /**
      * A function that determines whether we found a complete Morphism and can thus successfully terminate.
@@ -73,7 +64,6 @@ public class VF2Algorithm {
      * Construct a useless VF2Algorithm that has to be customized by a {@link VF2AlgorithmBuilder}.
      */
 	VF2Algorithm() {
-		feasibilityChecks = new ArrayList<>();
 		morphismFoundCheck = null;
 		morphismImpossibleCheck = null;
 	}
@@ -96,42 +86,49 @@ public class VF2Algorithm {
      */
 	private boolean match(VF2State state) {
 
-		if(morphismImpossibleCheck.eval(state)) {
-			return false;
-		}
-	
-		if(morphismFoundCheck.eval(state)) {
-			storeMorphism(state);
-			return true;
-		}
+		Stack<VF2State>	stateStack = new Stack<>();
+		stateStack.push(state);
 
-		/* Since it is possible that some Morphism exists, we continue
-           searching for one. To this end we go through all (reachable)
-           pairs (patternNode, targetNode) of candidates that might be
-           added to the partial morphism.
-        */
-		for(CandidatePair c : state.computeCandidates()) {
+		mainLoop:
+		while(!stateStack.isEmpty()) {
 
-			if(isFeasible(state, c)) {
-				
-				/* A shallow copy only copies data required for backtracking
-				   such as the last candidate. After that we move further
-				   down in the search tree.
-                */
-				VF2State nextState = state.shallowCopy();
-				nextState.addCandidate(c);
-				if(match(nextState)) {
-					return true;
+			state = stateStack.peek();
+
+			if (morphismImpossibleCheck.eval(state)) {
+				stateStack.pop();
+				continue;
+			}
+
+			if (morphismFoundCheck.eval(state)) {
+				storeMorphism(state);
+				return true;
+			}
+
+			/* Since it is possible that some Morphism exists, we continue
+           	   searching for one. To this end we go through all (reachable)
+               pairs (patternNode, targetNode) of candidates that might be
+               added to the partial morphism. */
+			while (state.nextCandidate()) {
+				int p = state.getPatternCandidate();
+				int t = state.getTargetCandidate();
+				if (isFeasible(state, p, t)) {
+
+					/* A shallow copy only copies data required for backtracking
+				       such as the last candidate. After that we move further
+				       down in the search tree. */
+					VF2State nextState = state.shallowCopy();
+					nextState.addCandidate(p, t);
+					stateStack.push(nextState);
+					continue mainLoop; // simulate recursion by adjusting stack and jumping to the outer loop.
 				}
 			}
+
+			/* We stored all morphisms found so far and finished going through all search trees
+		   	   after adding all available candidate pairs to the current state.
+               Hence, we backtrack and remove the last pair added to the current state before. */
+			state.backtrack();
+			stateStack.pop();
 		}
-		
-		/* We stored all morphisms found so far and finished going through all search trees
-		   after adding all available candidate pairs to the current state.
-           Hence, we backtrack and remove the last pair added to the current state before.
-        */
-		state.backtrack();
-		
 		return false;
 	}
 
@@ -140,14 +137,15 @@ public class VF2Algorithm {
      * results in a state that might still lead to a desired Morphism.
      *
      * @param state The current position in the search tree.
-     * @param candidate A pair of nodes that should be added to the current state of the algorithm.
+	 * @param p The pattern candidate node that should be added to the current state of the algorithm.
+	 * @param t The target candidate node that should be added to the current state of the algorithm.
      * @return true if and only if adding candidate to state might still result in a desired morphism.
      */
-	private boolean isFeasible(VF2State state, CandidatePair candidate) {
+	private boolean isFeasible(VF2State state, int p, int t) {
 
-		for(FeasibilityFunction f : feasibilityChecks) {
-
-			if(!f.eval(state, candidate)) {
+		for(int i=0; i < feasibilityChecks.length; i++)  {
+			FeasibilityFunction f = feasibilityChecks[i];
+			if(!f.eval(state, p, t)) {
 				return false;
 			}
 		}

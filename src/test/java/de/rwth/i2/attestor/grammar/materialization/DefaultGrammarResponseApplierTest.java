@@ -14,7 +14,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.*;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -89,8 +89,9 @@ public class DefaultGrammarResponseApplierTest {
 		
 		GrammarResponse grammarResponse = new DefaultGrammarResponse( rulesInResponse );
 		
+		int edge_id = inputGraph.nonterminalEdges().get(0);
 		Collection<HeapConfiguration> materializedGraphs = 
-				ruleApplier.applyGrammarResponseTo( inputGraph, EDGE_ID, grammarResponse );
+				ruleApplier.applyGrammarResponseTo( inputGraph, edge_id, grammarResponse );
 		
 		assertThat( materializedGraphs, containsInAnyOrder( expectedResult_ApplySimpleRule() ) );
 		assertEquals( getInputGraph(), inputGraph );
@@ -116,8 +117,9 @@ public class DefaultGrammarResponseApplierTest {
 		
 		GrammarResponse grammarResponse = new DefaultGrammarResponse( rulesInResponse );
 		
+		int edge_id = inputGraph.nonterminalEdges().get(0);
 		Collection<HeapConfiguration> materializedGraphs = 
-				ruleApplier.applyGrammarResponseTo( inputGraph, EDGE_ID, grammarResponse );
+				ruleApplier.applyGrammarResponseTo( inputGraph, edge_id, grammarResponse );
 		
 		assertThat( materializedGraphs, containsInAnyOrder( expectedResult_ApplySimpleRule(), 
 														    expectedResult_applyBigRule(),
@@ -130,7 +132,7 @@ public class DefaultGrammarResponseApplierTest {
 	}
 
 	private HeapConfiguration getInputGraph() {
-		TestHeapConfigImplementation hc = new TestHeapConfigImplementation();
+		InternalHeapConfiguration hc = new InternalHeapConfiguration();
 		Type type = Settings.getInstance().factory().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL,
 															RANK, 
@@ -138,10 +140,9 @@ public class DefaultGrammarResponseApplierTest {
 
 		TIntArrayList nodes = new TIntArrayList();
 		
-		TestHeapConfigurationBuilder builder = (TestHeapConfigurationBuilder) hc.getBuilderForTest()
-				.addNodes(type, 2, nodes);
-		
-		return	builder.addNonterminalEdge(nt, EDGE_ID, nodes ) 
+		return  hc.builder()
+				.addNodes(type, 2, nodes)
+				.addNonterminalEdge(nt, nodes ) 
 				.build();
 	}
 

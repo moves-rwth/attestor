@@ -77,11 +77,8 @@ public class VF2GraphData {
 	/**
 	 * Initializes an empty VF2GraphData object.
 	 * @param graph The graph represented by this object.
-	 * @param nodeOrder Determines a custom node order or the default order if nodeOrder == null.
 	 */
-	public VF2GraphData(Graph graph, int[] nodeOrder) {
-		
-		assert(nodeOrder == null || nodeOrder.length == graph.size());
+	public VF2GraphData(Graph graph) {
 		
 		this.graph = graph;
 		
@@ -96,20 +93,14 @@ public class VF2GraphData {
 		match = new int[noNodes];
 		in = new int[noNodes];
 		out = new int[noNodes];
-		
-		this.nodeOrder = new int[noNodes];
-		
-		
+		nodeOrder = new int[noNodes];
+
+
 		for(int i=0; i < noNodes; i++) {
 			match[i] = NULL_NODE;
 			in[i] = NULL_NODE;
 			out[i] = NULL_NODE;
-			
-			if(nodeOrder == null) {
-				this.nodeOrder[i] = i;
-			} else {
-				this.nodeOrder[i] = nodeOrder[i];
-			}
+			nodeOrder[i] = i;
 		}
 		
 	}

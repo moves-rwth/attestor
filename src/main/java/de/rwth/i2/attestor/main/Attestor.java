@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.automata.HeapAutomaton;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
@@ -30,10 +29,14 @@ import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
+import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.RefinementParser;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
+import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.GeneralInclusionStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
@@ -127,10 +130,21 @@ public class Attestor {
 	 */
 	private StateSpace stateSpace;
 
+	private List<String> ltlFormulas = new ArrayList<>();
+	private List<String> ltlFormulaResults = new ArrayList<>();
+
     /**
 	 * A parser for command line arguments.
 	 */
 	private final CommandLineReader commandLineReader = new CommandLineReader();
+
+	private long startupTime;
+	private long setupTime;
+	private long parsingTime;
+	private long preprocessingTime;
+	private long stateSpaceGenerationTime;
+	private long modelCheckingTime;
+	private long reportGenerationTime;
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -143,6 +157,8 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
+        startupTime = System.nanoTime();
+
 		printVersion();
 
 	    try {
@@ -151,6 +167,7 @@ public class Attestor {
 	    	failPhase(e, "Setup");
 		}
         leavePhase("Setup");
+		setupTime = System.nanoTime();
 
 	    try {
 			parsingPhase();
@@ -158,6 +175,7 @@ public class Attestor {
 	    	failPhase(e,"Parsing");
 		}
         leavePhase("Parsing");
+		parsingTime = System.nanoTime();
 
 	    try {
 			preprocessingPhase();
@@ -165,6 +183,7 @@ public class Attestor {
 	    	failPhase(e,"Preprocessing");
 		}
         leavePhase("Preprocessing");
+		preprocessingTime = System.nanoTime();
 
         try {
 			stateSpaceGenerationPhase();
@@ -172,6 +191,7 @@ public class Attestor {
         	failPhase(e,"State space generation");
 		}
         leavePhase("State space generation");
+		stateSpaceGenerationTime = System.nanoTime();
 
         try {
         	modelCheckingPhase();
@@ -179,6 +199,7 @@ public class Attestor {
         	failPhase(e,"Model-checking");
 		}
         leavePhase("Model-checking");
+		modelCheckingTime = System.nanoTime();
 
         try {
         	reportPhase();
@@ -186,8 +207,21 @@ public class Attestor {
         	failPhase(e,"Report generation");
 		}
         leavePhase("Report generation");
+		reportGenerationTime = System.nanoTime();
 
 		printSummary();
+	}
+
+	public long getTotalNumberOfStates() {
+		return settings.factory().getTotalNumberOfStates();
+	}
+
+	public int getNumberOfStatesWithoutProcedureCalls() {
+		return stateSpace.getStates().size();
+	}
+
+	public int getNumberOfFinalStates() {
+		return stateSpace.getFinalStates().size();
 	}
 
     /**
@@ -277,7 +311,7 @@ public class Attestor {
 	}
 
 	private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
-		HashMap<String, String> rename = new HashMap<String, String>();
+		HashMap<String, String> rename = new HashMap<>();
 		// Read in the type and field name mapping
 		try {
 			BufferedReader br = new BufferedReader(new java.io.FileReader( locationOfRenamingMap ));
@@ -351,39 +385,66 @@ public class Attestor {
 
 	private void preprocessingPhase() {
 
-        if(!settings.options().isIndexedMode()
-                && settings.options().getStateLabelingAutomaton() != null) {
+		determineRequiredRefinements();
+
+        if(!settings.options().isIndexedMode()) {
             setupStateLabeling();
         } else {
             inputs.add(originalInput);
             settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
-            if(settings.options().getStateLabelingAutomaton() == null) {
-                logger.info("Skipped refinement, because no atomic propositions are required.");
-            } else if(settings.options().isIndexedMode()) {
-                logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
-            }
+            settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+            logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
         }
 
-        setupStateRefinement();
+        setupMaterialization();
+		setupCanonicalization();
+		setupAbortTest();
+	}
+
+	private void determineRequiredRefinements() {
+
+		HashSet<String> requiredAPs = new HashSet<>();
+		for(LTLFormula formula : settings.modelChecking().getFormulae()) {
+			requiredAPs.addAll(formula.getApList());
+		}
+
+		logger.info("Setup refinements for " + requiredAPs.size() + " atomic proposition(s).");
+
+		RefinementParser refinementParser = new RefinementParser(requiredAPs);
+		settings.options().setRefinementAutomaton(refinementParser.getRefinementAutomaton());
+		settings.stateSpaceGeneration().setStateRefinementStrategy(refinementParser.getStateRefinementStrategy());
+		settings.stateSpaceGeneration().setStateLabelingStrategy(refinementParser.getStateLabelingStrategy());
 	}
 
 	private void setupStateLabeling() {
 
-        logger.info("Refining grammar...");
-        HeapAutomaton stateLabelingAutomaton = settings.options().getStateLabelingAutomaton();
-        settings.grammar().setGrammar(
-                stateLabelingAutomaton.refine( settings.grammar().getGrammar() )
-        );
+		HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
+		if(refinementAutomaton == null) {
+			logger.info("No grammar refinement is required.");
+			inputs.add(originalInput);
+			settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
+			return;
+		}
+
+		logger.info("Refining grammar...");
+		GrammarRefinement grammarRefinement = new GrammarRefinement(
+				settings.grammar().getGrammar(),
+				refinementAutomaton
+		);
+		settings.grammar().setGrammar(grammarRefinement.getRefinedGrammar());
+
         logger.info("done. Number of refined nonterminals: "
                 + settings.grammar().getGrammar().getAllLeftHandSides().size());
-        logger.info("Refined nonterminals are: " + settings.grammar().getGrammar().getAllLeftHandSides());
 
         logger.info("Refining input heap configuration...");
-        inputs = stateLabelingAutomaton.refineHeapConfiguration(
-                originalInput,
-                settings.grammar().getGrammar(),
-                new HashSet<>()
-        );
+
+        InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
+        		originalInput,
+				settings.grammar().getGrammar(),
+				refinementAutomaton
+		);
+
+        inputs = inputRefinement.getRefinements();
 
         if(inputs.isEmpty())	{
             logger.fatal("No refined initial state exists.");
@@ -392,37 +453,12 @@ public class Attestor {
 
         logger.info("done. Number of refined heap configurations: "
                 + inputs.size());
-
-        settings.stateSpaceGeneration()
-                .setStateLabelingStrategy(
-                        programState -> {
-                            for(String ap : stateLabelingAutomaton
-                                    .move(programState.getHeap()).getAtomicPropositions()) {
-                                programState.addAP(ap);
-                            }
-                        }
-                );
-    }
-
-    private void setupStateRefinement() {
-
-		if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
-            settings.stateSpaceGeneration()
-                    .setStateRefinementStrategy(
-                            state -> state
-                    );
-            logger.info("No additional state refinement is used.");
-        }
     }
 
 	private void stateSpaceGenerationPhase() {
 
 	    settings.factory().resetTotalNumberOfStates();
 
-	    setupMaterialization();
-	    setupCanonicalization();
-	    setupInclusionTest();
-	    setupAbortTest();
 
 	    assert(!inputs.isEmpty());
 
@@ -434,7 +470,7 @@ public class Attestor {
                     0
                 );
 
-	    printAnalyzedMethod();
+		printAnalyzedMethod();
 
 	    stateSpace = stateSpaceGenerator.generate();
 	    logger.info("State space generation finished. #states: "
@@ -526,20 +562,10 @@ public class Attestor {
 		final int abstractionDifference = settings.options().getAbstractionDistance();
 		final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
 		final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference ,
-																				aggressiveAbstractionThreshold, 
-																				aggressiveReturnAbstraction);
-		return checkerProvider;
+		return new EmbeddingCheckerProvider(abstractionDifference ,
+				aggressiveAbstractionThreshold,
+				aggressiveReturnAbstraction);
 	}
-
-    private void setupInclusionTest() {
-
-	    settings.stateSpaceGeneration()
-                .setInclusionStrategy(
-                        new GeneralInclusionStrategy()
-                );
-	    logger.info("Setup state inclusion test: Isomorphism.");
-    }
 
     private void setupAbortTest() {
 
@@ -566,18 +592,25 @@ public class Attestor {
 
 	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
 
+	    	ltlFormulas.add(formula.toString());
 	        logger.info("Checking formula: " + formula.toString() + "...");
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
+            	ltlFormulaResults.add(ANSI_GREEN + "satisfied" + ANSI_RESET);
                 logger.info("Formula is satisfied.");
             } else {
+				ltlFormulaResults.add(ANSI_RED + "violated" + ANSI_RESET);
                 logger.warn("Formula is not satisfied.");
             }
         }
 	}
 
 	private void reportPhase() throws IOException {
+
+		if(settings.options().isNoExport()) {
+			return;
+		}
 
 	    if(settings.output().isExportGrammar() ){
 	        String location = settings.output().getLocationForGrammar();
@@ -606,17 +639,17 @@ public class Attestor {
 
 		    exportStateSpace(
                     location + File.separator + "data",
-                    "statespace.json",
                     stateSpace,
                     program
             );
 
-            List<ProgramState> states = stateSpace.getStates();
-            for(int i=0; i < states.size(); i++) {
+            Set<ProgramState> states = stateSpace.getStates();
+            for(ProgramState state : states) {
+            	int i = state.getStateSpaceId();
                 exportHeapConfiguration(
                         location + File.separator + "data",
                         "hc_" + i + ".json",
-                        states.get(i).getHeap()
+                        state.getHeap()
                 );
             }
 
@@ -663,12 +696,12 @@ public class Attestor {
         writer.close();
     }
 
-    private void exportStateSpace(String directory, String filename, StateSpace stateSpace, Program program)
+    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
             throws IOException {
 
         FileUtils.createDirectories(directory);
         Writer writer = new BufferedWriter(
-                new OutputStreamWriter( new FileOutputStream(directory + File.separator + filename) )
+                new OutputStreamWriter( new FileOutputStream(directory + File.separator + "statespace.json") )
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
         exporter.export(stateSpace, program);
@@ -677,14 +710,42 @@ public class Attestor {
 
 	private void printSummary() {
 
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info("|           |  w/ procedure calls  |  w/o procedure calls  | final  |");
-        logger.info("+-----------+----------------------+-----------------------+--------+");
-        logger.info(String.format("| #states   |  %19d |  %19d  |  %5d |",
-                Settings.getInstance().factory().getTotalNumberOfStates(),
-                stateSpace.getStates().size(),
-                stateSpace.getFinalStates().size()
-        ));
-        logger.info("+-----------+----------------------+-----------------------+--------+");
+		double elapsedSetup = (setupTime - startupTime) / 1e9;
+		double elapsedParsing = (parsingTime - setupTime) / 1e9;
+		double elapsedPreprocessing = (preprocessingTime - parsingTime) / 1e9;
+		double elapsedStateSpaceGeneration = (stateSpaceGenerationTime - preprocessingTime) / 1e9;
+		double elapsedModelChecking = (modelCheckingTime - stateSpaceGenerationTime) / 1e9;
+		double elapsedReportGeneration = (reportGenerationTime - modelCheckingTime) / 1e9;
+		double elapsedTotal = (reportGenerationTime - startupTime) / 1e9;
+
+		logger.info("Summary for '"
+				+ settings.input().getClassName()
+				+ "."
+				+ settings.input().getMethodName()
+				+ "':"
+		);
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| Setup                            | %28.3f s |", elapsedSetup));
+		logger.info(String.format("| Parser                           | %28.3f s |", elapsedParsing));
+		logger.info(String.format("| Preprocessing                    | %28.3f s |", elapsedPreprocessing));
+		logger.info(String.format("| State space generation           | %28.3f s |", elapsedStateSpaceGeneration));
+		logger.info(String.format("| Model checking                   | %28.3f s |", elapsedModelChecking));
+		logger.info(String.format("| Report generation                | %28.3f s |", elapsedReportGeneration));
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
+		logger.info("+----------------------------------+--------------------------------+");
+		logger.info(String.format("| # states w/ procedure calls      | %30d |",
+					getTotalNumberOfStates()));
+		logger.info(String.format("| # states w/o procedure calls     | %30d |",
+        			getNumberOfStatesWithoutProcedureCalls()));
+		logger.info(String.format("| # final states                   | %30d |",
+        			getNumberOfFinalStates()));
+        logger.info("+-----------+----------------------+--------------------------------+");
+        if(!ltlFormulas.isEmpty()) {
+        	for(int i=0; i < ltlFormulas.size(); i++) {
+				logger.info(String.format("| %18s | %s", ltlFormulaResults.get(i), ltlFormulas.get(i)));
+			}
+			logger.info("+-----------+-------------------------------------------------------+");
+		}
     }
 }

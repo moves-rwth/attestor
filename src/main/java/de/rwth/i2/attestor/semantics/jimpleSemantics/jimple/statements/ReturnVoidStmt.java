@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -72,6 +73,7 @@ public class ReturnVoidStmt extends Statement {
 	private void removeLocals( JimpleProgramState programState ){
 		int scope = programState.getScopeDepth();
 		HeapConfiguration heap = programState.getHeap();
+		HeapConfigurationBuilder builder = heap.builder();
 		
 		TIntIterator iter = heap.variableEdges().iterator();
 		
@@ -81,9 +83,10 @@ public class ReturnVoidStmt extends Statement {
 			int var = iter.next();
 			String name = heap.nameOf(var);
 			if(name.startsWith(prefix)) {
-				heap.builder().removeVariableEdge(var).build();
+				builder.removeVariableEdge(var);
 			}
 		}
+		builder.build();
 	}
 
 }

@@ -1,11 +1,12 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.File;
-
-import org.apache.commons.cli.*;
-import org.apache.logging.log4j.*;
-
 import de.rwth.i2.attestor.LTLFormula;
+import org.apache.commons.cli.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
 
 /**
  * Parses the provided command line options in order to populate
@@ -38,7 +39,13 @@ public class CommandLineReader {
 	public void setupCLI() {
 
 		cliOptions = new Options();
-		
+
+		cliOptions.addOption(
+				Option.builder("ne")
+						.longOpt("no-export")
+						.build()
+		);
+
 		cliOptions.addOption(
 				Option.builder("rp")
 				.longOpt("root-path")
@@ -48,7 +55,7 @@ public class CommandLineReader {
 						+ "paths are evaluated relative to this path." )
 				.build()
 				);
-		
+
 		cliOptions.addOption( 
 				Option.builder("sf")
 				.longOpt( "settings-file" )
@@ -244,9 +251,14 @@ public class CommandLineReader {
 		
 		OptionSettings optionSettings = settings.options();
 
+		if(cmd.hasOption("ne"))	{
+			optionSettings.setNoExport(true);
+		} else {
+			optionSettings.setNoExport(false);
+		}
+
 		if(cmd.hasOption("ad")) {
 			optionSettings.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
-
 		}
 
 		if(cmd.hasOption("msp")) {

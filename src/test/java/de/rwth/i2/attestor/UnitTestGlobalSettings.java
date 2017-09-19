@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.main.settings.Settings;
 
 import java.io.File;
@@ -13,6 +14,7 @@ public final class UnitTestGlobalSettings {
 
     public static void reset() {
 
+        BasicNonterminal.clearExistingNonterminals();
         Settings.getInstance().resetAllSettings();
     }
 

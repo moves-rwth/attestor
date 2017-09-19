@@ -7,7 +7,7 @@ import gnu.trove.list.array.TIntArrayList;
  * Checks whether all already matched predecessors of the pattern candidate node are matched to predecessors
  * the the target candidate node.
  * Alternatively, this class can also check whether both nodes have the same predecessors if
- * the flag checkEquality is set.
+ * the flag checkEqualityOnExternal is set.
  *
  * @author Christoph
  */
@@ -18,49 +18,51 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 	 * already matched predecessor nodes. Otherwise, it suffices that all already matched predecessors of the pattern
 	 * node have matching predecessors of the target node.
 	 */
-	private final boolean checkEquality;
+	private final boolean checkEqualityOnExternal;
 
     /**
-     * @param checkEquality True if and only if exactly the same predecessors are required.
+     * @param checkEqualityOnExternal True if and only if exactly the same predecessors are required.
      */
-	public CompatiblePredecessors(boolean checkEquality) {
-		this.checkEquality = checkEquality;
+	public CompatiblePredecessors(boolean checkEqualityOnExternal) {
+		this.checkEqualityOnExternal = checkEqualityOnExternal;
 	}
 	
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 		
 		VF2GraphData pattern = state.getPattern();
 		VF2GraphData target = state.getTarget();
 		Graph patternGraph = pattern.getGraph();
 		Graph targetGraph = target.getGraph();
 
-		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(candidate.p);
+		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
+
+		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(p);
 		for(int i=0; i < predsOfP.size(); i++) {
 		
-			int p = predsOfP.get(i);
-			if(pattern.containsMatch(p)) {
+			int predP = predsOfP.get(i);
+			if(pattern.containsMatch(predP)) {
 			
-				int match = pattern.getMatch(p);
-				TIntArrayList targetPredecessors = targetGraph.getPredecessorsOf(candidate.t);
+				int match = pattern.getMatch(predP);
+				TIntArrayList targetPredecessors = targetGraph.getPredecessorsOf(t);
 				if(!targetPredecessors.contains(match)) {
 					
-					return !checkEquality && (targetGraph.isExternal(candidate.t) && targetGraph.isExternal(match));
+					return !checkEquality && (targetGraph.isExternal(t) && targetGraph.isExternal(match));
 				}
 			}
 		}
 		
-		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(candidate.t);
+		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(t);
 		for(int i=0; i < predsOfT.size(); i++) {
 			
-			int t = predsOfT.get(i);
-			if(target.containsMatch(t)) {
+			int predT = predsOfT.get(i);
+			if(target.containsMatch(predT)) {
 			
-				int match = target.getMatch(t);
-				TIntArrayList patternPredecessors = patternGraph.getPredecessorsOf(candidate.p);
+				int match = target.getMatch(predT);
+				TIntArrayList patternPredecessors = patternGraph.getPredecessorsOf(p);
 				if(!patternPredecessors.contains(match)) {
 					
-					return !checkEquality && (patternGraph.isExternal(candidate.p) && patternGraph.isExternal(match));
+					return !checkEquality && (patternGraph.isExternal(p) && patternGraph.isExternal(match));
 
 				}
 			}

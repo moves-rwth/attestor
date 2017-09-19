@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
@@ -79,7 +80,7 @@ public class FactorySettings {
      */
     private boolean requiresRefinedSymbols() {
 
-        return Settings.getInstance().options().getStateLabelingAutomaton() != null;
+        return Settings.getInstance().options().getRefinementAutomaton() != null;
     }
 
     /**
@@ -211,9 +212,6 @@ public class FactorySettings {
                 )
                 .setMaterializationStrategy(
                         settings.getMaterializationStrategy()
-                )
-                .setInclusionStrategy(
-                        settings.getInclusionStrategy()
                 )
                 .setCanonizationStrategy(
                         settings.getCanonicalizationStrategy()

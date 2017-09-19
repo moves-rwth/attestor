@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.graph.morphism;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A builder class to conveniently construct {@link VF2Algorithm}s step by step.
  * 
@@ -12,6 +15,8 @@ public final class VF2AlgorithmBuilder {
 	 * The VF2Algorithm under construction.
 	 */
 	private final VF2Algorithm algorithm;
+
+	private final List<FeasibilityFunction> feasibilityFunctions = new ArrayList<>();
 	
 	VF2AlgorithmBuilder() {
 		algorithm = new VF2Algorithm();
@@ -24,7 +29,9 @@ public final class VF2AlgorithmBuilder {
 	public VF2Algorithm build() {
 		assert(algorithm.morphismFoundCheck != null);
 		assert(algorithm.morphismImpossibleCheck != null);
-		
+
+		algorithm.feasibilityChecks = feasibilityFunctions.toArray(new FeasibilityFunction[feasibilityFunctions.size()]);
+
 		return algorithm;
 	}
 	
@@ -54,7 +61,7 @@ public final class VF2AlgorithmBuilder {
 	 * @return The builder.
 	 */
 	public VF2AlgorithmBuilder addFeasibilityCondition(FeasibilityFunction condition) {
-		algorithm.feasibilityChecks.add(condition);
+		feasibilityFunctions.add(condition);
 		return this;
 	}
 }

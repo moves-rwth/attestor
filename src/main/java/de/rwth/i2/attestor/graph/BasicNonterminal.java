@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author Christoph
  */
-public class BasicNonterminal implements Nonterminal {
+public final class BasicNonterminal implements Nonterminal {
 
 	/**
 	 * The logger used by this class.
@@ -29,6 +29,13 @@ public class BasicNonterminal implements Nonterminal {
 	 * Stores the unique nonterminal object corresponding to each label.
 	 */
 	private static final Map<String, BasicNonterminal> existingNonterminals = new HashMap<>();
+
+	/**
+	 * Method to remove all stored existing nonterminals.
+	 */
+	public static synchronized void clearExistingNonterminals() {
+		existingNonterminals.clear();
+	}
 
 	/**
 	 * Method to access already existing nonterminal symbols.
@@ -64,6 +71,7 @@ public class BasicNonterminal implements Nonterminal {
 			existingNonterminals.put( label, res );
 		}else{
 			res = existingNonterminals.get( label );
+			/*
 			if( res.getRank() != rank ){
 				logger.warn( label + ": rank of stored nonterminal does not match. got: " + res.getRank() + " request: " + rank );
 			}
@@ -72,7 +80,7 @@ public class BasicNonterminal implements Nonterminal {
 					logger.warn( label +  ": " + i + "th  reduction tentacle of stored nonterminal does not match. got: " + res.isReductionTentacle[i] + " request: " + isReductionTentacle[i] );
 				}
 			}
-			
+			*/
 		}
 		
 		return res;
@@ -136,4 +144,9 @@ public class BasicNonterminal implements Nonterminal {
 		return this.label;
 	}
 
+	@Override
+	public int hashCode() {
+
+		return label.hashCode();
+	}
 }

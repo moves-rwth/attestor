@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.CandidatePair;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
@@ -10,7 +10,7 @@ import gnu.trove.list.array.TIntArrayList;
  * Checks whether all already matched successors of the pattern candidate node are matched to predecessors
  * the the target candidate node.
  * Alternatively, this class can also check whether both nodes have the same successors if
- * the flag checkEquality is set.
+ * the flag checkEqualityOnExternal is set.
  *
  * @author Christoph
  */
@@ -21,48 +21,52 @@ public class CompatibleSuccessors implements FeasibilityFunction {
 	 * already matched successor nodes. Otherwise, it suffices that all already matched successors of the pattern
 	 * node have matching successors of the target node.
 	 */
-	private final boolean checkEquality;
+	private final boolean checkEqualityOnExternal;
 
 	/**
-	 * @param checkEquality True if and only if exactly the same successors are required.
+	 * @param checkEqualityOnExternal True if and only if exactly the same successors are required.
 	 */
-	public CompatibleSuccessors(boolean checkEquality) {
-		this.checkEquality = checkEquality;
+	public CompatibleSuccessors(boolean checkEqualityOnExternal) {
+		this.checkEqualityOnExternal = checkEqualityOnExternal;
 	}
 	
 	@Override
-	public boolean eval(VF2State state, CandidatePair candidate) {
+	public boolean eval(VF2State state, int p, int t) {
 
 		VF2GraphData pattern = state.getPattern();
+		Graph patternGraph = pattern.getGraph();
 		VF2GraphData target = state.getTarget();
-		
+		Graph targetGraph = target.getGraph();
 
-		TIntArrayList succsOfP = pattern.getGraph().getSuccessorsOf(candidate.p);
+		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
+
+
+		TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
 		for(int i=0; i < succsOfP.size(); i++) {
 
-			int p = succsOfP.get(i);
-			if(pattern.containsMatch(p)) {
+			int succP = succsOfP.get(i);
+			if(pattern.containsMatch(succP)) {
 			
-				int match = pattern.getMatch(p);
-				TIntArrayList targetSuccessors = target.getGraph().getSuccessorsOf(candidate.t);
+				int match = pattern.getMatch(succP);
+				TIntArrayList targetSuccessors = targetGraph.getSuccessorsOf(t);
 				if(!targetSuccessors.contains(match)) {
 					
-					return !checkEquality && (target.getGraph().isExternal(candidate.t) && target.getGraph().isExternal(match));
+					return !checkEquality && (targetGraph.isExternal(t) && targetGraph.isExternal(match));
 				}
 			}
 		}
 		
-		TIntArrayList succsOfT = target.getGraph().getSuccessorsOf(candidate.t);
+		TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
 		for(int i=0; i < succsOfT.size(); i++) {
 			
-			int t = succsOfT.get(i);
-			if(target.containsMatch(t)) {
+			int succT = succsOfT.get(i);
+			if(target.containsMatch(succT)) {
 			
-				int match = target.getMatch(t);
-				TIntArrayList patternSuccessors = pattern.getGraph().getSuccessorsOf(candidate.p);
+				int match = target.getMatch(succT);
+				TIntArrayList patternSuccessors = patternGraph.getSuccessorsOf(p);
 				if(!patternSuccessors.contains(match)) {
 
-					return !checkEquality && (pattern.getGraph().isExternal(candidate.p) && pattern.getGraph().isExternal(match));
+					return !checkEquality && (patternGraph.isExternal(p) && patternGraph.isExternal(match));
 				}
 			}
 		}

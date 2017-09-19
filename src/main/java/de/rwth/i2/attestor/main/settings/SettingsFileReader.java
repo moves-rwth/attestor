@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.automata.JsonToHeapAutomatonParser;
-import de.rwth.i2.attestor.strategies.stateRefinement.JsonStateRefinementStrategyParser;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -177,18 +175,6 @@ public class SettingsFileReader {
 		if( jsonOptions.has( "removeDeadVariables" ) ){
 			options.setRemoveDeadVariables( jsonOptions.getBoolean( "removeDeadVariables" ) );
 		}
-
-		if( jsonOptions.has("stateLabeling") ) {
-            JSONArray stateLabelingSettings = jsonOptions.getJSONArray("stateLabeling");
-            JsonToHeapAutomatonParser parser = new JsonToHeapAutomatonParser(stateLabelingSettings);
-            options.setStateLabelingAutomaton( parser.getHeapAutomaton() );
-        }
-
-        if( jsonOptions.has("stateRefinement") ) {
-            JSONArray stateRefinementSettings = jsonOptions.getJSONArray("stateRefinement");
-			JsonStateRefinementStrategyParser parser = new JsonStateRefinementStrategyParser(stateRefinementSettings);
-			settings.stateSpaceGeneration().setStateRefinementStrategy( parser.getStrategy() );
-        }
 
         if( jsonOptions.has("aggressiveNullAbstraction") ){
 			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );

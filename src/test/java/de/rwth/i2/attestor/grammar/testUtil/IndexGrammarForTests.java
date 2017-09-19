@@ -1,22 +1,20 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IndexGrammarForTests implements IndexMaterializationStrategy {
 
 	public IndexGrammarForTests() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public IndexedNonterminal materializeIndex(IndexedNonterminal nt, IndexSymbol s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

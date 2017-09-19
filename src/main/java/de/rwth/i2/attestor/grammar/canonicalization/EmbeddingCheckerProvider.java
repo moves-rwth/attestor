@@ -4,6 +4,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 /**
@@ -45,10 +47,16 @@ public class EmbeddingCheckerProvider {
 	 */
 	public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern,
 			Semantics semantics) {
-		
-		if( graph.countNodes() > aggressiveAbstractionThreshold
-                || (aggressiveReturnAbstraction && semantics instanceof TerminalStatement)) {
-	
+
+		Class sClass = semantics.getClass();
+
+		if( graph.countNodes() > aggressiveAbstractionThreshold || (aggressiveReturnAbstraction
+				&& (
+						sClass == ReturnValueStmt.class
+				     || sClass == ReturnVoidStmt.class
+					 || sClass == TerminalStatement.class
+				)
+		)) {
 			return new EmbeddingChecker( pattern, graph );
 		}
 

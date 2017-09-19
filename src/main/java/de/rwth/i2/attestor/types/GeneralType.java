@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author Christoph
  */
-public class GeneralType implements Type {
+public final class GeneralType implements Type {
 
     /**
      * The type object corresponding to the type 'null'.

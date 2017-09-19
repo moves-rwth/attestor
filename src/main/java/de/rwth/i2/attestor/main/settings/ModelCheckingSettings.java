@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.settings;
 import de.rwth.i2.attestor.LTLFormula;
 
 import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -17,7 +18,7 @@ public class ModelCheckingSettings {
     private boolean modelCheckingEnabled = false;
 
     // Contains all LTL formulae model checking should be performed for.
-    private HashSet<LTLFormula> formulae;
+    private Set<LTLFormula> formulae;
 
     public ModelCheckingSettings(){
         this.formulae = new HashSet<>();
@@ -31,7 +32,7 @@ public class ModelCheckingSettings {
         this.modelCheckingEnabled = enabled;
     }
 
-    public HashSet<LTLFormula> getFormulae(){
+    public Set<LTLFormula> getFormulae(){
         return this.formulae;
     }
 

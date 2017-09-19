@@ -1,17 +1,19 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import org.junit.BeforeClass;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
+import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class HeapConfigurationBuilderTest {
 
@@ -326,14 +328,14 @@ public class HeapConfigurationBuilderTest {
 		SelectorLabel s3 = new MockupSelector("third");
 		MockupType type = new MockupType();
 		TIntArrayList nodes = new TIntArrayList();
-		
+
 		hc.builder()
 			.addNodes(type, 3, nodes)
 			.addSelector(nodes.get(1), s2, nodes.get(0))
 			.addSelector(nodes.get(1), s1, nodes.get(0))
 			.replaceSelector(nodes.get(1), s2, s3)
 			.build();
-		
+
 		assertEquals("Number of selectors should remain unchanged.", 2, hc.selectorLabelsOf(nodes.get(1)).size());
 		assertTrue("Node should now have a selector edge labeled with s3.", hc.selectorLabelsOf(nodes.get(1)).contains(s3));
 		assertFalse("Node should not have a selector edge labeled with s2 anymore.", hc.selectorLabelsOf(nodes.get(1)).contains(s2));
@@ -997,6 +999,31 @@ public class HeapConfigurationBuilderTest {
 			fail("The number of external nodes of the matching pattern have to coincide with the rank of the provided nonterminal.");
 		} catch(IllegalArgumentException ex) {
 		}
+	}
+
+	@Test
+	public void testChangeNodeType() {
+
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		SelectorLabel s1 = new MockupSelector("first");
+		SelectorLabel s2 = new MockupSelector("second");
+		SelectorLabel s3 = new MockupSelector("third");
+		MockupType type = new MockupType();
+		TIntArrayList nodes = new TIntArrayList();
+
+		hc.builder()
+				.addNodes(type, 3, nodes)
+				.addSelector(nodes.get(1), s2, nodes.get(0))
+				.addSelector(nodes.get(1), s1, nodes.get(0))
+				.replaceSelector(nodes.get(1), s2, s3)
+				.replaceNodeType(nodes.get(1), GeneralType.getType("otherType"))
+				.build();
+
+		assertEquals(hc.nodeTypeOf(nodes.get(0)), type);
+		assertEquals(hc.nodeTypeOf(nodes.get(1)), GeneralType.getType("otherType"));
+		assertEquals(hc.nodeTypeOf(nodes.get(2)), type);
+
+
 	}
 	
 }

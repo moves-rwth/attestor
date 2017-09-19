@@ -21,7 +21,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	/**
 	 * The HeapConfiguration that is manipulated by this InternalHeapConfigurationBuilder.
 	 */
-	protected InternalHeapConfiguration heapConf;
+	private InternalHeapConfiguration heapConf;
 	
 	/**
 	 * Creates a new InternalHeapConfigurationBuilder for the provided InternalHeapConfiguration.
@@ -74,6 +74,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
                 return value;
             }
         });
+
+		heapConf.publicToPrivateIDs.retainEntries( (key,value) -> heapConf.graph.containsNode(value));
 	}
 
 	@Override
@@ -113,7 +115,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	/**
 	 * @return The next private ID available in the graph.
 	 */
-	protected int getNextPrivateId() {
+	private int getNextPrivateId() {
 		
 		return heapConf.graph.size();
 	}
@@ -167,7 +169,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * @param publicId the public ID 
 	 * @return the private ID corresponding to publicId if it exists.
 	 */
-	protected int getPrivateId(int publicId) {
+	private int getPrivateId(int publicId) {
 		
 		return heapConf.getPrivateId(publicId);
 	}
@@ -205,7 +207,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * @param privateId A privateId belonging to the underlyin InternalHeapConfiguration.
 	 * @return True if and only if the provided private ID corresponds to a node.
 	 */
-	protected boolean isNode(int privateId) {
+	private boolean isNode(int privateId) {
 		
 		return heapConf.isNode(privateId);
 	}
@@ -232,11 +234,11 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	public HeapConfigurationBuilder replaceSelector(int node, SelectorLabel oldSel, SelectorLabel newSel) {
 		
 		int privateId = getPrivateId(node);
-		
+
 		if(!isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
-		
+
 		if(oldSel == null || newSel == null) {
 			throw new NullPointerException();
 		}
@@ -587,7 +589,23 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		return this;
 	}
 
-    /**
+	@Override
+	public HeapConfigurationBuilder replaceNodeType(int node, Type newType) {
+
+		if(newType == null) {
+			throw new NullPointerException();
+		}
+
+		int privateId = getPrivateId(node);
+		if(!isNode(privateId)) {
+			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
+		}
+
+		heapConf.graph.replaceNodeLabel(privateId, newType);
+		return this;
+	}
+
+	/**
      * Removes all selector and tentacle edges in the underlying HeapConfiguration that belong to the provided
      * HeapConfiguration according to the provided matching.
      * @param matching A mapping from the provided HeapConfiguration to elements of the underlying HeapConfiguration.

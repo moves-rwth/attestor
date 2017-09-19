@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  * This comprises information about the current program location, that is the value of the program counter,
  * of the state and the program's heap.
  */
-public interface ProgramState extends Cloneable, LabelledProgramState {
+public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 	/**
 	 * @return The program location of this state.

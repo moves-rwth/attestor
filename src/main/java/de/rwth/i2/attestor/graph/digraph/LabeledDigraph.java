@@ -97,15 +97,13 @@ public class LabeledDigraph {
 	 * @return NodeLabel of the given node or null if the provided index does not correspond to a node.
 	 */
 	public NodeLabel nodeLabelOf(int node) {
-		
+
 		if(containsNode(node)) {
 			
 			return nodeLabels.get(node);	
 		} else {
-			
 			return null;
 		}
-		
 	}
 	
 	/**

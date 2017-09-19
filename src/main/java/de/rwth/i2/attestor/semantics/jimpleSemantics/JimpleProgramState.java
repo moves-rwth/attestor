@@ -139,5 +139,4 @@ public interface JimpleProgramState extends ProgramState {
      * @return True if and only if the provided name (within scope) corresponds to a constant.
      */
 	boolean isConstantName(String constant);
-
 }

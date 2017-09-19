@@ -39,28 +39,34 @@ public class IndexedState extends GeneralJimpleProgramState {
 
 
 	public int hashCode() {
-		if( getHeap() != null ){
-			return getHeap().hashCode();
-		}else{
-			return 0;
-		}
+
+		int hash = programCounter;
+		hash = (hash << 1) ^ scopeDepth;
+		hash = (hash << 1) ^ heap.hashCode();
+		return hash;
 	}
 	
 	@Override
 	public boolean equals(Object other) {
-		
-		if(other instanceof IndexedState) {
 
-			IndexedState state = (IndexedState) other;
-
-			return programCounter == state.programCounter
-					&& scopeDepth == state.scopeDepth
-					&& atomicPropositions.equals(state.getAPs())
-					&& heap.equals(state.getHeap());
-
+		if(other == this) {
+			return true;
 		}
-		
-		return false;
+
+		if(other == null) {
+			return false;
+		}
+
+		if(other.getClass() != IndexedState.class) {
+			return false;
+		}
+
+		IndexedState state = (IndexedState) other;
+
+		return programCounter == state.programCounter
+			&& scopeDepth == state.scopeDepth
+			&& atomicPropositions.equals(state.getAPs())
+			&& heap.equals(state.getHeap());
 	}
 
 	@Override

@@ -27,11 +27,15 @@ public class IntConstant implements Value {
 	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue res = programState.getConstant( "" + intValue );
+
+		/*
 		if( res.type() != this.type ){
 			String msg = "The type of the resulting ConcreteValue does not match.";
 			msg += "\n expected: " + this.type + " got: " + res.type();
 			logger.debug( msg );
 		}
+		*/
+
 		return res;
 	}
 
