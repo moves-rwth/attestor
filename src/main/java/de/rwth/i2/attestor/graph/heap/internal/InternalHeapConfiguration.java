@@ -594,15 +594,15 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
 		int privateId = checkNodeAndGetPrivateId(node);
 		TIntIntMap result = new TIntIntHashMap(graph.predecessorSizeOf(privateId));
-		TIntIterator predIter = graph.predecessorsOf(privateId)	.iterator();
+		TIntIterator predIter = graph.predecessorsOf(privateId).iterator();
 		while(predIter.hasNext()) {
 			int pred = predIter.next();
 			if(isNonterminalEdge(pred)) {
 				TIntArrayList att = graph.successorsOf(pred);
-				Nonterminal label = labelOf(pred);
+				Nonterminal label = (Nonterminal) graph.nodeLabelOf(pred);
 				for(int tentacle = 0; tentacle < att.size(); tentacle++) {
 					if(att.get(tentacle) == privateId && !label.isReductionTentacle(tentacle)) {
-						result.put(pred, tentacle);
+						result.put(getPublicId(pred), tentacle);
 						break;
 					}
 				}
