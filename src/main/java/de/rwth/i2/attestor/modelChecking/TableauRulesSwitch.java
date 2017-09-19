@@ -98,8 +98,14 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 	public void caseANegStateform(ANegStateform node){
 		Assertion current = (Assertion) this.getIn(node);
 
-		String negExpectedAP = node.getAtomicprop().toString().trim();
-		if(!current.getProgramState().satisfiesAP(negExpectedAP)){
+		// Because of PNF we know that the negated LTL formula is a term
+		assert node.getLtlform() instanceof ATermLtlform;
+
+		ATermLtlform term = (ATermLtlform) node.getLtlform();
+
+		String negExpectedAP = node.getLtlform().toString().trim();
+		//String negExpectedAP = node.getAtomicprop().toString().trim();
+		if(term.getTerm() instanceof AFalseTerm || !current.getProgramState().satisfiesAP(negExpectedAP)){
 			current.setTrue();
 			this.setOut(node, null);
 		} else {
