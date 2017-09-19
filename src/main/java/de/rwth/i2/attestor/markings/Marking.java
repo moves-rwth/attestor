@@ -6,6 +6,12 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A marking specifies a single variable that should traverse all unfolded HeapConfigurations according to a grammar
+ * together with a (sub)set of selectors that should additionally be marked.
+ *
+ * @author Christoph
+ */
 public class Marking {
 
     private static final String MARKING_PREFIX = "%";
@@ -13,6 +19,11 @@ public class Marking {
     private String markingName;
     private List<SelectorLabel> requiredSelectorLabels;
 
+    /**
+     * Specifies a new Marking
+     * @param markingName The name of the universally quantified variable that should traverse every node.
+     * @param requiredSelectors The (sub)set of selectors that should additionally be marked.
+     */
     public Marking(String markingName, String... requiredSelectors) {
 
         this.markingName = markingName;
@@ -26,16 +37,26 @@ public class Marking {
 
     }
 
+    /**
+     * @return The full variable name used to mark the currently visited node.
+     */
     public String getUniversalVariableName() {
 
         return MARKING_PREFIX + markingName;
     }
 
+    /**
+     * @return A list of all selector labels that have to be marked.
+     */
     public List<SelectorLabel> getRequiredSelectors() {
 
         return requiredSelectorLabels;
     }
 
+    /**
+     * @param selector The label of a selector label.
+     * @return The variable name used to mark a selector with the given label.
+     */
     public String getSelectorVariableName(String selector) {
 
         return MARKING_PREFIX + markingName + "." + selector;

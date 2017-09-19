@@ -16,12 +16,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ *
+ * Given a grammar and an initial HeapConfiguration, this class computes a set of partially unfolded HeapConfigurations
+ * in which every node and ,if specified, some of its selectors are marked by special variables.
+ * The computed sets covers all possible unfolded HeapConfigurations of the initial
+ * one with respect to the given grammar.
+ *
+ * @author Christoph
+ */
 public class MarkedHcGenerator {
 
     private Grammar grammar;
     private Marking marking;
     private String universalVariableName;
-    List<SelectorLabel> requiredSelectors;
+    private List<SelectorLabel> requiredSelectors;
 
     private Set<HeapConfiguration> markedHeapConfigurations = new HashSet<>();
     private Stack<HeapConfiguration> unexploredHeapConfigurations = new Stack<>();
@@ -30,6 +39,13 @@ public class MarkedHcGenerator {
     private HeapConfiguration currentHc;
     private TIntIntMap nonReductionTentacles;
 
+    /**
+     * Start generating all marked HeapConfigurations.
+     * @param initialHc The HeapConfigurations whose unfolded HeapConfigurations shall be marked.
+     * @param grammar The grammar specifying materialization and canonicalization.
+     * @param marking A specification of the variable that should traverse every node in the unfolded HeapConfigurations
+     *                and the selectors that should also be marked.
+     */
     public MarkedHcGenerator(HeapConfiguration initialHc, Grammar grammar, Marking marking) {
 
         this.grammar = grammar;
@@ -41,6 +57,9 @@ public class MarkedHcGenerator {
         computeFixpointOfMarkedHcs();
     }
 
+    /**
+     * @return The set of marked HeapConfigurations.
+     */
     public Set<HeapConfiguration> getMarkedHcs() {
 
         return markedHeapConfigurations;
@@ -69,10 +88,9 @@ public class MarkedHcGenerator {
 
         while( !unexploredHeapConfigurations.isEmpty() ) {
             nextCurrent();
-            if(isCurrentNodeFullyConcrete()) {
-                completeCurrentMarking();
-                currentHc = canonicalizeCurrent(currentHc);
-                if(markedHeapConfigurations.add(currentHc)) {
+            if(isCurrentNodeFullyConcrete() && completeCurrentMarking()) {
+                HeapConfiguration canonicalHc = canonicalizeCurrent(currentHc);
+                if (markedHeapConfigurations.add(canonicalHc)) {
                     moveCurrentNodeToEachSuccessor();
                 }
             } else {
@@ -93,7 +111,7 @@ public class MarkedHcGenerator {
         return nonReductionTentacles.isEmpty();
     }
 
-    private void completeCurrentMarking() {
+    private boolean completeCurrentMarking() {
 
         List<SelectorLabel> availableSelectors = currentHc.selectorLabelsOf(currentNode);
         if(availableSelectors.containsAll(requiredSelectors)) {
@@ -105,7 +123,9 @@ public class MarkedHcGenerator {
                 );
             }
             builder.build();
+            return true;
         }
+        return requiredSelectors.isEmpty();
     }
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
@@ -115,7 +135,11 @@ public class MarkedHcGenerator {
                 AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0);
                 if(checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
-                    return hc.clone().builder().replaceMatching( embedding, lhs).build();
+                    HeapConfiguration abstractedHc = hc.clone()
+                            .builder()
+                            .replaceMatching( embedding, lhs)
+                            .build();
+                    return canonicalizeCurrent(abstractedHc);
                 }
             }
         }

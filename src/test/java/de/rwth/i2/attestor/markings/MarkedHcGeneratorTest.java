@@ -114,6 +114,7 @@ public class MarkedHcGeneratorTest {
       expectedMarkedHcs.add(unfoldedHc);
 
       MarkedHcGenerator generator = new MarkedHcGenerator(hc, grammar, marking);
+
       assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
    }
 }
