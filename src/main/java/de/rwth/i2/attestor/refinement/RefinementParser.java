@@ -2,9 +2,6 @@ package de.rwth.i2.attestor.refinement;
 
 import de.rwth.i2.attestor.refinement.product.ProductHeapAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedNodesAutomaton;
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedStateRefinementStrategy;
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedVariableStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import org.apache.logging.log4j.LogManager;
@@ -37,26 +34,14 @@ public class RefinementParser {
 
     private void parseAtomicPropositions(String ap) {
 
-        String[] apContents = ap.split("[\\{\\}]");
-        if(apContents.length < 2) {
-            logger.warn("Invalid atomic proposition '" + ap + "'");
-            return;
-        }
-
-        ap = apContents[1].trim();
-
         switch(ap) {
             case "tree":
             case "btree":
             case "sll":
             case "dll":
             case "identicNeighbours":
-                logger.warn("Atomic proposition '" + ap + "' is not supported yet.");
-                break;
             case "visited":
-                heapAutomata.add(new VisitedNodesAutomaton());
-                stateRefinements.add(new VisitedStateRefinementStrategy());
-                logger.info("Enable heap automaton to track all nodes visited by some variable.");
+                logger.warn("Atomic proposition '" + ap + "' is not supported yet.");
                 break;
             default:
                 parseParametrizedAp(ap);
@@ -67,10 +52,11 @@ public class RefinementParser {
     private void parseParametrizedAp(String ap) {
 
         if(visitedByPattern.matcher(ap).matches()) {
-            heapAutomata.add(new VisitedNodesAutomaton(ap));
+            //heapAutomata.add(new VisitedNodesAutomaton(ap));
             String varName = ap.split("[\\(\\)]")[1];
-            stateRefinements.add(new VisitedVariableStateRefinementStrategy(varName));
-            logger.info("Enable heap automaton to track all nodes visited by variable '" + varName + "'.");
+            logger.warn("Atomic proposition '" + ap + "' is not supported yet.");
+            //stateRefinements.add(new VisitedVariableStateRefinementStrategy(varName));
+            //logger.info("Enable heap automaton to track all nodes visited by variable '" + varName + "'.");
         } else if(!hasReachableAutomaton && reachablePattern.matcher(ap).matches()) {
             heapAutomata.add(new ReachabilityHeapAutomaton());
             hasReachableAutomaton = true;

@@ -41,8 +41,17 @@ public class ModelCheckingSettings {
     public void addFormula(LTLFormula formula){
         this.formulae.add(formula);
         for(String ap : formula.getApList()) {
-            requiredAtomicPropositions.add(ap);
+            requiredAtomicPropositions.add(extractAP(ap));
         }
+    }
+
+    private String extractAP(String apString) {
+
+        String[] apContents = apString.split("[\\{\\}]");
+        if(apContents.length < 2) {
+            return null;
+        }
+        return apContents[1].trim();
     }
 
 

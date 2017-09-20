@@ -425,7 +425,6 @@ public class Attestor {
 			}
 		}
 
-
 		if(requiresVisitedMarking) {
 			logger.info("Computing marked inputs to track visited identities...");
 			markInputs(new Marking("visited"));
@@ -643,8 +642,9 @@ public class Attestor {
 
 	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
 
-	    	ltlFormulas.add(formula.toString());
-	        logger.info("Checking formula: " + formula.toString() + "...");
+	    	String formulaString = formula.getFormulaString();
+	    	ltlFormulas.add(formulaString);
+	        logger.info("Checking formula: " + formulaString + "...");
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
