@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.semantics.util.Constants;
 
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class VariablesUtil {
         String [] vars = name.split( "(==)|(\\!=)|(=)" );
 		for (String var : vars) {
             String varName = var.split("\\.")[0].trim();
-            if (!liveVariables.contains(varName) && !programState.isConstantName(varName)) {
+            if (!liveVariables.contains(varName) && !Constants.isConstant(varName)) {
                 programState.removeVariable(varName);
             }
         }

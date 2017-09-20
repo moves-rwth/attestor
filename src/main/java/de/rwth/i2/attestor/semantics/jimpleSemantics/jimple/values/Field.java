@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -68,7 +69,7 @@ public class Field implements SettableValue {
 			return programState.getUndefined();
 		} else {
 			
-			if(programState.getConstant("null").equals(concreteOrigin)) {
+			if(programState.getConstant(Constants.NULL).equals(concreteOrigin)) {
 				throw new NullPointerDereferenceException(originValue);
 			}
 			

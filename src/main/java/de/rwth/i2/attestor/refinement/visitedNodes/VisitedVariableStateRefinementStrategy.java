@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.refinement.visitedNodes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.types.Type;
@@ -24,11 +25,12 @@ public class VisitedVariableStateRefinementStrategy implements StateRefinementSt
     @Override
     public ProgramState refine(ProgramState state) {
 
-        markConstant( state, "null" );
-        markConstant( state, "true" );
-        markConstant( state, "false" );
-        markConstant( state, "0" );
-        markConstant( state, "1" );
+        markConstant( state, Constants.NULL );
+        markConstant( state, Constants.TRUE );
+        markConstant( state, Constants.FALSE );
+        markConstant( state, Constants.ZERO );
+        markConstant( state, Constants.ONE );
+        markConstant( state, Constants.MINUS_ONE );
         markVariable( state, variableName );
 
         return state;

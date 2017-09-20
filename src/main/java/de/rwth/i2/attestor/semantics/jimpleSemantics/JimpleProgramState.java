@@ -132,11 +132,4 @@ public interface JimpleProgramState extends ProgramState {
 	 * @return The current depth of the scope of this executable.
 	 */
 	int getScopeDepth();
-
-    /**
-     * Checks whether the given name corresponds to a constant (within scope) of this executable.
-     * @param constant The name of the constant (without scope).
-     * @return True if and only if the provided name (within scope) corresponds to a constant.
-     */
-	boolean isConstantName(String constant);
 }
