@@ -47,7 +47,11 @@ public class InputSettings {
 	 * predefined grammars
 	 */
 	private HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
-	// The mapping from predefined grammars to their rename mapping
+
+
+	/**
+	 * The mapping from predefined grammars to their rename mapping
+	 */
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 
     /**
@@ -234,4 +238,5 @@ public class InputSettings {
 	public String getRenamingLocation(String predefinedGrammar) {
 		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
+
 }

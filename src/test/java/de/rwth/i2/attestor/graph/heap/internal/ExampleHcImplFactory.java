@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ExampleHcImplFactory {
+
+	public static HeapConfiguration getEmptyHc() {
+
+		return new InternalHeapConfiguration();
+	}
 	
 	public static HeapConfiguration getSimpleDLL() {
 		
@@ -538,7 +543,7 @@ public final class ExampleHcImplFactory {
 		Type listType = Settings.getInstance().factory().getType("List");
 		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
-		
+
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()

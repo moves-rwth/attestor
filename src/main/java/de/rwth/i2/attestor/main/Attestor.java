@@ -28,6 +28,8 @@ import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.markings.MarkedHcGenerator;
+import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.RefinementParser;
@@ -50,7 +52,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
-
+import java.util.regex.Pattern;
 
 
 /**
@@ -109,11 +111,6 @@ public class Attestor {
 	 * The global settings for Attestor.
 	 */
 	private final Settings settings = Settings.getInstance();
-
-    /**
-     * The originally parsed input heap configuration.
-     */
-	private HeapConfiguration originalInput;
 
     /**
      * The input heap configurations that will be used to analyze the program.
@@ -366,11 +363,13 @@ public class Attestor {
 
 		JSONObject jsonObj = new JSONObject(str);
 
+		HeapConfiguration originalInput;
 		if(settings.options().isIndexedMode()) {
 		    originalInput = JsonToIndexedHC.jsonToHC( jsonObj );
 		} else {
 			originalInput = JsonToDefaultHC.jsonToHC( jsonObj );
 		}
+		inputs.add(originalInput);
 	}
 
 	private void loadProgram() {
@@ -385,12 +384,13 @@ public class Attestor {
 
 	private void preprocessingPhase() {
 
+		computeMarkedHeapConfigurations();
+
 		determineRequiredRefinements();
 
         if(!settings.options().isIndexedMode()) {
             setupStateLabeling();
         } else {
-            inputs.add(originalInput);
             settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
             settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
             logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
@@ -401,13 +401,61 @@ public class Attestor {
 		setupAbortTest();
 	}
 
-	private void determineRequiredRefinements() {
+	private void computeMarkedHeapConfigurations() {
 
-		HashSet<String> requiredAPs = new HashSet<>();
-		for(LTLFormula formula : settings.modelChecking().getFormulae()) {
-			requiredAPs.addAll(formula.getApList());
+		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
+
+		boolean requiresVisitedMarking = false;
+		boolean requiresNeighbourhoodMarking = false;
+
+		Pattern visitedPattern = Pattern.compile("^visited$|^visited\\(\\p{Alnum}+\\)$");
+
+		for(String s : requiredAPs) {
+
+			if(requiresNeighbourhoodMarking && requiresVisitedMarking) {
+				break;
+			}
+
+			if(!requiresVisitedMarking && visitedPattern.matcher(s).matches()) {
+				requiresVisitedMarking = true;
+			}
+
+			if(!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
+				requiresNeighbourhoodMarking = true;
+			}
 		}
 
+
+		if(requiresVisitedMarking) {
+			logger.info("Computing marked inputs to track visited identities...");
+			markInputs(new Marking("visited"));
+		}
+
+		if(requiresNeighbourhoodMarking) {
+			logger.info("Computing marked inputs to track neighbourhood identities...");
+			markInputs(new Marking("neighbourhood", true));
+		}
+
+	}
+
+	private void markInputs(Marking marking) {
+
+		Grammar grammar = settings.grammar().getGrammar();
+		List<HeapConfiguration> newInputs = new ArrayList<>();
+		for(HeapConfiguration input : inputs) {
+			MarkedHcGenerator generator = new MarkedHcGenerator(input, grammar, marking);
+			newInputs.addAll(generator.getMarkedHcs());
+		}
+		if(newInputs.isEmpty()) {
+			throw new IllegalStateException("No marked heap configurations could be computed.");
+		}
+		inputs = newInputs;
+		logger.info("Generated " + inputs.size() + " marked heap configurations.");
+	}
+
+	private void determineRequiredRefinements() {
+
+		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
 		logger.info("Setup refinements for " + requiredAPs.size() + " atomic proposition(s).");
 
 		RefinementParser refinementParser = new RefinementParser(requiredAPs);
@@ -421,7 +469,6 @@ public class Attestor {
 		HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
 		if(refinementAutomaton == null) {
 			logger.info("No grammar refinement is required.");
-			inputs.add(originalInput);
 			settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
 			return;
 		}
@@ -438,13 +485,17 @@ public class Attestor {
 
         logger.info("Refining input heap configuration...");
 
-        InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
-        		originalInput,
-				settings.grammar().getGrammar(),
-				refinementAutomaton
-		);
+        List<HeapConfiguration> newInputs = new ArrayList<>();
+        for(HeapConfiguration input : inputs) {
+			InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
+					input,
+					settings.grammar().getGrammar(),
+					refinementAutomaton
+			);
 
-        inputs = inputRefinement.getRefinements();
+			newInputs.addAll(inputRefinement.getRefinements());
+		}
+		inputs = newInputs;
 
         if(inputs.isEmpty())	{
             logger.fatal("No refined initial state exists.");
@@ -613,6 +664,9 @@ public class Attestor {
 		}
 
 	    if(settings.output().isExportGrammar() ){
+
+			logger.info("Exporting grammar...");
+
 	        String location = settings.output().getLocationForGrammar();
 
             // Copy necessary libraries
@@ -626,15 +680,12 @@ public class Attestor {
             GrammarExporter exporter = new JsonGrammarExporter();
             exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
 
-            logger.info("Grammar exported to '"
-                    + location
-            );
-
-
+            logger.info("done. Grammar exported to '" + location + "'");
         }
 
 		if(settings.output().isExportStateSpace() ) {
 
+	    	logger.info("Exporting state space...");
 		    String location = settings.output().getLocationForStateSpace();
 
 		    exportStateSpace(
@@ -658,7 +709,7 @@ public class Attestor {
             File targetDirectory = new File(location + File.separator);
             ZipUtils.unzip(zis, targetDirectory);
 
-            logger.info("State space exported to '"
+            logger.info("done. State space exported to '"
                     + location
                     + "'"
             );
