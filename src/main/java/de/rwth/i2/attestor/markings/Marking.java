@@ -18,6 +18,7 @@ public class Marking {
 
     private String markingName;
     private List<SelectorLabel> requiredSelectorLabels;
+    private boolean markAllSuccessors = false;
 
     /**
      * Specifies a new Marking
@@ -38,6 +39,18 @@ public class Marking {
     }
 
     /**
+     * Specifies a new Marking
+     * @param markingName The name of the universally quantified variable that should traverse every node.
+     * @param markAllSuccessors True iff all successors should be marked without checking for the existence of
+     *                          specific ones.
+     */
+    public Marking(String markingName, boolean markAllSuccessors) {
+
+        this.markingName = markingName;
+        this.markAllSuccessors = markAllSuccessors;
+    }
+
+    /**
      * @return The full variable name used to mark the currently visited node.
      */
     public String getUniversalVariableName() {
@@ -51,6 +64,13 @@ public class Marking {
     public List<SelectorLabel> getRequiredSelectors() {
 
         return requiredSelectorLabels;
+    }
+
+    /**
+     * @return True iff all selectors should be marked without checking for the existence of specific ones.
+     */
+    public boolean isMarkAllSuccessors() {
+        return markAllSuccessors;
     }
 
     /**

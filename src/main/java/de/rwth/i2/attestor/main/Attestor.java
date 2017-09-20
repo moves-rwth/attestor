@@ -52,7 +52,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
-
+import java.util.regex.Pattern;
 
 
 /**
@@ -403,32 +403,59 @@ public class Attestor {
 
 	private void computeMarkedHeapConfigurations() {
 
-		Marking marking = settings.input().getMarking();
-		Grammar grammar = settings.grammar().getGrammar();
-		if(marking != null) {
+		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
 
-			logger.info("Computing marked inputs to track object identities...");
-			List<HeapConfiguration> newInputs = new ArrayList<>();
-			for(HeapConfiguration input : inputs) {
-				MarkedHcGenerator generator = new MarkedHcGenerator(input, grammar, marking);
-				newInputs.addAll(generator.getMarkedHcs());
+		boolean requiresVisitedMarking = false;
+		boolean requiresNeighbourhoodMarking = false;
+
+		Pattern visitedPattern = Pattern.compile("^visited$|^visited\\(\\p{Alnum}+\\)$");
+
+		for(String s : requiredAPs) {
+
+			if(requiresNeighbourhoodMarking && requiresVisitedMarking) {
+				break;
 			}
 
-			if(newInputs.isEmpty()) {
-				throw new IllegalStateException("No marked heap configurations could be computed.");
+			if(!requiresVisitedMarking && visitedPattern.matcher(s).matches()) {
+				requiresVisitedMarking = true;
 			}
-			inputs = newInputs;
-			logger.info("done. Generated " + inputs.size() + " marked initial heap configurations.");
+
+			if(!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
+				requiresNeighbourhoodMarking = true;
+			}
 		}
+
+
+		if(requiresVisitedMarking) {
+			logger.info("Computing marked inputs to track visited identities...");
+			markInputs(new Marking("visited"));
+		}
+
+		if(requiresNeighbourhoodMarking) {
+			logger.info("Computing marked inputs to track neighbourhood identities...");
+			markInputs(new Marking("neighbourhood", true));
+		}
+
+	}
+
+	private void markInputs(Marking marking) {
+
+		Grammar grammar = settings.grammar().getGrammar();
+		List<HeapConfiguration> newInputs = new ArrayList<>();
+		for(HeapConfiguration input : inputs) {
+			MarkedHcGenerator generator = new MarkedHcGenerator(input, grammar, marking);
+			newInputs.addAll(generator.getMarkedHcs());
+		}
+		if(newInputs.isEmpty()) {
+			throw new IllegalStateException("No marked heap configurations could be computed.");
+		}
+		inputs = newInputs;
+		logger.info("Generated " + inputs.size() + " marked heap configurations.");
 	}
 
 	private void determineRequiredRefinements() {
 
-		HashSet<String> requiredAPs = new HashSet<>();
-		for(LTLFormula formula : settings.modelChecking().getFormulae()) {
-			requiredAPs.addAll(formula.getApList());
-		}
-
+		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
 		logger.info("Setup refinements for " + requiredAPs.size() + " atomic proposition(s).");
 
 		RefinementParser refinementParser = new RefinementParser(requiredAPs);

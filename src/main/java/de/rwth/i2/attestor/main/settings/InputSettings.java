@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.markings.Marking;
-
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,11 +58,6 @@ public class InputSettings {
      * The path to the file specifying the initial state.
      */
 	private String pathToInput;
-
-	/**
-	 * The marking used for preprocessing to track object identities
-	 */
-	private Marking marking;
 
 	public URL getInitialStatesURL() {
 		return initialStatesURL;
@@ -246,11 +239,4 @@ public class InputSettings {
 		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
 
-	public void setMarking(Marking marking) {
-		this.marking = marking;
-	}
-
-	public Marking getMarking() {
-		return marking;
-	}
 }

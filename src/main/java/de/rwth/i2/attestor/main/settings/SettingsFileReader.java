@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.markings.Marking;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -134,21 +133,6 @@ public class SettingsFileReader {
 				throw new IllegalStateException("Default initial states location not found.");
 			} else {
 				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
-			}
-		}
-
-		if(jsonInput.has("marking")) {
-			JSONObject marking = jsonInput.getJSONObject("marking");
-			if(marking.has("name") && marking.has("selectors")) {
-				String markingName =  marking.getString("name");
-				JSONArray selectors = marking.getJSONArray("selectors");
-				String[] requiredSelectors = new String[selectors.length()];
-				for(int i=0; i < selectors.length(); i++) {
-					requiredSelectors[i] = selectors.getString(i);
-				}
-				input.setMarking(new Marking(markingName, requiredSelectors));
-			} else {
-				logger.error("You must define a name and the required selectors for markings.");
 			}
 		}
 

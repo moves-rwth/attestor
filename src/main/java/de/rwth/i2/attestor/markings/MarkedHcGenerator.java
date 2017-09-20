@@ -114,7 +114,18 @@ public class MarkedHcGenerator {
     private boolean completeCurrentMarking() {
 
         List<SelectorLabel> availableSelectors = currentHc.selectorLabelsOf(currentNode);
-        if(availableSelectors.containsAll(requiredSelectors)) {
+
+        if(marking.isMarkAllSuccessors()) {
+            HeapConfigurationBuilder builder = currentHc.builder();
+            for(SelectorLabel sel : availableSelectors) {
+                builder.addVariableEdge(
+                        marking.getSelectorVariableName(sel.getLabel()),
+                        currentHc.selectorTargetOf(currentNode, sel)
+                );
+            }
+            builder.build();
+            return true;
+        } else if(availableSelectors.containsAll(requiredSelectors)) {
             HeapConfigurationBuilder builder = currentHc.builder();
             for(SelectorLabel sel : requiredSelectors) {
                 builder.addVariableEdge(
@@ -125,7 +136,7 @@ public class MarkedHcGenerator {
             builder.build();
             return true;
         }
-        return requiredSelectors.isEmpty();
+        return marking.isMarkAllSuccessors() || requiredSelectors.isEmpty();
     }
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
