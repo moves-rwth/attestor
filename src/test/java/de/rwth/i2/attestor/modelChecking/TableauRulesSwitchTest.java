@@ -166,7 +166,8 @@ public class TableauRulesSwitchTest {
 		Assertion currentVertex = new Assertion(state);
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
-		ANegStateform negStateForm = new ANegStateform(new TNeg(), ap);
+		ATermLtlform apTerm = new ATermLtlform(new AAtomicpropTerm(ap));
+		ANegStateform negStateForm = new ANegStateform(new TNeg(), apTerm);
 		
 		currentVertex.addFormula(negStateForm);
 		
