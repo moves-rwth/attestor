@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.refinement;
 
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedStateRefinementStrategy;
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedVariableStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import org.apache.logging.log4j.LogManager;
@@ -51,17 +49,9 @@ public class JsonToStateRefinementStrategies {
         switch(name) {
             case "balance":
                 return new BalancednessStateRefinementStrategy();
-            case "visited":
-                return new VisitedStateRefinementStrategy();
             default:
-                if(name.startsWith("visitedBy(") && name.endsWith(")")) {
-                    String varName = name.split("[\\(\\)]")[1];
-                    return new VisitedVariableStateRefinementStrategy(varName);
-                } else {
                     logger.warn("Skipping unknown state refinement strategy '" + name + "'");
                     return null;
-
-                }
         }
     }
 

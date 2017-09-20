@@ -1,58 +1,14 @@
 package de.rwth.i2.attestor.main;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.GrammarExporter;
-import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.materialization.*;
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.CustomHcListExporter;
-import de.rwth.i2.attestor.io.JsonToDefaultHC;
-import de.rwth.i2.attestor.io.JsonToIndexedHC;
-import de.rwth.i2.attestor.io.jsonExport.JsonCustomHcListExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonGrammarExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonHeapConfigurationExporter;
-import de.rwth.i2.attestor.io.jsonExport.JsonStateSpaceExporter;
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
+import de.rwth.i2.attestor.main.phases.PhaseRegistry;
+import de.rwth.i2.attestor.main.phases.impl.*;
+import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
-import de.rwth.i2.attestor.markings.MarkedHcGenerator;
-import de.rwth.i2.attestor.markings.Marking;
-import de.rwth.i2.attestor.modelChecking.ProofStructure;
-import de.rwth.i2.attestor.refinement.HeapAutomaton;
-import de.rwth.i2.attestor.refinement.RefinementParser;
-import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
-import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
-import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
-import de.rwth.i2.attestor.util.FileReader;
-import de.rwth.i2.attestor.util.FileUtils;
-import de.rwth.i2.attestor.util.ZipUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**
@@ -62,9 +18,9 @@ import java.util.regex.Pattern;
  * passed, for example, to a main method.
  * In particular, these arguments have to include the path to a settings file customizing the analysis.
  * <br>
- * The execution of Attestor consists of six phases. Any fatal failure of a phase (that is an exception caught
+ * The execution of Attestor consists of phases. Any fatal failure of a phase (that is an exception caught
  * by the method starting the phase) aborts further execution.
- * The six phases are executed in the following order:
+ * The main phases are executed in the following order:
  * <ol>
  *     <li>Setup phase: Validates the provided command line options and populates the global Settings.</li>
  *     <li>Parsing phase: Parses all supplied input files, such as the program to be analyzed,
@@ -82,66 +38,14 @@ import java.util.regex.Pattern;
  */
 public class Attestor {
 
-    /**
-     * Green color for log messages.
-     */
-    private static final String ANSI_GREEN = "\u001B[32m";
-
-    /**
-     * Red color for log messages
-     */
-    private static final String ANSI_RED = "\u001B[31m";
-
-    /**
-     * Resets previously set colors in log messages.
-     */
-    private static final String ANSI_RESET = "\u001B[0m";
-
-    /**
-     * Project properties, such as the current version number.
-     */
     private final Properties properties = new Properties();
 
-    /**
-	 * The top-level logger.
-	 */
 	private static final Logger logger = LogManager.getLogger( "Attestor" );
 
-	/**
-	 * The global settings for Attestor.
-	 */
 	private final Settings settings = Settings.getInstance();
 
-    /**
-     * The input heap configurations that will be used to analyze the program.
-     */
-    private List<HeapConfiguration> inputs = new ArrayList<>();
+	private PhaseRegistry registry;
 
-	/**
-	 * The program that should be analyzed.
-	 */
-	private Program program;
-
-	/**
-	 * The state space obtained from analyzing the initial method of the provided program.
-	 */
-	private StateSpace stateSpace;
-
-	private List<String> ltlFormulas = new ArrayList<>();
-	private List<String> ltlFormulaResults = new ArrayList<>();
-
-    /**
-	 * A parser for command line arguments.
-	 */
-	private final CommandLineReader commandLineReader = new CommandLineReader();
-
-	private long startupTime;
-	private long setupTime;
-	private long parsingTime;
-	private long preprocessingTime;
-	private long stateSpaceGenerationTime;
-	private long modelCheckingTime;
-	private long reportGenerationTime;
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -154,59 +58,25 @@ public class Attestor {
 	 */
 	public void run(String[] args) {
 
-        startupTime = System.nanoTime();
-
 		printVersion();
 
-	    try {
-			setupPhase(args);
-		} catch(Exception e) {
-	    	failPhase(e, "Setup");
-		}
-        leavePhase("Setup");
-		setupTime = System.nanoTime();
+		registry = new PhaseRegistry(settings);
 
-	    try {
-			parsingPhase();
-		} catch(Exception e) {
-	    	failPhase(e,"Parsing");
-		}
-        leavePhase("Parsing");
-		parsingTime = System.nanoTime();
+		registry
+				.addPhase( new CLIPhase(args) )
+				.addPhase( new ParseProgramPhase() )
+				.addPhase( new ParseGrammarPhase() )
+				.addPhase( new ParseInputPhase() )
+				.addPhase( new MarkingGenerationPhase() )
+				.addPhase( new GrammarRefinementPhase() )
+				.addPhase( new AbstractionPreprocessingPhase() )
+				.addPhase( new StateSpaceGenerationPhase() )
+				.addPhase( new ModelCheckingPhase() )
+				.addPhase( new ReportGenerationPhase() )
+				.execute();
 
-	    try {
-			preprocessingPhase();
-		} catch(Exception e) {
-	    	failPhase(e,"Preprocessing");
-		}
-        leavePhase("Preprocessing");
-		preprocessingTime = System.nanoTime();
-
-        try {
-			stateSpaceGenerationPhase();
-		} catch(Exception e) {
-        	failPhase(e,"State space generation");
-		}
-        leavePhase("State space generation");
-		stateSpaceGenerationTime = System.nanoTime();
-
-        try {
-        	modelCheckingPhase();
-		} catch (Exception e) {
-        	failPhase(e,"Model-checking");
-		}
-        leavePhase("Model-checking");
-		modelCheckingTime = System.nanoTime();
-
-        try {
-        	reportPhase();
-		} catch(Exception e) {
-        	failPhase(e,"Report generation");
-		}
-        leavePhase("Report generation");
-		reportGenerationTime = System.nanoTime();
-
-		printSummary();
+		registry.logExecutionSummary();
+		registry.logExecutionTimes();
 	}
 
 	public long getTotalNumberOfStates() {
@@ -214,16 +84,20 @@ public class Attestor {
 	}
 
 	public int getNumberOfStatesWithoutProcedureCalls() {
-		return stateSpace.getStates().size();
+		return registry.getMostRecentPhase(StateSpaceTransformer.class)
+				.getStateSpace()
+				.getStates()
+				.size();
 	}
 
 	public int getNumberOfFinalStates() {
-		return stateSpace.getFinalStates().size();
+
+		return registry.getMostRecentPhase(StateSpaceTransformer.class)
+				.getStateSpace()
+				.getFinalStates()
+				.size();
 	}
 
-    /**
-     * Prints the currently running version of attestor.
-     */
 	private void printVersion() {
 
         try {
@@ -233,570 +107,5 @@ public class Attestor {
             logger.fatal("Project version could not be found. Aborting.");
             System.exit(1);
         }
-    }
-
-    /**
-     * This phase initializes the command line interfaces and populates the global settings.
-     * @param args The command line arguments passed to attestor.
-     */
-	private void setupPhase(String[] args) {
-
-        commandLineReader.setupCLI();
-		commandLineReader.loadSettings(args);
-        if( commandLineReader.hasSettingsFile() ){
-            SettingsFileReader settingsReader =
-                    new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
-            settingsReader.getInputSettings( settings );
-            settingsReader.getOptionSettings( settings );
-            settingsReader.getOutputSettings( settings );
-            settingsReader.getMCSettings( settings );
-        }
-        commandLineReader.getInputSettings(  settings );
-        commandLineReader.getOptionSettings( settings );
-        commandLineReader.getOutputSettings( settings );
-        commandLineReader.getMCSettings( settings );
-
-        if( commandLineReader.hasRootPath() ){
-            settings.setRootPath( commandLineReader.getRootPath() );
-        }
-	}
-
-    private void failPhase(Exception e, String message) {
-        e.printStackTrace();
-        logger.fatal(e.getMessage());
-        logger.fatal("+------------------------------------------------------------------+");
-        logger.fatal(String.format("|  " + ANSI_RED + "Phase execution failed:"
-                + ANSI_RESET + " %-39s |", message));
-        logger.fatal("+------------------------------------------------------------------+");
-        System.exit(1);
-    }
-
-	private void leavePhase(String message) {
-        logger.info("+-------------------------------------------------------------------+");
-        logger.info(String.format("|  " + ANSI_GREEN + "Phase executed successfully:"
-                + ANSI_RESET + " %-35s |", message));
-        logger.info("+-------------------------------------------------------------------+");
-    }
-
-	private void parsingPhase() throws IOException {
-
-	
-		loadUserDefinedGrammar();
-		loadPredefinedGrammars();
-
-		loadInput();
-		loadProgram();
-	}
-
-	private void loadPredefinedGrammars() {
-		
-		if(settings.input().getUsedPredefinedGrammars() != null) {
-			for ( String predefinedGrammar : settings.input().getUsedPredefinedGrammars() ) {
-				logger.debug("Loading predefined grammar " + predefinedGrammar);
-				//HashMap<String, String> renamingMap = settings.input().getRenaming( predefinedGrammar );
-				String locationOfRenamingMap = settings.input().getRenamingLocation( predefinedGrammar );
-				try{
-				HashMap<String,String> renamingMap = parseRenamingMap( locationOfRenamingMap );
-				settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
-                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
-				}catch( FileNotFoundException e ){
-					logger.warn( "Skipping predefined grammar "
-								+ predefinedGrammar + ".");
-				}
-			}
-		}
-	}
-
-	private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
-		HashMap<String, String> rename = new HashMap<>();
-		// Read in the type and field name mapping
-		try {
-			BufferedReader br = new BufferedReader(new java.io.FileReader( locationOfRenamingMap ));
-			String definitionsLine = null;
-			try {
-				definitionsLine = br.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			while(definitionsLine != null){
-				if(definitionsLine.startsWith("@Rename")){
-					String[] map = definitionsLine.replace("@Rename", "").split("->");
-					assert map.length == 2;
-
-					rename.put(map[0].trim(), map[1].trim());
-				}
-
-				try {
-					definitionsLine = br.readLine();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-			logger.warn("File " + locationOfRenamingMap + " not found. ");
-			throw e;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return rename;
-	}
-
-	private void loadUserDefinedGrammar() {
-		if(settings.input().getUserDefinedGrammarName() != null) {
-			settings.grammar().loadGrammarFromFile(settings.input().getGrammarLocation(), null);
-		}
-	}
-
-	private void loadInput() throws IOException {
-
-		String str;
-		if(settings.input().getInputName() != null){
-			logger.debug("Reading user-defined initial state.");
-			str = FileReader.read(settings.input().getInputLocation());
-		} else {
-			logger.debug("Reading predefined empty initial state.");
-			str = FileReader.read(settings.input().getInitialStatesURL().openStream());
-		}
-
-		JSONObject jsonObj = new JSONObject(str);
-
-		HeapConfiguration originalInput;
-		if(settings.options().isIndexedMode()) {
-		    originalInput = JsonToIndexedHC.jsonToHC( jsonObj );
-		} else {
-			originalInput = JsonToDefaultHC.jsonToHC( jsonObj );
-		}
-		inputs.add(originalInput);
-	}
-
-	private void loadProgram() {
-
-		JimpleParser programParser = new JimpleParser(new StandardAbstractSemantics());
-		program = programParser.parse(
-				settings.input().getClasspath(),
-				settings.input().getClassName(),
-				settings.input().getMethodName()
-		);
-	}
-
-	private void preprocessingPhase() {
-
-		computeMarkedHeapConfigurations();
-
-		determineRequiredRefinements();
-
-        if(!settings.options().isIndexedMode()) {
-            setupStateLabeling();
-        } else {
-            settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
-            settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
-            logger.warn("Refinement of indexed grammars is not supported yet and thus ignored.");
-        }
-
-        setupMaterialization();
-		setupCanonicalization();
-		setupAbortTest();
-	}
-
-	private void computeMarkedHeapConfigurations() {
-
-		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
-
-		boolean requiresVisitedMarking = false;
-		boolean requiresNeighbourhoodMarking = false;
-
-		Pattern visitedPattern = Pattern.compile("^visited$|^visited\\(\\p{Alnum}+\\)$");
-
-		for(String s : requiredAPs) {
-
-			if(requiresNeighbourhoodMarking && requiresVisitedMarking) {
-				break;
-			}
-
-			if(!requiresVisitedMarking && visitedPattern.matcher(s).matches()) {
-				requiresVisitedMarking = true;
-			}
-
-			if(!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
-				requiresNeighbourhoodMarking = true;
-			}
-		}
-
-		if(requiresVisitedMarking) {
-			logger.info("Computing marked inputs to track visited identities...");
-			markInputs(new Marking("visited"));
-		}
-
-		if(requiresNeighbourhoodMarking) {
-			logger.info("Computing marked inputs to track neighbourhood identities...");
-			markInputs(new Marking("neighbourhood", true));
-		}
-
-	}
-
-	private void markInputs(Marking marking) {
-
-		Grammar grammar = settings.grammar().getGrammar();
-		List<HeapConfiguration> newInputs = new ArrayList<>();
-		for(HeapConfiguration input : inputs) {
-			MarkedHcGenerator generator = new MarkedHcGenerator(input, grammar, marking);
-			newInputs.addAll(generator.getMarkedHcs());
-		}
-		if(newInputs.isEmpty()) {
-			throw new IllegalStateException("No marked heap configurations could be computed.");
-		}
-		inputs = newInputs;
-		logger.info("Generated " + inputs.size() + " marked heap configurations.");
-	}
-
-	private void determineRequiredRefinements() {
-
-		Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
-		logger.info("Setup refinements for " + requiredAPs.size() + " atomic proposition(s).");
-
-		RefinementParser refinementParser = new RefinementParser(requiredAPs);
-		settings.options().setRefinementAutomaton(refinementParser.getRefinementAutomaton());
-		settings.stateSpaceGeneration().setStateRefinementStrategy(refinementParser.getStateRefinementStrategy());
-		settings.stateSpaceGeneration().setStateLabelingStrategy(refinementParser.getStateLabelingStrategy());
-	}
-
-	private void setupStateLabeling() {
-
-		HeapAutomaton refinementAutomaton = settings.options().getRefinementAutomaton();
-		if(refinementAutomaton == null) {
-			logger.info("No grammar refinement is required.");
-			settings.stateSpaceGeneration().setStateLabelingStrategy(state -> {});
-			return;
-		}
-
-		logger.info("Refining grammar...");
-		GrammarRefinement grammarRefinement = new GrammarRefinement(
-				settings.grammar().getGrammar(),
-				refinementAutomaton
-		);
-		settings.grammar().setGrammar(grammarRefinement.getRefinedGrammar());
-
-        logger.info("done. Number of refined nonterminals: "
-                + settings.grammar().getGrammar().getAllLeftHandSides().size());
-
-        logger.info("Refining input heap configuration...");
-
-        List<HeapConfiguration> newInputs = new ArrayList<>();
-        for(HeapConfiguration input : inputs) {
-			InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
-					input,
-					settings.grammar().getGrammar(),
-					refinementAutomaton
-			);
-
-			newInputs.addAll(inputRefinement.getRefinements());
-		}
-		inputs = newInputs;
-
-        if(inputs.isEmpty())	{
-            logger.fatal("No refined initial state exists.");
-            throw new IllegalStateException();
-        }
-
-        logger.info("done. Number of refined heap configurations: "
-                + inputs.size());
-    }
-
-	private void stateSpaceGenerationPhase() {
-
-	    settings.factory().resetTotalNumberOfStates();
-
-
-	    assert(!inputs.isEmpty());
-
-	    StateSpaceGenerator stateSpaceGenerator = settings
-                .factory()
-                .createStateSpaceGenerator(
-	                program,
-                    inputs,
-                    0
-                );
-
-		printAnalyzedMethod();
-
-	    stateSpace = stateSpaceGenerator.generate();
-	    logger.info("State space generation finished. #states: "
-                + settings.factory().getTotalNumberOfStates());
-
-	}
-
-    private void printAnalyzedMethod() {
-
-        logger.info("Analyzing '"
-                + settings.input().getClasspath()
-                + "/"
-                + settings.input().getClassName()
-                + "."
-                + settings.input().getMethodName()
-                + "'..."
-        );
-
-    }
-
-	private void setupMaterialization() {
-
-        Grammar grammar = settings.grammar().getGrammar();
-        MaterializationStrategy strategy;
-
-        if(settings.options().isIndexedMode()) {
-            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-
-            IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
-            MaterializationRuleManager grammarManager =
-                    new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
-
-            GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(),
-                            new GraphMaterializer() );
-
-            strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using indexed grammars.");
-        } else {
-            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
-            MaterializationRuleManager grammarManager =
-                    new DefaultMaterializationRuleManager(vioResolver);
-            GrammarResponseApplier ruleApplier =
-                    new DefaultGrammarResponseApplier( new GraphMaterializer() );
-            strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using standard hyperedge replacement grammars.");
-        }
-
-        settings.stateSpaceGeneration().setMaterializationStrategy(strategy);
-    }
-
-    private void setupCanonicalization() {
-
-        Grammar grammar = settings.grammar().getGrammar();
-        EmbeddingCheckerProvider checkerProvider = getEmbeddingCheckerProvider();
-        CanonicalizationHelper canonicalizationHelper;
-         
-        if(settings.options().isIndexedMode()) {
-        	
-        	canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
-            logger.info("Setup canonicalization using indexed grammar.");
-            
-        } else {
-        	canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
-            logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
-        }
-        CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper); 
-        settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
-    }
-
-	private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
-		CanonicalizationHelper canonicalizationHelper;
-		IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
-		
-		
-		
-		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
-		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
-		EmbeddingIndexChecker indexChecker = 
-				new EmbeddingIndexChecker( indexMatcher, 
-											materializer );
-		
-		canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
-		return canonicalizationHelper;
-	}
-
-	private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {
-		final int abstractionDifference = settings.options().getAbstractionDistance();
-		final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
-		final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
-		return new EmbeddingCheckerProvider(abstractionDifference ,
-				aggressiveAbstractionThreshold,
-				aggressiveReturnAbstraction);
-	}
-
-    private void setupAbortTest() {
-
-        int stateSpaceBound = Settings.getInstance().options().getMaxStateSpaceSize();
-        int stateBound = Settings.getInstance().options().getMaxStateSize();
-        settings.stateSpaceGeneration()
-                .setAbortStrategy(
-                        new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
-                );
-        logger.info("Setup abort criterion: #states > "
-                + stateSpaceBound
-                + " or one state is larger than "
-                + stateBound
-                + " nodes.");
-    }
-
-	private void modelCheckingPhase() {
-
-	    Set<LTLFormula> formulas = settings.modelChecking().getFormulae();
-
-	    if(formulas.isEmpty()) {
-	        logger.info("No LTL formulas have been provided.");
-        }
-
-	    for(LTLFormula formula : settings.modelChecking().getFormulae()) {
-
-	    	String formulaString = formula.getFormulaString();
-	    	ltlFormulas.add(formulaString);
-	        logger.info("Checking formula: " + formulaString + "...");
-            ProofStructure proofStructure = new ProofStructure();
-            proofStructure.build(stateSpace, formula);
-            if(proofStructure.isSuccessful()) {
-            	ltlFormulaResults.add(ANSI_GREEN + "satisfied" + ANSI_RESET);
-                logger.info("Formula is satisfied.");
-            } else {
-				ltlFormulaResults.add(ANSI_RED + "violated" + ANSI_RESET);
-                logger.warn("Formula is not satisfied.");
-            }
-        }
-	}
-
-	private void reportPhase() throws IOException {
-
-		if(settings.options().isNoExport()) {
-			return;
-		}
-
-	    if(settings.output().isExportGrammar() ){
-
-			logger.info("Exporting grammar...");
-
-	        String location = settings.output().getLocationForGrammar();
-
-            // Copy necessary libraries
-            InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
-                    ".zip");
-
-            File targetDirectory = new File(location + File.separator);
-            ZipUtils.unzip(zis, targetDirectory);
-
-            // Generate JSON files
-            GrammarExporter exporter = new JsonGrammarExporter();
-            exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
-
-            logger.info("done. Grammar exported to '" + location + "'");
-        }
-
-		if(settings.output().isExportStateSpace() ) {
-
-	    	logger.info("Exporting state space...");
-		    String location = settings.output().getLocationForStateSpace();
-
-		    exportStateSpace(
-                    location + File.separator + "data",
-                    stateSpace,
-                    program
-            );
-
-            Set<ProgramState> states = stateSpace.getStates();
-            for(ProgramState state : states) {
-            	int i = state.getStateSpaceId();
-                exportHeapConfiguration(
-                        location + File.separator + "data",
-                        "hc_" + i + ".json",
-                        state.getHeap()
-                );
-            }
-
-            InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
-
-            File targetDirectory = new File(location + File.separator);
-            ZipUtils.unzip(zis, targetDirectory);
-
-            logger.info("done. State space exported to '"
-                    + location
-                    + "'"
-            );
-        }
-
-        if(settings.output().isExportCustomHcs()){
-	        String location = settings.output().getLocationForCustomHcs();
-
-            // Copy necessary libraries
-            InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
-                    ".zip");
-
-            File targetDirectory = new File(location + File.separator);
-            ZipUtils.unzip(zis, targetDirectory);
-
-            // Generate JSON files for prebooked HCs and their summary
-            CustomHcListExporter exporter = new JsonCustomHcListExporter();
-            exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
-
-            logger.info("Custom HCs exported to '"
-                    + location
-            );
-
-        }
-
-	}
-
-    private void exportHeapConfiguration(String directory, String filename, HeapConfiguration hc)
-            throws IOException {
-
-        FileUtils.createDirectories(directory);
-        FileWriter writer = new FileWriter(directory + File.separator + filename);
-        HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
-        exporter.export(hc);
-        writer.close();
-    }
-
-    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
-            throws IOException {
-
-        FileUtils.createDirectories(directory);
-        Writer writer = new BufferedWriter(
-                new OutputStreamWriter( new FileOutputStream(directory + File.separator + "statespace.json") )
-        );
-        StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
-        exporter.export(stateSpace, program);
-        writer.close();
-    }
-
-	private void printSummary() {
-
-		double elapsedSetup = (setupTime - startupTime) / 1e9;
-		double elapsedParsing = (parsingTime - setupTime) / 1e9;
-		double elapsedPreprocessing = (preprocessingTime - parsingTime) / 1e9;
-		double elapsedStateSpaceGeneration = (stateSpaceGenerationTime - preprocessingTime) / 1e9;
-		double elapsedModelChecking = (modelCheckingTime - stateSpaceGenerationTime) / 1e9;
-		double elapsedReportGeneration = (reportGenerationTime - modelCheckingTime) / 1e9;
-		double elapsedTotal = (reportGenerationTime - startupTime) / 1e9;
-
-		logger.info("Summary for '"
-				+ settings.input().getClassName()
-				+ "."
-				+ settings.input().getMethodName()
-				+ "':"
-		);
-		logger.info("+----------------------------------+--------------------------------+");
-		logger.info(String.format("| Setup                            | %28.3f s |", elapsedSetup));
-		logger.info(String.format("| Parser                           | %28.3f s |", elapsedParsing));
-		logger.info(String.format("| Preprocessing                    | %28.3f s |", elapsedPreprocessing));
-		logger.info(String.format("| State space generation           | %28.3f s |", elapsedStateSpaceGeneration));
-		logger.info(String.format("| Model checking                   | %28.3f s |", elapsedModelChecking));
-		logger.info(String.format("| Report generation                | %28.3f s |", elapsedReportGeneration));
-		logger.info("+----------------------------------+--------------------------------+");
-		logger.info(String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
-		logger.info("+----------------------------------+--------------------------------+");
-		logger.info(String.format("| # states w/ procedure calls      | %30d |",
-					getTotalNumberOfStates()));
-		logger.info(String.format("| # states w/o procedure calls     | %30d |",
-        			getNumberOfStatesWithoutProcedureCalls()));
-		logger.info(String.format("| # final states                   | %30d |",
-        			getNumberOfFinalStates()));
-        logger.info("+-----------+----------------------+--------------------------------+");
-        if(!ltlFormulas.isEmpty()) {
-        	for(int i=0; i < ltlFormulas.size(); i++) {
-				logger.info(String.format("| %18s | %s", ltlFormulaResults.get(i), ltlFormulas.get(i)));
-			}
-			logger.info("+-----------+-------------------------------------------------------+");
-		}
     }
 }

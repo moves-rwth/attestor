@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.refinement;
 import de.rwth.i2.attestor.refinement.pointsTo.PointsToHeapAutomaton;
 import de.rwth.i2.attestor.refinement.product.ProductHeapAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
-import de.rwth.i2.attestor.refinement.visitedNodes.VisitedNodesAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,8 +49,6 @@ public class JsonToStateLabelingStrategies {
                 return new ReachabilityHeapAutomaton();
             case "points-to":
                 return new PointsToHeapAutomaton();
-            case "visited":
-                return new VisitedNodesAutomaton();
             default:
                 logger.warn("Skipping unknown heap automaton '" + automatonName + "'.");
                 return null;

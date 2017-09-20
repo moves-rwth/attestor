@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.markings;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -26,6 +27,8 @@ public class MarkedHcGeneratorTest {
 
    @Before
    public void setup() {
+
+      UnitTestGlobalSettings.reset();
 
       nt = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
       type = Settings.getInstance().factory().getType("List");

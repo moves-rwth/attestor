@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Marking {
 
-    private static final String MARKING_PREFIX = "%";
+    public static final String MARKING_PREFIX = "%";
 
     private String markingName;
     private List<SelectorLabel> requiredSelectorLabels;
