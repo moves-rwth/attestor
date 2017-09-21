@@ -53,7 +53,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
     /**
      * The atomic propositions assigned to this state.
      */
-    protected HashSet<String> atomicPropositions;
+    protected Set<String> atomicPropositions;
 
     /**
      * Initializes a state with the initial program location and scope depth 0.
@@ -148,7 +148,9 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	public void setProgramCounter(int pc) {
 		
 		programCounter = pc;
-		
+		if(programCounter < 0) {
+			addAP("{ terminated }");
+		}
 	}
 
 	@Override
