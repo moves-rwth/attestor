@@ -12,9 +12,11 @@ public interface StateSpace {
 
     Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state);
     Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state);
+    Set<ProgramState> getArtificialInfPathsSuccessorsOf(ProgramState state);
 
     TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId);
     TIntArrayList getMaterializationSuccessorsIdsOf(int stateSpaceId);
+    TIntArrayList getArtificialInfPathsSuccessorsIdsOf(int stateSpaceId);
 
     boolean addState(ProgramState state);
     boolean addStateIfAbsent(ProgramState state);
@@ -23,6 +25,7 @@ public interface StateSpace {
 
     void addMaterializationTransition(ProgramState from, ProgramState to);
     void addControlFlowTransition(ProgramState from, ProgramState to);
+    void addArtificialInfPathsTransition(ProgramState cur);
 
     int getMaximalStateSize();
 }

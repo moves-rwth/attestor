@@ -23,6 +23,7 @@ public class InternalStateSpace implements StateSpace {
 
     private TIntObjectMap<TIntArrayList> materializationSuccessors;
     private TIntObjectMap<TIntArrayList> controlFlowSuccessors;
+    private TIntObjectMap<TIntArrayList> artificialInfPathsSuccessors;
     private int nextStateId = 0;
     private int maximalStateSize = 0;
 
@@ -34,6 +35,7 @@ public class InternalStateSpace implements StateSpace {
         finalStateIds = new TIntHashSet(100);
         materializationSuccessors = new TIntObjectHashMap<>(capacity);
         controlFlowSuccessors = new TIntObjectHashMap<>(capacity);
+        artificialInfPathsSuccessors = new TIntObjectHashMap<>(100);
     }
 
     public Set<ProgramState> getInitialStates() {
@@ -113,6 +115,23 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public Set<ProgramState> getArtificialInfPathsSuccessorsOf(ProgramState state) {
+
+        int stateSpaceId = state.getStateSpaceId();
+        TIntArrayList successors = artificialInfPathsSuccessors.get(stateSpaceId);
+
+
+        if(successors.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        return filterStates(
+                successors::contains,
+                successors.size()
+        );
+    }
+
+    @Override
     public TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId) {
 
         return controlFlowSuccessors.get(stateSpaceId);
@@ -122,6 +141,12 @@ public class InternalStateSpace implements StateSpace {
     public TIntArrayList getMaterializationSuccessorsIdsOf(int stateSpaceId) {
 
         return materializationSuccessors.get(stateSpaceId);
+    }
+
+    @Override
+    public TIntArrayList getArtificialInfPathsSuccessorsIdsOf(int stateSpaceId) {
+
+        return artificialInfPathsSuccessors.get(stateSpaceId);
     }
 
     @Override
@@ -149,6 +174,7 @@ public class InternalStateSpace implements StateSpace {
         state.setStateSpaceId(nextStateId);
         materializationSuccessors.put(nextStateId, new TIntArrayList());
         controlFlowSuccessors.put(nextStateId, new TIntArrayList());
+        artificialInfPathsSuccessors.put(nextStateId, new TIntArrayList());
         maximalStateSize = Math.max(maximalStateSize, state.getSize());
         ++nextStateId;
     }
@@ -174,6 +200,11 @@ public class InternalStateSpace implements StateSpace {
     public void addControlFlowTransition(ProgramState from, ProgramState to) {
 
         addTransition(from, to, controlFlowSuccessors);
+    }
+
+    public void addArtificialInfPathsTransition(ProgramState cur){
+        addTransition(cur, cur, artificialInfPathsSuccessors);
+
     }
 
     private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {

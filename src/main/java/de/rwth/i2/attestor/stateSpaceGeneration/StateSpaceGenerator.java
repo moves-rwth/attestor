@@ -144,6 +144,8 @@ public class StateSpaceGenerator {
 				Set<ProgramState> successorStates = executionPhase(state);
 				if(successorStates.isEmpty()) {
 					stateSpace.setFinal(state);
+					// Add self-loop to each final state
+					stateSpace.addArtificialInfPathsTransition(state);
 				} else {
 					successorStates.forEach(nextState -> {
 						nextState = stateRefinementStrategy.refine(nextState);

@@ -45,13 +45,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -83,13 +86,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -117,13 +123,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 		
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -152,23 +161,19 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
-
-		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("proofStruct");
-		try {
-			exporter.export("proofStructTestDllUntilTree", proofStruct);
-		} catch (Exception e){
-			System.out.println("Not able to write proofStructure");
-		}
 		
 		// Expected output
 		assertEquals(proofStruct.getLeaves().size(), 3);
@@ -182,7 +187,6 @@ public class ProofStructureTest extends InternalStateSpace {
 	}
 
 	@Test
-	@Ignore
 	public void buildProofStructureTestTrueUntil(){
 
 		LTLFormula formula = null;
@@ -193,25 +197,19 @@ public class ProofStructureTest extends InternalStateSpace {
 		}
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
 
-		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("proofStruct");
-		try {
-			exporter.export("proofStructTestTrueUntil", proofStruct);
-		} catch (Exception e){
-			System.out.println("Not able to write proofStructure");
-		}
-
-		// Expected output
-		// assertEquals(proofStruct.getLeaves().size(), 3);
 		// Make sure that verification fails
 		assertFalse(proofStruct.isSuccessful());
 	}
@@ -320,10 +318,13 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ sll }");
+		state1.setProgramCounter(1);
 		DefaultProgramState state2 = new DefaultProgramState(hc);
 		state2.addAP("{ tree }");
+		state2.setProgramCounter(2);
 		
 		
 		this.addStateIfAbsent(initialState);
