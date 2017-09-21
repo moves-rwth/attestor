@@ -245,10 +245,4 @@ public class StateSpaceGenerator {
 		stateSpace.addControlFlowTransition(previousState, state);
 	}
 
-	/**
-	 * @return The initial state of the generated state space.
-	 */
-	public Set<ProgramState> getInitialStates() {
-		return stateSpace.getInitialStates();
-	}
 }

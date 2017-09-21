@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.TIntSet;
 
 import java.util.Set;
 
@@ -8,7 +9,9 @@ public interface StateSpace {
 
     Set<ProgramState> getStates();
     Set<ProgramState> getInitialStates();
+    TIntSet getInitialStateIds();
     Set<ProgramState> getFinalStates();
+    TIntSet getFinalStateIds();
 
     Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state);
     Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state);
@@ -28,4 +31,6 @@ public interface StateSpace {
     void addArtificialInfPathsTransition(ProgramState cur);
 
     int getMaximalStateSize();
+
+    boolean satisfiesAP(int stateId, String expectedAP);
 }

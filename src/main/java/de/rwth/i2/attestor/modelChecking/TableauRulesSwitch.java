@@ -6,6 +6,7 @@ import com.google.common.collect.HashBiMap;
 
 import de.rwth.i2.attestor.generated.analysis.AnalysisAdapter;
 import de.rwth.i2.attestor.generated.node.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 /**
  * This class implements the tableau rules for the model checking.
@@ -21,8 +22,12 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 	// Holds the additional next formulae obtained while unrolling release and until
 	HashBiMap<Node, ANextLtlform> additionalNextFormulae;
 
-	public TableauRulesSwitch(){
+	StateSpace stateSpace;
+
+	public TableauRulesSwitch(StateSpace stateSpace){
+
 		additionalNextFormulae = HashBiMap.create();
+		this.stateSpace = stateSpace;
 	}
 	
 	/**
@@ -67,7 +72,8 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 		Assertion current = (Assertion) this.getIn(node);
 		
 		String expectedAP = node.toString().trim();
-		if(current.getProgramState().satisfiesAP(expectedAP)){
+		if(stateSpace.satisfiesAP(current.getProgramState(), expectedAP)){
+		//if(current.getProgramState().satisfiesAP(expectedAP)){
 			current.setTrue();
 			this.setOut(node, null);
 		} else {
@@ -105,12 +111,14 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 
 		String negExpectedAP = node.getLtlform().toString().trim();
 		//String negExpectedAP = node.getAtomicprop().toString().trim();
-		if(term.getTerm() instanceof AFalseTerm || !current.getProgramState().satisfiesAP(negExpectedAP)){
-			current.setTrue();
-			this.setOut(node, null);
-		} else {
-			removeFormulaAndSetOut(node);
+		if(term.getTerm() instanceof AFalseTerm || !stateSpace.satisfiesAP(current.getProgramState(), negExpectedAP)){
+			//if(term.getTerm() instanceof AFalseTerm || !current.getProgramState().satisfiesAP(negExpectedAP)){
+				current.setTrue();
+				this.setOut(node, null);
+			} else {
+				removeFormulaAndSetOut(node);
 		}
+
 	}
 	
 	public void caseAAndStateform(AAndStateform node){
