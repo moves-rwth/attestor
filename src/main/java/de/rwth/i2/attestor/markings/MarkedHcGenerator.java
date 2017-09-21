@@ -7,9 +7,12 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntIntMap;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.HashSet;
 import java.util.List;
@@ -67,12 +70,31 @@ public class MarkedHcGenerator {
 
     private void placeInitialMarkers(HeapConfiguration initialHc) {
 
+        TIntSet nodesWithConstants = getNodesWithConstants(initialHc);
+
         TIntIterator nodeIter = initialHc.nodes().iterator();
         while(nodeIter.hasNext()) {
             int node = nodeIter.next();
-            HeapConfiguration hc = withUniversalMarking(initialHc, node);
-            unexploredHeapConfigurations.push(hc);
+            if(!nodesWithConstants.contains(node)) {
+                HeapConfiguration hc = withUniversalMarking(initialHc, node);
+                unexploredHeapConfigurations.push(hc);
+            }
         }
+    }
+
+    private TIntSet getNodesWithConstants(HeapConfiguration hc) {
+
+        TIntSet result = new TIntHashSet();
+
+        TIntIterator iter = hc.variableEdges().iterator();
+        while(iter.hasNext()) {
+            int var = iter.next();
+            String label = hc.nameOf(var);
+            if(Constants.isConstant(label)) {
+                result.add(hc.targetOf(var));
+            }
+        }
+        return result;
     }
 
     private HeapConfiguration withUniversalMarking(HeapConfiguration hc, int node) {
@@ -91,6 +113,7 @@ public class MarkedHcGenerator {
             if(isCurrentNodeFullyConcrete() && completeCurrentMarking()) {
                 HeapConfiguration canonicalHc = canonicalizeCurrent(currentHc);
                 if (markedHeapConfigurations.add(canonicalHc)) {
+
                     moveCurrentNodeToEachSuccessor();
                 }
             } else {
@@ -141,9 +164,11 @@ public class MarkedHcGenerator {
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
+        int minAbstractionDistance = (marking.isMarkAllSuccessors() || !marking.getRequiredSelectors().isEmpty()) ? 1 : 0;
+
         for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0);
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, minAbstractionDistance);
                 if(checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()

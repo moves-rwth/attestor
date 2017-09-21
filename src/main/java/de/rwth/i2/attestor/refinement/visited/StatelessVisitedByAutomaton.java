@@ -4,6 +4,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.HashSet;
@@ -29,8 +31,8 @@ public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
         while(iter.hasNext()) {
             int var = iter.next();
             String label = heapConfiguration.nameOf(var);
-            if(!Markings.isMarking(label)) {
-                result.add("{ visitedBy(" + label + ") }");
+            if(!Markings.isMarking(label) && !Constants.isConstant(label)) {
+                result.add("{ visitedBy(" + VariableScopes.getName(label) + ") }");
             }
         }
         return result;

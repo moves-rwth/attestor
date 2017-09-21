@@ -2,7 +2,10 @@ package de.rwth.i2.attestor.refinement.visited;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markings.Marking;
+import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,8 +33,13 @@ public class StatelessVisitedAutomaton implements StatelessHeapAutomaton {
             return Collections.emptySet();
         }
 
-        if(heapConfiguration.attachedVariablesOf(markedNode).size() > 1) {
-            return Collections.singleton("{ visited }");
+        TIntIterator iter = heapConfiguration.attachedVariablesOf(markedNode).iterator();
+        while(iter.hasNext()) {
+            int var = iter.next();
+            String name = heapConfiguration.nameOf(var);
+            if(!Constants.isConstant(name) && !Markings.isMarking(name)) {
+                return Collections.singleton("{ visited }");
+            }
         }
 
         return Collections.emptySet();

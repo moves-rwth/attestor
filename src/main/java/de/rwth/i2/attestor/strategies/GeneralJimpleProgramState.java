@@ -148,9 +148,6 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	public void setProgramCounter(int pc) {
 		
 		programCounter = pc;
-		if(programCounter < 0) {
-			addAP("{ terminated }");
-		}
 	}
 
 	@Override

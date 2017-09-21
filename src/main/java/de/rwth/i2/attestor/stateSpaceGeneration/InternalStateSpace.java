@@ -205,6 +205,7 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public void setFinal(ProgramState state) {
         finalStateIds.add(state.getStateSpaceId());
+        state.addAP("{ terminated }");
     }
 
     @Override
