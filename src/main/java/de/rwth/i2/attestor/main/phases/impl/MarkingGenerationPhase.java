@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
+import de.rwth.i2.attestor.refinement.identicalNeighbourhood.NeighbourhoodAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 
@@ -74,23 +75,26 @@ public class MarkingGenerationPhase extends AbstractPhase
             }
         }
 
+        Marking marking = null;
         if(requiresVisitedMarking || requiresVisitedByMarking) {
             logger.info("Computing marked inputs to track visited identities...");
-            markInputs(new Marking("visited"));
+            marking = new Marking("visited");
+            markInputs(marking);
         }
 
         if(requiresVisitedMarking) {
-            stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton());
+            stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton(marking));
         }
 
         if(requiresVisitedByMarking) {
-            stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton());
+            stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton(marking));
         }
 
         if(requiresNeighbourhoodMarking) {
             logger.info("Computing marked inputs to track neighbourhood identities...");
-            markInputs(new Marking("neighbourhood", true));
-            // TODO add heap automaton
+            marking = new Marking("neighbourhood", true);
+            markInputs(marking);
+            stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(marking));
         }
 
     }

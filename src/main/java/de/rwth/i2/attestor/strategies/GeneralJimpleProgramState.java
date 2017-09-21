@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.strategies;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
@@ -179,7 +180,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			    // intended
             }
 
-			if(!Constants.isConstant(name) && !name.startsWith("@")) {
+			if(!Constants.isConstant(name) && !Markings.isMarking(name) && !name.startsWith("@")) {
 				
 				int target = heap.targetOf(var);
 				copy.builder()

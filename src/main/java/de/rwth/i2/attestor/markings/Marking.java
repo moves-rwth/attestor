@@ -6,6 +6,8 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.rwth.i2.attestor.markings.Markings.MARKING_PREFIX;
+
 /**
  * A marking specifies a single variable that should traverse all unfolded HeapConfigurations according to a grammar
  * together with a (sub)set of selectors that should additionally be marked.
@@ -13,8 +15,6 @@ import java.util.List;
  * @author Christoph
  */
 public class Marking {
-
-    public static final String MARKING_PREFIX = "%";
 
     private String markingName;
     private List<SelectorLabel> requiredSelectorLabels;
