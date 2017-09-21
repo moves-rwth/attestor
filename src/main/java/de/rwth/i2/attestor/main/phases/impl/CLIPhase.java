@@ -57,7 +57,7 @@ public class CLIPhase extends AbstractPhase {
         );
 
         String scenario = settings.input().getScenario();
-        if(!scenario.isEmpty()) {
+        if(scenario != null && !scenario.isEmpty()) {
             logger.info("| Scenario: " + scenario);
         }
         logger.info("+----------------------------------+--------------------------------+");

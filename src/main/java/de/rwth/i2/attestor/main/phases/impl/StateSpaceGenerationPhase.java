@@ -59,7 +59,6 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     @Override
     public void logSummary() {
 
-        logger.info("State space generation summmary:");
         logger.info("+----------------------------------+--------------------------------+");
         logger.info(String.format("| # states w/ procedure calls      | %30d |",
                 settings.factory().getTotalNumberOfStates()));
