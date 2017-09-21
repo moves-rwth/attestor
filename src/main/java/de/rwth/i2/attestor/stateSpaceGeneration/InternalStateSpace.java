@@ -17,28 +17,41 @@ public class InternalStateSpace implements StateSpace {
 
     private Map<ProgramState, ProgramState> potentialMergeStates;
     private List<ProgramState> otherStates; // states that are never checked for isomorphism
-    private Set<ProgramState> initialStates;
 
+    private TIntSet initialStateIds;
     private TIntSet finalStateIds;
 
     private TIntObjectMap<TIntArrayList> materializationSuccessors;
     private TIntObjectMap<TIntArrayList> controlFlowSuccessors;
+    // TODO: Self-loops are managed here! Use map to int instead of list?!?
+    private TIntObjectMap<TIntArrayList> artificialInfPathsSuccessors;
     private int nextStateId = 0;
     private int maximalStateSize = 0;
+
+    private TIntObjectMap<Set<String>> atomicPropMap;
 
     public InternalStateSpace(int capacity) {
 
         potentialMergeStates = new HashMap<>(capacity);
         otherStates = new ArrayList<>(capacity);
-        initialStates = new HashSet<>(100);
+        initialStateIds = new TIntHashSet(100);
         finalStateIds = new TIntHashSet(100);
         materializationSuccessors = new TIntObjectHashMap<>(capacity);
         controlFlowSuccessors = new TIntObjectHashMap<>(capacity);
+        artificialInfPathsSuccessors = new TIntObjectHashMap<>(100);
+        atomicPropMap = new TIntObjectHashMap<>(capacity);
     }
 
     public Set<ProgramState> getInitialStates() {
 
-        return Collections.unmodifiableSet(initialStates);
+        return filterStates(
+                id -> initialStateIds.contains(id),
+                initialStateIds.size()
+        );
+    }
+
+    public TIntSet getInitialStateIds() {
+        return initialStateIds;
     }
 
     @Override
@@ -48,6 +61,10 @@ public class InternalStateSpace implements StateSpace {
                 id -> finalStateIds.contains(id),
                 finalStateIds.size()
         );
+    }
+
+    public TIntSet getFinalStateIds() {
+        return finalStateIds;
     }
 
     private Set<ProgramState> filterStates(IntPredicate filter, int size) {
@@ -113,6 +130,23 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public Set<ProgramState> getArtificialInfPathsSuccessorsOf(ProgramState state) {
+
+        int stateSpaceId = state.getStateSpaceId();
+        TIntArrayList successors = artificialInfPathsSuccessors.get(stateSpaceId);
+
+
+        if(successors.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        return filterStates(
+                successors::contains,
+                successors.size()
+        );
+    }
+
+    @Override
     public TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId) {
 
         return controlFlowSuccessors.get(stateSpaceId);
@@ -122,6 +156,12 @@ public class InternalStateSpace implements StateSpace {
     public TIntArrayList getMaterializationSuccessorsIdsOf(int stateSpaceId) {
 
         return materializationSuccessors.get(stateSpaceId);
+    }
+
+    @Override
+    public TIntArrayList getArtificialInfPathsSuccessorsIdsOf(int stateSpaceId) {
+
+        return artificialInfPathsSuccessors.get(stateSpaceId);
     }
 
     @Override
@@ -149,6 +189,9 @@ public class InternalStateSpace implements StateSpace {
         state.setStateSpaceId(nextStateId);
         materializationSuccessors.put(nextStateId, new TIntArrayList());
         controlFlowSuccessors.put(nextStateId, new TIntArrayList());
+        artificialInfPathsSuccessors.put(nextStateId, new TIntArrayList());
+        // TODO: In the long run remove APs from program state!
+        atomicPropMap.put(nextStateId, state.getAPs());
         maximalStateSize = Math.max(maximalStateSize, state.getSize());
         ++nextStateId;
     }
@@ -156,7 +199,7 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public void addInitialState(ProgramState state) {
         addStateIfAbsent(state);
-        initialStates.add(state);
+        initialStateIds.add(state.getStateSpaceId());
     }
 
     @Override
@@ -176,6 +219,11 @@ public class InternalStateSpace implements StateSpace {
         addTransition(from, to, controlFlowSuccessors);
     }
 
+    public void addArtificialInfPathsTransition(ProgramState cur){
+        addTransition(cur, cur, artificialInfPathsSuccessors);
+
+    }
+
     private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {
 
         int fId = from.getStateSpaceId();
@@ -191,6 +239,12 @@ public class InternalStateSpace implements StateSpace {
     public int getMaximalStateSize() {
 
         return maximalStateSize;
+    }
+
+    @Override
+    public boolean satisfiesAP(int stateId, String expectedAP) {
+        Set<String> satisfiedAPs = atomicPropMap.get(stateId);
+        return satisfiedAPs.contains(expectedAP);
     }
 
     @Override

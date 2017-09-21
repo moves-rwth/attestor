@@ -45,13 +45,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -83,13 +86,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -117,13 +123,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 		
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -152,13 +161,16 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ tree }");
+		state1.setProgramCounter(1);
 
 		this.addStateIfAbsent(initialState);
 		this.addInitialState(initialState);
 		this.addStateIfAbsent(state1);
 		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
@@ -173,6 +185,36 @@ public class ProofStructureTest extends InternalStateSpace {
 		assertTrue(proofStruct.size() <= 9 && proofStruct.size() >= 7);
 		assertTrue(proofStruct.isSuccessful());
 	}
+
+	@Test
+	public void buildProofStructureTestTrueUntil(){
+
+		LTLFormula formula = null;
+		try{
+			formula = new LTLFormula("(true U {tree})");
+		} catch(Exception e) {
+			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+		}
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
+		initialState.setProgramCounter(0);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
+		state1.setProgramCounter(1);
+
+		this.addStateIfAbsent(initialState);
+		this.addInitialState(initialState);
+		this.addStateIfAbsent(state1);
+		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
+
+		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.build(this, formula);
+
+		// Make sure that verification fails
+		assertFalse(proofStruct.isSuccessful());
+	}
+
+
 	
 	@Test
 	public void buildProofStructureTestUntilWithCycle(){
@@ -276,10 +318,13 @@ public class ProofStructureTest extends InternalStateSpace {
 
 		DefaultProgramState initialState = new DefaultProgramState(hc);
 		initialState.addAP("{ dll }");
+		initialState.setProgramCounter(0);
 		DefaultProgramState state1 = new DefaultProgramState(hc);
 		state1.addAP("{ sll }");
+		state1.setProgramCounter(1);
 		DefaultProgramState state2 = new DefaultProgramState(hc);
 		state2.addAP("{ tree }");
+		state2.setProgramCounter(2);
 		
 		
 		this.addStateIfAbsent(initialState);
