@@ -15,8 +15,10 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMateriali
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
@@ -40,6 +42,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         setupMaterialization();
         setupCanonicalization();
         setupAbortTest();
+        setupStateLabeling();
+        setupStateRefinement();
     }
 
     @Override
@@ -134,6 +138,24 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 + " or one state is larger than "
                 + stateBound
                 + " nodes.");
+    }
+
+    private void setupStateLabeling() {
+
+        StateLabelingStrategy stateLabelingStrategy = getPhase(StateLabelingStrategyBuilderTransformer.class)
+                .getStrategy()
+                .build();
+        if(stateLabelingStrategy == null) {
+            stateLabelingStrategy = s -> {};
+        }
+        settings.stateSpaceGeneration().setStateLabelingStrategy(stateLabelingStrategy);
+    }
+
+    private void setupStateRefinement() {
+
+        if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
+            settings.stateSpaceGeneration().setStateRefinementStrategy(s -> s);
+        }
     }
 
 

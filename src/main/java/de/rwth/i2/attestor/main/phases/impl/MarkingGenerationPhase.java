@@ -4,17 +4,27 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
+import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
+import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
+import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
+import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class MarkingGenerationPhase extends AbstractPhase implements InputTransformer {
+public class MarkingGenerationPhase extends AbstractPhase
+        implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
     private List<HeapConfiguration> inputs;
+
+    private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
+
+    private AutomatonStateLabelingStrategy stateLabelingStrategy;
 
     @Override
     public String getName() {
@@ -28,10 +38,22 @@ public class MarkingGenerationPhase extends AbstractPhase implements InputTransf
         inputs = getPhase(InputTransformer.class).getInputs();
         Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
 
+
+        StateLabelingStrategyBuilderTransformer prev = getPhase(StateLabelingStrategyBuilderTransformer.class);
+        if(prev == null) {
+            stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
+        } else {
+            stateLabelingStrategyBuilder = prev.getStrategy();
+            if (stateLabelingStrategyBuilder == null) {
+                stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
+            }
+        }
+
         boolean requiresVisitedMarking = false;
+        boolean requiresVisitedByMarking = false;
         boolean requiresNeighbourhoodMarking = false;
 
-        Pattern visitedPattern = Pattern.compile("^visited$|^visited\\(\\p{Alnum}+\\)$");
+        Pattern visitedPattern = Pattern.compile("^visited\\(\\p{Alnum}+\\)$");
 
         for(String s : requiredAPs) {
 
@@ -39,8 +61,12 @@ public class MarkingGenerationPhase extends AbstractPhase implements InputTransf
                 break;
             }
 
-            if(!requiresVisitedMarking && visitedPattern.matcher(s).matches()) {
+            if(!requiresVisitedMarking && s.equals("visited")) {
                 requiresVisitedMarking = true;
+            }
+
+            if(!requiresVisitedByMarking && visitedPattern.matcher(s).matches()) {
+                requiresVisitedByMarking = true;
             }
 
             if(!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
@@ -48,15 +74,23 @@ public class MarkingGenerationPhase extends AbstractPhase implements InputTransf
             }
         }
 
-        if(requiresVisitedMarking) {
+        if(requiresVisitedMarking || requiresVisitedByMarking) {
             logger.info("Computing marked inputs to track visited identities...");
             markInputs(new Marking("visited"));
-            // TODO add visited automaton...
+        }
+
+        if(requiresVisitedMarking) {
+            stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton());
+        }
+
+        if(requiresVisitedByMarking) {
+            stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton());
         }
 
         if(requiresNeighbourhoodMarking) {
             logger.info("Computing marked inputs to track neighbourhood identities...");
             markInputs(new Marking("neighbourhood", true));
+            // TODO add heap automaton
         }
 
     }
@@ -85,5 +119,11 @@ public class MarkingGenerationPhase extends AbstractPhase implements InputTransf
     public List<HeapConfiguration> getInputs() {
 
         return inputs;
+    }
+
+    @Override
+    public AutomatonStateLabelingStrategyBuilder getStrategy() {
+
+        return stateLabelingStrategyBuilder;
     }
 }

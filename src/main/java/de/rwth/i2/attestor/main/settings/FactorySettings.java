@@ -80,7 +80,7 @@ public class FactorySettings {
      */
     private boolean requiresRefinedSymbols() {
 
-        return Settings.getInstance().options().getRefinementAutomaton() != null;
+        return Settings.getInstance().options().isGrammarRefinementEnabled();
     }
 
     /**

@@ -37,7 +37,7 @@ public class PhaseRegistry {
             return phaseType.cast(phase);
          }
       }
-      throw new IllegalStateException("No suitable previous phase could be found.");
+      return null;
    }
 
    public <T> T getMostRecentPhase(Class<T> phaseType) {
