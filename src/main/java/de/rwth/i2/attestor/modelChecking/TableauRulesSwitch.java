@@ -111,7 +111,9 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 
 		String negExpectedAP = node.getLtlform().toString().trim();
 		//String negExpectedAP = node.getAtomicprop().toString().trim();
-		if(term.getTerm() instanceof AFalseTerm || !stateSpace.satisfiesAP(current.getProgramState(), negExpectedAP)){
+		if(term.getTerm() instanceof ATrueTerm){
+			removeFormulaAndSetOut(node);
+		} else if(term.getTerm() instanceof AFalseTerm || !stateSpace.satisfiesAP(current.getProgramState(), negExpectedAP)){
 			//if(term.getTerm() instanceof AFalseTerm || !current.getProgramState().satisfiesAP(negExpectedAP)){
 				current.setTrue();
 				this.setOut(node, null);
