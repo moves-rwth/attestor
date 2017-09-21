@@ -48,9 +48,6 @@ public class MarkedHcGeneratorTest {
       Marking marking = new Marking("x");
 
       Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
-      expectedMarkedHcs.add( hc.clone().builder().addVariableEdge(marking.getUniversalVariableName(), 0).build() );
-      expectedMarkedHcs.add( hc.clone().builder().addVariableEdge(marking.getUniversalVariableName(), 1).build() );
-      expectedMarkedHcs.add( hc.clone().builder().addVariableEdge(marking.getUniversalVariableName(), 2).build() );
 
       MarkedHcGenerator generator = new MarkedHcGenerator(hc, grammar, marking);
       assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
