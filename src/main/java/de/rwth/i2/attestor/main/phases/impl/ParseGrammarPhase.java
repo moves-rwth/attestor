@@ -22,8 +22,7 @@ public class ParseGrammarPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        hasUserDefinedGrammar = settings.input().getGrammarLocation() != null;
-
+        hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
         if(hasUserDefinedGrammar) {
             loadUserDefinedGrammar();
         } else {
