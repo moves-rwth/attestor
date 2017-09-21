@@ -72,7 +72,11 @@ public class SettingsFileReader {
 		if( jsonInput.has( "defaultPath" ) ){
 			input.setDefaultPath( jsonInput.getString( "defaultPath" ) );
 		}
-		
+
+		if(jsonSettings.has("scenario")) {
+			input.setScenario(jsonSettings.getString("scenario"));
+		}
+
 		JSONObject programSettings = jsonInput.getJSONObject( "program" );
 		if( programSettings.has( "classpath" )){
 			input.setClasspath( programSettings.getString( "classpath" )  );

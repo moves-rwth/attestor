@@ -12,6 +12,11 @@ import java.util.HashMap;
  */
 public class InputSettings {
 
+	/**
+	 * Description of the analyzed scenario.
+	 */
+	private String scenario;
+
     /**
      * The classpath of source code files that are analyzed.
      */
@@ -85,6 +90,14 @@ public class InputSettings {
 		classpath = path;
 		pathToGrammar = path;
 		pathToInput = path;
+	}
+
+	public void setScenario(String scenario) {
+		this.scenario = scenario;
+	}
+
+	public String getScenario() {
+		return scenario;
 	}
 
     /**

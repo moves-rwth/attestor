@@ -45,6 +45,22 @@ public class CLIPhase extends AbstractPhase {
 
     @Override
     public void logSummary() {
-        // nothing to report
+
+        logger.info("Analysis summary:");
+        logger.info("+----------------------------------+--------------------------------+");
+        logger.info("| Method: "
+                + settings.input().getClasspath()
+                + "/"
+                + settings.input().getClassName()
+                + "."
+                + settings.input().getMethodName()
+        );
+
+        String scenario = settings.input().getScenario();
+        if(!scenario.isEmpty()) {
+            logger.info("| Scenario: " + scenario);
+        }
+        logger.info("+----------------------------------+--------------------------------+");
+
     }
 }
