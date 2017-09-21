@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 public class ParseGrammarPhase extends AbstractPhase {
 
@@ -20,6 +21,8 @@ public class ParseGrammarPhase extends AbstractPhase {
 
     @Override
     protected void executePhase() {
+
+        hasUserDefinedGrammar = settings.input().getGrammarLocation() != null;
 
         if(hasUserDefinedGrammar) {
             loadUserDefinedGrammar();
@@ -39,6 +42,13 @@ public class ParseGrammarPhase extends AbstractPhase {
     }
 
     private void loadPredefinedGrammars() {
+
+        List<String> usedPredefinedGrammars = settings.input().getUsedPredefinedGrammars();
+
+        if(usedPredefinedGrammars == null) {
+            logger.warn( "No suitable predefined grammar could be found" );
+            return;
+        }
 
         for ( String predefinedGrammar : settings.input().getUsedPredefinedGrammars() ) {
             logger.debug("Loading predefined grammar " + predefinedGrammar);
