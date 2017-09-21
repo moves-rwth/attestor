@@ -76,7 +76,7 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 				psJSON.append( "', type: 'node', ");
 			}
 			psJSON.append( "label: '" );
-			psJSON.append( vertex.pcAndFormulaeToString());
+			psJSON.append( i + " " + vertex.pcAndFormulaeToString());
 			psJSON.append( "' } },\n" );
 			
 			i++;

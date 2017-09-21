@@ -162,6 +162,13 @@ public class ProofStructureTest extends InternalStateSpace {
 		
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
+
+		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("proofStruct");
+		try {
+			exporter.export("proofStructTestDllUntilTree", proofStruct);
+		} catch (Exception e){
+			System.out.println("Not able to write proofStructure");
+		}
 		
 		// Expected output
 		assertEquals(proofStruct.getLeaves().size(), 3);
@@ -173,6 +180,43 @@ public class ProofStructureTest extends InternalStateSpace {
 		assertTrue(proofStruct.size() <= 9 && proofStruct.size() >= 7);
 		assertTrue(proofStruct.isSuccessful());
 	}
+
+	@Test
+	@Ignore
+	public void buildProofStructureTestTrueUntil(){
+
+		LTLFormula formula = null;
+		try{
+			formula = new LTLFormula("(true U {tree})");
+		} catch(Exception e) {
+			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+		}
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
+
+		this.addStateIfAbsent(initialState);
+		this.addInitialState(initialState);
+		this.addStateIfAbsent(state1);
+		this.addControlFlowTransition(initialState, state1);
+
+		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.build(this, formula);
+
+		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("proofStruct");
+		try {
+			exporter.export("proofStructTestTrueUntil", proofStruct);
+		} catch (Exception e){
+			System.out.println("Not able to write proofStructure");
+		}
+
+		// Expected output
+		// assertEquals(proofStruct.getLeaves().size(), 3);
+		// Make sure that verification fails
+		assertFalse(proofStruct.isSuccessful());
+	}
+
+
 	
 	@Test
 	public void buildProofStructureTestUntilWithCycle(){
