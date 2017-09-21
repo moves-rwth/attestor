@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.main.settings.FactorySettings;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -129,9 +130,8 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
         for(int i=0; i < variables.size(); i++) {
             int var = variables.get(i);
             String varName = kernel.nameOf(var);
-            if(varName.contains("-")) {
-                varName = varName.split("-",2)[1];
-            }
+
+            varName = VariableScopes.getName(varName);
 
             int varFrom = kernel.targetOf(var);
             TIntIterator iter = kernel.successorNodesOf(varFrom).iterator();
@@ -140,9 +140,7 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
                 TIntArrayList attVars = kernel.attachedVariablesOf(to);
                 for(int j=0; j < attVars.size(); j++) {
                     String toName = kernel.nameOf(attVars.get(j));
-                    if(toName.contains("-")) {
-                        toName = toName.split("-", 2)[1];
-                    }
+                    toName = VariableScopes.getName(toName);
                     result.add("isReachable(" + varName + "," + toName + ")");
                 }
             }

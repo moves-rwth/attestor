@@ -82,29 +82,28 @@ public class GrammarRefinementPhase extends AbstractPhase
                 logger.info("Enable heap automaton to track reachable variables");
             } else if(equalityPattern.matcher(ap).matches()) {
                 String[] split = ap.split("\\=\\=");
-                String lhs = split[0].trim();
-                String rhs = split[1].trim();
-                Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
-                if(trackedVariableRelations.add(trackedPair)) {
-                   stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-                    logger.info("Enable heap automaton to track relationships between variables '"
-                            + lhs + "' and '" + rhs + "'");
-                }
+                enableVariableRelationTracking(trackedVariableRelations, split);
             } else if (inequalityPattern.matcher(ap).matches()) {
                 String[] split = ap.split("\\!\\=");
-                String lhs = split[0].trim();
-                String rhs = split[1].trim();
-                Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
-                if(trackedVariableRelations.add(trackedPair)) {
-                    stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-                    logger.info("Enable heap automaton to track relationships between variables '"
-                            + lhs + "' and '" + rhs + "'");
-                }
+                enableVariableRelationTracking(trackedVariableRelations, split);
             }
-
-            // TODO points-to
         }
     }
+
+    private void enableVariableRelationTracking(Set<Pair<String, String>> trackedVariableRelations, String[] split) {
+
+        String lhs = split[0].trim();
+        String rhs = split[1].trim();
+        Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
+        if(trackedVariableRelations.add(trackedPair)) {
+           stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
+           settings.stateSpaceGeneration().addKeptVariable(lhs);
+           settings.stateSpaceGeneration().addKeptVariable(rhs);
+           logger.info("Enable heap automaton to track relationships between variables '"
+                    + lhs + "' and '" + rhs + "'");
+        }
+    }
+
 
     private Grammar refineGrammar(HeapAutomaton automaton, Grammar grammar) {
 

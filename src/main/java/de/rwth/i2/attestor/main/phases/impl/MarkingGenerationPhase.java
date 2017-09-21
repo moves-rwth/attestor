@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
 public class MarkingGenerationPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
+
+    private static final Pattern visitedByPattern = Pattern.compile("^visited\\(\\p{Alnum}+\\)$");
+
     private List<HeapConfiguration> inputs;
 
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
@@ -54,7 +57,6 @@ public class MarkingGenerationPhase extends AbstractPhase
         boolean requiresVisitedByMarking = false;
         boolean requiresNeighbourhoodMarking = false;
 
-        Pattern visitedPattern = Pattern.compile("^visited\\(\\p{Alnum}+\\)$");
 
         for(String s : requiredAPs) {
 
@@ -66,7 +68,9 @@ public class MarkingGenerationPhase extends AbstractPhase
                 requiresVisitedMarking = true;
             }
 
-            if(!requiresVisitedByMarking && visitedPattern.matcher(s).matches()) {
+            if(visitedByPattern.matcher(s).matches()) {
+                String varName = s.split("[\\(\\)]")[1];
+                settings.stateSpaceGeneration().addKeptVariable(varName);
                 requiresVisitedByMarking = true;
             }
 

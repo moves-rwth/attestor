@@ -1,8 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
 
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.settings.StateSpaceGenerationSettings;
+import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 
 import java.util.Set;
 
@@ -19,10 +23,16 @@ public class VariablesUtil {
      */
 	public static void removeDeadVariables(String name, JimpleProgramState programState, Set<String> liveVariables) {
 
-        String [] vars = name.split( "(==)|(\\!=)|(=)" );
+        StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
+
+        String [] vars = name.split( "(==)|(!=)|(=)" );
 		for (String var : vars) {
             String varName = var.split("\\.")[0].trim();
-            if (!liveVariables.contains(varName) && !Constants.isConstant(varName)) {
+            if (!liveVariables.contains(varName)
+                    && !Constants.isConstant(varName)
+                    && !Markings.isMarking(varName)
+                    && !settings.isKeptVariableName(VariableScopes.getName(varName))
+                    ) {
                 programState.removeVariable(varName);
             }
         }

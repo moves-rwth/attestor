@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.strategies;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
@@ -170,24 +169,15 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			
 			String name = heap.nameOf(var);
 
-			// we do not scope already scoped variables.
-			try {
-                String[] scope = name.split("-");
-                if (scope.length > 1 && Integer.valueOf(scope[0]) >= 0) {
-                    continue;
-                }
-            } catch(NumberFormatException e) {
-			    // intended
-            }
+			if(VariableScopes.isScoped(name) || !VariableScopes.isScopeable(name)) {
+				continue;
+			}
 
-			if(!Constants.isConstant(name) && !Markings.isMarking(name) && !name.startsWith("@")) {
-				
 				int target = heap.targetOf(var);
 				copy.builder()
 					.removeVariableEdge(var)
 					.addVariableEdge(getScopedName(name), target)
 					.build();
-			}
 		}
 		
 		Type booleanType =  Settings.getInstance().factory().getType( "int" );

@@ -2,6 +2,9 @@ package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Global configuration of state space generation.
  *
@@ -18,6 +21,8 @@ public class StateSpaceGenerationSettings {
     private StateLabelingStrategy stateLabelingStrategy = null;
 
     private StateRefinementStrategy stateRefinementStrategy = null;
+
+    private Set<String> keptVariables = new HashSet<>();
 
     public AbortStrategy getAbortStrategy() {
 
@@ -67,5 +72,15 @@ public class StateSpaceGenerationSettings {
     public void setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 
         this.stateRefinementStrategy = stateRefinementStrategy;
+    }
+
+    public void addKeptVariable(String unscopedVariableName) {
+
+        keptVariables.add(unscopedVariableName);
+    }
+
+    public boolean isKeptVariableName(String unscopedVariableName) {
+
+        return keptVariables.contains(unscopedVariableName);
     }
 }

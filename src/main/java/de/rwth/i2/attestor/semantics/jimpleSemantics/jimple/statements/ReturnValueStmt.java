@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -114,12 +115,10 @@ public class ReturnValueStmt extends Statement {
 		
 		TIntIterator iter = heap.variableEdges().iterator();
 		
-		String prefix = scope + "-";
-		
 		while(iter.hasNext()) {
 			int var = iter.next();
 			String name = heap.nameOf(var);
-			if(name.startsWith(prefix)) {
+			if(VariableScopes.hasScope(name, scope)) {
 				builder.removeVariableEdge(var);
 			}
 		}
