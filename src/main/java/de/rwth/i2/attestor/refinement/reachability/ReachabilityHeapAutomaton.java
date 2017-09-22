@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.refinement.reachability;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.FactorySettings;
@@ -17,6 +18,22 @@ import java.util.*;
 
 public class ReachabilityHeapAutomaton implements HeapAutomaton {
 
+    private Set<SelectorLabel> trackedSelectorLabels;
+
+    public ReachabilityHeapAutomaton() {
+
+        trackedSelectorLabels = Collections.emptySet();
+    }
+
+    public ReachabilityHeapAutomaton(Set<String> allowedSelectorLabels) {
+
+        trackedSelectorLabels = new HashSet<>(allowedSelectorLabels.size());
+
+        for(String label : allowedSelectorLabels) {
+            trackedSelectorLabels.add(Settings.getInstance().factory().getSelectorLabel(label));
+        }
+    }
+
     @Override
     public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
                                          List<HeapAutomatonState> statesOfNonterminals) {
@@ -24,7 +41,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
         HeapConfiguration canonicalHc = computeCanonicalHc(heapConfiguration, statesOfNonterminals);
         HeapConfiguration kernel = computeKernel(canonicalHc);
 
-        return new ReachabilityAutomatonState(kernel);
+        return new ReachabilityAutomatonState(kernel, trackedSelectorLabels);
     }
 
     private HeapConfiguration computeCanonicalHc(HeapConfiguration heapConfiguration,
@@ -52,7 +69,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
 
     private HeapConfiguration constructExternalKernel(HeapConfiguration canonicalHc) {
 
-        ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc);
+        ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
         FactorySettings factory = Settings.getInstance().factory();
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
         Type type = factory.getType("kernelNode");
@@ -75,7 +92,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
 
     private HeapConfiguration constructVariableKernel(HeapConfiguration canonicalHc) {
 
-        ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc);
+        ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
         FactorySettings factory = Settings.getInstance().factory();
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
         Type type = factory.getType("kernelNode");
@@ -116,10 +133,12 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
 class ReachabilityAutomatonState extends HeapAutomatonState {
 
     final HeapConfiguration kernel;
+    final Set<SelectorLabel> trackedSelectorLabels;
 
-    ReachabilityAutomatonState(HeapConfiguration kernel) {
+    ReachabilityAutomatonState(HeapConfiguration kernel, Set<SelectorLabel> trackedSelectorLabels) {
 
         this.kernel = kernel;
+        this.trackedSelectorLabels = trackedSelectorLabels;
     }
 
     @Override
@@ -141,7 +160,13 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
                 for(int j=0; j < attVars.size(); j++) {
                     String toName = kernel.nameOf(attVars.get(j));
                     toName = VariableScopes.getName(toName);
-                    result.add("isReachable(" + varName + "," + toName + ")");
+
+                    if(trackedSelectorLabels.isEmpty()) {
+                        result.add("isReachable(" + varName + "," + toName + ")");
+                    } else {
+                        result.add("isReachable(" + varName + "," + toName
+                                + "," + trackedSelectorLabels.toString() + ")");
+                    }
                 }
             }
         }
@@ -221,13 +246,16 @@ class ReachabilityHelper {
      */
     private boolean hasChanged;
 
+    private Set<SelectorLabel> trackedSelectorLabels;
+
     /**
      * @param heapConfiguration The heap configuration whose reachable nodes
      *                          shall be determined for each nodes.
      */
-    ReachabilityHelper(HeapConfiguration heapConfiguration) {
+    ReachabilityHelper(HeapConfiguration heapConfiguration, Set<SelectorLabel> trackedSelectorLabels) {
 
         this.heapConfiguration = heapConfiguration;
+        this.trackedSelectorLabels = trackedSelectorLabels;
         initReachableNodes();
         computeReachableNodes();
     }
@@ -243,10 +271,26 @@ class ReachabilityHelper {
         TIntIterator iter = heapConfiguration.nodes().iterator();
         while(iter.hasNext()) {
             int node = iter.next();
-            TIntArrayList successors = heapConfiguration.successorNodesOf(node);
+            TIntArrayList successors = getSuccessors(node);
             TIntSet reachable = new TIntHashSet(successors);
             reachableNodes.put(node, reachable);
         }
+    }
+
+    private TIntArrayList getSuccessors(int node) {
+
+        if(trackedSelectorLabels.isEmpty()) {
+            return heapConfiguration.successorNodesOf(node);
+        }
+
+        TIntArrayList result = new TIntArrayList(trackedSelectorLabels.size());
+        for(SelectorLabel label : trackedSelectorLabels) {
+            int target = heapConfiguration.selectorTargetOf(node, label);
+            if(target != HeapConfiguration.INVALID_ELEMENT) {
+                result.add(target);
+            }
+        }
+        return result;
     }
 
     /**
@@ -276,7 +320,7 @@ class ReachabilityHelper {
             TIntIterator succIter = successors.iterator();
             while(succIter.hasNext()) {
                 int succ = succIter.next();
-                update.addAll(heapConfiguration.successorNodesOf(succ));
+                update.addAll(getSuccessors(succ));
             }
             if(!successors.containsAll(update)) {
                 hasChanged = true;

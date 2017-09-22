@@ -27,6 +27,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Alnum}+\\)$");
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Alnum}+\\)$");
+    private static final Pattern reachableBySelPattern
+            = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Alnum}+,\\[(\\p{Alnum}+,\\p{Space})*\\p{Alnum}+\\]+\\)$");
     private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
     private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
 
@@ -72,18 +74,35 @@ public class GrammarRefinementPhase extends AbstractPhase
     private void updateHeapAutomata() {
 
         boolean hasReachabilityAutomaton = false;
+        boolean hasReachabilityAutomatonBySel = false;
         boolean hasLanguageInclusionAutomaton = false;
 
         Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
 
         Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
+
         for(String ap : requiredAPs) {
 
             if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
-                Grammar grammar =  settings.grammar().getGrammar();
+                Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
                 hasLanguageInclusionAutomaton = true;
                 logger.info("Enable language inclusion checks to determine heap shapes.");
+            } else if(!hasReachabilityAutomatonBySel && reachableBySelPattern.matcher(ap).matches()) {
+
+                String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
+                String[] variables = parameters[0].split(",");
+                settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
+                settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
+                String[] selectors = parameters[1].split("\\]")[0].split(",");
+                Set<String> allowedSelectors = new HashSet<>(selectors.length);
+                for(String sel : selectors) {
+                    allowedSelectors.add(sel.trim());
+                }
+                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
+                hasReachabilityAutomatonBySel = true;
+                logger.info("Enable heap automaton to track reachable variables according to selectors "
+                        + allowedSelectors);
             } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
