@@ -162,30 +162,56 @@ public class ProofStructure {
 								}
 							}
 						}
-						
-						newEdges.add(new SuccState(newAssertion, currentSubformula));
+
+						this.addEdge(currentVertex, new SuccState(newAssertion, currentSubformula));
+
 						this.vertices.add(newAssertion);
 						// Process the assertion further only in case it is not one, that was already processed
 						if(!formulaePresent){
 							vertexQueue.add(newAssertion);
 						} else {
-							// we detected a cycle, check if it is an unharmful one (containing a release
+							// we detected a potential cycle, check if it is a real and in that case an unharmful one (containing a release
 							// operator)
-							boolean containsReleaseOp = false;
-							for(Node current : newAssertion.getFormulae()){
-								if(current instanceof AReleaseLtlform){
-									containsReleaseOp = true;
-								}
-							}
-							if(!containsReleaseOp){
-								this.successful = false;
-								// Optimisation: abort proof structure generation, as we already know that it is not successful!
 
+							// Real cycle?
+							boolean isReal = false;
+							// First collect all successors
+							HashSet<Assertion> seen = new HashSet<>();
+							LinkedList<Assertion> queue = new LinkedList<>();
+							queue.add(newAssertion);
+							seen.add(newAssertion);
+							while(!queue.isEmpty() && !isReal){
+								Assertion curAssertion = queue.pop();
+								for(Assertion succAssertion : this.getSuccessors(curAssertion)){
+									if(succAssertion.equals(newAssertion)){
+										isReal = true;
+										break;
+									}
+
+									if(!seen.contains(succAssertion)){
+										queue.add(succAssertion);
+									}
+									seen.add(succAssertion);
+								}
+
+							}
+
+							if(isReal) {
+								// Contains a release operator?
+								boolean containsReleaseOp = false;
+								for (Node current : newAssertion.getFormulae()) {
+									if (current instanceof AReleaseLtlform) {
+										containsReleaseOp = true;
+									}
+								}
+								if (!containsReleaseOp) {
+									this.successful = false;
+									// Optimisation: abort proof structure generation, as we already know that it is not successful!
+
+								}
 							}
 						}
 					}
-					this.addEdges(currentVertex, newEdges);
-
 				} else{
 					rulesSwitch.setIn(currentSubformula, currentVertex);
 					currentSubformula.apply(rulesSwitch);
@@ -247,6 +273,17 @@ public class ProofStructure {
 		
 	}
 
+	private void addEdge(Assertion currentVertex, SuccState successorState) {
+		if(!edges.containsKey(currentVertex)){
+			HashSet<SuccState> newSuccStatesSet = new HashSet<SuccState>();
+			newSuccStatesSet.add(successorState);
+			edges.put(currentVertex, newSuccStatesSet);
+		} else {
+			edges.get(currentVertex).add(successorState);
+		}
+
+	}
+
 
 	/**
 	 * This method checks whether the outermost operator of the formula is a next-operator.
@@ -295,8 +332,10 @@ public class ProofStructure {
 	
 	public HashSet<Assertion> getSuccessors(Assertion current){
 		HashSet<Assertion> successors = new HashSet<Assertion>();
-		for(SuccState successor : this.edges.get(current)){
-			successors.add(successor.assertion);
+		if(this.edges.get(current) != null) {
+			for (SuccState successor : this.edges.get(current)) {
+				successors.add(successor.assertion);
+			}
 		}
 		return successors;
 	}

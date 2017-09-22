@@ -246,6 +246,46 @@ public class ProofStructureTest extends InternalStateSpace {
 	}
 
 	@Test
+	public void buildProofStructureTestGloballyFinally(){
+
+		LTLFormula formula = null;
+		try{
+			formula = new LTLFormula("G F { tree }");
+			formula.toPNF();
+		} catch(Exception e) {
+			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+		}
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
+		initialState.setProgramCounter(0);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
+		state1.setProgramCounter(1);
+		initialState.addAP("{ dll }");
+		state1.addAP("{ tree }");
+
+		this.addStateIfAbsent(initialState);
+		this.addInitialState(initialState);
+		this.addStateIfAbsent(state1);
+		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
+
+		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.build(this, formula);
+
+		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("psExport");
+		try{
+			exporter.export("globallyFinallyTest", proofStruct);
+		} catch (Exception e){
+			System.out.println("Not able to write ps");
+		}
+
+		// Make sure that verification succeeds
+		assertTrue(proofStruct.isSuccessful());
+	}
+
+
+
+	@Test
 	public void buildProofStructureTestImpliesFalse(){
 
 		LTLFormula formula = null;

@@ -273,7 +273,7 @@ public class SettingsFileReader {
 		}
 		if( jsonMC.has("formulae")){
 			String formulaeString = jsonMC.getString("formulae");
-			for(String formula : formulaeString.split(",")){
+			for(String formula : formulaeString.split(";")){
 				try {
 					LTLFormula ltlFormula = new LTLFormula(formula);
 					// Transform to PNF
