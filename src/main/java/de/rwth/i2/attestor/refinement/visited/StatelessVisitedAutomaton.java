@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ public class StatelessVisitedAutomaton implements StatelessHeapAutomaton {
         TIntIterator iter = heapConfiguration.attachedVariablesOf(markedNode).iterator();
         while(iter.hasNext()) {
             int var = iter.next();
-            String name = heapConfiguration.nameOf(var);
+            String name = VariableScopes.getName(heapConfiguration.nameOf(var));
             if(!Constants.isConstant(name) && !Markings.isMarking(name)) {
                 return Collections.singleton("{ visited }");
             }
