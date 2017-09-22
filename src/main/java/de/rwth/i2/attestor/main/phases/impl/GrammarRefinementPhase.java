@@ -78,6 +78,9 @@ public class GrammarRefinementPhase extends AbstractPhase
 
             if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
+                String[] variables = ap.split("[\\(\\)]")[1].split(",");
+                settings.stateSpaceGeneration().addKeptVariable(variables[0]);
+                settings.stateSpaceGeneration().addKeptVariable(variables[1]);
                 hasReachabilityAutomaton = true;
                 logger.info("Enable heap automaton to track reachable variables");
             } else if(equalityPattern.matcher(ap).matches()) {
