@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
+import de.rwth.i2.attestor.refinement.languageInclusion.LanguageInclusionAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomaton;
 import de.rwth.i2.attestor.util.Pair;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 public class GrammarRefinementPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
+    private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Alnum}+\\)$");
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Alnum}+\\)$");
     private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
     private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
@@ -70,13 +72,19 @@ public class GrammarRefinementPhase extends AbstractPhase
     private void updateHeapAutomata() {
 
         boolean hasReachabilityAutomaton = false;
+        boolean hasLanguageInclusionAutomaton = false;
 
         Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
 
         Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
         for(String ap : requiredAPs) {
 
-            if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
+            if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
+                Grammar grammar =  settings.grammar().getGrammar();
+                stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
+                hasLanguageInclusionAutomaton = true;
+                logger.info("Enable language inclusion checks to determine heap shapes.");
+            } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
