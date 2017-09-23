@@ -162,10 +162,10 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
                     toName = VariableScopes.getName(toName);
 
                     if(trackedSelectorLabels.isEmpty()) {
-                        result.add("isReachable(" + varName + "," + toName + ")");
+                        result.add("{ isReachable(" + varName + "," + toName + ") }");
                     } else {
-                        result.add("isReachable(" + varName + "," + toName
-                                + "," + trackedSelectorLabels.toString() + ")");
+                        result.add("{ isReachable(" + varName + "," + toName
+                                + "," + trackedSelectorLabels.toString() + ") }");
                     }
                 }
             }

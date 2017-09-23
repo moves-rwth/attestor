@@ -110,6 +110,36 @@ public class ProofStructureTest extends InternalStateSpace {
 		assertTrue(proofStruct.size() <= 3 && proofStruct.size() >= 2);
 		assertTrue(proofStruct.isSuccessful());
 	}
+
+	@Test
+	public void buildProofStructureTestNextLtlform(){
+
+		LTLFormula formula = null;
+		try{
+			formula = new LTLFormula("X {dll}");
+		} catch(Exception e) {
+			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+		}
+
+		DefaultProgramState initialState = new DefaultProgramState(hc);
+		initialState.setProgramCounter(0);
+		DefaultProgramState state1 = new DefaultProgramState(hc);
+		state1.addAP("{ dll }");
+		state1.setProgramCounter(1);
+
+		this.addStateIfAbsent(initialState);
+		this.addInitialState(initialState);
+		this.addStateIfAbsent(state1);
+		this.addControlFlowTransition(initialState, state1);
+		this.addArtificialInfPathsTransition(state1);
+
+		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.build(this, formula);
+
+		assertTrue(proofStruct.isSuccessful());
+
+	}
+
 	
 	@Test 
 	public void buildProofStructureTestNextNegLtlform(){
