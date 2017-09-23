@@ -82,7 +82,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
             for (int j = 0; j < rank; j++) {
                 int to = canonicalHc.externalNodeAt(j);
                 if (reachabilityHelper.isReachable(from, to)) {
-                    builder.addSelector(nodes.get(i), factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
+                    builder.addSelector(nodes.get(i), factory.getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
                 }
             }
         }
@@ -110,7 +110,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
                 int varTo = variables.get(j);
                 int to = canonicalHc.targetOf(varTo);
                 if (reachabilityHelper.isReachable(from, to)) {
-                    builder.addSelector(kernelFrom, factory.getSelectorLabel(String.valueOf(j)), nodes.get(j));
+                    builder.addSelector(kernelFrom, factory.getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
                 }
             }
         }
@@ -283,13 +283,17 @@ class ReachabilityHelper {
             return heapConfiguration.successorNodesOf(node);
         }
 
-        TIntArrayList result = new TIntArrayList(trackedSelectorLabels.size());
-        for(SelectorLabel label : trackedSelectorLabels) {
-            int target = heapConfiguration.selectorTargetOf(node, label);
-            if(target != HeapConfiguration.INVALID_ELEMENT) {
-                result.add(target);
+        List<SelectorLabel> selectorLabels = heapConfiguration.selectorLabelsOf(node);
+        TIntArrayList result = new TIntArrayList(selectorLabels.size());
+        for(SelectorLabel label : selectorLabels) {
+            if(trackedSelectorLabels.contains(label) || label.getLabel().startsWith("@")) {
+                int target = heapConfiguration.selectorTargetOf(node, label);
+                if (target != HeapConfiguration.INVALID_ELEMENT) {
+                    result.add(target);
+                }
             }
         }
+
         return result;
     }
 
