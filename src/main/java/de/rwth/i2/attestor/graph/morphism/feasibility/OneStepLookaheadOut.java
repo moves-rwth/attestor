@@ -40,8 +40,6 @@ public class OneStepLookaheadOut implements FeasibilityFunction {
 		VF2GraphData target = state.getTarget();
 		Graph targetGraph = target.getGraph();
 
-		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
-
 		int patternSucc = computeLookahead(
 				patternGraph.getSuccessorsOf(p),
 				pattern
@@ -52,7 +50,7 @@ public class OneStepLookaheadOut implements FeasibilityFunction {
 				target
 				);
 		
-		if(checkEquality) {
+		if(checkEqualityOnExternal) {
 			if(targetSucc != patternSucc) {
 				return false;
 			}	
@@ -72,7 +70,7 @@ public class OneStepLookaheadOut implements FeasibilityFunction {
 				target
 				);
 		
-		if(checkEquality) {
+		if(checkEqualityOnExternal) {
 			return (targetPred == patternPred);	
 		} else {
 			return (targetPred >= patternPred);
