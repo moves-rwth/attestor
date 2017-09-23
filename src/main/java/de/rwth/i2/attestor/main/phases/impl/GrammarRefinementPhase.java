@@ -25,10 +25,10 @@ import java.util.regex.Pattern;
 public class GrammarRefinementPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
-    private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Alnum}+\\)$");
-    private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Alnum}+\\)$");
+    private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Space}*\\p{Alnum}+\\p{Space}*\\)$");
+    private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Space}*\\p{Alnum}+,\\p{Space}*\\p{Alnum}+\\)$");
     private static final Pattern reachableBySelPattern
-            = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Alnum}+,\\[(\\p{Alnum}+,\\p{Space})*\\p{Alnum}+\\]+\\)$");
+            = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Space}*\\p{Alnum}+,\\p{Space}*\\[(\\p{Alnum}+,\\p{Space})*\\p{Alnum}+\\]+\\)$");
     private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
     private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
 
