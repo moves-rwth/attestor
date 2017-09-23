@@ -81,4 +81,13 @@ public class Marking {
 
         return MARKING_PREFIX + markingName + "." + selector;
     }
+
+    public String extractSelectorName(String selectorVariableName) {
+
+        String[] split = selectorVariableName.split(".");
+        if(split.length == 2) {
+            return split[1];
+        }
+        return null;
+    }
 }
