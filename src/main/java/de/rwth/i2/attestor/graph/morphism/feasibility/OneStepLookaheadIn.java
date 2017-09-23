@@ -60,7 +60,7 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 			}
 		} else {
 			
-			if(!(targetSucc <= patternSucc)) {
+			if(targetSucc < patternSucc) {
 			
 				return false;
 			}	
@@ -81,7 +81,7 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 			return (targetPred == patternPred);
 		} else {
 
-			return (targetPred <= patternPred);	
+			return (targetPred >= patternPred);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 		for(int i=0; i < neighbors.size(); i++) {
 			int next = neighbors.get(i);
 			
-			if(data.containsMatch(next) && data.containsIngoing(next)) {
+			if(data.containsIngoing(next)) {
 					++lookaheadIn;
 			}
 		}
