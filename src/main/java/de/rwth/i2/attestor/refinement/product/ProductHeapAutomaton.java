@@ -133,4 +133,9 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
 
         return Arrays.hashCode(states);
     }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(states);
+    }
 }
