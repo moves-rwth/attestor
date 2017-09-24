@@ -74,8 +74,9 @@ public class GrammarRefinementPhase extends AbstractPhase
     private void updateHeapAutomata() {
 
         boolean hasReachabilityAutomaton = false;
-        boolean hasReachabilityAutomatonBySel = false;
         boolean hasLanguageInclusionAutomaton = false;
+
+        Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
 
         Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
 
@@ -88,7 +89,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
                 hasLanguageInclusionAutomaton = true;
                 logger.info("Enable language inclusion checks to determine heap shapes.");
-            } else if(!hasReachabilityAutomatonBySel && reachableBySelPattern.matcher(ap).matches()) {
+            } else if(reachableBySelPattern.matcher(ap).matches()) {
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
@@ -99,10 +100,13 @@ public class GrammarRefinementPhase extends AbstractPhase
                 for(String sel : selectors) {
                     allowedSelectors.add(sel.trim());
                 }
-                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
-                hasReachabilityAutomatonBySel = true;
-                logger.info("Enable heap automaton to track reachable variables according to selectors "
-                        + allowedSelectors);
+
+                if(reachabilityAutomataBySelList.add(allowedSelectors)) {
+                    stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
+                    logger.info("Enable heap automaton to track reachable variables according to selectors "
+                            + allowedSelectors);
+                }
+
             } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
