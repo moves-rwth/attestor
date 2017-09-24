@@ -38,7 +38,7 @@ public class NeighbourhoodAutomaton implements StatelessHeapAutomaton {
             }
         }
 
-        return Collections.singleton("{ identicNeighbourhood }");
+        return Collections.singleton("{ identicNeighbours }");
 
     }
 }
