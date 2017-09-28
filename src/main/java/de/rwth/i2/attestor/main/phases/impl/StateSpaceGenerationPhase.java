@@ -65,7 +65,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         logger.info(String.format("| # states w/o procedure calls     | %30d |",
                 stateSpace.getStates().size()));
         logger.info(String.format("| # final states                   | %30d |",
-                stateSpace.getFinalStates().size()));
+                stateSpace.getFinalStateIds().size()));
         logger.info("+-----------+----------------------+--------------------------------+");
     }
 
