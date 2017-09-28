@@ -12,9 +12,21 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
 
     private HeapAutomaton heapAutomaton;
 
+    private List<StatelessHeapAutomaton> statelessHeapAutomata;
+
+    public static AutomatonStateLabelingStrategyBuilder builder() {
+        return new AutomatonStateLabelingStrategyBuilder();
+    }
+
     public AutomatonStateLabelingStrategy(HeapAutomaton heapAutomaton) {
 
         this.heapAutomaton = heapAutomaton;
+    }
+
+    public AutomatonStateLabelingStrategy(HeapAutomaton heapAutomaton,
+                                          List<StatelessHeapAutomaton> statelessHeapAutomata) {
+        this.heapAutomaton = heapAutomaton;
+        this.statelessHeapAutomata = statelessHeapAutomata;
     }
 
     private HeapAutomatonState transition(HeapConfiguration heapConfiguration) {
@@ -40,8 +52,16 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
     public void computeAtomicPropositions(ProgramState programState) {
 
         HeapConfiguration heapConf = programState.getHeap();
-        for(String ap : transition(heapConf).toAtomicPropositions()) {
-           programState.addAP(ap);
+        if(heapAutomaton != null) {
+            for (String ap : transition(heapConf).toAtomicPropositions()) {
+                programState.addAP(ap);
+            }
+        }
+        for(StatelessHeapAutomaton automaton : statelessHeapAutomata) {
+            for(String ap : automaton.transition(heapConf)) {
+                programState.addAP(ap);
+            }
         }
     }
 }
+

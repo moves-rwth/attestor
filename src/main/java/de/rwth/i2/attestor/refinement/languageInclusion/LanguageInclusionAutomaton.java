@@ -1,0 +1,86 @@
+package de.rwth.i2.attestor.refinement.languageInclusion;
+
+import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
+
+import java.util.Collections;
+import java.util.Set;
+
+public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
+
+    private Grammar grammar;
+
+    public LanguageInclusionAutomaton(Grammar grammar) {
+
+        this.grammar = grammar;
+    }
+
+    @Override
+    public Set<String> transition(HeapConfiguration heapConfiguration) {
+
+        heapConfiguration = getCopyWithoutVariables(heapConfiguration);
+
+        heapConfiguration = canonicalizeCurrent(heapConfiguration);
+
+        TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
+        if(ntEdges.size() != 1 || hasSelectorEdges(heapConfiguration)) {
+            return Collections.emptySet();
+        }
+
+        String label = heapConfiguration.labelOf( ntEdges.get(0) ).getLabel();
+
+        return Collections.singleton("{ L(" + label + ") }");
+
+    }
+
+    private HeapConfiguration getCopyWithoutVariables(HeapConfiguration heapConfiguration) {
+
+        heapConfiguration = heapConfiguration.clone();
+        TIntIterator iter = heapConfiguration.variableEdges().iterator();
+        HeapConfigurationBuilder builder = heapConfiguration.builder();
+        while(iter.hasNext()) {
+            int varEdge = iter.next();
+            builder.removeVariableEdge(varEdge);
+        }
+        return builder.build();
+    }
+
+    private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
+
+        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0);
+                if(checker.hasMatching()) {
+                    Matching embedding = checker.getMatching();
+                    HeapConfiguration abstractedHc = hc.clone()
+                            .builder()
+                            .replaceMatching( embedding, lhs)
+                            .build();
+                    return canonicalizeCurrent(abstractedHc);
+                }
+            }
+        }
+        return hc;
+    }
+
+
+    private boolean hasSelectorEdges(HeapConfiguration heapConfiguration) {
+
+        TIntIterator iter = heapConfiguration.nodes().iterator();
+        while(iter.hasNext()) {
+            int node = iter.next();
+            if(!heapConfiguration.successorNodesOf(node).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}

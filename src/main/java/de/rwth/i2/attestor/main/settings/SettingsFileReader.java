@@ -72,7 +72,11 @@ public class SettingsFileReader {
 		if( jsonInput.has( "defaultPath" ) ){
 			input.setDefaultPath( jsonInput.getString( "defaultPath" ) );
 		}
-		
+
+		if(jsonSettings.has("scenario")) {
+			input.setScenario(jsonSettings.getString("scenario"));
+		}
+
 		JSONObject programSettings = jsonInput.getJSONObject( "program" );
 		if( programSettings.has( "classpath" )){
 			input.setClasspath( programSettings.getString( "classpath" )  );
@@ -269,9 +273,12 @@ public class SettingsFileReader {
 		}
 		if( jsonMC.has("formulae")){
 			String formulaeString = jsonMC.getString("formulae");
-			for(String formula : formulaeString.split(",")){
+			for(String formula : formulaeString.split(";")){
 				try {
-					mc.addFormula(new LTLFormula(formula));
+					LTLFormula ltlFormula = new LTLFormula(formula);
+					// Transform to PNF
+					ltlFormula.toPNF();
+					mc.addFormula(ltlFormula);
 				} catch (Exception e) {
 					logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
 

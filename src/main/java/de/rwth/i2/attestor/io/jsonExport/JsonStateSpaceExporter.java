@@ -1,19 +1,20 @@
 package de.rwth.i2.attestor.io.jsonExport;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import org.json.JSONWriter;
+
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
-
-import org.json.JSONWriter;
-
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import java.util.Set;
 
 /**
  * Exports a state space to a JSON file.
@@ -71,16 +72,19 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     private void computeNumberOfIncomingEdges() {
 
         for(ProgramState s : states) {
-            for(ProgramState succ : stateSpace.getControlFlowSuccessorsOf(s)) {
-                int succId = succ.getStateSpaceId();
+            int id = s.getStateSpaceId();
+            TIntIterator iter = stateSpace.getControlFlowSuccessorsIdsOf(id).iterator();
+            while(iter.hasNext()) {
+                int succId = iter.next();
                 if(incomingEdgesOfStates.containsKey(succId)) {
                     incomingEdgesOfStates.put(succId, incomingEdgesOfStates.get(succId) + 1);
                 } else {
                     incomingEdgesOfStates.put(succId, 1);
                 }
             }
-            for(ProgramState succ : stateSpace.getMaterializationSuccessorsOf(s)) {
-                int succId = succ.getStateSpaceId();
+            iter = stateSpace.getMaterializationSuccessorsIdsOf(id).iterator();
+            while(iter.hasNext()) {
+                int succId = iter.next();
                 if(incomingEdgesOfStates.containsKey(succId)) {
                     incomingEdgesOfStates.put(succId, incomingEdgesOfStates.get(succId) + 1);
                 } else {
@@ -117,8 +121,8 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             jsonWriter.key("essential");
             boolean essential = !incomingEdgesOfStates.containsKey(i)
                     || incomingEdgesOfStates.get(i) != 1
-                    || (stateSpace.getMaterializationSuccessorsOf(s).size()
-                        + stateSpace.getControlFlowSuccessorsOf(s).size()) != 1;
+                    || (stateSpace.getMaterializationSuccessorsIdsOf(i).size()
+                        + stateSpace.getControlFlowSuccessorsIdsOf(i).size()) != 1;
             if(essential) {
                 isEssentialStateId.add(i);
             }
@@ -132,9 +136,9 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
 
         for(ProgramState predState : states)  {
             int source = predState.getStateSpaceId();
-            for (ProgramState succ : stateSpace.getControlFlowSuccessorsOf(predState)) {
-
-                int target = succ.getStateSpaceId();
+            TIntIterator succIter = stateSpace.getControlFlowSuccessorsIdsOf(source).iterator();
+            while(succIter.hasNext()) {
+                int target = succIter.next();
                 String label = "" ;
                 String type = "execution";
 
@@ -145,9 +149,9 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                         .key("label").value(label)
                         .endObject().endObject();
             }
-            for (ProgramState succ : stateSpace.getMaterializationSuccessorsOf(predState)) {
-
-                int target = succ.getStateSpaceId();
+            succIter = stateSpace.getMaterializationSuccessorsIdsOf(source).iterator();
+            while(succIter.hasNext()) {
+                int target = succIter.next();
                 String label = "" ;
                 String type = "materialization";
 
@@ -166,8 +170,9 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         for(ProgramState s : stateSpace.getStates()) {
             int source = s.getStateSpaceId();
             if(isEssentialStateId.contains(source)) {
-                for(ProgramState succ : computeEssentialSuccessors(s)) {
-                    int target = succ.getStateSpaceId();
+                TIntIterator iter = computeEssentialSuccessors(source).iterator();
+                while(iter.hasNext()) {
+                    int target = iter.next();
                     jsonWriter.object().key("data").object()
                             .key("source").value(source)
                             .key("target").value(target)
@@ -179,23 +184,25 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private List<ProgramState> computeEssentialSuccessors(ProgramState state) {
+    private TIntArrayList computeEssentialSuccessors(int id) {
 
-        List<ProgramState> reachableEssentials = new ArrayList<>();
-        for(ProgramState succ : stateSpace.getControlFlowSuccessorsOf(state)) {
-            int succId = succ.getStateSpaceId();
+        TIntArrayList reachableEssentials = new TIntArrayList();
+        TIntIterator iter = stateSpace.getControlFlowSuccessorsIdsOf(id).iterator();
+        while(iter.hasNext()) {
+            int succId = iter.next();
             if(isEssentialStateId.contains(succId)) {
-                reachableEssentials.add(succ);
+                reachableEssentials.add(succId);
             } else {
-                reachableEssentials.addAll( computeEssentialSuccessors(succ)  );
+                reachableEssentials.addAll( computeEssentialSuccessors(succId)  );
             }
         }
-        for(ProgramState succ : stateSpace.getMaterializationSuccessorsOf(state)) {
-            int succId = succ.getStateSpaceId();
+        iter = stateSpace.getMaterializationSuccessorsIdsOf(id).iterator();
+        while(iter.hasNext()) {
+            int succId = iter.next();
             if(isEssentialStateId.contains(succId)) {
-                reachableEssentials.add(succ);
+                reachableEssentials.add(succId);
             } else {
-                reachableEssentials.addAll( computeEssentialSuccessors(succ)  );
+                reachableEssentials.addAll( computeEssentialSuccessors(succId)  );
             }
         }
 

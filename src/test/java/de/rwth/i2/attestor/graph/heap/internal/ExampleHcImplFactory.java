@@ -1,18 +1,30 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ExampleHcImplFactory {
+
+	public static HeapConfiguration getEmptyHc() {
+
+		return new InternalHeapConfiguration();
+	}
 	
 	public static HeapConfiguration getSimpleDLL() {
 		
@@ -258,11 +270,11 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(intType, 2, nodes )
 				.addNodes(type, 4, nodes )
-				.addVariableEdge( "1", nodes.get( 1 ) )
-				.addVariableEdge( "true", nodes.get( 1 ) )
-				.addVariableEdge( "false", nodes.get( 0 ) )
-				.addVariableEdge( "0", nodes.get( 0 ) )
-				.addVariableEdge( "null", nodes.get( 5 ) )
+				.addVariableEdge( Constants.ONE, nodes.get( 1 ) )
+				.addVariableEdge( Constants.TRUE, nodes.get( 1 ) )
+				.addVariableEdge( Constants.FALSE, nodes.get( 0 ) )
+				.addVariableEdge( Constants.ZERO, nodes.get( 0 ) )
+				.addVariableEdge( Constants.NULL, nodes.get( 5 ) )
 				.addVariableEdge( "x", nodes.get( 2 ) )
 				.addSelector( nodes.get( 2 ), next, nodes.get( 3 ) )
 				.addSelector( nodes.get( 3 ), next, nodes.get( 4 ) )
@@ -281,11 +293,11 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(booleanType, 2, nodes )
 				.addNodes(type, 1, nodes )
-				.addVariableEdge( "1", nodes.get( 1 ) )
-				.addVariableEdge( "true", nodes.get( 1 ) )
-				.addVariableEdge( "false", nodes.get( 0 ) )
-				.addVariableEdge( "0", nodes.get( 0 ) )
-				.addVariableEdge( "null", nodes.get( 2 ) )
+				.addVariableEdge( Constants.ONE, nodes.get( 1 ) )
+				.addVariableEdge( Constants.TRUE, nodes.get( 1 ) )
+				.addVariableEdge( Constants.FALSE, nodes.get( 0 ) )
+				.addVariableEdge( Constants.ZERO, nodes.get( 0 ) )
+				.addVariableEdge( Constants.NULL, nodes.get( 2 ) )
 				.build();
 	}
 
@@ -300,7 +312,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(type, 4, nodes )
-				.addVariableEdge( "null", nodes.get( 3 ) )
+				.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 				.addVariableEdge( "x", nodes.get( 0 ) )
 				.addSelector( nodes.get( 0 ), next, nodes.get( 1 ) )
 				.addSelector( nodes.get( 1 ), next, nodes.get( 2 ) )
@@ -320,7 +332,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(type, 4, nodes )
-				.addVariableEdge( "null", nodes.get( 3 ) )
+				.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
 				.addVariableEdge( "x", nodes.get( 0 ) )
 				.addSelector( nodes.get( 0 ), next, nodes.get( 0 ) )
 				.addSelector( nodes.get( 1 ), next, nodes.get( 2 ) )
@@ -333,8 +345,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
 		
 		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
@@ -356,8 +368,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
 		
 		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
@@ -384,8 +396,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
 		
 		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
 		
@@ -406,8 +418,8 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
 		
 		Type defaultType = Settings.getInstance().factory().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.BoolList");
 		
@@ -434,9 +446,9 @@ public final class ExampleHcImplFactory {
 		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
 
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
-		int falseNode =  empty.targetOf(empty.variableWith("false"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
+		int falseNode =  empty.targetOf(empty.variableWith(Constants.FALSE));
 		
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -462,9 +474,9 @@ public final class ExampleHcImplFactory {
 		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
 
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
-		int falseNode =  empty.targetOf(empty.variableWith("false"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
+		int falseNode =  empty.targetOf(empty.variableWith(Constants.FALSE));
 		
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -486,9 +498,9 @@ public final class ExampleHcImplFactory {
 		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
 
-		int nullNode =  empty.targetOf(empty.variableWith("null"));
-		int trueNode =  empty.targetOf(empty.variableWith("true"));
-		int falseNode =  empty.targetOf(empty.variableWith("false"));
+		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
+		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
+		int falseNode =  empty.targetOf(empty.variableWith(Constants.FALSE));
 		
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -531,7 +543,7 @@ public final class ExampleHcImplFactory {
 		Type listType = Settings.getInstance().factory().getType("List");
 		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
-		
+
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return result.builder()
@@ -1196,7 +1208,7 @@ public final class ExampleHcImplFactory {
 				.addSelector(nodes.get(1), next, nodes.get(2))
 				.addSelector(nodes.get(1), prev, nodes.get(0))
 				.addSelector(nodes.get(0), prev, nodes.get(2))
-				.addVariableEdge("null", nodes.get(2))
+				.addVariableEdge(Constants.NULL, nodes.get(2))
 				.addVariableEdge("x", nodes.get(0))
 				.build();
 	}
@@ -1216,7 +1228,7 @@ public final class ExampleHcImplFactory {
 				.addSelector(nodes.get(1), next, nodes.get(1))
 				.addSelector(nodes.get(1), prev, nodes.get(0))
 				.addSelector(nodes.get(0), prev, nodes.get(2))
-				.addVariableEdge("null", nodes.get(2))
+				.addVariableEdge(Constants.NULL, nodes.get(2))
 				.addVariableEdge("x", nodes.get(0))
 				.build();
 	}
@@ -1433,7 +1445,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(type, 9, nodes)
-				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge(Constants.NULL, nodes.get(0))
 				.addVariableEdge("0-x", nodes.get(3))
 				.addSelector(nodes.get(3), left, nodes.get(1))
 				.addSelector(nodes.get(3), right, nodes.get(2))
@@ -1503,7 +1515,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(type, 2, nodes)
-				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge(Constants.NULL, nodes.get(0))
 				.addVariableEdge("0-y", nodes.get(1))
 				.addSelector(nodes.get(1), left, nodes.get(0))
 				.build();
@@ -1535,7 +1547,7 @@ public final class ExampleHcImplFactory {
 		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
 		return result.builder()
 				.addNodes(type, 4, nodes)
-				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge(Constants.NULL, nodes.get(0))
 				.addVariableEdge("0-x", nodes.get(1))
 				.addSelector(nodes.get(1), left, nodes.get(0))
 				.addNonterminalEdge(path)
@@ -1563,7 +1575,7 @@ public final class ExampleHcImplFactory {
 				
 		return result.builder().addNodes(type, 3, nodes)
 				.addVariableEdge("some-variable0", nodes.get(1))
-				.addVariableEdge("null", nodes.get(0))
+				.addVariableEdge(Constants.NULL, nodes.get(0))
 				.addSelector(nodes.get(1), right, nodes.get(2))
 				.addSelector(nodes.get(1), left, nodes.get(0))
 				.addNonterminalEdge(tree)

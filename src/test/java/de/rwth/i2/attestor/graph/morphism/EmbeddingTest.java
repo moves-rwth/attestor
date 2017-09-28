@@ -1,17 +1,16 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.main.settings.Settings;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EmbeddingTest {
 
@@ -125,7 +124,7 @@ public class EmbeddingTest {
 		
 		Graph p = (Graph) ExampleHcImplFactory.getDLL2Rule();
 		Graph t = (Graph) ExampleHcImplFactory.getDLLTarget();
-		
+
 		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
 		checker.run(p, t);
 		assertTrue( checker.hasMorphism() );

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,9 +60,9 @@ public class OptionSettings {
 	private boolean indexedMode = false;
 
 	/**
-	 * Heap automaton used for grammar refinement.
+	 * Enabled this option leads to using RefinedNonterminals in graph grammars.
 	 */
-	private HeapAutomaton refinementAutomaton = null;
+	private boolean grammarRefinementEnabled = false;
 
 	/**
 	 * If true, no export happens.
@@ -195,19 +194,14 @@ public class OptionSettings {
 		this.indexedMode = indexedMode;
 	}
 
-	/**
-	 * @param automaton The heap automaton to be used for grammar refinement.
-	 */
-	public void setRefinementAutomaton(HeapAutomaton automaton) {
-		this.refinementAutomaton = automaton;
+	public void setGrammarRefinementEnabled(boolean enabled) {
+
+		grammarRefinementEnabled = enabled;
 	}
 
-	/**
-	 * @return The heap automaton to be used for grammar refinement.
-	 */
-	public HeapAutomaton getRefinementAutomaton() {
+	public boolean isGrammarRefinementEnabled() {
 
-		return refinementAutomaton;
+		return grammarRefinementEnabled;
 	}
 
 	/**

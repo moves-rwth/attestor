@@ -24,11 +24,6 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 	private static final Logger logger = LogManager.getLogger( "DefaultProgramState" );
 
     /**
-     * The constants that should be present in every default state.
-     */
-	private static final String[] CONSTANT_NAMES = {"true", "false", "null", "1", "0"};
-
-    /**
      * Initializes a program state with the default scope depth.
      * @param heap The underlying heap configuration.
      */
@@ -181,11 +176,6 @@ public class DefaultProgramState extends GeneralJimpleProgramState {
 					&& scopeDepth == state.scopeDepth
 					&& atomicPropositions.equals(state.getAPs())
                     && heap.equals(otherHeap);
-	}
-
-	@Override
-	protected String[] getConstants() {
-		return CONSTANT_NAMES;
 	}
 
 }

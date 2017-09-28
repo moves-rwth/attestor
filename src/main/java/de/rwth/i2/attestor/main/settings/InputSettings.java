@@ -12,6 +12,11 @@ import java.util.HashMap;
  */
 public class InputSettings {
 
+	/**
+	 * Description of the analyzed scenario.
+	 */
+	private String scenario;
+
     /**
      * The classpath of source code files that are analyzed.
      */
@@ -47,7 +52,11 @@ public class InputSettings {
 	 * predefined grammars
 	 */
 	private HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
-	// The mapping from predefined grammars to their rename mapping
+
+
+	/**
+	 * The mapping from predefined grammars to their rename mapping
+	 */
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
 
     /**
@@ -81,6 +90,14 @@ public class InputSettings {
 		classpath = path;
 		pathToGrammar = path;
 		pathToInput = path;
+	}
+
+	public void setScenario(String scenario) {
+		this.scenario = scenario;
+	}
+
+	public String getScenario() {
+		return scenario;
 	}
 
     /**
@@ -234,4 +251,5 @@ public class InputSettings {
 	public String getRenamingLocation(String predefinedGrammar) {
 		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
+
 }

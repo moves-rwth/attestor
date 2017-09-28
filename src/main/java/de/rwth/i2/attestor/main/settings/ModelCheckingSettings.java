@@ -17,6 +17,8 @@ public class ModelCheckingSettings {
     // Indicates whether model checking is conducted.
     private boolean modelCheckingEnabled = false;
 
+    private Set<String> requiredAtomicPropositions = new HashSet<>();
+
     // Contains all LTL formulae model checking should be performed for.
     private Set<LTLFormula> formulae;
 
@@ -38,8 +40,25 @@ public class ModelCheckingSettings {
 
     public void addFormula(LTLFormula formula){
         this.formulae.add(formula);
+        for(String ap : formula.getApList()) {
+            requiredAtomicPropositions.add(extractAP(ap));
+        }
     }
 
+    private String extractAP(String apString) {
+
+        String[] apContents = apString.split("[\\{\\}]");
+        if(apContents.length < 2) {
+            return null;
+        }
+        return apContents[1].trim();
+    }
+
+
+    public Set<String> getRequiredAtomicPropositions() {
+
+        return requiredAtomicPropositions;
+    }
 
 
 }

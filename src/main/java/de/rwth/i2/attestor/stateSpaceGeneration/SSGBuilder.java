@@ -77,6 +77,7 @@ public class SSGBuilder {
 
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
+			generator.stateLabelingStrategy.computeAtomicPropositions(state);
 			generator.stateSpace.addInitialState(state);
 			generator.unexploredConfigurations.add(state);
 		}

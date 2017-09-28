@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntIntMap;
 
 import java.util.List;
 
@@ -232,5 +233,22 @@ public interface HeapConfiguration {
 	 * @return An AbstractMatchingChecker to iterate through all found embeddings.
 	 */
 	AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance);
+
+	/**
+	 * @param variableName The name of the requested variable.
+	 *
+	 * @return The unique node attached to a variable edge with the given name or INVALID_ELEMENT if no such
+	 *         variable edge exists.
+	 */
+	int variableTargetOf(String variableName);
+
+	/**
+	 *
+	 * @param node A node in the graph.
+	 *
+	 * @return Mapping from attached nonterminal edges to node to the index of the first non reduction tentacle attached
+	 *         to node.
+	 */
+	TIntIntMap attachedNonterminalEdgesWithNonReductionTentacle(int node);
 
 }

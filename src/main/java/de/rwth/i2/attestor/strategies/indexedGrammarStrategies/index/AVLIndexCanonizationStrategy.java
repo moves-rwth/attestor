@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -174,7 +175,7 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 	private boolean isCanonicalizationAllowed(HeapConfiguration heapConfiguration){
 		try{
 			
-			int varNull = heapConfiguration.variableWith("null");
+			int varNull = heapConfiguration.variableWith(Constants.NULL);
 			int nullNode = heapConfiguration.targetOf(varNull);
 			
 			TIntIterator iter = heapConfiguration.predecessorNodesOf(nullNode).iterator();

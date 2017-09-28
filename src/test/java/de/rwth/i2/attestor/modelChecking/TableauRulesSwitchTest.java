@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,10 +14,14 @@ import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
-public class TableauRulesSwitchTest {
+public class TableauRulesSwitchTest extends InternalStateSpace {
 
 	private HeapConfiguration hc;
 	private DefaultProgramState state;
+
+	public TableauRulesSwitchTest(){
+		super(0);
+	}
 
 	@BeforeClass
 	public static void init() {
@@ -30,12 +35,13 @@ public class TableauRulesSwitchTest {
 		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
 		state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
+		this.addStateIfAbsent(state);
 	}
 
 	@Test
 	public void caseAAtomicpropTerm(){
 		
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
@@ -43,7 +49,7 @@ public class TableauRulesSwitchTest {
 		currentVertex.addFormula(term);
 		
 		// Check whether the generated assertion satisfies AP term
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(term, currentVertex);
 		
 		term.apply(rulesSwitch);
@@ -53,8 +59,9 @@ public class TableauRulesSwitchTest {
 		// Reset state and rule switch with new AP
 		state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
+		this.addStateIfAbsent(state);
 
-		currentVertex = new Assertion(state);
+		currentVertex = new Assertion(state.getStateSpaceId());
 
 		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
 		AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
@@ -62,7 +69,7 @@ public class TableauRulesSwitchTest {
 		currentVertex.addFormula(term2);
 		
 		// Check whether the generated assertion satisfies AP term2
-		rulesSwitch = new TableauRulesSwitch();
+		rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(term2, currentVertex);
 		
 		term2.apply(rulesSwitch);
@@ -78,7 +85,7 @@ public class TableauRulesSwitchTest {
 	
 	@Test
 	public void caseALtlTerm(){
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
@@ -87,7 +94,7 @@ public class TableauRulesSwitchTest {
 		currentVertex.addFormula(ltlTerm);
 				
 		// Check whether the generated assertion satisfies AP term
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(ltlTerm, currentVertex);
 		
 		ltlTerm.apply(rulesSwitch);
@@ -103,7 +110,7 @@ public class TableauRulesSwitchTest {
 		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
 
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 		
 		TFalse f = new TFalse();
 		AFalseTerm term = new AFalseTerm(f);
@@ -113,7 +120,7 @@ public class TableauRulesSwitchTest {
 		assertEquals(currentVertex.getFormulae().size(), 1);
 				
 		// Check whether the generated assertion satisfies AP term "false"
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(term, currentVertex);
 				
 		term.apply(rulesSwitch);
@@ -136,7 +143,7 @@ public class TableauRulesSwitchTest {
 	@Test 
 	public void caseATrueTerm(){
 
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 			
 		TTrue t = new TTrue();
 		ATrueTerm term = new ATrueTerm(t);
@@ -145,7 +152,7 @@ public class TableauRulesSwitchTest {
 
 						
 		// Check whether the generated assertion satisfies AP term "true"
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(term, currentVertex);
 						
 		term.apply(rulesSwitch);
@@ -162,16 +169,18 @@ public class TableauRulesSwitchTest {
 		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
 		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
+		this.addStateIfAbsent(state);
 
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
-		ANegStateform negStateForm = new ANegStateform(new TNeg(), ap);
+		ATermLtlform apTerm = new ATermLtlform(new AAtomicpropTerm(ap));
+		ANegStateform negStateForm = new ANegStateform(new TNeg(), apTerm);
 		
 		currentVertex.addFormula(negStateForm);
 		
 		// Check whether the generated assertion satisfies negated AP term "ap1"
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(negStateForm, currentVertex);
 						
 		negStateForm.apply(rulesSwitch);
@@ -189,7 +198,7 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void AAndStateform(){
 
-		Assertion currentVertex = new Assertion(state);
+		Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
@@ -207,7 +216,7 @@ public class TableauRulesSwitchTest {
 								
 		// Check whether the tableau rule application returns two new assertions with the same state but term1 (term2) 
 		// included instead of term1 and term2
-		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
 		rulesSwitch.setIn(andStateForm, currentVertex);
 								
 		andStateForm.apply(rulesSwitch);
@@ -225,7 +234,7 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseAUntilLtlform(){
 		
-        Assertion currentVertex = new Assertion(state);
+        Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
@@ -248,7 +257,7 @@ public class TableauRulesSwitchTest {
 
         // Check whether the tableau rule application returns two new assertions with the same state but term1 (term2)
         // included instead of term1 and term2
-        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
         rulesSwitch.setIn(untilForm, currentVertex);
 
         untilForm.apply(rulesSwitch);
@@ -276,7 +285,7 @@ public class TableauRulesSwitchTest {
 	@Test
 	public void caseAReleaseLtlform(){
 		
-        Assertion currentVertex = new Assertion(state);
+        Assertion currentVertex = new Assertion(state.getStateSpaceId());
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
@@ -300,7 +309,7 @@ public class TableauRulesSwitchTest {
 
         // Check whether the tableau rule application returns two new assertions with the same state but term1 (term2)
         // included instead of term1 and term2
-        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch();
+        TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(this);
         rulesSwitch.setIn(releaseForm, currentVertex);
 
         releaseForm.apply(rulesSwitch);

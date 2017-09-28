@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.strategies.VariableScopes;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
@@ -77,12 +78,10 @@ public class ReturnVoidStmt extends Statement {
 		
 		TIntIterator iter = heap.variableEdges().iterator();
 		
-		String prefix = scope + "-";
-		
 		while(iter.hasNext()) {
 			int var = iter.next();
 			String name = heap.nameOf(var);
-			if(name.startsWith(prefix)) {
+			if(VariableScopes.hasScope(name, scope)) {
 				builder.removeVariableEdge(var);
 			}
 		}

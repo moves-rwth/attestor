@@ -18,18 +18,18 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public class Assertion {
 	
-	ProgramState progState;
+	int progState;
 	LinkedList<Node> formulae;
 	// specifies, if the assertions is known to hold
 	boolean isTrue;
 	
-	public Assertion(ProgramState progState){
+	public Assertion(int progState){
 		this.progState = progState;
 		this.formulae = new LinkedList<Node>();
 		isTrue = false;
 	}
 	
-	public Assertion(ProgramState progState, LTLFormula formula){
+	public Assertion(int progState, LTLFormula formula){
 		this.progState = progState;
 		
 		this.formulae = new LinkedList<Node>();
@@ -55,7 +55,7 @@ public class Assertion {
 		return this.formulae;
 	}
 
-	public ProgramState getProgramState(){
+	public int getProgramState(){
 		return this.progState;
 	}
 	
@@ -99,9 +99,9 @@ public class Assertion {
 		
 	}
 	
-	public String pcAndFormulaeToString(){
+	public String stateIDAndFormulaeToString(){
 		
-		return this.progState.getProgramCounter() + this.formulae.toString();
+		return this.progState + this.formulae.toString();
 		
 		
 	}

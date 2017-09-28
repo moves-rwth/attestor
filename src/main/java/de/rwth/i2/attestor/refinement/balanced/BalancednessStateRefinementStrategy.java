@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
@@ -32,7 +33,7 @@ class BalancednessHelper {
         Set<Integer> visited = new HashSet<>();
         Queue<Integer> queue = new ArrayDeque<>();
 
-        int nullVariable = heapConfiguration.variableWith("null");
+        int nullVariable = heapConfiguration.variableWith(Constants.NULL);
 
         if(nullVariable == HeapConfiguration.INVALID_ELEMENT) {
             return;

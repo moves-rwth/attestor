@@ -13,8 +13,7 @@ import de.rwth.i2.attestor.types.Type;
 
 public class IndexedState extends GeneralJimpleProgramState {
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
-	private static final String[] CONSTANT_NAMES = {"true", "false", "null", "1", "0", "-1"};
-	
+
 	public IndexedState( HeapConfiguration heap ) {
 		super( heap);
 	}
@@ -153,11 +152,6 @@ public class IndexedState extends GeneralJimpleProgramState {
 		result.setProgramCounter( programCounter );
 		result.scopeDepth = scopeDepth;
 		return result;
-	}
-	
-	@Override
-	protected String[] getConstants() {
-		return CONSTANT_NAMES;
 	}
 	
 }
