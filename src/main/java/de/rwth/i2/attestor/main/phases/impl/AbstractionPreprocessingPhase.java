@@ -67,7 +67,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                             new GraphMaterializer() );
 
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using indexed grammars.");
+            logger.debug("Setup materialization using indexed grammars.");
         } else {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
             MaterializationRuleManager grammarManager =
@@ -75,7 +75,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
             GrammarResponseApplier ruleApplier =
                     new DefaultGrammarResponseApplier( new GraphMaterializer() );
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using standard hyperedge replacement grammars.");
+            logger.debug("Setup materialization using standard hyperedge replacement grammars.");
         }
 
         settings.stateSpaceGeneration().setMaterializationStrategy(strategy);
@@ -89,11 +89,11 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         if(settings.options().isIndexedMode()) {
 
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
-            logger.info("Setup canonicalization using indexed grammar.");
+            logger.debug("Setup canonicalization using indexed grammar.");
 
         } else {
             canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
-            logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
+            logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
         }
         CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
@@ -133,7 +133,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 .setAbortStrategy(
                         new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
                 );
-        logger.info("Setup abort criterion: #states > "
+        logger.debug("Setup abort criterion: #states > "
                 + stateSpaceBound
                 + " or one state is larger than "
                 + stateBound

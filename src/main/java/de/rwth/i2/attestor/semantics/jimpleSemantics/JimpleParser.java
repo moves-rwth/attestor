@@ -48,7 +48,7 @@ public class JimpleParser implements ProgramParser {
 	public Program parse(String classpath, String classname, String entryPoint) {
 		
 		try {
-			logger.info( "Initializing Soot with classpath: " + classpath );
+			logger.debug( "Initializing Soot with classpath: " + classpath );
 			new SootInitializer().initialize(classpath);
 		
 
@@ -64,9 +64,9 @@ public class JimpleParser implements ProgramParser {
 			Options.v().parse( new String [] {"-pp", "-keep-line-number", "-f", "jimple", classname } );
 			Scene.v().loadNecessaryClasses();
 
-			logger.info( "Invoking Soot." );
+			logger.info( "Invoking Soot..." );
 			PackManager.v().runPacks();
-			logger.info( "Soot is done." );
+			logger.info( "done." );
 
 
 		} catch(Exception e) {

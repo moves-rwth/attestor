@@ -88,7 +88,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
                 hasLanguageInclusionAutomaton = true;
-                logger.info("Enable language inclusion checks to determine heap shapes.");
+                logger.debug("Enable language inclusion checks to determine heap shapes.");
             } else if(reachableBySelPattern.matcher(ap).matches()) {
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
@@ -103,7 +103,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 if(reachabilityAutomataBySelList.add(allowedSelectors)) {
                     stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
-                    logger.info("Enable heap automaton to track reachable variables according to selectors "
+                    logger.debug("Enable heap automaton to track reachable variables according to selectors "
                             + allowedSelectors);
                 }
 
@@ -113,7 +113,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
                 settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
-                logger.info("Enable heap automaton to track reachable variables");
+                logger.debug("Enable heap automaton to track reachable variables");
             } else if(equalityPattern.matcher(ap).matches()) {
                 String[] split = ap.split("\\=\\=");
                 enableVariableRelationTracking(trackedVariableRelations, split);
@@ -133,7 +133,7 @@ public class GrammarRefinementPhase extends AbstractPhase
            stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
            settings.stateSpaceGeneration().addKeptVariable(lhs);
            settings.stateSpaceGeneration().addKeptVariable(rhs);
-           logger.info("Enable heap automaton to track relationships between variables '"
+           logger.debug("Enable heap automaton to track relationships between variables '"
                     + lhs + "' and '" + rhs + "'");
         }
     }

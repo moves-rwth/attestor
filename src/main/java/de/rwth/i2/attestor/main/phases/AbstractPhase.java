@@ -56,12 +56,12 @@ public abstract class AbstractPhase {
     }
 
     private void logStart() {
-        logger.info(ANSI_YELLOW + "(started) " + ANSI_RESET + getName() +  "...");
+        logger.debug(ANSI_YELLOW + "(started) " + ANSI_RESET + getName() +  "...");
     }
 
 
     private void logSuccess() {
-        logger.info(ANSI_GREEN + "(finished) " + ANSI_RESET + getName());
+        logger.debug(ANSI_GREEN + "(finished) " + ANSI_RESET + getName());
     }
 
     private void logFail(Exception e) {

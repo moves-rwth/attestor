@@ -25,7 +25,7 @@ public class ModelCheckingPhase extends AbstractPhase {
 
         Set<LTLFormula> formulae = settings.modelChecking().getFormulae();
         if(formulae.isEmpty()) {
-            logger.info("No LTL formulae have been provided.");
+            logger.debug("No LTL formulae have been provided.");
             return;
         }
 
