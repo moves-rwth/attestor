@@ -1,18 +1,15 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
-import de.rwth.i2.attestor.main.Attestor;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 
+import de.rwth.i2.attestor.main.Attestor;
+import de.rwth.i2.attestor.main.phases.AbstractPhase;
+
 public class ParseGrammarPhase extends AbstractPhase {
 
-    private boolean hasUserDefinedGrammar;
-
+  
     @Override
     public String getName() {
 
@@ -22,10 +19,13 @@ public class ParseGrammarPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
+        boolean hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
         if(hasUserDefinedGrammar) {
             loadUserDefinedGrammar();
-        } else {
+        } 
+        
+        boolean hasPredefinedGrammars = settings.input().getUsedPredefinedGrammars() != null;
+        if( hasPredefinedGrammars ) {
             loadPredefinedGrammars();
         }
     }
