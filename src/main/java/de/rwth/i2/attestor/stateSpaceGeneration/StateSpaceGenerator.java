@@ -134,9 +134,11 @@ public class StateSpaceGenerator {
 	 * underlying analysis.
 	 * @return The generated StateSpace.
 	 */
-	public StateSpace generate() {
+	public StateSpace generate() throws StateSpaceGenerationAbortedException {
 
 		while( hasUnexploredStates() ){
+
+			abortStrategy.checkAbort( stateSpace );
 			ProgramState state = unexploredConfigurations.pop();
 			boolean isSufficientlyMaterialized = materializationPhase(state);
 
@@ -164,9 +166,8 @@ public class StateSpaceGenerator {
 	/**
 	 * @return true iff further states can and should be generated.
 	 */
-	private boolean hasUnexploredStates(){
-
-		return !unexploredConfigurations.isEmpty() && abortStrategy.isAllowedToContinue( stateSpace );
+	private boolean hasUnexploredStates() throws StateSpaceGenerationAbortedException {
+		return !unexploredConfigurations.isEmpty();
 	}
 
 	/**
@@ -199,7 +200,7 @@ public class StateSpaceGenerator {
 	 *
 	 * @param state The program state whose successor states shall be computed.
 	 */
-	private Set<ProgramState> executionPhase(ProgramState state ){
+	private Set<ProgramState> executionPhase(ProgramState state ) throws StateSpaceGenerationAbortedException {
 
 		Semantics semantics = program.getStatement( state.getProgramCounter() );
 		try {
@@ -227,11 +228,6 @@ public class StateSpaceGenerator {
 	 */
 	private void addingPhase(ProgramState previousState, ProgramState state) {
 
-		// this ensures that we never ever add further states if the abort strategy has triggered somewhere
-		// before hitting the top of the state space generation loop again.
-		if(!abortStrategy.isAllowedToContinue(stateSpace)) {
-			return;
-		}
 
 		// performance optimization that prevents isomorphism checks against states in the state space.
 		Semantics semantics = program.getStatement(state.getProgramCounter());

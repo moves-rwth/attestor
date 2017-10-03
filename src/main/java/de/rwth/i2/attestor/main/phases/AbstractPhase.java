@@ -65,9 +65,7 @@ public abstract class AbstractPhase {
     }
 
     private void logFail(Exception e) {
-        e.printStackTrace();
-        logger.fatal(e.getMessage());
-        logger.info(ANSI_RED + "(failed) " + ANSI_RESET + getName());
+        logger.fatal(ANSI_RED + "(failed) " + ANSI_RESET + getName());
         System.exit(1);
     }
 }

@@ -11,8 +11,7 @@ public interface AbortStrategy {
     /**
      * Checks whether further states may be generated.
      * @param stateSpace The StateSpace that has been generated so far.
-     * @return true if and only if further states may be generated.
      */
-	boolean isAllowedToContinue(StateSpace stateSpace);
+	void checkAbort(StateSpace stateSpace) throws StateSpaceGenerationAbortedException;
 
 }

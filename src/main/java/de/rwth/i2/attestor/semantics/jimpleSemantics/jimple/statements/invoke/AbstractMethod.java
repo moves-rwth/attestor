@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +17,7 @@ public class AbstractMethod {
 
 	public interface StateSpaceFactory {
 
-		StateSpace create(Program method, HeapConfiguration input, int scopeDepth);
+		StateSpace create(Program method, HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException;
 	}
 
 	@SuppressWarnings("unused")
@@ -96,7 +93,8 @@ public class AbstractMethod {
 	 * @return all heaps which are in the fixpoint of the method at the terminal
 	 *         states of it.
 	 */
-	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth ){
+	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth )
+		throws StateSpaceGenerationAbortedException {
 		if( this.hasResult( input ) ){
 			return knownInputs.get( input );
 		}else{

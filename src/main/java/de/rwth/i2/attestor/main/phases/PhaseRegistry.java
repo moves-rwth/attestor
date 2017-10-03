@@ -50,8 +50,11 @@ public class PhaseRegistry {
 
    public void execute() {
 
-      for(AbstractPhase p : phases) {
-         p.run();
+      try {
+         for (AbstractPhase p : phases) {
+            p.run();
+         }
+      } catch(Exception e) {
       }
    }
 
