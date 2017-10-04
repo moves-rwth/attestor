@@ -178,8 +178,9 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
+			final boolean removeDeadVariablesOption = Settings.getInstance().options().isRemoveDeadVariables();
 			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input),
-					Settings.getInstance().options().isRemoveDeadVariables());
+					removeDeadVariablesOption);
 		}
 	}
 
