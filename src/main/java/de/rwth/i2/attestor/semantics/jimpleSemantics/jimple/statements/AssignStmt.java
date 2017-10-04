@@ -9,10 +9,7 @@ import org.apache.logging.log4j.Logger;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -111,7 +108,7 @@ public class AssignStmt extends Statement {
 
 		if(removeDeadVariables) {
 			VariablesUtil.removeDeadVariables(rhs.toString(), jimpleProgramState, liveVariableNames);
-				VariablesUtil.removeDeadVariables(lhs.toString(), jimpleProgramState, liveVariableNames);
+			VariablesUtil.removeDeadVariables(lhs.toString(), jimpleProgramState, liveVariableNames);
 		}
 
 		JimpleProgramState result = JimpleUtil.deepCopy(jimpleProgramState);
