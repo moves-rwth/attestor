@@ -67,7 +67,6 @@ public class JimpleParser implements ProgramParser {
 
 			logger.info( "Invoking Soot..." );
 			PackManager.v().runPacks();
-			logger.info( "done." );
 
 
 		} catch(Exception e) {
