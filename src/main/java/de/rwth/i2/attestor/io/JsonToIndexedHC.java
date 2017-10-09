@@ -1,21 +1,24 @@
 package de.rwth.i2.attestor.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 
@@ -32,7 +35,7 @@ public class JsonToIndexedHC {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToIndexedHC" );
 
-	public static HeapConfiguration jsonToHC( JSONObject obj ) {
+	public static HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
 		
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
@@ -46,7 +49,7 @@ public class JsonToIndexedHC {
 		JsonToIndexedHC.parseVariables( builder, nodes, variables );
 	
 		JSONArray selectors = obj.getJSONArray( "selectors" );
-		JsonToIndexedHC.parseSelectors( builder, nodes, selectors );
+		JsonToIndexedHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
 	
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
 		JsonToIndexedHC.parseHyperedges( builder, nodes, hyperedges );
@@ -98,14 +101,20 @@ public class JsonToIndexedHC {
 		return res;
 	}
 
-	private static void parseSelectors( HeapConfigurationBuilder builder,
-			TIntArrayList nodes, JSONArray selectors ) {
+	private static void parseSelectors(HeapConfigurationBuilder builder,
+									   TIntArrayList nodes,
+									   JSONArray selectors,
+									   Consumer<String> addSelectorLabelFunction) {
+
+
 		for( int i = 0; i < selectors.length(); i++ ){
 			String name = selectors.getJSONObject( i ).getString( "label" );
 			String annotation = selectors.getJSONObject(i).getString("annotation");
 			int originID = selectors.getJSONObject( i ).getInt( "origin" );
 			int targetID = selectors.getJSONObject( i ).getInt( "target" );
-			builder.addSelector( nodes.get( originID ), 
+
+			addSelectorLabelFunction.accept(name);
+			builder.addSelector( nodes.get( originID ),
 					new AnnotatedSelectorLabel(name, annotation),
 					nodes.get( targetID ) );
 		}

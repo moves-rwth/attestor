@@ -14,12 +14,14 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.function.Consumer;
+
 public class JsonToDefaultHC {
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToDefaultHC" );
 
-	public static HeapConfiguration jsonToHC( JSONObject obj ) {
+	public static HeapConfiguration jsonToHC(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
 		
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
@@ -33,7 +35,7 @@ public class JsonToDefaultHC {
 		JsonToDefaultHC.parseVariables( builder, nodes, variables );
 	
 		JSONArray selectors = obj.getJSONArray( "selectors" );
-		JsonToDefaultHC.parseSelectors( builder, nodes, selectors );
+		JsonToDefaultHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
 	
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
 		JsonToDefaultHC.parseHyperedges( builder, nodes, hyperedges );
@@ -58,12 +60,15 @@ public class JsonToDefaultHC {
 	}
 
 	private static void parseSelectors( HeapConfigurationBuilder builder,
-			TIntArrayList nodes, JSONArray selectors ) {
+			TIntArrayList nodes, JSONArray selectors, Consumer<String> addSelectorLabelFunction) {
+
 		for( int i = 0; i < selectors.length(); i++ ){
 			String name = selectors.getJSONObject( i ).getString( "label" );
 			int originID = selectors.getJSONObject( i ).getInt( "origin" );
 			int targetID = selectors.getJSONObject( i ).getInt( "target" );
-			builder.addSelector( nodes.get( originID ), 
+
+			addSelectorLabelFunction.accept(name);
+			builder.addSelector( nodes.get( originID ),
 					BasicSelectorLabel.getSelectorLabel(name),
 					nodes.get( targetID ) );
 		}

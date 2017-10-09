@@ -16,6 +16,7 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammar
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
@@ -23,6 +24,9 @@ import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase {
 
@@ -39,6 +43,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     protected void executePhase() {
 
         grammar = settings.grammar().getGrammar();
+
+        checkSelectors();
+
         setupMaterialization();
         setupCanonicalization();
         setupAbortTest();
@@ -49,6 +56,31 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     @Override
     public void logSummary() {
         // nothing to report
+    }
+
+    private void checkSelectors() {
+
+        InputSettings inputSettings = settings.input();
+        Set<String> usedSelectors = new HashSet<>(inputSettings.getUsedSelectorLabels());
+        usedSelectors.removeAll(inputSettings.getGrammarSelectorLabels());
+
+        if(!usedSelectors.isEmpty()) {
+            logger.warn("");
+            logger.warn("");
+            logger.warn("");
+            logger.warn("+------------------------------------------------------------------+");
+            logger.warn("| Some selector labels are not used within any grammar rule.       |");
+            logger.warn("| These selector labels can never be abstracted!                   |");
+            logger.warn("| The selectors in question are listed below:                      |");
+            for(String badSel : usedSelectors) {
+                logger.warn(String.format("| %-65s|", badSel));
+            }
+            logger.warn("+------------------------------------------------------------------+");
+            logger.warn("");
+            logger.warn("");
+            logger.warn("");
+        }
+
     }
 
     private void setupMaterialization() {

@@ -359,6 +359,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		String name = fieldRef.getField().getName();
 		Type type = topLevel.translateType( fieldRef.getType() );
 
+		Settings.getInstance().input().addUsedSelectorLabel(name);
+
 		return new Field( type, base, name );
 	}
 

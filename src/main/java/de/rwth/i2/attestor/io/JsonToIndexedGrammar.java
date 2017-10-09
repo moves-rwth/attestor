@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class JsonToIndexedGrammar {
 	@SuppressWarnings("unused")
@@ -103,9 +104,11 @@ public class JsonToIndexedGrammar {
 		Set<HeapConfiguration> res = new HashSet<>();
 		JSONArray graphs = grammarFragment.getJSONArray( "rules" );
 
+		Consumer<String> addGrammarSelectorLabel = Settings.getInstance().input()::addGrammarSelectorLabel;
+
 		for( int g = 0; g < graphs.length(); g++ ){
 
-			res.add( JsonToIndexedHC.jsonToHC( graphs.getJSONObject( g ) ) );
+			res.add( JsonToIndexedHC.jsonToHC( graphs.getJSONObject( g ), addGrammarSelectorLabel ) );
 		}
 
 		return res;
