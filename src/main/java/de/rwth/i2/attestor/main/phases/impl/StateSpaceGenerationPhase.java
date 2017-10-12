@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
 
 import java.util.List;
@@ -39,9 +40,14 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
         printAnalyzedMethod();
 
-        stateSpace = stateSpaceGenerator.generate();
-        logger.info("State space generation finished. #states: "
-                + settings.factory().getTotalNumberOfStates());
+        try {
+            stateSpace = stateSpaceGenerator.generate();
+            logger.info("State space generation finished. #states: "
+                    + settings.factory().getTotalNumberOfStates());
+        } catch(StateSpaceGenerationAbortedException e) {
+            logger.error("State space generation has been aborted prematurely.");
+            throw new IllegalStateException(e);
+        }
     }
 
     private void printAnalyzedMethod() {

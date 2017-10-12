@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.Set;
-
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+
+import java.util.Set;
 
 /**
  * An abstraction of abstract program semantics that is executed on objects of type {@link ProgramState}.
@@ -21,7 +21,8 @@ public interface Semantics {
      * @throws NotSufficientlyMaterializedException This exception is thrown if the semantics cannot be executed on
      *                                              programState due to missing fields.
      */
-    Set<ProgramState> computeSuccessors(ProgramState programState) throws NotSufficientlyMaterializedException;
+    Set<ProgramState> computeSuccessors(ProgramState programState)
+            throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException;
 
     /**
      * Checks whether execution of a single step of the abstract program semantics on the given program state

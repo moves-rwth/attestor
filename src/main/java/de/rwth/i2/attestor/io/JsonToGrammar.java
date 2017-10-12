@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.io;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -12,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class JsonToGrammar {
 
@@ -87,9 +89,11 @@ public class JsonToGrammar {
 		Set<HeapConfiguration> res = new HashSet<>();
 		JSONArray graphs = grammarFragment.getJSONArray( "rules" );
 
+		Consumer<String> addGrammarSelectorLabel = Settings.getInstance().input()::addGrammarSelectorLabel;
+
 		for( int g = 0; g < graphs.length(); g++ ){
 
-			res.add( JsonToDefaultHC.jsonToHC( graphs.getJSONObject( g ) ) );
+			res.add( JsonToDefaultHC.jsonToHC( graphs.getJSONObject( g ), addGrammarSelectorLabel ) );
 		}
 
 		return res;

@@ -62,11 +62,16 @@ public class StateSpaceGeneratorTest {
 
 
 		ProgramState initialState = new DefaultProgramState(initialGraph);
-		StateSpace res = ssgBuilder
-                .setProgram(mainProgram)
-                .addInitialState(initialState)
-                .build()
-                .generate();
+		StateSpace res = null;
+		try {
+			res = ssgBuilder
+                    .setProgram(mainProgram)
+                    .addInitialState(initialState)
+                    .build()
+                    .generate();
+		} catch (StateSpaceGenerationAbortedException e) {
+			fail("State space generation aborted");
+		}
 
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
@@ -92,11 +97,16 @@ public class StateSpaceGeneratorTest {
 		Program mainProgram = new Program( programInstructions );
 
 		ProgramState initialState = new DefaultProgramState(initialGraph);
-        StateSpace res = ssgBuilder
-                .setProgram(mainProgram)
-                .addInitialState(initialState)
-                .build()
-                .generate();
+		StateSpace res = null;
+		try {
+			res = ssgBuilder
+                    .setProgram(mainProgram)
+                    .addInitialState(initialState)
+                    .build()
+                    .generate();
+		} catch (StateSpaceGenerationAbortedException e) {
+			fail("State space generation aborted");
+		}
 
 		assertEquals( 4, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
@@ -148,11 +158,16 @@ public class StateSpaceGeneratorTest {
 		Program mainProgram = new Program( programInstructions );
 
         ProgramState initialState = new DefaultProgramState(initialGraph);
-        StateSpace res = ssgBuilder
-                .setProgram(mainProgram)
-                .addInitialState(initialState)
-                .build()
-                .generate();
+		StateSpace res = null;
+		try {
+			res = ssgBuilder
+                    .setProgram(mainProgram)
+                    .addInitialState(initialState)
+                    .build()
+                    .generate();
+		} catch (StateSpaceGenerationAbortedException e) {
+			fail("State space generation aborted");
+		}
 
 		assertEquals( 3, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );

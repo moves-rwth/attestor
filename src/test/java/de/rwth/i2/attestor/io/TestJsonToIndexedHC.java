@@ -1,18 +1,22 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.function.Consumer;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import org.json.JSONObject;
-import org.junit.*;
-
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
-
 public class TestJsonToIndexedHC {
 
+	private Consumer<String> sink = s -> {};
 
 	@BeforeClass
 	public static void init() {
@@ -49,7 +53,7 @@ public class TestJsonToIndexedHC {
 				+"}";
 		
 		HeapConfiguration parsed 
-			= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+			= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 		
 		assertEquals( ExpectedHCs.getExpected_Annotated(), parsed );
 	}
@@ -76,7 +80,7 @@ public class TestJsonToIndexedHC {
 		
 		
 		HeapConfiguration parsed 
-		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 	
 		assertEquals( ExpectedHCs.getExpected_Bottom(), parsed );
 	}
@@ -102,7 +106,7 @@ public class TestJsonToIndexedHC {
 				+"}\n";
 		
 		HeapConfiguration parsed 
-		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 	
 		assertEquals( ExpectedHCs.getExpected_TwoElementIndex(), parsed );
 	}
@@ -127,7 +131,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 	
 		assertEquals( ExpectedHCs.getExpected_IndexWithVar(), parsed );
 	}
@@ -152,7 +156,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 	
 		assertEquals( ExpectedHCs.getExpected_IndexWithAbs(), parsed );
 	}
@@ -178,7 +182,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -206,7 +210,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("bottom index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -234,7 +238,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("variable index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -262,7 +266,7 @@ public class TestJsonToIndexedHC {
 				+"		}]\n"
 				+"}\n";
 		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding));
+			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected

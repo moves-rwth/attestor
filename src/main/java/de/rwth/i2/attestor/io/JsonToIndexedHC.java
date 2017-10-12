@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.io;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,8 @@ public class JsonToIndexedHC {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToIndexedHC" );
 
-	public static HeapConfiguration jsonToHC( JSONObject obj ) {
+
+	public static HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
 
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
@@ -48,7 +50,8 @@ public class JsonToIndexedHC {
 		JsonToIndexedHC.parseVariables( builder, nodes, variables );
 
 		JSONArray selectors = obj.getJSONArray( "selectors" );
-		JsonToIndexedHC.parseSelectors( builder, nodes, selectors );
+
+		JsonToIndexedHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
 
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
 		JsonToIndexedHC.parseHyperedges( builder, nodes, hyperedges );
@@ -105,18 +108,26 @@ public class JsonToIndexedHC {
 		return res;
 	}
 
-	private static void parseSelectors( HeapConfigurationBuilder builder,
-			TIntArrayList nodes, JSONArray selectors ) {
+	private static void parseSelectors(HeapConfigurationBuilder builder,
+									   TIntArrayList nodes,
+									   JSONArray selectors,
+									   Consumer<String> addSelectorLabelFunction) {
+
+
 		for( int i = 0; i < selectors.length(); i++ ){
 			final JSONObject selectorInJson = selectors.getJSONObject(i);
 			String name = selectorInJson.getString( "label" );
+            
 			String annotation = "";
 			if( selectorInJson.has("annotation") ){
 			annotation = selectorInJson.getString("annotation");
 			}
+            
 			int originID = selectorInJson.getInt( "origin" );
 			int targetID = selectorInJson.getInt( "target" );
-			builder.addSelector( nodes.get( originID ), 
+            
+			addSelectorLabelFunction.accept(name);
+			builder.addSelector( nodes.get( originID ),
 					new AnnotatedSelectorLabel(name, annotation),
 					nodes.get( targetID ) );
 		}

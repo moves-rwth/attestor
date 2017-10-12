@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.io;
 
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -119,9 +120,11 @@ public class JsonToIndexedGrammar {
 		Set<HeapConfiguration> res = new HashSet<>();
 		JSONArray graphs = grammarFragment.getJSONArray( "rules" );
 
+		Consumer<String> addGrammarSelectorLabel = Settings.getInstance().input()::addGrammarSelectorLabel;
+
 		for( int g = 0; g < graphs.length(); g++ ){
 
-			res.add( JsonToIndexedHC.jsonToHC( graphs.getJSONObject( g ) ) );
+			res.add( JsonToIndexedHC.jsonToHC( graphs.getJSONObject( g ), addGrammarSelectorLabel ) );
 		}
 
 		return res;

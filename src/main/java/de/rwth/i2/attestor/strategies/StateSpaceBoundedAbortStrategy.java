@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.strategies;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,24 +48,19 @@ public class StateSpaceBoundedAbortStrategy implements AbortStrategy {
 	}
 	
 	@Override
-	public boolean isAllowedToContinue(StateSpace stateSpace) {
+	public void checkAbort(StateSpace stateSpace) throws StateSpaceGenerationAbortedException {
 		
 		if (maxStateSpaceSize != NO_MAXIMUM && stateSpace.getMaximalStateSize() > maxStateSize) {
 			
 			logger.error("Exceeded " + maxStateSize + " nodes in a heap configuration of a single state.");
-			
-			return false;
+			throw new StateSpaceGenerationAbortedException();
 		}
 		
 		if (maxStateSpaceSize != NO_MAXIMUM && stateSpace.getStates().size() > maxStateSpaceSize) {
 			
 			logger.error("Exceeded " + maxStateSpaceSize + " states.");
-			
-			return false;
+			throw new StateSpaceGenerationAbortedException();
 		}
-	
-		
-		return true;
 	}
 
 }

@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -78,7 +79,7 @@ public class IfStmtTest {
 							testState.getHeap().equals(resState.getHeap()));
 			}
 
-		}catch( NotSufficientlyMaterializedException e ){
+		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e){
 			fail( "Unexpected Exception: " + e.getMessage() );
 		}
 
@@ -118,7 +119,7 @@ public class IfStmtTest {
 			}
 
 			
-		}catch( NotSufficientlyMaterializedException e ){
+		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail( "Unexpected Exception: " + e.getMessage() );
 		}
 	}
@@ -158,7 +159,7 @@ public class IfStmtTest {
 				assertTrue( "Heap after evaluating condition should not change",
 						testState.getHeap().equals(resState.getHeap()));
 			}
-		}catch( NotSufficientlyMaterializedException e ){
+		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail( "Unexpected Exception: " + e.getMessage() );
 		}
 	}

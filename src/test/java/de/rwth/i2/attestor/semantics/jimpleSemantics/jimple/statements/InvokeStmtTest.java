@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -67,7 +68,7 @@ public class InvokeStmtTest {
 			HeapConfiguration expectedGraph = tmp.getHeap();
 			assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph );
 			assertEquals( "ensure heap is clean again", inputGraph, resState.getHeap() );
-		}catch( NotSufficientlyMaterializedException e ){
+		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail("Unexpected exception: " + e.getMessage());
 		}
 	}
