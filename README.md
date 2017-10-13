@@ -1,3 +1,7 @@
+![Build Status](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
+
+
+
 # Attestor
 
 Attestor is a [shape analysis][11] tool that attempts to discover precise
