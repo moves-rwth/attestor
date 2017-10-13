@@ -203,9 +203,8 @@ public class IndexCanonizationStrategyImpl implements IndexCanonizationStrategy 
 
 				for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(node)) {
 
-					String label =  sel.getLabel();
-					if(nullPointerGuards.contains(label)) {
-						if(heapConfiguration.selectorTargetOf(node, sel) == nullNode) {
+					if(heapConfiguration.selectorTargetOf(node, sel) == nullNode) {
+						if(nullPointerGuards.contains(sel.getLabel())) {
 							return false;
 						}
 					}

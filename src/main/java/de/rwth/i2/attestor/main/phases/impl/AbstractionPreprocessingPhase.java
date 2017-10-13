@@ -25,9 +25,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
+import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.HashSet;
@@ -153,23 +154,30 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     private Set<String> determineNullPointerGuards() {
 
         Set<String> nullPointerGuards = new HashSet<>();
+
         Grammar grammar = settings.grammar().getGrammar();
         for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
             if(lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
                 if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
                     for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+
                         TIntIterator iter = rhs.nodes().iterator();
                         while(iter.hasNext()) {
                             int node = iter.next();
                             for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
-                                nullPointerGuards.add(sel.getLabel());
+
+                                int target = rhs.selectorTargetOf(node, sel);
+                                if(rhs.nodeTypeOf(target) == GeneralType.getType("NULL")) {
+                                    nullPointerGuards.add(sel.getLabel());
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
         return nullPointerGuards;
     }
 
