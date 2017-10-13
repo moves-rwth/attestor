@@ -126,10 +126,5 @@ public interface JimpleProgramState extends ProgramState {
      */
 	JimpleProgramState clone();
 	
-	/**
-     * Provides the depth of the scope of this executable, which is necessary to pass this to abstract methods.
-     *
-	 * @return The current depth of the scope of this executable.
-	 */
-	int getScopeDepth();
+
 }

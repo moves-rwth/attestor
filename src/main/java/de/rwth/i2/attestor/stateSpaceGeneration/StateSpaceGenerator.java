@@ -138,8 +138,17 @@ public class StateSpaceGenerator {
 
 		while( hasUnexploredStates() ){
 
-			abortStrategy.checkAbort( stateSpace );
 			ProgramState state = unexploredConfigurations.pop();
+
+			// TODO
+			try {
+				abortStrategy.checkAbort(stateSpace);
+			} catch(StateSpaceGenerationAbortedException e) {
+				if(state.getScopeDepth() > 0) {
+					throw e;
+				}
+				break;
+			}
 			boolean isSufficientlyMaterialized = materializationPhase(state);
 
 			if(isSufficientlyMaterialized) {

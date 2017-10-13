@@ -38,6 +38,15 @@ public final class BasicNonterminal implements Nonterminal {
 	}
 
 	/**
+	 * Method to check whether a nonterminal with the given label already exists
+	 * @param label The label
+	 * @return True iff a BasicNonterminal with label 'label' exists.
+	 */
+	public static boolean hasNonterminal(String label) {
+		return existingNonterminals.containsKey( label );
+	}
+
+	/**
 	 * Method to access already existing nonterminal symbols.
 	 * @param label The label of a requested already existing nonterminal symbol.
 	 * @return The nonterminal symbol with the requested label.

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
@@ -55,8 +56,12 @@ public class GrammarRefinementPhase extends AbstractPhase
         updateHeapAutomata();
 
         if(settings.options().isIndexedMode()) {
-            logger.info("Grammar refinement for indexed grammars is not supported yet.");
-            settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+            logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
+
+            if(BasicNonterminal.hasNonterminal("BT"))  {
+                settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+            }
+
             return;
         }
 
