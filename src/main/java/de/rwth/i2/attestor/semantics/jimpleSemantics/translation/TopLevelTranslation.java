@@ -148,7 +148,9 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 */
 	private String getShortName(soot.Type type) {
 
+		// escaped name was recently removed in soot.Type
 		//String[] splitted = type.getEscapedName().split("\\.");
+
 		String[] splitted = type.toString().split("\\.");
 		return splitted[splitted.length - 1];
 	}

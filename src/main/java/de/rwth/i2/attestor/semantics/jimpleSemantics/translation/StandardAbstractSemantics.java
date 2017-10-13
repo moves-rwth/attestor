@@ -157,7 +157,10 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Type translateType( soot.Type input ){
 
-		return Settings.getInstance().factory().getType( input.getEscapedName() );
+		// getEscapedName was recently removed in soot.Type
+		//String name = input.getEscapedName();
+		String name = input.toString();
+		return Settings.getInstance().factory().getType( name );
 	}
 	
 	/**
