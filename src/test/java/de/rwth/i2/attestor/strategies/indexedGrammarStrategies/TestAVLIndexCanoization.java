@@ -1,17 +1,23 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 
 public class TestAVLIndexCanoization {
 
-	private AVLIndexCanonizationStrategy canonizer;
+	private IndexCanonizationStrategyImpl canonizer;
 
 	@BeforeClass
 	public static void init() {
@@ -21,7 +27,12 @@ public class TestAVLIndexCanoization {
 
 	@Before
 	public void setup(){
-		canonizer = new AVLIndexCanonizationStrategy();
+
+		Set<String> nullPointerGuards = new HashSet<>();
+		nullPointerGuards.add("left");
+		nullPointerGuards.add("right");
+
+		canonizer = new IndexCanonizationStrategyImpl(nullPointerGuards);
 	}
 	
 	@Test

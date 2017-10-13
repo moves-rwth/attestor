@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import java.util.List;
-
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -11,11 +9,14 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractInd
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
 
+import java.util.List;
+
 /**
  * Responsible for applying the materialization rules to the indices of the nonterminals
  * in the graph.
- * 
- * For input rule X &#8594; ssZ it replaces the indexsymbol X in all nonterminals where it occures
+ *
+ * Example:
+ * For input rule X &#8594; ssZ it replaces the index symbol X in all nonterminals where it occurs
  * by ssZ.
  * 
  * @author Hannah

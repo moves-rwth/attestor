@@ -14,6 +14,9 @@ import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMateria
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
@@ -21,9 +24,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+import gnu.trove.iterator.TIntIterator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -133,10 +138,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
         CanonicalizationHelper canonicalizationHelper;
-        IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
-
-
-
+        IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
         IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
@@ -146,6 +148,29 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
+    }
+
+    private Set<String> determineNullPointerGuards() {
+
+        Set<String> nullPointerGuards = new HashSet<>();
+        Grammar grammar = settings.grammar().getGrammar();
+        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if(lhs instanceof IndexedNonterminal) {
+                IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
+                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                        TIntIterator iter = rhs.nodes().iterator();
+                        while(iter.hasNext()) {
+                            int node = iter.next();
+                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+                                nullPointerGuards.add(sel.getLabel());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return nullPointerGuards;
     }
 
     private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {

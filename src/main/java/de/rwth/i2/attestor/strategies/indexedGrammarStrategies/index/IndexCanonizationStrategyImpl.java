@@ -8,6 +8,9 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A IndexCanonizationStrategy that uses a fixed right-regular string grammar given by the following rules:
  * <ul>
@@ -21,7 +24,14 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Hannah, Christoph
  */
-public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
+public class IndexCanonizationStrategyImpl implements IndexCanonizationStrategy {
+
+	private Set<String> nullPointerGuards = new HashSet<>();
+
+	public IndexCanonizationStrategyImpl(Set<String> nullPointerGuards) {
+
+		this.nullPointerGuards = nullPointerGuards;
+	}
 
 	/**
 	 * Abstracts the indices of all nonterminals in heapConfiguration simultaneously and as far as possible.
@@ -171,12 +181,17 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 
 
 	/**
-	 * Specialized check for AVL trees that prevents abstractions if
-	 * selector edges labeled "left" or "right" to null exist.
+	 * Specialized check that prevents abstractions if
+	 * selector edges to null exist.
 	 * @param heapConfiguration The HeapConfiguration to which canonicalization should be applied.
 	 * @return true if and only if no selector edges labeled "left" or "right" to null exist.
 	 */
 	private boolean isCanonicalizationAllowed(HeapConfiguration heapConfiguration){
+
+		if(nullPointerGuards.isEmpty())	 {
+			return true;
+		}
+
 		try{
 
 			int varNull = heapConfiguration.variableWith(Constants.NULL);
@@ -188,7 +203,8 @@ public class AVLIndexCanonizationStrategy implements IndexCanonizationStrategy {
 
 				for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(node)) {
 
-					if( sel.hasLabel("left") || sel.hasLabel("right") ) {
+					String label =  sel.getLabel();
+					if(nullPointerGuards.contains(label)) {
 						if(heapConfiguration.selectorTargetOf(node, sel) == nullNode) {
 							return false;
 						}

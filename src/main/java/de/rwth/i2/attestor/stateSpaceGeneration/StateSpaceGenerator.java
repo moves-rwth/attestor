@@ -140,7 +140,6 @@ public class StateSpaceGenerator {
 
 			ProgramState state = unexploredConfigurations.pop();
 
-			// TODO
 			try {
 				abortStrategy.checkAbort(stateSpace);
 			} catch(StateSpaceGenerationAbortedException e) {
@@ -149,6 +148,7 @@ public class StateSpaceGenerator {
 				}
 				break;
 			}
+
 			boolean isSufficientlyMaterialized = materializationPhase(state);
 
 			if(isSufficientlyMaterialized) {
