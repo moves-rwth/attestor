@@ -30,8 +30,8 @@ public class GrammarRefinementPhase extends AbstractPhase
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Space}*\\p{Alnum}+,\\p{Space}*\\p{Alnum}+\\)$");
     private static final Pattern reachableBySelPattern
             = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Space}*\\p{Alnum}+,\\p{Space}*\\[(\\p{Alnum}+,\\p{Space})*\\p{Alnum}+\\]+\\)$");
-    private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
-    private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
+    private static final Pattern equalityPattern = Pattern.compile("^@?\\p{Alnum}+(.\\p{Alnum}+)? == \\p{Alnum}+$");
+    private static final Pattern inequalityPattern = Pattern.compile("^@?\\p{Alnum}+(.\\p{Alnum}+)? != \\p{Alnum}+$");
 
     private List<HeapConfiguration> inputs;
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
@@ -44,6 +44,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     @Override
     protected void executePhase() {
+
 
         inputs = getPhase(InputTransformer.class).getInputs();
 
@@ -148,7 +149,7 @@ public class GrammarRefinementPhase extends AbstractPhase
            stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
            settings.stateSpaceGeneration().addKeptVariable(lhs);
            settings.stateSpaceGeneration().addKeptVariable(rhs);
-           logger.debug("Enable heap automaton to track relationships between variables '"
+           logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }
     }
