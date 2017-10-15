@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilder
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessAutomaton;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 public class GrammarRefinementPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
+    private static final Pattern btree = Pattern.compile("^btree$");
     private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Space}*\\p{Alnum}+\\p{Space}*\\)$");
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Space}*\\p{Alnum}+,\\p{Space}*\\p{Alnum}+\\)$");
     private static final Pattern reachableBySelPattern
@@ -79,6 +81,7 @@ public class GrammarRefinementPhase extends AbstractPhase
         boolean isIndexedMode = settings.options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
+        boolean hasBtreeAutomaton = false;
 
         Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
 
@@ -88,7 +91,12 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         for(String ap : requiredAPs) {
 
-            if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
+            if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
+                Grammar grammar = settings.grammar().getGrammar();
+                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(grammar));
+                hasBtreeAutomaton = true;
+                logger.debug("Enable checking for balanced trees.");
+            } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
                 hasLanguageInclusionAutomaton = true;
