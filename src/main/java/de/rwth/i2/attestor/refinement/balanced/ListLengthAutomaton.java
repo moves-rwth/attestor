@@ -48,7 +48,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
         IndexedState state = new IndexedState(heapConfiguration, 0);
         heapConfiguration = canonicalizationStrategy.canonicalize(new ReturnVoidStmt(), state).getHeap();
 
-        if(countSelectorEdges(heapConfiguration) > 4) {
+        if(countSelectorEdges(heapConfiguration) > 8) {
             return Collections.emptySet();
         }
 
