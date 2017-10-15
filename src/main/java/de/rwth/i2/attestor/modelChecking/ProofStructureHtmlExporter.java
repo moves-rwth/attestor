@@ -60,7 +60,7 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 		StringBuilder psJSON = new StringBuilder( "elements: [\n ");
 		
 		// Generate a unique mapping from assertions to ints
-		HashMap<Assertion, Integer> nodeIds = new HashMap<Assertion, Integer>();
+		HashMap<Assertion, Integer> nodeIds = new HashMap<>();
 		
 		// Initiate nodes secction
 		psJSON.append("//nodes \n" );

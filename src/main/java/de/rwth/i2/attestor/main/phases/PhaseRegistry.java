@@ -56,6 +56,7 @@ public class PhaseRegistry {
             p.run();
          }
       } catch(Exception e) {
+         logger.fatal(e.getMessage());
       }
    }
 

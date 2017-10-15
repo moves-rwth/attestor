@@ -92,7 +92,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 */
 	public void translate() {
 
-		ArrayList<SootMethod> methods = new ArrayList<SootMethod>();
+		ArrayList<SootMethod> methods = new ArrayList<>();
 
 		SootClass mainClass = Scene.v().getMainClass();
 
@@ -243,16 +243,13 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
 	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() throws StateSpaceGenerationAbortedException {
 
-		return (program, input, scopeDepth) -> {
-			return Settings.getInstance()
-					.factory()
-					.createStateSpaceGenerator(
-							program,
-							input,
-							scopeDepth
-					).generate();
-
-		};
+		return (program, input, scopeDepth) -> Settings.getInstance()
+                .factory()
+                .createStateSpaceGenerator(
+                        program,
+                        input,
+                        scopeDepth
+                ).generate();
 	}
 
 	@Override
