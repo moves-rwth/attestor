@@ -63,6 +63,7 @@ public abstract class AbstractPhase {
 
     private void logFail(Exception e) {
         logger.fatal(getName() + " failed.");
+        logger.fatal(e.getMessage());
         System.exit(1);
     }
 

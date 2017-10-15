@@ -253,8 +253,6 @@ public class CommandLineReader {
 
 		if(cmd.hasOption("ne"))	{
 			optionSettings.setNoExport(true);
-		} else {
-			optionSettings.setNoExport(false);
 		}
 
 		if(cmd.hasOption("ad")) {

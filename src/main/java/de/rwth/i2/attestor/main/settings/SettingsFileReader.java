@@ -199,6 +199,10 @@ public class SettingsFileReader {
 		if( jsonOutput.has( "defaultPath" )){
 			output.setDefaultPath( jsonOutput.getString( "defaultPath" ) );
 		}
+
+		if( jsonOutput.has("enabled") ) {
+			settings.options().setNoExport(!jsonOutput.getBoolean("enabled"));
+		}
 		
 		if( jsonOutput.has( "stateSpace" ) ){
 			output.setExportStateSpace( true );
