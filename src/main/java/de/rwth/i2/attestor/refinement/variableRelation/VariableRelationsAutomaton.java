@@ -11,9 +11,10 @@ import java.util.Set;
 
 public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
 
-    private final String lhs;
-    private final String rhs;
-    private final String field;
+    private String lhs;
+    private String rhs;
+    private String lhsField;
+    private String rhsField;
 
     private final Set<String> equalityAPs;
     private final Set<String> inequalityAPs;
@@ -22,17 +23,31 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
 
         if(lhs.contains(".")) {
             String[] split = lhs.split("[.]");
-            this.lhs = split[0].trim();
-            this.field = split[1].trim();
+            this.lhs = returnHotfix(split[0].trim());
+            this.lhsField = split[1].trim();
         } else {
-            this.lhs = lhs;
-            this.field = null;
+            this.lhs = returnHotfix(lhs);
+            this.lhsField = null;
         }
 
-        this.rhs = rhs;
+        if(rhs.contains(".")) {
+            String[] split = rhs.split("[.]");
+            this.rhs = returnHotfix(split[0].trim());
+            this.rhsField = split[1].trim();
+        } else {
+            this.rhs = returnHotfix(rhs);
+            this.rhsField = null;
+        }
 
         equalityAPs = Collections.singleton("{ " + lhs + " == " + rhs + " }");
         inequalityAPs = Collections.singleton("{ " + lhs + " != " + rhs + " }");
+    }
+
+    private String returnHotfix(String name) {
+        if(name.startsWith("return")) {
+            return "@" + name;
+        }
+        return name;
     }
 
     @Override
@@ -42,10 +57,6 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
         int rhsNode = HeapConfiguration.INVALID_ELEMENT;
 
         // This is a hotfix because the LTL parser does not like @ symbols...
-        String lhsName = lhs;
-        if(lhs.startsWith("return")) {
-            lhsName = "@" + lhsName;
-        }
 
         TIntIterator varIter = heapConfiguration.variableEdges().iterator();
         while(varIter.hasNext()
@@ -55,30 +66,12 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
             // remove scoping information first
             String name = VariableScopes.getName(heapConfiguration.nameOf(var));
 
-
-            if(name.equals(lhsName)) {
-                lhsNode = heapConfiguration.targetOf(var);
-                if(field != null && lhsNode != HeapConfiguration.INVALID_ELEMENT) {
-
-                    boolean foundSelector = false;
-                    for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(lhsNode)) {
-                        if(sel.getLabel().equals(field)) {
-                            lhsNode = heapConfiguration.selectorTargetOf(
-                                    lhsNode,
-                                    sel
-                            );
-                            foundSelector = true;
-                            break;
-                        }
-                    }
-                    if(!foundSelector) {
-                        lhsNode = HeapConfiguration.INVALID_ELEMENT;
-                    }
-                }
+            if(lhsNode == HeapConfiguration.INVALID_ELEMENT) {
+               lhsNode = getNode(heapConfiguration, var, name, lhs, lhsField);
             }
 
-            if(name.equals(rhs)) {
-                rhsNode = heapConfiguration.targetOf(var);
+            if(rhsNode == HeapConfiguration.INVALID_ELEMENT) {
+                rhsNode = getNode(heapConfiguration, var, name, rhs, rhsField);
             }
         }
 
@@ -91,5 +84,27 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
         }
 
         return inequalityAPs;
+    }
+
+    private int getNode(HeapConfiguration hc, int varEdge, String hcVar, String var, String field) {
+
+        if(hcVar.equals(var)) {
+            int node  = hc.targetOf(varEdge);
+            if(field != null && node != HeapConfiguration.INVALID_ELEMENT) {
+
+                boolean foundSelector = false;
+                for(SelectorLabel sel : hc.selectorLabelsOf(node)) {
+                    if(sel.getLabel().equals(lhsField)) {
+                        return hc.selectorTargetOf(
+                                node,
+                                sel
+                        );
+                    }
+                }
+                return HeapConfiguration.INVALID_ELEMENT;
+            }
+            return node;
+        }
+        return HeapConfiguration.INVALID_ELEMENT;
     }
 }
