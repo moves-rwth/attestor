@@ -22,7 +22,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanoni
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.array.TIntArrayList;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,15 +47,32 @@ public class BalancednessAutomaton implements StatelessHeapAutomaton {
         IndexedState state = new IndexedState(heapConfiguration, 0);
         heapConfiguration = canonicalizationStrategy.canonicalize(new ReturnVoidStmt(), state).getHeap();
 
-        TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        if(ntEdges.size() > 2 || countSelectorEdges(heapConfiguration) > 1) {
+        if(countSelectorEdges(heapConfiguration) > 1) {
             return Collections.emptySet();
         }
 
-        //String label = heapConfiguration.labelOf( ntEdges.get(0) ).getLabel();
 
-        return Collections.singleton("{ btree }");
+        TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
+        int pFound = 0;
+        int btFound = 0;
+        while(iter.hasNext()) {
+           int edge = iter.next();
+           String label = heapConfiguration.labelOf(edge).getLabel();
+           switch (label) {
+               case "P":
+                   ++pFound;
+                   break;
+               case "BT":
+                   ++btFound;
+                   break;
+           }
+        }
 
+        if(btFound == 1 && pFound <= 1) {
+            return Collections.singleton("{ btree }");
+        } else {
+            return Collections.emptySet();
+        }
     }
 
     private void setupCanonicalization() {

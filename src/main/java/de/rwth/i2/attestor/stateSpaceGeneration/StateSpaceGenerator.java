@@ -161,7 +161,9 @@ public class StateSpaceGenerator {
 					successorStates.forEach(nextState -> {
 						nextState = stateRefinementStrategy.refine(nextState);
 						nextState = canonicalizationPhase(nextState);
-						stateLabelingStrategy.computeAtomicPropositions(nextState);
+						if(state.getScopeDepth() == 0) {
+							stateLabelingStrategy.computeAtomicPropositions(nextState);
+						}
 						addingPhase(state, nextState);
 					});
 				}
