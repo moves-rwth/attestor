@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessAutomaton;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.balanced.ListLengthAutomaton;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.refinement.languageInclusion.LanguageInclusionAutomaton;
@@ -28,6 +29,7 @@ public class GrammarRefinementPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
     private static final Pattern btree = Pattern.compile("^btree$");
+    private static final Pattern bimap = Pattern.compile("^bimap$");
     private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Space}*\\p{Alnum}+\\p{Space}*\\)$");
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Space}*\\p{Alnum}+,\\p{Space}*\\p{Alnum}+\\)$");
     private static final Pattern reachableBySelPattern
@@ -82,6 +84,7 @@ public class GrammarRefinementPhase extends AbstractPhase
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
         boolean hasBtreeAutomaton = false;
+        boolean hasBimapAutomaton = false;
 
         Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
 
@@ -91,7 +94,12 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         for(String ap : requiredAPs) {
 
-            if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
+            if(!hasBimapAutomaton && bimap.matcher(ap).matches()) {
+                Grammar grammar = settings.grammar().getGrammar();
+                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(grammar));
+                hasBimapAutomaton = true;
+                logger.debug("Enable checking for lists of equal length.");
+            } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new BalancednessAutomaton(grammar));
                 hasBtreeAutomaton = true;
