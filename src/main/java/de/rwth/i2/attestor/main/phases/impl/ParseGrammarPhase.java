@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-
 import de.rwth.i2.attestor.main.Attestor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 public class ParseGrammarPhase extends AbstractPhase {
 
@@ -103,5 +105,11 @@ public class ParseGrammarPhase extends AbstractPhase {
     @Override
     public void logSummary() {
         // nothing to report
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
     }
 }

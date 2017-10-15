@@ -203,6 +203,12 @@ public class GrammarRefinementPhase extends AbstractPhase
     }
 
     @Override
+    public boolean isVerificationPhase() {
+
+        return true;
+    }
+
+    @Override
     public List<HeapConfiguration> getInputs() {
 
         return inputs;

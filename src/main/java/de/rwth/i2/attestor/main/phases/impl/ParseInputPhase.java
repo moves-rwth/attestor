@@ -61,6 +61,12 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
     }
 
     @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
+
+    @Override
     public List<HeapConfiguration> getInputs() {
 
         return inputs;

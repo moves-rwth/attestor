@@ -63,4 +63,10 @@ public class CLIPhase extends AbstractPhase {
         logSum("+----------------------------------+--------------------------------+");
 
     }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
 }

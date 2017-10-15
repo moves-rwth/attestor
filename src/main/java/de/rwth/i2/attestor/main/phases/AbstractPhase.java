@@ -39,6 +39,8 @@ public abstract class AbstractPhase {
 
     public abstract void logSummary();
 
+    public abstract boolean isVerificationPhase();
+
     public void run() {
 
         try {

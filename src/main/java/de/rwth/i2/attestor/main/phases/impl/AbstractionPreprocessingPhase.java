@@ -64,6 +64,12 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         // nothing to report
     }
 
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
+
     private void checkSelectors() {
 
         InputSettings inputSettings = settings.input();

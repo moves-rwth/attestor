@@ -165,4 +165,10 @@ public class ReportGenerationPhase extends AbstractPhase {
             );
         }
     }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
 }

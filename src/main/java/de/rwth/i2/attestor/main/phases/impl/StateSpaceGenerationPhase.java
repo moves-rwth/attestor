@@ -75,6 +75,12 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     }
 
     @Override
+    public boolean isVerificationPhase() {
+
+        return true;
+    }
+
+    @Override
     public StateSpace getStateSpace() {
 
         return stateSpace;

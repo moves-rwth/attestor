@@ -36,6 +36,12 @@ public class ParseProgramPhase extends AbstractPhase implements ProgramTransform
     }
 
     @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
+
+    @Override
     public Program getProgram() {
 
         return program;

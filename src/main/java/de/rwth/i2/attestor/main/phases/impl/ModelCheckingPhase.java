@@ -71,4 +71,10 @@ public class ModelCheckingPhase extends AbstractPhase {
             logger.log(Level.getLevel("LTL-UNSAT"), "Some provided LTL formulae are violated.");
         }
     }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return true;
+    }
 }
