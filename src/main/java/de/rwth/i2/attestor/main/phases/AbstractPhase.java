@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.main.phases;
 
 import de.rwth.i2.attestor.main.settings.Settings;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractPhase {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
-    protected static final String ANSI_GREEN = "\u001B[32m";
-    protected static final String ANSI_RED = "\u001B[31m";
-    protected static final String ANSI_RESET = "\u001B[0m";
-    protected static final String ANSI_YELLOW = "\u001B[33m";
 
 
     private int phaseId;
@@ -56,17 +53,21 @@ public abstract class AbstractPhase {
     }
 
     private void logStart() {
-        logger.debug(ANSI_YELLOW + "(started) " + ANSI_RESET + getName() +  "...");
+        logger.debug(getName() +  " started.");
     }
 
 
     private void logSuccess() {
-        logger.debug(ANSI_GREEN + "(finished) " + ANSI_RESET + getName());
+        logger.debug(getName() + " finished.");
     }
 
     private void logFail(Exception e) {
-        logger.fatal(ANSI_RED + "(failed) " + ANSI_RESET + getName());
-        e.printStackTrace(); // TODO
+        logger.fatal(getName() + " failed.");
         System.exit(1);
+    }
+
+    protected void logSum(String message) {
+
+        logger.log(Level.getLevel("REPORT"), message);
     }
 }

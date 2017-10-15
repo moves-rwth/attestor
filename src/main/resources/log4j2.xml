@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="ERROR">
+  <CustomLevels>
+        <CustomLevel name="VERSION" intLevel="50" />
+        <CustomLevel name="REPORT" intLevel="50" />
+        <CustomLevel name="LTL-SAT" intLevel="50" />
+        <CustomLevel name="LTL-UNSAT" intLevel="50" />
+  </CustomLevels>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%highlight{%level}{STYLE=Logback}] %msg%n"/>
+            <PatternLayout pattern="[%highlight{%level}{STYLE=Logback, VERSION=blue, REPORT=Normal, LTL-SAT=green, LTL-UNSAT=red}] %msg%n"/>
     </Console>
   </Appenders>
   <Loggers>
-    <Root level="INFO">
+    <Root level="ERROR">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>

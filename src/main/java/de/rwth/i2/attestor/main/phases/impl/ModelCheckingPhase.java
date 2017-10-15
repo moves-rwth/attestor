@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import org.apache.logging.log4j.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,18 +57,18 @@ public class ModelCheckingPhase extends AbstractPhase {
         }
 
         boolean allSatisfied = true;
-        logger.info("Model checking results:");
-        logger.info("+-----------+-------------------------------------------------------+");
+        logSum("Model checking results:");
+        logSum("+-----------+-------------------------------------------------------+");
         for(Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
-            logger.info(String.format("| %-11s | %s", result.getValue(), result.getKey().getFormulaString()));
+            logSum(String.format("| %-11s | %s", result.getValue(), result.getKey().getFormulaString()));
             allSatisfied &= result.getValue();
         }
-        logger.info("+-----------+-------------------------------------------------------+");
+        logSum("+-----------+-------------------------------------------------------+");
 
         if(allSatisfied) {
-            logger.info("All provided LTL formulae are satisfied.");
+            logger.log(Level.getLevel("LTL-SAT"), "All provided LTL formulae are satisfied.");
         } else {
-            logger.warn("Some provided LTL formulae are violated.");
+            logger.log(Level.getLevel("LTL-UNSAT"), "Some provided LTL formulae are violated.");
         }
     }
 }

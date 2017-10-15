@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases;
 
 import de.rwth.i2.attestor.main.settings.Settings;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,16 +61,18 @@ public class PhaseRegistry {
 
    public void logExecutionTimes() {
 
+      Level REPORT = Level.getLevel("REPORT");
+
       double elapsedTotal = 0;
-      logger.info("+----------------------------------+--------------------------------+");
+      logger.log(REPORT,"+----------------------------------+--------------------------------+");
       for(AbstractPhase p : phases) {
          double elapsed = p.getElapsedTime();
          elapsedTotal += elapsed;
-         logger.info(String.format("| %-32s | %28.3f s |", p.getName(), elapsed));
+         logger.log(REPORT, String.format("| %-32s | %28.3f s |", p.getName(), elapsed));
       }
-      logger.info("+----------------------------------+--------------------------------+");
-      logger.info(String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
-      logger.info("+----------------------------------+--------------------------------+");
+      logger.log(REPORT,"+----------------------------------+--------------------------------+");
+      logger.log(REPORT, String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
+      logger.log(REPORT, "+----------------------------------+--------------------------------+");
    }
 
    public void logExecutionSummary() {

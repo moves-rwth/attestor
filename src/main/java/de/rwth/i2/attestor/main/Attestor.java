@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.impl.*;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.settings.Settings;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,7 +103,8 @@ public class Attestor {
 
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
-            logger.info(properties.getProperty("artifactId") + " - version " + properties.getProperty("version"));
+            logger.log(Level.getLevel("VERSION"), properties.getProperty("artifactId")
+					+ " - version " + properties.getProperty("version"));
         } catch (IOException e) {
             logger.fatal("Project version could not be found. Aborting.");
             System.exit(1);
