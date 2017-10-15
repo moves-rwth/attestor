@@ -56,19 +56,16 @@ public class GrammarRefinementPhase extends AbstractPhase
         updateHeapAutomata();
 
         if(settings.options().isIndexedMode()) {
-            logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
 
             if(BasicNonterminal.hasNonterminal("BT"))  {
                 settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
             }
-
-            return;
         }
 
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
         Grammar grammar =  settings.grammar().getGrammar();
 
-        if(automaton != null && grammar != null) {
+        if(automaton != null && grammar != null && !settings.options().isIndexedMode()) {
             settings.options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
@@ -78,6 +75,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private void updateHeapAutomata() {
 
+        boolean isIndexedMode = settings.options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
 
@@ -96,6 +94,11 @@ public class GrammarRefinementPhase extends AbstractPhase
                 logger.debug("Enable language inclusion checks to determine heap shapes.");
             } else if(reachableBySelPattern.matcher(ap).matches()) {
 
+                if(isIndexedMode) {
+                    logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
+                    continue;
+                }
+
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
@@ -113,6 +116,13 @@ public class GrammarRefinementPhase extends AbstractPhase
                 }
 
             } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
+
+
+                if(isIndexedMode) {
+                    logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
+                    continue;
+                }
+
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
