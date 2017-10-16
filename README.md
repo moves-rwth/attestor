@@ -36,16 +36,23 @@ The following software has to be installed prior to the installation of Attestor
 
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
+
+Please note that the installation requires an internet connection as maven will install additional dependencies.
   
 ## Running Attestor
 
-Instructions on running attestor from the command-line can be found in the [wiki](https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line).
+The simplest (and recommended) way to use Attestor is to create a new benchmark project that contains the code to be analyzed.
+To get started, there is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
+Each benchmark collection can be executed individually by running the following maven command from the benchmark's root directory:
 
-## Examples and Benchmarks
+    $ mvn clean install exec:exec@run
 
-There is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
-Each benchmark can be executed individually using maven.
-Details are provided in the README of the indidividual collection of examples.
+We also provide a maven archetype that allows to create new benchmark projects that include a small running example.
+Details on creating new benchmark projects are found [here][14].
+
+It is also possible to directly run attestor from the command-line using individual settings files.
+Instructions on running attestor from the command-line can be found in the [wiki][15].
+The format and possible options of Attestor's settings are also explained in the [wiki][16].
 
 ## Documentation and Publications
 
@@ -74,3 +81,6 @@ Furthermore, the theoretical foundations underlying Attestor are described in th
 [11]: https://en.wikipedia.org/wiki/Shape_analysis_(program_analysis)
 [12]: https://en.wikipedia.org/wiki/Graph_rewriting
 [13]: https://github.com/Sable/soot
+[14]: https://github.com/moves-rwth/attestor-examples/tree/archetype
+[15]: https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line
+[16]: https://github.com/moves-rwth/attestor/wiki/Settings-file
