@@ -59,7 +59,6 @@ The format and possible options of Attestor's settings are also explained in the
 The API document is available as part of this repository [here][1].
 Furthermore, the theoretical foundations underlying Attestor are described in the following research papers:
 
-- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll: [Heap Abstraction Beyond Context-Freeness][5]. CoRR abs/1705.03754 (2017)
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203 (2015)
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Verifying pointer programs using graph grammars][8]. Sci. Comput. Program. 97: 157-162 (2015)
