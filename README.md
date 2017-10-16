@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
+![Build Status](https://travis-ci.org/moves-rwth/attestor.svg?branch=stable)
 
 
 
@@ -27,8 +27,10 @@ developers twofold:
 
 The following software has to be installed prior to the installation of Attestor:
 
-- [Java JDK 1.8 or higher][3]
+- [Java JDK 1.8][3]
 - [Apache Maven][4]
+- (Windows) Since Attestor uses [soot][13], please make sure that rt.jar is in your CLASSPATH.
+
 
 ## Installation
 
@@ -43,6 +45,7 @@ Instructions on running attestor from the command-line can be found in the [wiki
 
 There is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
 Each benchmark can be executed individually using maven.
+Details are provided in the README of the indidividual collection of examples.
 
 ## Documentation and Publications
 
@@ -59,7 +62,7 @@ Furthermore, the theoretical foundations underlying Attestor are described in th
 
 
 [1]: https://moves-rwth.github.io/attestor/doc/
-[2]: https://github.com/moves-rwth/attestor-examples
+[2]: https://github.com/moves-rwth/attestor-examples/tree/stable
 [3]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 [4]: http://maven.apache.org/
 [5]: https://arxiv.org/abs/1705.03754
@@ -70,3 +73,4 @@ Furthermore, the theoretical foundations underlying Attestor are described in th
 [10]: https://link.springer.com/chapter/10.1007/978-3-319-09108-2_4
 [11]: https://en.wikipedia.org/wiki/Shape_analysis_(program_analysis)
 [12]: https://en.wikipedia.org/wiki/Graph_rewriting
+[13]: https://github.com/Sable/soot
