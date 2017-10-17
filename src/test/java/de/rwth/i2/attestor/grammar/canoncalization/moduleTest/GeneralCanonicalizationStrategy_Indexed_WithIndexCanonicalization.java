@@ -1,13 +1,5 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -28,13 +20,18 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
@@ -50,7 +47,12 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 	
 	@Before
 	public void init() {
-		IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
+
+		Set<String> nullPointerGuards = new HashSet<>();
+		nullPointerGuards.add("left");
+		nullPointerGuards.add("right");
+
+		IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(nullPointerGuards);
 		
 		final int minDereferenceDepth = 1;
 		final int aggressiveAbstractionThreshold = 10;

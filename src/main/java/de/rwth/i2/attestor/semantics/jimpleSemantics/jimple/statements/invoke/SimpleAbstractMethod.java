@@ -6,8 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -56,8 +55,8 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	 * @return all heaps which are in the fixpoint of the method at the terminal
 	 *         states of it.
 	 */
-	@Override
-	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth ){
+	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth )
+		throws StateSpaceGenerationAbortedException {
 		if( this.hasResult( input ) ){
 			return knownInputs.get( input );
 		}else{

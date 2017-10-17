@@ -75,4 +75,11 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 * @return A shallow copy of this program state with the given program counter.
 	 */
 	ProgramState shallowCopyUpdatePC(int newPC);
+
+	/**
+	 * Provides the depth of the scope of this executable, which is necessary to pass this to abstract methods.
+	 *
+	 * @return The current depth of the scope of this executable.
+	 */
+	int getScopeDepth();
 }

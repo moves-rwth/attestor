@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import java.util.List;
+
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.Index;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-
-import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
 
@@ -71,13 +71,13 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		//final int prime = 31;
 		int result = 1;
-		result = prime * result + ((basicNonterminal == null) ? 0 : basicNonterminal.hashCode());
+		result = result ^ ((basicNonterminal == null) ? 0 : basicNonterminal.hashCode());
 
 		for(int i = 0; i < index.size(); i++) {
 		    IndexSymbol symb = index.get(i);
-			result = prime * symb.hashCode();
+			result = (result << 1 ) ^ symb.hashCode();
 		}
 		return result;
 	}

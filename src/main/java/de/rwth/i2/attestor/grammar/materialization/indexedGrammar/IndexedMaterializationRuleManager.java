@@ -1,10 +1,11 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
-import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarRequest;
+import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -13,6 +14,8 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
+
+import java.util.*;
 
 /**
  * Computes and caches the rules for resolving a given violation point
@@ -109,7 +112,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 			final IndexedNonterminal indexedLhs = (IndexedNonterminal) lhs;
 			
 			if( indexMatcher.canMatch( toReplace, indexedLhs) ){
-			addMaterializationAndRules(allMaterializationsAndRules, 
+				addMaterializationAndRules(allMaterializationsAndRules,
 									   toReplace, indexedLhs, 
 									   rulesResolvingViolationPoint.get(lhs) );
 			}

@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -153,7 +154,10 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Type translateType( soot.Type input ){
 
-		return Settings.getInstance().factory().getType( input.getEscapedName() );
+		// getEscapedName was recently removed in soot.Type
+		//String name = input.getEscapedName();
+		String name = input.toString();
+		return Settings.getInstance().factory().getType( name );
 	}
 	
 	/**
@@ -171,12 +175,19 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();
 			InvokeHelper invokePrepare = createInvokeHelper( invokeExpr );
 			invokePrepare.setLiveVariableNames( LiveVariableHelper.extractLiveVariables( input ) );
-			AbstractMethod method = topLevel.getMethod( invokeExpr.getMethod().getSignature() );
+			AbstractMethod method = null;
+			try {
+				method = topLevel.getMethod( invokeExpr.getMethod().getSignature() );
+			} catch (StateSpaceGenerationAbortedException e) {
+				logger.fatal("Unexpected exception");
+				throw new IllegalStateException(e.getMessage());
+			}
 			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
+			final boolean removeDeadVariablesOption = Settings.getInstance().options().isRemoveDeadVariables();
 			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input),
-					Settings.getInstance().options().isRemoveDeadVariables());
+					removeDeadVariablesOption);
 		}
 	}
 
@@ -193,7 +204,13 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		// SootMethod method = expr.getMethod();
 
 		String name = expr.getMethod().getSignature();
-		AbstractMethod translatedMethod = topLevel.getMethod( name );
+		AbstractMethod translatedMethod = null;
+		try {
+			translatedMethod = topLevel.getMethod( name );
+		} catch (StateSpaceGenerationAbortedException e) {
+			logger.fatal("Unexpected exception");
+			throw new IllegalStateException(e.getMessage());
+		}
 		// List<Type> types = method.getParameterTypes()
 
 		InvokeHelper invokePrepare = createInvokeHelper( expr );
@@ -342,6 +359,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		Value base = topLevel.translateValue( fieldRef.getBase() );
 		String name = fieldRef.getField().getName();
 		Type type = topLevel.translateType( fieldRef.getType() );
+
+		Settings.getInstance().input().addUsedSelectorLabel(name);
 
 		return new Field( type, base, name );
 	}

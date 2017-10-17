@@ -97,15 +97,15 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     private void addNodes() {
 
         for(ProgramState s : states) {
-            int i = s.getStateSpaceId();
+            int id = s.getStateSpaceId();
             jsonWriter.object().key("data").object();
-            jsonWriter.key("id").value(i);
+            jsonWriter.key("id").value(id);
             jsonWriter.key("type");
             if(initialStates.contains(s)) {
                 jsonWriter.value("initialState");
             } else if(finalStates.contains(s)) {
                 jsonWriter.value("finalState");
-            } else if(incomingEdgesOfStates.containsKey(i) && incomingEdgesOfStates.get(i) > 1) {
+            } else if(incomingEdgesOfStates.containsKey(id) && incomingEdgesOfStates.get(id) > 1) {
                 jsonWriter.value("mergeState");
             } else {
                 jsonWriter.value("state");
@@ -119,12 +119,12 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             final String statement = program.getStatement( pc ).toString();
 			jsonWriter.key("statement").value("("+pc+")"+statement);
             jsonWriter.key("essential");
-            boolean essential = !incomingEdgesOfStates.containsKey(i)
-                    || incomingEdgesOfStates.get(i) != 1
-                    || (stateSpace.getMaterializationSuccessorsIdsOf(i).size()
-                        + stateSpace.getControlFlowSuccessorsIdsOf(i).size()) != 1;
+            boolean essential = !incomingEdgesOfStates.containsKey(id)
+                    || incomingEdgesOfStates.get(id) != 1
+                    || (stateSpace.getMaterializationSuccessorsIdsOf(id).size()
+                        + stateSpace.getControlFlowSuccessorsIdsOf(id).size()) != 1;
             if(essential) {
-                isEssentialStateId.add(i);
+                isEssentialStateId.add(id);
             }
             jsonWriter.value(essential);
             jsonWriter.key("size").value(s.getHeap().countNodes());

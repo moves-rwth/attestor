@@ -10,7 +10,7 @@ import gnu.trove.list.array.TIntArrayList;
 /**
  * Restricts the considered morphisms to ones in which the distance from variables to nodes with outgoing selector
  * edges belonging to a morphism is at least the given minAbstractionDistance.
- * If aggressiveNullAbstraction is set to true, variables that model constants, such as null, are ignored.
+ * If aggressiveConstantAbstraction is set to true, variables that model constants, such as null, are ignored.
  *
  * @author Christoph
  */
@@ -21,18 +21,18 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 	 */
 	private final int minAbstractionDistance;
 
-	private final boolean aggressiveNullAbstraction;
+	private final boolean aggressiveConstantAbstraction;
 
 	/**
 	 * @param minAbstractionDistance The minimal distance of variables to nodes in the morphism.
-	 * @param aggressiveNullAbstraction True if and only if the minimal distance should be ignored
-	 *                                         for the null node.
+	 * @param aggressiveConstantAbstraction True if and only if the minimal distance should be ignored
+	 *                                         for variable edges representing constants.
 	 */
-	public MinAbstractionDistance(int minAbstractionDistance, boolean aggressiveNullAbstraction
+	public MinAbstractionDistance(int minAbstractionDistance, boolean aggressiveConstantAbstraction
 	) {
 		
 		this.minAbstractionDistance = minAbstractionDistance;
-		this.aggressiveNullAbstraction = aggressiveNullAbstraction;
+		this.aggressiveConstantAbstraction = aggressiveConstantAbstraction;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 			Object nodeLabel = graph.getNodeLabel(i);
 			if (nodeLabel.getClass() == Variable.class) {
 				String label = ((Variable) nodeLabel).getName();
-				if(!(aggressiveNullAbstraction && Constants.isConstant(label))) {
+				if(!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
 					int attachedNode = graph.getSuccessorsOf(i).get(0);
 					if(dist.get(attachedNode) < minAbstractionDistance)	{
 						return false;

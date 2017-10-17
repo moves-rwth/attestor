@@ -1,18 +1,15 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * An instance of this class is a helper for a specific invoke statement. It can
@@ -50,13 +47,13 @@ public abstract class InvokeHelper {
     /**
      * The live variables for this statement.
      */
-	private Set<String> liveVariableNames = new HashSet<>();
+	protected Set<String> liveVariableNames = new HashSet<>();
 
 	/**
 	 * True if and only if dead variables should be removed after
 	 * execution of this statement.
 	 */
-	private boolean removeDeadVariables;
+	protected boolean removeDeadVariables;
 
 
 	/**
@@ -128,7 +125,7 @@ public abstract class InvokeHelper {
 			}
 
 			if(removeDeadVariables) {
-				VariablesUtil.removeDeadVariables(argumentValues.get( i ).toString(), programState, liveVariableNames);
+				VariablesUtil.removeDeadVariables( argumentValues.get( i ).toString(), programState, liveVariableNames );
 			}
 		}
 	}

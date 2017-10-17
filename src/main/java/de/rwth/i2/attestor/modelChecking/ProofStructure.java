@@ -53,8 +53,8 @@ public class ProofStructure {
 	
 	
 	public ProofStructure() {
-		this.vertices = new HashSet<Assertion>();
-		this.edges = new HashMap<Assertion, HashSet<SuccState>>();
+		this.vertices = new HashSet<>();
+		this.edges = new HashMap<>();
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class ProofStructure {
 		logger.trace("Building proof structure for formula " + formula.toString());
 		
 		// The queue holding the vertices that have still to be processed
-		LinkedList<Assertion> vertexQueue = new LinkedList<Assertion>();
+		LinkedList<Assertion> vertexQueue = new LinkedList<>();
 		
 		// Initialise the switch
 		TableauRulesSwitch rulesSwitch = new TableauRulesSwitch(statespace);
@@ -97,7 +97,7 @@ public class ProofStructure {
 					// Note that due to the insertion order we know that all contained formulae are next formulae
 					
 					// First collect the successor formula of each contained next formula
-					HashSet<Node> nextSuccessors = new HashSet<Node>();
+					HashSet<Node> nextSuccessors = new HashSet<>();
 					for(Node nextFormula : currentVertex.getFormulae()){
 						nextFormula.apply(rulesSwitch);
 						
@@ -106,7 +106,7 @@ public class ProofStructure {
 						nextSuccessors.add(successorNode);
 					}
 					
-					HashSet<SuccState> newEdges = new HashSet<SuccState>();
+					HashSet<SuccState> newEdges = new HashSet<>();
 					// Generate an assertion for each successor state of the current state in the state space 
 					// with formula set equal to the next successor formulae generated before
 					int currentState = currentVertex.getProgramState();
@@ -220,7 +220,7 @@ public class ProofStructure {
 					HashSet<Assertion> successors = (HashSet<Assertion>) rulesSwitch.getOut(currentSubformula);
 					// This means that the current vertex is not (yet) successful
 					if(successors != null){
-						HashSet<SuccState> successorStates = new HashSet<SuccState>();
+						HashSet<SuccState> successorStates = new HashSet<>();
 						for(Assertion assertion : successors){
 							successorStates.add(new SuccState(assertion, currentSubformula));
 						}
@@ -253,7 +253,7 @@ public class ProofStructure {
 	 * if none exist an empty set is returned.
 	 */
 	private HashSet<Assertion> getVerticesForState(int programState) {
-		HashSet<Assertion> assertionsForState = new HashSet<Assertion>();
+		HashSet<Assertion> assertionsForState = new HashSet<>();
 		
 		for(Assertion current : this.vertices){
 			if(current.getProgramState() == programState){
@@ -275,7 +275,7 @@ public class ProofStructure {
 
 	private void addEdge(Assertion currentVertex, SuccState successorState) {
 		if(!edges.containsKey(currentVertex)){
-			HashSet<SuccState> newSuccStatesSet = new HashSet<SuccState>();
+			HashSet<SuccState> newSuccStatesSet = new HashSet<>();
 			newSuccStatesSet.add(successorState);
 			edges.put(currentVertex, newSuccStatesSet);
 		} else {
@@ -311,7 +311,7 @@ public class ProofStructure {
 	}
 	
 	public HashSet<Assertion> getLeaves(){
-		HashSet<Assertion> leaves = new HashSet<Assertion>();
+		HashSet<Assertion> leaves = new HashSet<>();
 		for(Assertion vertex :vertices){
 			if(!edges.containsKey(vertex)){
 				leaves.add(vertex);
@@ -331,7 +331,7 @@ public class ProofStructure {
 	}
 	
 	public HashSet<Assertion> getSuccessors(Assertion current){
-		HashSet<Assertion> successors = new HashSet<Assertion>();
+		HashSet<Assertion> successors = new HashSet<>();
 		if(this.edges.get(current) != null) {
 			for (SuccState successor : this.edges.get(current)) {
 				successors.add(successor.assertion);

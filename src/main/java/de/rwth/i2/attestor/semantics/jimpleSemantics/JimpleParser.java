@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.PackManager;
@@ -48,7 +49,7 @@ public class JimpleParser implements ProgramParser {
 	public Program parse(String classpath, String classname, String entryPoint) {
 		
 		try {
-			logger.info( "Initializing Soot with classpath: " + classpath );
+			logger.debug( "Initializing Soot with classpath: " + classpath );
 			new SootInitializer().initialize(classpath);
 		
 
@@ -64,9 +65,8 @@ public class JimpleParser implements ProgramParser {
 			Options.v().parse( new String [] {"-pp", "-keep-line-number", "-f", "jimple", classname } );
 			Scene.v().loadNecessaryClasses();
 
-			logger.info( "Invoking Soot." );
+			logger.info( "Invoking Soot..." );
 			PackManager.v().runPacks();
-			logger.info( "Soot is done." );
 
 
 		} catch(Exception e) {
@@ -85,6 +85,11 @@ public class JimpleParser implements ProgramParser {
 		
 		String mainMethodName = sootClass.getMethodByName( entryPoint ).getSignature();
 
-		return translator.getMethod( mainMethodName ).getControlFlow();
+		try {
+			return translator.getMethod(mainMethodName).getControlFlow();
+		} catch(StateSpaceGenerationAbortedException e) {
+			logger.fatal("Unexpected exception");
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
 }

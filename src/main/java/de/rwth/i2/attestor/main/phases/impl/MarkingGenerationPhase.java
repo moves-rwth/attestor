@@ -124,6 +124,12 @@ public class MarkingGenerationPhase extends AbstractPhase
     }
 
     @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
+
+    @Override
     public List<HeapConfiguration> getInputs() {
 
         return inputs;

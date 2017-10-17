@@ -86,7 +86,7 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 	}
 
 	/**
-	 * For indexed HeapConfigurations this canonicalises the indices.
+	 * For indexed HeapConfigurations this performs index canonicalization.
 	 */
 	@Override
 	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {

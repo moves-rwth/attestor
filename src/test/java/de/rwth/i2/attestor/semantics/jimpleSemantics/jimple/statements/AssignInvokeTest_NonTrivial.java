@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -67,7 +68,7 @@ public class AssignInvokeTest_NonTrivial {
 			assertEquals( ExampleHcImplFactory.getListAndConstants(), inputGraph );
 			assertFalse( inputGraph.equals( resState.getHeap() ) );
 			assertEquals(ExampleHcImplFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
-		}catch( NotSufficientlyMaterializedException e ){
+		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail("unexpected exception: " + e.getMessage());
 		}
 	}

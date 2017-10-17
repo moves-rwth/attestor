@@ -29,7 +29,7 @@ public class AbstractMethodIPA extends AbstractMethod {
 			String methodSignature ) {
 		
 		StateSpace currentStateSpace = stateSpaces.get( idOfCurrentStateSpace );
-		ProgramState currentState = currentStateSpace.getState( idOfCurrentState );
+		ProgramState currentState = null;//= currentStateSpace.getState( idOfCurrentState );//TODO
 		
 		Pair<HeapConfiguration,HeapConfiguration> methodConfig = prepareInput( currentState.getHeap() );
 		//TODO store replaced fragment somewhere

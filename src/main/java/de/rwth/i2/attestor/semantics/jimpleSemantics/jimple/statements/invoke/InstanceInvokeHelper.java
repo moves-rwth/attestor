@@ -1,14 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * Prepares the heap for the invoke of an instance method and cleans it afterwards.
@@ -97,6 +97,9 @@ public class InstanceInvokeHelper extends InvokeHelper {
 			// String type = " " + baseValue.getType().toString();
 			String type = "";
 			programState.setIntermediate( "@this:" + type, concreteBase );
+			if(super.removeDeadVariables) {
+				VariablesUtil.removeDeadVariables( baseValue.toString(), programState, liveVariableNames );
+			}
 		}
 
 		appendArguments( programState );

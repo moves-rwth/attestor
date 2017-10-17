@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
@@ -8,7 +9,9 @@ import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilder
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.balanced.BalancednessAutomaton;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.balanced.ListLengthAutomaton;
 import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfigurationRefinement;
 import de.rwth.i2.attestor.refinement.languageInclusion.LanguageInclusionAutomaton;
@@ -25,12 +28,14 @@ import java.util.regex.Pattern;
 public class GrammarRefinementPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
 
+    private static final Pattern btree = Pattern.compile("^btree$");
+    private static final Pattern bimap = Pattern.compile("^bimap$");
     private static final Pattern languageInclusion = Pattern.compile("^L\\(\\p{Space}*\\p{Alnum}+\\p{Space}*\\)$");
     private static final Pattern reachablePattern = Pattern.compile("^isReachable\\(\\p{Space}*\\p{Alnum}+,\\p{Space}*\\p{Alnum}+\\)$");
     private static final Pattern reachableBySelPattern
             = Pattern.compile("^isReachable\\(\\p{Alnum}+,\\p{Space}*\\p{Alnum}+,\\p{Space}*\\[(\\p{Alnum}+,\\p{Space})*\\p{Alnum}+\\]+\\)$");
-    private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
-    private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
+    private static final Pattern equalityPattern = Pattern.compile("^@?\\p{Alnum}+(.\\p{Alnum}+)? == \\p{Alnum}+$");
+    private static final Pattern inequalityPattern = Pattern.compile("^@?\\p{Alnum}+(.\\p{Alnum}+)? != \\p{Alnum}+$");
 
     private List<HeapConfiguration> inputs;
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
@@ -44,6 +49,7 @@ public class GrammarRefinementPhase extends AbstractPhase
     @Override
     protected void executePhase() {
 
+
         inputs = getPhase(InputTransformer.class).getInputs();
 
         stateLabelingStrategyBuilder = getPhase(StateLabelingStrategyBuilderTransformer.class).getStrategy();
@@ -55,15 +61,16 @@ public class GrammarRefinementPhase extends AbstractPhase
         updateHeapAutomata();
 
         if(settings.options().isIndexedMode()) {
-            logger.info("Grammar refinement for indexed grammars is not supported yet.");
-            settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
-            return;
+
+            if(BasicNonterminal.hasNonterminal("BT"))  {
+                settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+            }
         }
 
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
         Grammar grammar =  settings.grammar().getGrammar();
 
-        if(automaton != null && grammar != null) {
+        if(automaton != null && grammar != null && !settings.options().isIndexedMode()) {
             settings.options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
@@ -73,8 +80,11 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private void updateHeapAutomata() {
 
+        boolean isIndexedMode = settings.options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
+        boolean hasBtreeAutomaton = false;
+        boolean hasBimapAutomaton = false;
 
         Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
 
@@ -84,12 +94,27 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         for(String ap : requiredAPs) {
 
-            if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
+            if(!hasBimapAutomaton && bimap.matcher(ap).matches()) {
+                Grammar grammar = settings.grammar().getGrammar();
+                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(grammar));
+                hasBimapAutomaton = true;
+                logger.debug("Enable checking for lists of equal length.");
+            } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
+                Grammar grammar = settings.grammar().getGrammar();
+                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(grammar));
+                hasBtreeAutomaton = true;
+                logger.debug("Enable checking for balanced trees.");
+            } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
                 hasLanguageInclusionAutomaton = true;
-                logger.info("Enable language inclusion checks to determine heap shapes.");
+                logger.debug("Enable language inclusion checks to determine heap shapes.");
             } else if(reachableBySelPattern.matcher(ap).matches()) {
+
+                if(isIndexedMode) {
+                    logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
+                    continue;
+                }
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
@@ -103,17 +128,24 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 if(reachabilityAutomataBySelList.add(allowedSelectors)) {
                     stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
-                    logger.info("Enable heap automaton to track reachable variables according to selectors "
+                    logger.debug("Enable heap automaton to track reachable variables according to selectors "
                             + allowedSelectors);
                 }
 
             } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
+
+
+                if(isIndexedMode) {
+                    logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
+                    continue;
+                }
+
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
                 settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
-                logger.info("Enable heap automaton to track reachable variables");
+                logger.debug("Enable heap automaton to track reachable variables");
             } else if(equalityPattern.matcher(ap).matches()) {
                 String[] split = ap.split("\\=\\=");
                 enableVariableRelationTracking(trackedVariableRelations, split);
@@ -133,7 +165,7 @@ public class GrammarRefinementPhase extends AbstractPhase
            stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
            settings.stateSpaceGeneration().addKeptVariable(lhs);
            settings.stateSpaceGeneration().addKeptVariable(rhs);
-           logger.info("Enable heap automaton to track relationships between variables '"
+           logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }
     }
@@ -176,6 +208,12 @@ public class GrammarRefinementPhase extends AbstractPhase
     @Override
     public void logSummary() {
         // nothing to report
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return true;
     }
 
     @Override

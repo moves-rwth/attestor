@@ -302,13 +302,6 @@ public class ProofStructureTest extends InternalStateSpace {
 		ProofStructure proofStruct = new ProofStructure();
 		proofStruct.build(this, formula);
 
-		ProofStructureHtmlExporter exporter = new ProofStructureHtmlExporter("psExport");
-		try{
-			exporter.export("globallyFinallyTest", proofStruct);
-		} catch (Exception e){
-			System.out.println("Not able to write ps");
-		}
-
 		// Make sure that verification succeeds
 		assertTrue(proofStruct.isSuccessful());
 	}

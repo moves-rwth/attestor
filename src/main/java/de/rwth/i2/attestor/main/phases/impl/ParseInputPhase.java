@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
@@ -42,10 +43,13 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
         JSONObject jsonObj = new JSONObject(str);
 
         HeapConfiguration originalInput;
+
+        Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
+
         if(settings.options().isIndexedMode()) {
-            originalInput = JsonToIndexedHC.jsonToHC( jsonObj );
+            originalInput = JsonToIndexedHC.jsonToHC( jsonObj, addUsedSelectorLabel );
         } else {
-            originalInput = JsonToDefaultHC.jsonToHC( jsonObj );
+            originalInput = JsonToDefaultHC.jsonToHC( jsonObj, addUsedSelectorLabel );
         }
         inputs.add(originalInput);
     }
@@ -54,6 +58,12 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
     public void logSummary() {
 
         // nothing to report
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
     }
 
     @Override

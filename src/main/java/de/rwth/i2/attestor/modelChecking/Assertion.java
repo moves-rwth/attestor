@@ -25,14 +25,14 @@ public class Assertion {
 	
 	public Assertion(int progState){
 		this.progState = progState;
-		this.formulae = new LinkedList<Node>();
+		this.formulae = new LinkedList<>();
 		isTrue = false;
 	}
 	
 	public Assertion(int progState, LTLFormula formula){
 		this.progState = progState;
 		
-		this.formulae = new LinkedList<Node>();
+		this.formulae = new LinkedList<>();
 		// Note: To make sure that only "rule-nodes" are added, walk a step into the AST!
 		this.formulae.add(formula.getASTRoot().getPLtlform());
 		

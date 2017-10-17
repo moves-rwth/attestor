@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
 
 import java.util.List;
@@ -39,9 +40,13 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
         printAnalyzedMethod();
 
-        stateSpace = stateSpaceGenerator.generate();
-        logger.info("State space generation finished. #states: "
-                + settings.factory().getTotalNumberOfStates());
+        try {
+            stateSpace = stateSpaceGenerator.generate();
+            logger.info("State space generation finished. #states: "
+                    + settings.factory().getTotalNumberOfStates());
+        } catch(StateSpaceGenerationAbortedException e) {
+            logger.error("State space generation has been aborted prematurely.");
+        }
     }
 
     private void printAnalyzedMethod() {
@@ -59,14 +64,20 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     @Override
     public void logSummary() {
 
-        logger.info("+----------------------------------+--------------------------------+");
-        logger.info(String.format("| # states w/ procedure calls      | %30d |",
+        logSum("+----------------------------------+--------------------------------+");
+        logSum(String.format("| # states w/ procedure calls      | %30d |",
                 settings.factory().getTotalNumberOfStates()));
-        logger.info(String.format("| # states w/o procedure calls     | %30d |",
+        logSum(String.format("| # states w/o procedure calls     | %30d |",
                 stateSpace.getStates().size()));
-        logger.info(String.format("| # final states                   | %30d |",
-                stateSpace.getFinalStates().size()));
-        logger.info("+-----------+----------------------+--------------------------------+");
+        logSum(String.format("| # final states                   | %30d |",
+                stateSpace.getFinalStateIds().size()));
+        logSum("+-----------+----------------------+--------------------------------+");
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return true;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.refinement.balanced;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import java.util.*;
+
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -11,8 +11,6 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelector
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
 
 public class BalancednessStateRefinementStrategy implements StateRefinementStrategy {
 
@@ -73,6 +71,9 @@ class BalancednessHelper {
         while(iter.hasNext()) {
 
             int ntEdge = iter.next();
+            if( ! (hc.labelOf(ntEdge) instanceof IndexedNonterminal) ){
+            	continue;
+            }
             IndexedNonterminal nt = (IndexedNonterminal) hc.labelOf(ntEdge);
             if(nt.getLabel().equals(btLabel.getLabel())) {
 

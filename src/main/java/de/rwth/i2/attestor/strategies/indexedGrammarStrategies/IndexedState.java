@@ -64,7 +64,6 @@ public class IndexedState extends GeneralJimpleProgramState {
 
 		return programCounter == state.programCounter
 			&& scopeDepth == state.scopeDepth
-			&& atomicPropositions.equals(state.getAPs())
 			&& heap.equals(state.getHeap());
 	}
 

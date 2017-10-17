@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -51,8 +52,8 @@ public class InvokeStmt extends Statement {
 	 */
 	@Override
 	public Set<ProgramState> computeSuccessors( ProgramState programState )
-			throws NotSufficientlyMaterializedException{
-		
+			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
+
 		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
 
 		invokePrepare.prepareHeap( jimpleProgramState );

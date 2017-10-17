@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.types.Type;

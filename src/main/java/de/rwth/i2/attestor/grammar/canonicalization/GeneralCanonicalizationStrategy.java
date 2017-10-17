@@ -30,7 +30,7 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	private ProgramState performCanonicalization(Semantics semantics, ProgramState state) {
 
 		state = canonicalizationHelper.prepareHeapForCanonicalization( state );
-		
+
 		for( Nonterminal lhs : grammar.getAllLeftHandSides() ){
 			for( HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs) ){
 				ProgramState abstractedState =
@@ -38,7 +38,7 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 				if( abstractedState != null ) {
 					return performCanonicalization( semantics, abstractedState );
 				}
-			}			
+			}
 		}
 
 		return state;

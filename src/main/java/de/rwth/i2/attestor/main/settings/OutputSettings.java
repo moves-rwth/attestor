@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.HcLabelPair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.HcLabelPair;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All settings related to exporting artifacts.
@@ -291,7 +290,7 @@ public class OutputSettings {
 		this.exportCustomHcs = exportCustomHcs;
 
 		if(exportCustomHcs){
-			this.customHcList = new ArrayList<HcLabelPair>();
+			this.customHcList = new ArrayList<>();
 		}
 	}
 

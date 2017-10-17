@@ -2,12 +2,15 @@ package de.rwth.i2.attestor.io;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -32,49 +35,56 @@ public class JsonToIndexedHC {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToIndexedHC" );
 
-	public static HeapConfiguration jsonToHC( JSONObject obj ) {
-		
+
+	public static HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
+
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
 		JSONArray jsonNodes = obj.getJSONArray( "nodes" );
 		TIntArrayList nodes = JsonToIndexedHC.parseNodes( builder, jsonNodes );
-	
+
 		JSONArray externals = obj.getJSONArray( "externals" );
 		JsonToIndexedHC.parseExternals( builder, nodes, externals );
-	
+
 		JSONArray variables = obj.getJSONArray( "variables" );
 		JsonToIndexedHC.parseVariables( builder, nodes, variables );
-	
+
 		JSONArray selectors = obj.getJSONArray( "selectors" );
-		JsonToIndexedHC.parseSelectors( builder, nodes, selectors );
-	
+
+		JsonToIndexedHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
+
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
 		JsonToIndexedHC.parseHyperedges( builder, nodes, hyperedges );
-	
+
 		return builder.build();
 	}
 
 	private static void parseHyperedges( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray hyperedges ) {
-		
+
 		for( int i = 0; i < hyperedges.length(); i++ ){
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
 			String label = hyperedge.getString( "label" );
-			
-			List<IndexSymbol> index = parseIndex( hyperedge.getJSONArray("index") );
-			
-			IndexedNonterminal nt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
-			nt = nt.getWithIndex(index);
+
+			Nonterminal nt;
+			if( hyperedge.has("index") ){
+				List<IndexSymbol> index = parseIndex( hyperedge.getJSONArray("index") );
+
+				IndexedNonterminal indexedNt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
+				nt = indexedNt.getWithIndex(index);
+			}else{
+				nt = BasicNonterminal.getNonterminal(label);
+			}
 
 			TIntArrayList tentacles = new TIntArrayList(nt.getRank());
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){
 				tentacles.add( nodes.get( hyperedge.getJSONArray( "tentacles" ).getInt( tentacleNr ) ) );
 			}
-			
+
 			builder.addNonterminalEdge(nt, tentacles);
 		}
 	}
-	
+
 	static List<IndexSymbol>  parseIndex(JSONArray index){
 		List<IndexSymbol> res = new ArrayList<>();
 		for( int i = 0; i < index.length(); i++ ){
@@ -98,14 +108,26 @@ public class JsonToIndexedHC {
 		return res;
 	}
 
-	private static void parseSelectors( HeapConfigurationBuilder builder,
-			TIntArrayList nodes, JSONArray selectors ) {
+	private static void parseSelectors(HeapConfigurationBuilder builder,
+									   TIntArrayList nodes,
+									   JSONArray selectors,
+									   Consumer<String> addSelectorLabelFunction) {
+
+
 		for( int i = 0; i < selectors.length(); i++ ){
-			String name = selectors.getJSONObject( i ).getString( "label" );
-			String annotation = selectors.getJSONObject(i).getString("annotation");
-			int originID = selectors.getJSONObject( i ).getInt( "origin" );
-			int targetID = selectors.getJSONObject( i ).getInt( "target" );
-			builder.addSelector( nodes.get( originID ), 
+			final JSONObject selectorInJson = selectors.getJSONObject(i);
+			String name = selectorInJson.getString( "label" );
+            
+			String annotation = "";
+			if( selectorInJson.has("annotation") ){
+			annotation = selectorInJson.getString("annotation");
+			}
+            
+			int originID = selectorInJson.getInt( "origin" );
+			int targetID = selectorInJson.getInt( "target" );
+            
+			addSelectorLabelFunction.accept(name);
+			builder.addSelector( nodes.get( originID ),
 					new AnnotatedSelectorLabel(name, annotation),
 					nodes.get( targetID ) );
 		}
@@ -122,7 +144,7 @@ public class JsonToIndexedHC {
 
 	private static void parseExternals( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray externals ) {
-		
+
 		for( int i = 0; i < externals.length(); i++ ){
 			int nodeId = externals.getInt( i );
 			builder.setExternal( nodes.get( nodeId ) );
@@ -130,7 +152,7 @@ public class JsonToIndexedHC {
 	}
 
 	private static TIntArrayList parseNodes(HeapConfigurationBuilder builder, JSONArray jsonNodes ) {
-		
+
 		TIntArrayList nodes = new TIntArrayList();
 		for( int i = 0; i < jsonNodes.length(); i++ ){
 			String typeName = jsonNodes.getJSONObject( i ).getString( "type" );

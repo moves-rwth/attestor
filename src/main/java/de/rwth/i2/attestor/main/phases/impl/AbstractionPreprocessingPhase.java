@@ -14,15 +14,25 @@ import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMateria
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AVLIndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
+import de.rwth.i2.attestor.types.GeneralType;
+import gnu.trove.iterator.TIntIterator;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase {
 
@@ -39,6 +49,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     protected void executePhase() {
 
         grammar = settings.grammar().getGrammar();
+
+        checkSelectors();
+
         setupMaterialization();
         setupCanonicalization();
         setupAbortTest();
@@ -49,6 +62,37 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     @Override
     public void logSummary() {
         // nothing to report
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
+    }
+
+    private void checkSelectors() {
+
+        InputSettings inputSettings = settings.input();
+        Set<String> usedSelectors = new HashSet<>(inputSettings.getUsedSelectorLabels());
+        usedSelectors.removeAll(inputSettings.getGrammarSelectorLabels());
+
+        if(!usedSelectors.isEmpty()) {
+            logger.warn("");
+            logger.warn("");
+            logger.warn("");
+            logger.warn("+------------------------------------------------------------------+");
+            logger.warn("| Some selector labels are not used within any grammar rule.       |");
+            logger.warn("| These selector labels can never be abstracted!                   |");
+            logger.warn("| The selectors in question are listed below:                      |");
+            for(String badSel : usedSelectors) {
+                logger.warn(String.format("| %-65s|", badSel));
+            }
+            logger.warn("+------------------------------------------------------------------+");
+            logger.warn("");
+            logger.warn("");
+            logger.warn("");
+        }
+
     }
 
     private void setupMaterialization() {
@@ -67,7 +111,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                             new GraphMaterializer() );
 
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using indexed grammars.");
+            logger.debug("Setup materialization using indexed grammars.");
         } else {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
             MaterializationRuleManager grammarManager =
@@ -75,7 +119,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
             GrammarResponseApplier ruleApplier =
                     new DefaultGrammarResponseApplier( new GraphMaterializer() );
             strategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-            logger.info("Setup materialization using standard hyperedge replacement grammars.");
+            logger.debug("Setup materialization using standard hyperedge replacement grammars.");
         }
 
         settings.stateSpaceGeneration().setMaterializationStrategy(strategy);
@@ -89,11 +133,11 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         if(settings.options().isIndexedMode()) {
 
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
-            logger.info("Setup canonicalization using indexed grammar.");
+            logger.debug("Setup canonicalization using indexed grammar.");
 
         } else {
             canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
-            logger.info("Setup canonicalization using standard hyperedge replacement grammar.");
+            logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
         }
         CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
@@ -101,10 +145,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
         CanonicalizationHelper canonicalizationHelper;
-        IndexCanonizationStrategy indexStrategy = new AVLIndexCanonizationStrategy();
-
-
-
+        IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
         IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
@@ -114,6 +155,36 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
+    }
+
+    private Set<String> determineNullPointerGuards() {
+
+        Set<String> nullPointerGuards = new HashSet<>();
+
+        Grammar grammar = settings.grammar().getGrammar();
+        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if(lhs instanceof IndexedNonterminal) {
+                IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
+                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+
+                        TIntIterator iter = rhs.nodes().iterator();
+                        while(iter.hasNext()) {
+                            int node = iter.next();
+                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+
+                                int target = rhs.selectorTargetOf(node, sel);
+                                if(rhs.nodeTypeOf(target) == GeneralType.getType("NULL")) {
+                                    nullPointerGuards.add(sel.getLabel());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return nullPointerGuards;
     }
 
     private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {
@@ -133,7 +204,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 .setAbortStrategy(
                         new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
                 );
-        logger.info("Setup abort criterion: #states > "
+        logger.debug("Setup abort criterion: #states > "
                 + stateSpaceBound
                 + " or one state is larger than "
                 + stateBound

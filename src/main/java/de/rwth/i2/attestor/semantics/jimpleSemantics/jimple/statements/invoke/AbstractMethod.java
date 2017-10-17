@@ -9,8 +9,9 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 public abstract class AbstractMethod {
 
 	public interface StateSpaceFactory {
-	
-		StateSpace create(Program method, HeapConfiguration input, int scopeDepth);
+
+
+		StateSpace create(Program method, HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException;
 	}
 
 	/**
@@ -18,7 +19,7 @@ public abstract class AbstractMethod {
 	 */
 	protected Program method;
 
-	public abstract Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth);
+	public abstract Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException;
 
 	/**
 	 * the methods signature
@@ -54,7 +55,7 @@ public abstract class AbstractMethod {
 		return this.method;
 	}
 
-	public String toString() {
+	public String toString(){
 		return this.displayName;
 	}
 

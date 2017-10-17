@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import java.util.HashSet;
-
 import com.google.common.collect.HashBiMap;
-
 import de.rwth.i2.attestor.generated.analysis.AnalysisAdapter;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+
+import java.util.HashSet;
 
 /**
  * This class implements the tableau rules for the model checking.
@@ -131,7 +130,7 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 		firstAssertion.addFormula(node.getLeftform());
 		secondAssertion.addFormula(node.getRightform());
 		
-		HashSet<Assertion> successors = new HashSet<Assertion>();
+		HashSet<Assertion> successors = new HashSet<>();
 		successors.add(firstAssertion); successors.add(secondAssertion);
 		this.setOut(node, successors);
 	}
@@ -143,7 +142,7 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 		newAssertion.addFormula(node.getLeftform());
 		newAssertion.addFormula(node.getRightform());
 		
-		HashSet<Assertion> successors = new HashSet<Assertion>();
+		HashSet<Assertion> successors = new HashSet<>();
 		successors.add(newAssertion); 
 		this.setOut(node, successors);
 	}
@@ -178,7 +177,7 @@ public class TableauRulesSwitch extends AnalysisAdapter{
         
         newAssertion2.addFormula(node.getRightform()); newAssertion2.addFormula(nextNode);
         
-        HashSet<Assertion> successors = new HashSet<Assertion>();
+        HashSet<Assertion> successors = new HashSet<>();
 		successors.add(newAssertion1); successors.add(newAssertion2); 
 		this.setOut(node, successors);
 	}
@@ -212,7 +211,7 @@ public class TableauRulesSwitch extends AnalysisAdapter{
         
         newAssertion2.addFormula(node.getLeftform()); newAssertion2.addFormula(nextNode);
         
-        HashSet<Assertion> successors = new HashSet<Assertion>();
+        HashSet<Assertion> successors = new HashSet<>();
 		successors.add(newAssertion1); successors.add(newAssertion2); 
 		this.setOut(node, successors);
         
@@ -245,16 +244,16 @@ public class TableauRulesSwitch extends AnalysisAdapter{
 	private void removeFormulaAndSetOut(Node node){
 		Assertion currentCopy = removeFormula(node);
 		
-		HashSet<Assertion> successors = new HashSet<Assertion>();
+		HashSet<Assertion> successors = new HashSet<>();
 		successors.add(currentCopy);
 		this.setOut(node, successors);
 	}
 	
 	/**
 	 * This method generates a copy of the assertion associated to node (via "in") and removes the first formula from 
-	 * this asserion's formulae set.
+	 * this assertion's formulae set.
 	 * @param node, the node that should be removed
-	 * @return
+	 * @return the assertion
 	 */
 	private Assertion removeFormula(Node node){
 		Assertion current = (Assertion) this.getIn(node);

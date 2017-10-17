@@ -11,8 +11,7 @@ import java.util.List;
 
 public class ParseGrammarPhase extends AbstractPhase {
 
-    private boolean hasUserDefinedGrammar;
-
+  
     @Override
     public String getName() {
 
@@ -22,10 +21,13 @@ public class ParseGrammarPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
+        boolean hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
         if(hasUserDefinedGrammar) {
             loadUserDefinedGrammar();
-        } else {
+        } 
+        
+        boolean hasPredefinedGrammars = settings.input().getUsedPredefinedGrammars() != null;
+        if( hasPredefinedGrammars ) {
             loadPredefinedGrammars();
         }
     }
@@ -103,5 +105,11 @@ public class ParseGrammarPhase extends AbstractPhase {
     @Override
     public void logSummary() {
         // nothing to report
+    }
+
+    @Override
+    public boolean isVerificationPhase() {
+
+        return false;
     }
 }

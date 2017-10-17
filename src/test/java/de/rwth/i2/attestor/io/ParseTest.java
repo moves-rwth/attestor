@@ -1,22 +1,21 @@
 package de.rwth.i2.attestor.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ParseTest {
 	private static final Logger logger = LogManager.getLogger( "ParseTest.java" );
@@ -49,7 +48,7 @@ public class ParseTest {
 			 */
 			BasicNonterminal.getNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
 
-			HeapConfiguration res = JsonToDefaultHC.jsonToHC( obj );
+			HeapConfiguration res = JsonToDefaultHC.jsonToHC( obj, s -> {} );
 
 			logger.trace( "res:" + res );
 			

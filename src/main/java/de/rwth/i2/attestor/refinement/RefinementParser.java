@@ -60,7 +60,7 @@ public class RefinementParser {
         } else if(!hasReachableAutomaton && reachablePattern.matcher(ap).matches()) {
             heapAutomata.add(new ReachabilityHeapAutomaton());
             hasReachableAutomaton = true;
-            logger.info("Enable heap automaton to track reachable variables");
+            logger.debug("Enable heap automaton to track reachable variables");
         } else if(equalityPattern.matcher(ap).matches()) {
             logger.warn("Atomic proposition '" + ap + "' is not supported yet.");
         } else if(inequalityPattern.matcher(ap).matches()) {

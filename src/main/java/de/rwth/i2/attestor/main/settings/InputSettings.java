@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * All global settings regarding input files.
@@ -81,6 +83,9 @@ public class InputSettings {
      * The name of the file specifying the initial state.
      */
 	private String inputName;
+
+	private Set<String>	usedSelectorLabels = new HashSet<>();
+	private Set<String> grammarSelectorLabels = new HashSet<>();
 
     /**
      * Sets the default path to search for all possible input files.
@@ -227,7 +232,7 @@ public class InputSettings {
 	 */
 	public void addPredefinedGrammar(String name, String renameFileLocation){
 		if(this.usedPredefinedGrammars == null){
-			this.usedPredefinedGrammars = new ArrayList<String>();
+			this.usedPredefinedGrammars = new ArrayList<>();
 			this.grammar2RenameMap = new HashMap<>();
 		}
 
@@ -251,5 +256,23 @@ public class InputSettings {
 	public String getRenamingLocation(String predefinedGrammar) {
 		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
+
+	public void addGrammarSelectorLabel(String selector) {
+		grammarSelectorLabels.add(selector);
+	}
+
+	public void addUsedSelectorLabel(String selector) {
+		usedSelectorLabels.add(selector);
+	}
+
+	public Set<String> getGrammarSelectorLabels() {
+		return grammarSelectorLabels;
+	}
+
+	public Set<String> getUsedSelectorLabels() {
+		return usedSelectorLabels;
+	}
+
+
 
 }
