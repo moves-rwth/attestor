@@ -4,8 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.util.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
@@ -35,6 +34,7 @@ public class AbstractMethodIPATest_2 {
 		ipa.setControlFlow(program);
 	}
 	
+	@Ignore
 	@Test
 	public void testGetResult() {
 
