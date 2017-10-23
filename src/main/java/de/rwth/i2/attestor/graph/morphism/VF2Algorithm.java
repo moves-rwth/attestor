@@ -30,6 +30,8 @@ import java.util.Stack;
  */
 public class VF2Algorithm {
 
+	boolean multipleExternalMatches = false;
+
     /**
      * The FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
@@ -94,10 +96,11 @@ public class VF2Algorithm {
 
 			state = stateStack.peek();
 
+			/** TODO we need new criteria here if multiple external pattern nodes are allows to be mapped to the same target node
 			if (morphismImpossibleCheck.eval(state)) {
 				stateStack.pop();
 				continue;
-			}
+			}*/
 
 			if (morphismFoundCheck.eval(state)) {
 				storeMorphism(state);
@@ -108,7 +111,7 @@ public class VF2Algorithm {
            	   searching for one. To this end we go through all (reachable)
                pairs (patternNode, targetNode) of candidates that might be
                added to the partial morphism. */
-			while (state.nextCandidate()) {
+			while (state.nextCandidate(multipleExternalMatches)) {
 				int p = state.getPatternCandidate();
 				int t = state.getTargetCandidate();
 				if (isFeasible(state, p, t)) {

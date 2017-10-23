@@ -87,7 +87,7 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 		for(int i=0; i < neighbors.size(); i++) {
 			int next = neighbors.get(i);
 			
-			if(data.containsIngoing(next)) {
+			if(data.containsIngoingUnmatched(next)) {
 					++lookaheadIn;
 			}
 		}

@@ -64,4 +64,9 @@ public final class VF2AlgorithmBuilder {
 		feasibilityFunctions.add(condition);
 		return this;
 	}
+
+	public VF2AlgorithmBuilder allowMultipleExternalMatches() {
+		algorithm.multipleExternalMatches = true;
+		return this;
+	}
 }

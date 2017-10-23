@@ -30,6 +30,7 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 					.addFeasibilityCondition( new TwoStepLookahead(false) )
 					.addFeasibilityCondition( new EmbeddingExternalNodes() )
 					.addFeasibilityCondition( new EmbeddingEdgeLabels() )
+					.allowMultipleExternalMatches()
 					.build();
 
 	

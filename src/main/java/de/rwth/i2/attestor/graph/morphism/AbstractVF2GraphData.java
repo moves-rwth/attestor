@@ -126,7 +126,7 @@ public abstract class AbstractVF2GraphData {
      * @return true if and only if the stored morphism does not contain the given node yet, but the node is
      *         reachable via an ingoing edge from a matched node.
      */
-	public boolean containsIngoing(int node) {
+	public boolean containsIngoingUnmatched(int node) {
 		
 			return in[node] != NULL_NODE
 					&& !containsMatch(node);
@@ -139,11 +139,21 @@ public abstract class AbstractVF2GraphData {
      * @return true if and only if the stored morphism does not contain the given node yet, but the node is
      *         reachable via an outgoing edge from a matched node.
      */
-	public boolean containsOutgoing(int node) {
+	public boolean containsOutgoingUnmatched(int node) {
 		
 		return out[node] != NULL_NODE
 				&& !containsMatch(node);
 	}
+
+	public boolean containsOutgoing(int node) {
+
+	    return out[node] != NULL_NODE;
+    }
+
+    public boolean containsIngoing(int node) {
+
+	    return in[node] != NULL_NODE;
+    }
 
     /**
      * @return True if and only if there are no ingoing edges to already matched nodes from nodes that
@@ -169,8 +179,6 @@ public abstract class AbstractVF2GraphData {
      */
     void setMatch(int matchFrom, int matchTo) {
 		
-		assert(matchFrom != NULL_NODE);
-
 		matchNode(matchFrom, matchTo);
 		++matchLength;
 		lastMatchedNode = matchFrom;

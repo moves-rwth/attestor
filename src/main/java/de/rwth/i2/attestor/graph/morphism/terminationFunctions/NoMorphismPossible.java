@@ -19,8 +19,9 @@ public class NoMorphismPossible implements TerminationFunction {
 		VF2TargetGraphData target = state.getTarget();
 		
 		return 
-				pattern.getGraph().size() > target.getGraph().size()
-				|| pattern.getTerminalInSize() > target.getTerminalInSize()
+				//pattern.getGraph().size() > target.getGraph().size()
+	//			||
+				pattern.getTerminalInSize() > target.getTerminalInSize()
 				|| pattern.getTerminalOutSize() > target.getTerminalOutSize()
 				;
 		
