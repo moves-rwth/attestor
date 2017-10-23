@@ -22,13 +22,13 @@ public class VF2State {
 	 * The currently found partial mapping from pattern to target together
 	 * with additional data to prune the search space.
 	 */
-	private final VF2GraphData pattern;
+	private final VF2PatternGraphData pattern;
 
 	/**
 	 * The currently found partial mapping from target to pattern together
 	 * with additional data to prune the search space.
 	 */
-	private final VF2GraphData target;
+	private final VF2TargetGraphData target;
 
 	private int patternCandidate;
 	private int targetCandidate;
@@ -44,13 +44,13 @@ public class VF2State {
 	 * @param targetGraph The target graph.
 	 */
 	public VF2State(Graph patternGraph, Graph targetGraph) {
-		pattern = new VF2GraphData(patternGraph);
-		target = new VF2GraphData(targetGraph);
+		pattern = new VF2PatternGraphData(patternGraph);
+		target = new VF2TargetGraphData(targetGraph);
 		countPatternNodes = pattern.getGraph().size();
 		countTargetNodes = target.getGraph().size();
 		patternCandidate = 0;
 		targetCandidate = -1;
-		patternMin = VF2GraphData.NULL_NODE;
+		patternMin = AbstractVF2GraphData.NULL_NODE;
 	}
 
 	/**
@@ -60,13 +60,13 @@ public class VF2State {
 	 * @param state The state to be copied.
 	 */
     private VF2State(VF2State state) {
-		pattern = new VF2GraphData(state.pattern);
-		target = new VF2GraphData(state.target);
+		pattern = new VF2PatternGraphData(state.pattern);
+		target = new VF2TargetGraphData(state.target);
 		countPatternNodes = state.countPatternNodes;
 		countTargetNodes = state.countTargetNodes;
 		patternCandidate = 0;
 		targetCandidate = -1;
-		patternMin = VF2GraphData.NULL_NODE;
+		patternMin = AbstractVF2GraphData.NULL_NODE;
 	}
 
 	/**
@@ -79,14 +79,14 @@ public class VF2State {
 	/**
 	 * @return The data stored for the pattern graph within this state.
 	 */
-	public VF2GraphData getPattern() {
+	public VF2PatternGraphData getPattern() {
 		return pattern;
 	}
 
 	/**
 	 * @return The data stored for the target graph within this state.
 	 */
-	public VF2GraphData getTarget() {
+	public VF2TargetGraphData getTarget() {
 		return target;
 	}
 

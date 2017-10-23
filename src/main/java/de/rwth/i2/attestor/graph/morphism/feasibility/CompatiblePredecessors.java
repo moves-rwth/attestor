@@ -32,8 +32,8 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 	@Override
 	public boolean eval(VF2State state, int p, int t) {
 		
-		VF2GraphData pattern = state.getPattern();
-		VF2GraphData target = state.getTarget();
+		VF2PatternGraphData pattern = state.getPattern();
+		VF2TargetGraphData target = state.getTarget();
 		Graph patternGraph = pattern.getGraph();
 		Graph targetGraph = target.getGraph();
 

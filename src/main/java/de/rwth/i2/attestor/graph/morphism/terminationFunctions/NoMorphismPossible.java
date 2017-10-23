@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.terminationFunctions;
 
-import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
-import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 
 /**
  * 
@@ -17,8 +15,8 @@ public class NoMorphismPossible implements TerminationFunction {
 	@Override
 	public boolean eval(VF2State state) {
 		
-		VF2GraphData pattern = state.getPattern();
-		VF2GraphData target = state.getTarget();
+		VF2PatternGraphData pattern = state.getPattern();
+		VF2TargetGraphData target = state.getTarget();
 		
 		return 
 				pattern.getGraph().size() > target.getGraph().size()

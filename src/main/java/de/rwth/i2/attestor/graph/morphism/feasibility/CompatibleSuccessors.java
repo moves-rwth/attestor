@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
@@ -35,9 +32,9 @@ public class CompatibleSuccessors implements FeasibilityFunction {
 	@Override
 	public boolean eval(VF2State state, int p, int t) {
 
-		VF2GraphData pattern = state.getPattern();
+		VF2PatternGraphData pattern = state.getPattern();
 		Graph patternGraph = pattern.getGraph();
-		VF2GraphData target = state.getTarget();
+		VF2TargetGraphData target = state.getTarget();
 		Graph targetGraph = target.getGraph();
 
 		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
