@@ -5,6 +5,8 @@ import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 /**
  * Checks whether all already matched successors of the pattern candidate node are matched to predecessors
@@ -40,37 +42,31 @@ public class CompatibleSuccessors implements FeasibilityFunction {
 
 		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
 
-
 		TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
+		TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
+
+		TIntSet targetMatches = new TIntHashSet(succsOfP.size());
+
 		for(int i=0; i < succsOfP.size(); i++) {
 
 			int succP = succsOfP.get(i);
 			if(pattern.containsMatch(succP)) {
-			
-				int match = pattern.getMatch(succP);
-				TIntArrayList targetSuccessors = targetGraph.getSuccessorsOf(t);
-				if(!targetSuccessors.contains(match)) {
-					
-					return !checkEquality && (targetGraph.isExternal(t) && targetGraph.isExternal(match));
-				}
-			}
-		}
-		
-		TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
-		for(int i=0; i < succsOfT.size(); i++) {
-			
-			int succT = succsOfT.get(i);
-			if(target.containsMatch(succT)) {
-			
-				int match = target.getMatch(succT);
-				TIntArrayList patternSuccessors = patternGraph.getSuccessorsOf(p);
-				if(!patternSuccessors.contains(match)) {
 
-					return !checkEquality && (patternGraph.isExternal(p) && patternGraph.isExternal(match));
+				int match = pattern.getMatch(succP);
+				if(checkEquality && !succsOfT.contains(match)) {
+					return false;
 				}
+				targetMatches.add(match);
 			}
 		}
-		
+
+		for(int i=0; i < succsOfT.size(); i++) {
+			int succT = succsOfT.get(i);
+			if(checkEquality && target.containsMatch(succT) && !targetMatches.contains(succT)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 }

@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 /**
  * Checks whether all already matched predecessors of the pattern candidate node are matched to predecessors
@@ -38,33 +40,27 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
 
 		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(p);
+		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(t);
+		TIntSet targetMatches = new TIntHashSet(predsOfT.size());
+
 		for(int i=0; i < predsOfP.size(); i++) {
 		
 			int predP = predsOfP.get(i);
 			if(pattern.containsMatch(predP)) {
 			
 				int match = pattern.getMatch(predP);
-				TIntArrayList targetPredecessors = targetGraph.getPredecessorsOf(t);
-				if(!targetPredecessors.contains(match)) {
-					
-					return !checkEquality && (targetGraph.isExternal(t) && targetGraph.isExternal(match));
+				if(checkEquality && !predsOfT.contains(match)) {
+					return false;
 				}
+				targetMatches.add(match);
 			}
 		}
 		
-		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(t);
 		for(int i=0; i < predsOfT.size(); i++) {
 			
 			int predT = predsOfT.get(i);
-			if(target.containsMatch(predT)) {
-			
-				int match = target.getMatch(predT);
-				TIntArrayList patternPredecessors = patternGraph.getPredecessorsOf(p);
-				if(!patternPredecessors.contains(match)) {
-					
-					return !checkEquality && (patternGraph.isExternal(p) && patternGraph.isExternal(match));
-
-				}
+			if(checkEquality && target.containsMatch(predT) && !targetMatches.contains(predT)) {
+				return false;
 			}
 		}
 		
