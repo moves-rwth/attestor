@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
-public class AbstractMethodIPATest {
+public class ReachableFragmentTest {
 
 	AbstractMethodIPA ipa = new AbstractMethodIPA( "testMethod", null );
 	Type type = Settings.getInstance().factory().getType("someType");
