@@ -40,6 +40,13 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
         printAnalyzedMethod();
 
+        System.out.println("5...");
+        try {
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             stateSpace = stateSpaceGenerator.generate();
             logger.info("State space generation finished. #states: "

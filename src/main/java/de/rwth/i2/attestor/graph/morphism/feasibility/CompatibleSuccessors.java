@@ -11,59 +11,20 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Christoph
  */
-public class CompatibleSuccessors implements FeasibilityFunction {
-
-	/**
-	 * True if and only the procedure should check whether pattern and target node have the same
-	 * already matched successor nodes. Otherwise, it suffices that all already matched successors of the pattern
-	 * node have matching successors of the target node.
-	 */
-	private final boolean checkEqualityOnExternal;
+public class CompatibleSuccessors extends AbstractCompatibleNeighbours {
 
 	/**
 	 * @param checkEqualityOnExternal True if and only if exactly the same successors are required.
 	 */
 	public CompatibleSuccessors(boolean checkEqualityOnExternal) {
-		this.checkEqualityOnExternal = checkEqualityOnExternal;
+		super(checkEqualityOnExternal);
 	}
-	
+
 	@Override
-	public boolean eval(VF2State state, int p, int t) {
+	protected TIntArrayList getAdjacent(Graph graph, int node) {
 
-		VF2PatternGraphData pattern = state.getPattern();
-		Graph patternGraph = pattern.getGraph();
-		VF2TargetGraphData target = state.getTarget();
-		Graph targetGraph = target.getGraph();
-
-		boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
-
-		TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
-		TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
-
-		TIntArrayList targetMatches = new TIntArrayList(succsOfP.size());
-
-		for(int i=0; i < succsOfP.size(); i++) {
-
-			int succP = succsOfP.get(i);
-			if(pattern.containsMatch(succP)) {
-
-				int match = pattern.getMatch(succP);
-				if(checkEquality && !succsOfT.contains(match)) {
-					return false;
-				}
-				targetMatches.add(match);
-			}
-		}
-
-		targetMatches.sort();
-
-		for(int i=0; i < succsOfT.size(); i++) {
-			int succT = succsOfT.get(i);
-			if(checkEquality && target.containsMatch(succT) && targetMatches.binarySearch(succT) < 0) {
-				return false;
-			}
-		}
-
-		return true;
+		return graph.getSuccessorsOf(node);
 	}
+
+
 }
