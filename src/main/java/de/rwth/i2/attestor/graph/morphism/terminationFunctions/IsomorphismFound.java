@@ -22,7 +22,7 @@ public class IsomorphismFound implements TerminationFunction {
 		VF2PatternGraphData pattern = state.getPattern();
 		
 		return pattern.getMatchingSize() == pattern.getGraph().size()
-				&& pattern.getGraph().size() == state.getTarget().getGraph().size();
+				&& pattern.getMatchingSize() == state.getTarget().getGraph().size();
 	}
 
 }

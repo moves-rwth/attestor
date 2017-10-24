@@ -44,12 +44,6 @@ public class VF2Algorithm {
      */
 	TerminationFunction morphismFoundCheck;
 
-    /**
-     * A function that determines whether the current state cannot lead to a complete Morphism anymore
-     * and we thus either have to backtrack or give up.
-     */
-	TerminationFunction morphismImpossibleCheck;
-
 	/**
 	 * The morphism that has been found by the algorithm. Null otherwise.
 	 */
@@ -67,7 +61,6 @@ public class VF2Algorithm {
      */
 	VF2Algorithm() {
 		morphismFoundCheck = null;
-		morphismImpossibleCheck = null;
 	}
 
     /**
@@ -95,12 +88,6 @@ public class VF2Algorithm {
 		while(!stateStack.isEmpty()) {
 
 			state = stateStack.peek();
-
-			/** TODO we need new criteria here if multiple external pattern nodes are allows to be mapped to the same target node
-			if (morphismImpossibleCheck.eval(state)) {
-				stateStack.pop();
-				continue;
-			}*/
 
 			if (morphismFoundCheck.eval(state)) {
 				storeMorphism(state);
@@ -146,9 +133,8 @@ public class VF2Algorithm {
      */
 	private boolean isFeasible(VF2State state, int p, int t) {
 
-		for(int i=0; i < feasibilityChecks.length; i++)  {
-			FeasibilityFunction f = feasibilityChecks[i];
-			if(!f.eval(state, p, t)) {
+		for (FeasibilityFunction f : feasibilityChecks) {
+			if (!f.eval(state, p, t)) {
 				return false;
 			}
 		}

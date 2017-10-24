@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
 import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
-import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
 import de.rwth.i2.attestor.main.settings.Settings;
 
 /**
@@ -23,11 +22,6 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
 	 * Specification of the condition that an embedding has been found.
 	 */
 	private static final TerminationFunction matchingCondition = new MorphismFound();
-	
-	/**
-	 * Specification of the condition that no embedding can be found anymore.
-	 */
-	private static final TerminationFunction matchingImpossibleCondition = new NoMorphismPossible();
 	
 	/**
 	 * Specification of all compatible predecessor nodes.
@@ -85,7 +79,6 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
 		super(
 				VF2Algorithm.builder()
 				.setMatchingCondition( matchingCondition )
-				.setMatchingImpossibleCondition( matchingImpossibleCondition )
 				.addFeasibilityCondition( compatibleNodeTypes )
 				.addFeasibilityCondition( compatiblePredecessors )
 				.addFeasibilityCondition( compatibleSuccessors )

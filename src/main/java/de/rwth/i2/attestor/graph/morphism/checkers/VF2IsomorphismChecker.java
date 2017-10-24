@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
 import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.IsomorphismFound;
-import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
 
 /**
  * 
@@ -20,7 +19,6 @@ public class VF2IsomorphismChecker extends AbstractVF2MorphismChecker {
 	 */
 	private static final VF2Algorithm matchingAlgorithm = VF2Algorithm.builder()
 					.setMatchingCondition( new IsomorphismFound() )
-					.setMatchingImpossibleCondition( new NoMorphismPossible() )
 					.addFeasibilityCondition( new CompatiblePredecessors(true) )
 					.addFeasibilityCondition( new CompatibleSuccessors(true) )
 					.addFeasibilityCondition( new OneStepLookaheadIn(true) ) // lookahead sets are compared for equality

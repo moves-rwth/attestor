@@ -28,7 +28,6 @@ public final class VF2AlgorithmBuilder {
 	 */
 	public VF2Algorithm build() {
 		assert(algorithm.morphismFoundCheck != null);
-		assert(algorithm.morphismImpossibleCheck != null);
 
 		algorithm.feasibilityChecks = feasibilityFunctions.toArray(new FeasibilityFunction[feasibilityFunctions.size()]);
 
@@ -42,16 +41,6 @@ public final class VF2AlgorithmBuilder {
 	 */
 	public VF2AlgorithmBuilder setMatchingCondition(TerminationFunction condition) {
 		algorithm.morphismFoundCheck = condition;
-		return this;
-	}
-	
-	/**
-	 * Specifies the condition that determines that no suitable matching can be found.
-	 * @param condition The negative termination condition to be used by the algorithm.
-	 * @return The builder.
-	 */
-	public VF2AlgorithmBuilder setMatchingImpossibleCondition(TerminationFunction condition) {
-		algorithm.morphismImpossibleCheck = condition;
 		return this;
 	}
 	
