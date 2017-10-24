@@ -133,8 +133,8 @@ public class VF2Algorithm {
      */
 	private boolean isFeasible(VF2State state, int p, int t) {
 
-		for (FeasibilityFunction f : feasibilityChecks) {
-			if (!f.eval(state, p, t)) {
+		for(int i=0; i < feasibilityChecks.length; i++) {
+			if (!feasibilityChecks[i].eval(state, p, t)) {
 				return false;
 			}
 		}
