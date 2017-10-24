@@ -140,7 +140,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		countNodes = 0;
 		countVariableEdges = 0;
 		countNonterminalEdges = 0;
-		publicToPrivateIDs = new TIntIntHashMap();
+		publicToPrivateIDs = new TIntIntHashMap(200, 0.8f);
 	}
 
 	@Override
@@ -161,11 +161,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		builder = null;
 		graph = new LabeledDigraph(hc.graph);
 
-		publicToPrivateIDs = new TIntIntHashMap( hc.publicToPrivateIDs.size() );
-		for(int key : hc.publicToPrivateIDs.keys()) {
-
-			publicToPrivateIDs.put(key, hc.publicToPrivateIDs.get(key));
-		}
+		publicToPrivateIDs = new TIntIntHashMap( hc.publicToPrivateIDs );
 	}
 
 	@Override

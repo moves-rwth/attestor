@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
 
 /**
  * All the messy details of a {@link HeapConfigurationBuilder} for {@link InternalHeapConfiguration}s. 
@@ -62,14 +61,14 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      	// Swap all deleted elements to the end and remove them from the
 		// graph to get a tight representation. 
 		// The obtained map stores all performed swaps
-		TIntIntMap swaps = heapConf.graph.pack();
+		int[] swaps = heapConf.graph.pack();
 		
 		// Update the mapping from private to public IDs such that swapped
 		// private IDs still refer to the same public ID as before.
 		heapConf.publicToPrivateIDs.transformValues(value -> {
 
-            if(swaps.containsKey(value)) {
-                return swaps.get(value);
+			if(swaps[value] != HeapConfiguration.INVALID_ELEMENT) {
+                return swaps[value];
             } else {
                 return value;
             }

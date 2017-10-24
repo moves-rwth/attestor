@@ -32,14 +32,15 @@ public class InternalStateSpace implements StateSpace {
 
     public InternalStateSpace(int capacity) {
 
-        potentialMergeStates = new HashMap<>(capacity);
+        capacity = 2 * capacity;
+        potentialMergeStates = new HashMap<>(capacity, 0.8f);
         otherStates = new ArrayList<>(capacity);
         initialStateIds = new TIntHashSet(100);
         finalStateIds = new TIntHashSet(100);
-        materializationSuccessors = new TIntObjectHashMap<>(capacity);
-        controlFlowSuccessors = new TIntObjectHashMap<>(capacity);
+        materializationSuccessors = new TIntObjectHashMap<>(capacity, 0.8f);
+        controlFlowSuccessors = new TIntObjectHashMap<>(capacity, 0.8f);
         artificialInfPathsSuccessors = new TIntObjectHashMap<>(100);
-        atomicPropMap = new TIntObjectHashMap<>(capacity);
+        atomicPropMap = new TIntObjectHashMap<>(capacity, 0.8f);
     }
 
     public Set<ProgramState> getInitialStates() {

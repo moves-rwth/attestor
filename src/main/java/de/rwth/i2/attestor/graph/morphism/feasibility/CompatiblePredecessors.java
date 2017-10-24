@@ -2,8 +2,6 @@ package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
 
 /**
  * Checks whether all already matched predecessors of the pattern candidate node are matched to predecessors
@@ -41,7 +39,9 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 
 		TIntArrayList predsOfP = patternGraph.getPredecessorsOf(p);
 		TIntArrayList predsOfT = targetGraph.getPredecessorsOf(t);
-		TIntSet targetMatches = new TIntHashSet(predsOfT.size());
+
+
+		TIntArrayList targetMatches = new TIntArrayList(predsOfT.size());
 
 		for(int i=0; i < predsOfP.size(); i++) {
 		
@@ -55,11 +55,13 @@ public class CompatiblePredecessors implements FeasibilityFunction {
 				targetMatches.add(match);
 			}
 		}
-		
+
+		targetMatches.sort();
+
 		for(int i=0; i < predsOfT.size(); i++) {
 			
 			int predT = predsOfT.get(i);
-			if(checkEquality && target.containsMatch(predT) && !targetMatches.contains(predT)) {
+			if(checkEquality && target.containsMatch(predT) && targetMatches.binarySearch(predT) < 0) {
 				return false;
 			}
 		}
