@@ -61,6 +61,32 @@ public class AbstractMethodIPATest {
 
 		performTest( input, expectedFragment, expectedReplace );
 	}
+	
+	@Test
+	public void testPrepareInput_reachableList_withVariablesToSamePosition(){
+		int listSize = 4;
+		int variablePosition = 2;
+		String variableName = "n1";
+		String variableName2 = "n2";
+		HeapConfiguration input = reachableListWithVariables_samePosition( listSize, variablePosition, variableName, variableName2 );
+		HeapConfiguration expectedFragment = reachableList_HeadExternal_VarExternal( listSize, variablePosition );
+		HeapConfiguration expectedReplace = twoNodesAttached( variableName, variableName2 );
+
+		performTest( input, expectedFragment, expectedReplace );
+	}
+	
+	@Test
+	public void testPrepareInput_reachableList_withVariableAndParamToSamePosition(){
+		int listSize = 4;
+		int variablePosition = 2;
+		String variableName = "n1";
+		String variableName2 = "@parameter1:";
+		HeapConfiguration input = reachableListWithVariables_samePosition( listSize, variablePosition, variableName, variableName2 );
+		HeapConfiguration expectedFragment = reachableList_HeadExternal_VarExternal_twoParams( listSize, variablePosition, variablePosition );
+		HeapConfiguration expectedReplace = twoNodesAttached( variableName );
+
+		performTest( input, expectedFragment, expectedReplace );
+	}
 
 	@Test
 	public void testPrepareInput_partlyReachableList(){
@@ -201,12 +227,36 @@ public class AbstractMethodIPATest {
 		builder.addSelector(additionalNodes.get(unreachableListSize - 1), nextLabel, oldNodes.get(0) );
 		return builder.build();
 	}
+	
+	private HeapConfiguration reachableListWithVariables_samePosition(int listSize, int variablePosition,
+			String variableName, String variableName2) {
+		TIntArrayList nodes = new TIntArrayList();
+		HeapConfiguration config = reachableListHelper( listSize , nodes);
+		return config.builder()
+				.addVariableEdge(variableName, nodes.get(variablePosition))
+				.addVariableEdge(variableName2, nodes.get(variablePosition))
+				.build();
+	}
+	
 
 	private HeapConfiguration reachableListWithVariable(int listSize, int variablePosition, String variableName) {
 		TIntArrayList nodes = new TIntArrayList();
 		HeapConfiguration config = reachableListHelper( listSize , nodes);
 		return config.builder().addVariableEdge(variableName, nodes.get(variablePosition)).build();
 	}
+	
+
+
+	private HeapConfiguration reachableList_HeadExternal_VarExternal_twoParams(int listSize, int variablePosition,
+			int parameterPosition ) {
+		TIntArrayList nodes = new TIntArrayList();
+		HeapConfiguration config = reachableListHelper( listSize , nodes);
+		return config.builder()
+				.setExternal(nodes.get(0)).setExternal(nodes.get(variablePosition))
+				.addVariableEdge("@parameter1:", parameterPosition )
+				.build();
+	}
+
 
 	private HeapConfiguration reachableList_HeadExternal_VarExternal(int listSize, int variablePosition) {
 		TIntArrayList nodes = new TIntArrayList();
@@ -270,6 +320,15 @@ public class AbstractMethodIPATest {
 		
 		return twoNodesAttachedHelper( nodes ).builder()
 				.setExternal( nodes.get(1) ).build();
+	}
+	
+	private HeapConfiguration twoNodesAttached(String variableName, String variableName2) {
+		TIntArrayList nodes = new TIntArrayList();
+		
+		return twoNodesAttachedHelper( nodes ).builder()
+				.addVariableEdge( variableName, nodes.get(1) )
+				.addVariableEdge(variableName2, nodes.get(1))
+				.build();
 	}
 
 
