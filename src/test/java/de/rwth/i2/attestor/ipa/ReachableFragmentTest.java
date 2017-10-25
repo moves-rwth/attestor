@@ -15,7 +15,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class ReachableFragmentTest {
 
-	AbstractMethodIPA ipa = new AbstractMethodIPA( "testMethod", null );
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
 	Type type = Settings.getInstance().factory().getType("someType");
 	SelectorLabel nextLabel = BasicSelectorLabel.getSelectorLabel("next");
 

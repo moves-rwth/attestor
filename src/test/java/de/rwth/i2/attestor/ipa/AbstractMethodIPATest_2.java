@@ -14,7 +14,7 @@ import de.rwth.i2.attestor.types.Type;
 
 public class AbstractMethodIPATest_2 {
 
-	AbstractMethodIPA ipa = new AbstractMethodIPA( "testMethod", null );
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
 
 	@Before
 	public void setupProgram(){

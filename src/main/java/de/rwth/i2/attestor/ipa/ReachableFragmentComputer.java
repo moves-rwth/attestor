@@ -26,6 +26,11 @@ public class ReachableFragmentComputer {
 		this.displayName = displayName;
 	}
 
+	/**
+	 * 
+	 * @param input
+	 * @return <reachableFragment,remainingFragment>
+	 */
 	protected Pair<HeapConfiguration, HeapConfiguration> prepareInput( HeapConfiguration input ){
 		
 		HeapConfigurationBuilder reachableFragmentBuilder = new InternalHeapConfiguration().builder();
