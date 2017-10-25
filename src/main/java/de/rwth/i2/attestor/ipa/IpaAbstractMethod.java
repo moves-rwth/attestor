@@ -23,16 +23,15 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) {
 		
 		Set<ProgramState> result = new HashSet<>();
-		for( HeapConfiguration postConfig : getResult( toString(), input ) ){
+		for( HeapConfiguration postConfig : getResult( input ) ){
 			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
 		}
 		
 		return result;
 	}
 
-	public List<HeapConfiguration> getResult( String methodSignature, HeapConfiguration currentConfig ){
-		
-		Pair<HeapConfiguration, HeapConfiguration> splittedConfig = prepareInput( currentConfig, methodSignature );
+	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ){
+		Pair<HeapConfiguration, HeapConfiguration> splittedConfig = prepareInput( currentConfig );
 		HeapConfiguration reachableFragment = splittedConfig.first();
 		HeapConfiguration remainingFragment = splittedConfig.second(); 
 		int placeholderPos = 0;//TODO (pos of placeholder?)
@@ -48,8 +47,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 	 * @param methodName
 	 * @return <reachableFragment,remainingFragment>
 	 */
-	protected Pair<HeapConfiguration, HeapConfiguration> prepareInput( HeapConfiguration input, String methodName ){
-		ReachableFragmentComputer helper = new ReachableFragmentComputer( methodName );
+	protected Pair<HeapConfiguration, HeapConfiguration> prepareInput( HeapConfiguration input ){
+		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString() );
 		return helper.prepareInput(input);
 	}
 	
