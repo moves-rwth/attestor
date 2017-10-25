@@ -73,8 +73,6 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
                 return value;
             }
         });
-
-		heapConf.publicToPrivateIDs.retainEntries( (key,value) -> heapConf.graph.containsNode(value));
 	}
 
 	@Override
@@ -156,11 +154,12 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * Removes an existing private ID from the underlying HeapConfiguration.
 	 * @param publicId The public ID of the removed element.
 	 * @param privateId The private ID of the removed element.
+	 * @return true iff the element with the given private ID was successfully removed
 	 */
-	private void removeElement(int publicId, int privateId) {
+	private boolean removeElement(int publicId, int privateId) {
 		
-		heapConf.graph.removeNodeAt(privateId);
 		heapConf.publicToPrivateIDs.remove(publicId);
+		return heapConf.graph.removeNodeAt(privateId);
 	}
 	
 	@Override
@@ -301,7 +300,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new IllegalArgumentException("Provided ID does not correspond to a variable edge.");
 		}
 		
-		if(heapConf.graph.removeNodeAt(privateId)) {
+		if(removeElement(varEdge, privateId)) {
 			--heapConf.countVariableEdges;
 		}
 		
@@ -360,7 +359,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new IllegalArgumentException("Provided ID does not correspond to a nonterminal edge.");
 		}
 		
-		if(heapConf.graph.removeNodeAt(privateId)) {
+		if(removeElement(ntEdge, privateId)) {
 			--heapConf.countNonterminalEdges;
 		}
 		
@@ -614,10 +613,14 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 				} else if(pattern.isNonterminalEdge(i)) {
 					--heapConf.countNonterminalEdges;
 				}
-				
-				heapConf.graph.removeNodeAt(match);				
+
+				heapConf.graph.removeNodeAt(match);
 			}
 		}
+
+		heapConf.publicToPrivateIDs.retainEntries(
+				(key,value) -> heapConf.graph.containsNode(value)
+		);
 	}
 
     /**
