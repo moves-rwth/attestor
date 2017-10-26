@@ -8,8 +8,9 @@ import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -98,6 +99,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		// Expected output
@@ -134,6 +136,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		assertTrue(proofStruct.isSuccessful());
@@ -165,6 +168,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		// Expected output
@@ -203,6 +207,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		// Expected output
@@ -238,6 +243,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		// Make sure that verification fails
@@ -269,6 +275,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		// Make sure that verification fails
@@ -300,6 +307,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		// Make sure that verification succeeds
@@ -333,6 +341,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		// Make sure that verification fails
@@ -365,6 +374,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addArtificialInfPathsTransition(state1);
 
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 
 		// Make sure that verification fails
@@ -389,6 +399,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		// Expected output
@@ -419,6 +430,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		assertEquals(proofStruct.getLeaves().size(), 2);
@@ -450,10 +462,12 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addControlFlowTransition(initialState, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
-		
-		assertEquals(proofStruct.getLeaves().size(), 2);
-		for(Assertion assertion : proofStruct.getLeaves()){
+
+		HashSet<Assertion> leaves = proofStruct.getLeaves();
+		assertEquals(2, leaves.size());
+		for(Assertion assertion : leaves){
 			// Make sure all leaves are successful
 			assertTrue(assertion.isTrue());
 			
@@ -497,6 +511,7 @@ public class ProofStructureTest extends InternalStateSpace {
 		this.addControlFlowTransition(state2, initialState);
 		
 		ProofStructure proofStruct = new ProofStructure();
+		proofStruct.setBuildFullStructure();
 		proofStruct.build(this, formula);
 		
 		// Expected output

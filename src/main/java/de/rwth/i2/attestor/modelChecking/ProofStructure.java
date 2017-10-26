@@ -37,6 +37,12 @@ public class ProofStructure {
 
 	Assertion originOfFailure = null;
 	private StateSpace stateSpace;
+
+	boolean buildFullStructure = false;
+
+	void setBuildFullStructure() {
+		buildFullStructure = true;
+	}
 	
 	
 	/**
@@ -236,8 +242,9 @@ public class ProofStructure {
 										this.originOfFailure = newAssertion;
 									}
 									// Optimisation: abort proof structure generation, as we already know that it is not successful!
-									return;
-
+									if(!buildFullStructure) {
+										return;
+									}
 								}
 							}
 						}
@@ -273,7 +280,9 @@ public class ProofStructure {
 					this.originOfFailure = currentVertex;
 				}
 				// Optimisation: abort proof structure generation, as we already know that it is not successful!
-				return;
+				if(!buildFullStructure) {
+					return;
+				}
 			}
 			
 			
@@ -348,6 +357,7 @@ public class ProofStructure {
 
 		TIntObjectIterator<Set<Assertion>> iter = stateIdToVertices.iterator();
 		while(iter.hasNext()) {
+			iter.advance();
 			for(Assertion vertex : iter.value()) {
 				if(!edges.containsKey(vertex)){
 					leaves.add(vertex);
@@ -367,6 +377,7 @@ public class ProofStructure {
 
 		TIntObjectIterator<Set<Assertion>> iter = stateIdToVertices.iterator();
 		while(iter.hasNext()) {
+			iter.advance();
 			vertices.addAll(iter.value());
 		}
 		return vertices;
