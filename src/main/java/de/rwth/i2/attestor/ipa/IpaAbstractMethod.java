@@ -1,10 +1,12 @@
 package de.rwth.i2.attestor.ipa;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.internal.IpaContractCollection;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -13,35 +15,43 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
-	
-	
+	IpaContractCollection contracts = new IpaContractCollection();
+
 	public IpaAbstractMethod(String displayName, StateSpaceFactory factory) {
 		super(displayName, factory);
 	}
 
 	@Override
 	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) {
-		
+
 		Set<ProgramState> result = new HashSet<>();
 		for( HeapConfiguration postConfig : getResult( input ) ){
 			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
 		}
-		
+
 		return result;
 	}
 
 	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ){
+
 		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
 		HeapConfiguration reachableFragment = splittedConfig.first();
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
-		//TODO compare with existing preconditions (consider different arrangement of external nodes)
-		List<HeapConfiguration> contracts = null; //TODO
-		//TODO rearrange tentacles in remaining fragment
-		//TODO replace placeholder by post conditions
-		return applyContract(remainingFragment, placeholderPos, contracts);
+
+		Entry<IpaPrecondition, List<HeapConfiguration>> contract = contracts.getContract( reachableFragment );
+		if( contract != null ){
+			IpaPrecondition precondition = contract.getKey();
+			List<HeapConfiguration> postconditions = contract.getValue();
+
+			remainingFragment = adaptExternalOrdering( precondition, reachableFragment, 
+					remainingFragment, placeholderPos);
+
+			return applyContract(remainingFragment, placeholderPos, postconditions );
+		}
+		return null;
 	}
-	
+
 	/**
 	 * @param input
 	 * @param methodName
@@ -51,41 +61,41 @@ public class IpaAbstractMethod extends AbstractMethod {
 		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString() );
 		return helper.prepareInput(input);
 	}
-	
+
 	private List<HeapConfiguration> applyContract( HeapConfiguration replacedFragment,
-												   int contractPlaceholderEdge,
-												   List<HeapConfiguration> contracts ){
-		
+			int contractPlaceholderEdge,
+			List<HeapConfiguration> contracts ){
+
 		List<HeapConfiguration> result = new ArrayList<>();
 		for( HeapConfiguration contract : contracts ){
 			HeapConfigurationBuilder builder = replacedFragment.builder();
 			builder.replaceNonterminalEdge(contractPlaceholderEdge, contract);
 			result.add( builder.build() );
 		}
-		
+
 		return result;
 	}
-	
+
 	protected HeapConfiguration adaptExternalOrdering( IpaPrecondition precondition, 
-													   HeapConfiguration reachableFragment,
-													   HeapConfiguration remainingFragment,
-													   int placeholderPosition )
-													   throws IllegalArgumentException {
-		 
+			HeapConfiguration reachableFragment,
+			HeapConfiguration remainingFragment,
+			int placeholderPosition )
+					throws IllegalArgumentException {
+
 		int[] reordering = precondition.getReordering( reachableFragment );
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
 		TIntArrayList newTentacles = new TIntArrayList();
 		for( int i = 0; i < reordering.length; i++ ){
 			newTentacles.add( oldTentacles.get( reordering[i]) );
 		} 
-		
+
 		Nonterminal label = remainingFragment.labelOf(placeholderPosition);
 		return remainingFragment.builder().removeNonterminalEdge(placeholderPosition)
-			.addNonterminalEdge(label, newTentacles ).build();
-		
-	}
-	
+				.addNonterminalEdge(label, newTentacles ).build();
 
-	
+	}
+
+
+
 
 }
