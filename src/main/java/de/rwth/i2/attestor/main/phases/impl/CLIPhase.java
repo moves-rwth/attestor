@@ -24,7 +24,9 @@ public class CLIPhase extends AbstractPhase {
 
         CommandLineReader commandLineReader = new CommandLineReader();
         commandLineReader.setupCLI();
-        commandLineReader.loadSettings(args);
+        if(!commandLineReader.loadSettings(args)) {
+            throw new IllegalArgumentException("Invalid command line options");
+        }
         if( commandLineReader.hasSettingsFile() ){
             SettingsFileReader settingsReader =
                     new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
