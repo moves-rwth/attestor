@@ -47,7 +47,6 @@ public class ModelCheckingPhase extends AbstractPhase {
                 logger.warn("violated.");
             }
         }
-
     }
 
     @Override
