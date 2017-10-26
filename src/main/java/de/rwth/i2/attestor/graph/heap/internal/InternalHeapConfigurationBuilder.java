@@ -321,27 +321,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder addNonterminalEdge(Nonterminal label, TIntArrayList attachedNodes) {
 		
-		if(label == null || attachedNodes == null) {
-			throw new NullPointerException();
-		}
-		
-		if(label.getRank() != attachedNodes.size()) {
-			throw new IllegalArgumentException("The rank of the provided label and the size of the list of attached nodes do not coincide.");
-		}
-		
-		int publicId = addPrivatePublicIdPair();
-		int privateId = heapConf.getPrivateId(publicId);
-		
-		heapConf.graph.addNode(label, attachedNodes.size(), 0);
-		for(int i=0; i < attachedNodes.size(); i++) {
-			int to = heapConf.getPrivateId( attachedNodes.get(i) );
-			if(!heapConf.isNode(to)) {
-				throw new IllegalArgumentException("ID of one attached node does not actually correspond to a node.");
-			}
-			heapConf.graph.addEdge(privateId, i, to);
-		}
-		++heapConf.countNonterminalEdges;
-		
+		addNonterminalEdgeAndReturnId(label, attachedNodes);
 		return this;
 	}
 	
