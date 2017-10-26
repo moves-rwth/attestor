@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.graph.digraph;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -481,12 +481,13 @@ public class LabeledDigraph {
 	 * last valid element. 
 	 * After that all invalid elements are removed.
 	 * 
-	 * @return A list recording all swaps performed.
+	 * @return An array recording all swaps performed.
 	 */
-	public TIntIntMap pack() {
-		
-		TIntIntMap res = new TIntIntHashMap(nodeLabels.size());
-		
+	public int[] pack() {
+
+		int[] result = new int[nodeLabels.size()];
+		Arrays.fill(result, HeapConfiguration.INVALID_ELEMENT);
+
 		removeNullTail();
 		
 		for(int i=0; i < nodeLabels.size()-1; i++) {
@@ -495,13 +496,13 @@ public class LabeledDigraph {
 				
 				int last = nodeLabels.size()-1;
 				move(last, i);
-				res.put(last, i);
-				
+				result[last] = i;
+
 				removeNullTail();
 			}
 		}
 		
-		return res;
+		return result;
 	}
 	
 	/**

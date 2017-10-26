@@ -30,6 +30,8 @@ import java.util.Stack;
  */
 public class VF2Algorithm {
 
+	boolean multipleExternalMatches = false;
+
     /**
      * The FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
@@ -41,12 +43,6 @@ public class VF2Algorithm {
      * A function that determines whether we found a complete Morphism and can thus successfully terminate.
      */
 	TerminationFunction morphismFoundCheck;
-
-    /**
-     * A function that determines whether the current state cannot lead to a complete Morphism anymore
-     * and we thus either have to backtrack or give up.
-     */
-	TerminationFunction morphismImpossibleCheck;
 
 	/**
 	 * The morphism that has been found by the algorithm. Null otherwise.
@@ -65,7 +61,6 @@ public class VF2Algorithm {
      */
 	VF2Algorithm() {
 		morphismFoundCheck = null;
-		morphismImpossibleCheck = null;
 	}
 
     /**
@@ -94,11 +89,6 @@ public class VF2Algorithm {
 
 			state = stateStack.peek();
 
-			if (morphismImpossibleCheck.eval(state)) {
-				stateStack.pop();
-				continue;
-			}
-
 			if (morphismFoundCheck.eval(state)) {
 				storeMorphism(state);
 				return true;
@@ -108,7 +98,7 @@ public class VF2Algorithm {
            	   searching for one. To this end we go through all (reachable)
                pairs (patternNode, targetNode) of candidates that might be
                added to the partial morphism. */
-			while (state.nextCandidate()) {
+			while (state.nextCandidate(multipleExternalMatches)) {
 				int p = state.getPatternCandidate();
 				int t = state.getTargetCandidate();
 				if (isFeasible(state, p, t)) {
@@ -143,9 +133,8 @@ public class VF2Algorithm {
      */
 	private boolean isFeasible(VF2State state, int p, int t) {
 
-		for(int i=0; i < feasibilityChecks.length; i++)  {
-			FeasibilityFunction f = feasibilityChecks[i];
-			if(!f.eval(state, p, t)) {
+		for(int i=0; i < feasibilityChecks.length; i++) {
+			if (!feasibilityChecks[i].eval(state, p, t)) {
 				return false;
 			}
 		}

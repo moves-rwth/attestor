@@ -55,9 +55,9 @@ public class ParseGrammarPhase extends AbstractPhase {
             logger.debug("Loading predefined grammar " + predefinedGrammar);
             String locationOfRenamingMap = settings.input().getRenamingLocation( predefinedGrammar );
             try{
-                HashMap<String,String> renamingMap = parseRenamingMap( locationOfRenamingMap );
+                settings.grammar().setRenamingMap(parseRenamingMap( locationOfRenamingMap ));
                 settings.grammar().loadGrammarFromURL(Attestor.class.getClassLoader()
-                    .getResource("predefinedGrammars/" + predefinedGrammar + ".json"), renamingMap);
+                    .getResource("predefinedGrammars/" + predefinedGrammar + ".json"));
                 }catch( FileNotFoundException e ){
                     logger.warn( "Skipping predefined grammar "
                             + predefinedGrammar + ".");

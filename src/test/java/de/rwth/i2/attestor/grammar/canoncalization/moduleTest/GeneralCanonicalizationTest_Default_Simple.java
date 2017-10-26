@@ -1,16 +1,11 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.junit.Assert.assertEquals;
-
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -25,6 +20,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class GeneralCanonicalizationTest_Default_Simple {
 	
@@ -93,10 +92,10 @@ public class GeneralCanonicalizationTest_Default_Simple {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		NonterminalEdgeBuilder builder =  hc.builder().addNodes(TYPE, RANK, nodes)
-				.addNonterminalEdge(lhs);
-		for( int i = 0; i < RANK; i++ ){
-			builder.addTentacle( nodes.get(i) );
-		}
+				.addNonterminalEdge(lhs)
+				.addTentacle(nodes.get(0))
+				.addTentacle(nodes.get(1))
+				.addTentacle(nodes.get(0));
 		hc =  builder.build().build();
 		return new DefaultProgramState( hc );
 	}

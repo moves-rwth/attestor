@@ -43,6 +43,10 @@ public class GrammarSettings {
      */
     private GrammarBuilder grammarBuilder = null;
 
+    /**
+     * Stores the renaming map, that is used for renaming of predefined grammars
+     */
+    HashMap<String,String> renamingMap;
 
     /**
      * Prevents creating objects of this class outside this package.
@@ -69,6 +73,22 @@ public class GrammarSettings {
      */
     public void setGrammar(Grammar grammar) {
         this.grammar = grammar;
+    }
+
+
+    /**
+     * Returns the renaming map read from the renaming file (for predefined grammars).
+     * Note that null is returned, if grammars were not yet read or no predefined grammars
+     * are used.
+     * @return the renaming map in case predefined grammars are used and parsed already
+     *      null otherwise
+     */
+    public HashMap<String, String> getRenamingMap() {
+        return renamingMap;
+    }
+
+    public void setRenamingMap(HashMap<String, String> renamingMap) {
+        this.renamingMap = renamingMap;
     }
 
     /**
@@ -130,7 +150,7 @@ public class GrammarSettings {
         }
     }
 
-    public void loadGrammarFromURL(URL resource, HashMap<String, String> rename) {
+    public void loadGrammarFromURL(URL resource) {
 
         if(grammar != null)  {
             logger.debug("Extending previously set grammar.");
@@ -146,8 +166,8 @@ public class GrammarSettings {
             String str = FileReader.read(is);
 
             // Modify grammar (replace all keys in rename by its values)
-            if(rename != null){
-                for(HashMap.Entry<String, String> renaming : rename.entrySet()){
+            if(getRenamingMap() != null){
+                for(HashMap.Entry<String, String> renaming : getRenamingMap().entrySet()){
                     logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
                     str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
                 }

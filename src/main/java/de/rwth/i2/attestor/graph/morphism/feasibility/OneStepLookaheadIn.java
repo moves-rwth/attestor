@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -35,9 +32,9 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
 	@Override
 	public boolean eval(VF2State state, int p, int t) {
 		
-		VF2GraphData pattern = state.getPattern();
+		VF2PatternGraphData pattern = state.getPattern();
 		Graph patternGraph = pattern.getGraph();
-		VF2GraphData target = state.getTarget();
+		VF2TargetGraphData target = state.getTarget();
 		Graph targetGraph = target.getGraph();
 
 		int patternSucc = computeLookahead(
@@ -85,12 +82,12 @@ public class OneStepLookaheadIn implements FeasibilityFunction {
      * @return The number of nodes in neighbors that have not been matched yet, but that are reachable via a single
      *         ingoing edge from the candidate node.
      */
-	private int computeLookahead(TIntArrayList neighbors, VF2GraphData data) {
+	private int computeLookahead(TIntArrayList neighbors, AbstractVF2GraphData data) {
 		int lookaheadIn = 0;
 		for(int i=0; i < neighbors.size(); i++) {
 			int next = neighbors.get(i);
 			
-			if(data.containsIngoing(next)) {
+			if(data.containsIngoingUnmatched(next)) {
 					++lookaheadIn;
 			}
 		}

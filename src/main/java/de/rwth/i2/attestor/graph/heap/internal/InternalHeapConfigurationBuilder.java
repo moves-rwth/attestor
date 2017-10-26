@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
 
 /**
  * All the messy details of a {@link HeapConfigurationBuilder} for {@link InternalHeapConfiguration}s. 
@@ -62,20 +61,18 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      	// Swap all deleted elements to the end and remove them from the
 		// graph to get a tight representation. 
 		// The obtained map stores all performed swaps
-		TIntIntMap swaps = heapConf.graph.pack();
+		int[] swaps = heapConf.graph.pack();
 		
 		// Update the mapping from private to public IDs such that swapped
 		// private IDs still refer to the same public ID as before.
 		heapConf.publicToPrivateIDs.transformValues(value -> {
 
-            if(swaps.containsKey(value)) {
-                return swaps.get(value);
+			if(swaps[value] != HeapConfiguration.INVALID_ELEMENT) {
+                return swaps[value];
             } else {
                 return value;
             }
         });
-
-		heapConf.publicToPrivateIDs.retainEntries( (key,value) -> heapConf.graph.containsNode(value));
 	}
 
 	@Override
@@ -136,9 +133,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder removeIsolatedNode(int node) {
 		
-		int privateId = getPrivateId(node);
+		int privateId = heapConf.getPrivateId(node);
 		
-		if(!isNode(privateId)) {
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
 		
@@ -157,31 +154,21 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * Removes an existing private ID from the underlying HeapConfiguration.
 	 * @param publicId The public ID of the removed element.
 	 * @param privateId The private ID of the removed element.
+	 * @return true iff the element with the given private ID was successfully removed
 	 */
-	private void removeElement(int publicId, int privateId) {
+	private boolean removeElement(int publicId, int privateId) {
 		
-		heapConf.graph.removeNodeAt(privateId);
 		heapConf.publicToPrivateIDs.remove(publicId);
+		return heapConf.graph.removeNodeAt(privateId);
 	}
-	
-	/**
-	 * Provides the private ID corresponding to a given public ID
-	 * @param publicId the public ID 
-	 * @return the private ID corresponding to publicId if it exists.
-	 */
-	private int getPrivateId(int publicId) {
-		
-		return heapConf.getPrivateId(publicId);
-	}
-
 	
 	@Override
 	public HeapConfigurationBuilder addSelector(int from, SelectorLabel sel, int to) {
 		
-		int pFrom = getPrivateId(from);
-		int pTo = getPrivateId(to);
+		int pFrom = heapConf.getPrivateId(from);
+		int pTo = heapConf.getPrivateId(to);
 		
-		if(!isNode(pFrom)) {
+		if(!heapConf.isNode(pFrom)) {
 			throw new IllegalArgumentException("ID 'from' does not refer to a valid node.");
 		}
 		
@@ -189,7 +176,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new NullPointerException();
 		}
 		
-		if(!isNode(pTo)) {
+		if(!heapConf.isNode(pTo)) {
 			throw new IllegalArgumentException("ID 'to' does not refer to a valid node.");
 		}
 		
@@ -203,21 +190,12 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		 
 	}
 	
-	/**
-	 * @param privateId A privateId belonging to the underlyin InternalHeapConfiguration.
-	 * @return True if and only if the provided private ID corresponds to a node.
-	 */
-	private boolean isNode(int privateId) {
-		
-		return heapConf.isNode(privateId);
-	}
-
 	@Override
 	public HeapConfigurationBuilder removeSelector(int node, SelectorLabel sel) {
 		
-		int privateId = getPrivateId(node);
+		int privateId = heapConf.getPrivateId(node);
 		
-		if(!isNode(privateId)) {
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node: " + node);
 		}
 		
@@ -233,9 +211,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder replaceSelector(int node, SelectorLabel oldSel, SelectorLabel newSel) {
 		
-		int privateId = getPrivateId(node);
+		int privateId = heapConf.getPrivateId(node);
 
-		if(!isNode(privateId)) {
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
 
@@ -251,9 +229,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder setExternal(int node) {
 		
-		int privateId = getPrivateId(node);
+		int privateId = heapConf.getPrivateId(node);
 		
-		if(!isNode(privateId)) {
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node: " + node);
 		}
 		
@@ -269,9 +247,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder unsetExternal(int node) {
 		
-		int privateId = getPrivateId(node);
+		int privateId = heapConf.getPrivateId(node);
 		
-		if(!isNode(privateId)) {
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID is not a node: " + node);
 		}
 		
@@ -287,13 +265,13 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder addVariableEdge(String name, int target) {
 		
-		int tId = getPrivateId(target);
+		int tId = heapConf.getPrivateId(target);
 		
 		if(name == null) {
 			throw new NullPointerException();
 		}
 		
-		if(!isNode(tId)) {
+		if(!heapConf.isNode(tId)) {
 			throw new IllegalArgumentException("Provided target does not correspond to a node.");
 		}
 		
@@ -302,7 +280,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 		
 		int publicId = addPrivatePublicIdPair();
-		int privateId = getPrivateId(publicId);
+		int privateId = heapConf.getPrivateId(publicId);
 		
 		// variable edges are attached to exactly one node and have no 
 		// incoming edges in the underlying graph		
@@ -316,13 +294,13 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder removeVariableEdge(int varEdge) {
 		
-		int privateId = getPrivateId(varEdge);
+		int privateId = heapConf.getPrivateId(varEdge);
 		
 		if(!isVariable(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a variable edge.");
 		}
 		
-		if(heapConf.graph.removeNodeAt(privateId)) {
+		if(removeElement(varEdge, privateId)) {
 			--heapConf.countVariableEdges;
 		}
 		
@@ -352,12 +330,12 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 		
 		int publicId = addPrivatePublicIdPair();
-		int privateId = getPrivateId(publicId);
+		int privateId = heapConf.getPrivateId(publicId);
 		
 		heapConf.graph.addNode(label, attachedNodes.size(), 0);
 		for(int i=0; i < attachedNodes.size(); i++) {
-			int to = getPrivateId( attachedNodes.get(i) );
-			if(!isNode(to)) {
+			int to = heapConf.getPrivateId( attachedNodes.get(i) );
+			if(!heapConf.isNode(to)) {
 				throw new IllegalArgumentException("ID of one attached node does not actually correspond to a node.");
 			}
 			heapConf.graph.addEdge(privateId, i, to);
@@ -375,40 +353,29 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder removeNonterminalEdge(int ntEdge) {
 		
-		int privateId = getPrivateId(ntEdge);
+		int privateId = heapConf.getPrivateId(ntEdge);
 		
-		if(!isNonterminalEdge(privateId)) {
+		if(!heapConf.isNonterminalEdge(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a nonterminal edge.");
 		}
 		
-		if(heapConf.graph.removeNodeAt(privateId)) {
+		if(removeElement(ntEdge, privateId)) {
 			--heapConf.countNonterminalEdges;
 		}
 		
 		return this;
 	}
 
-	/**
-	 * Checks whether a provided private ID belonging to the underlying InternalHeapConfiguration is
-	 * a nonterminal hyperedge.
-	 * @param privateId A private ID that belongs to an element of the underlying InternalHeapConfiguration.
-	 * @return True if and only if private ID corresponds to a nonterminal hyperedge.
-	 */
-	private boolean isNonterminalEdge(int privateId) {
-		
-		return heapConf.isNonterminalEdge(privateId);
-	}
-
 	@Override
 	public HeapConfigurationBuilder replaceNonterminal(int ntEdge, Nonterminal newNt) {
 		
-		int privateId = getPrivateId(ntEdge);
+		int privateId = heapConf.getPrivateId(ntEdge);
 		
 		if(newNt == null) {
 			throw new NullPointerException();
 		}
 		
-		if(!isNonterminalEdge(privateId)) {
+		if(!heapConf.isNonterminalEdge(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a nonterminal edge.");
 		}
 		
@@ -435,9 +402,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 
 		InternalHeapConfiguration repl = (InternalHeapConfiguration) replacement;
-		int ntPrivateId = getPrivateId(ntEdge);
+		int ntPrivateId = heapConf.getPrivateId(ntEdge);
 		
-		if(!isNonterminalEdge(ntPrivateId)) {
+		if(!heapConf.isNonterminalEdge(ntPrivateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a nonterminal edge.");
 		}
 		
@@ -596,8 +563,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new NullPointerException();
 		}
 
-		int privateId = getPrivateId(node);
-		if(!isNode(privateId)) {
+		int privateId = heapConf.getPrivateId(node);
+		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
 
@@ -646,10 +613,14 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 				} else if(pattern.isNonterminalEdge(i)) {
 					--heapConf.countNonterminalEdges;
 				}
-				
-				heapConf.graph.removeNodeAt(match);				
+
+				heapConf.graph.removeNodeAt(match);
 			}
 		}
+
+		heapConf.publicToPrivateIDs.retainEntries(
+				(key,value) -> heapConf.graph.containsNode(value)
+		);
 	}
 
     /**

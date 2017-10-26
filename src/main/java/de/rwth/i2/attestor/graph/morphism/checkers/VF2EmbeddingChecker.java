@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
 import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
-import de.rwth.i2.attestor.graph.morphism.terminationFunctions.NoMorphismPossible;
 
 /**
  * 
@@ -21,7 +20,6 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 	 */
 	private static final VF2Algorithm matchingAlgorithm= VF2Algorithm.builder()
 					.setMatchingCondition( new MorphismFound() )
-					.setMatchingImpossibleCondition( new NoMorphismPossible() )
 					.addFeasibilityCondition( new CompatibleNodeTypes() )
 					.addFeasibilityCondition( new CompatiblePredecessors(false) )
 					.addFeasibilityCondition( new CompatibleSuccessors(false) )
@@ -30,6 +28,7 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 					.addFeasibilityCondition( new TwoStepLookahead(false) )
 					.addFeasibilityCondition( new EmbeddingExternalNodes() )
 					.addFeasibilityCondition( new EmbeddingEdgeLabels() )
+					.allowMultipleExternalMatches()
 					.build();
 
 	

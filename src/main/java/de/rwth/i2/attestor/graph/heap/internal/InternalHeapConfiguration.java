@@ -140,7 +140,8 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		countNodes = 0;
 		countVariableEdges = 0;
 		countNonterminalEdges = 0;
-		publicToPrivateIDs = new TIntIntHashMap();
+		publicToPrivateIDs = new TIntIntHashMap(200, 0.5f,
+				HeapConfiguration.INVALID_ELEMENT, HeapConfiguration.INVALID_ELEMENT );
 	}
 
 	@Override
@@ -161,11 +162,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		builder = null;
 		graph = new LabeledDigraph(hc.graph);
 
-		publicToPrivateIDs = new TIntIntHashMap( hc.publicToPrivateIDs.size() );
-		for(int key : hc.publicToPrivateIDs.keys()) {
-
-			publicToPrivateIDs.put(key, hc.publicToPrivateIDs.get(key));
-		}
+		publicToPrivateIDs = new TIntIntHashMap( hc.publicToPrivateIDs );
 	}
 
 	@Override
@@ -330,8 +327,9 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 */
     int getPrivateId(int publicId) {
 
-		if(publicToPrivateIDs.containsKey(publicId)) {
-			return publicToPrivateIDs.get(publicId);
+    	int res = publicToPrivateIDs.get(publicId);
+    	if(res != HeapConfiguration.INVALID_ELEMENT) {
+    		return res;
 		}
 
 		throw new IllegalArgumentException("HeapConfiguration does not contain an element with ID: " + publicId );

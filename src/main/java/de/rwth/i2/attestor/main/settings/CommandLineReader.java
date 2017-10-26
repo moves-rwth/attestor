@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import org.apache.commons.cli.*;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
+
+import org.apache.commons.cli.*;
+import org.apache.logging.log4j.*;
+
+import de.rwth.i2.attestor.LTLFormula;
 
 /**
  * Parses the provided command line options in order to populate
@@ -327,7 +326,7 @@ public class CommandLineReader {
      */
 	private boolean commandLineIsValid(CommandLine cmd){
 		
-			return  cmd.hasOption( "sf" );
+			return  cmd.hasOption( "sf" ) && cmd.hasOption( "rp" );
 		
 	}
 
