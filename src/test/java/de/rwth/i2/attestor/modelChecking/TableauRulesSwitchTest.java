@@ -41,7 +41,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test
 	public void caseAAtomicpropTerm(){
 		
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
@@ -61,7 +61,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 		state.addAP("{ sll }");
 		this.addStateIfAbsent(state);
 
-		currentVertex = new Assertion(state.getStateSpaceId());
+		currentVertex = new Assertion(state.getStateSpaceId(), currentVertex);
 
 		ADllAtomicprop ap2 = new ADllAtomicprop(new TLcurlyparen(), new TApdll(), new TRcurlyparen());
 		AAtomicpropTerm term2 = new AAtomicpropTerm(ap2);
@@ -85,7 +85,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	
 	@Test
 	public void caseALtlTerm(){
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term = new AAtomicpropTerm(ap);
@@ -110,7 +110,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
 
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 		
 		TFalse f = new TFalse();
 		AFalseTerm term = new AFalseTerm(f);
@@ -143,7 +143,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test 
 	public void caseATrueTerm(){
 
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 			
 		TTrue t = new TTrue();
 		ATrueTerm term = new ATrueTerm(t);
@@ -171,7 +171,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 		state.addAP("{ sll }");
 		this.addStateIfAbsent(state);
 
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		ATermLtlform apTerm = new ATermLtlform(new AAtomicpropTerm(ap));
@@ -198,7 +198,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test
 	public void AAndStateform(){
 
-		Assertion currentVertex = new Assertion(state.getStateSpaceId());
+		Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
 		AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
@@ -234,7 +234,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test
 	public void caseAUntilLtlform(){
 		
-        Assertion currentVertex = new Assertion(state.getStateSpaceId());
+        Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);
@@ -285,7 +285,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test
 	public void caseAReleaseLtlform(){
 		
-        Assertion currentVertex = new Assertion(state.getStateSpaceId());
+        Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
 
 		ASllAtomicprop ap1 = new ASllAtomicprop(new TLcurlyparen(), new TApsll(), new TRcurlyparen());
         AAtomicpropTerm term1 = new AAtomicpropTerm(ap1);

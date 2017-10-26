@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.modelChecking.Counterexample;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public class ModelCheckingPhase extends AbstractPhase {
 
-    private Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
+    private Map<LTLFormula, Counterexample> formulaResults = new HashMap<>();
 
     @Override
     public String getName() {
@@ -39,10 +40,10 @@ public class ModelCheckingPhase extends AbstractPhase {
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
-                formulaResults.put(formula, true);
+                formulaResults.put(formula, new Counterexample());
                 logger.info("satisfied.");
             } else {
-                formulaResults.put(formula, false);
+                formulaResults.put(formula, proofStructure.getCounterexample());
                 logger.warn("violated.");
             }
         }
@@ -59,9 +60,15 @@ public class ModelCheckingPhase extends AbstractPhase {
         boolean allSatisfied = true;
         logSum("Model checking results:");
         logSum("+-----------+-------------------------------------------------------+");
-        for(Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
-            logSum(String.format("| %-11s | %s", result.getValue(), result.getKey().getFormulaString()));
-            allSatisfied &= result.getValue();
+        for(Map.Entry<LTLFormula, Counterexample> result : formulaResults.entrySet()) {
+            boolean isSat = result.getValue().isEmpty();
+            if(isSat) {
+                logSum(String.format("| %-9s | %s", "satisfied", result.getKey().getFormulaString()));
+            } else {
+                logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
+                logSum(String.format(String.format("| %-9s | %s", "witness", result.getValue())));
+            }
+            allSatisfied &= isSat;
         }
         logSum("+-----------+-------------------------------------------------------+");
 

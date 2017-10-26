@@ -30,6 +30,8 @@ public interface StateSpace {
     void addControlFlowTransition(ProgramState from, ProgramState to);
     void addArtificialInfPathsTransition(ProgramState cur);
 
+    ProgramState getState(int id);
+
     int getMaximalStateSize();
 
     boolean satisfiesAP(int stateId, String expectedAP);

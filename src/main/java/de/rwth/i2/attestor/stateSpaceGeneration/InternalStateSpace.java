@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import gnu.trove.TIntCollection;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -9,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.function.IntPredicate;
 
 public class InternalStateSpace implements StateSpace {
 
@@ -17,6 +18,9 @@ public class InternalStateSpace implements StateSpace {
 
     private Map<ProgramState, ProgramState> potentialMergeStates;
     private List<ProgramState> otherStates; // states that are never checked for isomorphism
+
+    // will only initialized once state space generation is done
+    private TIntObjectMap<ProgramState> stateIdLookupTable = null;
 
     private TIntSet initialStateIds;
     private TIntSet finalStateIds;
@@ -45,10 +49,29 @@ public class InternalStateSpace implements StateSpace {
 
     public Set<ProgramState> getInitialStates() {
 
-        return filterStates(
-                id -> initialStateIds.contains(id),
-                initialStateIds.size()
-        );
+        return getStatesOf(initialStateIds);
+    }
+
+    private Set<ProgramState> getStatesOf(TIntCollection collection) {
+
+        initLookupTable();
+        Set<ProgramState> result = new HashSet<>(collection.size());
+        TIntIterator iter = collection.iterator();
+        while(iter.hasNext()) {
+            int id = iter.next();
+            result.add(stateIdLookupTable.get(id));
+        }
+
+        return result;
+    }
+
+    private void initLookupTable() {
+        if(stateIdLookupTable == null) {
+            stateIdLookupTable = new TIntObjectHashMap<>(getStates().size());
+            for(ProgramState state : getStates()) {
+                stateIdLookupTable.put(state.getStateSpaceId(), state);
+            }
+        }
     }
 
     public TIntSet getInitialStateIds() {
@@ -58,43 +81,11 @@ public class InternalStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getFinalStates() {
 
-        return filterStates(
-                id -> finalStateIds.contains(id),
-                finalStateIds.size()
-        );
+        return getStatesOf(finalStateIds);
     }
 
     public TIntSet getFinalStateIds() {
         return finalStateIds;
-    }
-
-    private Set<ProgramState> filterStates(IntPredicate filter, int size) {
-
-        Set<ProgramState> result = new HashSet<>(size);
-
-        if(size == 0) {
-            return result;
-        }
-
-        for(ProgramState s : potentialMergeStates.keySet()) {
-            if(filter.test(s.getStateSpaceId())) {
-                result.add(s);
-            }
-            if(result.size() == size) {
-                return result;
-            }
-        }
-        for(ProgramState s : otherStates) {
-            if(filter.test(s.getStateSpaceId())) {
-                result.add(s);
-            }
-            if(result.size() == size) {
-                return result;
-            }
-        }
-
-        logger.warn("Not all successor state IDs could be found");
-        return result;
     }
 
     @Override
@@ -108,10 +99,7 @@ public class InternalStateSpace implements StateSpace {
             return Collections.emptySet();
         }
 
-        return filterStates(
-            successors::contains,
-            successors.size()
-        );
+        return getStatesOf(successors);
     }
 
     @Override
@@ -124,10 +112,7 @@ public class InternalStateSpace implements StateSpace {
             return Collections.emptySet();
         }
 
-        return filterStates(
-                successors::contains,
-                successors.size()
-        );
+        return getStatesOf(successors);
     }
 
     @Override
@@ -141,10 +126,7 @@ public class InternalStateSpace implements StateSpace {
             return Collections.emptySet();
         }
 
-        return filterStates(
-                successors::contains,
-                successors.size()
-        );
+        return getStatesOf(successors);
     }
 
     @Override
@@ -224,6 +206,13 @@ public class InternalStateSpace implements StateSpace {
     public void addArtificialInfPathsTransition(ProgramState cur){
         addTransition(cur, cur, artificialInfPathsSuccessors);
 
+    }
+
+    @Override
+    public ProgramState getState(int id) {
+
+        initLookupTable();
+        return stateIdLookupTable.get(id);
     }
 
     private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {
