@@ -321,6 +321,12 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	@Override
 	public HeapConfigurationBuilder addNonterminalEdge(Nonterminal label, TIntArrayList attachedNodes) {
 		
+		addNonterminalEdgeAndReturnId(label, attachedNodes);
+		return this;
+	}
+	
+	@Override
+	public int addNonterminalEdgeAndReturnId(Nonterminal label, TIntArrayList attachedNodes) {
 		if(label == null || attachedNodes == null) {
 			throw new NullPointerException();
 		}
@@ -342,7 +348,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 		++heapConf.countNonterminalEdges;
 		
-		return this;
+		return publicId;
 	}
 	
 	@Override
@@ -648,7 +654,6 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 		++heapConf.countNonterminalEdges;
 	}
-
 
 
 }

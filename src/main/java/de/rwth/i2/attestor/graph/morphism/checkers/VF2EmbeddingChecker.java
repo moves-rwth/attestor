@@ -34,7 +34,7 @@ public class VF2EmbeddingChecker extends AbstractVF2MorphismChecker {
 	
 	public VF2EmbeddingChecker() {
 		
-		super(matchingAlgorithm);
+		super( matchingAlgorithm );
 	}
 	
 	

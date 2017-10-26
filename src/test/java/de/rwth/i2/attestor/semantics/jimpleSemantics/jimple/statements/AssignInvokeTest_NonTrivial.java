@@ -4,9 +4,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -44,7 +42,7 @@ public class AssignInvokeTest_NonTrivial {
 		Type type = Settings.getInstance().factory().getType( "node" );
 		Local var = new Local( type, "x" );
 
-		AbstractMethod method= new AbstractMethod( "method", StateSpaceFactoryHelper.get());
+		AbstractMethod method= new SimpleAbstractMethod( "method", StateSpaceFactoryHelper.get());
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>(), false));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );
