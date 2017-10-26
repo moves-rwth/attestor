@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.heap.matching;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.morphism.checkers.VF2StrongerPreconditionChecker;
+import de.rwth.i2.attestor.graph.morphism.checkers.VF2PreconditionChecker;
 
 public class PreconditionChecker extends AbstractMatchingChecker  {
 
@@ -11,6 +11,6 @@ public class PreconditionChecker extends AbstractMatchingChecker  {
 	 * @param target A HeapConfiguration that should be checked whether it is isomorphic to pattern.
 	 */
 	public PreconditionChecker(HeapConfiguration pattern, HeapConfiguration target) {
-		super(pattern, target, new VF2StrongerPreconditionChecker());
+		super(pattern, target, new VF2PreconditionChecker());
 	}
 }
