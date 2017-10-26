@@ -31,6 +31,7 @@ public class CommandLineReader {
      */
 	private CommandLine cmd;
 
+	private String parsingError;
 
     /**
      * Initializes the specification of the command line interface.
@@ -51,7 +52,7 @@ public class CommandLineReader {
 				.longOpt("root-path")
 				.hasArg()
 				.argName("path")
-				.desc( "(optional) defines a root path for the input. If specified, all other "
+				.desc( "defines a root path for the input. If specified, all other "
 						+ "paths are evaluated relative to this path." )
 				.build()
 				);
@@ -174,20 +175,24 @@ public class CommandLineReader {
 			cmd = parser.parse( cliOptions, args);
 			
 			if( ! commandLineIsValid(cmd) ){
-				HelpFormatter helpFormatter = new HelpFormatter();
-				helpFormatter.printHelp( "java Attestor", cliOptions );
 				return false;
 			}
 
 		} catch(ParseException | NumberFormatException e) {
-
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp( "Attestor", cliOptions );
 			return false;
-
 		}
 
 		return true;
+	}
+
+	public String getParsingError() {
+		return parsingError;
+	}
+
+	public void printHelp() {
+
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp( "java Attestor", cliOptions );
 	}
 
     /**
@@ -306,7 +311,7 @@ public class CommandLineReader {
 
 			String formulaString = cmd.getOptionValue("mc");
 			for(String formula : formulaString.split(",")){
-				LTLFormula ltlFormula = null;
+				LTLFormula ltlFormula;
 				try {
 					ltlFormula = new LTLFormula(formula);
 					mcSettings.addFormula(ltlFormula);
@@ -326,9 +331,19 @@ public class CommandLineReader {
      * @return true if and only if a settings file has been provided.
      */
 	private boolean commandLineIsValid(CommandLine cmd){
-		
-			return  cmd.hasOption( "sf" );
-		
+
+		if(!cmd.hasOption("sf")) {
+			parsingError = "The mandatory option -sf <path to settings file> is missing.";
+			return false;
+		}
+
+		if(!cmd.hasOption("rp")) {
+			parsingError = "The mandatory option -rp <root path> is missing. " +
+					"You might want to try '-rp .'";
+			return false;
+		}
+
+		return true;
 	}
 
 }
