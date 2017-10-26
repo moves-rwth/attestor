@@ -117,6 +117,15 @@ public interface HeapConfigurationBuilder {
 	HeapConfigurationBuilder addNonterminalEdge(Nonterminal label, TIntArrayList attachedNodes);
 	
 	/**
+	 * Adds a new nonterminal edge and returns the respective id
+	 * @param label The label of the new edge.
+	 * @param attachedNodes The list of nodes attached to the new edge. 
+	 *                      The size of this list must coincide with the rank of label.
+	 * @return the resulting id of the new nonterminal edge
+	 */
+	int addNonterminalEdgeAndReturnId(Nonterminal label, TIntArrayList attachedNodes);
+	
+	/**
 	 * gets a nonterminalEdgeBuilder that allows to specify the tentacles of this nonterminal
 	 * and add the resulting edge to the graph
 	 * @param nt the nonterminal
