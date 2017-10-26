@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
 
-public class AbstractMethodIPATest_2 {
+public class AbstractMethodIPATest_testGetResult {
 
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
 

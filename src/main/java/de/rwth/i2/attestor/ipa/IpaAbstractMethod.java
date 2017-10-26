@@ -70,8 +70,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 													   HeapConfiguration reachableFragment,
 													   HeapConfiguration remainingFragment,
 													   int placeholderPosition )
-	throws IllegalArgumentException{
-		
+													   throws IllegalArgumentException {
+		 
 		int[] reordering = precondition.getReordering( reachableFragment );
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
 		TIntArrayList newTentacles = new TIntArrayList();
