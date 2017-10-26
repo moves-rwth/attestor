@@ -31,10 +31,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ){
-		Pair<HeapConfiguration, HeapConfiguration> splittedConfig = prepareInput( currentConfig );
+		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
 		HeapConfiguration reachableFragment = splittedConfig.first();
-		HeapConfiguration remainingFragment = splittedConfig.second(); 
-		int placeholderPos = 0;//TODO (pos of placeholder?)
+		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
+		int placeholderPos = splittedConfig.second().second();
 		//TODO compare with existing preconditions (consider different arrangement of external nodes)
 		List<HeapConfiguration> contracts = null; //TODO
 		//TODO rearrange tentacles in remaining fragment
@@ -47,7 +47,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 	 * @param methodName
 	 * @return <reachableFragment,remainingFragment>
 	 */
-	protected Pair<HeapConfiguration, HeapConfiguration> prepareInput( HeapConfiguration input ){
+	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
 		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString() );
 		return helper.prepareInput(input);
 	}

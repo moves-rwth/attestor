@@ -140,9 +140,9 @@ public class ReachableFragmentTest {
 
 	private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
 			HeapConfiguration expectedReplace) {
-		Pair<HeapConfiguration, HeapConfiguration> result = ipa.prepareInput( input );
+		Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> result = ipa.prepareInput( input );
 		assertEquals("reachable Fragment", expectedFragment, result.first());
-		assertEquals("replaced Fragment", expectedReplace, result.second());
+		assertEquals("replaced Fragment", expectedReplace, result.second().first());
 	}
 	
 	private HeapConfiguration reachableNodeThroughNonterminal() {

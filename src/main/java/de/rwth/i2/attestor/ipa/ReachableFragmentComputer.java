@@ -3,7 +3,8 @@ package de.rwth.i2.attestor.ipa;
 import java.util.*;
 
 import de.rwth.i2.attestor.graph.*;
-import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.Pair;
@@ -31,10 +32,10 @@ public class ReachableFragmentComputer {
 	 * @param input
 	 * @return <reachableFragment,remainingFragment>
 	 */
-	protected Pair<HeapConfiguration, HeapConfiguration> prepareInput( HeapConfiguration input ){
+	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
 		
 		HeapConfigurationBuilder reachableFragmentBuilder = new InternalHeapConfiguration().builder();
-		HeapConfigurationBuilder replaceBuilder = input.clone().builder();
+		HeapConfigurationBuilder remainingFragmentBuilder = input.clone().builder();
 		TIntArrayList externals = new TIntArrayList();
 		
 		queue = new ArrayDeque<>();
@@ -42,23 +43,28 @@ public class ReachableFragmentComputer {
 		visitedNonterminalEdges = new HashSet<>();
 		this.input = input;
 		
-		findParameterNodes(input, reachableFragmentBuilder, replaceBuilder);
-		computeReachableFragment(reachableFragmentBuilder, replaceBuilder, externals);
-		addIpaNonterminal(replaceBuilder, externals);
+		findParameterNodes(input, reachableFragmentBuilder, remainingFragmentBuilder);
+		computeReachableFragment(reachableFragmentBuilder, remainingFragmentBuilder, externals);
+		int idOfNonterminal = addIpaNonterminal(remainingFragmentBuilder, externals);
 		
-		return new Pair<HeapConfiguration, HeapConfiguration>(reachableFragmentBuilder.build(), replaceBuilder.build() );
+		HeapConfiguration reachableFragment = reachableFragmentBuilder.build();
+		Pair<HeapConfiguration, Integer> remainingFragment = new Pair<>(remainingFragmentBuilder.build(), idOfNonterminal);
+		return new Pair<>(reachableFragment, remainingFragment );
 	}
 
-	private void addIpaNonterminal(HeapConfigurationBuilder replaceBuilder, TIntArrayList externals) {
+	private int addIpaNonterminal(HeapConfigurationBuilder replaceBuilder, TIntArrayList externals) {
 		final int rank = externals.size();
 		final boolean[] isReductionTentacle = new boolean[rank];
 		Nonterminal nt = BasicNonterminal.getNonterminal(displayName + rank, rank, isReductionTentacle);
-		
-		NonterminalEdgeBuilder edgeBuilder = replaceBuilder.addNonterminalEdge(nt);
+				
+		TIntArrayList tentacles = new TIntArrayList();
 		for( int i = 0; i < externals.size(); i++ ){
-			edgeBuilder.addTentacle(externals.get(i) );
+			tentacles.add(externals.get(i) );
 		}
-		edgeBuilder.build();
+		
+		int idOfNonterminal = replaceBuilder.addNonterminalEdgeAndReturnId(nt, tentacles);
+		
+		return idOfNonterminal;
 	}
 
 
