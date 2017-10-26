@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.LTLResultTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.modelChecking.Counterexample;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
@@ -12,9 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ModelCheckingPhase extends AbstractPhase {
+public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransformer {
 
     private Map<LTLFormula, Counterexample> formulaResults = new HashMap<>();
+    private boolean allSatisfied = true;
 
     @Override
     public String getName() {
@@ -43,6 +45,7 @@ public class ModelCheckingPhase extends AbstractPhase {
                 formulaResults.put(formula, new Counterexample());
                 logger.info("satisfied.");
             } else {
+                allSatisfied = false;
                 formulaResults.put(formula, proofStructure.getCounterexample());
                 logger.warn("violated.");
             }
@@ -56,7 +59,6 @@ public class ModelCheckingPhase extends AbstractPhase {
             return;
         }
 
-        boolean allSatisfied = true;
         logSum("Model checking results:");
         logSum("+-----------+-------------------------------------------------------+");
         for(Map.Entry<LTLFormula, Counterexample> result : formulaResults.entrySet()) {
@@ -67,7 +69,6 @@ public class ModelCheckingPhase extends AbstractPhase {
                 logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
                 logSum(String.format(String.format("| %-9s | %s", "witness", result.getValue())));
             }
-            allSatisfied &= isSat;
         }
         logSum("+-----------+-------------------------------------------------------+");
 
@@ -83,4 +84,18 @@ public class ModelCheckingPhase extends AbstractPhase {
 
         return true;
     }
+
+    @Override
+    public Map<LTLFormula, Counterexample> getLTLResults() {
+
+        return formulaResults;
+    }
+
+    @Override
+    public boolean hasAllLTLSatisfied() {
+
+        return allSatisfied;
+    }
+
+
 }
