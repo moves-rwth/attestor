@@ -20,6 +20,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public IpaAbstractMethod(String displayName, StateSpaceFactory factory) {
 		super(displayName, factory);
 	}
+	
+	public void addContracts( IpaPrecondition precondition, List<HeapConfiguration> postconditions ){
+		if( ! contracts.hasPrecondition(precondition) ){
+			contracts.addPrecondition(precondition);
+		}
+		List<HeapConfiguration> currentPostconditions = contracts.getPostConditions(precondition);
+		currentPostconditions.addAll( postconditions );
+	}
 
 	@Override
 	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) {

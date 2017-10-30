@@ -16,7 +16,7 @@ import de.rwth.i2.attestor.ipa.IpaPrecondition;
  */
 public class IpaContractCollection {
 
-	Map<Integer,Map<IpaPrecondition,List<HeapConfiguration>>> map;
+	Map<Integer,Map<IpaPrecondition,List<HeapConfiguration>>> map = new HashMap<>();
 	
 	public Entry<IpaPrecondition,List<HeapConfiguration>> getContract( HeapConfiguration remainingFragment ){
 		
@@ -35,6 +35,9 @@ public class IpaContractCollection {
 	
 	public List<HeapConfiguration> getPostConditions( IpaPrecondition precondition ){
 		int hashCode = precondition.hashCode();
+		if( ! map.containsKey( hashCode ) ){
+			return null;
+		}
 		return map.get(hashCode).get(precondition);
 	}
 	
@@ -45,5 +48,14 @@ public class IpaContractCollection {
 		}
 		
 		map.get( hashCode ).put( precondition, new ArrayList<>() );
+	}
+	
+	public boolean hasPrecondition( IpaPrecondition precondition ){
+		int hashCode = precondition.hashCode();
+		if( ! map.containsKey( hashCode ) ){
+			return false;
+		}
+		
+		return map.get( hashCode ).containsKey(precondition);
 	}
 }
