@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -136,13 +139,29 @@ public class ReachableFragmentTest {
 		
 		performTest( input, expectedFragment, expectedReplace );
 	}
+	
+	@Test
+	public void testReachableConstantWithoutVariable() {
+		HeapConfiguration input = reachable_nullTerminated_List();
+		HeapConfiguration expectedFragment = reachable_nullTerminated_List_nullExternal();
+		HeapConfiguration expectedReplace = attachedToNull();
+		
+		performTest( input, expectedFragment, expectedReplace );
+	}
+
+
 
 
 	private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
 			HeapConfiguration expectedReplace) {
 		Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> result = ipa.prepareInput( input );
-		assertEquals("reachable Fragment", expectedFragment, result.first());
-		assertEquals("replaced Fragment", expectedReplace, result.second().first());
+		IpaPrecondition toMatch = new IpaPrecondition(expectedFragment);
+		
+		
+		assertEquals( toMatch, new IpaPrecondition(result.first()) );
+		HeapConfiguration remainingFragmentWithReorderedTentacles = ipa.adaptExternalOrdering(toMatch, 
+											result.first(), result.second().first(), result.second().second());
+		assertEquals("replaced Fragment", expectedReplace, remainingFragmentWithReorderedTentacles);
 	}
 	
 	private HeapConfiguration reachableNodeThroughNonterminal() {
@@ -158,7 +177,7 @@ public class ReachableFragmentTest {
 	private HeapConfiguration reachableNodeThroughNonterminalHelper(TIntArrayList nodes) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("someType");
+		Type type = getSomeType();
 		final int rank = 2;
 		final boolean[] isReductionTentacle = new boolean[rank];
 		Nonterminal nt = BasicNonterminal.getNonterminal("AbstractMethodIpaTest", rank, isReductionTentacle);
@@ -342,7 +361,7 @@ public class ReachableFragmentTest {
 	private HeapConfiguration twoNodesAttachedHelper( TIntArrayList nodes) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("someType");
+		Type type = getSomeType();
 		final int rank = 2;
 		final boolean[] isReductionTentacle = new boolean[rank];
 		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
@@ -361,7 +380,7 @@ public class ReachableFragmentTest {
 	private HeapConfiguration singleNodeHeap(String variableName) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("someType");
+		Type type = getSomeType();
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 1, nodes)
@@ -373,7 +392,7 @@ public class ReachableFragmentTest {
 	private HeapConfiguration singleNodeExternal(String string) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("someType");
+		Type type = getSomeType();
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 1, nodes)
@@ -382,7 +401,64 @@ public class ReachableFragmentTest {
 				.build();
 	}
 
+	private HeapConfiguration attachedToNull() {
+		HeapConfiguration hc = new InternalHeapConfiguration();
 
+		Type nullType = getNullType();
+		final int rank = 1;
+		final boolean[] isReductionTentacle = new boolean[rank];
+		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+		
+		TIntArrayList nodes = new TIntArrayList();
+		return hc.builder()
+				.addNodes(nullType, 1, nodes)
+				.addNonterminalEdge(nt)
+					.addTentacle( nodes.get(0))
+					.build()
+				.build();
+	}
+
+	private HeapConfiguration reachable_nullTerminated_List_nullExternal() {
+		TIntArrayList nodes = new TIntArrayList();
+		return nullTerminatedList(nodes).builder()
+				.setExternal( nodes.get(0) )
+				.setExternal( nodes.get(1) )
+				.build();
+	}
+
+	private HeapConfiguration reachable_nullTerminated_List() {
+		TIntArrayList nodes = new TIntArrayList();
+		return nullTerminatedList( nodes );
+	}
+	
+	/**
+	 * null node is nodes.get(0)
+	 * 
+	 * @param nodes Node buffer
+	 * @return \@parameter0:-(.)-next->(NULL)-null
+	 */
+	private HeapConfiguration nullTerminatedList( TIntArrayList nodes ) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+
+		Type type = getSomeType();
+		Type nullType = getNullType();
+		
+		return hc.builder()
+				.addNodes(nullType, 1, nodes)
+				.addNodes(type, 1, nodes)
+				.addVariableEdge("@parameter0:", nodes.get(1))
+				.addVariableEdge("null", nodes.get(0))
+				.addSelector(nodes.get(1), nextLabel, nodes.get(0))
+				.build();
+	}
+
+	private Type getSomeType() {
+		return Settings.getInstance().factory().getType("someType");
+	}
+
+	private Type getNullType() {
+		return Settings.getInstance().factory().getType("NULL");
+	}
 
 
 }

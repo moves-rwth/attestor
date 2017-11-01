@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
@@ -93,7 +94,7 @@ public class ReachableFragmentComputer {
 		for( int i = 0; i < variables.size(); i++ ){
 			final int variableEdge = variables.get(i);
 			String variableName = input.nameOf( variableEdge );
-			if( variableName.startsWith("@param") || variableName.equals("@this") ){
+			if( isParameter(variableName) ){
 				replaceBuilder.removeVariableEdge(variableEdge );
 
 				int targetedNode = input.targetOf( variableEdge );
@@ -104,8 +105,20 @@ public class ReachableFragmentComputer {
 				}
 
 				reachableFragmentBuilder.addVariableEdge(variableName, idMapping.get(targetedNode));
+			}else if( Constants.isConstant(variableName) ) {
+				int targetedNode = input.targetOf( variableEdge );
+				if( ! idMapping.containsKey(targetedNode ) ){
+					addNodeToReachableFragment( targetedNode, reachableFragmentBuilder, input );
+					
+				}
+				reachableFragmentBuilder.addVariableEdge(variableName, idMapping.get(targetedNode) );
+				replaceBuilder.removeVariableEdge(variableEdge);
 			}
 		}
+	}
+
+	private boolean isParameter(String variableName) {
+		return variableName.startsWith("@param") || variableName.equals("@this");
 	}
 
 	private void addNodeToReachableFragment(int targetedNode, HeapConfigurationBuilder reachableFragmentBuilder,
