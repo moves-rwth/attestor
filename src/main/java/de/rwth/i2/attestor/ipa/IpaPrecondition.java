@@ -89,4 +89,8 @@ public class IpaPrecondition {
 		
 		return result;
 	}
+	
+	public String toString() {
+		return "Precondition:" + config.toString();
+	}
 }

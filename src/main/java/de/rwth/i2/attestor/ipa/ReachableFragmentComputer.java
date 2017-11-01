@@ -180,8 +180,10 @@ public class ReachableFragmentComputer {
 		TIntArrayList variables = input.variableEdges();
 		for( int i = 0; i < variables.size(); i++ ) {
 			int variableEdge = variables.get(i);
-			int referencedNode = input.targetOf(variableEdge);
-			nodesReachableFromVariables.add( referencedNode );
+			if( ! isParameter( input.nameOf(variableEdge)) ) {
+				int referencedNode = input.targetOf(variableEdge);
+				nodesReachableFromVariables.add( referencedNode );
+			}
 		}
 		//initialize with externals
 		TIntArrayList externals = input.externalNodes();
