@@ -158,6 +158,20 @@ public class ReachableFragmentTest {
 		performTest( input, expectedFragment, expectedReplace );
 	}
 
+	//a cutpoint which is not directy accessed by a variable
+	@Test
+	public void testIndirectCutpoint() {
+		
+		String parameterName = "@this";
+		String variableName = "x";
+		HeapConfiguration input = nodeReachableFromTwoSides( parameterName , variableName );
+		HeapConfiguration expectedFragment = parameterSide( parameterName );
+		HeapConfiguration expectedReplace = ntAttachedTovariableSide( variableName );
+		
+		performTest( input, expectedFragment, expectedReplace );
+		
+	}
+
 
 
 
@@ -371,32 +385,6 @@ public class ReachableFragmentTest {
 	}
 
 
-	private HeapConfiguration twoNodesAttached( String variableName ) {
-		TIntArrayList nodes = new TIntArrayList();
-		
-		return twoNodesAttachedHelper( nodes ).builder()
-				.addVariableEdge( variableName, nodes.get(1) ).build();
-	}
-
-	private HeapConfiguration twoNodesAttachedHelper( TIntArrayList nodes) {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-
-		Type type = getSomeType();
-		final int rank = 2;
-		final boolean[] isReductionTentacle = new boolean[rank];
-		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
-
-		
-		return hc.builder().addNodes(type, rank, nodes)
-				.addNonterminalEdge(nt)
-				.addTentacle(nodes.get(0))
-				.addTentacle(nodes.get(1))
-				.build()
-				.build();
-	}
-	
-
-
 	private HeapConfiguration singleNodeHeap(String parameterName, String variableName) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
@@ -478,6 +466,51 @@ public class ReachableFragmentTest {
 
 	private Type getNullType() {
 		return Settings.getInstance().factory().getType("NULL");
+	}
+	
+
+	private HeapConfiguration nodeReachableFromTwoSides(String parameterName, String variableName) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		hc.builder().addNodes(type, 1, nodes).build();
+		int meetingPoint = nodes.get(0);
+		addParameterSide( hc, meetingPoint, parameterName );
+		addVariableSide( hc, meetingPoint, variableName );
+		return hc;
+	}
+	
+	private HeapConfiguration parameterSide(String parameterName) {
+		HeapConfiguration hc = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+		hc.builder().addNodes(type, 1, nodes)
+			.setExternal(nodes.get(0))
+			.build();
+		int meetingPoint = nodes.get(0);
+		addParameterSide( hc, meetingPoint, parameterName );
+		return hc;
+	}
+	
+	private HeapConfiguration ntAttachedTovariableSide(String variableName) {
+		
+		TIntArrayList nodes = new TIntArrayList();
+		HeapConfiguration hc = singleNodeAttachedHelper(nodes);
+		int meetingPoint = nodes.get(0);
+		addParameterSide( hc, meetingPoint, variableName );
+		return hc;
+	}
+
+	private void addVariableSide(HeapConfiguration hc, int meetingPoint, String variableName) {
+		addParameterSide(hc, meetingPoint, variableName);
+	}
+
+	private void addParameterSide(HeapConfiguration hc, int meetingPoint, String parameterName) {
+		
+		TIntArrayList nodes = new TIntArrayList();
+		hc.builder()
+		.addNodes(type, 1, nodes)
+		.addVariableEdge(parameterName, nodes.get(0))
+		.addSelector(nodes.get(0), nextLabel, meetingPoint)
+		.build();
 	}
 
 
