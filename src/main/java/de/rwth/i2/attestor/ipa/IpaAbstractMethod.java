@@ -1,7 +1,10 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -66,8 +69,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 	 * @return <reachableFragment,remainingFragment>
 	 */
 	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
-		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString() );
-		return helper.prepareInput(input);
+		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString(), input );
+		return helper.prepareInput();
 	}
 
 	private List<HeapConfiguration> applyContract( HeapConfiguration replacedFragment,
