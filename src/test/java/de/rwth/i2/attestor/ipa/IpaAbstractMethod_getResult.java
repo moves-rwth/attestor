@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
@@ -23,7 +24,7 @@ public class IpaAbstractMethod_getResult {
 	Type type = Settings.getInstance().factory().getType("someType");
 	
 	@Test
-	public void test(){
+	public void test() throws StateSpaceGenerationAbortedException{
 		IpaPrecondition precondition = createPreCondition();
 		HeapConfiguration postcondition = createPostcondition();
 		

@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.IpaContractCollection;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -40,7 +40,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) {
+	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) 
+													throws StateSpaceGenerationAbortedException {
 
 		Set<ProgramState> result = new HashSet<>();
 		for( HeapConfiguration postConfig : getResult( input ) ){
@@ -50,7 +51,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return result;
 	}
 
-	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ){
+	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ) 
+			throws StateSpaceGenerationAbortedException{
 
 		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
 		HeapConfiguration reachableFragment = splittedConfig.first();
@@ -58,16 +60,29 @@ public class IpaAbstractMethod extends AbstractMethod {
 		int placeholderPos = splittedConfig.second().second();
 
 		Entry<IpaPrecondition, List<HeapConfiguration>> contract = contracts.getContract( reachableFragment );
-		if( contract != null ){
+		if( contract == null ){ 
+			
+			computeContract(reachableFragment);
+			contract = contracts.getContract(reachableFragment);
+		}else{
 			IpaPrecondition precondition = contract.getKey();
-			List<HeapConfiguration> postconditions = contract.getValue();
-
 			remainingFragment = adaptExternalOrdering( precondition, reachableFragment, 
 					remainingFragment, placeholderPos);
-
-			return applyContract(remainingFragment, placeholderPos, postconditions );
 		}
-		return null;
+
+			List<HeapConfiguration> postconditions = contract.getValue();
+			return applyContract(remainingFragment, placeholderPos, postconditions );
+		
+	}
+
+	private void computeContract(HeapConfiguration reachableFragment) throws StateSpaceGenerationAbortedException {
+		final IpaPrecondition precondition = new IpaPrecondition( reachableFragment );
+		contracts.addPrecondition( precondition );
+		StateSpace stateSpace = factory.create(method, reachableFragment, 0);
+		List<HeapConfiguration> postconditions = contracts.getPostConditions(precondition);
+		for( ProgramState finalState : stateSpace.getFinalStates() ){
+			postconditions.add( finalState.getHeap() );
+		}
 	}
 
 	/**
