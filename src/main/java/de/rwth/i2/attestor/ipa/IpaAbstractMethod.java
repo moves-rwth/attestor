@@ -94,13 +94,13 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return helper.prepareInput();
 	}
 
-	private List<HeapConfiguration> applyContract( HeapConfiguration replacedFragment,
+	private List<HeapConfiguration> applyContract( HeapConfiguration remainingFragment,
 			int contractPlaceholderEdge,
 			List<HeapConfiguration> contracts ){
 
 		List<HeapConfiguration> result = new ArrayList<>();
 		for( HeapConfiguration contract : contracts ){
-			HeapConfigurationBuilder builder = replacedFragment.builder();
+			HeapConfigurationBuilder builder = remainingFragment.builder();
 			builder.replaceNonterminalEdge(contractPlaceholderEdge, contract);
 			result.add( builder.build() );
 		}
