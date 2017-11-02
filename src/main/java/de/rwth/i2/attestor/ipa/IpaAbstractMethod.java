@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.internal.IpaContractCollection;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -35,7 +34,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		if( ! contracts.hasPrecondition(precondition) ){
 			contracts.addPrecondition(precondition);
 		}
-		List<HeapConfiguration> currentPostconditions = contracts.getPostConditions(precondition);
+		List<HeapConfiguration> currentPostconditions = contracts.getContract(precondition.config).getValue();
 		currentPostconditions.addAll( postconditions );
 	}
 
@@ -79,7 +78,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		final IpaPrecondition precondition = new IpaPrecondition( reachableFragment );
 		contracts.addPrecondition( precondition );
 		StateSpace stateSpace = factory.create(method, reachableFragment, 0);
-		List<HeapConfiguration> postconditions = contracts.getPostConditions(precondition);
+		List<HeapConfiguration> postconditions = contracts.getContract( reachableFragment ).getValue();
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
 			postconditions.add( finalState.getHeap() );
 		}
