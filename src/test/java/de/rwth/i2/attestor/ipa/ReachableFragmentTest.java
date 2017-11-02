@@ -4,10 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -18,7 +15,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class ReachableFragmentTest {
 
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
 	Type type = Settings.getInstance().factory().getType("someType");
 	SelectorLabel nextLabel = BasicSelectorLabel.getSelectorLabel("next");
 

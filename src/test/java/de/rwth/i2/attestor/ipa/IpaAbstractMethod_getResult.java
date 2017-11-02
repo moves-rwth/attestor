@@ -18,7 +18,7 @@ public class IpaAbstractMethod_getResult {
 	
 	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someLabel");
 
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
 	
 	Type type = Settings.getInstance().factory().getType("someType");
 	

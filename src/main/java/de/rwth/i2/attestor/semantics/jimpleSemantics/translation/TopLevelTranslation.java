@@ -93,7 +93,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
 		ArrayList<SootMethod> methods = new ArrayList<>();
 
-		SootClass mainClass = Scene.v().getMainClass();
+		//SootClass mainClass = Scene.v().getMainClass();
 
 		// Determine all necessary (non-library) classes and its methods
 		Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();

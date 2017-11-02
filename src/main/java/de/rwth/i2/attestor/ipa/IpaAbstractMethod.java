@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -17,11 +14,21 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod extends AbstractMethod {
+	
+	private static Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
+	
+	public static IpaAbstractMethod getMethod( String signature ){
+		if( ! knownMethods.containsKey(signature) ){
+			knownMethods.put(signature, new IpaAbstractMethod( signature ) );
+		}
+		return knownMethods.get( signature );
+	}
 
 	IpaContractCollection contracts = new IpaContractCollection();
 
-	public IpaAbstractMethod(String displayName, StateSpaceFactory factory) {
-		super(displayName, factory);
+	public IpaAbstractMethod(String displayName) {
+		super();
+		super.setDisplayName(displayName);
 	}
 	
 	public void addContracts( IpaPrecondition precondition, List<HeapConfiguration> postconditions ){
