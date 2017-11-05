@@ -393,7 +393,7 @@ public class ProofStructure {
 		return successors;
 	}
 
-	public Counterexample getCounterexample() {
+	public FailureTrace getFailureTrace() {
 
 		if(isSuccessful()) { // proof was successful, no counterexample exists
 			return null;
@@ -401,7 +401,7 @@ public class ProofStructure {
 
 		assert(this.originOfFailure != null);
 
-		return new Counterexample(this.originOfFailure, stateSpace);
+		return new FailureTrace(this.originOfFailure, stateSpace);
 	}
 
 }

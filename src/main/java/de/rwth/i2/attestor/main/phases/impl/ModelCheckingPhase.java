@@ -1,12 +1,16 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.counterexamples.CounterexampleGenerator;
+import de.rwth.i2.attestor.counterexamples.SpuriousCounterexampleException;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.LTLResultTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.modelChecking.Counterexample;
+import de.rwth.i2.attestor.modelChecking.FailureTrace;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import org.apache.logging.log4j.Level;
 
 import java.util.HashMap;
@@ -15,7 +19,8 @@ import java.util.Set;
 
 public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransformer {
 
-    private Map<LTLFormula, Counterexample> formulaResults = new HashMap<>();
+    private Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
+    private Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
     private boolean allSatisfied = true;
 
     @Override
@@ -42,13 +47,43 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
-                formulaResults.put(formula, new Counterexample());
+                formulaResults.put(formula, true);
                 logger.info("satisfied.");
             } else {
-                allSatisfied = false;
-                formulaResults.put(formula, proofStructure.getCounterexample());
                 logger.warn("violated.");
+                allSatisfied = false;
+                FailureTrace failureTrace = proofStructure.getFailureTrace();
+                formulaResults.put(formula, false);
+                checkCounterexample(formula, failureTrace);
             }
+        }
+    }
+
+    private void checkCounterexample(LTLFormula formula, FailureTrace failureTrace) {
+
+        Program program = getPhase(ProgramTransformer.class).getProgram();
+        StateRefinementStrategy stateRefinementStrategy = settings.stateSpaceGeneration().getStateRefinementStrategy();
+        MaterializationStrategy materializationStrategy = settings.stateSpaceGeneration().getMaterializationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getCanonicalizationStrategy();
+
+        CounterexampleGenerator generator = CounterexampleGenerator
+                    .builder()
+                    .setProgram(program)
+                    .setTrace(failureTrace)
+                    .setStateRefinementStrategy(stateRefinementStrategy)
+                    .setMaterializationStrategy(materializationStrategy)
+                    .setCanonicalizationStrategy(canonicalizationStrategy)
+                    .build();
+
+        try {
+            HeapConfiguration badInput = generator.generate();
+            counterexamples.put(formula, badInput);
+            logger.info("Counterexample is not spurious.");
+
+            System.out.println(badInput);
+
+        } catch (SpuriousCounterexampleException e) {
+            logger.error("Counterexample might be spurious: " + formula);
         }
     }
 
@@ -61,13 +96,20 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
 
         logSum("Model checking results:");
         logSum("+-----------+-------------------------------------------------------+");
-        for(Map.Entry<LTLFormula, Counterexample> result : formulaResults.entrySet()) {
-            boolean isSat = result.getValue().isEmpty();
-            if(isSat) {
+        for(Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
+            if(result.getValue()) {
                 logSum(String.format("| %-9s | %s", "satisfied", result.getKey().getFormulaString()));
             } else {
                 logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
-                logSum(String.format(String.format("| %-9s | %s", "witness", result.getValue())));
+
+                if(counterexamples.containsKey(result.getKey())) {
+                    logSum(String.format(String.format("| %-9s | %s", "",
+                            "A counterexample has been found.")));
+                } else {
+                    logSum(String.format(String.format("| %-9s | %s", "witness",
+                            "All counterexamples might be spurious.")));
+                }
+
             }
         }
         logSum("+-----------+-------------------------------------------------------+");
@@ -86,7 +128,7 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
     }
 
     @Override
-    public Map<LTLFormula, Counterexample> getLTLResults() {
+    public Map<LTLFormula, Boolean> getLTLResults() {
 
         return formulaResults;
     }
@@ -95,6 +137,12 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
     public boolean hasAllLTLSatisfied() {
 
         return allSatisfied;
+    }
+
+    @Override
+    public HeapConfiguration getCounterexampleInput(LTLFormula formula) {
+
+        return counterexamples.get(formula);
     }
 
 
