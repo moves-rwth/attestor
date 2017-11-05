@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -51,15 +52,20 @@ public class InvokeStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
 		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
 
-		invokePrepare.prepareHeap( jimpleProgramState );
+		invokePrepare.prepareHeap( jimpleProgramState, options );
 
-		Set<ProgramState> methodResult = method.getResult( jimpleProgramState.getHeap(), jimpleProgramState.getScopeDepth() );
-		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleProgramState) x ) );
+		Set<ProgramState> methodResult = method.getResult(
+				jimpleProgramState.getHeap(),
+				jimpleProgramState.getScopeDepth(),
+				options
+		);
+
+		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleProgramState) x, options ) );
 		methodResult.forEach( x -> ( (JimpleProgramState) x ).clone() );
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		

@@ -23,12 +23,13 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	 * stores all previously seen inputs with their fixpoints for reuse
 	 */
 	private final Map<HeapConfiguration, Set<ProgramState>> knownInputs;
-	public SimpleAbstractMethod( String signature, StateSpaceFactory factory ){
-		this(signature, signature, factory);
+
+	public SimpleAbstractMethod( String signature){
+		this(signature, signature);
 	}
 
-	public SimpleAbstractMethod( String signature, String displayName, StateSpaceFactory factory){
-		super( displayName, factory );
+	public SimpleAbstractMethod( String signature, String displayName){
+		super( displayName  );
 		knownInputs = new HashMap<>();
 	}
 
@@ -52,19 +53,21 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	 * @param scopeDepth 
 	 * 			 The scope depth of the method to apply (necessary to distinguish
 	 * 			 variables with identical name).
+	 * @param options
+	 * 			 The current options for the symbolic execution.
 	 * @return all heaps which are in the fixpoint of the method at the terminal
 	 *         states of it.
 	 */
 	@Override
-	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth )
+	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth, SemanticsOptions options )
 		throws StateSpaceGenerationAbortedException {
 		if( this.hasResult( input ) ){
 			return knownInputs.get( input );
 		}else{
 			
-			StateSpace stateSpace;
 			Set<ProgramState> resultHeaps = new HashSet<>();
-			stateSpace = factory.create(method, input, scopeDepth);
+
+			StateSpace stateSpace = options.generateStateSpace(method, input, scopeDepth);
 			resultHeaps.addAll(stateSpace.getFinalStates());
 			
 			return resultHeaps;

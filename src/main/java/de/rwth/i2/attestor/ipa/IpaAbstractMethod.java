@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.graph.heap.internal.IpaContractCollection;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -17,12 +18,12 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	IpaContractCollection contracts = new IpaContractCollection();
 
-	public IpaAbstractMethod(String displayName, StateSpaceFactory factory) {
-		super(displayName, factory);
+	public IpaAbstractMethod(String displayName) {
+		super(displayName);
 	}
 
 	@Override
-	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) {
+	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth, SemanticsOptions options) {
 
 		Set<ProgramState> result = new HashSet<>();
 		for( HeapConfiguration postConfig : getResult( input ) ){
@@ -54,7 +55,6 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	/**
 	 * @param input
-	 * @param methodName
 	 * @return <reachableFragment,remainingFragment>
 	 */
 	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){

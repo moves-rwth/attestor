@@ -89,7 +89,7 @@ public class StateSpaceGeneratorTest {
 		Statement skipStmt = new Skip( 1 );
 		programInstructions.add( skipStmt );
 		Statement assignStmt = new AssignStmt( new Local( type, "x" ), new NewExpr( type ),
-                2, new HashSet<>(), false );
+                2, new HashSet<>());
 		programInstructions.add( assignStmt );
 		Statement returnStmt = new ReturnVoidStmt();
 		programInstructions.add( returnStmt );
@@ -149,7 +149,7 @@ public class StateSpaceGeneratorTest {
 		HeapConfiguration initialGraph = ExampleHcImplFactory.getEmptyGraphWithConstants();
 		
 		List<Semantics> programInstructions = new ArrayList<>();
-		Statement ifStmt = new IfStmt( new IntConstant( 1 ), 1, 2, new HashSet<>(), false );
+		Statement ifStmt = new IfStmt( new IntConstant( 1 ), 1, 2, new HashSet<>());
 		programInstructions.add( ifStmt );
 		Statement firstReturn = new ReturnVoidStmt();
 		programInstructions.add( firstReturn );

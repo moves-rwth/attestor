@@ -19,21 +19,27 @@ public abstract class AbstractMethod {
 	 */
 	protected Program method;
 
-	public abstract Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException;
+	/**
+	 * Provides the results of symbolically executing the method represented by this object
+	 * on the given input.
+	 * @param input The heap configuration determining the input of the method.
+	 * @param scopeDepth The current scope of the call stack.
+	 * @param options The current state space generation options.
+	 * @return The state space obtained from symbolically executing this AbstractMethod on the
+	 *         given input.
+	 * @throws StateSpaceGenerationAbortedException
+	 */
+	public abstract Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth, SemanticsOptions options)
+			throws StateSpaceGenerationAbortedException;
 
 	/**
 	 * the methods signature
 	 */
 	protected final String displayName;
-	/**
-	 * Factory to obtain a state space.
-	 */
-	protected StateSpaceFactory factory;
 
-	public AbstractMethod( String displayName, StateSpaceFactory factory ) {
+	public AbstractMethod( String displayName ) {
 		super();
 		this.displayName = displayName;
-		this.factory = factory;
 	}
 
 	/**

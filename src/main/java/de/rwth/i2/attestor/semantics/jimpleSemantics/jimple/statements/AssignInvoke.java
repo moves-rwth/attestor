@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -67,13 +68,13 @@ public class AssignInvoke extends Statement {
 	 * as it is clearly not live at this point.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 		
 		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
 		
-		invokePrepare.prepareHeap( jimpleProgramState );
+		invokePrepare.prepareHeap( jimpleProgramState, options );
 		
 		if( lhs instanceof Local ){
 			jimpleProgramState.leaveScope();
@@ -83,7 +84,8 @@ public class AssignInvoke extends Statement {
 
 		Set<ProgramState> methodResult = method.getResult(
 				jimpleProgramState.getHeap(),
-				jimpleProgramState.getScopeDepth()
+				jimpleProgramState.getScopeDepth(),
+				options
 		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
@@ -92,7 +94,7 @@ public class AssignInvoke extends Statement {
 			JimpleProgramState jimpleResState = (JimpleProgramState) resState;
 			ConcreteValue concreteRHS = jimpleResState.removeIntermediate( "@return" );
 
-			invokePrepare.cleanHeap( jimpleResState );
+			invokePrepare.cleanHeap( jimpleResState, options );
 
 			/*
 			if( concreteRHS.isUndefined() ){

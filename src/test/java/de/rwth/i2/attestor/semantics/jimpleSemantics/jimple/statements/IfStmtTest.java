@@ -57,12 +57,12 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>() );
 
 		try{
 			DefaultProgramState input = testState.clone();
 					
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsOptions() );
 			
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );
@@ -98,11 +98,11 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = testState.clone();
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsOptions() );
 			
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );
@@ -138,13 +138,13 @@ public class IfStmtTest {
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = testState.clone();
 			
 			
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsOptions() );
 
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );

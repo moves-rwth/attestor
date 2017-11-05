@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -44,16 +45,12 @@ public class IfStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	private boolean removeDeadVariables;
-
-	public IfStmt( Value condition, int truePC, int falsePC,
-				   Set<String> liveVariableNames, boolean removeDeadVariables ){
+	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
 
 		this.conditionValue = condition;
 		this.truePC = truePC;
 		this.falsePC = falsePC;
 		this.liveVariableNames = liveVariableNames;
-		this.removeDeadVariables = removeDeadVariables;
 	}
 
 	/**
@@ -67,7 +64,7 @@ public class IfStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 		
 		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
@@ -95,7 +92,7 @@ public class IfStmt extends Statement {
 			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
 		}
 
-		if(removeDeadVariables) {
+		if(options.isDeadVariableEliminationEnabled()) {
 			VariablesUtil.removeDeadVariables(conditionValue.toString(), jimpleProgramState, liveVariableNames);
 		}
 

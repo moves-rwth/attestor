@@ -108,7 +108,7 @@ public class CounterexampleGenerator {
 
         try {
             for(ProgramState mState : materializedStates) {
-                Set<ProgramState> successorStates = semantics.computeSuccessors(mState);
+                Set<ProgramState> successorStates = semantics.computeSuccessors(mState, null); // TODO
                 if(successorStates.size() != 1) {
                     throw new SpuriousCounterexampleException("Nondeterminism could not be resolved.");
                 }

@@ -14,7 +14,7 @@ import de.rwth.i2.attestor.types.Type;
 
 public class AbstractMethodIPATest_testGetResult {
 
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod", null );
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod");
 
 	@Before
 	public void setupProgram(){
@@ -26,7 +26,7 @@ public class AbstractMethodIPATest_testGetResult {
 		
 		Value rhs = new Local(type, "@parameter0:");
 		
-		Statement assignStmt = new AssignStmt(lhs, rhs, 1, new HashSet<>(), false );
+		Statement assignStmt = new AssignStmt(lhs, rhs, 1, new HashSet<>());
 		Statement returnStmt = new ReturnVoidStmt();
 		
 		program.add(assignStmt);

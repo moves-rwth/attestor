@@ -219,6 +219,9 @@ public class FactorySettings {
                 )
                 .setStateCounter(
                         this::addGeneratedStates
+                )
+                .setDeadVariableElimination(
+                        Settings.getInstance().options().isRemoveDeadVariables()
                 );
     }
 

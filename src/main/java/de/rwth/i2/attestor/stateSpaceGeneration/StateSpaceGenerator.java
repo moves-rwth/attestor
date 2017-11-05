@@ -57,42 +57,56 @@ public class StateSpaceGenerator {
 	 * The control flow of the program together with the
 	 * abstract semantics of each statement
 	 */
-	Program program = null;
+	Program program;
 
 	/**
 	 * Strategy guiding the materialization of states.
 	 * This strategy is invoked whenever an abstract transfer
 	 * function cannot be executed.
 	 */
-	MaterializationStrategy materializationStrategy = null;
+	MaterializationStrategy materializationStrategy;
 
 	/**
 	 * Strategy guiding the canonicalization of states.
 	 * This strategy is invoked after execution of abstract transfer
 	 * functions in order to generalize.
 	 */
-	CanonicalizationStrategy canonicalizationStrategy = null;
+	CanonicalizationStrategy canonicalizationStrategy;
 
 	/**
 	 * Strategy determining when to give up on further state space
 	 * exploration.
 	 */
-	AbortStrategy abortStrategy = null;
+	AbortStrategy abortStrategy;
 
 	/**
 	 * Strategy determining the labels of states in the state space
 	 */
-	StateLabelingStrategy stateLabelingStrategy = null;
+	StateLabelingStrategy stateLabelingStrategy;
 
 	/**
 	 * Strategy determining how states are refined prior to canonicalization
 	 */
-	StateRefinementStrategy stateRefinementStrategy = null;
+	StateRefinementStrategy stateRefinementStrategy;
 
 	/**
 	 * Counter for the total number of states generated so far.
 	 */
-	TotalStatesCounter totalStatesCounter = null;
+	TotalStatesCounter totalStatesCounter;
+
+	/**
+	 * Flag that determines whether dead variables may be eliminated after
+	 * a single step of the symbolic execution.
+	 * Whether variables are actually eliminated depends on the executed
+	 * statement.
+	 */
+	boolean isDeadVariableEliminationEnabled;
+
+	/**
+	 * The options for this state space generator that configure the individual
+	 * steps of the symbolic execution.
+	 */
+	private final SemanticsOptions semanticsOptions;
 
 	/**
 	 * @return The strategy determining when state space generation is aborted.
@@ -127,6 +141,15 @@ public class StateSpaceGenerator {
 	 */
 	public StateRefinementStrategy getStateRefinementStrategy() {
 		return stateRefinementStrategy;
+	}
+
+	public boolean isDeadVariableEliminationEnabled() {
+		return isDeadVariableEliminationEnabled;
+	}
+
+	protected StateSpaceGenerator() {
+
+		semanticsOptions = new StateSpaceGeneratorSemanticsOptions(this);
 	}
 
 	/**
@@ -215,7 +238,7 @@ public class StateSpaceGenerator {
 
 		Semantics semantics = program.getStatement( state.getProgramCounter() );
 		try {
-			return semantics.computeSuccessors(state);
+			return semantics.computeSuccessors(state, semanticsOptions);
 		} catch (NotSufficientlyMaterializedException e) {
 			logger.error("A state could not be sufficiently materialized.");
 			return new HashSet<>();

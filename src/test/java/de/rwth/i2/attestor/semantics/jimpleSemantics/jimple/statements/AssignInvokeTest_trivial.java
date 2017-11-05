@@ -46,12 +46,11 @@ public class AssignInvokeTest_trivial {
 			= new Local( type, "x" );
 
 
-		AbstractMethod method = new SimpleAbstractMethod( "method", StateSpaceFactoryHelper.get());
+		AbstractMethod method = new SimpleAbstractMethod( "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(),
-				new ArrayList<>(), false );
+		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(), new ArrayList<>());
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		
@@ -62,7 +61,7 @@ public class AssignInvokeTest_trivial {
 	@Test
 	public void testComputeSuccessors(){
 		try{
-			Set<ProgramState> resStates = stmt.computeSuccessors( inputState );
+			Set<ProgramState> resStates = stmt.computeSuccessors( inputState, new MockupSemanticsOptions() );
 			assertEquals( 1, resStates.size() );
 			DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
 			assertNotSame( resState, inputState );

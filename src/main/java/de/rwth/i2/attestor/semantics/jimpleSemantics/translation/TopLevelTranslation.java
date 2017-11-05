@@ -83,8 +83,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Assumes that soot.Scene already contains the Jimple code that should be
 	 * translated.
 	 * 
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#AbstractMethod(String, SimpleAbstractMethod.StateSpaceFactory)
-	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory()())
+	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#SimpleAbstractMethod(String)
+	 *      AbstractMethod(String name)
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#setControlFlow(List)
 	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)
@@ -107,12 +107,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
-            try {
-				methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName, getStateSpaceFactory()));
-			} catch (StateSpaceGenerationAbortedException e) {
-				logger.fatal("Unexpected exception");
-				throw new IllegalStateException(e.getMessage());
-			}
+			methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName));
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);
@@ -227,9 +222,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		} else {
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );
 
-			AbstractMethod.StateSpaceFactory factory = getStateSpaceFactory();
 			AbstractMethod defaultMethod = new SimpleAbstractMethod(signature + " (only default - empty Method)",
-					displayName, factory);
+					displayName);
 			methodMapping.put(signature, defaultMethod);
 			List<Semantics> defaultControlFlow = new ArrayList<>();
 			defaultControlFlow.add(new Skip(-1));
@@ -239,17 +233,6 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
 			return defaultMethod;
 		}
-	}
-
-	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() throws StateSpaceGenerationAbortedException {
-
-		return (program, input, scopeDepth) -> Settings.getInstance()
-                .factory()
-                .createStateSpaceGenerator(
-                        program,
-                        input,
-                        scopeDepth
-                ).generate();
 	}
 
 	@Override

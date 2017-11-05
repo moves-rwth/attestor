@@ -150,13 +150,31 @@ public class SSGBuilder {
 		return this;
 	}
 
+	/**
+	 * @param stateRefinementStrategy The strategy to refine states before continuing the symbolic execution.
+	 * @return The builder.
+	 */
 	public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 		generator.stateRefinementStrategy = stateRefinementStrategy;
 		return this;
 	}
 
+	/**
+	 * @param stateCounter The global counter for the total number of states generated so far.
+	 * @return The builder.
+	 */
 	public SSGBuilder setStateCounter(StateSpaceGenerator.TotalStatesCounter stateCounter) {
 		generator.totalStatesCounter = stateCounter;
+		return this;
+	}
+
+	/**
+	 * @param enabled True if and only if it is permitted to eliminate dead variables after a single
+	 *                step of the symbolic execution.
+	 * @return The builder.
+	 */
+	public SSGBuilder setDeadVariableElimination(boolean enabled) {
+		generator.isDeadVariableEliminationEnabled = enabled;
 		return this;
 	}
 	

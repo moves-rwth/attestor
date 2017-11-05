@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import java.util.Set;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,17 +42,13 @@ public class AssignStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	private final boolean removeDeadVariables;
-
-	public AssignStmt( SettableValue lhs , Value rhs , int nextPC,
-					   Set<String> liveVariableNames, boolean removeDeadVariables ){
+	public AssignStmt( SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames){
 		super();
 		this.rhs = rhs;
 		this.lhs = lhs;
 		this.nextPC = nextPC;
 		this.liveVariableNames = liveVariableNames;
-		this.removeDeadVariables = removeDeadVariables;
-		
+
 		potentialViolationPoints = new ViolationPoints();
 		potentialViolationPoints.addAll(lhs.getPotentialViolationPoints());
 		potentialViolationPoints.addAll(rhs.getPotentialViolationPoints());
@@ -72,7 +69,8 @@ public class AssignStmt extends Statement {
 	 * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState ) throws NotSufficientlyMaterializedException {
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
+			throws NotSufficientlyMaterializedException {
 		
 		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
@@ -106,7 +104,7 @@ public class AssignStmt extends Statement {
 			logger.error(e.getErrorMessage(this));
 		}
 
-		if(removeDeadVariables) {
+		if(options.isDeadVariableEliminationEnabled()) {
 			VariablesUtil.removeDeadVariables(rhs.toString(), jimpleProgramState, liveVariableNames);
 			VariablesUtil.removeDeadVariables(lhs.toString(), jimpleProgramState, liveVariableNames);
 		}

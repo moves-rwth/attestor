@@ -185,9 +185,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
-			final boolean removeDeadVariablesOption = Settings.getInstance().options().isRemoveDeadVariables();
-			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input),
-					removeDeadVariablesOption);
+			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input));
 		}
 	}
 
@@ -245,11 +243,9 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			soot.Value sootBase = instanceMethod.getBase();
 			Value translatedBase = topLevel.translateValue( sootBase );
 
-			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams, localNames,
-                    Settings.getInstance().options().isRemoveDeadVariables() );
+			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams, localNames);
 		}else{
-			invokeHelper = new StaticInvokeHelper( translatedParams, localNames,
-                    Settings.getInstance().options().isRemoveDeadVariables() );
+			invokeHelper = new StaticInvokeHelper( translatedParams, localNames);
 		}
 		return invokeHelper;
 	}
@@ -310,8 +306,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		Unit trueSuccessor = stmt.getTarget();
 		int truePC = topLevel.getPCforUnit( trueSuccessor );
 		int falsePC = pc + 1;
-		return new IfStmt( condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input),
-				Settings.getInstance().options().isRemoveDeadVariables());
+		return new IfStmt( condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input) );
 	}
 
     /**

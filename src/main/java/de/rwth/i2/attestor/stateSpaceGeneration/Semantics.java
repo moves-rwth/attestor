@@ -17,11 +17,12 @@ public interface Semantics {
      * be evaluated), this results in a set of successor program states in general.
      *
      * @param programState The state on which the abstract program semantics shall be executed.
+     * @param options A collection of configuration parameters to influence to symbolic execution.
      * @return The set of all states resulting from executing the program semantics on programState.
      * @throws NotSufficientlyMaterializedException This exception is thrown if the semantics cannot be executed on
      *                                              programState due to missing fields.
      */
-    Set<ProgramState> computeSuccessors(ProgramState programState)
+    Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException;
 
     /**
