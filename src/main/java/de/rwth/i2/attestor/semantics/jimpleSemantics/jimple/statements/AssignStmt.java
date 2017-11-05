@@ -7,8 +7,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -71,45 +69,30 @@ public class AssignStmt extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException {
-		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
-		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
-		
+
+		programState = programState.clone();
 		ConcreteValue concreteRHS;
 		
 		try {
-			concreteRHS = rhs.evaluateOn( jimpleProgramState );
+			concreteRHS = rhs.evaluateOn( programState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error( e.getErrorMessage(this) );
-			concreteRHS = jimpleProgramState.getUndefined();
+			concreteRHS = programState.getUndefined();
 		}
 
-		/*
-		if( concreteRHS.isUndefined() ){
-				logger.debug( "The value of the right hand side is undefined. Ignoring Assign." );
-		}else{
-			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
-				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
-				msg += " with the type of the lhs";
-				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.debug( msg );
-			}
-		}
-		*/
-		
 		try {
-		    lhs.evaluateOn(jimpleProgramState); // enforce materialization if necessary
-			lhs.setValue( jimpleProgramState, concreteRHS );
+		    lhs.evaluateOn(programState); // enforce materialization if necessary
+			lhs.setValue(programState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
 
 		if(options.isDeadVariableEliminationEnabled()) {
-			VariablesUtil.removeDeadVariables(rhs.toString(), jimpleProgramState, liveVariableNames);
-			VariablesUtil.removeDeadVariables(lhs.toString(), jimpleProgramState, liveVariableNames);
+			VariablesUtil.removeDeadVariables(rhs.toString(), programState, liveVariableNames);
+			VariablesUtil.removeDeadVariables(lhs.toString(), programState, liveVariableNames);
 		}
 
-		JimpleProgramState result = JimpleUtil.deepCopy(jimpleProgramState);
+		ProgramState result = programState.clone();
 		result.setProgramCounter(nextPC);
 		
 		return SingleElementUtil.createSet( result );
@@ -118,9 +101,7 @@ public class AssignStmt extends Statement {
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
 		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
-		
-		return rhs.needsMaterialization( jimpleProgramState ) || lhs.needsMaterialization( jimpleProgramState );
+		return rhs.needsMaterialization( programState ) || lhs.needsMaterialization( programState );
 	}
 
 

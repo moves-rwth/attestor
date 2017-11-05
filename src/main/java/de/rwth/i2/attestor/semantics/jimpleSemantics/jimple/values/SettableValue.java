@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
@@ -25,7 +25,7 @@ public interface SettableValue extends Value {
 	 * @throws NullPointerDereferenceException if the evaluation of originValue
 	 * results in a null pointer dereference.
 	 */
-	void setValue(JimpleProgramState programState, ConcreteValue concreteRHS)
+	void setValue(ProgramState programState, ConcreteValue concreteRHS)
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
 
 }

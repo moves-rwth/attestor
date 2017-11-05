@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
@@ -16,6 +14,8 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -66,23 +66,21 @@ public class IfStmt extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
-		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 
-		Set<ProgramState> defaultRes = JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
-		defaultRes.add( JimpleUtil.updatePC(jimpleProgramState, falsePC) );
+		Set<ProgramState> defaultRes = new HashSet<>();
+		defaultRes.add(programState.shallowCopyUpdatePC(truePC));
+		defaultRes.add(programState.shallowCopyUpdatePC(falsePC));
 
-		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
-
-		ConcreteValue trueValue = jimpleProgramState.getConstant(Constants.TRUE);
-		ConcreteValue falseValue = jimpleProgramState.getConstant(Constants.FALSE);
+		programState = programState.clone();
+		ConcreteValue trueValue = programState.getConstant(Constants.TRUE);
+		ConcreteValue falseValue = programState.getConstant(Constants.FALSE);
 
 		ConcreteValue concreteCondition;
 		try {
-			concreteCondition = conditionValue.evaluateOn( jimpleProgramState );
+			concreteCondition = conditionValue.evaluateOn( programState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteCondition = jimpleProgramState.getUndefined();
+			concreteCondition = programState.getUndefined();
 		}
 		
 		if( concreteCondition.isUndefined() ){
@@ -93,15 +91,13 @@ public class IfStmt extends Statement {
 		}
 
 		if(options.isDeadVariableEliminationEnabled()) {
-			VariablesUtil.removeDeadVariables(conditionValue.toString(), jimpleProgramState, liveVariableNames);
+			VariablesUtil.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
 		}
 
 		if( concreteCondition.equals( trueValue ) ){
-			
-			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
+			return Collections.singleton(programState.shallowCopyUpdatePC(truePC));
 		}else if( concreteCondition.equals( falseValue )){
-			
-			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, falsePC);
+			return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
 		}else{
 			return defaultRes;
 		}
@@ -109,7 +105,7 @@ public class IfStmt extends Statement {
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return conditionValue.needsMaterialization( (JimpleProgramState) programState );
+		return conditionValue.needsMaterialization( programState );
 	}
 
 

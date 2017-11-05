@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -40,36 +40,23 @@ public class Local implements SettableValue {
 	}
 
 	@Override
-	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( ProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		ConcreteValue res = programState.getVariableTarget( this.getName() );
-
-		/*
-		if( !( this.type.equals( res.type() ) ) ){
-			
-			String msg = "The type of the resulting ConcreteValue ";
-			msg += this.getName();
-			msg += " does not match.";
-			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.debug( msg );
-		}
-		*/
-
-		return res;
+		return programState.getVariableTarget( this.getName() );
 	}
 
 	/**
 	 * sets the variable in programState to concreteTarget
 	 */
 	@Override
-	public void setValue(JimpleProgramState programState, ConcreteValue concreteTarget )
+	public void setValue(ProgramState programState, ConcreteValue concreteTarget )
 			throws NotSufficientlyMaterializedException{
 
 		programState.setVariable( this.getName(), concreteTarget );
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleProgramState programState ){
+	public boolean needsMaterialization( ProgramState programState ){
 		return false;
 	}
 

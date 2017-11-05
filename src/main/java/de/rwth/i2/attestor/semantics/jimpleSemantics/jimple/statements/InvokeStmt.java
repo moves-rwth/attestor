@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -55,18 +53,18 @@ public class InvokeStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
+		programState = programState.clone();
 
-		invokePrepare.prepareHeap( jimpleProgramState, options );
+		invokePrepare.prepareHeap( programState, options );
 
 		Set<ProgramState> methodResult = method.getResult(
-				jimpleProgramState.getHeap(),
-				jimpleProgramState.getScopeDepth(),
+				programState.getHeap(),
+				programState.getScopeDepth(),
 				options
 		);
 
-		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleProgramState) x, options ) );
-		methodResult.forEach( x -> ( (JimpleProgramState) x ).clone() );
+		methodResult.forEach( x -> invokePrepare.cleanHeap(x, options ) );
+		methodResult.forEach( x -> x.clone() );
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		
 		return methodResult;
@@ -74,7 +72,7 @@ public class InvokeStmt extends Statement {
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
+		return invokePrepare.needsMaterialization( programState );
 	}
 
 

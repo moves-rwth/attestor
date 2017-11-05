@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -70,54 +68,38 @@ public class AssignInvoke extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
-		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
-		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
-		
-		invokePrepare.prepareHeap( jimpleProgramState, options );
+
+		programState = programState.clone();
+
+		invokePrepare.prepareHeap( programState, options );
 		
 		if( lhs instanceof Local ){
-			jimpleProgramState.leaveScope();
-			jimpleProgramState.removeVariable( ((Local)lhs).getName() );
-			jimpleProgramState.enterScope();
+			programState.leaveScope();
+			programState.removeVariable( ((Local)lhs).getName() );
+			programState.enterScope();
 		}
 
 		Set<ProgramState> methodResult = method.getResult(
-				jimpleProgramState.getHeap(),
-				jimpleProgramState.getScopeDepth(),
+				programState.getHeap(),
+				programState.getScopeDepth(),
 				options
 		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
 		for( ProgramState resState : methodResult ) {
 
-			JimpleProgramState jimpleResState = (JimpleProgramState) resState;
-			ConcreteValue concreteRHS = jimpleResState.removeIntermediate( "@return" );
+			ConcreteValue concreteRHS = resState.removeIntermediate( "@return" );
 
-			invokePrepare.cleanHeap( jimpleResState, options );
-
-			/*
-			if( concreteRHS.isUndefined() ){
-					logger.debug( "rhs evaluated to undefined (no return attached to heap)" );
-			}else{
-				if(!( lhs.getType().equals( concreteRHS.type() ) ) ){
-					String msg = "The type of the resulting ConcreteValue for rhs does not match ";
-					msg += " with the type of the lhs";
-					msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-					logger.debug( msg );
-				}
-			}
-			*/
+			invokePrepare.cleanHeap( resState, options );
 
 			try {
-				lhs.setValue( jimpleResState, concreteRHS );
+				lhs.setValue( resState, concreteRHS );
 			} catch (NullPointerDereferenceException e) {
 				logger.error(e.getErrorMessage(this));
 			}
-			
-			JimpleProgramState freshState = JimpleUtil.deepCopy(jimpleResState);
+
+			ProgramState freshState = resState.clone();
 			freshState.setProgramCounter(nextPC);
-			
 			assignResult.add( freshState );
 		}
 				
@@ -126,7 +108,7 @@ public class AssignInvoke extends Statement {
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
+		return invokePrepare.needsMaterialization( programState );
 	}
 
 	public String toString(){

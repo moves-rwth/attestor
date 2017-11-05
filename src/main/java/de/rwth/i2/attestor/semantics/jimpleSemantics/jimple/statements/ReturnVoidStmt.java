@@ -2,16 +2,14 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.strategies.VariableScopes;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,15 +28,15 @@ public class ReturnVoidStmt extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
-		
-		JimpleProgramState result = JimpleUtil.deepCopy( (JimpleProgramState) programState);
+
+		programState = programState.clone();
 
 		// -1 since this statement has no successor location
 		int nextPC = -1;
-		result.setProgramCounter(nextPC);
+		programState.setProgramCounter(nextPC);
 
-		removeLocals( result );
-		return SingleElementUtil.createSet( result );
+		removeLocals( programState );
+		return Collections.singleton(programState);
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class ReturnVoidStmt extends Statement {
 	 * Removes local variables from the current block.
 	 * @param programState The programState whose local variables should be removed.
 	 */
-	private void removeLocals( JimpleProgramState programState ){
+	private void removeLocals( ProgramState programState ){
 		int scope = programState.getScopeDepth();
 		HeapConfiguration heap = programState.getHeap();
 		HeapConfigurationBuilder builder = heap.builder();

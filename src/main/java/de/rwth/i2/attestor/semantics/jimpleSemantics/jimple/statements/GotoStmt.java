@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -38,8 +37,8 @@ public class GotoStmt extends Statement {
 
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState state, SemanticsOptions options) {
-		
-		return JimpleUtil.createSingletonAndUpdatePC( (JimpleProgramState) state , nextPC);
+
+		return Collections.singleton(state.shallowCopyUpdatePC(nextPC));
 	}
 
 	@Override

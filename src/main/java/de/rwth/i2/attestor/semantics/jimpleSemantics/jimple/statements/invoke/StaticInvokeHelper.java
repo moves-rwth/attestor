@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Prepares the heap for the invoke of a static method and cleans it afterwards.
  * <br><br>
- * Call {@link #prepareHeap(JimpleProgramState,SemanticsOptions) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleProgramState,SemanticsOptions) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState,SemanticsOptions) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState,SemanticsOptions) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * <br>
  * Handles the evaluation of parameter expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
@@ -55,7 +55,7 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * sets the current scope the the method's scope.
 	 */
 	@Override
-	public void prepareHeap(JimpleProgramState programState, SemanticsOptions options)
+	public void prepareHeap(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 
 		appendArguments(programState, options);
@@ -68,7 +68,7 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * leaves the method's scope.
 	 */
 	@Override
-	public void cleanHeap( JimpleProgramState programState, SemanticsOptions options){
+	public void cleanHeap(ProgramState programState, SemanticsOptions options){
 
 		removeParameters(programState);
 		removeLocals(programState);
