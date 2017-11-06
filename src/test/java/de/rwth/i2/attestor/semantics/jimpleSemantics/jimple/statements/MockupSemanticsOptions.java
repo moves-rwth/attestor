@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class MockupSemanticsOptions implements SemanticsOptions {
 
+
     @Override
     public StateSpace generateStateSpace(Program program, HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException {
 
@@ -30,6 +31,7 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                         }
                 )
                 .setStateCounter( s -> {} )
+                .setExplorationStrategy(s -> true)
                 .build()
                 .generate();
     }

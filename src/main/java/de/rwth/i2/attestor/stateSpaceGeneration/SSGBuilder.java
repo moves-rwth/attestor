@@ -75,6 +75,10 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No state counter.");
 		}
 
+		if(generator.explorationStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
+		}
+
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
 			generator.stateLabelingStrategy.computeAtomicPropositions(state);
@@ -185,6 +189,15 @@ public class SSGBuilder {
 	 */
 	public SSGBuilder setBreadthFirstSearchEnabled(boolean enabled) {
 		generator.breadthFirstSearchEnabled = enabled;
+		return this;
+	}
+
+	/**
+	 * @param strategy A strategy that determines whether successors of a given state should be explored further.
+	 * @return The builder.
+	 */
+	public SSGBuilder setExplorationStrategy(ExplorationStrategy strategy) {
+		generator.explorationStrategy = strategy;
 		return this;
 	}
 	

@@ -47,6 +47,7 @@ public class StateSpaceGeneratorTest {
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(s -> s)
 				.setStateCounter(s -> {})
+				.setExplorationStrategy(s -> true)
 				;
 	}
 

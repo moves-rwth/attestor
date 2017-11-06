@@ -87,6 +87,11 @@ public class StateSpaceGenerator {
 	StateRefinementStrategy stateRefinementStrategy;
 
 	/**
+	 * Strategy determining whether successors of a given state should also be explored.
+	 */
+	ExplorationStrategy explorationStrategy;
+
+	/**
 	 * Counter for the total number of states generated so far.
 	 */
 	TotalStatesCounter totalStatesCounter;
@@ -144,6 +149,13 @@ public class StateSpaceGenerator {
 	 */
 	public StateRefinementStrategy getStateRefinementStrategy() {
 		return stateRefinementStrategy;
+	}
+
+	/**
+	 * @return The strategy determining whether successors of a given state should be explored or not.
+	 */
+	public ExplorationStrategy getExplorationStrategy() {
+		return explorationStrategy;
 	}
 
 	public boolean isDeadVariableEliminationEnabled() {
@@ -223,7 +235,10 @@ public class StateSpaceGenerator {
 	}
 
 	private void addUnexploredState(ProgramState state) {
-		unexploredConfigurations.addLast(state);
+
+		if(explorationStrategy.check(state)) {
+			unexploredConfigurations.addLast(state);
+		}
 	}
 
 	private Semantics semanticsOf(ProgramState state) {
