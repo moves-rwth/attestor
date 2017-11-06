@@ -13,6 +13,8 @@ public interface StateSpace {
     Set<ProgramState> getFinalStates();
     TIntSet getFinalStateIds();
 
+    int size();
+
     Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state);
     Set<ProgramState> getMaterializationSuccessorsOf(ProgramState state);
     Set<ProgramState> getArtificialInfPathsSuccessorsOf(ProgramState state);

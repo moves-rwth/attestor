@@ -179,10 +179,11 @@ public class StateSpaceGenerator {
 				break;
 			}
 
-			boolean isSufficientlyMaterialized = materializationPhase(state);
+			Semantics stateSemantics = semanticsOf(state);
+			boolean isSufficientlyMaterialized = materializationPhase(state, stateSemantics);
 
 			if(isSufficientlyMaterialized) {
-				Set<ProgramState> successorStates = executionPhase(state);
+				Set<ProgramState> successorStates = executionPhase(state, stateSemantics);
 				if(successorStates.isEmpty()) {
 					stateSpace.setFinal(state);
 					// Add self-loop to each final state
@@ -190,17 +191,18 @@ public class StateSpaceGenerator {
 				} else {
 					successorStates.forEach(nextState -> {
 						nextState = stateRefinementStrategy.refine(nextState);
-						nextState = canonicalizationPhase(nextState);
+						Semantics semantics = semanticsOf(nextState);
+						nextState = canonicalizationPhase(nextState, semantics);
 						if(state.getScopeDepth() == 0) {
 							stateLabelingStrategy.computeAtomicPropositions(nextState);
 						}
-						addingPhase(state, nextState);
+						addingPhase(state, nextState, semantics);
 					});
 				}
 			}
 		}
 
-		totalStatesCounter.addStates(stateSpace.getStates().size());
+		totalStatesCounter.addStates(stateSpace.size());
 		return stateSpace;
 	}
 
@@ -224,23 +226,26 @@ public class StateSpaceGenerator {
 		unexploredConfigurations.addLast(state);
 	}
 
+	private Semantics semanticsOf(ProgramState state) {
+		return program.getStatement(state.getProgramCounter());
+	}
+
 	/**
 	 * In the materialization phase violation points of the given state are removed until the current statement
 	 * can be executed. The materialized states are immediately added to the state space as successors of the
 	 * given state.
 	 * @param state The program state that should be materialized.
+	 * @param semantics The statement that should be executed next and thus determines the necessary materialization.
 	 * @return True if and only if no materialization is needed.
 	 */
-	private boolean materializationPhase(ProgramState state) {
+	private boolean materializationPhase(ProgramState state, Semantics semantics) {
 
-		Semantics semantics = program.getStatement(state.getProgramCounter());
 		List<ProgramState> materialized = materializationStrategy.materialize(
 				state,
 				semantics.getPotentialViolationPoints()
-				);
+		);
 
 		for(ProgramState m : materialized) {
-
 			// performance optimization that prevents isomorphism checks against states in the state space.
 			stateSpace.addState(m);
 			addUnexploredState(m);
@@ -253,21 +258,21 @@ public class StateSpaceGenerator {
 	 * Computes canonical successors of the given program state.
 	 *
 	 * @param state The program state whose successor states shall be computed.
+	 * @param semantics The statement that should be executed.
 	 */
-	private Set<ProgramState> executionPhase(ProgramState state ) throws StateSpaceGenerationAbortedException {
+	private Set<ProgramState> executionPhase(ProgramState state, Semantics semantics)
+			throws StateSpaceGenerationAbortedException {
 
-		Semantics semantics = program.getStatement( state.getProgramCounter() );
 		try {
 			return semantics.computeSuccessors(state, semanticsOptions);
 		} catch (NotSufficientlyMaterializedException e) {
 			logger.error("A state could not be sufficiently materialized.");
-			return new HashSet<>();
+			return Collections.emptySet();
 		}
 	}
 
-	private ProgramState canonicalizationPhase(ProgramState state) {
+	private ProgramState canonicalizationPhase(ProgramState state, Semantics semantics) {
 
-		Semantics semantics = program.getStatement(state.getProgramCounter());
 		if(semantics.permitsCanonicalization()) {
 			state = canonicalizationStrategy.canonicalize(semantics, state);
 		}
@@ -279,13 +284,13 @@ public class StateSpaceGenerator {
 	 * provided to no subsuming state already exists.
 	 * @param previousState The predecessor of the given state.
 	 * @param state The state that should be added.
+	 * @param semantics The statement that has been executed on previousState to get to state.
+	 *
 	 */
-	private void addingPhase(ProgramState previousState, ProgramState state) {
-
+	private void addingPhase(ProgramState previousState, ProgramState state, Semantics semantics) {
 
 		// performance optimization that prevents isomorphism checks against states in the state space.
-		Semantics semantics = program.getStatement(state.getProgramCounter());
-		if( ! semantics.permitsCanonicalization()) { 
+		if(! semantics.permitsCanonicalization()) {
 			stateSpace.addState(state);
 			addUnexploredState(state);
 		} else if(stateSpace.addStateIfAbsent(state)) {

@@ -89,6 +89,12 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public int size() {
+
+        return potentialMergeStates.size() + otherStates.size();
+    }
+
+    @Override
     public Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state) {
 
         int stateSpaceId = state.getStateSpaceId();
