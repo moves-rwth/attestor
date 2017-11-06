@@ -121,5 +121,10 @@ public class InstanceInvokeHelper extends InvokeHelper {
 		return super.needsMaterialization(programState) || baseValue.needsMaterialization( programState );
 	}
 
+	@Override
+	public String baseValueString() {
+		return this.baseValue.toString() + ".";
+	}
+
 
 }

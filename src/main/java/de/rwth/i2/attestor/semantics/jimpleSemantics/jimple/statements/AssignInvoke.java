@@ -124,7 +124,8 @@ public class AssignInvoke extends Statement {
 	}
 
 	public String toString(){
-		String res = lhs.toString() + " = " + method.toString() + "(";
+		String res = lhs.toString() + " = " ;
+		res += invokePrepare.baseValueString() + method.toString() + "(";
 		res += invokePrepare.argumentString();
 		res += ");";
 		return res;

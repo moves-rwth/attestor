@@ -1,12 +1,13 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * Prepares the heap for the invoke of a static method and cleans it afterwards.
@@ -76,6 +77,11 @@ public class StaticInvokeHelper extends InvokeHelper {
 		removeReturn(programState);
 
 		programState.leaveScope();
+	}
+
+	@Override
+	public String baseValueString() {
+		return "";
 	}
 
 }
