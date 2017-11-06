@@ -452,10 +452,14 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			} else if(replacement.isNonterminalEdge(i)) {
 				
 				addNtEdgeFromReplacement(replacement, newElements, i);
+			
+			} else if( replacement.isVariable(i)) {
+				
+				addVariableFromReplacement( replacement, newElements, i);
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates a map that contains the new private IDs assigned to elements of a provided InternalHeapConfiguration
 	 * that is added to the underlying InternalHeapConfiguration.
@@ -534,6 +538,23 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			int to = newElements.get(succ.get(j));
 			heapConf.graph.addEdge(freshPrivateId, j, to);
 		}
+	}
+	
+	/**
+	 * Adds a variable edge from a HeapConfiguration that should be added to the underlying HeapConfiguration
+	 * with the provided privateID. Furthermore it is attached to the node corresponding to its target.
+	 * @param replacement The HeapConfiguration that should e added to the underlying HeapConfiguration
+	 * @param newElements A list mapping all nodes of replacement to their new private IDs in the
+	 * 					  underying Internal HeapConfiguration.
+	 * @param varIDtoAdd The private ID of the variable edge in replacement that should be added.
+	 */
+	private void addVariableFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int varIDtoAdd) {
+		int freshPrivateId = getNextPrivateId();
+		addPrivatePublicIdPair();
+		int target = replacement.graph.successorsOf(varIDtoAdd).get(0);
+		heapConf.graph.addNode(replacement.graph.nodeLabelOf(varIDtoAdd), 1, 0);
+		++heapConf.countVariableEdges;
+		heapConf.graph.addEdge(freshPrivateId, 1, newElements.get(target));
 	}
 
 	@Override
