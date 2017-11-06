@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.counterexamples.heapConfWithPartner.HeapConfigurationWithPartner;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 public final class CounterexampleGenerator {
@@ -21,9 +22,9 @@ public final class CounterexampleGenerator {
 
     public HeapConfiguration generate() {
 
-        ProgramState initialState = traceStateSpace.getInitialStates().iterator().next();
+        ProgramState initialState = traceStateSpace.getInitialStates().iterator().next().clone();
         HeapConfiguration input = initialState.getHeap();
-        HeapConfigurationWithPartner inputWithPartner = new HeapConfigurationWithPartner(input.clone(), input.clone());
+        HeapConfigurationWithPartner inputWithPartner = new HeapConfigurationWithPartner(input, input.clone());
         initialState = initialState.shallowCopyWithUpdateHeap(inputWithPartner);
 
         try {
@@ -35,7 +36,10 @@ public final class CounterexampleGenerator {
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setBreadthFirstSearchEnabled(true)
                     .setSemanticsOptionsSupplier(s -> new StateSpaceGeneratorSemanticsOptions(s))
-                    .setExplorationStrategy(s -> true)
+                    .setExplorationStrategy(s -> {
+                        ProgramState canon = canonicalizationStrategy.canonicalize(new Skip(1), s);
+                        return traceStateSpace.getStates().contains(canon);
+                    })
                     .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                     .setAbortStrategy(s -> {})
                     .setProgram(program)

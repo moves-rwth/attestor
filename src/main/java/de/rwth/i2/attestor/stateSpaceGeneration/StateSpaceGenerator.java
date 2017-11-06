@@ -250,7 +250,7 @@ public class StateSpaceGenerator {
 		}
 	}
 
-	private void addUnexploredState(ProgramState state) {
+	protected void addUnexploredState(ProgramState state) {
 
 		if(explorationStrategy.check(state)) {
 			unexploredConfigurations.addLast(state);

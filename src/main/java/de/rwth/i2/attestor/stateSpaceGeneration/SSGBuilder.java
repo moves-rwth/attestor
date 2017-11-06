@@ -93,7 +93,7 @@ public class SSGBuilder {
 			state.setProgramCounter(0);
 			generator.stateLabelingStrategy.computeAtomicPropositions(state);
 			generator.stateSpace.addInitialState(state);
-			generator.unexploredConfigurations.add(state);
+			generator.addUnexploredState(state);
 		}
 
 		generator.semanticsOptions = generator.semanticsOptionsSupplier.get(generator);
