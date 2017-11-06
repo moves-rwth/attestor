@@ -1,16 +1,8 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -414,7 +406,7 @@ public class ReachableFragmentComputer {
 	 * @return true, if the name belongs to a parameter, false otherwise
 	 */
 	private boolean isParameter(String variableName) {
-		return variableName.startsWith("@param") || variableName.equals("@this");
+		return variableName.startsWith("@param") || variableName.startsWith("@this");
 	}
 
 	/**
