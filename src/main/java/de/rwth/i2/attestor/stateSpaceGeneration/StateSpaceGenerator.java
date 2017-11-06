@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -42,7 +44,7 @@ public class StateSpaceGenerator {
 	 * Stores the state space generated upon instantiation of
 	 * this generator.
 	 */
-	StateSpace stateSpace = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
+	StateSpace stateSpace; // TODO = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
 
 	/**
 	 * Stores the program configurations that still have
@@ -117,6 +119,17 @@ public class StateSpaceGenerator {
 	SemanticsOptions semanticsOptions;
 
 	/**
+	 * Functional interface to obtain instances of state spaces.
+	 */
+	StateSpaceSupplier stateSpaceSupplier;
+
+	/**
+	 * Functional interface determining the semantics options passed to Semantics objects during
+	 * symbolic execution
+	 */
+	SemanticsOptionsSupplier semanticsOptionsSupplier;
+
+	/**
 	 * @return The strategy determining when state space generation is aborted.
 	 */
 	public AbortStrategy getAbortStrategy() {
@@ -149,6 +162,14 @@ public class StateSpaceGenerator {
 	 */
 	public StateRefinementStrategy getStateRefinementStrategy() {
 		return stateRefinementStrategy;
+	}
+
+	public StateSpaceSupplier getStateSpaceSupplier() {
+		return stateSpaceSupplier;
+	}
+
+	public SemanticsOptionsSupplier getSemanticsOptionsSupplier() {
+		return semanticsOptionsSupplier;
 	}
 
 	/**

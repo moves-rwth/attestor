@@ -32,6 +32,8 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                 )
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy(s -> true)
+                .setStateSpaceSupplier(() -> new InternalStateSpace(100))
+                .setSemanticsOptionsSupplier(s -> new MockupSemanticsOptions())
                 .build()
                 .generate();
     }

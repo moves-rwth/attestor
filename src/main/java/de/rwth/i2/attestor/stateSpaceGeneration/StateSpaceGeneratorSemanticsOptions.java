@@ -33,6 +33,8 @@ public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
                 .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
                 .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
                 .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+                .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
+                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsOptionsSupplier())
                 .setProgram(program)
                 .addInitialState(initialState)
                 .build()

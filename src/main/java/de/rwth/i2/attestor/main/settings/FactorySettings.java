@@ -228,7 +228,10 @@ public class FactorySettings {
                         Settings.getInstance().options().isRemoveDeadVariables()
                 )
                 .setBreadthFirstSearchEnabled(false)
-                .setExplorationStrategy(s -> true);
+                .setExplorationStrategy(s -> true)
+                .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
+                .setSemanticsOptionsSupplier(ssp -> new StateSpaceGeneratorSemanticsOptions(ssp));
+
     }
 
     public ProgramState createProgramState(HeapConfiguration heapConfiguration, int scopeDepth) {
