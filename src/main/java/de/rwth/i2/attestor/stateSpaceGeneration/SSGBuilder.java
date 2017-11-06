@@ -174,7 +174,17 @@ public class SSGBuilder {
 	 * @return The builder.
 	 */
 	public SSGBuilder setDeadVariableElimination(boolean enabled) {
-		generator.isDeadVariableEliminationEnabled = enabled;
+		generator.deadVariableEliminationEnabled = enabled;
+		return this;
+	}
+
+	/**
+	 * @param enabled True if and only if the state space should be explored in a breadth-first instead of
+	 *                a depth-first fashion.
+	 * @return The builder.
+	 */
+	public SSGBuilder setBreadthFirstSearchEnabled(boolean enabled) {
+		generator.breadthFirstSearchEnabled = enabled;
 		return this;
 	}
 	

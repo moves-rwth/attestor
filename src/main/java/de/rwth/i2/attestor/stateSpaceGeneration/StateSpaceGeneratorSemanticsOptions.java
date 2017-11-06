@@ -30,7 +30,7 @@ public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled)
+                .setDeadVariableElimination(stateSpaceGenerator.deadVariableEliminationEnabled)
                 .setProgram(program)
                 .addInitialState(initialState)
                 .build()

@@ -5,10 +5,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -51,7 +48,7 @@ public class StateSpaceGenerator {
 	 * Stores the program configurations that still have
 	 * to be executed by the state space generation
 	 */
-	final Stack<ProgramState> unexploredConfigurations = new Stack<>();
+	final LinkedList<ProgramState> unexploredConfigurations = new LinkedList<>();
 
 	/**
 	 * The control flow of the program together with the
@@ -100,7 +97,13 @@ public class StateSpaceGenerator {
 	 * Whether variables are actually eliminated depends on the executed
 	 * statement.
 	 */
-	boolean isDeadVariableEliminationEnabled;
+	boolean deadVariableEliminationEnabled;
+
+	/**
+	 * Flag that determines whether the state space is generated in a depth-first
+	 * or breadth-first fashion.
+	 */
+	boolean breadthFirstSearchEnabled;
 
 	/**
 	 * The options for this state space generator that configure the individual
@@ -144,7 +147,11 @@ public class StateSpaceGenerator {
 	}
 
 	public boolean isDeadVariableEliminationEnabled() {
-		return isDeadVariableEliminationEnabled;
+		return deadVariableEliminationEnabled;
+	}
+
+	public boolean isBreadthFirstSearchEnabled() {
+		return breadthFirstSearchEnabled;
 	}
 
 	protected StateSpaceGenerator() {
@@ -161,7 +168,7 @@ public class StateSpaceGenerator {
 
 		while( hasUnexploredStates() ){
 
-			ProgramState state = unexploredConfigurations.pop();
+			ProgramState state = nextUnexploredState();
 
 			try {
 				abortStrategy.checkAbort(stateSpace);
@@ -204,6 +211,19 @@ public class StateSpaceGenerator {
 		return !unexploredConfigurations.isEmpty();
 	}
 
+	private ProgramState nextUnexploredState() {
+
+		if(breadthFirstSearchEnabled) {
+			return unexploredConfigurations.removeFirst();
+		} else {
+			return unexploredConfigurations.removeLast();
+		}
+	}
+
+	private void addUnexploredState(ProgramState state) {
+		unexploredConfigurations.addLast(state);
+	}
+
 	/**
 	 * In the materialization phase violation points of the given state are removed until the current statement
 	 * can be executed. The materialized states are immediately added to the state space as successors of the
@@ -223,7 +243,7 @@ public class StateSpaceGenerator {
 
 			// performance optimization that prevents isomorphism checks against states in the state space.
 			stateSpace.addState(m);
-			unexploredConfigurations.add(m);
+			addUnexploredState(m);
 			stateSpace.addMaterializationTransition(state, m);
 		}
 		return materialized.isEmpty();
@@ -267,9 +287,9 @@ public class StateSpaceGenerator {
 		Semantics semantics = program.getStatement(state.getProgramCounter());
 		if( ! semantics.permitsCanonicalization()) { 
 			stateSpace.addState(state);
-			unexploredConfigurations.add(state);
+			addUnexploredState(state);
 		} else if(stateSpace.addStateIfAbsent(state)) {
-			unexploredConfigurations.add(state);
+			addUnexploredState(state);
 		}
 
 		stateSpace.addControlFlowTransition(previousState, state);
