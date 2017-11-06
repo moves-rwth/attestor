@@ -100,7 +100,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 		List<HeapConfiguration> result = new ArrayList<>();
 		for( HeapConfiguration contract : contracts ){
-			HeapConfigurationBuilder builder = remainingFragment.builder();
+			HeapConfigurationBuilder builder = remainingFragment.clone().builder();
 			builder.replaceNonterminalEdge(contractPlaceholderEdge, contract);
 			result.add( builder.build() );
 		}
