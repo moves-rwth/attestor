@@ -86,6 +86,7 @@ public class SSGBuilder {
 			generator.unexploredConfigurations.add(state);
 		}
 
+		generator.semanticsOptions = new StateSpaceGeneratorSemanticsOptions(generator);
 		return generator;
 	}
 

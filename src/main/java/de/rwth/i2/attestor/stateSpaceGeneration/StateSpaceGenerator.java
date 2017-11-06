@@ -114,7 +114,7 @@ public class StateSpaceGenerator {
 	 * The options for this state space generator that configure the individual
 	 * steps of the symbolic execution.
 	 */
-	private final SemanticsOptions semanticsOptions;
+	SemanticsOptions semanticsOptions;
 
 	/**
 	 * @return The strategy determining when state space generation is aborted.
@@ -164,11 +164,6 @@ public class StateSpaceGenerator {
 
 	public boolean isBreadthFirstSearchEnabled() {
 		return breadthFirstSearchEnabled;
-	}
-
-	protected StateSpaceGenerator() {
-
-		semanticsOptions = new StateSpaceGeneratorSemanticsOptions(this);
 	}
 
 	/**
