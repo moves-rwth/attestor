@@ -60,7 +60,7 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 				}
 			}else if( graph.isExternal(i) ){
 				Type type = (Type) nodeLabel;
-				if( ! (type.toString().equals("NULL") || type.toString().startsWith("int")) ){
+				if( ! ( aggressiveConstantAbstraction && (type.toString().equals("NULL") || type.toString().startsWith("int")) )){
 					if( dist.get(i) < minAbstractionDistance ){
 						return false;
 					}
