@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
@@ -12,9 +11,14 @@ public class MockupSemanticsOptions implements SemanticsOptions {
 
 
     @Override
-    public StateSpace generateStateSpace(Program program, HeapConfiguration input, int scopeDepth) throws StateSpaceGenerationAbortedException {
+    public void update(Object handler, ProgramState input) {
 
-        ProgramState initialState = new DefaultProgramState(input, scopeDepth);
+    }
+
+    @Override
+    public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
+
+        ProgramState initialState = new DefaultProgramState(input.getHeap(), input.getScopeDepth());
         initialState.setProgramCounter(0);
         return StateSpaceGenerator.builder()
                 .addInitialState(initialState)
@@ -31,7 +35,7 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                         }
                 )
                 .setStateCounter( s -> {} )
-                .setExplorationStrategy(s -> true)
+                .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setSemanticsOptionsSupplier(s -> new MockupSemanticsOptions())
                 .build()

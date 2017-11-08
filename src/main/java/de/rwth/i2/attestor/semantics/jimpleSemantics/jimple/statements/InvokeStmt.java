@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
@@ -17,7 +18,7 @@ import java.util.Set;
  * @author Hannah Arndt
  *
  */
-public class InvokeStmt extends Statement {
+public class InvokeStmt extends Statement implements InvokeCleanup {
 
 	/**
 	 * the abstract representation of the called method
@@ -53,13 +54,14 @@ public class InvokeStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
+		options.update(this, programState);
+
 		programState = programState.clone();
 
 		invokePrepare.prepareHeap( programState, options );
 
 		Set<ProgramState> methodResult = method.getResult(
-				programState.getHeap(),
-				programState.getScopeDepth(),
+				programState,
 				options
 		);
 
@@ -68,6 +70,11 @@ public class InvokeStmt extends Statement {
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		
 		return methodResult;
+	}
+
+	public ProgramState getCleanedResultState(ProgramState state, SemanticsOptions options)  {
+		invokePrepare.cleanHeap(state, options);
+		return state;
 	}
 
 	@Override

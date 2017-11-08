@@ -98,8 +98,8 @@ public class InternalStateSpace implements StateSpace {
     public Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state) {
 
         int stateSpaceId = state.getStateSpaceId();
-        TIntArrayList successors = controlFlowSuccessors.get(stateSpaceId);
 
+        TIntArrayList successors = controlFlowSuccessors.get(stateSpaceId);
 
         if(successors.isEmpty()) {
             return Collections.emptySet();
@@ -219,6 +219,21 @@ public class InternalStateSpace implements StateSpace {
 
         initLookupTable();
         return stateIdLookupTable.get(id);
+    }
+
+    public ProgramState getStateInStateSpace(ProgramState state) {
+
+        ProgramState result = potentialMergeStates.get(state);
+        if(result != null) {
+            return result;
+        }
+        for(ProgramState s : otherStates)  {
+
+            if(s.getHeap().equals(state.getHeap())) {
+                return s;
+            }
+        }
+        return null;
     }
 
     private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {

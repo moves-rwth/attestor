@@ -38,6 +38,8 @@ public class GotoStmt extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState state, SemanticsOptions options) {
 
+		options.update(this, state);
+
 		return Collections.singleton(state.shallowCopyUpdatePC(nextPC));
 	}
 

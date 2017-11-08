@@ -68,6 +68,8 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 */
 	void leaveScope();
 
+	void setScopeDepth(int scopeDepth);
+
 	/**
 	 * Gets the target of the variable in the current scope.
 	 *

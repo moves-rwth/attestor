@@ -28,6 +28,8 @@ public interface StateSpace {
     void addInitialState(ProgramState state);
     void setFinal(ProgramState state);
 
+    ProgramState getStateInStateSpace(ProgramState state);
+
     void addMaterializationTransition(ProgramState from, ProgramState to);
     void addControlFlowTransition(ProgramState from, ProgramState to);
     void addArtificialInfPathsTransition(ProgramState cur);

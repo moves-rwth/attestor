@@ -187,6 +187,15 @@ public class StateSpaceGenerator {
 		return breadthFirstSearchEnabled;
 	}
 
+	public StateSpace getStateSpace() {
+
+		return stateSpace;
+	}
+
+	public TotalStatesCounter getTotalStatesCounter() {
+		return totalStatesCounter;
+	}
+
 	/**
 	 * Attempts to generate a StateSpace according to the
 	 * underlying analysis.
@@ -252,7 +261,7 @@ public class StateSpaceGenerator {
 
 	protected void addUnexploredState(ProgramState state) {
 
-		if(explorationStrategy.check(state)) {
+		if(explorationStrategy.check(state, stateSpace)) {
 			unexploredConfigurations.addLast(state);
 		}
 	}

@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
@@ -14,6 +11,12 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
 public class IpaAbstractMethod extends AbstractMethod {
 
 	IpaContractCollection contracts = new IpaContractCollection();
@@ -23,10 +26,17 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth, SemanticsOptions options) {
+	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
 
+		return null; // TODO
+	}
+
+	@Override
+	public Set<ProgramState> getResult(ProgramState input, SemanticsOptions options) {
+
+		HeapConfiguration heap = input.getHeap();
 		Set<ProgramState> result = new HashSet<>();
-		for( HeapConfiguration postConfig : getResult( input ) ){
+		for( HeapConfiguration postConfig : getResult( heap ) ){
 			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
 		}
 

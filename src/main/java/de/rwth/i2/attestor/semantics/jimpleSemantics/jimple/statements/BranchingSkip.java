@@ -47,6 +47,8 @@ public class BranchingSkip extends Statement {
 	@Override
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options) {
 
+		options.update(this, programState);
+
 		ProgramState leftResult = programState.shallowCopy();
 		leftResult.setProgramCounter(leftSuccessor);
 

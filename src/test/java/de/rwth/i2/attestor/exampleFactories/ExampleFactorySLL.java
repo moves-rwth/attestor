@@ -57,6 +57,10 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
                 .build();
     }
 
+    public SelectorLabel getNextSel() {
+        return sel;
+    }
+
     public HeapConfiguration getListofLengthAtLeastOne() {
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()

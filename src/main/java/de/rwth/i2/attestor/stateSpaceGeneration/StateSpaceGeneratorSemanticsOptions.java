@@ -20,10 +20,18 @@ public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
     }
 
     @Override
-    public StateSpace generateStateSpace(Program program, HeapConfiguration input, int scopeDepth)
+    public void update(Object handler, ProgramState input) {
+
+    }
+
+    @Override
+    public StateSpace generateStateSpace(Program program, ProgramState input)
             throws StateSpaceGenerationAbortedException {
 
-        ProgramState initialState = Settings.getInstance().factory().createProgramState(input, scopeDepth);
+        HeapConfiguration heap = input.getHeap();
+        int scopeDepth = input.getScopeDepth();
+
+        ProgramState initialState = Settings.getInstance().factory().createProgramState(heap, scopeDepth);
         return StateSpaceGenerator.builder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
@@ -35,6 +43,7 @@ public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
                 .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsOptionsSupplier())
+                .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setProgram(program)
                 .addInitialState(initialState)
                 .build()

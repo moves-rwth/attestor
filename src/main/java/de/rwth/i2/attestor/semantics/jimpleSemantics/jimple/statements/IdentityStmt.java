@@ -53,6 +53,8 @@ public class IdentityStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 
+		options.update(this, programState);
+
 		programState = programState.clone();
 		ConcreteValue concreteRHS = programState.removeIntermediate( rhs );
 

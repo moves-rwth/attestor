@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -23,7 +24,7 @@ import java.util.Set;
  * @author Hannah Arndt
  *
  */
-public class AssignInvoke extends Statement {
+public class AssignInvoke extends Statement implements InvokeCleanup {
 
 	private static final Logger logger = LogManager.getLogger( "AssignInvoke" );
 
@@ -69,8 +70,9 @@ public class AssignInvoke extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-		programState = programState.clone();
+		options.update(this, programState);
 
+		programState = programState.clone();
 		invokePrepare.prepareHeap( programState, options );
 		
 		if( lhs instanceof Local ){
@@ -80,30 +82,36 @@ public class AssignInvoke extends Statement {
 		}
 
 		Set<ProgramState> methodResult = method.getResult(
-				programState.getHeap(),
-				programState.getScopeDepth(),
+				programState,
 				options
 		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
 		for( ProgramState resState : methodResult ) {
 
-			ConcreteValue concreteRHS = resState.removeIntermediate( "@return" );
-
-			invokePrepare.cleanHeap( resState, options );
-
-			try {
-				lhs.setValue( resState, concreteRHS );
-			} catch (NullPointerDereferenceException e) {
-				logger.error(e.getErrorMessage(this));
-			}
-
+			resState = getCleanedResultState(resState, options);
 			ProgramState freshState = resState.clone();
 			freshState.setProgramCounter(nextPC);
 			assignResult.add( freshState );
 		}
 				
 		return assignResult;
+	}
+
+	public ProgramState getCleanedResultState(ProgramState state, SemanticsOptions options)
+			throws NotSufficientlyMaterializedException {
+
+		ConcreteValue concreteRHS = state.removeIntermediate( "@return" );
+		invokePrepare.cleanHeap( state, options );
+
+		try {
+			lhs.setValue(state, concreteRHS );
+		} catch (NullPointerDereferenceException e) {
+			logger.error(e.getErrorMessage(this));
+		}
+
+		return state;
+
 	}
 
 	@Override

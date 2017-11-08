@@ -67,6 +67,8 @@ public class IfStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 
+		options.update(this, programState);
+
 		Set<ProgramState> defaultRes = new HashSet<>();
 		defaultRes.add(programState.shallowCopyUpdatePC(truePC));
 		defaultRes.add(programState.shallowCopyUpdatePC(falsePC));

@@ -3,15 +3,22 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 import de.rwth.i2.attestor.counterexamples.heapConfWithPartner.HeapConfigurationWithPartner;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+
+import java.util.*;
 
 public final class CounterexampleGenerator {
 
     private Program program;
-    private StateSpace traceStateSpace; // assumption: connected, exactly one initial and one final state
+    private List<ProgramState> trace;
     private CanonicalizationStrategy canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
+
+    private ProgramState lastProcedureInitialState;
+    private Set<ProgramState> lastProcedureFinalStates;
+    private InvokeCleanup lastProcedureInvokeCleanup;
 
     public static CounterexampleGeneratorBuilder builder() {
         return new CounterexampleGeneratorBuilder();
@@ -20,9 +27,63 @@ public final class CounterexampleGenerator {
     private CounterexampleGenerator() {
     }
 
+    protected void setLastProcedureInvokeCleanup(InvokeCleanup invokeCleanup) {
+        this.lastProcedureInvokeCleanup = invokeCleanup;
+    }
+
+    protected InvokeCleanup getLastProcedureInvokeCleanup() {
+        return lastProcedureInvokeCleanup;
+    }
+
+    protected void setLastProcedureInitialState(ProgramState initialState) {
+        lastProcedureInitialState = initialState;
+    }
+
+    protected void setLastProcedureFinalStates(Set<ProgramState> finalStates) {
+        lastProcedureFinalStates = finalStates;
+    }
+
+    protected ProgramState getTraceSuccessor(ProgramState state) {
+
+        Iterator<ProgramState> iter = trace.iterator();
+        while(iter.hasNext()) {
+            ProgramState current = iter.next();
+            if(current.getStateSpaceId() == state.getStateSpaceId()) {
+                if(iter.hasNext()) {
+                    return iter.next();
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
+    protected CanonicalizationStrategy getCanonicalizationStrategy() {
+        return canonicalizationStrategy;
+    }
+
+    protected ProgramState getLastProcedureInitialState() {
+
+        if(lastProcedureInitialState == null) {
+            return trace.get(0);
+        }
+        return lastProcedureInitialState;
+    }
+
+    protected Set<ProgramState> getLastProcedureFinalStates() {
+
+        if(lastProcedureFinalStates == null) {
+            Set<ProgramState> result = new HashSet<>(1);
+            result.add(trace.get(trace.size()-1));
+            return result;
+        }
+
+        return lastProcedureFinalStates;
+    }
+
     public HeapConfiguration generate() {
 
-        ProgramState initialState = traceStateSpace.getInitialStates().iterator().next().clone();
+        ProgramState initialState = trace.iterator().next();
         HeapConfiguration input = initialState.getHeap();
         HeapConfigurationWithPartner inputWithPartner = new HeapConfigurationWithPartner(input, input.clone());
         initialState = initialState.shallowCopyWithUpdateHeap(inputWithPartner);
@@ -35,12 +96,16 @@ public final class CounterexampleGenerator {
                     .setCanonizationStrategy((sem,state) -> state)
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setBreadthFirstSearchEnabled(true)
-                    .setSemanticsOptionsSupplier(s -> new StateSpaceGeneratorSemanticsOptions(s))
-                    .setExplorationStrategy(s -> {
+                    .setSemanticsOptionsSupplier(s ->
+                            new CounterexampleSemanticsOptions(s, this)
+                    )
+                    .setExplorationStrategy((s,sp) -> {
                         ProgramState canon = canonicalizationStrategy.canonicalize(new Skip(1), s);
-                        return traceStateSpace.getStates().contains(canon);
+                        return trace.contains(canon);
                     })
-                    .setStateSpaceSupplier(() -> new InternalStateSpace(100))
+                    .setStateSpaceSupplier(() ->
+                            new CounterexampleStateSpace(this)
+                    )
                     .setAbortStrategy(s -> {})
                     .setProgram(program)
                     .addInitialState(initialState)
@@ -48,7 +113,7 @@ public final class CounterexampleGenerator {
                 .build()
                 .generate();
 
-            assert stateSpace.getFinalStateIds().size() == 1;
+            assert stateSpace.getFinalStates().size() == 1;
             HeapConfiguration finalHeap = stateSpace
                     .getFinalStates()
                     .iterator()
@@ -72,7 +137,7 @@ public final class CounterexampleGenerator {
         }
 
         public CounterexampleGenerator build() {
-            assert generator.traceStateSpace != null;
+            assert generator.trace != null && !generator.trace.isEmpty();
             assert generator.program != null;
             assert generator.materializationStrategy != null;
             assert generator.canonicalizationStrategy != null;
@@ -82,10 +147,16 @@ public final class CounterexampleGenerator {
             return result;
         }
 
-        public CounterexampleGeneratorBuilder setTraceStateSpace(StateSpace traceStateSpace) {
-            assert traceStateSpace.getInitialStateIds().size() == 1;
-            assert traceStateSpace.getFinalStateIds().size() == 1;
-            generator.traceStateSpace = traceStateSpace;
+        public CounterexampleGeneratorBuilder setTrace(List<ProgramState> trace) {
+            generator.trace = trace;
+            return this;
+        }
+
+        public CounterexampleGeneratorBuilder addTraceState(ProgramState state) {
+            if(generator.trace == null) {
+                generator.trace = new ArrayList<>();
+            }
+            generator.trace.add(state);
             return this;
         }
 

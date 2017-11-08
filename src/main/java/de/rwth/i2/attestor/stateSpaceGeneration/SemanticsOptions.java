@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-
 /**
  * Collection of all options to influence symbolic program execution during runtime.
  *
@@ -10,14 +8,20 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 public interface SemanticsOptions {
 
     /**
+     * Callback function to update the state space generation whenever a statement is executed.
+     * @param handler The object that manipulates the input state
+     * @param input The input on which the statement should be executed.
+     */
+    void update(Object handler, ProgramState input);
+
+    /**
      * Generates a new state space using the same internal settings as the calling state space
      * generation.
      * @param program The program that should be symbolic executed to generate a state space.
-     * @param input The initial heap configuration for the symbolic execution.
-     * @param scopeDepth The current depth of the scope.
+     * @param input The program state determining the input for the symbolic execution.
      * @return The state space generated for the given input.
      */
-    StateSpace generateStateSpace(Program program, HeapConfiguration input, int scopeDepth)
+    StateSpace generateStateSpace(Program program, ProgramState input)
             throws StateSpaceGenerationAbortedException;
 
     /**

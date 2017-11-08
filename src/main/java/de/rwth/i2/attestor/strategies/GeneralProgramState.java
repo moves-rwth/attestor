@@ -255,6 +255,11 @@ public abstract class GeneralProgramState implements ProgramState {
 	}
 
 	@Override
+	public void setScopeDepth(int scopeDepth) {
+		this.scopeDepth = scopeDepth;
+	}
+
+	@Override
 	public void leaveScope() {
 		
 		--this.scopeDepth;

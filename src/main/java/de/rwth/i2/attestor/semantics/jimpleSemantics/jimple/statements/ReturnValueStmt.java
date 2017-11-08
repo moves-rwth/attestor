@@ -49,6 +49,8 @@ public class ReturnValueStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 
+		options.update(this, programState);
+
 		programState = programState.clone();
 
 		ConcreteValue concreteReturn;

@@ -29,6 +29,8 @@ public class ReturnVoidStmt extends Statement {
 	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
 			throws NotSufficientlyMaterializedException{
 
+		options.update(this, programState);
+
 		programState = programState.clone();
 
 		// -1 since this statement has no successor location

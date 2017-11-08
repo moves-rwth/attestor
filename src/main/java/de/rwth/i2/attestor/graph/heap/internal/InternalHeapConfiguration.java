@@ -620,7 +620,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 			return false;
 		}
 
-		InternalHeapConfiguration hc = (InternalHeapConfiguration) otherObject;
+		HeapConfiguration hc = (HeapConfiguration) otherObject;
 		IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
 		return isoChecker.hasMatching();
 	}

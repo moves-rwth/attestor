@@ -2,9 +2,11 @@ package de.rwth.i2.attestor.counterexamples.heapConfWithPartner;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
@@ -18,7 +20,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public final class HeapConfigurationWithPartner implements HeapConfiguration {
+public final class HeapConfigurationWithPartner implements HeapConfiguration, Graph {
 
     HeapConfiguration actual; // the actual HeapConfiguration visible through all methods
     HeapConfiguration partner;
@@ -249,5 +251,53 @@ public final class HeapConfigurationWithPartner implements HeapConfiguration {
     public int hashCode() {
 
         return actual.hashCode();
+    }
+
+    @Override
+    public int size() {
+
+        return ((Graph) actual).size();
+    }
+
+    @Override
+    public boolean hasEdge(int from, int to) {
+
+        return ((Graph) actual).hasEdge(from, to);
+    }
+
+    @Override
+    public TIntArrayList getSuccessorsOf(int node) {
+
+        return ((Graph) actual).getSuccessorsOf(node);
+    }
+
+    @Override
+    public TIntArrayList getPredecessorsOf(int node) {
+
+        return ((Graph) actual).getPredecessorsOf(node);
+    }
+
+    @Override
+    public NodeLabel getNodeLabel(int node) {
+
+        return ((Graph) actual).getNodeLabel(node);
+    }
+
+    @Override
+    public List<Object> getEdgeLabel(int from, int to) {
+
+        return ((Graph) actual).getEdgeLabel(from, to);
+    }
+
+    @Override
+    public boolean isExternal(int node) {
+
+        return ((Graph) actual).isExternal(node);
+    }
+
+    @Override
+    public int getExternalIndex(int node) {
+
+        return ((Graph) actual).getExternalIndex(node);
     }
 }
