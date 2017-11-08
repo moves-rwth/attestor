@@ -73,7 +73,7 @@ public class StaticInvokeHelper extends InvokeHelper {
 	public void cleanHeap( JimpleProgramState programState){
 
 		removeParameters(programState);
-		removeLocals(programState);
+		//removeLocals(programState);
 		removeReturn(programState);
 
 		programState.leaveScope();

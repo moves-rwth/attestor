@@ -59,7 +59,6 @@ public class InstanceInvokeHelper extends InvokeHelper {
 
 	/**
 	 * remove any intermediates that are still present in the heap. <br>
-	 * remove all local variables from the scope of this method from the heap <br>
 	 * leave the scope of the method.
 	 */
 	@Override
@@ -67,7 +66,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 
 		programState.removeIntermediate( "@this:" );
 		removeParameters( programState );
-		removeLocals( programState );
+		//removeLocals( programState );
 		removeReturn( programState );
 
 		programState.leaveScope();

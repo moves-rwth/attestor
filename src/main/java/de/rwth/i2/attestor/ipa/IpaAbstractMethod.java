@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
@@ -80,7 +81,24 @@ public class IpaAbstractMethod extends AbstractMethod {
 		StateSpace stateSpace = factory.create(method, reachableFragment, 0);
 		List<HeapConfiguration> postconditions = contracts.getContract( reachableFragment ).getValue();
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
+			//otherwise, any local variables are already removed 
+			if( ! Settings.getInstance().options().isRemoveDeadVariables() ){
+			removeLocals( finalState );
+			}
 			postconditions.add( finalState.getHeap() );
+		}
+	}
+
+	private void removeLocals(ProgramState finalState) {
+		final HeapConfiguration finalHeap = finalState.getHeap();
+		HeapConfigurationBuilder builder = finalHeap.clone().builder();
+		TIntArrayList variableIndices = finalHeap.variableEdges();
+		for( int i = 0; i < variableIndices.size(); i++ ){
+			final int varId = variableIndices.get(i);
+			String variableName = finalHeap.nameOf( varId );
+			if( !( Constants.isConstant(variableName) || variableName.equals("@return")) ){
+				builder.removeVariableEdge( varId );
+			}
 		}
 	}
 
