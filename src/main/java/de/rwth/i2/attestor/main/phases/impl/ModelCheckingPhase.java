@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.counterexamples.CounterexampleGenerator;
-import de.rwth.i2.attestor.counterexamples.SpuriousCounterexampleException;
+import de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.LTLResultTransformer;
@@ -66,25 +65,17 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
         MaterializationStrategy materializationStrategy = settings.stateSpaceGeneration().getMaterializationStrategy();
         CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getCanonicalizationStrategy();
 
-        CounterexampleGenerator generator = CounterexampleGenerator
-                    .builder()
+        CounterexampleGenerator generator = CounterexampleGenerator.builder()
                     .setProgram(program)
-                    .setTrace(failureTrace)
+                    .setTrace(failureTrace.getTrace())
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setMaterializationStrategy(materializationStrategy)
                     .setCanonicalizationStrategy(canonicalizationStrategy)
                     .build();
 
-        try {
             HeapConfiguration badInput = generator.generate();
             counterexamples.put(formula, badInput);
-            logger.info("Counterexample is not spurious.");
-
-            System.out.println(badInput);
-
-        } catch (SpuriousCounterexampleException e) {
-            logger.error("Counterexample might be spurious: " + formula);
-        }
+            logger.info("Constructed counterexample.");
     }
 
     @Override

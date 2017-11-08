@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.counterexamples.heapConfWithPartner;
+package de.rwth.i2.attestor.counterexampleGeneration.heapConfWithPartner;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;

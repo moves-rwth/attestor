@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import de.rwth.i2.attestor.counterexamples.Trace;
+import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 

@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.counterexamples.heapConfWithPartner.HeapConfigurationWithPartner;
+import de.rwth.i2.attestor.counterexampleGeneration.heapConfWithPartner.HeapConfigurationWithPartner;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
@@ -128,7 +128,7 @@ public final class CounterexampleGenerator {
 
     }
 
-    static class CounterexampleGeneratorBuilder {
+    public static class CounterexampleGeneratorBuilder {
 
         private CounterexampleGenerator generator;
 

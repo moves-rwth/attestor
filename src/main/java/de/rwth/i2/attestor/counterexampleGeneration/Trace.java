@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.counterexamples;
+package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
