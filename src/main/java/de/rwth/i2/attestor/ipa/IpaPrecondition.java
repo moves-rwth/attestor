@@ -48,7 +48,7 @@ public class IpaPrecondition {
 			if (other.config != null)
 				return false;
 		} else{
-			PreconditionChecker checker = new PreconditionChecker( other.getHeap(), config );
+			PreconditionChecker checker = new PreconditionChecker( config, other.getHeap() );
 			if( checker.hasMatching() ){
 				lastUsedChecker = checker;
 				return true;
@@ -71,20 +71,20 @@ public class IpaPrecondition {
 	 */
 	public int[] getReordering( HeapConfiguration matchingConfig ) throws IllegalArgumentException{
 		PreconditionChecker checker = lastUsedChecker;
-		if( checker.getPattern() != matchingConfig ){ //checker is not valid for this input
-			checker = new PreconditionChecker(matchingConfig, config);
+		if( checker.getTarget() != matchingConfig ){ //checker is not valid for this input
+			checker = new PreconditionChecker(config, matchingConfig);
 			if( ! checker.hasMatching() ){
 				throw new IllegalArgumentException(); //input has to be matching
 			}
 		}
 		
 		Matching matching = checker.getMatching();
-		TIntArrayList externalNodes = matchingConfig.externalNodes();
+		TIntArrayList externalNodes = config.externalNodes();
 		int[] result = new int[externalNodes.size()];
 		for( int i = 0; i < externalNodes.size(); i++ ){
 			
 			int matchingNode = matching.match( externalNodes.get(i) );
-			result[i] = config.externalIndexOf( matchingNode );
+			result[i] = matchingConfig.externalIndexOf( matchingNode );
 		}
 		
 		return result;

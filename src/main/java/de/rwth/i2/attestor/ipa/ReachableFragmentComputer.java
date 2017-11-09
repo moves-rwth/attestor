@@ -233,7 +233,7 @@ public class ReachableFragmentComputer {
 	private void addNodeToReachableFragment(int nodeToTranslate) {
 		Type type = input.nodeTypeOf( nodeToTranslate );
 		TIntArrayList insertedNode = new TIntArrayList();
-		reachableFragmentBuilder.addNodes(type, 1, insertedNode);
+		reachableFragmentBuilder.addNodes( type, 1, insertedNode );
 		idMapping.put(nodeToTranslate, insertedNode.get(0) );
 	}
 
