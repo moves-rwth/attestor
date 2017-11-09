@@ -47,10 +47,7 @@ public class VariableScopes {
     public static boolean hasScope(String scopedName, int scope) {
 
         String[] split = scopedName.split(SCOPE_DELIMITER);
-        if (split .length > 1) {
-            return split[0].equals(String.valueOf(scope));
-        }
-        return false;
+        return split.length > 1 && split[0].equals(String.valueOf(scope));
     }
 
     public static String getName(String scopedName) {

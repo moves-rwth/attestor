@@ -13,7 +13,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class ReachableFragmentComputer {
 
 	
-	private String displayName;
+	private final String displayName;
 	
 	Queue<Integer> queue;
 	Map<Integer, Integer> idMapping;
@@ -61,10 +61,8 @@ public class ReachableFragmentComputer {
 		for( int i = 0; i < externals.size(); i++ ){
 			tentacles.add(externals.get(i) );
 		}
-		
-		int idOfNonterminal = replaceBuilder.addNonterminalEdgeAndReturnId(nt, tentacles);
-		
-		return idOfNonterminal;
+
+		return replaceBuilder.addNonterminalEdgeAndReturnId(nt, tentacles);
 	}
 
 

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -14,15 +13,21 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A custom state space implementation for counterexample generation that stores only final states that are required
+ * by some state within a trace. Note that multiple final states might be required due to multiple paths to reach
+ * a fixed final state within bodies of procedure calls.
+ *
+ * @author Christoph
+ */
 final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState initialState;
-    private Set<ProgramState> requiredFinalStates;
-    private CanonicalizationStrategy canonicalizationStrategy;
-    private InvokeCleanup invokeCleanup;
+    private final Set<ProgramState> requiredFinalStates;
+    private final CanonicalizationStrategy canonicalizationStrategy;
+    private final InvokeCleanup invokeCleanup;
 
-    private int scopeDepth;
-    private Set<ProgramState> finalStates = new HashSet<>();
+    private final Set<ProgramState> finalStates = new HashSet<>();
 
     CounterexampleStateSpace(CanonicalizationStrategy canonicalizationStrategy,
                                     Set<ProgramState> requiredFinalStates,
@@ -33,7 +38,6 @@ final class CounterexampleStateSpace implements StateSpace {
         this.invokeCleanup = invokeCleanup;
 
         assert !requiredFinalStates.isEmpty();
-        this.scopeDepth = requiredFinalStates.iterator().next().getScopeDepth();
     }
 
     @Override
@@ -149,6 +153,11 @@ final class CounterexampleStateSpace implements StateSpace {
         this.initialState = state;
     }
 
+    /** We first reconstruct a fully abstract state from the currently generated
+     * final state. If this state is actually required and no (more concrete)
+     * representative of this state has been stored yet, we add this state as
+     * a final state.
+     */
     @Override
     public void setFinal(ProgramState state) {
 

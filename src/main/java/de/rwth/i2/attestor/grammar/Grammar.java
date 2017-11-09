@@ -20,7 +20,7 @@ public class Grammar {
 		return new GrammarBuilder();
 	}
 
-	Map<Nonterminal, Set<HeapConfiguration>> rules;
+	final Map<Nonterminal, Set<HeapConfiguration>> rules;
 	
 	public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules ) {
 		this.rules = rules;

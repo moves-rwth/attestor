@@ -12,10 +12,10 @@ import gnu.trove.map.TIntIntMap;
 
 public final class HeapConfigurationPairBuilder implements HeapConfigurationBuilder {
 
-    private HeapConfigurationPair hc;
-    private HeapConfigurationBuilder actualBuilder;
-    private HeapConfigurationBuilder partnerBuilder;
-    private TIntIntMap ntEdgeRelation;
+    private final HeapConfigurationPair hc;
+    private final HeapConfigurationBuilder actualBuilder;
+    private final HeapConfigurationBuilder partnerBuilder;
+    private final TIntIntMap ntEdgeRelation;
 
     HeapConfigurationPairBuilder(HeapConfigurationPair hc)  {
 

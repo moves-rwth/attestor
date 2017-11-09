@@ -70,12 +70,12 @@ public class JsonToGrammar {
 
 	private static boolean hasDefinedTentacles(JSONObject grammarFragment) {
 
-		return grammarFragment.has( "redunctionTentacles" );
+		return grammarFragment.has( "reductionTentacles" );
 	}
 
 	private static boolean[] getReductionTentacles( JSONObject grammarFragment ) {
 
-		JSONArray tentacles = grammarFragment.getJSONArray( "redunctionTentacles" );
+		JSONArray tentacles = grammarFragment.getJSONArray( "reductionTentacles" );
 		boolean[] res = new boolean[tentacles.length()];
 		for( int i = 0; i < tentacles.length(); i++ ) {
 
@@ -204,10 +204,10 @@ public class JsonToGrammar {
 
 			int externalNode = hc.externalNodeAt( i );
 			
-			TIntIterator ntIter = hc.attachedNonterminalEdgesOf( externalNode ).iterator();
-			while(ntIter.hasNext()) {
+			TIntIterator ntIterator = hc.attachedNonterminalEdgesOf( externalNode ).iterator();
+			while(ntIterator.hasNext()) {
 			
-				int ntEdge = ntIter.next();
+				int ntEdge = ntIterator.next();
 				
 				Nonterminal adjacentNonterminal =  hc.labelOf(ntEdge);
 				for( int t = 0; t < adjacentNonterminal.getRank(); t++ ){
@@ -229,7 +229,7 @@ public class JsonToGrammar {
 	 * Sets those tentacles to nonReductionTentacles which directly produce an outgoing selector
 	 * @param ntsWithoutReductionTentacles the nonterminals to consider
 	 * @param res the rules in the grammar which may produce the outgoing selectors
-	 * @param changedTentacles stores those tentacles for which a change occured to consider them
+	 * @param changedTentacles stores those tentacles for which a change occurred to consider them
 	 * in the fixpoint computation
 	 */
 	private static void setSimpleNonRedactionTentacles( List<Nonterminal> ntsWithoutReductionTentacles,

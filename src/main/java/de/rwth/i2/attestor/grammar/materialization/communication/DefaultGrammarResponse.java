@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 public class DefaultGrammarResponse implements GrammarResponse {
 
-	private Collection<HeapConfiguration> applicableRules;
+	private final Collection<HeapConfiguration> applicableRules;
 	
 	public DefaultGrammarResponse( Collection<HeapConfiguration> rules ){
 		applicableRules = rules;

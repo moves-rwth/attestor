@@ -16,7 +16,7 @@ public class SSGBuilder {
 	/**
 	 * The initial state passed to the state space generation
 	 */
-	private List<ProgramState> initialStates;
+	private final List<ProgramState> initialStates;
 	
 	/**
 	 * Internal instance of the StateSpaceGenerator under
@@ -79,7 +79,7 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
 		}
 
-		if(generator.semanticsOptionsSupplier == null) {
+		if(generator.semanticsObserverSupplier == null) {
 	        throw new IllegalStateException("StateSpaceGenerator: No supplier for semantics options.");
         }
 
@@ -96,7 +96,7 @@ public class SSGBuilder {
 			generator.addUnexploredState(state);
 		}
 
-		generator.semanticsOptions = generator.semanticsOptionsSupplier.get(generator);
+		generator.semanticsObserver = generator.semanticsObserverSupplier.get(generator);
 		return generator;
 	}
 
@@ -222,12 +222,12 @@ public class SSGBuilder {
     }
 
     /**
-     * @param semanticsOptionsSupplier The function determining which semantics options are passed to individual
+     * @param semanticsObserverSupplier The function determining which semantics options are passed to individual
      *                                 statements during symbolic execution.
      * @return The builder.
      */
-    public SSGBuilder setSemanticsOptionsSupplier(SemanticsOptionsSupplier semanticsOptionsSupplier) {
-	    generator.semanticsOptionsSupplier = semanticsOptionsSupplier;
+    public SSGBuilder setSemanticsOptionsSupplier(SemanticsObserverSupplier semanticsObserverSupplier) {
+	    generator.semanticsObserverSupplier = semanticsObserverSupplier;
 	    return this;
     }
 	

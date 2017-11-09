@@ -21,8 +21,8 @@ public class RefinementParser {
     private static final Pattern equalityPattern = Pattern.compile("^\\p{Alnum}+ \\=\\= \\p{Alnum}+$");
     private static final Pattern inequalityPattern = Pattern.compile("^\\p{Alnum}+ \\!\\= \\p{Alnum}+$");
 
-    private List<HeapAutomaton> heapAutomata = new ArrayList<>();
-    private List<StateRefinementStrategy> stateRefinements = new ArrayList<>();
+    private final List<HeapAutomaton> heapAutomata = new ArrayList<>();
+    private final List<StateRefinementStrategy> stateRefinements = new ArrayList<>();
     private boolean hasReachableAutomaton = false;
 
     public RefinementParser(Set<String> atomicPropositions) {

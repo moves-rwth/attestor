@@ -17,10 +17,10 @@ public class ModelCheckingSettings {
     // Indicates whether model checking is conducted.
     private boolean modelCheckingEnabled = false;
 
-    private Set<String> requiredAtomicPropositions = new HashSet<>();
+    private final Set<String> requiredAtomicPropositions = new HashSet<>();
 
     // Contains all LTL formulae model checking should be performed for.
-    private Set<LTLFormula> formulae;
+    private final Set<LTLFormula> formulae;
 
     public ModelCheckingSettings(){
         this.formulae = new HashSet<>();

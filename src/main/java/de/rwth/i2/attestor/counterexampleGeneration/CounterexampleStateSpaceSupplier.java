@@ -9,9 +9,14 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceSupplier;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Supplier class to initialize configured state space objects during counterexample generation.
+ *
+ * @author Christoph
+ */
 final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
-    private CanonicalizationStrategy canonicalizationStrategy;
+    private final CanonicalizationStrategy canonicalizationStrategy;
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;

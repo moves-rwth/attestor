@@ -61,7 +61,7 @@ public class AssignInvokeTest_trivial {
 	@Test
 	public void testComputeSuccessors(){
 		try{
-			Set<ProgramState> resStates = stmt.computeSuccessors( inputState, new MockupSemanticsOptions() );
+			Set<ProgramState> resStates = stmt.computeSuccessors( inputState, new MockupSemanticsObserver() );
 			assertEquals( 1, resStates.size() );
 			DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
 			assertNotSame( resState, inputState );

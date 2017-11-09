@@ -32,7 +32,7 @@ public abstract class AbstractMethod {
 	 *         given input.
 	 * @throws StateSpaceGenerationAbortedException
 	 */
-	public abstract Set<ProgramState> getResult(ProgramState input, SemanticsOptions options)
+	public abstract Set<ProgramState> getResult(ProgramState input, SemanticsObserver options)
 			throws StateSpaceGenerationAbortedException;
 
 	/**

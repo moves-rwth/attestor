@@ -18,8 +18,8 @@ import java.util.Set;
 
 public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransformer {
 
-    private Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
-    private Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
+    private final Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
+    private final Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
     private boolean allSatisfied = true;
 
     @Override

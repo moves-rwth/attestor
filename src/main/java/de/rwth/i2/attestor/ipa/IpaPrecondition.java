@@ -7,7 +7,7 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaPrecondition {
 
-	HeapConfiguration config;
+	final HeapConfiguration config;
 
 	PreconditionChecker lastUsedChecker; //to avoid double computations
 	

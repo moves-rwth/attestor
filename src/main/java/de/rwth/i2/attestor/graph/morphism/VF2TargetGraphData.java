@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.graph.morphism;
 
 public class VF2TargetGraphData extends AbstractVF2GraphData {
 
-    private int[] matchCounter;
+    private final int[] matchCounter;
 
     VF2TargetGraphData(Graph graph) {
         super(graph);

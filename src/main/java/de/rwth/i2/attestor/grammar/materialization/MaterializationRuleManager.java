@@ -12,5 +12,5 @@ import de.rwth.i2.attestor.graph.Nonterminal;
  */
 public interface MaterializationRuleManager {
 
-	public GrammarResponse getRulesFor( Nonterminal toReplace, int tentacle, String requestedSelector ) throws UnexpectedNonterminalTypeException;
+	GrammarResponse getRulesFor( Nonterminal toReplace, int tentacle, String requestedSelector ) throws UnexpectedNonterminalTypeException;
 }

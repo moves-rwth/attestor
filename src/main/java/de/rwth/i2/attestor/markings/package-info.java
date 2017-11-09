@@ -1,5 +1,3 @@
-package de.rwth.i2.attestor.markings;
-
 /**
  *
  * This package allows to traverse all graphs in the language of an (abstract) HeapConfiguration with respect to
@@ -16,3 +14,4 @@ package de.rwth.i2.attestor.markings;
  *
  * @author Christoph
  */
+package de.rwth.i2.attestor.markings;

@@ -7,8 +7,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  */
 public class HcLabelPair {
 
-    String label;
-    HeapConfiguration hc;
+    final String label;
+    final HeapConfiguration hc;
 
     public HcLabelPair(String label, HeapConfiguration hc){
         this.label = label;

@@ -67,9 +67,7 @@ public class IndexMaterializationStrategy {
 		
 		
 		final HeapConfiguration clone = inputGraph.clone();
-		HeapConfiguration materializedGraph = 
-				applyMaterializationToIndexedNonterminalsOf( clone, symbolToMaterialize, inputMaterializationPostfix );
-		return materializedGraph;
+		return applyMaterializationToIndexedNonterminalsOf( clone, symbolToMaterialize, inputMaterializationPostfix );
 	}
 
 	/**
@@ -103,8 +101,7 @@ public class IndexMaterializationStrategy {
 
 			}
 		}
-		HeapConfiguration materializedGraph = builder.build();
-		return materializedGraph;
+		return builder.build();
 	}
 
 	/**

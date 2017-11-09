@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.graph.heap.internal.IpaContractCollection;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
-	IpaContractCollection contracts = new IpaContractCollection();
+	final IpaContractCollection contracts = new IpaContractCollection();
 
 	public IpaAbstractMethod(String displayName) {
 		super(displayName);
@@ -32,7 +32,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(ProgramState input, SemanticsOptions options) {
+	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver options) {
 
 		HeapConfiguration heap = input.getHeap();
 		Set<ProgramState> result = new HashSet<>();
@@ -45,10 +45,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ){
 
-		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
-		HeapConfiguration reachableFragment = splittedConfig.first();
-		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
-		int placeholderPos = splittedConfig.second().second();
+		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splitConfig = prepareInput( currentConfig );
+		HeapConfiguration reachableFragment = splitConfig.first();
+		HeapConfiguration remainingFragment = splitConfig.second().first();
+		int placeholderPos = splitConfig.second().second();
 
 		Entry<IpaPrecondition, List<HeapConfiguration>> contract = contracts.getContract( reachableFragment );
 		if( contract != null ){
@@ -95,8 +95,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 		int[] reordering = precondition.getReordering( reachableFragment );
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
 		TIntArrayList newTentacles = new TIntArrayList();
-		for( int i = 0; i < reordering.length; i++ ){
-			newTentacles.add( oldTentacles.get( reordering[i]) );
+		for (int aReordering : reordering) {
+			newTentacles.add(oldTentacles.get(aReordering));
 		} 
 
 		Nonterminal label = remainingFragment.labelOf(placeholderPosition);

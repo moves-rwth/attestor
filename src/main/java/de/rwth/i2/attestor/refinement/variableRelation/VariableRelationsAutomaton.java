@@ -11,10 +11,10 @@ import java.util.Set;
 
 public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
 
-    private String lhs;
-    private String rhs;
-    private String lhsField;
-    private String rhsField;
+    private final String lhs;
+    private final String rhs;
+    private final String lhsField;
+    private final String rhsField;
 
     private final Set<String> equalityAPs;
     private final Set<String> inequalityAPs;

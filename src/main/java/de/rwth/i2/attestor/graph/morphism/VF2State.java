@@ -33,8 +33,8 @@ public class VF2State {
 	private int patternCandidate;
 	private int targetCandidate;
 
-	private int countPatternNodes;
-	private int countTargetNodes;
+	private final int countPatternNodes;
+	private final int countTargetNodes;
 
 	private int patternMin;
 

@@ -49,7 +49,7 @@ public class StateSpaceGeneratorTest {
 				.setStateCounter(s -> {})
 				.setExplorationStrategy((s,sp) -> true)
 				.setStateSpaceSupplier(() -> new InternalStateSpace(100))
-				.setSemanticsOptionsSupplier(s -> new MockupSemanticsOptions())
+				.setSemanticsOptionsSupplier(s -> new MockupSemanticsObserver())
 				;
 	}
 

@@ -9,8 +9,8 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol
 
 public class MaterializationAndRuleResponse implements GrammarResponse {
 
-	private AbstractIndexSymbol symbolToMaterialize;
-	private Map<List<IndexSymbol>, Collection<HeapConfiguration>> materializationsAndRules;
+	private final AbstractIndexSymbol symbolToMaterialize;
+	private final Map<List<IndexSymbol>, Collection<HeapConfiguration>> materializationsAndRules;
 
 	public MaterializationAndRuleResponse(Map<List<IndexSymbol>, Collection<HeapConfiguration>> rules,
 			AbstractIndexSymbol indexSymbolToMaterialize ) {

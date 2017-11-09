@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Index {
 
-   private List<IndexSymbol> indexSymbols;
+   private final List<IndexSymbol> indexSymbols;
 
    public Index(List<IndexSymbol> indexSymbols) {
        this.indexSymbols = indexSymbols;

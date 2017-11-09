@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -36,7 +36,7 @@ public class GotoStmt extends Statement {
 	}
 
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState state, SemanticsOptions options) {
+	public Set<ProgramState> computeSuccessors(ProgramState state, SemanticsObserver options) {
 
 		options.update(this, state);
 

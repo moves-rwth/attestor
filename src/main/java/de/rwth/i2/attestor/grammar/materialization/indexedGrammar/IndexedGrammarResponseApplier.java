@@ -22,7 +22,7 @@ public class IndexedGrammarResponseApplier extends DefaultGrammarResponseApplier
 
 	private static final Logger logger = LogManager.getLogger( "IndexedGrammarResponseApplier" );
 
-	IndexMaterializationStrategy indexMaterializationStrategy;
+	final IndexMaterializationStrategy indexMaterializationStrategy;
 
 	public IndexedGrammarResponseApplier( IndexMaterializationStrategy indexMaterializationStrategy,
 										  GraphMaterializer graphMaterializer) {

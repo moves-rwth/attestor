@@ -52,7 +52,7 @@ public abstract class GeneralProgramState implements ProgramState {
     /**
      * The atomic propositions assigned to this state.
      */
-    protected Set<String> atomicPropositions;
+    protected final Set<String> atomicPropositions;
 
     /**
      * Initializes a state with the initial program location and scope depth 0.

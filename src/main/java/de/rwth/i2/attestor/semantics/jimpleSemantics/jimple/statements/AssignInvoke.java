@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -67,7 +67,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 	 * as it is clearly not live at this point.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
 		options.update(this, programState);
@@ -98,7 +98,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 		return assignResult;
 	}
 
-	public ProgramState getCleanedResultState(ProgramState state, SemanticsOptions options)
+	public ProgramState getCleanedResultState(ProgramState state, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException {
 
 		ConcreteValue concreteRHS = state.removeIntermediate( "@return" );

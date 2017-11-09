@@ -131,6 +131,7 @@ public class VF2Algorithm {
 	 * @param t The target candidate node that should be added to the current state of the algorithm.
      * @return true if and only if adding candidate to state might still result in a desired morphism.
      */
+	@SuppressWarnings("ForLoopReplaceableByForEach")
 	private boolean isFeasible(VF2State state, int p, int t) {
 
 		for(int i=0; i < feasibilityChecks.length; i++) {

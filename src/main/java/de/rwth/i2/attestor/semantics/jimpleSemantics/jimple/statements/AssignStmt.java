@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -69,7 +69,7 @@ public class AssignStmt extends Statement {
 	 * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException {
 
 		options.update(this, programState);

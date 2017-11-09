@@ -22,7 +22,7 @@ public interface Semantics {
      * @throws NotSufficientlyMaterializedException This exception is thrown if the semantics cannot be executed on
      *                                              programState due to missing fields.
      */
-    Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
+    Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException;
 
     /**

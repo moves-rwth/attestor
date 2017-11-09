@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramSta
 
 import java.util.ArrayList;
 
-public class MockupSemanticsOptions implements SemanticsOptions {
+public class MockupSemanticsObserver implements SemanticsObserver {
 
 
     @Override
@@ -43,7 +43,7 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSemanticsOptions())
+                .setSemanticsOptionsSupplier(s -> new MockupSemanticsObserver())
                 .build()
                 .generate();
     }

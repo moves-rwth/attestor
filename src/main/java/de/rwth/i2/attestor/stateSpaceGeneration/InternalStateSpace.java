@@ -16,23 +16,23 @@ public class InternalStateSpace implements StateSpace {
 
     private final static Logger logger = LogManager.getLogger("InternalStateSpace");
 
-    private Map<ProgramState, ProgramState> potentialMergeStates;
-    private List<ProgramState> otherStates; // states that are never checked for isomorphism
+    private final Map<ProgramState, ProgramState> potentialMergeStates;
+    private final List<ProgramState> otherStates; // states that are never checked for isomorphism
 
     // will only initialized once state space generation is done
     private TIntObjectMap<ProgramState> stateIdLookupTable = null;
 
-    private TIntSet initialStateIds;
-    private TIntSet finalStateIds;
+    private final TIntSet initialStateIds;
+    private final TIntSet finalStateIds;
 
-    private TIntObjectMap<TIntArrayList> materializationSuccessors;
-    private TIntObjectMap<TIntArrayList> controlFlowSuccessors;
+    private final TIntObjectMap<TIntArrayList> materializationSuccessors;
+    private final TIntObjectMap<TIntArrayList> controlFlowSuccessors;
     // TODO: Self-loops are managed here! Use map to int instead of list?!?
-    private TIntObjectMap<TIntArrayList> artificialInfPathsSuccessors;
+    private final TIntObjectMap<TIntArrayList> artificialInfPathsSuccessors;
     private int nextStateId = 0;
     private int maximalStateSize = 0;
 
-    private TIntObjectMap<Set<String>> atomicPropMap;
+    private final TIntObjectMap<Set<String>> atomicPropMap;
 
     public InternalStateSpace(int capacity) {
 
@@ -323,7 +323,7 @@ public class InternalStateSpace implements StateSpace {
             @Override
             public <T> T[] toArray(T[] ts) {
 
-                return null;
+                return ts;
             }
 
             @Deprecated

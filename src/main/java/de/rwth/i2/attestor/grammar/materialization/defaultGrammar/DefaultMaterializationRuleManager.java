@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DefaultMaterializationRuleManager implements MaterializationRuleManager {
 
-	ViolationPointResolver vioPointResolver;
+	final ViolationPointResolver vioPointResolver;
 	
 	public DefaultMaterializationRuleManager(ViolationPointResolver vioResolver) {
 		this.vioPointResolver = vioResolver;

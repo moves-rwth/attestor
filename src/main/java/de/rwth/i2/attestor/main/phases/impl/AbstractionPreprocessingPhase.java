@@ -146,12 +146,12 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
         CanonicalizationHelper canonicalizationHelper;
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
-        IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
+        IndexMaterializationStrategy materializationStrategy = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
         IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
         EmbeddingIndexChecker indexChecker =
                 new EmbeddingIndexChecker( indexMatcher,
-                        materializer );
+                        materializationStrategy );
 
         canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
@@ -168,9 +168,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
                     for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
 
-                        TIntIterator iter = rhs.nodes().iterator();
-                        while(iter.hasNext()) {
-                            int node = iter.next();
+                        TIntIterator iterator = rhs.nodes().iterator();
+                        while(iterator.hasNext()) {
+                            int node = iterator.next();
                             for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);

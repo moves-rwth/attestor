@@ -11,7 +11,7 @@ import java.io.Writer;
 
 public class JsonHeapConfigurationExporter implements HeapConfigurationExporter {
 
-    protected Writer writer;
+    protected final Writer writer;
 
     public JsonHeapConfigurationExporter(Writer writer) {
 
@@ -49,9 +49,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     private void writeNodes(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
-            int node = iter.next();
+        TIntIterator iterator = heapConfiguration.nodes().iterator();
+        while(iterator.hasNext()) {
+            int node = iterator.next();
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(node);
             jsonWriter.key("type").value("node");
@@ -62,9 +62,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     public void writeNonterminalHyperedges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
-        while(iter.hasNext()) {
-            int edge= iter.next();
+        TIntIterator iterator = heapConfiguration.nonterminalEdges().iterator();
+        while(iterator.hasNext()) {
+            int edge= iterator.next();
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(edge);
             jsonWriter.key("type").value("hyperedge");
@@ -76,9 +76,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     public void writeVariables(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.variableEdges().iterator();
-        while(iter.hasNext()) {
-            int variable = iter.next();
+        TIntIterator iterator = heapConfiguration.variableEdges().iterator();
+        while(iterator.hasNext()) {
+            int variable = iterator.next();
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(variable);
             jsonWriter.key("type").value("variable");
@@ -89,9 +89,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     public void writeSelectors(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
-            int source = iter.next();
+        TIntIterator iterator = heapConfiguration.nodes().iterator();
+        while(iterator.hasNext()) {
+            int source = iterator.next();
             for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(source)) {
                 int target = heapConfiguration.selectorTargetOf(source, sel);
                 writeEdge(jsonWriter, source, target, sel.toString(), "selector");
@@ -101,9 +101,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     public void writeNonterminalTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
-        while (iter.hasNext()) {
-            int source = iter.next();
+        TIntIterator iterator = heapConfiguration.nonterminalEdges().iterator();
+        while (iterator.hasNext()) {
+            int source = iterator.next();
             TIntArrayList att = heapConfiguration.attachedNodesOf(source);
             for(int i=0; i < att.size(); i++) {
                 int target = att.get(i);
@@ -115,9 +115,9 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
 
     public void writeVariableTentacles(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.variableEdges().iterator();
-        while(iter.hasNext()) {
-            int source = iter.next();
+        TIntIterator iterator = heapConfiguration.variableEdges().iterator();
+        while(iterator.hasNext()) {
+            int source = iterator.next();
             int target = heapConfiguration.targetOf(source);
             writeEdge(jsonWriter, source, target, "", "variable");
         }

@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -50,7 +50,7 @@ public class IdentityStmt extends Statement {
 	 * (i.e. this statement can only be called once per intermediate)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException{
 
 		options.update(this, programState);

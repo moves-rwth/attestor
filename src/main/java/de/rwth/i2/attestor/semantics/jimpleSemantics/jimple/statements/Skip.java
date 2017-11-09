@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -38,7 +38,7 @@ public class Skip extends Statement {
 	}
 
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsOptions options) {
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options) {
 
 		options.update(this, programState);
 

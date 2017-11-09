@@ -17,8 +17,8 @@ import java.util.LinkedList;
 
 public class Assertion {
 	
-	int progState;
-	LinkedList<Node> formulae;
+	final int progState;
+	final LinkedList<Node> formulae;
 	// specifies, if the assertions is known to hold
 	boolean isTrue;
 
@@ -32,7 +32,7 @@ public class Assertion {
 	boolean isContainedInTrace;
 
 	// The previous assertion or null if the assertion is the root
-	Assertion parent;
+	final Assertion parent;
 	
 	public Assertion(int progState, Assertion parent){
 		this.progState = progState;
@@ -57,7 +57,7 @@ public class Assertion {
 	 */
 	public Assertion(Assertion assertion){
 		this.progState = assertion.getProgramState();
-		this.formulae = (LinkedList<Node>) assertion.getFormulae().clone();
+		this.formulae = new LinkedList<>(assertion.getFormulae());
 		this.isTrue = assertion.isTrue();
 		this.isContainedInTrace = assertion.isContainedInTrace;
 		this.parent = assertion.parent;

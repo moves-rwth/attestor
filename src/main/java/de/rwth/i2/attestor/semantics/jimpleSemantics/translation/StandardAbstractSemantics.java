@@ -175,7 +175,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();
 			InvokeHelper invokePrepare = createInvokeHelper( invokeExpr );
 			invokePrepare.setLiveVariableNames( LiveVariableHelper.extractLiveVariables( input ) );
-			AbstractMethod method = null;
+			AbstractMethod method;
 			try {
 				method = topLevel.getMethod( invokeExpr.getMethod().getSignature() );
 			} catch (StateSpaceGenerationAbortedException e) {
@@ -202,7 +202,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		// SootMethod method = expr.getMethod();
 
 		String name = expr.getMethod().getSignature();
-		AbstractMethod translatedMethod = null;
+		AbstractMethod translatedMethod;
 		try {
 			translatedMethod = topLevel.getMethod( name );
 		} catch (StateSpaceGenerationAbortedException e) {

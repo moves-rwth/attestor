@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
 
-    private HeapAutomaton heapAutomaton;
+    private final HeapAutomaton heapAutomaton;
 
     private List<StatelessHeapAutomaton> statelessHeapAutomata;
 

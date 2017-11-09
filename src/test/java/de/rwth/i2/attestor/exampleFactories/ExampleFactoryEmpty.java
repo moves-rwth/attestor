@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.exampleFactories;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsOptions;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
 
@@ -28,8 +28,8 @@ public class ExampleFactoryEmpty {
         return s -> {};
     }
 
-    public SemanticsOptionsSupplier getSemanticsOptionsSupplier() {
-        return s -> new MockupSemanticsOptions();
+    public SemanticsObserverSupplier getSemanticsOptionsSupplier() {
+        return s -> new MockupSemanticsObserver();
     }
 
     public StateSpaceSupplier getStateSpaceSupplier() {

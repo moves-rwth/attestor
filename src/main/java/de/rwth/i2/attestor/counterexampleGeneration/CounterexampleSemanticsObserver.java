@@ -5,21 +5,25 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-final class CounterexampleSemanticsOptions implements SemanticsOptions {
+/**
+ * A tailored observer that determines the required successor states of
+ * procedure calls to guide the counterexample generation.
+ *
+ * @author Christoph
+ */
+final class CounterexampleSemanticsObserver implements SemanticsObserver {
 
-    private StateSpaceGenerator stateSpaceGenerator;
-    private CounterexampleStateSpaceSupplier stateSpaceSupplier;
-    private Trace trace;
+    private final StateSpaceGenerator stateSpaceGenerator;
+    private final CounterexampleStateSpaceSupplier stateSpaceSupplier;
+    private final Trace trace;
 
     private ProgramState requiredFinalState = null;
     private int requiredNoOfFinalStates = 1;
 
-    CounterexampleSemanticsOptions(StateSpaceGenerator stateSpaceGenerator,
-                                   Trace trace) {
+    CounterexampleSemanticsObserver(StateSpaceGenerator stateSpaceGenerator,
+                                    Trace trace) {
 
         this.stateSpaceGenerator = stateSpaceGenerator;
         this.stateSpaceSupplier = (CounterexampleStateSpaceSupplier) stateSpaceGenerator.getStateSpaceSupplier();
@@ -70,15 +74,21 @@ final class CounterexampleSemanticsOptions implements SemanticsOptions {
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
                 .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
                 .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
-                .setExplorationStrategy((s,sp) -> sp.getFinalStates().size() < requiredNoOfFinalStates)
+                .setExplorationStrategy(new CounterexampleExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsOptionsSupplier())
+                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setProgram(program)
                 .addInitialState(input)
                 .build()
                 .generate();
+    }
 
+    private final class CounterexampleExplorationStrategy implements ExplorationStrategy {
+        @Override
+        public boolean check(ProgramState state, StateSpace stateSpace) {
+            return stateSpace.getFinalStates().size() < requiredNoOfFinalStates;
+        }
     }
 
     @Override

@@ -13,8 +13,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
 	private static final Semantics DEFAULT_SEMANTICS = new Skip(-1);
-	private Grammar grammar; 
-	private CanonicalizationHelper canonicalizationHelper;
+	private final Grammar grammar;
+	private final CanonicalizationHelper canonicalizationHelper;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
 											CanonicalizationHelper canonicalizationHelper ) {

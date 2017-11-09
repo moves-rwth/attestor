@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  */
 public class DefaultGrammarResponseApplier implements GrammarResponseApplier {
 	
-	GraphMaterializer graphMaterializer;
+	final GraphMaterializer graphMaterializer;
 
 	public DefaultGrammarResponseApplier(GraphMaterializer graphMaterializer ) {
 		 this.graphMaterializer = graphMaterializer;
@@ -49,7 +49,7 @@ public class DefaultGrammarResponseApplier implements GrammarResponseApplier {
 	 * 
 	 * @param inputGraph the graph which will be materialized
 	 * @param edgeId the id of the nonterminal edge which will be materialized
-	 * @param grammarResponse a DefaultGrammarResponse holding all the rules 
+	 * @param defaultGrammarResponse a DefaultGrammarResponse holding all the rules
 	 * which will be applied
 	 * @return a collection holding all the materialization results.
 	 */

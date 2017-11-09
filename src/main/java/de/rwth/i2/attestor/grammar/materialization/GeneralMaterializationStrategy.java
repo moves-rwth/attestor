@@ -30,8 +30,8 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
 
 	private static final Logger logger = LogManager.getLogger( "GeneralMaterializationStrategy" );
 
-	private MaterializationRuleManager ruleManager;
-	private GrammarResponseApplier ruleApplier;
+	private final MaterializationRuleManager ruleManager;
+	private final GrammarResponseApplier ruleApplier;
 	
 	/**
 	 * Creates a new GeneralMaterializationStrategy using ruleManager to determine

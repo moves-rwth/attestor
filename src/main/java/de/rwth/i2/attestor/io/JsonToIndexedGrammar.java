@@ -236,11 +236,11 @@ public class JsonToIndexedGrammar {
 			int externalNode = hc.externalNodeAt( i );
 
 			TIntArrayList attachedNts = hc.attachedNonterminalEdgesOf(externalNode);
-			TIntIterator iter = attachedNts.iterator();
+			TIntIterator iterator = attachedNts.iterator();
 
-			while(iter.hasNext()) {
+			while(iterator.hasNext()) {
 
-				int adjacentNonterminalEdge = iter.next();
+				int adjacentNonterminalEdge = iterator.next();
 				Nonterminal adjacentNonterminal = hc.labelOf( adjacentNonterminalEdge );
 				TIntArrayList attachedNodes = hc.attachedNodesOf(adjacentNonterminalEdge);
 
@@ -262,7 +262,7 @@ public class JsonToIndexedGrammar {
 	 * Sets those tentacles to nonReductionTentacles which directly produce an outgoing selector
 	 * @param ntsWithoutReductionTentacles the nonterminals to consider
 	 * @param res the rules in the grammar which may produce the outgoing selectors
-	 * @param changedTentacles stores those tentacles for which a change occured to consider them
+	 * @param changedTentacles stores those tentacles for which a change occurred to consider them
 	 * in the fixpoint computation
 	 */
 	private static void setSimpleNonRedactionTentacles( List<Nonterminal> ntsWithoutReductionTentacles,

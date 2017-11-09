@@ -144,6 +144,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 				HeapConfiguration.INVALID_ELEMENT, HeapConfiguration.INVALID_ELEMENT );
 	}
 
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	@Override
 	public HeapConfiguration clone() {
 
@@ -155,7 +156,6 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 * @param hc The InternalHeapConfiguration that should be copied.
 	 */
 	private InternalHeapConfiguration(InternalHeapConfiguration hc) {
-
 		countNodes = hc.countNodes;
 		countNonterminalEdges = hc.countNonterminalEdges;
 		countVariableEdges = hc.countVariableEdges;
@@ -609,6 +609,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 		return result;
 	}
 
+	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	@Override
 	public boolean equals(Object otherObject) {
 

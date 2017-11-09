@@ -4,9 +4,9 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 
 public class GrammarRequest {
 	
-	private Nonterminal nonterminal;
-	private int tentacle;
-	private String SelectorLabel;
+	private final Nonterminal nonterminal;
+	private final int tentacle;
+	private final String SelectorLabel;
 	
 	
 	
@@ -56,11 +56,10 @@ public class GrammarRequest {
 		if (nonterminal == null) {
 			if (other.nonterminal != null)
 				return false;
-		} else if (!nonterminal.equals(other.nonterminal))
+		} else if (!nonterminal.equals(other.nonterminal)) {
 			return false;
-		if (tentacle != other.tentacle)
-			return false;
-		return true;
+		}
+		return tentacle == other.tentacle;
 	}
 
 	

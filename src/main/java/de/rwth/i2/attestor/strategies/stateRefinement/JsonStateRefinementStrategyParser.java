@@ -14,7 +14,7 @@ public class JsonStateRefinementStrategyParser {
 
     private static final Logger logger = LogManager.getLogger("JsonStateRefinementStrategyParser");
 
-    private List<StateRefinementStrategy> strategies = new ArrayList<>();
+    private final List<StateRefinementStrategy> strategies = new ArrayList<>();
 
     /**
      * The logger of this class.

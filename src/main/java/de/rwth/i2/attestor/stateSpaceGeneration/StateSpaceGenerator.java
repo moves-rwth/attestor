@@ -116,7 +116,7 @@ public class StateSpaceGenerator {
 	 * The options for this state space generator that configure the individual
 	 * steps of the symbolic execution.
 	 */
-	SemanticsOptions semanticsOptions;
+	SemanticsObserver semanticsObserver;
 
 	/**
 	 * Functional interface to obtain instances of state spaces.
@@ -127,7 +127,7 @@ public class StateSpaceGenerator {
 	 * Functional interface determining the semantics options passed to Semantics objects during
 	 * symbolic execution
 	 */
-	SemanticsOptionsSupplier semanticsOptionsSupplier;
+	SemanticsObserverSupplier semanticsObserverSupplier;
 
 	/**
 	 * @return The strategy determining when state space generation is aborted.
@@ -168,8 +168,8 @@ public class StateSpaceGenerator {
 		return stateSpaceSupplier;
 	}
 
-	public SemanticsOptionsSupplier getSemanticsOptionsSupplier() {
-		return semanticsOptionsSupplier;
+	public SemanticsObserverSupplier getSemanticsObserverSupplier() {
+		return semanticsObserverSupplier;
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class StateSpaceGenerator {
 			throws StateSpaceGenerationAbortedException {
 
 		try {
-			return semantics.computeSuccessors(state, semanticsOptions);
+			return semantics.computeSuccessors(state, semanticsObserver);
 		} catch (NotSufficientlyMaterializedException e) {
 			logger.error("A state could not be sufficiently materialized.");
 			return Collections.emptySet();

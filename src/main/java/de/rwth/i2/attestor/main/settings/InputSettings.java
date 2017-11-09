@@ -53,7 +53,7 @@ public class InputSettings {
 	 * The paths to the file specifying the renaming used for the 
 	 * predefined grammars
 	 */
-	private HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
+	private final HashMap<String,String> pathsToGrammar2RenameDefininition = new HashMap<>();
 
 
 	/**
@@ -84,8 +84,8 @@ public class InputSettings {
      */
 	private String inputName;
 
-	private Set<String>	usedSelectorLabels = new HashSet<>();
-	private Set<String> grammarSelectorLabels = new HashSet<>();
+	private final Set<String>	usedSelectorLabels = new HashSet<>();
+	private final Set<String> grammarSelectorLabels = new HashSet<>();
 
     /**
      * Sets the default path to search for all possible input files.

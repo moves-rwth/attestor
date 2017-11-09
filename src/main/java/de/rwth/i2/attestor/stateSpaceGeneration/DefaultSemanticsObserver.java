@@ -7,14 +7,14 @@ import de.rwth.i2.attestor.main.settings.Settings;
  * The options passed to every Semantics object by a state space generator to configure the symbolic execution.
  * @author Christoph
  */
-public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
+public class DefaultSemanticsObserver implements SemanticsObserver {
 
     /**
      * The state space generator that calls Semantics objects during the symbolic execution.
      */
-    private StateSpaceGenerator stateSpaceGenerator;
+    private final StateSpaceGenerator stateSpaceGenerator;
 
-    public StateSpaceGeneratorSemanticsOptions(StateSpaceGenerator stateSpaceGenerator) {
+    public DefaultSemanticsObserver(StateSpaceGenerator stateSpaceGenerator) {
 
         this.stateSpaceGenerator = stateSpaceGenerator;
     }
@@ -42,7 +42,7 @@ public class StateSpaceGeneratorSemanticsOptions implements SemanticsOptions {
                 .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
                 .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsOptionsSupplier())
+                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setProgram(program)
                 .addInitialState(initialState)

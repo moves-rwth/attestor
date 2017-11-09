@@ -19,9 +19,9 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanoni
  */
 public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 
-	public IndexCanonizationStrategy indexCanonizationStrategy;
-	public EmbeddingCheckerProvider checkerProvider;
-	public EmbeddingIndexChecker indexChecker;
+	public final IndexCanonizationStrategy indexCanonizationStrategy;
+	public final EmbeddingCheckerProvider checkerProvider;
+	public final EmbeddingIndexChecker indexChecker;
 
 	/**
 	 * @param indexCanonicalizer canonicalises the indices before the graph is canonicalised.
@@ -53,15 +53,14 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs, semantics);
 
 		if(checker.hasMatching()) {
-			ProgramState toAbstract  = state;
 			Matching embedding = checker.getMatching();
 			try {
 				IndexEmbeddingResult res = 
-						indexChecker.getIndexEmbeddingResult(toAbstract.getHeap(), embedding, lhs);
+						indexChecker.getIndexEmbeddingResult(state.getHeap(), embedding, lhs);
 	
 				HeapConfiguration abstracted = replaceEmbeddingBy( res.getMaterializedToAbstract(), 
 															  embedding, res.getInstantiatedLhs() );
-				result = toAbstract.shallowCopyWithUpdateHeap( abstracted );
+				result = state.shallowCopyWithUpdateHeap( abstracted );
 				
 			}catch( CannotMatchException e ) {
 				//this may happen. continue as if no matching has been found.
@@ -79,10 +78,9 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 	 */
 	private HeapConfiguration replaceEmbeddingBy( HeapConfiguration toAbstract, Matching embedding, Nonterminal nonterminal) {
 		toAbstract = toAbstract.clone();
-		HeapConfiguration abstracted = toAbstract.builder()
-											     .replaceMatching(embedding, nonterminal)
-											     .build();
-		return abstracted;
+		return toAbstract.builder()
+				.replaceMatching(embedding, nonterminal)
+				.build();
 	}
 
 	/**

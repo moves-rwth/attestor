@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 
 public class CLIPhase extends AbstractPhase {
 
-    private String[] args;
+    private final String[] args;
 
     public CLIPhase(String[] args) {
 

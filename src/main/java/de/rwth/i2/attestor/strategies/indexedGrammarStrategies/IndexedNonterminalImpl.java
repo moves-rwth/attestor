@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol
 public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 
-	protected Index index;
+	protected final Index index;
 	protected  final BasicNonterminal basicNonterminal;
 
 	public IndexedNonterminalImpl(String label,

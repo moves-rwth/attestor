@@ -7,9 +7,9 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class InternalNonterminalEdgeBuilder implements NonterminalEdgeBuilder {
 
-	Nonterminal nt;
-	HeapConfigurationBuilder parentBuilder;
-	TIntArrayList tentacles = new TIntArrayList();
+	final Nonterminal nt;
+	final HeapConfigurationBuilder parentBuilder;
+	final TIntArrayList tentacles = new TIntArrayList();
 	
 	public InternalNonterminalEdgeBuilder(Nonterminal nt,
 			HeapConfigurationBuilder heapConfigurationBuilder) {

@@ -78,17 +78,16 @@ public class HcToJava {
 
         String varName = VAR_PREFIX + node;
         nodeToExpression.put(node, varName);
-        StringBuilder builder = new StringBuilder();
-        builder.append(indentPrefix)
-                .append(type)
-                .append(" ")
-                .append(varName)
-                .append(" = new ")
-                .append(type)
-                .append("();")
-                .append(System.lineSeparator());
+        String builder = indentPrefix +
+                type +
+                " " +
+                varName +
+                " = new " +
+                type +
+                "();" +
+                System.lineSeparator();
 
-        writer.write(builder.toString());
+        writer.write(builder);
     }
 
     private boolean hasAttachedConstants(int node) {
@@ -134,15 +133,14 @@ public class HcToJava {
         int targetNode = heapConfiguration.targetOf(var);
         Type type = heapConfiguration.nodeTypeOf(targetNode);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(indentPrefix)
-                .append(type)
-                .append(" ")
-                .append(name)
-                .append(";")
-                .append(System.lineSeparator());
+        String builder = indentPrefix +
+                type +
+                " " +
+                name +
+                ";" +
+                System.lineSeparator();
 
-        writer.write(builder.toString());
+        writer.write(builder);
     }
 
     private void defineVariable(int var) throws IOException {
@@ -155,15 +153,14 @@ public class HcToJava {
 
         int targetNode = heapConfiguration.targetOf(var);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(indentPrefix)
-                .append(name)
-                .append(" = ")
-                .append(nodeToExpression.get(targetNode))
-                .append(";")
-                .append(System.lineSeparator());
+        String builder = indentPrefix +
+                name +
+                " = " +
+                nodeToExpression.get(targetNode) +
+                ";" +
+                System.lineSeparator();
 
-        writer.write(builder.toString());
+        writer.write(builder);
     }
 
 }

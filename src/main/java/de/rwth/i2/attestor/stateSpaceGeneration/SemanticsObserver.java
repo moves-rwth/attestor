@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 /**
- * Collection of all options to influence symbolic program execution during runtime.
+ * Observer that is called before each symbolic execution step.
+ * Moreover, this class contains options defined by the state space generation used by
+ * {@link Semantics} objects to configure individual symbolic execution steps.
  *
  * @author Christoph
  */
-public interface SemanticsOptions {
+public interface SemanticsObserver {
 
     /**
      * Callback function to update the state space generation whenever a statement is executed.

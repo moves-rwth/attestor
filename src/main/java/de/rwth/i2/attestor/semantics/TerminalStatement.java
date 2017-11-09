@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.semantics;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsOptions;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
 import java.util.HashSet;
@@ -24,7 +24,7 @@ public class TerminalStatement implements Semantics {
 	private boolean isCanonicalizationPermitted = true;
 	
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState executable, SemanticsOptions options) {
+	public Set<ProgramState> computeSuccessors(ProgramState executable, SemanticsObserver options) {
 		
 		return new HashSet<>();
 	}

@@ -14,7 +14,7 @@ import java.util.Set;
 public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
 
 
-    private Marking marking;
+    private final Marking marking;
 
     public StatelessVisitedByAutomaton(Marking marking) {
 

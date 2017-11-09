@@ -22,9 +22,9 @@ import java.util.List;
  */
 public final class HeapConfigurationPair implements HeapConfiguration, Graph {
 
-    HeapConfiguration actual; // the actual HeapConfiguration visible through all methods
-    HeapConfiguration pairedHeapConfiguration;
-    TIntIntMap ntEdgeRelation;
+    final HeapConfiguration actual; // the actual HeapConfiguration visible through all methods
+    final HeapConfiguration pairedHeapConfiguration;
+    final TIntIntMap ntEdgeRelation;
     HeapConfigurationPairBuilder builder;
 
     public HeapConfigurationPair(HeapConfiguration actual, HeapConfiguration partner) {
@@ -244,15 +244,8 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     @Override
     public boolean equals(Object otherObject) {
 
-        if(otherObject == this) {
-            return true;
-        }
+        return otherObject == this || otherObject instanceof HeapConfiguration && actual.equals(otherObject);
 
-        if(!(otherObject instanceof HeapConfiguration)) {
-            return false;
-        }
-
-        return actual.equals(otherObject);
     }
 
     @Override

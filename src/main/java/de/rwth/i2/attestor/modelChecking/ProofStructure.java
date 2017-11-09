@@ -30,9 +30,9 @@ public class ProofStructure {
 	
 	private static final Logger logger = LogManager.getLogger( "proofStructure.java" );
 
-	TIntObjectMap<Set<Assertion>> stateIdToVertices;
+	final TIntObjectMap<Set<Assertion>> stateIdToVertices;
 
-	HashMap<Assertion, HashSet<SuccState>> edges;
+	final HashMap<Assertion, HashSet<SuccState>> edges;
 	boolean successful = true;
 
 	Assertion originOfFailure = null;
@@ -53,8 +53,8 @@ public class ProofStructure {
 	 *
 	 */
 	class SuccState {
-		Assertion assertion;
-		Node type;
+		final Assertion assertion;
+		final Node type;
 		
 		// TODO: check if we need succstates instead of assertions only
 		private SuccState(Assertion assertion, Node type){
@@ -339,10 +339,7 @@ public class ProofStructure {
 			return true;
 		} else if (formula instanceof Start){
 			Start helper = (Start) formula;
-			if(helper.getPLtlform() instanceof ANextLtlform){
-				return true;
-			}
-			return false;
+			return helper.getPLtlform() instanceof ANextLtlform;
 		}
 
 		return false;
