@@ -2,6 +2,9 @@ package de.rwth.i2.attestor.graph.morphism;
 
 import java.util.Stack;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * This class implements the VF2 (sub)graph searching algorithm in order to find graph morphisms
  * between two Graphs.
@@ -29,6 +32,10 @@ import java.util.Stack;
  * @author Christoph
  */
 public class VF2Algorithm {
+	
+	boolean debug = false;
+    private static final Logger logger = LogManager.getLogger( "VF2Algorithm" );
+
 
 	boolean multipleExternalMatches = false;
 
@@ -103,6 +110,10 @@ public class VF2Algorithm {
 				int t = state.getTargetCandidate();
 				if (isFeasible(state, p, t)) {
 
+					if( debug ){
+						logger.trace("found feasible candidate ("+ p + "," + t + ")" );
+					}
+					
 					/* A shallow copy only copies data required for backtracking
 				       such as the last candidate. After that we move further
 				       down in the search tree. */
@@ -113,6 +124,9 @@ public class VF2Algorithm {
 				}
 			}
 
+			if( debug ){
+				logger.trace("Backtracking...");
+			}
 			/* We stored all morphisms found so far and finished going through all search trees
 		   	   after adding all available candidate pairs to the current state.
                Hence, we backtrack and remove the last pair added to the current state before. */
@@ -135,6 +149,9 @@ public class VF2Algorithm {
 
 		for(int i=0; i < feasibilityChecks.length; i++) {
 			if (!feasibilityChecks[i].eval(state, p, t)) {
+				if( debug ){
+					logger.trace(feasibilityChecks[i].getClass().getSimpleName() + " rejected candidate (" + p +","+t+")");
+				}
 				return false;
 			}
 		}
