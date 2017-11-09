@@ -67,7 +67,7 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder()
                     .setProgram(program)
-                    .setTrace(failureTrace.getTrace())
+                    .setTrace(failureTrace)
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setMaterializationStrategy(materializationStrategy)
                     .setCanonicalizationStrategy(canonicalizationStrategy)
@@ -94,11 +94,11 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
                 logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
 
                 if(counterexamples.containsKey(result.getKey())) {
-                    logSum(String.format(String.format("| %-9s | %s", "",
-                            "A counterexample has been found.")));
+                    logSum(String.format("| %-9s | %s", "",
+                            "A counterexample has been found."));
                 } else {
-                    logSum(String.format(String.format("| %-9s | %s", "witness",
-                            "All counterexamples might be spurious.")));
+                    logSum(String.format("| %-9s | %s", "witness",
+                            "All counterexamples might be spurious."));
                 }
 
             }

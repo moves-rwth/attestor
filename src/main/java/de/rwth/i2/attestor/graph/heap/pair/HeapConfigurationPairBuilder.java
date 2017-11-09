@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.counterexampleGeneration.heapConfWithPartner;
+package de.rwth.i2.attestor.graph.heap.pair;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -10,18 +10,18 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 
-public class HeapConfigurationWithPartnerBuilder implements HeapConfigurationBuilder {
+public final class HeapConfigurationPairBuilder implements HeapConfigurationBuilder {
 
-    HeapConfigurationWithPartner hc;
-    HeapConfigurationBuilder actualBuilder;
-    HeapConfigurationBuilder partnerBuilder;
-    TIntIntMap ntEdgeRelation;
+    private HeapConfigurationPair hc;
+    private HeapConfigurationBuilder actualBuilder;
+    private HeapConfigurationBuilder partnerBuilder;
+    private TIntIntMap ntEdgeRelation;
 
-    HeapConfigurationWithPartnerBuilder(HeapConfigurationWithPartner hc)  {
+    HeapConfigurationPairBuilder(HeapConfigurationPair hc)  {
 
        this.hc = hc;
        this.actualBuilder = hc.actual.builder();
-       this.partnerBuilder = hc.partner.builder();
+       this.partnerBuilder = hc.pairedHeapConfiguration.builder();
        this.ntEdgeRelation = hc.ntEdgeRelation;
     }
 

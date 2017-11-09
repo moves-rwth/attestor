@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceSupplier;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
+final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
     private CanonicalizationStrategy canonicalizationStrategy;
 

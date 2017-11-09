@@ -9,18 +9,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class CounterexampleSemanticsOptions implements SemanticsOptions {
+final class CounterexampleSemanticsOptions implements SemanticsOptions {
 
     private StateSpaceGenerator stateSpaceGenerator;
     private CounterexampleStateSpaceSupplier stateSpaceSupplier;
-    private List<ProgramState> trace;
+    private Trace trace;
 
     private ProgramState requiredFinalState = null;
-
     private int requiredNoOfFinalStates = 1;
 
     CounterexampleSemanticsOptions(StateSpaceGenerator stateSpaceGenerator,
-                                   List<ProgramState> trace) {
+                                   Trace trace) {
 
         this.stateSpaceGenerator = stateSpaceGenerator;
         this.stateSpaceSupplier = (CounterexampleStateSpaceSupplier) stateSpaceGenerator.getStateSpaceSupplier();
@@ -39,24 +38,8 @@ public class CounterexampleSemanticsOptions implements SemanticsOptions {
     }
 
     private void updateInvoke(InvokeCleanup invokeCleanup, ProgramState input) {
-        requiredFinalState = getTraceSuccessor(input);
+        requiredFinalState = trace.getSuccessor(input);
         stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup);
-    }
-
-    private ProgramState getTraceSuccessor(ProgramState state) {
-
-        Iterator<ProgramState> iter = trace.iterator();
-        while(iter.hasNext()) {
-            ProgramState s = iter.next();
-            if(s.getStateSpaceId() == state.getStateSpaceId()) {
-                if(iter.hasNext()) {
-                    return iter.next();
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 
     private void updateMethod(AbstractMethod method, ProgramState input) {

@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.counterexampleGeneration.heapConfWithPartner;
+package de.rwth.i2.attestor.graph.heap.pair;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -15,29 +15,29 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import java.util.List;
 
 /**
- * A HeapConfigurationWithPartner actually consists of two heap configurations that are materialized together.
- * All methods except for hyperedge replacement are only applied to the actual HeapConfiguration and not to its partner
+ * A HeapConfigurationPair actually consists of two heap configurations that are materialized together.
+ * All methods except for hyperedge replacement are only applied to the actual HeapConfiguration and not to its pairedHeapConfiguration
  *
  * @author Christoph
  */
-public final class HeapConfigurationWithPartner implements HeapConfiguration, Graph {
+public final class HeapConfigurationPair implements HeapConfiguration, Graph {
 
     HeapConfiguration actual; // the actual HeapConfiguration visible through all methods
-    HeapConfiguration partner;
+    HeapConfiguration pairedHeapConfiguration;
     TIntIntMap ntEdgeRelation;
-    HeapConfigurationWithPartnerBuilder builder;
+    HeapConfigurationPairBuilder builder;
 
-    public HeapConfigurationWithPartner(HeapConfiguration actual, HeapConfiguration partner) {
+    public HeapConfigurationPair(HeapConfiguration actual, HeapConfiguration partner) {
 
         this.actual = actual;
-        this.partner = partner;
+        this.pairedHeapConfiguration = partner;
         this.ntEdgeRelation = new TIntIntHashMap();
         updateNtRelation();
     }
 
     void updateNtRelation() {
         TIntArrayList actualEdges = actual.nonterminalEdges();
-        TIntArrayList partnerEdges = partner.nonterminalEdges();
+        TIntArrayList partnerEdges = pairedHeapConfiguration.nonterminalEdges();
         ntEdgeRelation.clear();
 
         for(int i=0; i < actualEdges.size(); i++) {
@@ -45,30 +45,30 @@ public final class HeapConfigurationWithPartner implements HeapConfiguration, Gr
         }
     }
 
-    protected HeapConfigurationWithPartner(HeapConfigurationWithPartner hc) {
+    private HeapConfigurationPair(HeapConfigurationPair hc) {
 
         this.actual = hc.actual.clone();
-        this.partner = hc.partner.clone();
+        this.pairedHeapConfiguration = hc.pairedHeapConfiguration.clone();
         this.ntEdgeRelation = new TIntIntHashMap(hc.ntEdgeRelation);
     }
 
-    public HeapConfiguration getPartner() {
+    public HeapConfiguration getPairedHeapConfiguration() {
 
-        return partner;
+        return pairedHeapConfiguration;
     }
 
 
     @Override
     public HeapConfiguration clone() {
 
-        return new HeapConfigurationWithPartner(this);
+        return new HeapConfigurationPair(this);
     }
 
     @Override
     public HeapConfigurationBuilder builder() {
 
         if(builder == null) {
-            builder = new HeapConfigurationWithPartnerBuilder(this);
+            builder = new HeapConfigurationPairBuilder(this);
         }
         return builder;
     }
@@ -243,6 +243,14 @@ public final class HeapConfigurationWithPartner implements HeapConfiguration, Gr
 
     @Override
     public boolean equals(Object otherObject) {
+
+        if(otherObject == this) {
+            return true;
+        }
+
+        if(!(otherObject instanceof HeapConfiguration)) {
+            return false;
+        }
 
         return actual.equals(otherObject);
     }

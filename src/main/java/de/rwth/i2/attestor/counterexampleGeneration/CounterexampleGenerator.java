@@ -1,9 +1,8 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.counterexampleGeneration.heapConfWithPartner.HeapConfigurationWithPartner;
+import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.*;
@@ -11,7 +10,7 @@ import java.util.*;
 public final class CounterexampleGenerator {
 
     private Program program;
-    private List<ProgramState> trace;
+    private Trace trace;
     private CanonicalizationStrategy canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
@@ -27,7 +26,7 @@ public final class CounterexampleGenerator {
 
         ProgramState initialState = trace.iterator().next();
         HeapConfiguration input = initialState.getHeap();
-        HeapConfigurationWithPartner inputWithPartner = new HeapConfigurationWithPartner(input, input.clone());
+        HeapConfigurationPair inputWithPartner = new HeapConfigurationPair(input, input.clone());
         initialState = initialState.shallowCopyWithUpdateHeap(inputWithPartner);
 
 
@@ -61,7 +60,7 @@ public final class CounterexampleGenerator {
                     .next()
                     .getHeap();
 
-            return ((HeapConfigurationWithPartner) finalHeap).getPartner();
+            return ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
         } catch (StateSpaceGenerationAbortedException e) {
             e.printStackTrace();
             return null;
@@ -75,7 +74,7 @@ public final class CounterexampleGenerator {
                 canonicalizationStrategy
         );
         Set<ProgramState> finalStates = new HashSet<>(1);
-        finalStates.add(trace.get(trace.size()-1));
+        finalStates.add(trace.getFinalState());
         stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
         return stateSpaceSupplier;
     }
@@ -99,16 +98,8 @@ public final class CounterexampleGenerator {
             return result;
         }
 
-        public CounterexampleGeneratorBuilder setTrace(List<ProgramState> trace) {
+        public CounterexampleGeneratorBuilder setTrace(Trace trace) {
             generator.trace = trace;
-            return this;
-        }
-
-        public CounterexampleGeneratorBuilder addTraceState(ProgramState state) {
-            if(generator.trace == null) {
-                generator.trace = new ArrayList<>();
-            }
-            generator.trace.add(state);
             return this;
         }
 

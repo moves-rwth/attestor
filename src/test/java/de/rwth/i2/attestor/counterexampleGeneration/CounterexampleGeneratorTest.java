@@ -42,18 +42,19 @@ public class CounterexampleGeneratorTest {
         try {
             finalState = program.getStatement(0)
                     .computeSuccessors(initialState.clone(), new MockupSemanticsOptions()).iterator().next();
-        } catch (NotSufficientlyMaterializedException e) {
-            fail();
-        } catch (StateSpaceGenerationAbortedException e) {
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }
+
+        MockupTrace trace = new MockupTrace();
+        trace.addState(initialState)
+                .addState(finalState);
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
         CounterexampleGenerator generator = CounterexampleGenerator
                 .builder()
                 .setProgram(program)
-                .addTraceState(initialState)
-                .addTraceState(finalState)
+                .setTrace(trace)
                 .setCanonicalizationStrategy(factoryEmpty.getCanonicalization())
                 .setMaterializationStrategy(factoryEmpty.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
@@ -107,11 +108,14 @@ public class CounterexampleGeneratorTest {
             fail();
         }
 
+        MockupTrace trace = new MockupTrace();
+        trace.addState(initialState)
+                .addState(finalState);
+
         CounterexampleGenerator generator = CounterexampleGenerator
                 .builder()
                 .setProgram(program)
-                .addTraceState(initialState)
-                .addTraceState(finalState)
+                .setTrace(trace)
                 .setCanonicalizationStrategy(factorySLL.getCanonicalization())
                 .setMaterializationStrategy(factorySLL.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
@@ -198,13 +202,16 @@ public class CounterexampleGeneratorTest {
             fail();
         }
 
+        MockupTrace trace = new MockupTrace();
+        trace.addState(initialState)
+                .addState(finalState)
+                .addState(finalState.shallowCopyUpdatePC(2))
+                .addState(finalState.shallowCopyUpdatePC(-1));
+
         CounterexampleGenerator generator = CounterexampleGenerator
                 .builder()
                 .setProgram(program)
-                .addTraceState(initialState)
-                .addTraceState(finalState)
-                .addTraceState(finalState.shallowCopyUpdatePC(2))
-                .addTraceState(finalState.shallowCopyUpdatePC(-1))
+                .setTrace(trace)
                 .setCanonicalizationStrategy(factorySLL.getCanonicalization())
                 .setMaterializationStrategy(factorySLL.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())

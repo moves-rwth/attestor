@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class FailureTrace implements Trace {
 
     }
 
-    public FailureTrace(Assertion failureAssertion, StateSpace stateSpace) {
+    FailureTrace(Assertion failureAssertion, StateSpace stateSpace) {
 
         Assertion current = failureAssertion;
         do {
@@ -32,14 +33,47 @@ public class FailureTrace implements Trace {
     }
 
     @Override
-    public List<ProgramState> getTrace() {
+    public ProgramState getInitialState() {
+        return stateTrace.getFirst();
+    }
 
-        return new LinkedList<>(stateTrace);
+    @Override
+    public ProgramState getFinalState() {
+        return stateTrace.getLast();
+    }
 
+    @Override
+    public int size() {
+        return stateTrace.size();
+    }
+
+    @Override
+    public ProgramState getSuccessor(ProgramState state) {
+        Iterator<ProgramState> iterator = stateTrace.iterator();
+        while(iterator.hasNext()) {
+           ProgramState s = iterator.next();
+           if(s.getStateSpaceId() == state.getStateSpaceId()) {
+               if(iterator.hasNext()) {
+                   return iterator.next();
+               }
+               return null;
+           }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean contains(ProgramState state) {
+        return stateTrace.contains(state);
     }
 
     public boolean isEmpty() {
         return stateIdTrace.isEmpty();
+    }
+
+    @Override
+    public Iterator<ProgramState> iterator() {
+        return stateTrace.iterator();
     }
 
     public String toString() {

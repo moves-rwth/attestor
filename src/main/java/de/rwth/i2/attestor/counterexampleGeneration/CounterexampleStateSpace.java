@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CounterexampleStateSpace implements StateSpace {
+final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState initialState;
     private Set<ProgramState> requiredFinalStates;
