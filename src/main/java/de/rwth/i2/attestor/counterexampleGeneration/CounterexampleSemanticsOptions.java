@@ -5,21 +5,27 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class CounterexampleSemanticsOptions implements SemanticsOptions {
 
     private StateSpaceGenerator stateSpaceGenerator;
-    private CounterexampleGenerator counterexampleGenerator;
+    private CounterexampleStateSpaceSupplier stateSpaceSupplier;
+    private List<ProgramState> trace;
 
     private ProgramState requiredFinalState = null;
 
     private int requiredNoOfFinalStates = 1;
 
-    CounterexampleSemanticsOptions(StateSpaceGenerator stateSpaceGenerator, CounterexampleGenerator counterexampleGenerator) {
+    CounterexampleSemanticsOptions(StateSpaceGenerator stateSpaceGenerator,
+                                   List<ProgramState> trace) {
 
         this.stateSpaceGenerator = stateSpaceGenerator;
-        this.counterexampleGenerator = counterexampleGenerator;
+        this.stateSpaceSupplier = (CounterexampleStateSpaceSupplier) stateSpaceGenerator.getStateSpaceSupplier();
+        this.trace = trace;
+
     }
 
     @Override
@@ -32,23 +38,38 @@ public class CounterexampleSemanticsOptions implements SemanticsOptions {
         }
     }
 
-    private void updateInvoke(InvokeCleanup stmt, ProgramState input) {
-        requiredFinalState = counterexampleGenerator.getTraceSuccessor(input);
-        counterexampleGenerator.setLastProcedureInvokeCleanup(stmt);
+    private void updateInvoke(InvokeCleanup invokeCleanup, ProgramState input) {
+        requiredFinalState = getTraceSuccessor(input);
+        stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup);
+    }
+
+    private ProgramState getTraceSuccessor(ProgramState state) {
+
+        Iterator<ProgramState> iter = trace.iterator();
+        while(iter.hasNext()) {
+            ProgramState s = iter.next();
+            if(s.getStateSpaceId() == state.getStateSpaceId()) {
+                if(iter.hasNext()) {
+                    return iter.next();
+                } else {
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 
     private void updateMethod(AbstractMethod method, ProgramState input) {
 
         method.setReuseResults(false);
-        counterexampleGenerator.setLastProcedureInitialState(input);
         if(requiredFinalState != null) {
             requiredNoOfFinalStates = 1;
-            counterexampleGenerator.setLastProcedureFinalStates(
+            stateSpaceSupplier.setFinalStatesOfPreviousProcedure(
                     Collections.singleton(requiredFinalState)
             );
         } else {
             Set<ProgramState> finalStates = method.getFinalStates(input.getHeap());
-            counterexampleGenerator.setLastProcedureFinalStates(finalStates);
+            stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
             requiredNoOfFinalStates = finalStates.size();
         }
     }

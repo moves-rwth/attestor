@@ -17,27 +17,23 @@ import java.util.Set;
 public class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState initialState;
-    private Set<ProgramState> requiredFinalStates = new HashSet<>();
-    private Set<ProgramState> finalStates = new HashSet<>();
+    private Set<ProgramState> requiredFinalStates;
     private CanonicalizationStrategy canonicalizationStrategy;
-    private int scopeDepth;
     private InvokeCleanup invokeCleanup;
 
-    public CounterexampleStateSpace(CounterexampleGenerator counterexampleGenerator) {
+    private int scopeDepth;
+    private Set<ProgramState> finalStates = new HashSet<>();
 
-        this.initialState = counterexampleGenerator.getLastProcedureInitialState();
+    CounterexampleStateSpace(CanonicalizationStrategy canonicalizationStrategy,
+                                    Set<ProgramState> requiredFinalStates,
+                                    InvokeCleanup invokeCleanup) {
 
-        for(ProgramState state : counterexampleGenerator.getLastProcedureFinalStates()) {
-            state = state.clone();
-            state.setProgramCounter(-1);
-            requiredFinalStates.add(state);
-        }
+        this.canonicalizationStrategy = canonicalizationStrategy;
+        this.requiredFinalStates = requiredFinalStates;
+        this.invokeCleanup = invokeCleanup;
 
         assert !requiredFinalStates.isEmpty();
         this.scopeDepth = requiredFinalStates.iterator().next().getScopeDepth();
-        this.invokeCleanup = counterexampleGenerator.getLastProcedureInvokeCleanup();
-
-        this.canonicalizationStrategy = counterexampleGenerator.getCanonicalizationStrategy();
     }
 
     @Override
@@ -150,26 +146,32 @@ public class CounterexampleStateSpace implements StateSpace {
 
     @Override
     public void addInitialState(ProgramState state) {
+        this.initialState = state;
     }
 
     @Override
     public void setFinal(ProgramState state) {
 
-       ProgramState abstractState = canonicalizationStrategy.canonicalize(new Skip(-1), state);
-       abstractState.setProgramCounter(-1);
-
-       if(invokeCleanup != null) {
-           try {
-               invokeCleanup.getCleanedResultState(abstractState, null);
-           } catch (NotSufficientlyMaterializedException e) {
-               throw new IllegalStateException("Not sufficiently materialized state found.");
-           }
-       }
-
+        ProgramState abstractState = getAbstractStateInOriginalStateSpace(state);
        if(requiredFinalStates.contains(abstractState)) {
            requiredFinalStates.remove(abstractState);
            finalStates.add(state);
        }
+    }
+
+    private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
+
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(new Skip(-1), state);
+        abstractState.setProgramCounter(-1);
+
+        if(invokeCleanup != null) {
+            try {
+                invokeCleanup.getCleanedResultState(abstractState, null);
+            } catch (NotSufficientlyMaterializedException e) {
+                throw new IllegalStateException("Not sufficiently materialized state found.");
+            }
+        }
+        return abstractState;
     }
 
     @Override

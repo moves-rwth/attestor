@@ -16,69 +16,11 @@ public final class CounterexampleGenerator {
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
 
-    private ProgramState lastProcedureInitialState;
-    private Set<ProgramState> lastProcedureFinalStates;
-    private InvokeCleanup lastProcedureInvokeCleanup;
-
     public static CounterexampleGeneratorBuilder builder() {
         return new CounterexampleGeneratorBuilder();
     }
 
     private CounterexampleGenerator() {
-    }
-
-    protected void setLastProcedureInvokeCleanup(InvokeCleanup invokeCleanup) {
-        this.lastProcedureInvokeCleanup = invokeCleanup;
-    }
-
-    protected InvokeCleanup getLastProcedureInvokeCleanup() {
-        return lastProcedureInvokeCleanup;
-    }
-
-    protected void setLastProcedureInitialState(ProgramState initialState) {
-        lastProcedureInitialState = initialState;
-    }
-
-    protected void setLastProcedureFinalStates(Set<ProgramState> finalStates) {
-        lastProcedureFinalStates = finalStates;
-    }
-
-    protected ProgramState getTraceSuccessor(ProgramState state) {
-
-        Iterator<ProgramState> iter = trace.iterator();
-        while(iter.hasNext()) {
-            ProgramState current = iter.next();
-            if(current.getStateSpaceId() == state.getStateSpaceId()) {
-                if(iter.hasNext()) {
-                    return iter.next();
-                }
-                return null;
-            }
-        }
-        return null;
-    }
-
-    protected CanonicalizationStrategy getCanonicalizationStrategy() {
-        return canonicalizationStrategy;
-    }
-
-    protected ProgramState getLastProcedureInitialState() {
-
-        if(lastProcedureInitialState == null) {
-            return trace.get(0);
-        }
-        return lastProcedureInitialState;
-    }
-
-    protected Set<ProgramState> getLastProcedureFinalStates() {
-
-        if(lastProcedureFinalStates == null) {
-            Set<ProgramState> result = new HashSet<>(1);
-            result.add(trace.get(trace.size()-1));
-            return result;
-        }
-
-        return lastProcedureFinalStates;
     }
 
     public HeapConfiguration generate() {
@@ -88,24 +30,23 @@ public final class CounterexampleGenerator {
         HeapConfigurationWithPartner inputWithPartner = new HeapConfigurationWithPartner(input, input.clone());
         initialState = initialState.shallowCopyWithUpdateHeap(inputWithPartner);
 
+
         try {
             StateSpace stateSpace = StateSpaceGenerator
                 .builder()
                     .setStateLabelingStrategy(s -> {})
                     .setMaterializationStrategy(materializationStrategy)
-                    .setCanonizationStrategy((sem,state) -> state)
+                    .setCanonizationStrategy((semantics,state) -> state)
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setBreadthFirstSearchEnabled(true)
                     .setSemanticsOptionsSupplier(s ->
-                            new CounterexampleSemanticsOptions(s, this)
+                            new CounterexampleSemanticsOptions(s, trace)
                     )
                     .setExplorationStrategy((s,sp) -> {
                         ProgramState canon = canonicalizationStrategy.canonicalize(new Skip(1), s);
                         return trace.contains(canon);
                     })
-                    .setStateSpaceSupplier(() ->
-                            new CounterexampleStateSpace(this)
-                    )
+                    .setStateSpaceSupplier(getStateSpaceSupplier())
                     .setAbortStrategy(s -> {})
                     .setProgram(program)
                     .addInitialState(initialState)
@@ -126,6 +67,17 @@ public final class CounterexampleGenerator {
             return null;
         }
 
+    }
+
+    private StateSpaceSupplier getStateSpaceSupplier() {
+
+        CounterexampleStateSpaceSupplier stateSpaceSupplier = new CounterexampleStateSpaceSupplier(
+                canonicalizationStrategy
+        );
+        Set<ProgramState> finalStates = new HashSet<>(1);
+        finalStates.add(trace.get(trace.size()-1));
+        stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
+        return stateSpaceSupplier;
     }
 
     public static class CounterexampleGeneratorBuilder {
