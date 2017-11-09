@@ -5,12 +5,14 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
+	private static final Semantics DEFAULT_SEMANTICS = new Skip(-1);
 	private Grammar grammar; 
 	private CanonicalizationHelper canonicalizationHelper;
 
@@ -25,6 +27,11 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
 
 		return performCanonicalization( semantics, state );
+	}
+
+	@Override
+	public ProgramState canonicalize(ProgramState state) {
+		return canonicalize(DEFAULT_SEMANTICS, state);
 	}
 
 	private ProgramState performCanonicalization(Semantics semantics, ProgramState state) {

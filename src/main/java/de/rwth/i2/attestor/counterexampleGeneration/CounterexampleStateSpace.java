@@ -161,7 +161,7 @@ final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
 
-        ProgramState abstractState = canonicalizationStrategy.canonicalize(new Skip(-1), state);
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
         abstractState.setProgramCounter(-1);
 
         if(invokeCleanup != null) {

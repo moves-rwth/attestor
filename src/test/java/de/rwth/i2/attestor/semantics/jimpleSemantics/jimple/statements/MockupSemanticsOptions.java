@@ -29,11 +29,17 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                 .setMaterializationStrategy(
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
-                .setCanonizationStrategy(
-                        (semantics, conf) -> {
-                            return conf.clone();
-                        }
-                )
+                .setCanonizationStrategy(new CanonicalizationStrategy() {
+                    @Override
+                    public ProgramState canonicalize(Semantics semantics, ProgramState state) {
+                        return state.clone();
+                    }
+
+                    @Override
+                    public ProgramState canonicalize(ProgramState state) {
+                        return state.clone();
+                    }
+                })
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
@@ -41,6 +47,7 @@ public class MockupSemanticsOptions implements SemanticsOptions {
                 .build()
                 .generate();
     }
+
 
     @Override
     public boolean isDeadVariableEliminationEnabled() {

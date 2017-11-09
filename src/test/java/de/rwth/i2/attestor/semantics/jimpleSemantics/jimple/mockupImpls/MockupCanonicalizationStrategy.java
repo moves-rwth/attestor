@@ -8,14 +8,14 @@ public class MockupCanonicalizationStrategy implements CanonicalizationStrategy 
 	//private static final Logger logger = LogManager.getLogger( "TestCanonizationStrategy" );
 	
 	@Override
-	public ProgramState canonicalize(Semantics semantics, ProgramState conf ) {
-		return conf;
+	public ProgramState canonicalize(Semantics semantics, ProgramState state) {
+		return state;
 	}
-	
 
-
-	
-
+	@Override
+	public ProgramState canonicalize(ProgramState state) {
+		return state;
+	}
 
 
 }

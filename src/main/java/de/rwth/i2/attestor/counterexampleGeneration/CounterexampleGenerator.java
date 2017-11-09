@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
 
 import java.util.*;
 
@@ -35,14 +36,14 @@ public final class CounterexampleGenerator {
                 .builder()
                     .setStateLabelingStrategy(s -> {})
                     .setMaterializationStrategy(materializationStrategy)
-                    .setCanonizationStrategy((semantics,state) -> state)
+                    .setCanonizationStrategy(new NoCanonicalizationStrategy())
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setBreadthFirstSearchEnabled(true)
                     .setSemanticsOptionsSupplier(s ->
                             new CounterexampleSemanticsOptions(s, trace)
                     )
                     .setExplorationStrategy((s,sp) -> {
-                        ProgramState canon = canonicalizationStrategy.canonicalize(new Skip(1), s);
+                        ProgramState canon = canonicalizationStrategy.canonicalize(s);
                         return trace.contains(canon);
                     })
                     .setStateSpaceSupplier(getStateSpaceSupplier())

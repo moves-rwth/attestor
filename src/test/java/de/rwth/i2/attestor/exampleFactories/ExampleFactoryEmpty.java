@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.exampleFactories;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsOptions;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
 
 import java.util.Collections;
 
@@ -16,7 +17,7 @@ public class ExampleFactoryEmpty {
     }
 
     public CanonicalizationStrategy getCanonicalization() {
-        return (sem, state) -> state;
+        return new NoCanonicalizationStrategy();
     }
 
     public StateLabelingStrategy getStateLabeling() {
