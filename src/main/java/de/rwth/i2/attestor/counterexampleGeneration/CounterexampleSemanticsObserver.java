@@ -43,7 +43,7 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
 
     private void updateInvoke(InvokeCleanup invokeCleanup, ProgramState input) {
         requiredFinalState = trace.getSuccessor(input);
-        stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup);
+        stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup, this);
     }
 
     private void updateMethod(AbstractMethod method, ProgramState input) {
@@ -93,7 +93,6 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
 
     @Override
     public boolean isDeadVariableEliminationEnabled() {
-
         return stateSpaceGenerator.isDeadVariableEliminationEnabled();
     }
 }

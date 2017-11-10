@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
 
@@ -35,6 +36,7 @@ public final class CounterexampleGenerator {
     private CanonicalizationStrategy canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
+    private boolean deadVariableEliminationEnabled;
 
     /**
      * @return A builder object to construct a new CounterexampleGenerator.
@@ -80,6 +82,7 @@ public final class CounterexampleGenerator {
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
                 .setStateRefinementStrategy(stateRefinementStrategy)
+                .setDeadVariableElimination(deadVariableEliminationEnabled)
                 .setBreadthFirstSearchEnabled(true)
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSemanticsObserver(s, trace))
                 .setExplorationStrategy((s,sp) -> {
@@ -158,6 +161,11 @@ public final class CounterexampleGenerator {
 
         public CounterexampleGeneratorBuilder setStateRefinementStrategy(StateRefinementStrategy strategy) {
             generator.stateRefinementStrategy = strategy;
+            return this;
+        }
+
+        public CounterexampleGeneratorBuilder setDeadVariableEliminationEnabled(boolean enabled) {
+            generator.deadVariableEliminationEnabled = enabled;
             return this;
         }
     }

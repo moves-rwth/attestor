@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -19,6 +20,8 @@ import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramSta
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,6 +32,11 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class CounterexampleGeneratorTest {
+
+    @BeforeClass
+    public static void setupClass() {
+        UnitTestGlobalSettings.reset();
+    }
 
     @Test
     public void testTrivial() {
@@ -203,6 +211,7 @@ public class CounterexampleGeneratorTest {
         }
 
         MockupTrace trace = new MockupTrace();
+        assert finalState != null;
         trace.addState(initialState)
                 .addState(finalState)
                 .addState(finalState.shallowCopyUpdatePC(2))

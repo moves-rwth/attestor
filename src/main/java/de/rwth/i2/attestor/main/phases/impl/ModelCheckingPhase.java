@@ -68,6 +68,7 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
         CounterexampleGenerator generator = CounterexampleGenerator.builder()
                     .setProgram(program)
                     .setTrace(failureTrace)
+                    .setDeadVariableEliminationEnabled(settings.options().isRemoveDeadVariables())
                     .setStateRefinementStrategy(stateRefinementStrategy)
                     .setMaterializationStrategy(materializationStrategy)
                     .setCanonicalizationStrategy(canonicalizationStrategy)

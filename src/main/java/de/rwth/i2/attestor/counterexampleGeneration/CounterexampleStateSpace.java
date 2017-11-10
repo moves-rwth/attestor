@@ -25,18 +25,21 @@ final class CounterexampleStateSpace implements StateSpace {
     private final CanonicalizationStrategy canonicalizationStrategy;
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
+    private final SemanticsObserver invokeObserver;
 
     private final Set<ProgramState> finalStates = new HashSet<>();
 
     CounterexampleStateSpace(Program program,
                              CanonicalizationStrategy canonicalizationStrategy,
                              Set<ProgramState> requiredFinalStates,
-                             InvokeCleanup invokeCleanup) {
+                             InvokeCleanup invokeCleanup,
+                             SemanticsObserver invokeObserver) {
 
         this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.requiredFinalStates = requiredFinalStates;
         this.invokeCleanup = invokeCleanup;
+        this.invokeObserver = invokeObserver;
 
         assert !requiredFinalStates.isEmpty();
     }
@@ -177,7 +180,7 @@ final class CounterexampleStateSpace implements StateSpace {
 
         if(invokeCleanup != null) {
             try {
-                invokeCleanup.getCleanedResultState(abstractState, null);
+                invokeCleanup.getCleanedResultState(abstractState, invokeObserver);
             } catch (NotSufficientlyMaterializedException e) {
                 throw new IllegalStateException("Not sufficiently materialized state found.");
             }
