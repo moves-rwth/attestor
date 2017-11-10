@@ -74,14 +74,9 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
                     .setCanonicalizationStrategy(canonicalizationStrategy)
                     .build();
 
-        HeapConfiguration badInput = null;
-        try {
-                    badInput = generator.generate();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-            counterexamples.put(formula, badInput);
-            logger.info("Constructed counterexample.");
+        HeapConfiguration badInput = generator.generate();
+        counterexamples.put(formula, badInput);
+        logger.info("Constructed counterexample.");
     }
 
     @Override
