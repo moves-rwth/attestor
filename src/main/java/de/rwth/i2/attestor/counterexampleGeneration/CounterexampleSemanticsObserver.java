@@ -94,6 +94,6 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
     @Override
     public boolean isDeadVariableEliminationEnabled() {
 
-        return false;
+        return stateSpaceGenerator.isDeadVariableEliminationEnabled();
     }
 }

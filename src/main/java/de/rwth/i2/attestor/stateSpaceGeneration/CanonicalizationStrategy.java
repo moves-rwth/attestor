@@ -17,12 +17,4 @@ public interface CanonicalizationStrategy {
      * @return An abstract program states that covers the original program state conf.
      */
 	 ProgramState canonicalize(Semantics semantics, ProgramState state);
-
-	/**
-	 * A simplified version of canonicalization that is configured according to default values instead of using
-	 * the last statement that has been executed.
-	 * @param state The ProgramState that should be abstracted.
-	 * @return An abstract program states that covers the original program state conf.
-	 */
-	 ProgramState canonicalize(ProgramState state);
 }

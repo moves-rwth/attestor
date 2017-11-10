@@ -61,12 +61,9 @@ public final class CounterexampleGenerator {
             StateSpaceGenerator generator = setupStateSpaceGenerator();
             StateSpace stateSpace = generator.generate();
 
-            assert stateSpace.getFinalStates().size() == 1;
-            HeapConfiguration finalHeap = stateSpace
-                    .getFinalStates()
-                    .iterator()
-                    .next()
-                    .getHeap();
+            Iterator<ProgramState>  iterator = stateSpace.getFinalStates().iterator();
+            assert iterator.hasNext();
+            HeapConfiguration finalHeap = iterator.next().getHeap();
             return ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
 
         } catch (StateSpaceGenerationAbortedException e) {
@@ -86,7 +83,8 @@ public final class CounterexampleGenerator {
                 .setBreadthFirstSearchEnabled(true)
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSemanticsObserver(s, trace))
                 .setExplorationStrategy((s,sp) -> {
-                    ProgramState canon = canonicalizationStrategy.canonicalize(s);
+                    Semantics semantics = program.getStatement(s.getProgramCounter());
+                    ProgramState canon = canonicalizationStrategy.canonicalize(semantics, s);
                     return trace.contains(canon);
                 })
                 .setStateSpaceSupplier(getStateSpaceSupplier())
@@ -100,7 +98,7 @@ public final class CounterexampleGenerator {
     private StateSpaceSupplier getStateSpaceSupplier() {
 
         CounterexampleStateSpaceSupplier stateSpaceSupplier
-                = new CounterexampleStateSpaceSupplier(canonicalizationStrategy);
+                = new CounterexampleStateSpaceSupplier(program, canonicalizationStrategy);
         Set<ProgramState> finalStates = new HashSet<>(1);
         finalStates.add(trace.getFinalState());
         stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);

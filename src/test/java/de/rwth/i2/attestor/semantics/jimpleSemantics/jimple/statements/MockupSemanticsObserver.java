@@ -29,17 +29,7 @@ public class MockupSemanticsObserver implements SemanticsObserver {
                 .setMaterializationStrategy(
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
-                .setCanonizationStrategy(new CanonicalizationStrategy() {
-                    @Override
-                    public ProgramState canonicalize(Semantics semantics, ProgramState state) {
-                        return state.clone();
-                    }
-
-                    @Override
-                    public ProgramState canonicalize(ProgramState state) {
-                        return state.clone();
-                    }
-                })
+                .setCanonizationStrategy((semantics, state) -> state.clone())
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))

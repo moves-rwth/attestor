@@ -12,10 +12,4 @@ public class MockupCanonicalizationStrategy implements CanonicalizationStrategy 
 		return state;
 	}
 
-	@Override
-	public ProgramState canonicalize(ProgramState state) {
-		return state;
-	}
-
-
 }

@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceSupplier;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +13,15 @@ import java.util.Set;
  */
 final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
+    private final Program program;
     private final CanonicalizationStrategy canonicalizationStrategy;
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
 
-    CounterexampleStateSpaceSupplier(CanonicalizationStrategy canonicalizationStrategy) {
+    CounterexampleStateSpaceSupplier(Program program, CanonicalizationStrategy canonicalizationStrategy) {
 
+        this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;
     }
 
@@ -47,6 +46,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         }
 
         CounterexampleStateSpace result = new CounterexampleStateSpace(
+                program,
                 canonicalizationStrategy,
                 requiredFinalStates,
                 invokeCleanupOfPreviousProcedure

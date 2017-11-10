@@ -1,9 +1,7 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
@@ -23,16 +21,19 @@ import java.util.Set;
 final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState initialState;
-    private final Set<ProgramState> requiredFinalStates;
+    private final Program program;
     private final CanonicalizationStrategy canonicalizationStrategy;
+    private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
 
     private final Set<ProgramState> finalStates = new HashSet<>();
 
-    CounterexampleStateSpace(CanonicalizationStrategy canonicalizationStrategy,
-                                    Set<ProgramState> requiredFinalStates,
-                                    InvokeCleanup invokeCleanup) {
+    CounterexampleStateSpace(Program program,
+                             CanonicalizationStrategy canonicalizationStrategy,
+                             Set<ProgramState> requiredFinalStates,
+                             InvokeCleanup invokeCleanup) {
 
+        this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.requiredFinalStates = requiredFinalStates;
         this.invokeCleanup = invokeCleanup;
@@ -170,7 +171,8 @@ final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
 
-        ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
+        Semantics semantics = program.getStatement(state.getProgramCounter());
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(semantics, state);
         abstractState.setProgramCounter(-1);
 
         if(invokeCleanup != null) {

@@ -9,9 +9,4 @@ public class NoCanonicalizationStrategy implements CanonicalizationStrategy {
     public ProgramState canonicalize(Semantics semantics, ProgramState state) {
         return state;
     }
-
-    @Override
-    public ProgramState canonicalize(ProgramState state) {
-        return state;
-    }
 }

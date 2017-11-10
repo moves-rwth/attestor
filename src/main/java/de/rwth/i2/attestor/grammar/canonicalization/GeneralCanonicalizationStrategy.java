@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
-	private static final Semantics DEFAULT_SEMANTICS = new Skip(-1);
 	private final Grammar grammar;
 	private final CanonicalizationHelper canonicalizationHelper;
 
@@ -27,11 +26,6 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
 
 		return performCanonicalization( semantics, state );
-	}
-
-	@Override
-	public ProgramState canonicalize(ProgramState state) {
-		return canonicalize(DEFAULT_SEMANTICS, state);
 	}
 
 	private ProgramState performCanonicalization(Semantics semantics, ProgramState state) {

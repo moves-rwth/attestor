@@ -73,7 +73,12 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
                     .setCanonicalizationStrategy(canonicalizationStrategy)
                     .build();
 
-            HeapConfiguration badInput = generator.generate();
+        HeapConfiguration badInput = null;
+        try {
+                    badInput = generator.generate();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
             counterexamples.put(formula, badInput);
             logger.info("Constructed counterexample.");
     }
@@ -98,7 +103,7 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
                             "A counterexample has been found."));
                 } else {
                     logSum(String.format("| %-9s | %s", "witness",
-                            "All counterexamples might be spurious."));
+                            "All detected counterexamples might be spurious."));
                 }
 
             }
