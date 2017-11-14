@@ -101,9 +101,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		for( SootClass sootClass : sootClasses ){
 			methods.addAll( sootClass.getMethods() );
 		}
-		methodMapping = new HashMap<>();
-		
-
+	
 		for (SootMethod method : methods) {
 			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
@@ -111,7 +109,6 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
             try {
 				//methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName, getStateSpaceFactory()));
             	final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
-				methodMapping.put(signature, abstractMethod );
             	abstractMethod.setStateSpaceFactory(getStateSpaceFactory());
             	abstractMethod.setDisplayName(shortName);
             } catch (StateSpaceGenerationAbortedException e) {
