@@ -111,7 +111,7 @@ public class VF2Algorithm {
 				if (isFeasible(state, p, t)) {
 
 					if( debug ){
-						logger.trace("found feasible candidate ("+ p + "," + t + ")" );
+						logger.error("found feasible candidate ("+ p + "," + t + ")" );
 					}
 					
 					/* A shallow copy only copies data required for backtracking
@@ -125,7 +125,7 @@ public class VF2Algorithm {
 			}
 
 			if( debug ){
-				logger.trace("Backtracking...");
+				logger.error("Backtracking...");
 			}
 			/* We stored all morphisms found so far and finished going through all search trees
 		   	   after adding all available candidate pairs to the current state.
@@ -150,7 +150,7 @@ public class VF2Algorithm {
 		for(int i=0; i < feasibilityChecks.length; i++) {
 			if (!feasibilityChecks[i].eval(state, p, t)) {
 				if( debug ){
-					logger.trace(feasibilityChecks[i].getClass().getSimpleName() + " rejected candidate (" + p +","+t+")");
+					logger.error(feasibilityChecks[i].getClass().getSimpleName() + " rejected candidate (" + p +","+t+")");
 				}
 				return false;
 			}
