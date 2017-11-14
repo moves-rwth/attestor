@@ -29,8 +29,8 @@ public class IpaContractCollectionTest {
 		HeapConfiguration h2 = otherSimpleGraphWithSameHash();
 		assertEquals( h1.hashCode(), h2.hashCode() );
 				
-		assertFalse("should not contain p1", contracts.hasPrecondition(h1) );
-		assertFalse("should not contain p2",  contracts.hasPrecondition( h2 ) );
+		assertFalse("should not contain p1", contracts.hasMatchingPrecondition(h1) );
+		assertFalse("should not contain p2",  contracts.hasMatchingPrecondition( h2 ) );
 		assertNull("h1 contract should be null", contracts.getPostconditions( h1 ) );
 		assertNull("h2 contract should be null", contracts.getPostconditions( h2 ) );
 		assertNull("h1 should not get a reordering", contracts.getReordering( h1 ) );
@@ -38,8 +38,8 @@ public class IpaContractCollectionTest {
 		
 		contracts.addPrecondition( h1 );
 		
-		assertTrue("should have p1", contracts.hasPrecondition(h1) );
-		assertFalse("should not have p2", contracts.hasPrecondition( h2 ) );
+		assertTrue("should have p1", contracts.hasMatchingPrecondition(h1) );
+		assertFalse("should not have p2", contracts.hasMatchingPrecondition( h2 ) );
 		assertNotNull("should have contract h1", contracts.getPostconditions( h1 ) );
 		assertNotNull("should have a reordering", contracts.getReordering( h1 ) );
 		assertTrue("reordering should be identity", Arrays.equals(identityReordering(), contracts.getReordering( h1)) );

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.ipa;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -175,12 +176,11 @@ public class ReachableFragmentTest {
 	private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
 			HeapConfiguration expectedReplace) {
 		Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> result = ipa.prepareInput( input );
-		IpaPrecondition toMatch = new IpaPrecondition(expectedFragment);
 		
 		
 		final HeapConfiguration reachableFragment = result.first();
-		assertEquals( toMatch, new IpaPrecondition(reachableFragment) );
-		int [] reordering = toMatch.getReordering( reachableFragment );
+		assertTrue( ipa.contracts.match(expectedFragment, reachableFragment) );
+		int [] reordering = ipa.contracts.getReordering( expectedFragment, reachableFragment );
 		final HeapConfiguration remainingFragment = result.second().first();
 		final Integer placeholderPos = result.second().second();
 		HeapConfiguration remainingFragmentWithReorderedTentacles = ipa.adaptExternalOrdering(reachableFragment, 

@@ -31,7 +31,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 	
 	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
-		if( ! contracts.hasPrecondition(precondition) ){
+		if( ! contracts.hasMatchingPrecondition(precondition) ){
 			contracts.addPrecondition(precondition);
 		}
 		List<HeapConfiguration> currentPostconditions = contracts.getPostconditions( precondition );
@@ -58,7 +58,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
 		
-		if( !contracts.hasPrecondition(reachableFragment) ){ 
+		if( !contracts.hasMatchingPrecondition(reachableFragment) ){ 
 			
 			computeContract(reachableFragment);
 		}else{

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.ipa;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -27,13 +28,13 @@ public class IpaAbstractMethod_testReordering {
 		int [] order2 = new int[]{2,1,0};
 		
 		HeapConfiguration matching = someGraph( order1 );
-		IpaPrecondition toMatch = new IpaPrecondition( someGraph( order2 ) );
+		HeapConfiguration toMatch = someGraph( order2 );
 		
 		Pair<HeapConfiguration,Integer> toAdapt = someGraphWithNonterminal( order1 );
 		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( order2 ).first();
 		
-		assertEquals( toMatch, new IpaPrecondition(matching) );
-		int[] reordering = toMatch.getReordering( matching );
+		assertTrue( ipa.contracts.match( toMatch, matching ) );
+		int[] reordering = ipa.contracts.getReordering( toMatch, matching );
 		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering(matching, toAdapt.first(), toAdapt.second(), reordering) );
 	}
 
@@ -45,7 +46,7 @@ public class IpaAbstractMethod_testReordering {
 		int [] externalOrder1 = new int[]{0,1,2,3,4};
 		int [] externalOrder2 = new int[]{2,1,3,0,4};
 		HeapConfiguration matching = someGraph( externalOrder1 );
-		IpaPrecondition toMatch = new IpaPrecondition( someGraph( externalOrder2 ) );
+		HeapConfiguration toMatch = someGraph( externalOrder2 );
 		
 		
 		int [] tentacleOrder1 = new int[]{0,1,3,4,2};
@@ -53,8 +54,8 @@ public class IpaAbstractMethod_testReordering {
 		Pair<HeapConfiguration,Integer> toAdapt = someGraphWithNonterminal( tentacleOrder1 );
 		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( tentacleOrder2 ).first();
 		
-		assertEquals( toMatch, new IpaPrecondition(matching) );
-		int[] reordering = toMatch.getReordering( matching );
+		assertTrue( ipa.contracts.match( toMatch, matching ) );
+		int[] reordering = ipa.contracts.getReordering( toMatch, matching );
 		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( matching, toAdapt.first(), toAdapt.second(), reordering) );
 	}
 	
