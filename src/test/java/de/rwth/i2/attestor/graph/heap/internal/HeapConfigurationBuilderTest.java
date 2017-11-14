@@ -1,19 +1,18 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import static org.junit.Assert.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Matching;
+import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class HeapConfigurationBuilderTest {
 
@@ -850,6 +849,53 @@ public class HeapConfigurationBuilderTest {
 		
 		assertEquals("Selector edge 'next' should have been added between the two nodes attached to the nonterminal edge 'nt'.",
 				"next", source.selectorLabelsOf(srcNodes.get(1)).get(1).toString() );
+	}
+	
+	/**
+	 * Tests the intended usage of builders to perform hyperedge replacement
+	 * in the context of interprocedural analysis with contracts.
+	 */
+	@Test
+	public void testReplaceNonterminalEdgeWithVariables() {
+		
+		HeapConfiguration source = new InternalHeapConfiguration();
+		TIntArrayList srcNodes = new TIntArrayList();
+		
+		source.builder()
+			.addNodes(new MockupType(), 3, srcNodes)
+			.addSelector(srcNodes.get(1), new MockupSelector("sel"), srcNodes.get(2))
+			.addNonterminalEdge(new MockupNonterminal("nt", 2), new TIntArrayList(new int[]{srcNodes.get(1), srcNodes.get(2)}))
+			.build();
+		
+		HeapConfiguration repl = new InternalHeapConfiguration();
+		TIntArrayList replNodes = new TIntArrayList();
+		
+		repl.builder()
+			.addNodes(new MockupType(), 3, replNodes)
+			.addSelector(replNodes.get(0), new MockupSelector("next"), replNodes.get(1))
+			.addSelector(replNodes.get(1), new MockupSelector("prev"), replNodes.get(0))
+			.setExternal(replNodes.get(0))
+			.setExternal(replNodes.get(1))
+			.addNonterminalEdge(new MockupNonterminal("NEW", 1), new TIntArrayList(new int[]{replNodes.get(1)}))
+			.addSelector(replNodes.get(0), new MockupSelector("to2"), replNodes.get(2))
+			.addVariableEdge("@return", replNodes.get(0))
+			.build();
+		
+		source.builder()
+			.replaceNonterminalEdge(
+					source.nonterminalEdges().get(0),
+					repl
+					)
+			.build();
+			
+		assertEquals("There should be exactly one variable edge", 1, source.countVariableEdges() );
+		
+		assertEquals("The name of the single variable edge should correspond to the one in repl.", 
+				"@return", source.nameOf( source.variableEdges().get(0) ).toString());
+		
+		assertEquals("Node 1 should be attached to node which used to be the first tentacle", 
+				srcNodes.get(1), source.variableTargetOf("@return"));
+		
 	}
 	
 	/**

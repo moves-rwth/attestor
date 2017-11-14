@@ -1,16 +1,14 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import java.util.*;
+import java.util.function.IntPredicate;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.Variable;
-import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
-import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
-import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
-import de.rwth.i2.attestor.graph.heap.matching.MinDistanceEmbeddingChecker;
+import de.rwth.i2.attestor.graph.heap.*;
+import de.rwth.i2.attestor.graph.heap.matching.*;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -19,11 +17,6 @@ import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.function.IntPredicate;
 
 /**
  * 
@@ -524,7 +517,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 * @param privateId A private ID of an element of this InternalHeapConfiguration.
 	 * @return True if and only if the provided private ID corresponds to a variable.
 	 */
-	private boolean isVariable(int privateId) {
+	boolean isVariable(int privateId) {
 
 		Object v = graph.nodeLabelOf(privateId);
 		return v != null && v.getClass() == Variable.class;

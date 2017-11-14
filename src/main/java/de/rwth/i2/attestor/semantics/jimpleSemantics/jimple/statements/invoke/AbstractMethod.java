@@ -24,15 +24,23 @@ public abstract class AbstractMethod {
 	/**
 	 * the methods signature
 	 */
-	protected final String displayName;
+	protected String displayName;
 	/**
 	 * Factory to obtain a state space.
 	 */
 	protected StateSpaceFactory factory;
 
-	public AbstractMethod( String displayName, StateSpaceFactory factory ) {
+	public AbstractMethod( ) {
 		super();
 		this.displayName = displayName;
+		this.factory = factory;
+	}
+	
+	public void setDisplayName( String displayName ){
+		this.displayName = displayName;
+	}
+	
+	public void setStateSpaceFactory( StateSpaceFactory factory ){
 		this.factory = factory;
 	}
 

@@ -28,7 +28,9 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	public SimpleAbstractMethod( String signature, String displayName, StateSpaceFactory factory){
-		super( displayName, factory );
+		super( );
+		super.setDisplayName(displayName);
+		super.setStateSpaceFactory(factory);
 		knownInputs = new HashMap<>();
 	}
 

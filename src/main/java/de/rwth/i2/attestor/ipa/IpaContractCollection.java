@@ -1,10 +1,9 @@
-package de.rwth.i2.attestor.graph.heap.internal;
+package de.rwth.i2.attestor.ipa;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.IpaPrecondition;
 
 /**
  * This is essentially a hashMap from IpaPrecondtion to List&#60;HeapConfiguration&#62;
@@ -16,13 +15,16 @@ import de.rwth.i2.attestor.ipa.IpaPrecondition;
  */
 public class IpaContractCollection {
 
-	Map<Integer,Map<IpaPrecondition,List<HeapConfiguration>>> map;
+	Map<Integer,Map<IpaPrecondition,List<HeapConfiguration>>> map = new HashMap<>();
 	
 	public Entry<IpaPrecondition,List<HeapConfiguration>> getContract( HeapConfiguration remainingFragment ){
 		
 		
 		final IpaPrecondition toMatch = new IpaPrecondition(remainingFragment);
 		int hashCode = toMatch.hashCode();
+		if( ! map.containsKey(hashCode) ){
+			map.put(hashCode, new HashMap<>() );
+		}
 		Map<IpaPrecondition,List<HeapConfiguration>> contracts = map.get( hashCode );
 		for( Entry<IpaPrecondition, List<HeapConfiguration>> contract : contracts.entrySet() ){
 			if( contract.getKey().equals(toMatch) ){
@@ -33,10 +35,6 @@ public class IpaContractCollection {
 		return null;
 	}
 	
-	public List<HeapConfiguration> getPostConditions( IpaPrecondition precondition ){
-		int hashCode = precondition.hashCode();
-		return map.get(hashCode).get(precondition);
-	}
 	
 	public void addPrecondition( IpaPrecondition precondition ){
 		int hashCode = precondition.hashCode();
@@ -45,5 +43,14 @@ public class IpaContractCollection {
 		}
 		
 		map.get( hashCode ).put( precondition, new ArrayList<>() );
+	}
+	
+	public boolean hasPrecondition( IpaPrecondition precondition ){
+		int hashCode = precondition.hashCode();
+		if( ! map.containsKey( hashCode ) ){
+			return false;
+		}
+		
+		return map.get( hashCode ).containsKey(precondition);
 	}
 }

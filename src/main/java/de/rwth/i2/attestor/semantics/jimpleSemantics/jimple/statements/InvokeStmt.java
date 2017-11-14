@@ -1,16 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import java.util.Set;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-
-import java.util.Set;
 
 /**
  * InvokeStmt models statements like foo(); or bar(1,2);
@@ -73,7 +71,7 @@ public class InvokeStmt extends Statement {
 
 
 	public String toString(){
-		return method.toString() + "(" + invokePrepare.argumentString() + ");";
+		return invokePrepare.baseValueString() + method.toString() + "(" + invokePrepare.argumentString() + ");";
 	}
 
 	@Override
