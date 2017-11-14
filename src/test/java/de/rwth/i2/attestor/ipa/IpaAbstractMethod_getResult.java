@@ -25,7 +25,7 @@ public class IpaAbstractMethod_getResult {
 	
 	@Test
 	public void test() throws StateSpaceGenerationAbortedException{
-		IpaPrecondition precondition = createPreCondition();
+		HeapConfiguration precondition = createPreCondition();
 		HeapConfiguration postcondition = createPostcondition();
 		
 		ipa.addContracts(precondition, SingleElementUtil.createList(postcondition) );
@@ -53,7 +53,7 @@ public class IpaAbstractMethod_getResult {
 		
 	}
 
-	private IpaPrecondition createPreCondition() {
+	private HeapConfiguration createPreCondition() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -66,7 +66,7 @@ public class IpaAbstractMethod_getResult {
 				.addSelector(nodes.get(1), sel, nodes.get(2))
 				.build();
 		
-		return new IpaPrecondition( hc );
+		return hc;
 	}
 	
 	private HeapConfiguration createPostcondition() {

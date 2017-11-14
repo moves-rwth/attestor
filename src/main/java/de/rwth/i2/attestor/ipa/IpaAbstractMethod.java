@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.ipa;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -31,11 +30,11 @@ public class IpaAbstractMethod extends AbstractMethod {
 		super.setDisplayName(displayName);
 	}
 	
-	public void addContracts( IpaPrecondition precondition, List<HeapConfiguration> postconditions ){
+	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
 		if( ! contracts.hasPrecondition(precondition) ){
 			contracts.addPrecondition(precondition);
 		}
-		List<HeapConfiguration> currentPostconditions = contracts.getContract(precondition.config).getValue();
+		List<HeapConfiguration> currentPostconditions = contracts.getPostconditions( precondition );
 		currentPostconditions.addAll( postconditions );
 	}
 
@@ -58,28 +57,26 @@ public class IpaAbstractMethod extends AbstractMethod {
 		HeapConfiguration reachableFragment = splittedConfig.first();
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
-
-		Entry<IpaPrecondition, List<HeapConfiguration>> contract = contracts.getContract( reachableFragment );
-		if( contract == null ){ 
+		
+		if( !contracts.hasPrecondition(reachableFragment) ){ 
 			
 			computeContract(reachableFragment);
-			contract = contracts.getContract(reachableFragment);
 		}else{
-			IpaPrecondition precondition = contract.getKey();
-			remainingFragment = adaptExternalOrdering( precondition, reachableFragment, 
-					remainingFragment, placeholderPos);
+			int [] reordering = contracts.getReordering( reachableFragment );
+			remainingFragment = adaptExternalOrdering( reachableFragment, remainingFragment, 
+														placeholderPos, reordering );
 		}
-
-			List<HeapConfiguration> postconditions = contract.getValue();
-			return applyContract(remainingFragment, placeholderPos, postconditions );
+		
+		List<HeapConfiguration> postconditions = contracts.getPostconditions(reachableFragment);
+		return applyContract(remainingFragment, placeholderPos, postconditions );
 		
 	}
 
 	private void computeContract(HeapConfiguration reachableFragment) throws StateSpaceGenerationAbortedException {
-		final IpaPrecondition precondition = new IpaPrecondition( reachableFragment );
-		contracts.addPrecondition( precondition );
+		
+		contracts.addPrecondition( reachableFragment );
 		StateSpace stateSpace = factory.create(method, reachableFragment, 0);
-		List<HeapConfiguration> postconditions = contracts.getContract( reachableFragment ).getValue();
+		List<HeapConfiguration> postconditions = contracts.getPostconditions(reachableFragment);
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
 			//otherwise, any local variables are already removed 
 			if( ! Settings.getInstance().options().isRemoveDeadVariables() ){
@@ -126,13 +123,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return result;
 	}
 
-	protected HeapConfiguration adaptExternalOrdering( IpaPrecondition precondition, 
-			HeapConfiguration reachableFragment,
-			HeapConfiguration remainingFragment,
-			int placeholderPosition )
+
+	protected HeapConfiguration adaptExternalOrdering( HeapConfiguration reachableFragment, 
+													   HeapConfiguration remainingFragment,
+													   int placeholderPosition,
+													   int[] reordering 
+													  )
 					throws IllegalArgumentException {
 
-		int[] reordering = precondition.getReordering( reachableFragment );
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
 		TIntArrayList newTentacles = new TIntArrayList();
 		for( int i = 0; i < reordering.length; i++ ){

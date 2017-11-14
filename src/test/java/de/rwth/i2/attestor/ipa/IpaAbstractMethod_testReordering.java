@@ -33,7 +33,8 @@ public class IpaAbstractMethod_testReordering {
 		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( order2 ).first();
 		
 		assertEquals( toMatch, new IpaPrecondition(matching) );
-		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( toMatch, matching, toAdapt.first(), toAdapt.second()) );
+		int[] reordering = toMatch.getReordering( matching );
+		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering(matching, toAdapt.first(), toAdapt.second(), reordering) );
 	}
 
 	/**
@@ -53,7 +54,8 @@ public class IpaAbstractMethod_testReordering {
 		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( tentacleOrder2 ).first();
 		
 		assertEquals( toMatch, new IpaPrecondition(matching) );
-		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( toMatch, matching, toAdapt.first(), toAdapt.second()) );
+		int[] reordering = toMatch.getReordering( matching );
+		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( matching, toAdapt.first(), toAdapt.second(), reordering) );
 	}
 	
 	/*

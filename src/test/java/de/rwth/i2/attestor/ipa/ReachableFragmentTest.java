@@ -178,9 +178,13 @@ public class ReachableFragmentTest {
 		IpaPrecondition toMatch = new IpaPrecondition(expectedFragment);
 		
 		
-		assertEquals( toMatch, new IpaPrecondition(result.first()) );
-		HeapConfiguration remainingFragmentWithReorderedTentacles = ipa.adaptExternalOrdering(toMatch, 
-											result.first(), result.second().first(), result.second().second());
+		final HeapConfiguration reachableFragment = result.first();
+		assertEquals( toMatch, new IpaPrecondition(reachableFragment) );
+		int [] reordering = toMatch.getReordering( reachableFragment );
+		final HeapConfiguration remainingFragment = result.second().first();
+		final Integer placeholderPos = result.second().second();
+		HeapConfiguration remainingFragmentWithReorderedTentacles = ipa.adaptExternalOrdering(reachableFragment, 
+											remainingFragment, placeholderPos, reordering );
 		assertEquals("replaced Fragment", expectedReplace, remainingFragmentWithReorderedTentacles);
 	}
 	
