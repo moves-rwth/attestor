@@ -2,10 +2,7 @@ package de.rwth.i2.attestor.main.settings;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * All global settings regarding input files.
@@ -60,6 +57,16 @@ public class InputSettings {
 	 * The mapping from predefined grammars to their rename mapping
 	 */
 	private HashMap<String, HashMap<String, String>> grammar2RenameMap;
+	
+	/**
+	 * path to the files storing user defined contracts
+	 */
+	private String pathToContracts;
+	
+	/**
+	 * filenames containing user defined contracts to use
+	 */
+	ArrayList<String> contractFiles = new ArrayList<>();
 
     /**
      * The path to the file specifying the initial state.
@@ -164,6 +171,22 @@ public class InputSettings {
      */
 	public String getUserDefinedGrammarName() {
 		return this.userDefinedGrammarName;
+	}
+	
+	/**
+	 * Returns the path to the files containing user defined contracts
+	 * @return the location of the user defined contracts
+	 */
+	public String getPathToContracts(){
+		return this.pathToContracts;
+	}
+	
+	/**
+	 * Returns the filenames of the user defined contracts to use
+	 * @return a list containing the filenames
+	 */
+	public ArrayList<String> getContractFileNames(){
+		return this.contractFiles;
 	}
 
 	/**
