@@ -29,10 +29,17 @@ public class CompatibleNodeTypes implements FeasibilityFunction {
 			GeneralType patternType = (GeneralType) patternLabel;
 			GeneralType targetType = (GeneralType) targetLabel;
 			return patternType.typeEquals(targetType)
-					|| targetType.typeEquals( nullType );
+					|| ( targetType.typeEquals( nullType ) && !isConstantType(patternType) );
 		}else {
 			return patternLabel.matches(targetLabel);
 		}
+	}
+	
+	private boolean isConstantType( NodeLabel type ) {
+		return type.equals( GeneralType.getType("int") )
+				|| type.equals( GeneralType.getType("int_0"))
+				|| type.equals( GeneralType.getType("int_1"))
+				|| type.equals( GeneralType.getType("int_-1"));
 	}
 
 }
