@@ -139,7 +139,7 @@ public class SettingsFileReader {
 			}
 		}
 		
-		if(jsonSettings.has("contracts")) {
+		if(jsonInput.has("contracts")) {
 			JSONObject contractSettings = jsonInput.getJSONObject("contracts");
 			if( contractSettings.has( "path" ) ){
 				input.setPathToContracts( contractSettings.getString( "path" ) );

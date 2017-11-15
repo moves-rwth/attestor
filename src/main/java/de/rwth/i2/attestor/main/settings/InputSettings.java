@@ -255,6 +255,7 @@ public class InputSettings {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
 		this.pathToInput = rootPath + File.separator + this.pathToInput;
+		this.pathToContracts = rootPath + File.separator + this.pathToContracts;
 		for( java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefininition.entrySet() ){
 			entry.setValue( rootPath + File.separator + entry.getValue() );
 		}
