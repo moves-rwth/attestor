@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class VF2Algorithm {
 	
-	boolean debug = false;
+	public static final boolean DEBUG = false;
     private static final Logger logger = LogManager.getLogger( "VF2Algorithm" );
 
 
@@ -110,7 +110,7 @@ public class VF2Algorithm {
 				int t = state.getTargetCandidate();
 				if (isFeasible(state, p, t)) {
 
-					if( debug ){
+					if( DEBUG ){
 						logger.error("found feasible candidate ("+ p + "," + t + ")" );
 					}
 					
@@ -124,7 +124,7 @@ public class VF2Algorithm {
 				}
 			}
 
-			if( debug ){
+			if( DEBUG ){
 				logger.error("Backtracking...");
 			}
 			/* We stored all morphisms found so far and finished going through all search trees
@@ -149,7 +149,7 @@ public class VF2Algorithm {
 
 		for(int i=0; i < feasibilityChecks.length; i++) {
 			if (!feasibilityChecks[i].eval(state, p, t)) {
-				if( debug ){
+				if( DEBUG ){
 					logger.error(feasibilityChecks[i].getClass().getSimpleName() + " rejected candidate (" + p +","+t+")");
 				}
 				return false;
