@@ -174,6 +174,13 @@ public class InputSettings {
 	}
 	
 	/**
+	 * Sets the path to the files containing user defined contracts
+	 */
+	public void setPathToContracts(String pathToContracts) {
+		this.pathToContracts = pathToContracts;
+	}
+	
+	/**
 	 * Returns the path to the files containing user defined contracts
 	 * @return the location of the user defined contracts
 	 */
@@ -181,6 +188,13 @@ public class InputSettings {
 		return this.pathToContracts;
 	}
 	
+	/**
+	 * Adds the provided name to the list of contract files to consider for this run
+	 * @param name the filename
+	 */
+	public void addContractFile( String name ){
+		this.contractFiles.add( name );
+	}
 	/**
 	 * Returns the filenames of the user defined contracts to use
 	 * @return a list containing the filenames
@@ -295,6 +309,8 @@ public class InputSettings {
 	public Set<String> getUsedSelectorLabels() {
 		return usedSelectorLabels;
 	}
+
+
 
 
 

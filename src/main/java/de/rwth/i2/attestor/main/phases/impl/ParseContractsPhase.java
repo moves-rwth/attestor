@@ -61,19 +61,18 @@ public class ParseContractsPhase extends AbstractPhase {
 
 
         } catch (FileNotFoundException e) {
-            logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
+            logger.error("Could not parse contract at location " + path + File.separator + filename + ". Skipping it.");
         }		
 	}
 
 	@Override
 	public void logSummary() {
-		// TODO Auto-generated method stub
+		// nothing to report
 
 	}
 
 	@Override
 	public boolean isVerificationPhase() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

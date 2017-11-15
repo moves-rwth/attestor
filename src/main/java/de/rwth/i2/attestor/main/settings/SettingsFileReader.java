@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
+
+import org.apache.logging.log4j.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import de.rwth.i2.attestor.LTLFormula;
 
 /**
  * Populates {@link Settings} from a settings file.
@@ -137,6 +136,19 @@ public class SettingsFileReader {
 				throw new IllegalStateException("Default initial states location not found.");
 			} else {
 				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
+			}
+		}
+		
+		if(jsonSettings.has("contracts")) {
+			JSONObject contractSettings = jsonInput.getJSONObject("contracts");
+			if( contractSettings.has( "path" ) ){
+				input.setPathToContracts( contractSettings.getString( "path" ) );
+			}else if( (!jsonInput.has( "defaultPath" )) && contractSettings.has("file")){
+				logger.error("You must define a default path or a path for the contracts");
+			}
+			JSONArray listOfFiles = contractSettings.getJSONArray("files");
+			for(int i = 0; i < listOfFiles.length(); i++ ){
+				input.addContractFile( listOfFiles.getString(i) );
 			}
 		}
 

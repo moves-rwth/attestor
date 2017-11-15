@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.main;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.logging.log4j.*;
+
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.impl.*;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.settings.Settings;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.util.Properties;
 
 
 /**
@@ -68,6 +67,7 @@ public class Attestor {
 				.addPhase( new ParseProgramPhase() )
 				.addPhase( new ParseGrammarPhase() )
 				.addPhase( new ParseInputPhase() )
+				.addPhase( new ParseContractsPhase() )
 				.addPhase( new MarkingGenerationPhase() )
 				.addPhase( new GrammarRefinementPhase() )
 				.addPhase( new AbstractionPreprocessingPhase() )
