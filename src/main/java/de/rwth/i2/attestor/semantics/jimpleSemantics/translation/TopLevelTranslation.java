@@ -47,13 +47,6 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	private Map<Unit, Integer> currentUnitToPC;
 
 	/**
-	 * Maps the signature of occurring methods to an instance of abstract method
-	 * which is either the abstract semantic translation for this method or a
-	 * default method for those methods we do not translate.
-	 */
-	private Map<String, AbstractMethod> methodMapping;
-
-	/**
 	 * The next level in the translation hierarchy. This level is the first one
 	 * to actually translate statements/values/types.
 	 */
@@ -184,7 +177,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		}
 
 		logger.trace("method Name: " + method.getSignature());
-		methodMapping.get(method.getSignature()).setControlFlow(programStatements);
+		IpaAbstractMethod.getMethod(method.getSignature()).setControlFlow(programStatements);
 
 	}
 
@@ -223,24 +216,22 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * @return The corresponding abstract method.
 	 */
 	public AbstractMethod getMethod(String signature) throws StateSpaceGenerationAbortedException {
-		AbstractMethod res = this.methodMapping.get(signature);
-		if (res != null) {
-			return res;
-		} else {
+		AbstractMethod res = IpaAbstractMethod.getMethod(signature);
+		if (res.getControlFlow() == null) {
+			
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );
-
-			AbstractMethod.StateSpaceFactory factory = getStateSpaceFactory();
-			AbstractMethod defaultMethod = new SimpleAbstractMethod(signature + " (only default - empty Method)",
-					displayName, factory);
-			methodMapping.put(signature, defaultMethod);
+			res.setDisplayName(displayName);
+			res.setStateSpaceFactory(getStateSpaceFactory());
+			
 			List<Semantics> defaultControlFlow = new ArrayList<>();
 			defaultControlFlow.add(new Skip(-1));
-			defaultMethod.setControlFlow(defaultControlFlow);
+			res.setControlFlow(defaultControlFlow);
 
 			logger.warn("Method " + signature + " replaced by empty default method.");
 
-			return defaultMethod;
 		}
+		
+		return res;
 	}
 
 	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() throws StateSpaceGenerationAbortedException {
