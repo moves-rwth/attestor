@@ -8,9 +8,9 @@ import org.json.JSONObject;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.index.*;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HCtoInputFormatExporter {
