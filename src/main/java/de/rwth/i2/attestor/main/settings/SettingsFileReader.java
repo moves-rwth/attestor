@@ -272,6 +272,21 @@ public class SettingsFileReader {
 			}
 		}
 		
+		if( jsonOutput.has( "contracts" ) ){
+			output.setExportContracts( true );
+			JSONObject jsonC = jsonOutput.getJSONObject( "contracts" );
+			if( jsonC.has( "path" ) ){
+				output.setDirectoryForContracts( jsonC.getString( "path" ) );
+			}
+			JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
+			for( int i = 0; i < requestArray.length(); i++ ) {
+				JSONObject request = requestArray.getJSONObject(i);
+				String signature = request.getString("signature");
+				String filename = request.getString("filename");
+				settings.output().addRequiredContract(signature, filename);
+			}
+		}
+		
 		return output;
 	}
 

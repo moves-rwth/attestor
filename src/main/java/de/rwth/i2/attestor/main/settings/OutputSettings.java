@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.main.settings;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+import java.io.File;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
 
 /**
  * All settings related to exporting artifacts.
@@ -106,6 +105,22 @@ public class OutputSettings {
 	 * Holds the prebooked Hcs, that should be exported (for debugging purpose).
 	 */
 	private List<HcLabelPair> customHcList;
+
+	  /**
+     * True if and only if the generated contracts should be exported.
+     */
+	private boolean exportContracts = false;
+
+	/**
+	 * The directory that is created and contains the exported contracts.
+	 */
+	private String folderForContracts;
+
+	/**
+	 * A mapping containing the signatures of those methods the user requests contracts for
+	 * and as values the file names these contracts should be written to.
+	 */
+	private Map<String, String> requiredContracts;
 
     /**
      * Sets the default path for all exports.
@@ -330,7 +345,57 @@ public class OutputSettings {
 	public String getLocationForCustomHcs(){
 		return pathForCustomHcs + File.separator + folderForCustomHcs;
 	}
+	
+	/**
+	 * @param exportCustomHcs True if and only if the generated contracts should be exported.
+	 */
+	public boolean isExportContracts() {
+		return exportContracts;
+	}
+	
+	/**
+	 * @param exportContracts true if and only if (some) contracts should be exported.
+	 */
+	public void setExportContracts(boolean exportContracts) {
+		this.exportContracts = exportContracts;
 
+		if(exportContracts){
+			this.requiredContracts = new HashMap<>();
+		}
+	}
+	
+	/**
+	 * @return The directory that is created and contains the exported contracts.
+	 */
+	public String getDirectoryForContracts() {
+		return this.folderForContracts;
+	}
+	
+	/**
+	 * Defines where the exported contracts should be stored
+	 * @param directory
+	 */
+	public void setDirectoryForContracts( String directory ) {
+		this.folderForContracts = directory;
+	}
+
+	/**
+	 * A mapping from the signatures for which contracts are requested
+	 * and the names of the files the exported contracts are stored in.
+	 * @return
+	 */
+	public Map<String,String> getContractRequests() {
+		return this.requiredContracts;
+	}
+	
+	/**
+	 * Adds a pair requested signature and filename to the set of requested contracts
+	 * @param signature the signature of the method whose contract is requested
+	 * @param filename the name of the file where the contract should be written to.
+	 */
+	public void addRequiredContract( String signature, String filename ) {
+		this.requiredContracts.put(signature, filename + ".json");
+	}
 
     /**
      * Checks whether all necessary paths and names are present for objects that should be exported.
@@ -371,6 +436,7 @@ public class OutputSettings {
 		this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
 		this.pathForTerminalStates = rootPath + File.separator + this.pathForTerminalStates;
 		this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
+		this.folderForContracts = rootPath + File.separator + this.folderForContracts;
 	}
 
 	public List<HcLabelPair> getCustomHcSet() {

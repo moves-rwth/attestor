@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.io.jsonExport.inputFormat;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,11 +10,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.Index;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexVariable;
+import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HCtoInputFormatExporter {
@@ -80,7 +74,7 @@ public class HCtoInputFormatExporter {
 	
 	private static void addVariablesOfTo(HeapConfiguration hc, JSONObject res, Map<Integer, Integer> idMapping) {
 		
-		TIntArrayList varEdges = new TIntArrayList();
+		TIntArrayList varEdges = hc.variableEdges();
 		for( int i = 0; i < varEdges.size(); i++ ) {
 			int varEdge = varEdges.get(i);
 			
@@ -135,7 +129,7 @@ public class HCtoInputFormatExporter {
 			TIntArrayList tentacles = hc.attachedNodesOf(hyperedge);
 			JSONArray tentacleArray = new JSONArray();
 			for( int t = 0; t < tentacles.size(); t++ ) {
-				Object tentacleInHc = tentacleArray.get(t);
+				Object tentacleInHc = tentacles.get(t);
 				Integer tentacleInJson = idMapping.get( tentacleInHc);
 				tentacleArray.put( tentacleInJson );
 			}

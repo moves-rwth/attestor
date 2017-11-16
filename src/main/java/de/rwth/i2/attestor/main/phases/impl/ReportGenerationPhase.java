@@ -1,25 +1,22 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
+import java.io.*;
+import java.util.Set;
+
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonCustomHcListExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
+import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
+import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.IpaContractCollection;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
-
-import java.io.*;
-import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
 
@@ -54,12 +51,33 @@ public class ReportGenerationPhase extends AbstractPhase {
             if (settings.output().isExportCustomHcs()) {
                 exportCustomHcs();
             }
+            
+            if( settings.output().isExportContracts() ) {
+            	exportContracts();
+            }
+            
         } catch(IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
 
     }
-
+    
+    private void exportContracts() throws IOException {
+    	String directory = settings.output().getDirectoryForContracts();
+    	FileUtils.createDirectories( directory );
+    	for( String signature : settings.output().getContractRequests().keySet() ) {
+    		
+    		 String filename = settings.output().getContractRequests().get( signature );
+    		 FileWriter writer = new FileWriter( directory + File.separator + filename);
+    		 
+    		 IpaContractCollection contracts = IpaAbstractMethod.getMethod(signature).getContracts();
+    		 
+    		 ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
+    	     exporter.export( signature, contracts );
+    	     writer.close();
+    	}
+    }
+    
     private void exportCustomHcs() throws IOException {
 
         String location = settings.output().getLocationForCustomHcs();

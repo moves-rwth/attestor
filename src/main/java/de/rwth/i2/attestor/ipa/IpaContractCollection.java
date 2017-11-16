@@ -5,6 +5,7 @@ import java.util.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
+import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -122,5 +123,16 @@ public class IpaContractCollection {
 			return true;
 		}
 		return false;
+	}
+	
+	public List<Pair<HeapConfiguration, List<HeapConfiguration>>> getContractList(){
+		List<Pair<HeapConfiguration, List<HeapConfiguration>>> res = new ArrayList<>();
+		
+		for( List<IpaContract> contractsWithSameHash : map.values() ) {
+			for( IpaContract contract : contractsWithSameHash ) {
+				res.add(new Pair<>(contract.precondition, contract.postconditions));
+			}
+		}
+		return res;
 	}
 }

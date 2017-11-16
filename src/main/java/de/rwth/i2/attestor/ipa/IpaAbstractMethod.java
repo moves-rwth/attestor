@@ -143,6 +143,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	}
 
+	public IpaContractCollection getContracts() {
+		return contracts;
+	}
+
 
 
 
