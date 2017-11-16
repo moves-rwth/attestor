@@ -1,12 +1,8 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,9 +12,9 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
-import de.rwth.i2.attestor.util.FileReader;
 
 /**
  *

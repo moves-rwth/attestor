@@ -52,8 +52,13 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
                 logger.warn("violated.");
                 allSatisfied = false;
                 formulaResults.put(formula, false);
-                FailureTrace failureTrace = proofStructure.getFailureTrace();
-                checkCounterexample(formula, failureTrace);
+
+                if(settings.options().isIndexedMode()) {
+                    logger.warn("Counterexample generation for indexed grammars is not supported yet.");
+                } else {
+                    FailureTrace failureTrace = proofStructure.getFailureTrace();
+                    checkCounterexample(formula, failureTrace);
+                }
             }
         }
     }

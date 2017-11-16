@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
+import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
@@ -15,7 +16,6 @@ import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.util.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
 
 public class ReportGenerationPhase extends AbstractPhase {
