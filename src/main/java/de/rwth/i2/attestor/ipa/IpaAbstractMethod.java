@@ -1,20 +1,17 @@
 package de.rwth.i2.attestor.ipa;
 
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public class IpaAbstractMethod extends AbstractMethod {
 	
@@ -71,7 +68,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 		if( !contracts.hasMatchingPrecondition(reachableFragment) ){ 
 			
-			computeContract(reachableFragment);
+			computeContract( input, reachableFragment, observer );
 
 		}else{
 			int [] reordering = contracts.getReordering( reachableFragment );
