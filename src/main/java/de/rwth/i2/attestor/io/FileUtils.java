@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.util;
+package de.rwth.i2.attestor.io;
 
 import java.io.File;
 import java.io.IOException;

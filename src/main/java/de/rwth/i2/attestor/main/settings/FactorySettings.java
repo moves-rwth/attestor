@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNontermina
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.FileUtils;
+import de.rwth.i2.attestor.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

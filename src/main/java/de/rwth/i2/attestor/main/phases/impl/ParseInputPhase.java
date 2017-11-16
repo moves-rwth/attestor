@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.io.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.util.FileReader;
+import de.rwth.i2.attestor.io.FileReader;
 import org.json.JSONObject;
 
 import java.io.IOException;

@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
 import de.rwth.i2.attestor.io.HcLabelPair;
-import de.rwth.i2.attestor.util.FileUtils;
+import de.rwth.i2.attestor.io.FileUtils;
 
 /**
  * Created by christina on 23.08.17.

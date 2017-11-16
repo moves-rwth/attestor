@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-import de.rwth.i2.attestor.util.FileUtils;
+import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.util.ZipUtils;
 
 import java.io.*;
