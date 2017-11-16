@@ -109,7 +109,9 @@ public class OptionSettings {
      *                            embedding before abstraction is performed.
      */
 	public void setAbstractionDistance(int abstractionDistance) {
-		assert( abstractionDistance >= 0 );
+		if(abstractionDistance != 0 && abstractionDistance != 1) {
+			throw new IllegalArgumentException("Abstraction distance must be either '0' or '1'.");
+		}
 		this.abstractionDistance = abstractionDistance;
 	}
 
