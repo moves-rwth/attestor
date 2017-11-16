@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.JsonImporter;
+import de.rwth.i2.attestor.io.jsonImport.JsonImporter;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.util.FileReader;

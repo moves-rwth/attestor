@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.io.jsonExport;
+package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

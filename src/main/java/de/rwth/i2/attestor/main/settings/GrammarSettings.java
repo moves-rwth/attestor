@@ -16,8 +16,8 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.JsonToGrammar;
-import de.rwth.i2.attestor.io.JsonToIndexedGrammar;
+import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
+import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
 import de.rwth.i2.attestor.util.FileReader;
 
 /**

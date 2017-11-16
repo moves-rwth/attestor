@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.JsonToDefaultHC;
-import de.rwth.i2.attestor.io.JsonToIndexedHC;
+import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
+import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.util.FileReader;

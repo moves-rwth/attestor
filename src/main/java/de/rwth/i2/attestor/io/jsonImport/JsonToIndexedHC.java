@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.io;
+package de.rwth.i2.attestor.io.jsonImport;
 
 import java.util.ArrayList;
 import java.util.List;

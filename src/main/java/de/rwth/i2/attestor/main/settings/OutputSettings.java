@@ -1,7 +1,8 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.HcLabelPair;
+import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

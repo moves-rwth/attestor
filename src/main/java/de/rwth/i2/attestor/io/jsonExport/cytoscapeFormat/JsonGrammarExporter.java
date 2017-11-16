@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.io.jsonExport;
+package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
 import java.io.File;
 import java.io.FileWriter;

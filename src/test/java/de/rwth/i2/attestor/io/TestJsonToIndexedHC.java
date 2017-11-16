@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.io;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONObject;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.io.jsonExport;
+package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
