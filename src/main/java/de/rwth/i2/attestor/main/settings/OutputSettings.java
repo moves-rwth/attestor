@@ -32,7 +32,7 @@ public class OutputSettings {
 	private String pathForStateSpace;
 
     /**
-     * The directory that is created and contains the exported state space.
+     * The directory that is created and containsSubsumingState the exported state space.
      */
 	private String folderForStateSpace = "stateSpace";
 
@@ -47,7 +47,7 @@ public class OutputSettings {
 	private String pathForTerminalStates;
 
     /**
-     * The directory that is created and contains the exported terminal states.
+     * The directory that is created and containsSubsumingState the exported terminal states.
      */
 	private String folderForTerminalStates = "terminalStates";
 
@@ -67,7 +67,7 @@ public class OutputSettings {
 	private String pathForBigStates;
 
     /**
-     * The directory that is created and contains exported very large states.
+     * The directory that is created and containsSubsumingState exported very large states.
      */
 	private String folderForBigStates = "debug";
 
@@ -82,7 +82,7 @@ public class OutputSettings {
 	private String pathForGrammar;
 
     /**
-     * The directory that is created and contains exported grammars.
+     * The directory that is created and containsSubsumingState exported grammars.
      */
 	private String folderForGrammar = "grammar";
 
@@ -97,7 +97,7 @@ public class OutputSettings {
 	private String pathForCustomHcs;
 
 	/**
-	 * The directory that is created and contains the exported custom hcs.
+	 * The directory that is created and containsSubsumingState the exported custom hcs.
 	 */
 	private String folderForCustomHcs = "debug";
 
@@ -157,14 +157,14 @@ public class OutputSettings {
 	}
 
     /**
-     * @param folderForStateSpace The directory that is created and contains the exported state space.
+     * @param folderForStateSpace The directory that is created and containsSubsumingState the exported state space.
      */
 	public void setFolderForStateSpace(String folderForStateSpace) {
 		this.folderForStateSpace = folderForStateSpace;
 	}
 
     /**
-     * @return The directory that is created and contains the exported state space.
+     * @return The directory that is created and containsSubsumingState the exported state space.
      */
 	public String getLocationForStateSpace(){
 		return pathForStateSpace + File.separator + folderForStateSpace;
@@ -333,14 +333,14 @@ public class OutputSettings {
 	}
 
 	/**
-	 * @param folderForCustomHcs The directory that is created and contains the exported custom hcs.
+	 * @param folderForCustomHcs The directory that is created and containsSubsumingState the exported custom hcs.
 	 */
 	public void setFolderForCustomHcs(String folderForCustomHcs) {
 		this.folderForCustomHcs = folderForCustomHcs;
 	}
 
 	/**
-	 * @return The directory that is created and contains the exported state space.
+	 * @return The directory that is created and containsSubsumingState the exported state space.
 	 */
 	public String getLocationForCustomHcs(){
 		return pathForCustomHcs + File.separator + folderForCustomHcs;

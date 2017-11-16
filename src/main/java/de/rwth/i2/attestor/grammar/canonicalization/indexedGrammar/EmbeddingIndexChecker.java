@@ -238,7 +238,7 @@ public class EmbeddingIndexChecker {
 
 	/**
 	 * applies the new materialization to all the current materializations.
-	 * For example if materializations contains the rules
+	 * For example if materializations containsSubsumingState the rules
 	 * X -> sX,
 	 * Y -> ssX and
 	 * A -> ssB

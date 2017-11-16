@@ -19,7 +19,7 @@ import java.util.Set;
  *     <li>Y &#8594; sY</li>
  *     <li>Y &#8594; C</li>
  * </ul>
- * Furthermore, abstraction is specialized towards features of AVL trees if a HeapConfiguration contains
+ * Furthermore, abstraction is specialized towards features of AVL trees if a HeapConfiguration containsSubsumingState
  * selectors "left" and "right".
  *
  * @author Hannah, Christoph

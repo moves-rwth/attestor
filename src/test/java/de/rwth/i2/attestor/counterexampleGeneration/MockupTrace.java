@@ -41,7 +41,7 @@ public class MockupTrace implements Trace {
     }
 
     @Override
-    public boolean contains(ProgramState state) {
+    public boolean containsSubsumingState(ProgramState state) {
         return states.contains(state);
     }
 

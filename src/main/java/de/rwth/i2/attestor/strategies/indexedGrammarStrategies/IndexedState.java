@@ -152,5 +152,10 @@ public class IndexedState extends GeneralProgramState {
 		result.scopeDepth = scopeDepth;
 		return result;
 	}
-	
+
+	@Override
+	public boolean isSubsumedBy(ProgramState otherState) {
+		return equals(otherState);
+	}
+
 }

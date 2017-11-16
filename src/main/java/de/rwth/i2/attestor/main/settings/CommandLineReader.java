@@ -62,7 +62,7 @@ public class CommandLineReader {
 				.longOpt( "settings-file" )
 				.hasArg()
 				.argName( "path" )
-				.desc( "file that contains the settings to be executed." 
+				.desc( "file that containsSubsumingState the settings to be executed."
 						+ "Can be overwritten by additional command line settings" )
 				.build()
 				);

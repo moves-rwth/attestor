@@ -1,6 +1,6 @@
 /**
  * 
- * This package contains the classes storing the actual grammar-data.
+ * This package containsSubsumingState the classes storing the actual grammar-data.
  * Any logic building using this data can be found in its sub-packages 
  *
  * @author Hannah

@@ -1,5 +1,5 @@
 /**
- * This package contains all the classes necessary for materialization.
+ * This package containsSubsumingState all the classes necessary for materialization.
  * 
  * The main-class is {@link de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy}
  * which is the only class which should be called from outside.

@@ -475,7 +475,7 @@ public class LabeledDigraph {
 	
 	/**
 	 * Transforms this LabeledDigraph into a more compact form
-	 * in which the size of the underlying data structures contains
+	 * in which the size of the underlying data structures containsSubsumingState
 	 * no "wholes" due to invalid elements anymore.
 	 * Whenever an invalid element is encountered it is swapped with the
 	 * last valid element. 

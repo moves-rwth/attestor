@@ -73,7 +73,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * First fills the methodMapping with new abstractMethods for each method in
 	 * the main class. Then fills these methods each with the corresponding
 	 * translation of statements.<br>
-	 * Assumes that soot.Scene already contains the Jimple code that should be
+	 * Assumes that soot.Scene already containsSubsumingState the Jimple code that should be
 	 * translated.
 	 * 
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#SimpleAbstractMethod(String)

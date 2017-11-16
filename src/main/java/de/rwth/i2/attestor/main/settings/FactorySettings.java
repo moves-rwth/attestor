@@ -42,7 +42,7 @@ public class FactorySettings {
     private long totalNumberOfStates = 0;
 
     /**
-     * @return A HeapConfiguration that contains neither nodes nor edges.
+     * @return A HeapConfiguration that containsSubsumingState neither nodes nor edges.
      */
     public HeapConfiguration createEmptyHeapConfiguration() {
                                                           return new InternalHeapConfiguration();

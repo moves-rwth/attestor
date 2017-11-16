@@ -34,9 +34,9 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
+	public Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer) {
 
-		return knownInputs.get(input);
+		return knownInputs.get(input.getHeap());
 	}
 
 	public SimpleAbstractMethod( String signature, String displayName){

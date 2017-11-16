@@ -63,8 +63,13 @@ public class FailureTrace implements Trace {
     }
 
     @Override
-    public boolean contains(ProgramState state) {
-        return stateTrace.contains(state);
+    public boolean containsSubsumingState(ProgramState state) {
+        for(ProgramState s : stateTrace) {
+            if(state.isSubsumedBy(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isEmpty() {

@@ -39,11 +39,11 @@ public class HeapConfigurationBuilderTest {
 		
 		assertEquals("Exactly one new node should have been created.", count, buffer.size());
 		assertEquals("The single element of a previously empty HC has ID 0.", 0, buffer.get(0));
-		assertEquals("HC contains exactly one node", 1, hc.countNodes());
+		assertEquals("HC containsSubsumingState exactly one node", 1, hc.countNodes());
 		
 		hc.builder().addNodes(type, 7, buffer);
 		assertEquals("Buffer should now contain the original and the newly created nodes.", 8, buffer.size());
-		assertEquals("HC contains exactly one node", 8, hc.countNodes());
+		assertEquals("HC containsSubsumingState exactly one node", 8, hc.countNodes());
 		
 		for(int i=0; i < 8; i++) {
 			assertTrue("Created node IDs should range from 0 to 7", buffer.contains(i));

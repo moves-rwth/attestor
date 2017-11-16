@@ -16,7 +16,7 @@ public interface Trace {
     ProgramState getFinalState();
     int size();
     ProgramState getSuccessor(ProgramState state);
-    boolean contains(ProgramState state);
+    boolean containsSubsumingState(ProgramState state);
     boolean isEmpty();
     Iterator<ProgramState> iterator();
 }

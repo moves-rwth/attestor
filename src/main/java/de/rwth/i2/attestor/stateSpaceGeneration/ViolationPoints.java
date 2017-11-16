@@ -42,7 +42,7 @@ public class ViolationPoints {
 	}
 
     /**
-     * Creates a set of violation points that contains a single violation point.
+     * Creates a set of violation points that containsSubsumingState a single violation point.
      * @param variable The name of the variable that makes up a violation point.
      * @param selector The name of the selector that makes up a violation point.
      */

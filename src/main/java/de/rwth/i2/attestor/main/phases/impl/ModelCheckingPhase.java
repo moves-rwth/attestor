@@ -51,8 +51,8 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
             } else {
                 logger.warn("violated.");
                 allSatisfied = false;
-                FailureTrace failureTrace = proofStructure.getFailureTrace();
                 formulaResults.put(formula, false);
+                FailureTrace failureTrace = proofStructure.getFailureTrace();
                 checkCounterexample(formula, failureTrace);
             }
         }

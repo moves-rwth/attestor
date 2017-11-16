@@ -461,10 +461,10 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	}
 
 	/**
-	 * Creates a map that contains the new private IDs assigned to elements of a provided InternalHeapConfiguration
+	 * Creates a map that containsSubsumingState the new private IDs assigned to elements of a provided InternalHeapConfiguration
 	 * that is added to the underlying InternalHeapConfiguration.
 	 * For all elements except external nodes new private IDs are created.
-	 * For each external node, the map contains the private ID of a node in the underlying InternalHeapConfiguration
+	 * For each external node, the map containsSubsumingState the private ID of a node in the underlying InternalHeapConfiguration
 	 * that is merged with it.
 	 *
 	 * @param replacement The InternalHeapConfiguration that should be added to the underlying HeapConfiguration.

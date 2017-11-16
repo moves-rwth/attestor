@@ -1,5 +1,5 @@
 /**
- * This package contains the semantic of several JimpleValues
+ * This package containsSubsumingState the semantic of several JimpleValues
  * on JimpleExecutables.
  * 
  * They all implement the interface Value

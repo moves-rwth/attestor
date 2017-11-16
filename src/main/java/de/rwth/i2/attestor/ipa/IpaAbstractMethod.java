@@ -32,8 +32,12 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 	
 	@Override
-	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
-		return null; // TODO
+	public Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer) {
+		try {
+			return getResultStates(input, observer);
+		} catch (StateSpaceGenerationAbortedException e) {
+			throw new IllegalStateException("No contract found");
+		}
 	}
 
 	
@@ -50,9 +54,18 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer)
 													throws StateSpaceGenerationAbortedException {
 
+		observer.update(this, input);
+		return getResultStates(input, observer);
+	}
+
+	public Set<ProgramState> getResultStates(ProgramState input, SemanticsObserver observer)
+			throws StateSpaceGenerationAbortedException {
 		Set<ProgramState> result = new HashSet<>();
-		for( HeapConfiguration postConfig : getIPAResult( input, observer ) ){
-			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
+		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
+			ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
+			state.setProgramCounter(0);
+			state.setScopeDepth(0);
+			result.add(state);
 		}
 
 		return result;
@@ -66,7 +79,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
 
-		if( !contracts.hasMatchingPrecondition(reachableFragment) ){ 
+		
+		if( !contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled() ){ 
 			
 			computeContract( input, reachableFragment, observer );
 
