@@ -24,12 +24,12 @@ import de.rwth.i2.attestor.main.settings.InputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
-import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategyImpl;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.iterator.TIntIterator;
 

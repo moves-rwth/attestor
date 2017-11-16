@@ -4,18 +4,11 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.HeapInclusionStrategy;
-import gnu.trove.iterator.TIntIntIterator;
+import de.rwth.i2.attestor.programState.defaultState.HeapInclusionStrategy;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class MinDistanceInclusionStrategy implements HeapInclusionStrategy {
 

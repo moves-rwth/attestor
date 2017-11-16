@@ -4,9 +4,9 @@ import de.rwth.i2.attestor.grammar.materialization.communication.CannotMateriali
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.List;

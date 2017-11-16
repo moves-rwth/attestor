@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

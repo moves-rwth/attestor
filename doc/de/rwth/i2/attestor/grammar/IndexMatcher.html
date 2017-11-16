@@ -130,7 +130,7 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#IndexMatcher-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy-">IndexMatcher</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexMaterializationStrategy.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexMaterializationStrategy</a>&nbsp;indexGrammar)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#IndexMatcher-de.rwth.i2.attestor.programState.indexedState.index.IndexMaterializationStrategy-">IndexMatcher</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexMaterializationStrategy.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexMaterializationStrategy</a>&nbsp;indexGrammar)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -149,37 +149,37 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#canMatch-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">canMatch</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-        <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#canMatch-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">canMatch</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+        <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
 <div class="block">Determines whether there is a materialization and an instantiation such that the
  indices of the given nonterminals are equal.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../de/rwth/i2/attestor/util/Pair.html" title="class in de.rwth.i2.attestor.util">Pair</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/AbstractIndexSymbol.html" title="class in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">AbstractIndexSymbol</a>,<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexSymbol</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#getMaterializationRule-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">getMaterializationRule</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                      <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../../de/rwth/i2/attestor/util/Pair.html" title="class in de.rwth.i2.attestor.util">Pair</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/AbstractIndexSymbol.html" title="class in de.rwth.i2.attestor.programState.indexedState.index">AbstractIndexSymbol</a>,<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexSymbol</a>&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#getMaterializationRule-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">getMaterializationRule</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                      <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexSymbol</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#getNecessaryInstantiation-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">getNecessaryInstantiation</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                         <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexSymbol</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#getNecessaryInstantiation-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">getNecessaryInstantiation</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                         <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
 <div class="block">The sequence of symbols with which to replace the index variable at the end
  of the index of the instantiableNonterminal in order to achieve equal indices</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#needsInstantiation-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">needsInstantiation</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                  <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#needsInstantiation-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">needsInstantiation</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                  <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
 <div class="block">Determines whether the materializableNonterminal has to be instantiated to achieve equal indices
  (can be false for concrete indices)</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#needsMaterialization-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">needsMaterialization</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                    <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/rwth/i2/attestor/grammar/IndexMatcher.html#needsMaterialization-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">needsMaterialization</a></span>(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                    <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</code>
 <div class="block">Determines whether the materializableNonterminal has to be materialized to achieve equal indices</div>
 </td>
 </tr>
@@ -205,13 +205,13 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="IndexMatcher-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy-">
+<a name="IndexMatcher-de.rwth.i2.attestor.programState.indexedState.index.IndexMaterializationStrategy-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>IndexMatcher</h4>
-<pre>public&nbsp;IndexMatcher(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexMaterializationStrategy.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexMaterializationStrategy</a>&nbsp;indexGrammar)</pre>
+<pre>public&nbsp;IndexMatcher(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexMaterializationStrategy.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexMaterializationStrategy</a>&nbsp;indexGrammar)</pre>
 </li>
 </ul>
 </li>
@@ -222,14 +222,14 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="canMatch-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">
+<a name="canMatch-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>canMatch</h4>
-<pre>public&nbsp;boolean&nbsp;canMatch(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                        <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
+<pre>public&nbsp;boolean&nbsp;canMatch(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                        <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
 <div class="block">Determines whether there is a materialization and an instantiation such that the
  indices of the given nonterminals are equal.</div>
 <dl>
@@ -242,14 +242,14 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="needsMaterialization-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">
+<a name="needsMaterialization-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>needsMaterialization</h4>
-<pre>public&nbsp;boolean&nbsp;needsMaterialization(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                                    <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
+<pre>public&nbsp;boolean&nbsp;needsMaterialization(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                                    <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
 <div class="block">Determines whether the materializableNonterminal has to be materialized to achieve equal indices</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -260,24 +260,24 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getMaterializationRule-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">
+<a name="getMaterializationRule-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaterializationRule</h4>
-<pre>public&nbsp;<a href="../../../../../de/rwth/i2/attestor/util/Pair.html" title="class in de.rwth.i2.attestor.util">Pair</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/AbstractIndexSymbol.html" title="class in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">AbstractIndexSymbol</a>,<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexSymbol</a>&gt;&gt;&nbsp;getMaterializationRule(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                                                                          <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
+<pre>public&nbsp;<a href="../../../../../de/rwth/i2/attestor/util/Pair.html" title="class in de.rwth.i2.attestor.util">Pair</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/AbstractIndexSymbol.html" title="class in de.rwth.i2.attestor.programState.indexedState.index">AbstractIndexSymbol</a>,<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexSymbol</a>&gt;&gt;&nbsp;getMaterializationRule(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                                                                          <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
 </li>
 </ul>
-<a name="needsInstantiation-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">
+<a name="needsInstantiation-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>needsInstantiation</h4>
-<pre>public&nbsp;boolean&nbsp;needsInstantiation(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                                  <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
+<pre>public&nbsp;boolean&nbsp;needsInstantiation(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                                  <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
 <div class="block">Determines whether the materializableNonterminal has to be instantiated to achieve equal indices
  (can be false for concrete indices)</div>
 <dl>
@@ -289,14 +289,14 @@ extends <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getNecessaryInstantiation-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal-">
+<a name="getNecessaryInstantiation-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getNecessaryInstantiation</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index">IndexSymbol</a>&gt;&nbsp;getNecessaryInstantiation(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;materializableNonterminal,
-                                                   <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.strategies.indexedGrammarStrategies">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/index/IndexSymbol.html" title="interface in de.rwth.i2.attestor.programState.indexedState.index">IndexSymbol</a>&gt;&nbsp;getNecessaryInstantiation(<a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;materializableNonterminal,
+                                                   <a href="../../../../../de/rwth/i2/attestor/strategies/indexedGrammarStrategies/IndexedNonterminal.html" title="interface in de.rwth.i2.attestor.programState.indexedState">IndexedNonterminal</a>&nbsp;instantiableNonterminal)</pre>
 <div class="block">The sequence of symbols with which to replace the index variable at the end
  of the index of the instantiableNonterminal in order to achieve equal indices</div>
 <dl>

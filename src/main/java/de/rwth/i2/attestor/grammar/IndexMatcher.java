@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.grammar;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.util.Pair;
 
 public class IndexMatcher {

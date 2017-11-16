@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexMaterializationStrategy;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 
 import java.util.ArrayList;
 import java.util.List;

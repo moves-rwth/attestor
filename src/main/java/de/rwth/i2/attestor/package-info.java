@@ -5,18 +5,14 @@
  * <ul>
  *     <li>
  *         {@link de.rwth.i2.attestor.main} containsSubsumingState the main Attestor class that is used to customize and execute
- *         an analysis. It also containsSubsumingState the general interface for all analysis strategies.
+ *         an analysis. It also containsSubsumingState the general interface for all analysis programState.
  *         The actual execution of the full tool as well as integration test should always create an
  *         {@link de.rwth.i2.attestor.main.Attestor} object that is fed with command line options and/or setting files.
  *         All global options are handled in the subpackage {@link de.rwth.i2.attestor.main.settings}.
  *     </li>
  *     <li>
  *         {@link de.rwth.i2.attestor.stateSpaceGeneration} containsSubsumingState the data structures and algorithms to generate
- *         a state space. The state space generation itself is configurable through various strategies.
- *     </li>
- *     <li>
- *         {@link de.rwth.i2.attestor.strategies} containsSubsumingState different implementations of strategies that guide
- *         the analysis.
+ *         a state space. The state space generation itself is configurable through various programState.
  *     </li>
  *     <li>
  *         {@link de.rwth.i2.attestor.graph} containsSubsumingState the all algorithms and data structures on hypergraphs.

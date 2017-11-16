@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 
 import java.util.ArrayList;
 

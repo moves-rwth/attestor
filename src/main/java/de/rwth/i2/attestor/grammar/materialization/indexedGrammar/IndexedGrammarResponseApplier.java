@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 
 
 /**
