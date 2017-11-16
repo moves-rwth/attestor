@@ -16,17 +16,18 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod_testReordering {
 
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod");
-	
+	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
+
 	Type type = Settings.getInstance().factory().getType("someType");
 	String nonterminalLabel = "IpaAbstractMethodTest";
 	
 	@Test
 	public void test() {
-		int [] order1 = new int[]{1,2,0};
-		int [] order2 = new int[]{0,2,1};
-		IpaPrecondition toMatch = new IpaPrecondition( someGraph( order1 ) );
-		HeapConfiguration matching = someGraph( order2 );
+		int [] order1 = new int[]{1,0,2};
+		int [] order2 = new int[]{2,1,0};
+		
+		HeapConfiguration matching = someGraph( order1 );
+		IpaPrecondition toMatch = new IpaPrecondition( someGraph( order2 ) );
 		
 		Pair<HeapConfiguration,Integer> toAdapt = someGraphWithNonterminal( order1 );
 		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( order2 ).first();
@@ -35,6 +36,39 @@ public class IpaAbstractMethod_testReordering {
 		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( toMatch, matching, toAdapt.first(), toAdapt.second()) );
 	}
 
+	/**
+	 * this example occurred similarly in practice
+	 */
+	@Test
+	public void testFiveExternals() {
+		int [] externalOrder1 = new int[]{0,1,2,3,4};
+		int [] externalOrder2 = new int[]{2,1,3,0,4};
+		HeapConfiguration matching = someGraph( externalOrder1 );
+		IpaPrecondition toMatch = new IpaPrecondition( someGraph( externalOrder2 ) );
+		
+		
+		int [] tentacleOrder1 = new int[]{0,1,3,4,2};
+		int [] tentacleOrder2 = new int[]{3,1,4,0,2};
+		Pair<HeapConfiguration,Integer> toAdapt = someGraphWithNonterminal( tentacleOrder1 );
+		HeapConfiguration expectedAdaptation = someGraphWithNonterminal( tentacleOrder2 ).first();
+		
+		assertEquals( toMatch, new IpaPrecondition(matching) );
+		assertEquals( expectedAdaptation, ipa.adaptExternalOrdering( toMatch, matching, toAdapt.first(), toAdapt.second()) );
+	}
+	
+	/*
+	 * these variables should fix the node ordering. Otherwise the test will
+	 * pass trivially by being isomophic to the expected solution.
+	 */
+	private HeapConfiguration addVariables( HeapConfiguration hc ){
+		HeapConfigurationBuilder builder = hc.builder();
+		
+		TIntArrayList nodes = hc.nodes();
+		for( int i = 0; i < nodes.size(); i++ ){
+			builder.addVariableEdge("no."+i, nodes.get(i) );
+		}
+		return builder.build();
+	}
 
 
 	private HeapConfiguration someGraph(int[] orderingOfExternals ) {
@@ -42,13 +76,13 @@ public class IpaAbstractMethod_testReordering {
 		
 		TIntArrayList nodes = new TIntArrayList();
 		HeapConfigurationBuilder builder =  hc.builder()
-				.addNodes(type, orderingOfExternals .length, nodes);
+				.addNodes(type, orderingOfExternals.length, nodes);
 				
 		for (int i = 0; i < orderingOfExternals.length; i++) {
 			builder.setExternal( nodes.get( orderingOfExternals[i]) );
 		}
 		
-		return 	builder.build();
+		return 	addVariables(builder.build());
 	}
 	
 	private Pair<HeapConfiguration, Integer> someGraphWithNonterminal( int[] orderingOfTentacles ) {
@@ -68,7 +102,7 @@ public class IpaAbstractMethod_testReordering {
 		
 		int positionOfNonterminal = builder.addNonterminalEdgeAndReturnId( nt, tentacles );
 		
-		return new Pair<HeapConfiguration, Integer>( builder.build(), positionOfNonterminal );
+		return new Pair<HeapConfiguration, Integer>( addVariables(builder.build()), positionOfNonterminal );
 		
 	}
 

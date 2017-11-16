@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.*;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -29,8 +30,8 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 	 *                                         for variable edges representing constants.
 	 */
 	public MinAbstractionDistance(int minAbstractionDistance, boolean aggressiveConstantAbstraction
-	) {
-		
+			) {
+
 		this.minAbstractionDistance = minAbstractionDistance;
 		this.aggressiveConstantAbstraction = aggressiveConstantAbstraction;
 	}
@@ -49,11 +50,19 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 			Object nodeLabel = graph.getNodeLabel(i);
 			if (nodeLabel.getClass() == Variable.class) {
 				String label = ((Variable) nodeLabel).getName();
-				if(!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
+				//if the option aggressiveConstantAbstraction is enabled, constants are ignored.
+				if( !(aggressiveConstantAbstraction && Constants.isConstant(label) )) {
 					int attachedNode = graph.getSuccessorsOf(i).get(0);
 					if(dist.get(attachedNode) < minAbstractionDistance)	{
 						return false;
 
+					}
+				}
+			}else if( graph.isExternal(i) ){
+				Type type = (Type) nodeLabel;
+				if( ! ( aggressiveConstantAbstraction && (type.toString().equals("NULL") || type.toString().startsWith("int")) )){
+					if( dist.get(i) < minAbstractionDistance ){
+						return false;
 					}
 				}
 			}
@@ -78,4 +87,3 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 
 
 
- 

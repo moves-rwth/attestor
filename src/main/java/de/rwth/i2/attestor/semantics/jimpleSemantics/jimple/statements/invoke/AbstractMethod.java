@@ -38,13 +38,16 @@ public abstract class AbstractMethod {
 	/**
 	 * the methods signature
 	 */
-	protected final String displayName;
+	protected String displayName;
 
-	public AbstractMethod( String displayName ) {
+	public AbstractMethod( ) {
 		super();
+	}
+	
+	public void setDisplayName( String displayName ){
 		this.displayName = displayName;
 	}
-
+	
 	/**
 	 * sets the methods semantic to the control flow of the given list of
 	 * abstract semantics

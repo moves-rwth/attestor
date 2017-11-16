@@ -40,7 +40,8 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	public SimpleAbstractMethod( String signature, String displayName){
-		super( displayName  );
+		super( );
+		super.setDisplayName(displayName);
 	}
 
 	/**
@@ -53,10 +54,10 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver options )
+	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer )
 		throws StateSpaceGenerationAbortedException {
 
-		options.update(this, input);
+		observer.update(this, input);
 
 		HeapConfiguration heap = input.getHeap();
 		if( isReuseResultsEnabled() && this.hasResult( heap ) ){
@@ -65,7 +66,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
 
 			Set<ProgramState> resultHeaps = new HashSet<>();
 
-			StateSpace stateSpace = options.generateStateSpace(method, input);
+			StateSpace stateSpace = observer.generateStateSpace(method, input);
 			resultHeaps.addAll(stateSpace.getFinalStates());
 			setResult(heap, resultHeaps);
 

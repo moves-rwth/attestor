@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
@@ -13,11 +19,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedExcep
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * AssignInvoke models statements of the form x = foo(); or x = bar(3, name);
@@ -120,7 +121,8 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 	}
 
 	public String toString(){
-		String res = lhs.toString() + " = " + method.toString() + "(";
+		String res = lhs.toString() + " = " ;
+		res += invokePrepare.baseValueString() + method.toString() + "(";
 		res += invokePrepare.argumentString();
 		res += ");";
 		return res;

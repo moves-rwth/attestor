@@ -5,6 +5,7 @@ import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
@@ -92,7 +93,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
 		ArrayList<SootMethod> methods = new ArrayList<>();
 
-		SootClass mainClass = Scene.v().getMainClass();
+		//SootClass mainClass = Scene.v().getMainClass();
 
 		// Determine all necessary (non-library) classes and its methods
 		Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();
@@ -106,7 +107,10 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
-			methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName));
+			//methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName, getStateSpaceFactory()));
+            final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
+			methodMapping.put(signature, abstractMethod );
+            abstractMethod.setDisplayName(shortName);
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);

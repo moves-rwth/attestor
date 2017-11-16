@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.strategies;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -10,11 +16,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A general implementation of program states that comprises most functionality when analyzing Jimple programs.
@@ -251,7 +252,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	@Override
 	public void enterScope() {
 		
-		++this.scopeDepth;
+		//++this.scopeDepth;
 	}
 
 	@Override
@@ -262,7 +263,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	@Override
 	public void leaveScope() {
 		
-		--this.scopeDepth;
+		//--this.scopeDepth;
 	}
 
 	@Override

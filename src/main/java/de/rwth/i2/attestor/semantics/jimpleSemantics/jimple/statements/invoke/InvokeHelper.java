@@ -187,4 +187,6 @@ public abstract class InvokeHelper {
 		this.liveVariableNames = liveVariableNames;
 	}
 
+	public abstract String baseValueString();
+
 }

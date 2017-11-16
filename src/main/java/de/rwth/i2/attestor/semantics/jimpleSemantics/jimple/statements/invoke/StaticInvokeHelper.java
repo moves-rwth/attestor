@@ -4,10 +4,11 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 
 /**
  * Prepares the heap for the invoke of a static method and cleans it afterwards.
@@ -40,7 +41,7 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 *            The names of all locals which occur within the method (so they
 	 *            can be removed afterwards).
 	 */
-	public StaticInvokeHelper( List<Value> argumentValues, List<String> namesOfLocals){
+	public StaticInvokeHelper(List<Value> argumentValues, List<String> namesOfLocals){
 
 		super();
 		this.argumentValues = argumentValues;
@@ -71,10 +72,15 @@ public class StaticInvokeHelper extends InvokeHelper {
 	public void cleanHeap(ProgramState programState, SemanticsObserver options){
 
 		removeParameters(programState);
-		removeLocals(programState);
+		//removeLocals(programState);
 		removeReturn(programState);
 
 		programState.leaveScope();
+	}
+
+	@Override
+	public String baseValueString() {
+		return "";
 	}
 
 }
