@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 /**
  * Statements are {@link de.rwth.i2.attestor.stateSpaceGeneration.Semantics Sementics}
- * with {@link JimpleProgramState JimpleProgramState}
+ * with {@link de.rwth.i2.attestor.stateSpaceGeneration.ProgramState ProgramState}
  * as heaps.
  * @author Hannah Arndt
  *

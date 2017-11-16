@@ -22,7 +22,7 @@ public class StateSpaceGenerationSettings {
 
     private StateRefinementStrategy stateRefinementStrategy = null;
 
-    private Set<String> keptVariables = new HashSet<>();
+    private final Set<String> keptVariables = new HashSet<>();
 
     public AbortStrategy getAbortStrategy() {
 

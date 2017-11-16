@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -58,7 +58,7 @@ public class Field implements SettableValue {
 	 * selector is missing at the origin element. The correct element otherwise.
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleProgramState programState )
+	public ConcreteValue evaluateOn( ProgramState programState )
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException {
 
 		ConcreteValue concreteOrigin = originValue.evaluateOn( programState );
@@ -73,18 +73,7 @@ public class Field implements SettableValue {
 				throw new NullPointerDereferenceException(originValue);
 			}
 			
-			ConcreteValue res = programState.getSelectorTarget( concreteOrigin, fieldName );
-
-			/*
-			if( !res.type().equals( this.type ) ){
-				
-				String msg = "The type of the resulting ConcreteValue does not match.";
-				msg += "\n expected: " + this.type + " got: " + res.type();
-				logger.debug( msg );
-			}
-			*/
-
-			return res;
+			return programState.getSelectorTarget( concreteOrigin, fieldName );
 		}
 	}
 
@@ -99,16 +88,8 @@ public class Field implements SettableValue {
 	 * results in a null pointer dereference.
 	 */
 	@Override
-	public void setValue(JimpleProgramState programState, ConcreteValue concreteTarget )
+	public void setValue(ProgramState programState, ConcreteValue concreteTarget )
 			throws NotSufficientlyMaterializedException, NullPointerDereferenceException{
-
-		/*
-		if( !concreteTarget.type().equals( this.type ) ){
-			String msg = "The type of the resulting ConcreteValue does not match.";
-			msg += "\n expected: " + this.type + " got: " + concreteTarget.type();
-			logger.debug( msg );
-		}
-		*/
 
 		ConcreteValue concreteOrigin = originValue.evaluateOn( programState );
 		if( concreteOrigin.isUndefined() ){
@@ -119,7 +100,7 @@ public class Field implements SettableValue {
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleProgramState programState ){
+	public boolean needsMaterialization( ProgramState programState ){
 		return true;
 	}
 

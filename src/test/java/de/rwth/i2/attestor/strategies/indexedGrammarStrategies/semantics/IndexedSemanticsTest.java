@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.strategies.indexedGrammarStrategies.semantics;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
@@ -39,9 +40,9 @@ public class IndexedSemanticsTest {
 		
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
-		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>(), false);
+		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>());
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input);
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSemanticsObserver());
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {
@@ -62,9 +63,9 @@ public class IndexedSemanticsTest {
 		
 		Local varTmp = new Local(type, "tmp");
 		NewExpr expr = new NewExpr(type);
-		AssignStmt stmt = new AssignStmt(varTmp, expr, 0, new HashSet<>(), false);
+		AssignStmt stmt = new AssignStmt(varTmp, expr, 0, new HashSet<>());
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input);
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSemanticsObserver());
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {
@@ -84,10 +85,10 @@ public class IndexedSemanticsTest {
 		Local varTmp = new Local(type, "tmp");
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
-		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>(), false);
+		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>());
 		
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input);
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSemanticsObserver());
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
@@ -77,8 +76,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Assumes that soot.Scene already contains the Jimple code that should be
 	 * translated.
 	 * 
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#AbstractMethod(String, SimpleAbstractMethod.StateSpaceFactory)
-	 *      AbstractMethod(String name, AbstractMethod.StateSpaceFactory factory()())
+	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#SimpleAbstractMethod(String)
+	 *      AbstractMethod(String name)
 	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#setControlFlow(List)
 	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)
@@ -99,15 +98,9 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			logger.trace("Found soot method: " + method.getSignature());
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
-            try {
-				//methodMapping.put(signature, new SimpleAbstractMethod(signature, shortName, getStateSpaceFactory()));
-            	final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
-            	abstractMethod.setStateSpaceFactory(getStateSpaceFactory());
-            	abstractMethod.setDisplayName(shortName);
-            } catch (StateSpaceGenerationAbortedException e) {
-				logger.fatal("Unexpected exception");
-				throw new IllegalStateException(e.getMessage());
-			}
+
+            final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
+            abstractMethod.setDisplayName(shortName);
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);
@@ -221,7 +214,6 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );
 			res.setDisplayName(displayName);
-			res.setStateSpaceFactory(getStateSpaceFactory());
 			
 			List<Semantics> defaultControlFlow = new ArrayList<>();
 			defaultControlFlow.add(new Skip(-1));
@@ -232,17 +224,6 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		}
 		
 		return res;
-	}
-
-	private AbstractMethod.StateSpaceFactory getStateSpaceFactory() throws StateSpaceGenerationAbortedException {
-
-		return (program, input, scopeDepth) -> Settings.getInstance()
-                .factory()
-                .createStateSpaceGenerator(
-                        program,
-                        input,
-                        scopeDepth
-                ).generate();
 	}
 
 	@Override

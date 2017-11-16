@@ -17,9 +17,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  */
 public class ViolationPointResolver {
 
-	private Grammar grammar;
+	private final Grammar grammar;
 
-	private Map<GrammarRequest, Map<Nonterminal, Collection<HeapConfiguration>> > ruleGraphsCreatingSelector = new HashMap<>();
+	private final Map<GrammarRequest, Map<Nonterminal, Collection<HeapConfiguration>> > ruleGraphsCreatingSelector = new HashMap<>();
 
 	public ViolationPointResolver( Grammar grammar ) {
 		this.grammar = grammar;

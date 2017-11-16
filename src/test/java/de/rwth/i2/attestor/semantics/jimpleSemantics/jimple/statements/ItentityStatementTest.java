@@ -43,7 +43,7 @@ public class ItentityStatementTest {
 	@Test
 	public void testComputeSuccessors(){
 		try{
-			Set<ProgramState> res = stmt.computeSuccessors( inputState );
+			Set<ProgramState> res = stmt.computeSuccessors( inputState, new MockupSemanticsObserver() );
 			assertEquals( 1, res.size() );
 			DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
 			assertNotSame("ensure clone on state level", resState, inputState );

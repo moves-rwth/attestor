@@ -18,7 +18,7 @@ import java.util.*;
 
 public class ReachabilityHeapAutomaton implements HeapAutomaton {
 
-    private Set<SelectorLabel> trackedSelectorLabels;
+    private final Set<SelectorLabel> trackedSelectorLabels;
 
     public ReachabilityHeapAutomaton() {
 
@@ -231,7 +231,7 @@ class ReachabilityHelper {
      * The heap configuration in which the reachability between
      * nodes shall be computed.
      */
-    private HeapConfiguration heapConfiguration;
+    private final HeapConfiguration heapConfiguration;
 
     /**
      * Stores the set of reachable nodes for each node
@@ -246,7 +246,7 @@ class ReachabilityHelper {
      */
     private boolean hasChanged;
 
-    private Set<SelectorLabel> trackedSelectorLabels;
+    private final Set<SelectorLabel> trackedSelectorLabels;
 
     /**
      * @param heapConfiguration The heap configuration whose reachable nodes

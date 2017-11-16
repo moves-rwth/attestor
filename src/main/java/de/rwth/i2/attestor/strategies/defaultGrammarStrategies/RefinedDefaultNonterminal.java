@@ -16,12 +16,12 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
     /**
      * The actual nonterminal symbol.
      */
-    private Nonterminal nonterminal;
+    private final Nonterminal nonterminal;
 
     /**
      * The state the nonterminal is annotated with.
      */
-    private HeapAutomatonState state;
+    private final HeapAutomatonState state;
 
     public RefinedDefaultNonterminal(Nonterminal nonterminal, HeapAutomatonState state) {
        this.nonterminal = nonterminal;

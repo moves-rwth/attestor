@@ -6,12 +6,17 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -20,7 +25,7 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
  * @author Hannah Arndt
  *
  */
-public class AssignInvoke extends Statement {
+public class AssignInvoke extends Statement implements InvokeCleanup {
 
 	private static final Logger logger = LogManager.getLogger( "AssignInvoke" );
 
@@ -63,64 +68,56 @@ public class AssignInvoke extends Statement {
 	 * as it is clearly not live at this point.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
-		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
-		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
-		
-		invokePrepare.prepareHeap( jimpleProgramState );
+
+		options.update(this, programState);
+
+		programState = programState.clone();
+		invokePrepare.prepareHeap( programState, options );
 		
 		if( lhs instanceof Local ){
-			jimpleProgramState.leaveScope();
-			jimpleProgramState.removeVariable( ((Local)lhs).getName() );
-			jimpleProgramState.enterScope();
+			programState.leaveScope();
+			programState.removeVariable( ((Local)lhs).getName() );
+			programState.enterScope();
 		}
 
 		Set<ProgramState> methodResult = method.getResult(
-				jimpleProgramState.getHeap(),
-				jimpleProgramState.getScopeDepth()
+				programState,
+				options
 		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
 		for( ProgramState resState : methodResult ) {
 
-			JimpleProgramState jimpleResState = (JimpleProgramState) resState;
-			ConcreteValue concreteRHS = jimpleResState.removeIntermediate( "@return" );
-
-			invokePrepare.cleanHeap( jimpleResState );
-
-			/*
-			if( concreteRHS.isUndefined() ){
-					logger.debug( "rhs evaluated to undefined (no return attached to heap)" );
-			}else{
-				if(!( lhs.getType().equals( concreteRHS.type() ) ) ){
-					String msg = "The type of the resulting ConcreteValue for rhs does not match ";
-					msg += " with the type of the lhs";
-					msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-					logger.debug( msg );
-				}
-			}
-			*/
-
-			try {
-				lhs.setValue( jimpleResState, concreteRHS );
-			} catch (NullPointerDereferenceException e) {
-				logger.error(e.getErrorMessage(this));
-			}
-			
-			JimpleProgramState freshState = JimpleUtil.deepCopy(jimpleResState);
+			resState = getCleanedResultState(resState, options);
+			ProgramState freshState = resState.clone();
 			freshState.setProgramCounter(nextPC);
-			
 			assignResult.add( freshState );
 		}
 				
 		return assignResult;
 	}
 
+	public ProgramState getCleanedResultState(ProgramState state, SemanticsObserver options)
+			throws NotSufficientlyMaterializedException {
+
+		ConcreteValue concreteRHS = state.removeIntermediate( "@return" );
+		invokePrepare.cleanHeap( state, options );
+
+		try {
+			lhs.setValue(state, concreteRHS );
+		} catch (NullPointerDereferenceException e) {
+			logger.error(e.getErrorMessage(this));
+		}
+
+		return state;
+
+	}
+
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
+		return invokePrepare.needsMaterialization( programState );
 	}
 
 	public String toString(){

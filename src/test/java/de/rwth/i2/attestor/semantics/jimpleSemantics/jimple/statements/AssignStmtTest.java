@@ -49,12 +49,12 @@ public class AssignStmtTest {
 		Value origin = new Local( type, "ZYX" );
 		Value rhs = new Field( type, origin, "right" );
 
-		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>(), false);
+		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>());
 		try{
 			
 			DefaultProgramState input = new DefaultProgramState(testGraph);
 			
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
 			
 			assertNotNull( "test graph became null", testGraph);
 			assertEquals( "testGraph has changed", test, testGraph.toString() );

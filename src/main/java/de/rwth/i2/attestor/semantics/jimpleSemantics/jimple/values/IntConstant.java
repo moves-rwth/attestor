@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -24,19 +24,9 @@ public class IntConstant implements Value {
 	}
 
 	@Override
-	public ConcreteValue evaluateOn( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( ProgramState programState ) throws NotSufficientlyMaterializedException{
 
-		ConcreteValue res = programState.getConstant( "" + intValue );
-
-		/*
-		if( res.type() != this.type ){
-			String msg = "The type of the resulting ConcreteValue does not match.";
-			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.debug( msg );
-		}
-		*/
-
-		return res;
+		return programState.getConstant( "" + intValue );
 	}
 
 
@@ -51,7 +41,7 @@ public class IntConstant implements Value {
 	}
 
 	@Override
-	public boolean needsMaterialization(JimpleProgramState programState) {
+	public boolean needsMaterialization(ProgramState programState) {
 
 		return false;
 	}

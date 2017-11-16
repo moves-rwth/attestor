@@ -31,7 +31,7 @@ import java.util.Set;
 
 public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
-    private Grammar grammar;
+    private final Grammar grammar;
     private CanonicalizationStrategy canonicalizationStrategy;
 
     public ListLengthAutomaton(Grammar grammar) {

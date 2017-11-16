@@ -34,12 +34,12 @@ public class InvokeStmtTest {
 	public void setUp() throws Exception{
 		Type type = Settings.getInstance().factory().getType( "node" );
 		Local var = new Local( type, "x" );
-		AbstractMethod method = new SimpleAbstractMethod( "method", StateSpaceFactoryHelper.get() );
+		AbstractMethod method = new SimpleAbstractMethod( "method"  );
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );
 		InvokeHelper invokePrepare
-			= new InstanceInvokeHelper( var, new ArrayList<>(), new ArrayList<>(), false );
+			= new InstanceInvokeHelper( var, new ArrayList<>(), new ArrayList<>() );
 		
 		stmt = new InvokeStmt( method, invokePrepare, 1 );
 		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
@@ -50,7 +50,7 @@ public class InvokeStmtTest {
 	@Test
 	public void testComputeSuccessors(){
 		try{
-			Set<ProgramState> res = stmt.computeSuccessors( inputState );
+			Set<ProgramState> res = stmt.computeSuccessors( inputState, new MockupSemanticsObserver() );
 			assertEquals( 1, res.size() );
 			DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
 			assertNotSame("ensure clone on state level", resState, inputState );

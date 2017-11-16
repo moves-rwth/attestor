@@ -37,8 +37,8 @@ public class EmbeddingIndexChecker {
 	private static final Logger logger = LogManager.getLogger( "EmbeddingIndexChecker" );
 
 
-	IndexMatcher indexMatcher;
-	IndexMaterializationStrategy indexMaterializer;
+	final IndexMatcher indexMatcher;
+	final IndexMaterializationStrategy indexMaterializer;
 
 
 	public EmbeddingIndexChecker(IndexMatcher matcher, IndexMaterializationStrategy materializer) {
@@ -181,7 +181,7 @@ public class EmbeddingIndexChecker {
 	/**
 	 * Applies the instantiation rule to the graph pattern
 	 * @param pattern the graph to which the instantiation is applied
-	 * @param the instantiation sequence
+	 * @param instantiation sequence
 	 * @return
 	 */
 	private HeapConfiguration applyInstantiationTo( HeapConfiguration pattern, List<IndexSymbol> instantiation) {
@@ -204,8 +204,7 @@ public class EmbeddingIndexChecker {
 
 			}
 		}
-		HeapConfiguration materializedGraph = builder.build();
-		return materializedGraph;
+		return builder.build();
 	}
 
 

@@ -2,10 +2,11 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -13,8 +14,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 /**
  * Prepares the heap for the invoke of an instance method and cleans it afterwards.
  * <br><br>
- * Call {@link #prepareHeap(JimpleProgramState) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState, SemanticsObserver) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState, SemanticsObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * <br>
  * Handles the evaluation of parameter and this expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
@@ -43,12 +44,11 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 *            correct ordering
 	 * @param namesOfLocals  the names of all locals which occur within the method (so they
 	 *            can be removed afterwards).
-	 * @param removeDeadVariables true, if dead variables shall be removed
 	 */
 	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues,
-								 List<String> namesOfLocals, boolean removeDeadVariables ){
+								 List<String> namesOfLocals){
 
-		super(removeDeadVariables);
+		super();
 		this.baseValue = baseValue;
 		this.argumentValues = argumentValues;
 		this.namesOfLocals = namesOfLocals;
@@ -62,7 +62,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * leave the scope of the method.
 	 */
 	@Override
-	public void cleanHeap( JimpleProgramState programState ){
+	public void cleanHeap( ProgramState programState, SemanticsObserver options ){
 
 		programState.removeIntermediate( "@this:" );
 		removeParameters( programState );
@@ -81,7 +81,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * JimpleProgramState)
 	 */
 	@Override
-	public void prepareHeap( JimpleProgramState programState ) throws NotSufficientlyMaterializedException{
+	public void prepareHeap(ProgramState programState, SemanticsObserver options) throws NotSufficientlyMaterializedException{
 
 		ConcreteValue concreteBase;
 		try {
@@ -96,12 +96,12 @@ public class InstanceInvokeHelper extends InvokeHelper {
 			// String type = " " + baseValue.getType().toString();
 			String type = "";
 			programState.setIntermediate( "@this:" + type, concreteBase );
-			if(super.removeDeadVariables) {
+			if(options.isDeadVariableEliminationEnabled()) {
 				VariablesUtil.removeDeadVariables( baseValue.toString(), programState, liveVariableNames );
 			}
 		}
 
-		appendArguments( programState );
+		appendArguments( programState, options );
 
 		programState.enterScope();
 
@@ -116,7 +116,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * AbstractHeap)
 	 */
 	@Override
-	public boolean needsMaterialization( JimpleProgramState programState ){
+	public boolean needsMaterialization( ProgramState programState ){
 		return super.needsMaterialization(programState) || baseValue.needsMaterialization( programState );
 	}
 

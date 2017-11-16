@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class DefaultIndexMaterialization implements IndexMaterializationStrategy {
 	
-	public static AbstractIndexSymbol SYMBOL_X = AbstractIndexSymbol.get("X");
-	public static AbstractIndexSymbol SYMBOL_Y = AbstractIndexSymbol.get("Y");
-	public static IndexSymbol SYMBOL_s = ConcreteIndexSymbol.getIndexSymbol( "s", false);
-	public static IndexSymbol SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol( "Z", true );
-	public static IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getIndexSymbol( "C", true );
+	public static final AbstractIndexSymbol SYMBOL_X = AbstractIndexSymbol.get("X");
+	public static final AbstractIndexSymbol SYMBOL_Y = AbstractIndexSymbol.get("Y");
+	public static final IndexSymbol SYMBOL_s = ConcreteIndexSymbol.getIndexSymbol( "s", false);
+	public static final IndexSymbol SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol( "Z", true );
+	public static final IndexSymbol SYMBOL_C = ConcreteIndexSymbol.getIndexSymbol( "C", true );
 
 	@Override
 	public void materializeIndices(HeapConfiguration heapConfiguration, 

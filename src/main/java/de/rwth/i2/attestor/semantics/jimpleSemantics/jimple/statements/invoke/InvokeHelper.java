@@ -2,10 +2,11 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -19,8 +20,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
  * only be visible inside the method, e.g. references which the method did not
  * remove and its local variables.
  * <br><br>
- * Call {@link #prepareHeap(JimpleProgramState) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(JimpleProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState, SemanticsObserver) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState, SemanticsObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * 
  * @author Hannah Arndt
  *
@@ -50,13 +51,6 @@ public abstract class InvokeHelper {
 	protected Set<String> liveVariableNames = new HashSet<>();
 
 	/**
-	 * True if and only if dead variables should be removed after
-	 * execution of this statement.
-	 */
-	protected boolean removeDeadVariables;
-
-
-	/**
 	 * Increases the scope
 	 * 
 	 * Attaches method parameters and if need be this to the programState for use
@@ -67,10 +61,12 @@ public abstract class InvokeHelper {
 	 * 
 	 * @param programState
 	 *            : the programState which will be the input of the called method
+	 * @param options Current configuration of the symbolic execution that uses this InvokeHelper.
 	 * @exception NotSufficientlyMaterializedException if the argument or the base value
 	 * can not be evaluated on the heap before it is materialized.
 	 */
-	public abstract void prepareHeap( JimpleProgramState programState ) throws NotSufficientlyMaterializedException;
+	public abstract void prepareHeap(ProgramState programState, SemanticsObserver options )
+			throws NotSufficientlyMaterializedException;
 
 	/**
 	 * Decreases the scope
@@ -81,13 +77,12 @@ public abstract class InvokeHelper {
 	 * @param programState
 	 *            after execution of method (potentially wiht unused
 	 *            intermediates and local variables)
+	 * @param options Current configuration of the symbolic execution that uses this InvokeHelper.
 	 */
-	public abstract void cleanHeap( JimpleProgramState programState );
+	public abstract void cleanHeap( ProgramState programState, SemanticsObserver options );
 	
-	InvokeHelper(boolean removeDeadVariables) {
-		
+	InvokeHelper() {
 		potentialViolationPoints = new ViolationPoints();
-		this.removeDeadVariables = removeDeadVariables;
 	}
 	
 	void precomputePotentialViolationPoints() {
@@ -97,7 +92,7 @@ public abstract class InvokeHelper {
 		}
 	}
 
-	public boolean needsMaterialization( JimpleProgramState programState ){
+	public boolean needsMaterialization( ProgramState programState ){
 		boolean res = false;
 		for( Value argument : argumentValues ){
 			res = res || argument.needsMaterialization(programState);
@@ -106,7 +101,9 @@ public abstract class InvokeHelper {
 	}
 
 
-	void appendArguments(JimpleProgramState programState) throws NotSufficientlyMaterializedException{
+	void appendArguments(ProgramState programState, SemanticsObserver options)
+			throws NotSufficientlyMaterializedException {
+
 		for( int i = 0; i < argumentValues.size(); i++ ){
 			// String name = "@parameter"+i+": "+arguments.get(i).getType();
 			String referenceName = "@parameter" + i + ":";
@@ -124,7 +121,7 @@ public abstract class InvokeHelper {
 				programState.setIntermediate( referenceName, concreteArgument );
 			}
 
-			if(removeDeadVariables) {
+			if(options.isDeadVariableEliminationEnabled()) {
 				VariablesUtil.removeDeadVariables( argumentValues.get( i ).toString(), programState, liveVariableNames );
 			}
 		}
@@ -134,7 +131,7 @@ public abstract class InvokeHelper {
 	 * removes all locals from the scope of the method from the programState
 	 * @param programState the programState at the end of the method
 	 */
-    void removeLocals(JimpleProgramState programState){
+    void removeLocals(ProgramState programState){
 		for( String varName : namesOfLocals ){
 			programState.removeVariable( varName );
 		}
@@ -144,7 +141,7 @@ public abstract class InvokeHelper {
 	 * removes the parameters (intermediates) from the programState
 	 * @param programState the programState at the end of the method
 	 */
-    void removeParameters(JimpleProgramState programState){
+    void removeParameters(ProgramState programState){
 		for( int i = 0; i < this.argumentValues.size(); i++ ){
 			programState.removeIntermediate( "@parameter" + i + ":" );
 		}
@@ -154,7 +151,7 @@ public abstract class InvokeHelper {
 	 * removes the return intermediate in case it was not used by an AssignInvokeStmt
 	 * @param programState the heap from which the parameters are removed
 	 */
-    void removeReturn(JimpleProgramState programState){
+    void removeReturn(ProgramState programState){
 		programState.removeIntermediate( "@return" );
 	}
 
@@ -184,10 +181,10 @@ public abstract class InvokeHelper {
 
     /**
      * Specifies the live variables for this program location.
-     * @param liveVaribleNames Set of live variable names.
+     * @param liveVariableNames Set of live variable names.
      */
-	public void setLiveVariableNames( Set<String> liveVaribleNames ){
-		this.liveVariableNames = liveVaribleNames;
+	public void setLiveVariableNames( Set<String> liveVariableNames ){
+		this.liveVariableNames = liveVariableNames;
 	}
 
 	public abstract String baseValueString();

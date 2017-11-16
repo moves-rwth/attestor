@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
@@ -23,12 +22,12 @@ import gnu.trove.list.array.TIntArrayList;
  *
  * @author Christoph
  */
-public abstract class GeneralJimpleProgramState implements JimpleProgramState {
+public abstract class GeneralProgramState implements ProgramState {
 
     /**
      * The logger of this class.
      */
-    private static final Logger logger = LogManager.getLogger( "GeneralJimpleProgramState" );
+    private static final Logger logger = LogManager.getLogger( "GeneralProgramState" );
 
     /**
      * The heap configuration that determines the shape of the heap and the assignment of
@@ -54,13 +53,13 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
     /**
      * The atomic propositions assigned to this state.
      */
-    protected Set<String> atomicPropositions;
+    protected final Set<String> atomicPropositions;
 
     /**
      * Initializes a state with the initial program location and scope depth 0.
      * @param heap The initial heap configuration.
      */
-	protected GeneralJimpleProgramState(HeapConfiguration heap) {
+	protected GeneralProgramState(HeapConfiguration heap) {
 		
 		this.heap = heap;
 		atomicPropositions = new HashSet<>();
@@ -71,7 +70,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
      * @param heap The initial heap configuration.
      * @param scopeDepth The initial call scope depth.
      */
-	protected GeneralJimpleProgramState(HeapConfiguration heap, int scopeDepth) {
+	protected GeneralProgramState(HeapConfiguration heap, int scopeDepth) {
 		
 		this.heap = heap;
 		this.scopeDepth = scopeDepth;
@@ -82,7 +81,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
      * Creates a shallow copy of a program state.
      * @param state The state that should be copied.
      */
-	protected GeneralJimpleProgramState(GeneralJimpleProgramState state) {
+	protected GeneralProgramState(GeneralProgramState state) {
 		
 		this.heap = state.heap;
 		this.programCounter = state.programCounter;
@@ -93,7 +92,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
     /**
      * @return A deep copy of this program state.
      */
-    public abstract GeneralJimpleProgramState clone();
+    public abstract GeneralProgramState clone();
 
     /**
      * @param name The name of a variable or constant.
@@ -257,6 +256,11 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	}
 
 	@Override
+	public void setScopeDepth(int scopeDepth) {
+		this.scopeDepth = scopeDepth;
+	}
+
+	@Override
 	public void leaveScope() {
 		
 		//--this.scopeDepth;
@@ -417,7 +421,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 			return res;
 		} catch( ClassCastException e ) {
 			
-			logger.error("GeneralJimpleProgramState expects NodeTypes as types.");
+			logger.error("GeneralProgramState expects NodeTypes as types.");
 			builder.build();
 			return null;
 		}
@@ -431,7 +435,7 @@ public abstract class GeneralJimpleProgramState implements JimpleProgramState {
 	
 	@Override
 	public ProgramState shallowCopyWithUpdateHeap(HeapConfiguration newHeap) {
-		GeneralJimpleProgramState copy = (GeneralJimpleProgramState) shallowCopy();
+		GeneralProgramState copy = (GeneralProgramState) shallowCopy();
 		copy.heap = newHeap;
 		return copy;
 	}

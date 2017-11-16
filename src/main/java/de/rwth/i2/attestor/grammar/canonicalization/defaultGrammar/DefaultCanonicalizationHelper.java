@@ -18,10 +18,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
  */
 public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 
-	public EmbeddingCheckerProvider provider;
+	public final EmbeddingCheckerProvider provider;
 	
 	/**
-	 * @param checkerProvider generates a EmbeddingChecker for given graph and pattern. Responsible
+	 * @param provider generates a EmbeddingChecker for given graph and pattern. Responsible
 	 * to generate the correct one for given settings and semantics.
 	 */
 	public DefaultCanonicalizationHelper( EmbeddingCheckerProvider provider ) {

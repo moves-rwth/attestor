@@ -1,20 +1,21 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -44,16 +45,12 @@ public class IfStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	private boolean removeDeadVariables;
-
-	public IfStmt( Value condition, int truePC, int falsePC,
-				   Set<String> liveVariableNames, boolean removeDeadVariables ){
+	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
 
 		this.conditionValue = condition;
 		this.truePC = truePC;
 		this.falsePC = falsePC;
 		this.liveVariableNames = liveVariableNames;
-		this.removeDeadVariables = removeDeadVariables;
 	}
 
 	/**
@@ -67,25 +64,25 @@ public class IfStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException{
-		
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
 
-		Set<ProgramState> defaultRes = JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
-		defaultRes.add( JimpleUtil.updatePC(jimpleProgramState, falsePC) );
+		options.update(this, programState);
 
-		jimpleProgramState = JimpleUtil.deepCopy(jimpleProgramState);
+		Set<ProgramState> defaultRes = new HashSet<>();
+		defaultRes.add(programState.shallowCopyUpdatePC(truePC));
+		defaultRes.add(programState.shallowCopyUpdatePC(falsePC));
 
-		ConcreteValue trueValue = jimpleProgramState.getConstant(Constants.TRUE);
-		ConcreteValue falseValue = jimpleProgramState.getConstant(Constants.FALSE);
+		programState = programState.clone();
+		ConcreteValue trueValue = programState.getConstant(Constants.TRUE);
+		ConcreteValue falseValue = programState.getConstant(Constants.FALSE);
 
 		ConcreteValue concreteCondition;
 		try {
-			concreteCondition = conditionValue.evaluateOn( jimpleProgramState );
+			concreteCondition = conditionValue.evaluateOn( programState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteCondition = jimpleProgramState.getUndefined();
+			concreteCondition = programState.getUndefined();
 		}
 		
 		if( concreteCondition.isUndefined() ){
@@ -95,16 +92,14 @@ public class IfStmt extends Statement {
 			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
 		}
 
-		if(removeDeadVariables) {
-			VariablesUtil.removeDeadVariables(conditionValue.toString(), jimpleProgramState, liveVariableNames);
+		if(options.isDeadVariableEliminationEnabled()) {
+			VariablesUtil.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
 		}
 
 		if( concreteCondition.equals( trueValue ) ){
-			
-			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, truePC);
+			return Collections.singleton(programState.shallowCopyUpdatePC(truePC));
 		}else if( concreteCondition.equals( falseValue )){
-			
-			return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, falsePC);
+			return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
 		}else{
 			return defaultRes;
 		}
@@ -112,7 +107,7 @@ public class IfStmt extends Statement {
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return conditionValue.needsMaterialization( (JimpleProgramState) programState );
+		return conditionValue.needsMaterialization( programState );
 	}
 
 

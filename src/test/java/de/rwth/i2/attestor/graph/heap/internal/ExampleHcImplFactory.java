@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.graph.heap.internal;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -305,11 +306,11 @@ public final class ExampleHcImplFactory {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		
+
 		Type type = Settings.getInstance().factory().getType("List");
-		
+
 		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		
+
 		return result.builder()
 				.addNodes(type, 4, nodes )
 				.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
@@ -319,6 +320,26 @@ public final class ExampleHcImplFactory {
 				.addSelector( nodes.get( 2 ), next, nodes.get( 3 ) )
 				.build();
 	}
+
+	public static HeapConfiguration getAbstractList() {
+
+		HeapConfiguration result = new InternalHeapConfiguration();
+		TIntArrayList nodes = new TIntArrayList();
+
+		Type type = Settings.getInstance().factory().getType("List");
+
+		Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false, true});
+		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+
+		return result.builder()
+				.addNodes(type, 2, nodes )
+				.addVariableEdge( Constants.NULL, nodes.get( 1 ) )
+				.addVariableEdge( "x", nodes.get( 0 ) )
+				.addNonterminalEdge(nt, nodes)
+				.build();
+	}
+
+
 
 
 	public static HeapConfiguration getListAndConstantsWithChange() {

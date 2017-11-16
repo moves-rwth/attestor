@@ -5,14 +5,15 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
-	private Grammar grammar; 
-	private CanonicalizationHelper canonicalizationHelper;
+	private final Grammar grammar;
+	private final CanonicalizationHelper canonicalizationHelper;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
 											CanonicalizationHelper canonicalizationHelper ) {

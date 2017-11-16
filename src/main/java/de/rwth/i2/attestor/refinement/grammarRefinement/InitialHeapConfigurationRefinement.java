@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class InitialHeapConfigurationRefinement {
 
-    private List<HeapConfiguration> refinedInitialHeapConfigurations;
+    private final List<HeapConfiguration> refinedInitialHeapConfigurations;
     private HeapConfiguration initialHeapConf;
     private Grammar grammar;
     private HeapAutomaton heapAutomaton;

@@ -8,10 +8,10 @@ import de.rwth.i2.attestor.util.Pair;
 
 public class IndexMatcher {
 	
-	private Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<IndexSymbol>, List<IndexSymbol>>>
+	private final Map<Pair<IndexedNonterminal, IndexedNonterminal>, Pair<List<IndexSymbol>, List<IndexSymbol>>>
 		knownMatches = new HashMap<>();
 
-	private IndexMaterializationStrategy indexGrammar;
+	private final IndexMaterializationStrategy indexGrammar;
 	
 	public IndexMatcher(IndexMaterializationStrategy indexGrammar) {
 		this.indexGrammar = indexGrammar;

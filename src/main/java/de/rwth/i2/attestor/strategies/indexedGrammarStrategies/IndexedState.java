@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.strategies.indexedGrammarStrategies;
 
+import de.rwth.i2.attestor.strategies.GeneralProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,10 +9,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
 import de.rwth.i2.attestor.types.Type;
 
-public class IndexedState extends GeneralJimpleProgramState {
+public class IndexedState extends GeneralProgramState {
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
 
 	public IndexedState( HeapConfiguration heap ) {

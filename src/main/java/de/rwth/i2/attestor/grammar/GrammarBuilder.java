@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
  */
 public class GrammarBuilder {
 	
-	Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
+	final Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
 	
 	public Grammar build() {
 		return new Grammar( rules );

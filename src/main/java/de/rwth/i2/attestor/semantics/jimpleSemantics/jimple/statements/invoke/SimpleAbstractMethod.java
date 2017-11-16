@@ -1,12 +1,17 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.*;
-
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -22,16 +27,21 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	/**
 	 * stores all previously seen inputs with their fixpoints for reuse
 	 */
-	private final Map<HeapConfiguration, Set<ProgramState>> knownInputs;
-	public SimpleAbstractMethod( String signature, StateSpaceFactory factory ){
-		this(signature, signature, factory);
+	private final Map<HeapConfiguration, Set<ProgramState>> knownInputs = new HashMap<>();
+
+	public SimpleAbstractMethod( String signature){
+		this(signature, signature);
 	}
 
-	public SimpleAbstractMethod( String signature, String displayName, StateSpaceFactory factory){
+	@Override
+	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
+
+		return knownInputs.get(input);
+	}
+
+	public SimpleAbstractMethod( String signature, String displayName){
 		super( );
 		super.setDisplayName(displayName);
-		super.setStateSpaceFactory(factory);
-		knownInputs = new HashMap<>();
 	}
 
 	/**
@@ -43,32 +53,23 @@ public class SimpleAbstractMethod extends AbstractMethod {
 		return this.knownInputs.containsKey( input );
 	}
 
-	/**
-	 * applies the abstract semantic of the method to the input until a fixpoint
-	 * is reached.
-	 * 
-	 * @param input
-	 *            the heap at the beginning of the method with all parameters
-	 *            and if applicable this attached as intermediates to the
-	 *            respective elements (i.e. nodes)
-	 * @param scopeDepth 
-	 * 			 The scope depth of the method to apply (necessary to distinguish
-	 * 			 variables with identical name).
-	 * @return all heaps which are in the fixpoint of the method at the terminal
-	 *         states of it.
-	 */
 	@Override
-	public Set<ProgramState> getResult( HeapConfiguration input, int scopeDepth )
+	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer )
 		throws StateSpaceGenerationAbortedException {
-		if( this.hasResult( input ) ){
-			return knownInputs.get( input );
+
+		observer.update(this, input);
+
+		HeapConfiguration heap = input.getHeap();
+		if( isReuseResultsEnabled() && this.hasResult( heap ) ){
+			return knownInputs.get( heap );
 		}else{
-			
-			StateSpace stateSpace;
+
 			Set<ProgramState> resultHeaps = new HashSet<>();
-			stateSpace = factory.create(method, input, scopeDepth);
+
+			StateSpace stateSpace = observer.generateStateSpace(method, input);
 			resultHeaps.addAll(stateSpace.getFinalStates());
-			
+			setResult(heap, resultHeaps);
+
 			return resultHeaps;
 		}
 	}

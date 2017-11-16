@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.GeneralJimpleProgramState;
+import de.rwth.i2.attestor.strategies.GeneralProgramState;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Christoph
  */
-public class DefaultProgramState extends GeneralJimpleProgramState {
+public class DefaultProgramState extends GeneralProgramState {
 
     /**
      * The logger of this class.

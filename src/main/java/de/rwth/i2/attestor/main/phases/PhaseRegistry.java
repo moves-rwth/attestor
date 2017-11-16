@@ -12,9 +12,9 @@ public class PhaseRegistry {
 
    private static final Logger logger = LogManager.getLogger("PhaseRegistry");
 
-   private Settings settings;
+   private final Settings settings;
 
-   private List<AbstractPhase> phases;
+   private final List<AbstractPhase> phases;
 
    public PhaseRegistry(Settings settings) {
 

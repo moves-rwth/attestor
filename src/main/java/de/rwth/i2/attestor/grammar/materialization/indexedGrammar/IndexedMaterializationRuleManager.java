@@ -27,11 +27,11 @@ import java.util.*;
  */
 public class IndexedMaterializationRuleManager extends DefaultMaterializationRuleManager {
 
-	private ViolationPointResolver violationPointResolver;
+	private final ViolationPointResolver violationPointResolver;
 
-	private IndexMatcher indexMatcher;
+	private final IndexMatcher indexMatcher;
 
-	private Map<GrammarRequest, GrammarResponse> instantiatedRuleGraphsCreatingSelector = new HashMap<>();
+	private final Map<GrammarRequest, GrammarResponse> instantiatedRuleGraphsCreatingSelector = new HashMap<>();
 
 	public IndexedMaterializationRuleManager(ViolationPointResolver vioResolver, IndexMatcher indexMatcher) {
 		super( vioResolver );

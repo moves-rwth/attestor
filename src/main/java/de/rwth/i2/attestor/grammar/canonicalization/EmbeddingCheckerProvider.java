@@ -16,9 +16,9 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
  */
 public class EmbeddingCheckerProvider {
 	
-	private int minDereferenceDepth;
-	private int aggressiveAbstractionThreshold;
-	private boolean aggressiveReturnAbstraction;
+	private final int minDereferenceDepth;
+	private final int aggressiveAbstractionThreshold;
+	private final boolean aggressiveReturnAbstraction;
 
 	/**
 	 * Constructs an EmbeddingCheckerProvider with the given settings

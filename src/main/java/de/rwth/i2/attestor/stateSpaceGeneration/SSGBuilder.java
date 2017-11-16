@@ -16,7 +16,7 @@ public class SSGBuilder {
 	/**
 	 * The initial state passed to the state space generation
 	 */
-	private List<ProgramState> initialStates;
+	private final List<ProgramState> initialStates;
 	
 	/**
 	 * Internal instance of the StateSpaceGenerator under
@@ -75,13 +75,28 @@ public class SSGBuilder {
 			throw new IllegalStateException("StateSpaceGenerator: No state counter.");
 		}
 
+		if(generator.explorationStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
+		}
+
+		if(generator.semanticsObserverSupplier == null) {
+	        throw new IllegalStateException("StateSpaceGenerator: No supplier for semantics options.");
+        }
+
+        if(generator.stateSpaceSupplier == null) {
+            throw new IllegalStateException("StateSpaceGenerator: No supplier for state spaces.");
+        }
+
+        generator.stateSpace = generator.stateSpaceSupplier.get();
+
 		for (ProgramState state : initialStates) {
 			state.setProgramCounter(0);
 			generator.stateLabelingStrategy.computeAtomicPropositions(state);
 			generator.stateSpace.addInitialState(state);
-			generator.unexploredConfigurations.add(state);
+			generator.addUnexploredState(state);
 		}
 
+		generator.semanticsObserver = generator.semanticsObserverSupplier.get(generator);
 		return generator;
 	}
 
@@ -150,14 +165,70 @@ public class SSGBuilder {
 		return this;
 	}
 
+	/**
+	 * @param stateRefinementStrategy The strategy to refine states before continuing the symbolic execution.
+	 * @return The builder.
+	 */
 	public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 		generator.stateRefinementStrategy = stateRefinementStrategy;
 		return this;
 	}
 
+	/**
+	 * @param stateCounter The global counter for the total number of states generated so far.
+	 * @return The builder.
+	 */
 	public SSGBuilder setStateCounter(StateSpaceGenerator.TotalStatesCounter stateCounter) {
 		generator.totalStatesCounter = stateCounter;
 		return this;
 	}
+
+	/**
+	 * @param enabled True if and only if it is permitted to eliminate dead variables after a single
+	 *                step of the symbolic execution.
+	 * @return The builder.
+	 */
+	public SSGBuilder setDeadVariableElimination(boolean enabled) {
+		generator.deadVariableEliminationEnabled = enabled;
+		return this;
+	}
+
+	/**
+	 * @param enabled True if and only if the state space should be explored in a breadth-first instead of
+	 *                a depth-first fashion.
+	 * @return The builder.
+	 */
+	public SSGBuilder setBreadthFirstSearchEnabled(boolean enabled) {
+		generator.breadthFirstSearchEnabled = enabled;
+		return this;
+	}
+
+	/**
+	 * @param strategy A strategy that determines whether successors of a given state should be explored further.
+	 * @return The builder.
+	 */
+	public SSGBuilder setExplorationStrategy(ExplorationStrategy strategy) {
+		generator.explorationStrategy = strategy;
+		return this;
+	}
+
+    /**
+     * @param stateSpaceSupplier The function determining which instances of state spaces are generated
+     * @return The builder.
+     */
+	public SSGBuilder setStateSpaceSupplier(StateSpaceSupplier stateSpaceSupplier) {
+	    generator.stateSpaceSupplier = stateSpaceSupplier;
+	    return this;
+    }
+
+    /**
+     * @param semanticsObserverSupplier The function determining which semantics options are passed to individual
+     *                                 statements during symbolic execution.
+     * @return The builder.
+     */
+    public SSGBuilder setSemanticsOptionsSupplier(SemanticsObserverSupplier semanticsObserverSupplier) {
+	    generator.semanticsObserverSupplier = semanticsObserverSupplier;
+	    return this;
+    }
 	
 }

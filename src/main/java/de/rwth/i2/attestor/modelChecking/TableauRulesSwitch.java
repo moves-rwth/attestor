@@ -19,9 +19,9 @@ import java.util.HashSet;
 public class TableauRulesSwitch extends AnalysisAdapter{
 	
 	// Holds the additional next formulae obtained while unrolling release and until
-	HashBiMap<Node, ANextLtlform> additionalNextFormulae;
+    final HashBiMap<Node, ANextLtlform> additionalNextFormulae;
 
-	StateSpace stateSpace;
+	final StateSpace stateSpace;
 
 	public TableauRulesSwitch(StateSpace stateSpace){
 

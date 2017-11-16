@@ -16,7 +16,7 @@ import static de.rwth.i2.attestor.markings.Markings.MARKING_PREFIX;
  */
 public class Marking {
 
-    private String markingName;
+    private final String markingName;
     private List<SelectorLabel> requiredSelectorLabels;
     private boolean markAllSuccessors = false;
 

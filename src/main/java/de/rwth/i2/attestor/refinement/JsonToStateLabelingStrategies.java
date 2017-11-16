@@ -15,8 +15,8 @@ public class JsonToStateLabelingStrategies {
 
     private static final Logger logger = LogManager.getLogger("JsonToStateLabelingStrategies");
 
-    private HeapAutomaton heapAutomaton;
-    private StateLabelingStrategy stateLabelingStrategy;
+    private final HeapAutomaton heapAutomaton;
+    private final StateLabelingStrategy stateLabelingStrategy;
 
     public JsonToStateLabelingStrategies(JSONArray jsonArray) {
 

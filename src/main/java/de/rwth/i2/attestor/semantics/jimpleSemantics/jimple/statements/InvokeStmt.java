@@ -2,11 +2,13 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import java.util.Set;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -16,7 +18,7 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
  * @author Hannah Arndt
  *
  */
-public class InvokeStmt extends Statement {
+public class InvokeStmt extends Statement implements InvokeCleanup {
 
 	/**
 	 * the abstract representation of the called method
@@ -49,24 +51,35 @@ public class InvokeStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
+		options.update(this, programState);
 
-		invokePrepare.prepareHeap( jimpleProgramState );
+		programState = programState.clone();
 
-		Set<ProgramState> methodResult = method.getResult( jimpleProgramState.getHeap(), jimpleProgramState.getScopeDepth() );
-		methodResult.forEach( x -> invokePrepare.cleanHeap( (JimpleProgramState) x ) );
-		methodResult.forEach( x -> ( (JimpleProgramState) x ).clone() );
+		invokePrepare.prepareHeap( programState, options );
+
+		Set<ProgramState> methodResult = method.getResult(
+				programState,
+				options
+		);
+
+		methodResult.forEach( x -> invokePrepare.cleanHeap(x, options ) );
+		methodResult.forEach(ProgramState::clone);
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		
 		return methodResult;
 	}
 
+	public ProgramState getCleanedResultState(ProgramState state, SemanticsObserver options)  {
+		invokePrepare.cleanHeap(state, options);
+		return state;
+	}
+
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return invokePrepare.needsMaterialization( (JimpleProgramState) programState );
+		return invokePrepare.needsMaterialization( programState );
 	}
 
 

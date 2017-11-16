@@ -20,7 +20,6 @@ import gnu.trove.list.array.TIntArrayList;
  */
 public class ReachableFragmentComputer {
 
-
 	private String displayName;
 	HeapConfiguration input;
 
@@ -93,7 +92,6 @@ public class ReachableFragmentComputer {
 				handleConstant(variableEdge, variableName);
 			}
 		}
-
 		return queue;
 	}
 

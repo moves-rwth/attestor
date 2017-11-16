@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -46,14 +45,14 @@ public class BranchingSkip extends Statement {
 	 * copies the input heap to both successor states
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState) {
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options) {
 
-		JimpleProgramState jimpleProgramState = (JimpleProgramState) programState;
-		
-		JimpleProgramState leftResult = JimpleUtil.shallowCopyExecutable(jimpleProgramState);
+		options.update(this, programState);
+
+		ProgramState leftResult = programState.shallowCopy();
 		leftResult.setProgramCounter(leftSuccessor);
-		
-		JimpleProgramState rightResult = JimpleUtil.shallowCopyExecutable(jimpleProgramState);
+
+		ProgramState rightResult = programState.shallowCopy();
 		rightResult.setProgramCounter(rightSuccessor);
 		
 		Set<ProgramState> res = SingleElementUtil.createSet(leftResult);

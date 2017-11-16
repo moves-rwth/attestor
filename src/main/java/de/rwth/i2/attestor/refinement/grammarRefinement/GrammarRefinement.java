@@ -14,14 +14,14 @@ import java.util.*;
 
 public class GrammarRefinement {
 
-    private Set<Nonterminal> oldLeftHandSides;
-    private Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides = new HashMap<>();
+    private final Set<Nonterminal> oldLeftHandSides;
+    private final Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides = new HashMap<>();
 
-    private HeapAutomaton heapAutomaton;
+    private final HeapAutomaton heapAutomaton;
 
-    private Map<Nonterminal, List<HeapAutomatonState>> foundStates = new HashMap<>();
+    private final Map<Nonterminal, List<HeapAutomatonState>> foundStates = new HashMap<>();
 
-    private Map<Nonterminal, Set<HeapConfiguration>> refinedRules = new HashMap<>();
+    private final Map<Nonterminal, Set<HeapConfiguration>> refinedRules = new HashMap<>();
 
     private boolean newRulesFound;
 

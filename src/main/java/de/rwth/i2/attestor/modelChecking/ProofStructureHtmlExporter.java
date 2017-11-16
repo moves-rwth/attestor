@@ -104,11 +104,7 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
 		return psJSON.toString();
 	}
 
-	@Override
-	public void close() {
-	}
-
-	private final static String htmlTemplateHead1 = "<head>\n" + "		<title>";
+    private final static String htmlTemplateHead1 = "<head>\n" + "		<title>";
 
 	private final static String htmlTemplateHead2 = "</title>\n"
 			+ "\n"

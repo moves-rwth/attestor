@@ -5,13 +5,13 @@ public class VF2PatternGraphData extends AbstractVF2GraphData {
     /**
      * The current (partial) mapping from graph to the other considered graph.
      */
-    private int[] match;
+    private final int[] match;
 
     /**
      * A fixed order of nodes.
      * nodeOrder[i] is the position in the fixed order.
      */
-    private int[] nodeOrder;
+    private final int[] nodeOrder;
 
     public VF2PatternGraphData(Graph graph)  {
         super(graph);

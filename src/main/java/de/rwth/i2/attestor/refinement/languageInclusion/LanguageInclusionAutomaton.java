@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
 
-    private Grammar grammar;
+    private final Grammar grammar;
 
     public LanguageInclusionAutomaton(Grammar grammar) {
 

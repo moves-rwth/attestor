@@ -47,9 +47,9 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
 
     private void writeNodes(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
-        TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
-            int node = iter.next();
+        TIntIterator iterator = heapConfiguration.nodes().iterator();
+        while(iterator.hasNext()) {
+            int node = iterator.next();
             boolean isExternal = heapConfiguration.isExternalNode(node);
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(node);

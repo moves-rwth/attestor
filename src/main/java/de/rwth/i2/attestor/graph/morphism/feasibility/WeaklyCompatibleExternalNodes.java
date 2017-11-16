@@ -15,10 +15,6 @@ public class WeaklyCompatibleExternalNodes implements FeasibilityFunction  {
 		Graph patternGraph = state.getPattern().getGraph();
 		Graph targetGraph = state.getTarget().getGraph();
 
-		if( patternGraph.isExternal(p) == ! targetGraph.isExternal(t)) {
-			return false;
-		}
-		
-		return true;
+		return patternGraph.isExternal(p) == targetGraph.isExternal(t);
 	}
 }

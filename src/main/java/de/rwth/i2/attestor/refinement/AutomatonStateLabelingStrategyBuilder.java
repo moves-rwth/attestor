@@ -7,8 +7,8 @@ import java.util.List;
 
 public class AutomatonStateLabelingStrategyBuilder {
 
-    List<HeapAutomaton> automata = new ArrayList<>();
-    List<StatelessHeapAutomaton> statelessHeapAutomata = new ArrayList<>();
+    final List<HeapAutomaton> automata = new ArrayList<>();
+    final List<StatelessHeapAutomaton> statelessHeapAutomata = new ArrayList<>();
 
     public AutomatonStateLabelingStrategyBuilder add(HeapAutomaton automaton) {
         automata.add(automaton);

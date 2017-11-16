@@ -16,22 +16,22 @@ class AssignmentIterator<E> {
     /**
      * The number of elements contained in a single assignment.
      */
-    private int size;
+    private final int size;
 
     /**
      * All possible elements that can be assigned to each element of an assignment.
      */
-    private List<List<E>> availableAssignments;
+    private final List<List<E>> availableAssignments;
 
     /**
      * The number of possible elements that can be assigned to each element of an assignment.
      */
-    private TIntArrayList assignmentSizes;
+    private final TIntArrayList assignmentSizes;
 
     /**
      * The positions in the available assignments encoding the current assignment of the iterator.
      */
-    private TIntArrayList currentAssignment;
+    private final TIntArrayList currentAssignment;
 
     /**
      * The latest position in the current assignment that determines the element that is changed first to obtain

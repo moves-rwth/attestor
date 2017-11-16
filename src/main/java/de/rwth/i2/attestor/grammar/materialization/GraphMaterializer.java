@@ -16,10 +16,8 @@ public class GraphMaterializer {
 													   HeapConfiguration rule) {
 		
 		final HeapConfiguration cloneOfInput = inputGraph.clone();
-		
-		final HeapConfiguration materializedGraph = 
-				cloneOfInput.builder().replaceNonterminalEdge(toReplaceIndex, rule).build();
-		return materializedGraph;
+
+		return cloneOfInput.builder().replaceNonterminalEdge(toReplaceIndex, rule).build();
 	}
 
 }

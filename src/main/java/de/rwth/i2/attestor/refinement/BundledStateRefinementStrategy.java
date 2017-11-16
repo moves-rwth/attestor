@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BundledStateRefinementStrategy implements StateRefinementStrategy {
 
-    private List<StateRefinementStrategy> strategies;
+    private final List<StateRefinementStrategy> strategies;
 
     public BundledStateRefinementStrategy(List<StateRefinementStrategy> strategies) {
 

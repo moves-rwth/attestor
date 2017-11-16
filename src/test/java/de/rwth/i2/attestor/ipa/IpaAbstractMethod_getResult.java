@@ -3,6 +3,9 @@ package de.rwth.i2.attestor.ipa;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
@@ -30,14 +33,14 @@ public class IpaAbstractMethod_getResult {
 		
 		ipa.addContracts(precondition, SingleElementUtil.createList(postcondition) );
 		
-		HeapConfiguration input = createInput();
+		ProgramState input = createInput();
 		HeapConfiguration expected = createExpected();
 		
-		assertThat( ipa.getResult(input), contains( expected ) );
+		assertThat( ipa.getIPAResult(input, new MockupSemanticsObserver()), contains( expected ) );
 	}
 
 
-	private HeapConfiguration createInput() {
+	private ProgramState createInput() {
 	HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -49,7 +52,7 @@ public class IpaAbstractMethod_getResult {
 				.addVariableEdge("y", nodes.get(1))
 				.addSelector(nodes.get(1), sel, nodes.get(2))
 				.build();
-		return hc;
+		return new DefaultProgramState(hc);
 		
 	}
 

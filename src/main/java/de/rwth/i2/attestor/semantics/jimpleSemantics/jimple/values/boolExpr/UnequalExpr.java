@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -49,7 +49,7 @@ public class UnequalExpr implements Value {
 	 * @return the heap element representing true/false or undefined.
 	 */
 	@Override
-	public ConcreteValue evaluateOn( JimpleProgramState programState) throws NotSufficientlyMaterializedException{
+	public ConcreteValue evaluateOn( ProgramState programState) throws NotSufficientlyMaterializedException{
 		ConcreteValue leftRes;
 		try {
 			leftRes = leftExpr.evaluateOn(programState);
@@ -73,19 +73,11 @@ public class UnequalExpr implements Value {
 			return programState.getUndefined();
 		}
 
-		ConcreteValue res = programState.getConstant( "" + ( !leftRes.equals( rightRes ) ) );
-		/*
-		if( !( res.type().equals( this.type ) ) ){
-			String msg = "The type of the resulting ConcreteValue does not match.";
-			msg += "\n expected: " + this.type + " got: " + res.type();
-			logger.debug( msg );
-		}
-		*/
-		return res;
+		return programState.getConstant( "" + ( !leftRes.equals( rightRes ) ) );
 	}
 
 	@Override
-	public boolean needsMaterialization( JimpleProgramState programState){
+	public boolean needsMaterialization( ProgramState programState){
 		
 		return rightExpr.needsMaterialization(programState) || leftExpr.needsMaterialization(programState);
 	}

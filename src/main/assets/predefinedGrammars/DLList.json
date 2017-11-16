@@ -30,7 +30,7 @@
                     "label":"prev",
                     "origin":2,
                     "target":1
-                },
+                }
             ],
             "hyperedges":[]
         },
@@ -52,12 +52,12 @@
                     "label":"prev",
                     "origin":1,
                     "target":0
-                },
+                }
             ],
             "hyperedges":[
                 {
                 "label":"RefDLList",
-                "tentacles":[1,4,2,3],
+                "tentacles":[1,4,2,3]
                 }
             ]
         },
@@ -79,12 +79,12 @@
                     "label":"prev",
                     "origin":2,
                     "target":4
-                },
+                }
             ],
             "hyperedges":[
                 {
                     "label":"RefDLList",
-                    "tentacles":[0,1,4,2],
+                    "tentacles":[0,1,4,2]
                 }
             ]
         },
@@ -101,11 +101,11 @@
             "hyperedges":[
                 {
                     "label":"RefDLList",
-                    "tentacles":[0,1,4,5],
+                    "tentacles":[0,1,4,5]
                 },
                 {
                     "label":"RefDLList",
-                    "tentacles":[4,5,2,3],
+                    "tentacles":[4,5,2,3]
                 }
             ]
         } 

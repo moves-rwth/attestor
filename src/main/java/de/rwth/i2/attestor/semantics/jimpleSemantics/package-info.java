@@ -8,7 +8,7 @@
  *  Classes that deal with the semantics are in the sub-package
  *  {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple jimple}
  *  <br>
- *  {@link de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState JimpleProgramState}
+ *  {@link de.rwth.i2.attestor.stateSpaceGeneration.ProgramState ProgramState}
  *  specifies the functionality a heap has to have such that the our semantics is applicable to it.
  *  <br>
  *  The {@link de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser JimpleParser} 

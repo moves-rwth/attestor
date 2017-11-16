@@ -52,13 +52,13 @@ public abstract class AbstractVF2GraphData {
 	 * For each node this stores the height of the search tree at which the node
 	 * was for the first time not in the matching, but reachable via an incoming edge from the matching.
 	 */
-	private int[] in;
+	private final int[] in;
 
 	/**
 	 * For each node this stores the height of the search tree at which the node
 	 * was for the first time not in the matching, but reachable via an outgoing edge from the matching.
 	 */
-	private int[] out;
+	private final int[] out;
 
 	protected abstract void matchNode(int matchFrom, int matchTo);
 	protected abstract void unmatchNode(int node);

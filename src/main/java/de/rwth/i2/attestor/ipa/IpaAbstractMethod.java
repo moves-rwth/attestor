@@ -1,16 +1,20 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.*;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class IpaAbstractMethod extends AbstractMethod {
 	
@@ -23,15 +27,22 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return knownMethods.get( signature );
 	}
 
-	IpaContractCollection contracts = new IpaContractCollection();
+	final IpaContractCollection contracts = new IpaContractCollection();
 
 	public IpaAbstractMethod(String displayName) {
 		super();
 		super.setDisplayName(displayName);
 	}
 	
+	@Override
+	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
+		return null; // TODO
+	}
+
+	
 	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
 		if( ! contracts.hasMatchingPrecondition(precondition) ){
+
 			contracts.addPrecondition(precondition);
 		}
 		List<HeapConfiguration> currentPostconditions = contracts.getPostconditions( precondition );
@@ -39,28 +50,29 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(HeapConfiguration input, int scopeDepth) 
+	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer)
 													throws StateSpaceGenerationAbortedException {
 
 		Set<ProgramState> result = new HashSet<>();
-		for( HeapConfiguration postConfig : getResult( input ) ){
+		for( HeapConfiguration postConfig : getIPAResult( input, observer ) ){
 			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
 		}
 
 		return result;
 	}
 
-	public List<HeapConfiguration> getResult( HeapConfiguration currentConfig ) 
+	public List<HeapConfiguration> getIPAResult( ProgramState input, SemanticsObserver observer )
 			throws StateSpaceGenerationAbortedException{
-
+		HeapConfiguration currentConfig = input.getHeap();
 		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
 		HeapConfiguration reachableFragment = splittedConfig.first();
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
-		
+
 		if( !contracts.hasMatchingPrecondition(reachableFragment) ){ 
 			
 			computeContract(reachableFragment);
+
 		}else{
 			int [] reordering = contracts.getReordering( reachableFragment );
 			remainingFragment = adaptExternalOrdering( reachableFragment, remainingFragment, 
@@ -71,12 +83,15 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return applyContract(remainingFragment, placeholderPos, postconditions );
 		
 	}
-
-	private void computeContract(HeapConfiguration reachableFragment) throws StateSpaceGenerationAbortedException {
+	
+	private void computeContract(ProgramState input, HeapConfiguration reachableFragment, SemanticsObserver observer)
+			throws StateSpaceGenerationAbortedException {
 		
 		contracts.addPrecondition( reachableFragment );
-		StateSpace stateSpace = factory.create(method, reachableFragment, 0);
+		ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
+		StateSpace stateSpace = observer.generateStateSpace(method, initialState);
 		List<HeapConfiguration> postconditions = contracts.getPostconditions(reachableFragment);
+
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
 			//otherwise, any local variables are already removed 
 			if( ! Settings.getInstance().options().isRemoveDeadVariables() ){
@@ -101,7 +116,6 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	/**
 	 * @param input
-	 * @param methodName
 	 * @return <reachableFragment,remainingFragment>
 	 */
 	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
@@ -133,8 +147,8 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
 		TIntArrayList newTentacles = new TIntArrayList();
-		for( int i = 0; i < reordering.length; i++ ){
-			newTentacles.add( oldTentacles.get( reordering[i]) );
+		for (int aReordering : reordering) {
+			newTentacles.add(oldTentacles.get(aReordering));
 		} 
 
 		Nonterminal label = remainingFragment.labelOf(placeholderPosition);

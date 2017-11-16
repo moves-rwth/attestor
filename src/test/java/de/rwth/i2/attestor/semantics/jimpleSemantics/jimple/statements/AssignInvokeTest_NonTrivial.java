@@ -42,13 +42,13 @@ public class AssignInvokeTest_NonTrivial {
 		Type type = Settings.getInstance().factory().getType( "node" );
 		Local var = new Local( type, "x" );
 
-		AbstractMethod method= new SimpleAbstractMethod( "method", StateSpaceFactoryHelper.get());
+		AbstractMethod method= new SimpleAbstractMethod( "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>(), false));
+		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>()));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );
 		method.setControlFlow( defaultControlFlow );
 		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(),
-				SingleElementUtil.createList("x"), false );
+				SingleElementUtil.createList("x"));
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		
@@ -59,7 +59,7 @@ public class AssignInvokeTest_NonTrivial {
 	@Test
 	public void testComputeSuccessors(){
 		try{
-			Set<ProgramState> resStates = stmt.computeSuccessors( inputState );
+			Set<ProgramState> resStates = stmt.computeSuccessors( inputState, new MockupSemanticsObserver() );
 			assertEquals( 1, resStates.size() );
 			DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
 			assertNotSame( resState, inputState );

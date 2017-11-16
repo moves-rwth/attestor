@@ -1,11 +1,15 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
+import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import gnu.trove.list.array.TIntArrayList;
 
 /**
  * Abstraction of a program that is symbolically executed to generate a state space.
@@ -20,6 +24,10 @@ public class Program {
 	 * The position in the lost corresponds to the value of the program counter.
 	 */
 	private final List<Semantics> program;
+
+	public static ProgramBuilder builder() {
+		return new ProgramBuilder();
+	}
 
 	/**
 	 * @return The first statement upon execution of the program.
@@ -51,10 +59,13 @@ public class Program {
      * @param program The list of statements that make up this program.
      */
 	public Program( List<Semantics> program ){
-		super();		
 		this.program = program;
 		
 		updateCanonicalizationPermission();
+	}
+
+	private Program() {
+		program = new ArrayList<>();
 	}
 
     /**
@@ -100,5 +111,24 @@ public class Program {
      */
 	private boolean isExit(int programCounter){
 		return programCounter >= program.size() || programCounter < 0;
+	}
+
+	public final static class ProgramBuilder {
+		private Program program = new Program();
+
+		protected ProgramBuilder() {
+		}
+
+		public Program build() {
+			assert !program.program.isEmpty();
+			Program result = program;
+			program = null;
+			return result;
+		}
+
+		public ProgramBuilder addStatement(Semantics semantics) {
+			program.program.add(semantics);
+			return this;
+		}
 	}
 }

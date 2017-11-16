@@ -29,7 +29,7 @@ import java.util.Set;
 
 public class BalancednessAutomaton implements StatelessHeapAutomaton {
 
-    private Grammar grammar;
+    private final Grammar grammar;
     private CanonicalizationStrategy canonicalizationStrategy;
 
     public BalancednessAutomaton(Grammar grammar) {

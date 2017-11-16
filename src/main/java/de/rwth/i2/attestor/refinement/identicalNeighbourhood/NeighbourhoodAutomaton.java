@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class NeighbourhoodAutomaton implements StatelessHeapAutomaton {
 
-    private Marking marking;
+    private final Marking marking;
 
     public NeighbourhoodAutomaton(Marking marking) {
 

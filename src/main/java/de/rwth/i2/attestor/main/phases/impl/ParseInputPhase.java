@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
-    private List<HeapConfiguration> inputs = new ArrayList<>();
+    private final List<HeapConfiguration> inputs = new ArrayList<>();
 
     @Override
     public String getName() {

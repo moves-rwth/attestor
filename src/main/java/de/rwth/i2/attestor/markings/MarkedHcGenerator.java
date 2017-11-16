@@ -30,13 +30,13 @@ import java.util.Stack;
  */
 public class MarkedHcGenerator {
 
-    private Grammar grammar;
-    private Marking marking;
-    private String universalVariableName;
-    private List<SelectorLabel> requiredSelectors;
+    private final Grammar grammar;
+    private final Marking marking;
+    private final String universalVariableName;
+    private final List<SelectorLabel> requiredSelectors;
 
-    private Set<HeapConfiguration> markedHeapConfigurations = new HashSet<>();
-    private Stack<HeapConfiguration> unexploredHeapConfigurations = new Stack<>();
+    private final Set<HeapConfiguration> markedHeapConfigurations = new HashSet<>();
+    private final Stack<HeapConfiguration> unexploredHeapConfigurations = new Stack<>();
 
     private int currentNode;
     private HeapConfiguration currentHc;
@@ -208,13 +208,12 @@ public class MarkedHcGenerator {
     private void materializeCurrentNode() {
 
         TIntIntIterator iter = nonReductionTentacles.iterator();
-        while(iter.hasNext()) {
+        if(iter.hasNext()) {
             iter.advance();
             int edge = iter.key();
             int tentacle = iter.value();
             Nonterminal label = currentHc.labelOf(edge);
             materialize(edge, label, tentacle);
-            break;
         }
     }
 

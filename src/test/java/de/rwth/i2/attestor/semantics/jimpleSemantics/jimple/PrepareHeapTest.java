@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -54,12 +55,12 @@ public class PrepareHeapTest {
 		Value leftExpr = new Local( listType, "x" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver());
 			
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -82,12 +83,12 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin, "next" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -111,13 +112,13 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin3, "next" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>(), false );
+		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 
-			Set<ProgramState> res = stmt.computeSuccessors( input );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			

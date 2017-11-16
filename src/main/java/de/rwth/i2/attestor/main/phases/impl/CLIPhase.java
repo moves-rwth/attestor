@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.main.settings.SettingsFileReader;
 
 public class CLIPhase extends AbstractPhase {
 
-    private String[] args;
+    private final String[] args;
 
     public CLIPhase(String[] args) {
 
@@ -24,7 +24,10 @@ public class CLIPhase extends AbstractPhase {
 
         CommandLineReader commandLineReader = new CommandLineReader();
         commandLineReader.setupCLI();
-        commandLineReader.loadSettings(args);
+        if(!commandLineReader.loadSettings(args)) {
+            commandLineReader.printHelp();
+            throw new IllegalArgumentException(commandLineReader.getParsingError());
+        }
         if( commandLineReader.hasSettingsFile() ){
             SettingsFileReader settingsReader =
                     new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );

@@ -2,21 +2,20 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.strategies.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,17 +46,19 @@ public class ReturnValueStmt extends Statement {
 	}
 
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException{
 
-		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState);
+		options.update(this, programState);
+
+		programState = programState.clone();
 
 		ConcreteValue concreteReturn;
 		try {
-			concreteReturn = returnValue.evaluateOn( jimpleProgramState );
+			concreteReturn = returnValue.evaluateOn( programState );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
-			concreteReturn = jimpleProgramState.getUndefined();
+			concreteReturn = programState.getUndefined();
 		}
 		if( !( concreteReturn.type().equals( expectedType ) ) ){
 			logger.debug( "type mismatch. Expected: " + expectedType + " got: " + concreteReturn.type() );
@@ -66,20 +67,19 @@ public class ReturnValueStmt extends Statement {
 		if( concreteReturn.isUndefined() ){
 			logger.warn( "return value evaluated to undefined. No return will be attached" );
 		}else{
-			jimpleProgramState.setIntermediate( "@return", concreteReturn );
+			programState.setIntermediate( "@return", concreteReturn );
 		}
 
 	  	// -1 since this statement has no successor location
 		int nextPC = -1;
-		jimpleProgramState.setProgramCounter(nextPC);
-		
-		removeLocals( jimpleProgramState );
-		return SingleElementUtil.createSet( jimpleProgramState );
+		programState.setProgramCounter(nextPC);
+		removeLocals( programState );
+		return Collections.singleton(programState);
 	}
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return returnValue.needsMaterialization( (JimpleProgramState) programState );
+		return returnValue.needsMaterialization( programState );
 	}
 
 	public String toString(){
@@ -108,7 +108,7 @@ public class ReturnValueStmt extends Statement {
      * Removes local variables from the current block.
      * @param programState The programState whose local variables should be removed.
      */
-	private void removeLocals( JimpleProgramState programState ){
+	private void removeLocals( ProgramState programState ){
 		int scope = programState.getScopeDepth();
 		HeapConfiguration heap = programState.getHeap();
 		HeapConfigurationBuilder builder = heap.builder();

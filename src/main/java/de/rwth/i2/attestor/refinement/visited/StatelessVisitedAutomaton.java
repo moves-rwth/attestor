@@ -17,7 +17,7 @@ public class StatelessVisitedAutomaton implements StatelessHeapAutomaton {
 
     private static final Logger logger = LogManager.getLogger("StatelessVisitedAutomaton");
 
-    private Marking marking;
+    private final Marking marking;
 
     public StatelessVisitedAutomaton(Marking marking) {
 

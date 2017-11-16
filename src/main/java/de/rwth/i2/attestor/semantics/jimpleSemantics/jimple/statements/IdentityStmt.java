@@ -1,17 +1,17 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.JimpleUtil;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -50,38 +50,26 @@ public class IdentityStmt extends Statement {
 	 * (i.e. this statement can only be called once per intermediate)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors( ProgramState programState )
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
 			throws NotSufficientlyMaterializedException{
 
-		JimpleProgramState jimpleProgramState = JimpleUtil.deepCopy( (JimpleProgramState) programState );
+		options.update(this, programState);
 
-		ConcreteValue concreteRHS = jimpleProgramState.removeIntermediate( rhs );
-
-		/*
-		if( concreteRHS.isUndefined() ){
-			logger.debug( rhs + " is not attached to the heap. (Continued by ignoring." );
-		}else{
-			if( !( lhs.getType().equals( concreteRHS.type() ) ) ){
-				String msg = "The type of the resulting ConcreteValue for rhs does not match ";
-				msg += " with the type of the lhs";
-				msg += "\n expected: " + lhs.getType() + " got: " + concreteRHS.type();
-				logger.debug( msg );
-			}
-		}
-		*/
+		programState = programState.clone();
+		ConcreteValue concreteRHS = programState.removeIntermediate( rhs );
 
 		try {
-			lhs.setValue( jimpleProgramState, concreteRHS );
+			lhs.setValue( programState, concreteRHS );
 		} catch (NullPointerDereferenceException e) {
 			logger.error(e.getErrorMessage(this));
 		}
-		
-		return JimpleUtil.createSingletonAndUpdatePC(jimpleProgramState, nextPC);
+
+		return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
 	}
 
 	@Override
 	public boolean needsMaterialization( ProgramState programState ){
-		return lhs.needsMaterialization( (JimpleProgramState) programState );
+		return lhs.needsMaterialization( programState );
 	}
 
 	public String toString(){

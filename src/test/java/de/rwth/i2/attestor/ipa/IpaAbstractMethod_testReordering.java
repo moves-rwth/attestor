@@ -18,7 +18,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class IpaAbstractMethod_testReordering {
 
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
-	
+
 	Type type = Settings.getInstance().factory().getType("someType");
 	String nonterminalLabel = "IpaAbstractMethodTest";
 	
