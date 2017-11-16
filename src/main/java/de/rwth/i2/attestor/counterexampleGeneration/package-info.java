@@ -1,5 +1,5 @@
 /**
- * This package contains all necessary classes to perform counterexample generation.
+ * This package containsSubsumingState all necessary classes to perform counterexample generation.
  * That is, the class {@link de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator}
  * takes a {@link de.rwth.i2.attestor.counterexampleGeneration.Trace} -- a path through a previously generated state
  * space -- that violates a given LTL property.

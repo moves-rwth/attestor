@@ -153,11 +153,7 @@ public class ReachableFragmentComputer {
 		Set<Integer> nodesInReachableFragment = idMapping.keySet();
 		for( Integer n : nodesInReachableFragment ) {
 			if( ! cutpoints.contains( n ) ) {
-				//try{
-					remainingFragmentBuilder.removeIsolatedNode(n);
-				/*}catch( Exception e ){
-					System.out.println("only temporarily for debug. Remove.");
-				}*/
+				remainingFragmentBuilder.removeIsolatedNode(n);
 			}
 		}
 	}

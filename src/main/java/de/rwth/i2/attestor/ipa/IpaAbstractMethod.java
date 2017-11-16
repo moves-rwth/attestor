@@ -34,8 +34,12 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getFinalStates(HeapConfiguration input) {
-		return null; // TODO
+	public Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer) {
+		try {
+			return getResultStates(input, observer);
+		} catch (StateSpaceGenerationAbortedException e) {
+			throw new IllegalStateException("No contract found");
+		}
 	}
 
 	public void addContracts( IpaPrecondition precondition, List<HeapConfiguration> postconditions ){
@@ -50,9 +54,18 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer)
 													throws StateSpaceGenerationAbortedException {
 
+		observer.update(this, input);
+		return getResultStates(input, observer);
+	}
+
+	public Set<ProgramState> getResultStates(ProgramState input, SemanticsObserver observer)
+			throws StateSpaceGenerationAbortedException {
 		Set<ProgramState> result = new HashSet<>();
-		for( HeapConfiguration postConfig : getIPAResult( input, observer ) ){
-			result.add( Settings.getInstance().factory().createProgramState( postConfig, 0 ) );
+		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
+			ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
+			state.setProgramCounter(0);
+			state.setScopeDepth(0);
+			result.add(state);
 		}
 
 		return result;
@@ -68,19 +81,19 @@ public class IpaAbstractMethod extends AbstractMethod {
 		int placeholderPos = splitConfig.second().second();
 
 		Entry<IpaPrecondition, List<HeapConfiguration>> contract = contracts.getContract( reachableFragment );
-		if( contract == null ){ 
-			
+		if( contract == null || !isReuseResultsEnabled()){
+
 			computeContract(input, reachableFragment, observer);
 			contract = contracts.getContract(reachableFragment);
 		}else{
 			IpaPrecondition precondition = contract.getKey();
-			remainingFragment = adaptExternalOrdering( precondition, reachableFragment, 
+			remainingFragment = adaptExternalOrdering( precondition, reachableFragment,
 					remainingFragment, placeholderPos);
 		}
 
 			List<HeapConfiguration> postconditions = contract.getValue();
 			return applyContract(remainingFragment, placeholderPos, postconditions );
-		
+
 	}
 
 	private void computeContract(ProgramState input, HeapConfiguration reachableFragment, SemanticsObserver observer)

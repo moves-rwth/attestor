@@ -55,7 +55,7 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
                     Collections.singleton(requiredFinalState)
             );
         } else {
-            Set<ProgramState> finalStates = method.getFinalStates(input.getHeap());
+            Set<ProgramState> finalStates = method.getFinalStates(input, this);
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
             requiredNoOfFinalStates = finalStates.size();
         }

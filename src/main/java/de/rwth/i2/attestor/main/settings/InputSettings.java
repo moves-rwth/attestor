@@ -183,7 +183,7 @@ public class InputSettings {
 
     /**
      * Sets the path to the file holding the initial state.
-     * @param pathToInput The directory that contains the file holding the initial state.
+     * @param pathToInput The directory that containsSubsumingState the file holding the initial state.
      */
 	public void setPathToInput(String pathToInput) {
 		this.pathToInput = pathToInput;

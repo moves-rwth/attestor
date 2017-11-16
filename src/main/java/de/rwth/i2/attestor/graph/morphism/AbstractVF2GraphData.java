@@ -65,9 +65,9 @@ public abstract class AbstractVF2GraphData {
 
 	/**
 	 * Checks whether the partial morphism stored for the graph underlying this AbstractVF2GraphData
-	 * contains a matching for the given node.
+	 * containsSubsumingState a matching for the given node.
 	 * @param node The node that should be checked for a matching node.
-	 * @return true if and only if the stored morphism already contains the given node.
+	 * @return true if and only if the stored morphism already containsSubsumingState the given node.
 	 */
 	public abstract boolean containsMatch(int node);
 

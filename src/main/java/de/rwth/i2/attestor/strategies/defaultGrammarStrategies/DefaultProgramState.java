@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.strategies.defaultGrammarStrategies;
 
 
+import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -22,6 +23,12 @@ public class DefaultProgramState extends GeneralProgramState {
      * The logger of this class.
      */
 	private static final Logger logger = LogManager.getLogger( "DefaultProgramState" );
+
+	private static HeapInclusionStrategy heapInclusionStrategy = new NormalFormInclusionStrategy();
+
+	public static void setHeapInclusionStrategy(HeapInclusionStrategy strategy) {
+		heapInclusionStrategy = strategy;
+	}
 
     /**
      * Initializes a program state with the default scope depth.
@@ -174,7 +181,21 @@ public class DefaultProgramState extends GeneralProgramState {
 
         return programCounter == state.programCounter
 					&& scopeDepth == state.scopeDepth
-                    && heap.equals(otherHeap);
+					&& heap.equals(otherHeap);
 	}
 
+	public boolean isSubsumedBy(ProgramState otherState) {
+
+		if(otherState == this) {
+			return true;
+		}
+
+		if(otherState == null) {
+			return false;
+		}
+
+		return programCounter == otherState.getProgramCounter()
+				&& scopeDepth == otherState.getScopeDepth()
+				&& heapInclusionStrategy.subsumes(heap, otherState.getHeap());
+	}
 }

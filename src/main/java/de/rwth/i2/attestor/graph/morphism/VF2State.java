@@ -115,7 +115,6 @@ public class VF2State {
 	 */
 	public boolean nextCandidate(boolean multipleExternalMatches) {
 
-		// TODO treatment of external nodes might still be problematic. Make sure that we still get a partial order!
 		if(!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
 			return computeOutgoingCandidates(multipleExternalMatches);
 		} else if(!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {

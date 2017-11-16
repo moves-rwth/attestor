@@ -205,7 +205,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 
 	/**
 	 * instantiates all nonterminals in the graph which require this.
-	 * For example if a graph contains the two indexed nonterminals Nt[s,()] and Nt[Z]
+	 * For example if a graph containsSubsumingState the two indexed nonterminals Nt[s,()] and Nt[Z]
 	 * and the given instantiation is [s,Z], then the graph will afterwards contain
 	 * the two nonterminals Nt[s,s,Z] and Nt[Z] 
 	 * 

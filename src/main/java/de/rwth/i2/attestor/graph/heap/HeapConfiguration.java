@@ -250,5 +250,4 @@ public interface HeapConfiguration {
 	 *         to node.
 	 */
 	TIntIntMap attachedNonterminalEdgesWithNonReductionTentacle(int node);
-
 }

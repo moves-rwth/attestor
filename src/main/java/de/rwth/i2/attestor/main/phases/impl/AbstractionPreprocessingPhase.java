@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.inclusion.MinDistanceInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
@@ -24,6 +25,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.strategies.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.IndexedNonterminal;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
@@ -54,6 +56,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         setupMaterialization();
         setupCanonicalization();
+        setupInclusionCheck();
         setupAbortTest();
         setupStateLabeling();
         setupStateRefinement();
@@ -141,6 +144,17 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         }
         CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
+    }
+
+    private void setupInclusionCheck() {
+
+        final int abstractionDistance = settings.options().getAbstractionDistance();
+        if(abstractionDistance > 0 && !settings.options().isIndexedMode()) {
+            DefaultProgramState.setHeapInclusionStrategy(new MinDistanceInclusionStrategy(grammar));
+            logger.debug("Setup inclusion strategy to isomorphism checking with materialization.");
+        } else {
+            logger.debug("Setup inclusion strategy to isomorphism checking.");
+        }
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {

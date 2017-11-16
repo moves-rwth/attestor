@@ -38,8 +38,8 @@ import gnu.trove.map.hash.TIntIntHashMap;
  *     In contrast, a node may have an arbitrary number of incoming selector edges.
  * </li>
  * <li>Nonterminal edges are labeled with {@link Nonterminal}. 
- *     In the underlying LabeledDigraph a nonterminal edge contains no incoming edges.
- *     Moreover, a nonterminal edge with {@link Nonterminal#getRank()} equals to k contains exactly k 
+ *     In the underlying LabeledDigraph a nonterminal edge containsSubsumingState no incoming edges.
+ *     Moreover, a nonterminal edge with {@link Nonterminal#getRank()} equals to k containsSubsumingState exactly k
  *     outgoing edges in the underlying LabeledDigraph that correspond to its tentacles.
  *     Thus, these outgoing edges are labeled with integers 0,1,...,k-1, respectively.
  *     The target of an outgoing edge labeled with i then corresponds to the i-th node attached to the
@@ -48,7 +48,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
  *     In this setting an edge labeled with i denotes the i-th tentacle of a nonterminal edge. 
  * </li>
  * <li>Variable edges are labeled with {@link Variable}.
- *     In the underlying LabeledDigraph a variable edge contains no incoming edges.
+ *     In the underlying LabeledDigraph a variable edge containsSubsumingState no incoming edges.
  *     Moreover, each variable edge has exactly one outgoing edge in the underlying LabeledDigraph
  *     whose target is the unique node corresponding to the value of the variable.
  *     This unique outgoing edge is always labeled with the integer value 0.
@@ -196,7 +196,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 * @param capacity The initial capacity of the returned list.
 	 * @param filterPredicate A predicate that takes a private ID of an element of this InternalHeapConfiguration
 	 *                        and returns true if and only if the element should belong to the returned list.
-	 * @return A list that contains all public IDs whose corresponding private IDs satisfy filterPredicate.
+	 * @return A list that containsSubsumingState all public IDs whose corresponding private IDs satisfy filterPredicate.
 	 */
 	private TIntArrayList filterElements(int capacity, IntPredicate filterPredicate) {
 
@@ -232,7 +232,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	 * @param attached A list of private IDs of elements belonging to this InternalHeapConfiguration.
 	 * @param filterPredicate A predicate that takes a private ID of an element of this InternalHeapConfiguration
 	 *                        and returns true if and only if the element should belong to the returned list.
-	 * @return A repetition-free list that contains all public IDs whose corresponding private IDs satisfy filterPredicate.
+	 * @return A repetition-free list that containsSubsumingState all public IDs whose corresponding private IDs satisfy filterPredicate.
 	 */
 	private TIntArrayList filterAttachedElements(TIntArrayList attached, IntPredicate filterPredicate) {
 

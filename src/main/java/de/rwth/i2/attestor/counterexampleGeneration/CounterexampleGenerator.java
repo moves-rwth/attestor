@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
 
@@ -16,7 +15,7 @@ import java.util.*;
  *
  * The main idea to generate suitable input states is to perform another symbolic execution of the program
  * with respect to the trace's initial state. In contrast to the usual state space generation, however,
- * no abstraction is performed. Moreover, each state now contains two heap configurations:
+ * no abstraction is performed. Moreover, each state now containsSubsumingState two heap configurations:
  * <ol>
  *     <li>One heap configuration is used by the state space generation to perform the symbolic execution.</li>
  *     <li>A second heap configuration is materialized together with the first heap configuration. However, no
@@ -87,8 +86,11 @@ public final class CounterexampleGenerator {
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSemanticsObserver(s, trace))
                 .setExplorationStrategy((s,sp) -> {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
-                    ProgramState canon = canonicalizationStrategy.canonicalize(semantics, s);
-                    return trace.contains(canon);
+                    ProgramState canon = s;
+                    if(semantics.permitsCanonicalization()) {
+                        canon = canonicalizationStrategy.canonicalize(semantics, s);
+                    }
+                    return trace.containsSubsumingState(canon);
                 })
                 .setStateSpaceSupplier(getStateSpaceSupplier())
                 .setAbortStrategy(s -> {})

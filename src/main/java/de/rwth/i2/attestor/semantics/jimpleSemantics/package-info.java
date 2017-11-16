@@ -1,5 +1,5 @@
  /**
- *  This package contains all classes which deal with the translation of Jimple elements, such as statements, values
+ *  This package containsSubsumingState all classes which deal with the translation of Jimple elements, such as statements, values
   *  and types to semantics objects used within attestor.
  *  <br>
  *  Classes that deal with the translation process are in sub-package

@@ -44,7 +44,7 @@ public class StateSpaceGenerator {
 	 * Stores the state space generated upon instantiation of
 	 * this generator.
 	 */
-	StateSpace stateSpace; // TODO = new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize());
+	StateSpace stateSpace;
 
 	/**
 	 * Stores the program configurations that still have

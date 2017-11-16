@@ -3,7 +3,7 @@
  * Collection of all available analysis strategies, i.e.
  * full configurations of the state space generation algorithm.
  *
- * This package contains general strategies classes that are widely applicable to customize a program analysis
+ * This package containsSubsumingState general strategies classes that are widely applicable to customize a program analysis
  * with Attestor.
  *
  * Specialized versions based on standard hyperedge replacement grammars

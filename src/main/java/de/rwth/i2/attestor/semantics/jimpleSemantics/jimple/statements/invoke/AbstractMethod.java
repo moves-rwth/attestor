@@ -60,7 +60,7 @@ public abstract class AbstractMethod {
 		this.method = new Program( program );
 	}
 
-	public abstract Set<ProgramState> getFinalStates(HeapConfiguration input);
+	public abstract Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer);
 
 	/**
 	 * @return the method body / abstract semantics

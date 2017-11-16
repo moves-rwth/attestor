@@ -21,7 +21,7 @@ class SelectorDistanceHelper {
 	 * It essentially uses Dijkstra's shortest path algorithm.
 	 * @param graph The graph under consideration.
 	 * @param id An identifier of a node belonging to graph.
-	 * @return A list in which the n-th entry contains the distance of the n-th node of graph to the node with identifier id.
+	 * @return A list in which the n-th entry containsSubsumingState the distance of the n-th node of graph to the node with identifier id.
 	 */
 	static TIntArrayList getSelectorDistances(Graph graph, int id) {
 		

@@ -30,7 +30,7 @@ public class SettingsFileReader {
 
     /**
      * Creates a SettingsFileReader to parse a JSON file.
-     * @param file A JSON file that contains settings.
+     * @param file A JSON file that containsSubsumingState settings.
      */
 	public SettingsFileReader( String file ) {
 		Scanner scan;
