@@ -51,9 +51,11 @@ public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransf
             } else {
                 logger.warn("violated.");
                 allSatisfied = false;
-                FailureTrace failureTrace = proofStructure.getFailureTrace();
                 formulaResults.put(formula, false);
-                checkCounterexample(formula, failureTrace);
+                // TODO: Counterexample generation is turned off for now until we have working language inclusion
+                // TODO: implementation in the presence of positive abstraction distances.
+                // FailureTrace failureTrace = proofStructure.getFailureTrace();
+                //checkCounterexample(formula, failureTrace);
             }
         }
     }
