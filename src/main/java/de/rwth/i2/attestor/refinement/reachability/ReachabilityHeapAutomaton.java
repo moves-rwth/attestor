@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.main.settings.FactorySettings;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
-import de.rwth.i2.attestor.strategies.VariableScopes;
+import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;

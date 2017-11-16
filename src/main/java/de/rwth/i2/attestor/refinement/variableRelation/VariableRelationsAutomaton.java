@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.refinement.variableRelation;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
-import de.rwth.i2.attestor.strategies.VariableScopes;
+import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collections;

@@ -5,7 +5,7 @@
  * to construct a StateSpaceGenerator and generate a state space.
  *
  * State space generation is parametrized by various strategy classes that are passed to configure
- * the actually performed generation. This includes the following strategies:
+ * the actually performed generation. This includes the following programState:
  * <ol>
  *     <li>
  *         {@link de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy}

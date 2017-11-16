@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.main.settings.StateSpaceGenerationSettings;
 import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.VariableScopes;
+import de.rwth.i2.attestor.semantics.util.VariableScopes;
 
 import java.util.Set;
 

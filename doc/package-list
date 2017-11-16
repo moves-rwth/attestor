@@ -45,10 +45,10 @@ de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr
 de.rwth.i2.attestor.semantics.jimpleSemantics.translation
 de.rwth.i2.attestor.semantics.util
 de.rwth.i2.attestor.stateSpaceGeneration
-de.rwth.i2.attestor.strategies
-de.rwth.i2.attestor.strategies.defaultGrammarStrategies
-de.rwth.i2.attestor.strategies.indexedGrammarStrategies
-de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index
-de.rwth.i2.attestor.strategies.stateRefinement
+de.rwth.i2.attestor.programState
+de.rwth.i2.attestor.programState.defaultState
+de.rwth.i2.attestor.programState.indexedState
+de.rwth.i2.attestor.programState.indexedState.index
+de.rwth.i2.attestor.programState.stateRefinement
 de.rwth.i2.attestor.types
 de.rwth.i2.attestor.util

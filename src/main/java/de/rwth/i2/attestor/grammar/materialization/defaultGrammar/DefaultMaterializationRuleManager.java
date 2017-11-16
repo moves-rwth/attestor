@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonte
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.RefinedDefaultNonterminal;
+import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 
 import java.util.ArrayList;
 import java.util.Collection;

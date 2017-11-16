@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 
 /**
  * This class provides the methods to canonicalisation which are specific for

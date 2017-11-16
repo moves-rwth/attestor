@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.strategies.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 
 import java.util.*;
 

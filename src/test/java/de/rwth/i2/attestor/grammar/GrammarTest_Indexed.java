@@ -16,8 +16,8 @@ import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonte
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.*;
-import de.rwth.i2.attestor.strategies.indexedGrammarStrategies.index.*;
+import de.rwth.i2.attestor.programState.indexedState.*;
+import de.rwth.i2.attestor.programState.indexedState.index.*;
 import gnu.trove.iterator.TIntIterator;
 
 public class GrammarTest_Indexed {

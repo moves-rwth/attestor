@@ -8,7 +8,7 @@ import java.util.List;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

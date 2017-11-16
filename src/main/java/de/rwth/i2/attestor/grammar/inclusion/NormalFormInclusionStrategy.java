@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.inclusion;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.HeapInclusionStrategy;
+import de.rwth.i2.attestor.programState.defaultState.HeapInclusionStrategy;
 
 public class NormalFormInclusionStrategy implements HeapInclusionStrategy {
 

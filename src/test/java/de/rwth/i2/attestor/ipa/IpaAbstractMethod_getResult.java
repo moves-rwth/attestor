@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.contains;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.strategies.defaultGrammarStrategies.DefaultProgramState;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
