@@ -32,7 +32,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 	
 	@Override
-	public Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer) {
+	public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
 		try {
 			return getResultStates(input, observer);
 		} catch (StateSpaceGenerationAbortedException e) {
@@ -51,14 +51,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer)
+	public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
 													throws StateSpaceGenerationAbortedException {
 
 		observer.update(this, input);
 		return getResultStates(input, observer);
 	}
 
-	public Set<ProgramState> getResultStates(ProgramState input, SemanticsObserver observer)
+	public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
 		Set<ProgramState> result = new HashSet<>();
 		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
@@ -71,7 +71,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return result;
 	}
 
-	public List<HeapConfiguration> getIPAResult( ProgramState input, SemanticsObserver observer )
+	public List<HeapConfiguration> getIPAResult( ProgramState input, SymbolicExecutionObserver observer )
 			throws StateSpaceGenerationAbortedException{
 		HeapConfiguration currentConfig = input.getHeap();
 		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
@@ -95,7 +95,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		
 	}
 	
-	private void computeContract(ProgramState input, HeapConfiguration reachableFragment, SemanticsObserver observer)
+	private void computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
 		
 		contracts.addPrecondition( reachableFragment );

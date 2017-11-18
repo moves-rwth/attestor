@@ -96,7 +96,7 @@ public class SSGBuilder {
 			generator.addUnexploredState(state);
 		}
 
-		generator.semanticsObserver = generator.semanticsObserverSupplier.get(generator);
+		generator.symbolicExecutionObserver = generator.semanticsObserverSupplier.get(generator);
 		return generator;
 	}
 

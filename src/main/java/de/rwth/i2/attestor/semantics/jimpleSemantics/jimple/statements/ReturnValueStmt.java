@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
@@ -46,10 +46,10 @@ public class ReturnValueStmt extends Statement {
 	}
 
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
 			throws NotSufficientlyMaterializedException{
 
-		options.update(this, programState);
+		observer.update(this, programState);
 
 		programState = programState.clone();
 

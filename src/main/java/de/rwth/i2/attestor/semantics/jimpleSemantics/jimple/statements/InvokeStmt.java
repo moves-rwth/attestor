@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.Ab
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -51,28 +51,28 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-		options.update(this, programState);
+		observer.update(this, programState);
 
 		programState = programState.clone();
 
-		invokePrepare.prepareHeap( programState, options );
+		invokePrepare.prepareHeap( programState, observer );
 
 		Set<ProgramState> methodResult = method.getResult(
 				programState,
-				options
+				observer
 		);
 
-		methodResult.forEach( x -> invokePrepare.cleanHeap(x, options ) );
+		methodResult.forEach( x -> invokePrepare.cleanHeap(x, observer ) );
 		methodResult.forEach(ProgramState::clone);
 		methodResult.forEach( x -> x.setProgramCounter(nextPC) );
 		
 		return methodResult;
 	}
 
-	public ProgramState getCleanedResultState(ProgramState state, SemanticsObserver options)  {
+	public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options)  {
 		invokePrepare.cleanHeap(state, options);
 		return state;
 	}

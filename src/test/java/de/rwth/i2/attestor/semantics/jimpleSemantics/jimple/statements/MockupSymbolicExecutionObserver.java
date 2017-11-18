@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 
 import java.util.ArrayList;
 
-public class MockupSemanticsObserver implements SemanticsObserver {
+public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserver {
 
 
     @Override
@@ -33,7 +33,7 @@ public class MockupSemanticsObserver implements SemanticsObserver {
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSemanticsObserver())
+                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver())
                 .build()
                 .generate();
     }

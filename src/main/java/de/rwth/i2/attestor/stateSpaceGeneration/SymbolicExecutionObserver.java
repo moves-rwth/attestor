@@ -7,7 +7,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
  *
  * @author Christoph
  */
-public interface SemanticsObserver {
+public interface SymbolicExecutionObserver {
 
     /**
      * Callback function to update the state space generation whenever a statement is executed.

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public abstract class AbstractMethod {
 	 *         given input.
 	 * @throws StateSpaceGenerationAbortedException
 	 */
-	public abstract Set<ProgramState> getResult(ProgramState input, SemanticsObserver options)
+	public abstract Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver options)
 			throws StateSpaceGenerationAbortedException;
 
 	/**
@@ -60,7 +59,7 @@ public abstract class AbstractMethod {
 		this.method = new Program( program );
 	}
 
-	public abstract Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer);
+	public abstract Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer);
 
 	/**
 	 * @return the method body / abstract semantics

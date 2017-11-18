@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +34,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getFinalStates(ProgramState input, SemanticsObserver observer) {
+	public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
 
 		return knownInputs.get(input.getHeap());
 	}
@@ -54,7 +54,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	}
 
 	@Override
-	public Set<ProgramState> getResult(ProgramState input, SemanticsObserver observer )
+	public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer )
 		throws StateSpaceGenerationAbortedException {
 
 		observer.update(this, input);

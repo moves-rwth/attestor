@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -60,7 +60,7 @@ public class PrepareHeapTest {
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver());
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver());
 			
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -88,7 +88,7 @@ public class PrepareHeapTest {
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -118,7 +118,7 @@ public class PrepareHeapTest {
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			

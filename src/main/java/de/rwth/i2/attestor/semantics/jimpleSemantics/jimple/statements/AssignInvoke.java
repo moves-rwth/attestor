@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -68,13 +68,13 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 	 * as it is clearly not live at this point.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
 			throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-		options.update(this, programState);
+		observer.update(this, programState);
 
 		programState = programState.clone();
-		invokePrepare.prepareHeap( programState, options );
+		invokePrepare.prepareHeap( programState, observer );
 		
 		if( lhs instanceof Local ){
 			programState.leaveScope();
@@ -84,13 +84,13 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 
 		Set<ProgramState> methodResult = method.getResult(
 				programState,
-				options
+				observer
 		);
 
 		Set<ProgramState> assignResult = new HashSet<>();
 		for( ProgramState resState : methodResult ) {
 
-			resState = getCleanedResultState(resState, options);
+			resState = getCleanedResultState(resState, observer);
 			ProgramState freshState = resState.clone();
 			freshState.setProgramCounter(nextPC);
 			assignResult.add( freshState );
@@ -99,7 +99,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 		return assignResult;
 	}
 
-	public ProgramState getCleanedResultState(ProgramState state, SemanticsObserver options)
+	public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options)
 			throws NotSufficientlyMaterializedException {
 
 		ConcreteValue concreteRHS = state.removeIntermediate( "@return" );

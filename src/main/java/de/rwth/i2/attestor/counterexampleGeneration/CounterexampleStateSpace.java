@@ -25,7 +25,7 @@ final class CounterexampleStateSpace implements StateSpace {
     private final CanonicalizationStrategy canonicalizationStrategy;
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
-    private final SemanticsObserver invokeObserver;
+    private final SymbolicExecutionObserver invokeObserver;
 
     private final Set<ProgramState> finalStates = new HashSet<>();
 
@@ -33,7 +33,7 @@ final class CounterexampleStateSpace implements StateSpace {
                              CanonicalizationStrategy canonicalizationStrategy,
                              Set<ProgramState> requiredFinalStates,
                              InvokeCleanup invokeCleanup,
-                             SemanticsObserver invokeObserver) {
+                             SymbolicExecutionObserver invokeObserver) {
 
         this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;

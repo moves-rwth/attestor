@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -26,10 +26,10 @@ public class ReturnVoidStmt extends Statement {
 	 * and returns the resulting heap with exit location (-1)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
 			throws NotSufficientlyMaterializedException{
 
-		options.update(this, programState);
+		observer.update(this, programState);
 
 		programState = programState.clone();
 

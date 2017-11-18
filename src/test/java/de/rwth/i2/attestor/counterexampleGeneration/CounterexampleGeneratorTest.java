@@ -48,7 +48,7 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             finalState = program.getStatement(0)
-                    .computeSuccessors(initialState.clone(), new MockupSemanticsObserver()).iterator().next();
+                    .computeSuccessors(initialState.clone(), new MockupSymbolicExecutionObserver()).iterator().next();
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }
@@ -166,7 +166,7 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             Set<ProgramState> successors = invokeStmt.computeSuccessors(initialState.clone(),
-                    new SemanticsObserver() {
+                    new SymbolicExecutionObserver() {
                         @Override
                         public void update(Object handler, ProgramState input) {
 

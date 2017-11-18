@@ -83,7 +83,7 @@ public final class CounterexampleGenerator {
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setDeadVariableElimination(deadVariableEliminationEnabled)
                 .setBreadthFirstSearchEnabled(true)
-                .setSemanticsOptionsSupplier(s -> new CounterexampleSemanticsObserver(s, trace))
+                .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
                 .setExplorationStrategy((s,sp) -> {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
                     ProgramState canon = s;

@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -68,7 +68,7 @@ public class IfStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver observer)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
 			throws NotSufficientlyMaterializedException{
 
 		observer.update(this, programState);

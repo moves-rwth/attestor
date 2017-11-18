@@ -54,7 +54,7 @@ public class AssignStmtTest {
 			
 			DefaultProgramState input = new DefaultProgramState(testGraph);
 			
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSemanticsObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
 			
 			assertNotNull( "test graph became null", testGraph);
 			assertEquals( "testGraph has changed", test, testGraph.toString() );

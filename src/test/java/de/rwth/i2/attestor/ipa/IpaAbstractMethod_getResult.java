@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.ipa;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSemanticsObserver;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class IpaAbstractMethod_getResult {
 		ProgramState input = createInput();
 		HeapConfiguration expected = createExpected();
 		
-		assertThat( ipa.getIPAResult(input, new MockupSemanticsObserver()), contains( expected ) );
+		assertThat( ipa.getIPAResult(input, new MockupSymbolicExecutionObserver()), contains( expected ) );
 	}
 
 

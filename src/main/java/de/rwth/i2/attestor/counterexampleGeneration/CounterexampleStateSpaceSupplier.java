@@ -18,7 +18,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
-    private SemanticsObserver invokeObserverOfPreviousProcedure = null;
+    private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
 
     CounterexampleStateSpaceSupplier(Program program, CanonicalizationStrategy canonicalizationStrategy) {
 
@@ -31,7 +31,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         this.finalStatesOfPreviousProcedure = states;
     }
 
-    void setInvokeCleanupOfPreviousProcedure(InvokeCleanup invokeCleanup, SemanticsObserver observer) {
+    void setInvokeCleanupOfPreviousProcedure(InvokeCleanup invokeCleanup, SymbolicExecutionObserver observer) {
 
         this.invokeCleanupOfPreviousProcedure = invokeCleanup;
         this.invokeObserverOfPreviousProcedure = observer;

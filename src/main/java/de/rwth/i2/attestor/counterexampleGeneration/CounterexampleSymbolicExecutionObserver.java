@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Christoph
  */
-final class CounterexampleSemanticsObserver implements SemanticsObserver {
+final class CounterexampleSymbolicExecutionObserver implements SymbolicExecutionObserver {
 
     private final StateSpaceGenerator stateSpaceGenerator;
     private final CounterexampleStateSpaceSupplier stateSpaceSupplier;
@@ -23,8 +23,8 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
     private ProgramState requiredFinalState = null;
     private int requiredNoOfFinalStates = 1;
 
-    CounterexampleSemanticsObserver(StateSpaceGenerator stateSpaceGenerator,
-                                    Trace trace) {
+    CounterexampleSymbolicExecutionObserver(StateSpaceGenerator stateSpaceGenerator,
+                                            Trace trace) {
 
         this.stateSpaceGenerator = stateSpaceGenerator;
         this.stateSpaceSupplier = (CounterexampleStateSpaceSupplier) stateSpaceGenerator.getStateSpaceSupplier();

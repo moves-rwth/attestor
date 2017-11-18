@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 import java.util.*;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,8 +20,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
  * only be visible inside the method, e.g. references which the method did not
  * remove and its local variables.
  * <br><br>
- * Call {@link #prepareHeap(ProgramState, SemanticsObserver) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(ProgramState, SemanticsObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState, SymbolicExecutionObserver) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState, SymbolicExecutionObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * 
  * @author Hannah Arndt
  *
@@ -65,7 +65,7 @@ public abstract class InvokeHelper {
 	 * @exception NotSufficientlyMaterializedException if the argument or the base value
 	 * can not be evaluated on the heap before it is materialized.
 	 */
-	public abstract void prepareHeap(ProgramState programState, SemanticsObserver options )
+	public abstract void prepareHeap(ProgramState programState, SymbolicExecutionObserver options )
 			throws NotSufficientlyMaterializedException;
 
 	/**
@@ -79,7 +79,7 @@ public abstract class InvokeHelper {
 	 *            intermediates and local variables)
 	 * @param options Current configuration of the symbolic execution that uses this InvokeHelper.
 	 */
-	public abstract void cleanHeap( ProgramState programState, SemanticsObserver options );
+	public abstract void cleanHeap( ProgramState programState, SymbolicExecutionObserver options );
 	
 	InvokeHelper() {
 		potentialViolationPoints = new ViolationPoints();
@@ -101,7 +101,7 @@ public abstract class InvokeHelper {
 	}
 
 
-	void appendArguments(ProgramState programState, SemanticsObserver options)
+	void appendArguments(ProgramState programState, SymbolicExecutionObserver options)
 			throws NotSufficientlyMaterializedException {
 
 		for( int i = 0; i < argumentValues.size(); i++ ){

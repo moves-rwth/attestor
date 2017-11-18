@@ -230,7 +230,7 @@ public class FactorySettings {
                 .setBreadthFirstSearchEnabled(false)
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
-                .setSemanticsOptionsSupplier(DefaultSemanticsObserver::new);
+                .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new);
 
     }
 
