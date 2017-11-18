@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -38,6 +39,14 @@ final class CounterexampleSemanticsObserver implements SemanticsObserver {
             updateInvoke((InvokeCleanup) handler, input);
         } else if(handler instanceof AbstractMethod) {
             updateMethod( (AbstractMethod) handler, input);
+        } else if(handler.getClass() == NondeterminismMessage.class) {
+            /* Since nondeterminism due to overapproximation cannot occur during counterexample generation
+               (we never perform abstraction), we know at this point that nondeterminism was caused by
+               some kind of unsupported operation, such as arithmetical operations. In this case, we play
+               safe and report that our counterexample generation failed.
+             */
+            throw new IllegalStateException("Counterexample might be spurious due to encountered nondeterminism" +
+                    " caused by an unsupported program statement.");
         }
     }
 

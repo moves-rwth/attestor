@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
@@ -45,12 +46,15 @@ public class IfStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
+	private final NondeterminismMessage nondeterminismMessage;
+
 	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
 
 		this.conditionValue = condition;
 		this.truePC = truePC;
 		this.falsePC = falsePC;
 		this.liveVariableNames = liveVariableNames;
+		this.nondeterminismMessage = new NondeterminismMessage(this);
 	}
 
 	/**
@@ -64,10 +68,10 @@ public class IfStmt extends Statement {
 	 * it will be removed from the heap to enable abstraction.
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver options)
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SemanticsObserver observer)
 			throws NotSufficientlyMaterializedException{
 
-		options.update(this, programState);
+		observer.update(this, programState);
 
 		Set<ProgramState> defaultRes = new HashSet<>();
 		defaultRes.add(programState.shallowCopyUpdatePC(truePC));
@@ -86,13 +90,14 @@ public class IfStmt extends Statement {
 		}
 		
 		if( concreteCondition.isUndefined() ){
+			observer.update(nondeterminismMessage, programState);
 			return defaultRes;
 		}
 		if( !concreteCondition.type().equals( Settings.getInstance().factory().getType( "int" ) ) ){
 			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
 		}
 
-		if(options.isDeadVariableEliminationEnabled()) {
+		if(observer.isDeadVariableEliminationEnabled()) {
 			DeadVariableEliminator.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
 		}
 
@@ -101,6 +106,7 @@ public class IfStmt extends Statement {
 		}else if( concreteCondition.equals( falseValue )){
 			return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
 		}else{
+			observer.update(nondeterminismMessage, programState);
 			return defaultRes;
 		}
 	}
