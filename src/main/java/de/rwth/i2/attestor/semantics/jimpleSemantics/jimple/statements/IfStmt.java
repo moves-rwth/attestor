@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -93,7 +93,7 @@ public class IfStmt extends Statement {
 		}
 
 		if(options.isDeadVariableEliminationEnabled()) {
-			VariablesUtil.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
+			DeadVariableEliminator.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
 		}
 
 		if( concreteCondition.equals( trueValue ) ){

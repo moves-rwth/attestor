@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
@@ -92,8 +92,8 @@ public class AssignStmt extends Statement {
 		}
 
 		if(options.isDeadVariableEliminationEnabled()) {
-			VariablesUtil.removeDeadVariables(rhs.toString(), programState, liveVariableNames);
-			VariablesUtil.removeDeadVariables(lhs.toString(), programState, liveVariableNames);
+			DeadVariableEliminator.removeDeadVariables(rhs.toString(), programState, liveVariableNames);
+			DeadVariableEliminator.removeDeadVariables(lhs.toString(), programState, liveVariableNames);
 		}
 
 		ProgramState result = programState.clone();

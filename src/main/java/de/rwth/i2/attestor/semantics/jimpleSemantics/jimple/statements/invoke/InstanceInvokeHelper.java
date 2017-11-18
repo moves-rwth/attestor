@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.VariablesUtil;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
@@ -97,7 +97,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 			String type = "";
 			programState.setIntermediate( "@this:" + type, concreteBase );
 			if(options.isDeadVariableEliminationEnabled()) {
-				VariablesUtil.removeDeadVariables( baseValue.toString(), programState, liveVariableNames );
+				DeadVariableEliminator.removeDeadVariables( baseValue.toString(), programState, liveVariableNames );
 			}
 		}
 

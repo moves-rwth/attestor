@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
+package de.rwth.i2.attestor.semantics.util;
 
 
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * An auxiliary class to remove dead variables from a given executable.
  */
-public class VariablesUtil {
+public class DeadVariableEliminator {
 
     /**
      * Removes all dead variables from a given expression.
