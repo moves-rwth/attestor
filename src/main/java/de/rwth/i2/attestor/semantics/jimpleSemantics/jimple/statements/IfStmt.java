@@ -116,12 +116,6 @@ public class IfStmt extends Statement {
 	}
 
 	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return false;
-	}
-	
-	@Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return conditionValue.getPotentialViolationPoints();

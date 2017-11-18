@@ -76,13 +76,7 @@ public class IdentityStmt extends Statement {
 		return lhs + " = " + rhs + ";";
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return true;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return lhs.getPotentialViolationPoints();

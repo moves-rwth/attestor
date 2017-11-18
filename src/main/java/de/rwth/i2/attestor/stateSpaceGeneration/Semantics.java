@@ -34,11 +34,6 @@ public interface Semantics {
     boolean needsMaterialization(ProgramState programState);
 
     /**
-     * @return True if and only if executing this statement always yields at most one successor.
-     */
-    boolean hasUniqueSuccessor();
-
-    /**
      * @return All potential violation points that may prevent execution of this statement.
      */
     ViolationPoints getPotentialViolationPoints();

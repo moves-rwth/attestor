@@ -114,12 +114,6 @@ public class AssignStmt extends Statement {
 	}
 
 	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return true;
-	}
-	
-	@Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return potentialViolationPoints;

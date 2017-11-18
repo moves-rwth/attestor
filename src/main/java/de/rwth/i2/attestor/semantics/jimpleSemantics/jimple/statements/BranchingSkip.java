@@ -60,13 +60,7 @@ public class BranchingSkip extends Statement {
 		return res;
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-
-		return false;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return ViolationPoints.getEmptyViolationPoints();

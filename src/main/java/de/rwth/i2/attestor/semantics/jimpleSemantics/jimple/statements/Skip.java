@@ -45,13 +45,7 @@ public class Skip extends Statement {
 		return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return true;
-	}
-
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return ViolationPoints.getEmptyViolationPoints();

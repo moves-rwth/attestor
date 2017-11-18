@@ -43,13 +43,7 @@ public class GotoStmt extends Statement {
 		return Collections.singleton(state.shallowCopyUpdatePC(nextPC));
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-
-		return true;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return ViolationPoints.getEmptyViolationPoints();

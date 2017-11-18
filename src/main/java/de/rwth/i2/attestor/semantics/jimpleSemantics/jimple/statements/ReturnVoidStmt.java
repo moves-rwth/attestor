@@ -50,13 +50,7 @@ public class ReturnVoidStmt extends Statement {
 		return "return;";
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return true;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return ViolationPoints.getEmptyViolationPoints();

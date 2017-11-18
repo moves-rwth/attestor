@@ -87,13 +87,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
 		return invokePrepare.baseValueString() + method.toString() + "(" + invokePrepare.argumentString() + ");";
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-
-		return false;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return invokePrepare.getPotentialViolationPoints();

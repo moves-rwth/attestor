@@ -35,13 +35,7 @@ public class TerminalStatement implements Semantics {
 		return false;
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return false;
-	}
-
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return ViolationPoints.getEmptyViolationPoints();

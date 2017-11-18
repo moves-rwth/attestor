@@ -86,13 +86,7 @@ public class ReturnValueStmt extends Statement {
 		return "return " + returnValue + ";";
 	}
 
-	@Override
-	public boolean hasUniqueSuccessor() {
-		
-		return true;
-	}
-	
-	@Override
+    @Override
 	public ViolationPoints getPotentialViolationPoints() {
 		
 		return returnValue.getPotentialViolationPoints();
