@@ -23,11 +23,13 @@ public class FailureTrace implements Trace {
         do {
             int stateId = current.getProgramState();
             stateIdTrace.addFirst(stateId);
-            stateTrace.addFirst(stateSpace.getState(stateId));
+            ProgramState state = stateSpace.getState(stateId);
+            stateTrace.addFirst(state);
             current = current.getParent();
         } while(current != null);
     }
 
+    @Override
     public List<Integer> getStateIdTrace() {
         return new LinkedList<>(stateIdTrace);
     }

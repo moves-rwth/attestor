@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.LTLResultTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class CounterexampleGenerationPhase extends AbstractPhase implements CounterexampleTransformer {
 
-    private LTLResultTransformer modelCheckingResults;
+    private ModelCheckingResultsTransformer modelCheckingResults;
     private final Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
 
     @Override
@@ -30,7 +30,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     @Override
     protected void executePhase() {
 
-        modelCheckingResults = getPhase(LTLResultTransformer.class);
+        modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
         for(Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
             if(!result.getValue()) {
                 LTLFormula formula = result.getKey();
@@ -74,6 +74,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         logSum("+-------------------------------------------------------------------+");
         for(Map.Entry<LTLFormula, HeapConfiguration> result : counterexamples.entrySet()) {
             logSum(String.format("|  %s", result.getKey().getFormulaString()));
+            logSum("| Trace is " + modelCheckingResults.getTraceOf(result.getKey()).getStateIdTrace());
             logger.info(result.getValue());
         }
         logSum("+-------------------------------------------------------------------+");

@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.Map;
 
-public interface LTLResultTransformer {
+public interface ModelCheckingResultsTransformer {
 
     Map<LTLFormula, Boolean> getLTLResults();
 

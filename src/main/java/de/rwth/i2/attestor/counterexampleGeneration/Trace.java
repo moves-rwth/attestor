@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Interface defining a trace within a state space that is used to define actual program states that cause a
@@ -11,6 +12,8 @@ import java.util.Iterator;
  * @author Christoph
  */
 public interface Trace {
+
+    List<Integer> getStateIdTrace();
 
     ProgramState getInitialState();
     ProgramState getFinalState();

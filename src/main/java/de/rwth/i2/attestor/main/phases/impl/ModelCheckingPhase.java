@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.LTLResultTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.modelChecking.FailureTrace;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ModelCheckingPhase extends AbstractPhase implements LTLResultTransformer {
+public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingResultsTransformer {
 
     private final Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
     private final Map<LTLFormula, Trace> counterexampleTraces = new HashMap<>();
