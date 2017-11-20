@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 public class HcToJavaTest {
 
     @Test
-    @Ignore
     public void testSimple() {
 
         HeapConfiguration hc = ExampleHcImplFactory.getLongConcreteSLL()
@@ -21,7 +20,6 @@ public class HcToJavaTest {
 
         HcToJava export = new HcToJava(hc, writer, "\t");
         try {
-            export.declareVariables();
             export.translateHc();
             writer.flush();
         } catch (IOException e) {

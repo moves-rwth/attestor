@@ -34,12 +34,12 @@ public class HcToJava {
 
     }
 
-    public void declareVariables() throws IOException {
+    public void declareVariables(String modifier) throws IOException {
 
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         while(iter.hasNext()) {
             int var = iter.next();
-            declareVariable(var);
+            declareVariable(var, modifier);
         }
     }
 
@@ -122,7 +122,7 @@ public class HcToJava {
         writer.write(builder.toString());
     }
 
-    private void declareVariable(int var) throws IOException {
+    private void declareVariable(int var, String modifier) throws IOException {
 
         String name = heapConfiguration.nameOf(var);
 
@@ -134,6 +134,8 @@ public class HcToJava {
         Type type = heapConfiguration.nodeTypeOf(targetNode);
 
         String builder = indentPrefix +
+                modifier +
+                " " +
                 type +
                 " " +
                 name +
