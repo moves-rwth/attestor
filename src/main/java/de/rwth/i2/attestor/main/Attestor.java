@@ -73,6 +73,7 @@ public class Attestor {
 				.addPhase( new AbstractionPreprocessingPhase() )
 				.addPhase( new StateSpaceGenerationPhase() )
 				.addPhase( new ModelCheckingPhase() )
+				.addPhase( new CounterexampleGenerationPhase() )
 				.addPhase( new ReportGenerationPhase() )
 				.execute();
 
