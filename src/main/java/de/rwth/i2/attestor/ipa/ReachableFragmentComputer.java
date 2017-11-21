@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
- * This a algorithm class storing some of its
+ * This is an algorithm class storing some of its
  * intermediate results as fields to reduce parameters.
  * 
  * @author hannah

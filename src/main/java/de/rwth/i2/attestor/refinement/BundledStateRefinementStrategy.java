@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.refinement;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public class BundledStateRefinementStrategy implements StateRefinementStrategy {
     }
 
     @Override
-    public ProgramState refine(ProgramState state) {
+    public ProgramState refine(Semantics semantics, ProgramState state) {
 
-        strategies.forEach(f -> f.refine(state));
+        strategies.forEach(f -> f.refine(semantics, state));
         return state;
     }
 }

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 
@@ -23,7 +24,7 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
         return StateSpaceGenerator.builder()
                 .addInitialState(initialState)
                 .setProgram(program)
-                .setStateRefinementStrategy(s -> s)
+                .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setAbortStrategy(new StateSpaceBoundedAbortStrategy(500, 50))
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())
                 .setMaterializationStrategy(

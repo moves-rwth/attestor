@@ -2,5 +2,5 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 
 public interface StateRefinementStrategy {
 
-    ProgramState refine(ProgramState state);
+    ProgramState refine(Semantics semantics, ProgramState state);
 }

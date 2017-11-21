@@ -62,6 +62,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         if(settings.options().isIndexedMode()) {
 
+            // in the long run, we should make this an option in the settings
             if(BasicNonterminal.hasNonterminal("BT"))  {
                 settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
             }

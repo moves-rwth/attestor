@@ -47,6 +47,15 @@ public interface HeapConfigurationBuilder {
 	 * @return the builder
 	 */
 	HeapConfigurationBuilder removeIsolatedNode(int node);
+
+	/**
+	 * Removes the given node from the underlying HeapConfiguration.
+	 * This method also removes all edges attached to the node.
+	 * @param node ID of the node to remove
+	 * @return the builder
+	 */
+	HeapConfigurationBuilder removeNode(int node);
+
 	
 	/**
 	 * Adds a new selector edge that is labeled with 'sel' and points from node 'from' to node 'to'.

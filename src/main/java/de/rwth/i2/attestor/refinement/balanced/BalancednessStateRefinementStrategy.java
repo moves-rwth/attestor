@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -15,7 +16,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class BalancednessStateRefinementStrategy implements StateRefinementStrategy {
 
     @Override
-    public ProgramState refine(ProgramState state) {
+    public ProgramState refine(Semantics semantics, ProgramState state) {
 
         BalancednessHelper.updateSelectorAnnotations(state.getHeap());
         return state;

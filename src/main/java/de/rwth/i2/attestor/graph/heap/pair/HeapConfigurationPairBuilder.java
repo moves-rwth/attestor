@@ -49,6 +49,12 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
     }
 
     @Override
+    public HeapConfigurationBuilder removeNode(int node) {
+        this.actualBuilder.removeNode(node);
+        return this;
+    }
+
+    @Override
     public HeapConfigurationBuilder addSelector(int from, SelectorLabel sel, int to) {
 
         this.actualBuilder.addSelector(from, sel, to);

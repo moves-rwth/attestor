@@ -16,6 +16,15 @@ public class MockupTrace implements Trace {
     }
 
     @Override
+    public List<Integer> getStateIdTrace() {
+        List<Integer> result = new ArrayList<>();
+        for(ProgramState s : states) {
+            result.add(s.getStateSpaceId());
+        }
+        return result;
+    }
+
+    @Override
     public ProgramState getInitialState() {
         return states.get(0);
     }
