@@ -19,9 +19,9 @@ import gnu.trove.list.array.TIntArrayList;
 public class IpaContractCollection {
 
 	private class IpaContract{
-		public IpaContract(HeapConfiguration precondition, ArrayList<HeapConfiguration> postconditions) {
+		public IpaContract(HeapConfiguration precondition, List<HeapConfiguration> postconditions2) {
 			this.precondition = precondition;
-			this.postconditions = postconditions;
+			this.postconditions = postconditions2;
 		}
 		public HeapConfiguration precondition;
 		public List<HeapConfiguration> postconditions;
@@ -93,13 +93,22 @@ public class IpaContractCollection {
 	}
 
 
-	public void addPrecondition( HeapConfiguration precondition ){
+	public void addContract( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
 		int hashCode = precondition.hashCode();
 		if( ! map.containsKey( hashCode ) ){
 			map.put( hashCode, new ArrayList<>() );
 		}
 
-		map.get( hashCode ).add( new IpaContract( precondition, new ArrayList<>() ) );
+		map.get( hashCode ).add( new IpaContract( precondition, postconditions ) );
+	}
+	
+	public void addPostconditionsTp( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
+		if( ! this.hasMatchingPrecondition(precondition) ){
+
+			this.addContract(precondition, new ArrayList<>() );
+		}
+		List<HeapConfiguration> currentPostconditions = this.getPostconditions( precondition );
+		currentPostconditions.addAll( postconditions );
 	}
 
 	public boolean hasMatchingPrecondition( HeapConfiguration reachableFragment ){
