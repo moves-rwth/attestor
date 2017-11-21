@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
-import soot.jimple.parser.node.TInt;
 
 /**
  * All the messy details of a {@link HeapConfigurationBuilder} for {@link InternalHeapConfiguration}s. 
@@ -146,9 +145,6 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new IllegalArgumentException("Provided node is not isolated.");
 		}
 
-
-
-		
 		removeElement(node, privateId);
 		--heapConf.countNodes;
 
@@ -298,7 +294,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		}
 		
 		if(heapConf.graph.isExternal(privateId)) {
-			throw new IllegalArgumentException("Provided node is alread external.");
+			throw new IllegalArgumentException("Provided node is already external.");
 		}
 		
 		heapConf.graph.setExternal(privateId);
@@ -469,14 +465,14 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 			throw new IllegalArgumentException("Provided replacement is not an InternalHeapConfiguration.");
 		}
 
-		InternalHeapConfiguration repl = (InternalHeapConfiguration) replacement;
+		InternalHeapConfiguration replacementHc = (InternalHeapConfiguration) replacement;
 		int ntPrivateId = heapConf.getPrivateId(ntEdge);
 		
 		if(!heapConf.isNonterminalEdge(ntPrivateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a nonterminal edge.");
 		}
 		
-		// store originally attached nodes, because these are merged with the external nodes of repl.
+		// store originally attached nodes, because these are merged with the external nodes of replacementHc.
 		TIntArrayList tentacles = heapConf.graph.successorsOf(ntPrivateId);
 		
 		if(tentacles.size() != replacement.countExternalNodes()) {
@@ -486,7 +482,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 		
 		removeNonterminalEdge(ntEdge);
 		
-		addReplacementGraph(repl, tentacles);
+		addReplacementGraph(replacementHc, tentacles);
 		
 		return this;
 	}
@@ -574,10 +570,10 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	private void addNodeFromReplacement(InternalHeapConfiguration replacement,
                                         TIntArrayList newElements, int nodeIdToAdd) {
 		int privateId = newElements.get(nodeIdToAdd);
-		TIntArrayList succ = replacement.graph.successorsOf(nodeIdToAdd);
-		for(int j=0; j < succ.size(); j++) {
+		TIntArrayList successors = replacement.graph.successorsOf(nodeIdToAdd);
+		for(int j=0; j < successors.size(); j++) {
 			Object label = replacement.graph.edgeLabelAt(nodeIdToAdd, j);
-			int to = newElements.get( succ.get(j) );
+			int to = newElements.get( successors.get(j) );
 			heapConf.graph.addEdge(privateId, label, to);
 		}
 	}
@@ -593,11 +589,11 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	private void addNtEdgeFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int ntIdToAdd) {
 		int freshPrivateId = getNextPrivateId();
 		addPrivatePublicIdPair();
-		TIntArrayList succ = replacement.graph.successorsOf(ntIdToAdd);
-		heapConf.graph.addNode(replacement.graph.nodeLabelOf(ntIdToAdd), succ.size(), 0);
+		TIntArrayList successors = replacement.graph.successorsOf(ntIdToAdd);
+		heapConf.graph.addNode(replacement.graph.nodeLabelOf(ntIdToAdd), successors.size(), 0);
 		++heapConf.countNonterminalEdges;
-		for(int j=0; j < succ.size(); j++) {
-			int to = newElements.get(succ.get(j));
+		for(int j=0; j < successors.size(); j++) {
+			int to = newElements.get(successors.get(j));
 			heapConf.graph.addEdge(freshPrivateId, j, to);
 		}
 	}
@@ -607,7 +603,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	 * with the provided privateID. Furthermore it is attached to the node corresponding to its target.
 	 * @param replacement The HeapConfiguration that should e added to the underlying HeapConfiguration
 	 * @param newElements A list mapping all nodes of replacement to their new private IDs in the
-	 * 					  underying Internal HeapConfiguration.
+	 * 					  underlying Internal HeapConfiguration.
 	 * @param varIDtoAdd The private ID of the variable edge in replacement that should be added.
 	 */
 	private void addVariableFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int varIDtoAdd) {
