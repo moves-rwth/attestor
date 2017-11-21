@@ -73,6 +73,10 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     @Override
     public void logSummary() {
 
+        if(counterexamples.isEmpty()) {
+            return;
+        }
+
         logSum("Detected counterexamples for:");
         logSum("+-------------------------------------------------------------------+");
         for(Map.Entry<LTLFormula, HeapConfiguration> result : counterexamples.entrySet()) {

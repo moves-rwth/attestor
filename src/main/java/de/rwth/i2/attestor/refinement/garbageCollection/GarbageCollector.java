@@ -3,9 +3,8 @@ package de.rwth.i2.attestor.refinement.garbageCollection;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.util.ReachabilityChecker;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
@@ -28,6 +27,9 @@ public class GarbageCollector implements StateRefinementStrategy {
         semanticsTriggeringGarbageCollector.add(InvokeStmt.class);
         semanticsTriggeringGarbageCollector.add(AssignStmt.class);
         semanticsTriggeringGarbageCollector.add(AssignInvoke.class);
+        semanticsTriggeringGarbageCollector.add(TerminalStatement.class);
+        semanticsTriggeringGarbageCollector.add(ReturnVoidStmt.class);
+        semanticsTriggeringGarbageCollector.add(ReturnValueStmt.class);
     }
 
     @Override
@@ -75,6 +77,13 @@ public class GarbageCollector implements StateRefinementStrategy {
             int varEdge = variableIterator.next();
             variableTargets.add(heap.targetOf(varEdge));
         }
+
+        TIntIterator extIterator = heap.externalNodes().iterator();
+        while(extIterator.hasNext()) {
+            int extNode = extIterator.next();
+            variableTargets.add(extNode);
+        }
+
         return variableTargets;
     }
 }
