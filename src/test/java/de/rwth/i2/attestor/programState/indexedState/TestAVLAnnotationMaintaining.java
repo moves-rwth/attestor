@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class TestAVLAnnotationMaintaining {
 		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_AnnotationMaintaining());
 
 		BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy();
-		strategy.refine(input);
+		strategy.refine(new Skip(0), input);
 
 		assertEquals(expected, input);
 	}

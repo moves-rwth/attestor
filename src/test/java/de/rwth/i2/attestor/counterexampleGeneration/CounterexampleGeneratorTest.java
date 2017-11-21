@@ -15,6 +15,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
@@ -179,7 +180,7 @@ public class CounterexampleGeneratorTest {
                             return StateSpaceGenerator.builder()
                                     .addInitialState(initialState)
                                     .setProgram(program)
-                                    .setStateRefinementStrategy(s -> s)
+                                    .setStateRefinementStrategy(new NoStateRefinementStrategy())
                                     .setAbortStrategy(new StateSpaceBoundedAbortStrategy(500, 50))
                                     .setStateLabelingStrategy(new NoStateLabelingStrategy())
                                     .setMaterializationStrategy(factorySLL.getMaterialization())

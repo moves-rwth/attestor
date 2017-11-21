@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.refinement;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -21,13 +22,13 @@ public class JsonToStateRefinementStrategies {
             String name = jsonArray.getString(0);
             stateRefinementStrategy = parseStrategy(name);
             if(stateRefinementStrategy == null) {
-                stateRefinementStrategy = state -> state;
+                stateRefinementStrategy = new NoStateRefinementStrategy();
             }
             return;
         }
 
         if(jsonArray.length() == 0) {
-            stateRefinementStrategy = state -> state;
+            stateRefinementStrategy = new NoStateRefinementStrategy();
             return;
         }
 

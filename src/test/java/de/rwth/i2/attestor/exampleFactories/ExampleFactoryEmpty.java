@@ -3,13 +3,14 @@ package de.rwth.i2.attestor.exampleFactories;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 
 import java.util.Collections;
 
 public class ExampleFactoryEmpty {
 
     public StateRefinementStrategy getStateRefinement() {
-        return s -> s;
+        return new NoStateRefinementStrategy();
     }
 
     public MaterializationStrategy getMaterialization() {

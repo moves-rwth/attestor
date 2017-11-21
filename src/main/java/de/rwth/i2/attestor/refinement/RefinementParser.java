@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.refinement.product.ProductHeapAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,7 +75,7 @@ public class RefinementParser {
     public StateRefinementStrategy getStateRefinementStrategy() {
 
         if(stateRefinements.isEmpty()) {
-            return state -> state;
+            return new NoStateRefinementStrategy();
         }
         return new BundledStateRefinementStrategy(stateRefinements);
     }

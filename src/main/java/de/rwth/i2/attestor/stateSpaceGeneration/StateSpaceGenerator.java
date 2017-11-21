@@ -217,23 +217,23 @@ public class StateSpaceGenerator {
 			}
 
 			Semantics stateSemantics = semanticsOf(state);
-			boolean isSufficientlyMaterialized = materializationPhase(state, stateSemantics);
+			boolean isSufficientlyMaterialized = materializationPhase(stateSemantics, state);
 
 			if(isSufficientlyMaterialized) {
-				Set<ProgramState> successorStates = executionPhase(state, stateSemantics);
+				Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
 				if(successorStates.isEmpty()) {
 					stateSpace.setFinal(state);
 					// Add self-loop to each final state
 					stateSpace.addArtificialInfPathsTransition(state);
 				} else {
 					successorStates.forEach(nextState -> {
-						nextState = stateRefinementStrategy.refine(nextState);
 						Semantics semantics = semanticsOf(nextState);
-						nextState = canonicalizationPhase(nextState, semantics);
+						nextState = stateRefinementStrategy.refine(semantics, nextState);
+						nextState = canonicalizationPhase(semantics, nextState);
 						if(state.getScopeDepth() == 0) {
 							stateLabelingStrategy.computeAtomicPropositions(nextState);
 						}
-						addingPhase(state, nextState, semantics);
+						addingPhase(semantics, state, nextState);
 					});
 				}
 			}
@@ -274,11 +274,11 @@ public class StateSpaceGenerator {
 	 * In the materialization phase violation points of the given state are removed until the current statement
 	 * can be executed. The materialized states are immediately added to the state space as successors of the
 	 * given state.
-	 * @param state The program state that should be materialized.
 	 * @param semantics The statement that should be executed next and thus determines the necessary materialization.
+	 * @param state The program state that should be materialized.
 	 * @return True if and only if no materialization is needed.
 	 */
-	private boolean materializationPhase(ProgramState state, Semantics semantics) {
+	private boolean materializationPhase(Semantics semantics, ProgramState state) {
 
 		List<ProgramState> materialized = materializationStrategy.materialize(
 				state,
@@ -297,10 +297,10 @@ public class StateSpaceGenerator {
 	/**
 	 * Computes canonical successors of the given program state.
 	 *
-	 * @param state The program state whose successor states shall be computed.
 	 * @param semantics The statement that should be executed.
+	 * @param state The program state whose successor states shall be computed.
 	 */
-	private Set<ProgramState> executionPhase(ProgramState state, Semantics semantics)
+	private Set<ProgramState> executionPhase(Semantics semantics, ProgramState state)
 			throws StateSpaceGenerationAbortedException {
 
 		try {
@@ -311,7 +311,7 @@ public class StateSpaceGenerator {
 		}
 	}
 
-	private ProgramState canonicalizationPhase(ProgramState state, Semantics semantics) {
+	private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
 		if(semantics.permitsCanonicalization()) {
 			state = canonicalizationStrategy.canonicalize(semantics, state);
@@ -322,12 +322,12 @@ public class StateSpaceGenerator {
 	/**
 	 * Adds a state as a successor of the given previous state to the state space
 	 * provided to no subsuming state already exists.
+	 * @param semantics The statement that has been executed on previousState to get to state.
 	 * @param previousState The predecessor of the given state.
 	 * @param state The state that should be added.
-	 * @param semantics The statement that has been executed on previousState to get to state.
 	 *
 	 */
-	private void addingPhase(ProgramState previousState, ProgramState state, Semantics semantics) {
+	private void addingPhase(Semantics semantics, ProgramState previousState, ProgramState state) {
 
 		// performance optimization that prevents isomorphism checks against states in the state space.
 		if(! semantics.permitsCanonicalization()) {

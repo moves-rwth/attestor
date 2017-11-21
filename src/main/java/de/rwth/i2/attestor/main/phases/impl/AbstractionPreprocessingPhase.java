@@ -24,6 +24,7 @@ import de.rwth.i2.attestor.main.settings.InputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -239,7 +240,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     private void setupStateRefinement() {
 
         if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
-            settings.stateSpaceGeneration().setStateRefinementStrategy(s -> s);
+            settings.stateSpaceGeneration().setStateRefinementStrategy(new NoStateRefinementStrategy());
         }
     }
 
