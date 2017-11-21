@@ -5,7 +5,9 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.digraph.LabeledDigraph;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.types.Type;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+import soot.jimple.parser.node.TInt;
 
 /**
  * All the messy details of a {@link HeapConfigurationBuilder} for {@link InternalHeapConfiguration}s. 
@@ -134,22 +136,82 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	public HeapConfigurationBuilder removeIsolatedNode(int node) {
 		
 		int privateId = heapConf.getPrivateId(node);
-		
+
 		if(!heapConf.isNode(privateId)) {
 			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
 		}
-		
+
 		if(heapConf.graph.successorSizeOf(privateId) > 0
 				|| heapConf.graph.predecessorSizeOf(privateId) > 0) {
 			throw new IllegalArgumentException("Provided node is not isolated.");
 		}
+
+
+
 		
 		removeElement(node, privateId);
 		--heapConf.countNodes;
-		
+
 		return this;
 	}
-	
+
+	@Override
+	public HeapConfigurationBuilder removeNode(int node) {
+
+		int privateId = heapConf.getPrivateId(node);
+
+		if(!heapConf.isNode(privateId)) {
+			throw new IllegalArgumentException("Provided ID does not correspond to a node.");
+		}
+
+		removeAttachedVariables(node);
+		removeAttachedNonterminalEdges(node);
+		removeIncomingSelectors(node);
+		removeOutgoingSelectors(node);
+
+		removeElement(node, privateId);
+		--heapConf.countNodes;
+
+		return this;
+	}
+
+	private void removeAttachedVariables(int node) {
+
+		TIntArrayList varEdges = heapConf.attachedVariablesOf(node);
+		for(int i=0; i < varEdges.size(); i++) {
+			int edge = varEdges.get(i);
+			removeVariableEdge(edge);
+		}
+	}
+
+	private void removeAttachedNonterminalEdges(int node) {
+		TIntArrayList ntEdges = heapConf.attachedNonterminalEdgesOf(node);
+		for(int i=0; i < ntEdges.size(); i++) {
+			int edge = ntEdges.size();
+			removeNonterminalEdge(edge);
+		}
+	}
+
+	private void removeIncomingSelectors(int node) {
+
+		TIntIterator predecessorIterator = heapConf.predecessorNodesOf(node).iterator();
+		while(predecessorIterator.hasNext()) {
+			int predecessor = predecessorIterator.next();
+			for(SelectorLabel sel : heapConf.selectorLabelsOf(predecessor)) {
+				if(heapConf.selectorTargetOf(predecessor, sel) == node) {
+					removeSelector(predecessor, sel);
+				}
+			}
+		}
+	}
+
+	private void removeOutgoingSelectors(int node) {
+
+		for(SelectorLabel sel : heapConf.selectorLabelsOf(node)) {
+			removeSelector(node, sel);
+		}
+	}
+
 	/**
 	 * Removes an existing private ID from the underlying HeapConfiguration.
 	 * @param publicId The public ID of the removed element.

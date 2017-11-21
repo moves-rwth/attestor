@@ -124,7 +124,7 @@ public class ComplexGraphBuilderTest {
 			.addNodes(type, 3, nodes)
 			.addSelector( nodes.get( 0 ), sel, nodes.get( 1 ) )
 			.build();
-		
+
 		try{
 			result.builder().removeIsolatedNode( nodes.get( 0 ) ).build();
 			fail("this should throw an error since a selector starts at the node.");
@@ -132,7 +132,7 @@ public class ComplexGraphBuilderTest {
 			//this is expected
 		}
 	}
-	
+
 	@Test
 	public void testRemoveIsolatedNodeFail3() {
 		
@@ -144,6 +144,28 @@ public class ComplexGraphBuilderTest {
 		try{
 			result.builder().removeIsolatedNode( nodes.get( 1 ) ).build();
 			fail("this should throw an error since a selector points to the node.");
+		}catch( IllegalArgumentException e ){
+			//this is expected
+		}
+	}
+
+	@Test
+	public void testRemoveNodeSuccess() {
+
+		result.builder()
+				.addNodes(type, 3, nodes)
+				.addSelector( nodes.get( 0 ), sel, nodes.get( 1 ) )
+				.addSelector( nodes.get( 0 ), selA, nodes.get( 2 ) )
+				.addSelector( nodes.get( 1 ), sel, nodes.get( 2 ) )
+				.addVariableEdge("x", nodes.get(1))
+				.build();
+
+		try{
+			result.builder().removeNode( nodes.get( 1 ) ).build();
+			assertEquals(2, result.countNodes());
+			assertEquals(0, result.countVariableEdges());
+			assertEquals(1, result.selectorLabelsOf(nodes.get(0)).size());
+			assertEquals(0, result.selectorLabelsOf(nodes.get(1)).size());
 		}catch( IllegalArgumentException e ){
 			//this is expected
 		}
