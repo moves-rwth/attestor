@@ -35,6 +35,9 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
             if(!result.getValue()) {
                 LTLFormula formula = result.getKey();
                 Trace trace = modelCheckingResults.getTraceOf(formula);
+                if(trace == null) {
+                    continue;
+                }
 
                 try {
                     checkCounterexample(formula, trace);

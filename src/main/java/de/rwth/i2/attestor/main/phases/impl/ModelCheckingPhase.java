@@ -103,7 +103,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
         if(counterexampleTraces.containsKey(formula)) {
             return counterexampleTraces.get(formula);
         }
-        throw new IllegalArgumentException("Unknown LTL formula.");
+        return null;
     }
 
     @Override
