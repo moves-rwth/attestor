@@ -19,9 +19,12 @@ de.rwth.i2.attestor.graph.morphism
 de.rwth.i2.attestor.graph.morphism.checkers
 de.rwth.i2.attestor.graph.morphism.feasibility
 de.rwth.i2.attestor.graph.morphism.terminationFunctions
+de.rwth.i2.attestor.graph.util
 de.rwth.i2.attestor.io
 de.rwth.i2.attestor.io.hcToJava
-de.rwth.i2.attestor.io.jsonExport
+de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat
+de.rwth.i2.attestor.io.jsonExport.inputFormat
+de.rwth.i2.attestor.io.jsonImport
 de.rwth.i2.attestor.ipa
 de.rwth.i2.attestor.main
 de.rwth.i2.attestor.main.phases
@@ -36,6 +39,7 @@ de.rwth.i2.attestor.programState.indexedState
 de.rwth.i2.attestor.programState.indexedState.index
 de.rwth.i2.attestor.refinement
 de.rwth.i2.attestor.refinement.balanced
+de.rwth.i2.attestor.refinement.garbageCollection
 de.rwth.i2.attestor.refinement.grammarRefinement
 de.rwth.i2.attestor.refinement.identicalNeighbourhood
 de.rwth.i2.attestor.refinement.languageInclusion
@@ -47,6 +51,7 @@ de.rwth.i2.attestor.refinement.visited
 de.rwth.i2.attestor.semantics
 de.rwth.i2.attestor.semantics.jimpleSemantics
 de.rwth.i2.attestor.semantics.jimpleSemantics.jimple
+de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages
 de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements
 de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke
 de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values
