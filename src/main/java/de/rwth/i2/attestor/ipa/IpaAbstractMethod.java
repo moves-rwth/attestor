@@ -14,9 +14,9 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod extends AbstractMethod {
-	
+
 	private static Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
-	
+
 	public static IpaAbstractMethod getMethod( String signature ){
 		if( ! knownMethods.containsKey(signature) ){
 			knownMethods.put(signature, new IpaAbstractMethod( signature ) );
@@ -30,7 +30,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		super();
 		super.setDisplayName(displayName);
 	}
-	
+
 	@Override
 	public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
 		try {
@@ -40,19 +40,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 		}
 	}
 
-	
-	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
-		if( ! contracts.hasMatchingPrecondition(precondition) ){
 
-			contracts.addPrecondition(precondition);
-		}
-		List<HeapConfiguration> currentPostconditions = contracts.getPostconditions( precondition );
-		currentPostconditions.addAll( postconditions );
+	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
+		contracts.addPostconditionsTp(precondition, postconditions);
 	}
 
 	@Override
 	public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
-													throws StateSpaceGenerationAbortedException {
+			throws StateSpaceGenerationAbortedException {
 
 		observer.update(this, input);
 		return getResultStates(input, observer);
@@ -79,37 +74,41 @@ public class IpaAbstractMethod extends AbstractMethod {
 		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
 		int placeholderPos = splittedConfig.second().second();
 
-		
+		List<HeapConfiguration> postconditions;
 		if( !contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled() ){ 
-			
-			computeContract( input, reachableFragment, observer );
+
+			postconditions = computeContract( input, reachableFragment, observer );
 
 		}else{
 			int [] reordering = contracts.getReordering( reachableFragment );
 			remainingFragment = adaptExternalOrdering( reachableFragment, remainingFragment, 
-														placeholderPos, reordering );
+					placeholderPos, reordering );
+			postconditions = contracts.getPostconditions(reachableFragment);
 		}
-		
-		List<HeapConfiguration> postconditions = contracts.getPostconditions(reachableFragment);
 		return applyContract(remainingFragment, placeholderPos, postconditions );
-		
+
 	}
-	
-	private void computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
+
+	private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
-		
-		contracts.addPrecondition( reachableFragment );
+
+		List<HeapConfiguration> postconditions = new ArrayList<>();
 		ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
 		StateSpace stateSpace = observer.generateStateSpace(method, initialState);
-		List<HeapConfiguration> postconditions = contracts.getPostconditions(reachableFragment);
 
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
 			//otherwise, any local variables are already removed 
 			if( ! Settings.getInstance().options().isRemoveDeadVariables() ){
-			removeLocals( finalState );
+				removeLocals( finalState );
 			}
 			postconditions.add( finalState.getHeap() );
 		}
+
+		if( isReuseResultsEnabled() ) {
+			contracts.addContract(reachableFragment, postconditions);
+		}
+
+		return postconditions;
 	}
 
 	private void removeLocals(ProgramState finalState) {
@@ -150,10 +149,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 
 	protected HeapConfiguration adaptExternalOrdering( HeapConfiguration reachableFragment, 
-													   HeapConfiguration remainingFragment,
-													   int placeholderPosition,
-													   int[] reordering 
-													  )
+			HeapConfiguration remainingFragment,
+			int placeholderPosition,
+			int[] reordering 
+			)
 					throws IllegalArgumentException {
 
 		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );

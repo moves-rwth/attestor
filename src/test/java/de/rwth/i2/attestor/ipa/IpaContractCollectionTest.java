@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class IpaContractCollectionTest {
 		assertNull("h1 should not get a reordering", contracts.getReordering( h1 ) );
 		assertNull("h2 should not get a reordering", contracts.getReordering( h2 ) );
 		
-		contracts.addPrecondition( h1 );
+		contracts.addContract( h1, new ArrayList<>() );
 		
 		assertTrue("should have p1", contracts.hasMatchingPrecondition(h1) );
 		assertFalse("should not have p2", contracts.hasMatchingPrecondition( h2 ) );
