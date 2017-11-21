@@ -21,9 +21,13 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
+import de.rwth.i2.attestor.main.settings.StateSpaceGenerationSettings;
+import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
+import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -34,7 +38,9 @@ import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStra
 import de.rwth.i2.attestor.types.GeneralType;
 import gnu.trove.iterator.TIntIterator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase {
@@ -239,9 +245,25 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupStateRefinement() {
 
-        if(settings.stateSpaceGeneration().getStateRefinementStrategy() == null) {
-            settings.stateSpaceGeneration().setStateRefinementStrategy(new NoStateRefinementStrategy());
+        StateSpaceGenerationSettings stateSpaceGenerationSettings = settings.stateSpaceGeneration();
+        StateRefinementStrategy stateRefinementStrategy = stateSpaceGenerationSettings.getStateRefinementStrategy();
+        boolean isGarbageCollectionEnabled = settings.options().isGarbageCollectionEnabled();
+
+        if(stateRefinementStrategy == null) {
+            if(isGarbageCollectionEnabled) {
+                stateSpaceGenerationSettings.setStateRefinementStrategy(new GarbageCollector());
+            } else {
+                stateSpaceGenerationSettings.setStateRefinementStrategy(new NoStateRefinementStrategy());
+            }
+        } else if(isGarbageCollectionEnabled){
+
+            List<StateRefinementStrategy> strategies = new ArrayList<>(2);
+            strategies.add(stateRefinementStrategy);
+            strategies.add(new GarbageCollector());
+            BundledStateRefinementStrategy newStrategy = new BundledStateRefinementStrategy(strategies);
+            stateSpaceGenerationSettings.setStateRefinementStrategy(newStrategy);
         }
+
     }
 
 

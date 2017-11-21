@@ -196,6 +196,12 @@ public class SettingsFileReader {
 			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
 		}
 
+		if( jsonOptions.has("garbageCollection") ) {
+        	options.setGarbageCollectionEnabled(
+        		jsonOptions.getBoolean("garbageCollection")
+			);
+		}
+
 		return options;
 	}
 

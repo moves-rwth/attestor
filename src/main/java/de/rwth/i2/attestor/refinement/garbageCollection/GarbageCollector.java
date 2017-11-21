@@ -35,7 +35,6 @@ public class GarbageCollector implements StateRefinementStrategy {
 
         // If the previously executed program statement cannot alter the heap
         // there is no reason to invoke the garbage collection
-
         if(!semanticsTriggeringGarbageCollector.contains(semantics.getClass())) {
            return state;
         }
@@ -47,13 +46,20 @@ public class GarbageCollector implements StateRefinementStrategy {
         );
 
         TIntSet unreachableNodes = checker.getUnreachableNodes();
+
+        if(unreachableNodes.isEmpty()) {
+            return state;
+        }
+
         TIntIterator unreachableIterator = unreachableNodes.iterator();
         HeapConfigurationBuilder builder = heap.builder();
         while(unreachableIterator.hasNext()) {
             int node = unreachableIterator.next();
             builder.removeNode(node);
         }
+        builder.build();
 
+        state.addAP("{ garbage collected }");
         logger.debug("removed " + unreachableNodes.size() + " unreachable nodes.");
         logger.trace(unreachableNodes);
 

@@ -69,6 +69,8 @@ public class OptionSettings {
 	 */
 	private boolean noExport = false;
 
+	private boolean garbageCollectionEnabled = false;
+
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
 	 */
@@ -218,5 +220,19 @@ public class OptionSettings {
 	 */
 	public void setNoExport(boolean enabled) {
 		noExport = enabled;
+	}
+
+	/**
+	 * @return True if and only if the symbolic execution has to use garbage collection
+	 */
+	public boolean isGarbageCollectionEnabled() {
+		return garbageCollectionEnabled;
+	}
+
+	/**
+	 * @param enabled True if and only if the symbolic execution should perform garbage collection
+	 */
+	public void setGarbageCollectionEnabled(boolean enabled) {
+		this.garbageCollectionEnabled = enabled;
 	}
 }

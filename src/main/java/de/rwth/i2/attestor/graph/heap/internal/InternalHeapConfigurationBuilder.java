@@ -183,7 +183,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 	private void removeAttachedNonterminalEdges(int node) {
 		TIntArrayList ntEdges = heapConf.attachedNonterminalEdgesOf(node);
 		for(int i=0; i < ntEdges.size(); i++) {
-			int edge = ntEdges.size();
+			int edge = ntEdges.get(i);
 			removeNonterminalEdge(edge);
 		}
 	}
