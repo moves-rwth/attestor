@@ -1,16 +1,17 @@
 package de.rwth.i2.attestor.programState.defaultState;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.types.Type;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Simple implementation of program states for HRG-based analysis.
@@ -30,22 +31,13 @@ public class DefaultProgramState extends GeneralProgramState {
 		heapInclusionStrategy = strategy;
 	}
 
-    /**
-     * Initializes a program state with the default scope depth.
+	/**
+     * Initializes a program state.
      * @param heap The underlying heap configuration.
      */
 	public DefaultProgramState(HeapConfiguration heap ) {
-		super(heap);
-	}
-
-    /**
-     * Initializes a program state with the default scope depth.
-     * @param heap The underlying heap configuration.
-     * @param scopeDepth The depth of the scope.
-     */
-	public DefaultProgramState(HeapConfiguration heap, int scopeDepth ) {
 		
-		super( heap, scopeDepth);
+		super( heap );
 	}
 
     /**
@@ -148,7 +140,6 @@ public class DefaultProgramState extends GeneralProgramState {
 		HeapConfiguration newHeap = heap.clone();
 		DefaultProgramState result = new DefaultProgramState(newHeap);
 		result.setProgramCounter( programCounter );
-		result.scopeDepth = scopeDepth;
 		return result;
 	}
 
@@ -156,7 +147,6 @@ public class DefaultProgramState extends GeneralProgramState {
     public int hashCode() {
 
 	    int hash = programCounter;
-	    hash = (hash << 1) ^ scopeDepth;
 	    hash = (hash << 1) ^ heap.hashCode();
 	    return hash;
     }
@@ -180,7 +170,6 @@ public class DefaultProgramState extends GeneralProgramState {
 		HeapConfiguration otherHeap = state.getHeap();
 
         return programCounter == state.programCounter
-					&& scopeDepth == state.scopeDepth
 					&& heap.equals(otherHeap);
 	}
 
@@ -195,7 +184,6 @@ public class DefaultProgramState extends GeneralProgramState {
 		}
 
 		return programCounter == otherState.getProgramCounter()
-				&& scopeDepth == otherState.getScopeDepth()
 				&& heapInclusionStrategy.subsumes(heap, otherState.getHeap());
 	}
 }

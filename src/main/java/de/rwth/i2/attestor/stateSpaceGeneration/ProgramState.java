@@ -54,23 +54,6 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	int size();
 
 	/**
-	 * Manages the scope in order to distinguish variables of the same name, for example within recursion.
-	 * This method must be called before the fixpoint for the invoked method is computed.
-	 */
-	void enterScope();
-
-	/**
-	 * Manages the scope in order to distinguish variables of the same name, for example within recursion.
-	 *
-	 * This method must be called before any value in the calling method is
-	 * assigned (for example in x = foo(), decrease must be called after evaluating
-	 * foo() but before the return value is attached to x ).
-	 */
-	void leaveScope();
-
-	void setScopeDepth(int scopeDepth);
-
-	/**
 	 * Gets the target of the variable in the current scope.
 	 *
 	 * @param variableName The name of the requested variable (without scope).
@@ -178,12 +161,6 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 	ProgramState clone();
 
-	/**
-	 * Provides the depth of the scope of this executable, which is necessary to pass this to abstract methods.
-	 *
-	 * @return The current depth of the scope of this executable.
-	 */
-	int getScopeDepth();
 
 	/**
 	 * Checks whether the set of all concrete program states of this state is subsumed by the set of all
@@ -192,4 +169,11 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 * @return true if the concretizations of this state are subsumed by the concretizations of the other state.
 	 */
 	boolean isSubsumedBy(ProgramState otherState);
+	
+	/**
+	 * determines whether this state is part of the top level statespace
+	 * (and not of the state space of a method call)
+	 * @return true if and only  if the state is from the top level
+	 */
+	public boolean isFromTopLevelStateSpace();
 }

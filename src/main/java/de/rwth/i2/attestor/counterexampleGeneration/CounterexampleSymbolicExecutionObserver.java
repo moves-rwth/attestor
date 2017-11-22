@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import java.util.Collections;
+import java.util.Set;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * A tailored observer that determines the required successor states of
@@ -35,7 +35,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     @Override
     public void update(Object handler, ProgramState input) {
 
-        if(input.getScopeDepth() == 0 && handler instanceof InvokeCleanup) {
+        if( input.isFromTopLevelStateSpace() && handler instanceof InvokeCleanup) {
             updateInvoke((InvokeCleanup) handler, input);
         } else if(handler instanceof AbstractMethod) {
             updateMethod( (AbstractMethod) handler, input);

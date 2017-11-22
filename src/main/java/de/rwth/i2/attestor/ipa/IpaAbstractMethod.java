@@ -56,10 +56,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
 		Set<ProgramState> result = new HashSet<>();
+		
 		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
 			ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
 			state.setProgramCounter(0);
-			state.setScopeDepth(0);
 			result.add(state);
 		}
 

@@ -19,7 +19,7 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
     @Override
     public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
 
-        ProgramState initialState = new DefaultProgramState(input.getHeap(), input.getScopeDepth());
+        ProgramState initialState = new DefaultProgramState(input.getHeap());
         initialState.setProgramCounter(0);
         return StateSpaceGenerator.builder()
                 .addInitialState(initialState)
