@@ -1,26 +1,22 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import static org.junit.Assert.*;
+
+import java.util.*;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class AssignStmtTest {
 
@@ -71,11 +67,11 @@ public class AssignStmtTest {
 				
 				HeapConfiguration hc = resState.getHeap();
 				
-				int varZYX = hc.variableWith("0-ZYX");
+				int varZYX = hc.variableWith("ZYX");
 				int targetZYX = hc.targetOf(varZYX);
 				int expectedNode = hc.selectorTargetOf(targetZYX, sel);
 				
-				int varXYZ = hc.variableWith("0-XYZ");
+				int varXYZ = hc.variableWith("XYZ");
 				int actualNode = hc.targetOf(varXYZ);
 
 				assertEquals( "selector not set as expected", expectedNode, actualNode );

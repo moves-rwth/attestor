@@ -126,7 +126,7 @@ public class CounterexampleGeneratorTest {
         HeapConfiguration counterexampleInput = generator.generate();
         HeapConfiguration expected = factorySLL.getListofLengthAtLeastOne();
         expected.builder()
-                .addVariableEdge("0-x", expected.nodes().get(0))
+                .addVariableEdge("x", expected.nodes().get(0))
                 .build();
         assertEquals(expected, counterexampleInput);
     }
@@ -137,7 +137,7 @@ public class CounterexampleGeneratorTest {
         ProgramState initialState = factorySLL.getInitialState();
         initialState.getHeap()
                 .builder()
-                .addVariableEdge("0-x", initialState.getHeap().nodes().get(0))
+                .addVariableEdge("x", initialState.getHeap().nodes().get(0))
                 .build();
 
         return initialState;
@@ -225,7 +225,7 @@ public class CounterexampleGeneratorTest {
         HeapConfiguration expected = factorySLL
                 .getListofLengthAtLeastOne()
                 .builder()
-                .addVariableEdge("0-x", 0)
+                .addVariableEdge("x", 0)
                 .build();
 
         assertEquals(expected, counterexampleInput);

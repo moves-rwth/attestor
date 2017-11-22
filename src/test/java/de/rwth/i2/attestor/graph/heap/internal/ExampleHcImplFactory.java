@@ -1,24 +1,17 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
-import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
-import de.rwth.i2.attestor.types.Type;
-import gnu.trove.list.array.TIntArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.programState.indexedState.*;
+import de.rwth.i2.attestor.programState.indexedState.index.*;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.types.Type;
+import gnu.trove.list.array.TIntArrayList;
 
 public final class ExampleHcImplFactory {
 
@@ -403,11 +396,11 @@ public final class ExampleHcImplFactory {
 				.addSelector( nodes.get( 1 ), nextSel, nodes.get( 2 ) )
 				.addSelector( nodes.get( 0 ), nextSel, nodes.get( 1 ) )
 				.addSelector( nodes.get( 2 ), valSelector, trueNode )
-				.addVariableEdge( "0-$r4", nodes.get( 2 ) )
-				.addVariableEdge( "0-$r6", nodes.get( 0 ) )
-				.addVariableEdge( "0-$r5", nodes.get( 1 ))
-				.addVariableEdge( "0-r8", nodes.get( 2 ) )
-				.addVariableEdge( "0-$r7", nullNode )
+				.addVariableEdge( "$r4", nodes.get( 2 ) )
+				.addVariableEdge( "$r6", nodes.get( 0 ) )
+				.addVariableEdge( "$r5", nodes.get( 1 ))
+				.addVariableEdge( "r8", nodes.get( 2 ) )
+				.addVariableEdge( "$r7", nullNode )
 				.build();
 
 	}
@@ -479,11 +472,11 @@ public final class ExampleHcImplFactory {
 				.addSelector( nodes.get(0), valSelector, trueNode )
 				.addSelector( nodes.get(1), nextSelector, nodes.get(0) )
 				.addSelector( nodes.get(2), nextSelector, nodes.get(1) )
-				.addVariableEdge( "0-$r4", nodes.get(0) )
-				.addVariableEdge( "0-$r6", nodes.get(2) )
-				.addVariableEdge( "0-$r5", nodes.get(1) )
-				.addVariableEdge( "0-r7", nodes.get(0) )
-				.addVariableEdge( "0-$z0", falseNode )
+				.addVariableEdge( "$r4", nodes.get(0) )
+				.addVariableEdge( "$r6", nodes.get(2) )
+				.addVariableEdge( "$r5", nodes.get(1) )
+				.addVariableEdge( "r7", nodes.get(0) )
+				.addVariableEdge( "$z0", falseNode )
 				.build();
 	}
 
@@ -532,11 +525,11 @@ public final class ExampleHcImplFactory {
 				.addSelector( nodes.get(1), nextSelector, nodes.get(0) )
 				.addSelector( nodes.get(1), valSelector, trueNode )
 				.addSelector( nodes.get(2), nextSelector, nodes.get(1) )
-				.addVariableEdge( "0-$z0", falseNode )
-				.addVariableEdge( "0-r3", nodes.get(2) )
-				.addVariableEdge( "0-r4", nodes.get(0) )
-				.addVariableEdge( "0-r1", nodes.get(0) )
-				.addVariableEdge( "0-r2", nodes.get(0) )
+				.addVariableEdge( "$z0", falseNode )
+				.addVariableEdge( "r3", nodes.get(2) )
+				.addVariableEdge( "r4", nodes.get(0) )
+				.addVariableEdge( "r1", nodes.get(0) )
+				.addVariableEdge( "r2", nodes.get(0) )
 				.build();
 	}
 	
@@ -832,7 +825,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(listType, 2, nodes)
 				.addNonterminalEdge(listLabel, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-				.addVariableEdge("0-x", nodes.get(0))
+				.addVariableEdge("x", nodes.get(0))
 				.build();
 	}
 
@@ -848,7 +841,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(listType, 2, nodes)
 				.addSelector(nodes.get(0), nextSel, nodes.get(1))
-				.addVariableEdge("0-x", nodes.get(0))
+				.addVariableEdge("x", nodes.get(0))
 				.build();
 	}
 
@@ -865,7 +858,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(listType, 3, nodes)
-				.addVariableEdge("0-x", nodes.get(0))
+				.addVariableEdge("x", nodes.get(0))
 				.addSelector(nodes.get(0), nextSel, nodes.get(1))
 				.addNonterminalEdge(listLabel, new TIntArrayList(new int[]{nodes.get(1), nodes.get(2)}))
 				.build();
@@ -1181,7 +1174,7 @@ public final class ExampleHcImplFactory {
 		
 		return result.builder()
 				.addNodes(type, 1, nodes)
-				.addVariableEdge("0-x", nodes.get(0))
+				.addVariableEdge("x", nodes.get(0))
 				.build();
 	}
 	
@@ -1369,12 +1362,12 @@ public final class ExampleHcImplFactory {
 				.setExternal(nodes.get(0))
 				.setExternal(nodes.get(1))
 				.setExternal(nodes.get(2))
-				.addVariableEdge("0-$r0", nodes.get(0))
+				.addVariableEdge("$r0", nodes.get(0))
 				.addSelector(nodes.get(1), list, nodes.get(0))
 				.addSelector(nodes.get(4), next, nodes.get(1))
 				.addSelector(nodes.get(4), list, nodes.get(0))
 				.addSelector(nodes.get(1), prev, nodes.get(4))
-				.addVariableEdge("0-$r1", nodes.get(4))
+				.addVariableEdge("$r1", nodes.get(4))
 				//.addSelector(nodes.get(4), list, nodes.get(5))
 				.build();
 	}
@@ -1467,7 +1460,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(type, 9, nodes)
 				.addVariableEdge(Constants.NULL, nodes.get(0))
-				.addVariableEdge("0-x", nodes.get(3))
+				.addVariableEdge("x", nodes.get(3))
 				.addSelector(nodes.get(3), left, nodes.get(1))
 				.addSelector(nodes.get(3), right, nodes.get(2))
 				.addSelector(nodes.get(4), left, nodes.get(3))
@@ -1537,7 +1530,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(type, 2, nodes)
 				.addVariableEdge(Constants.NULL, nodes.get(0))
-				.addVariableEdge("0-y", nodes.get(1))
+				.addVariableEdge("y", nodes.get(1))
 				.addSelector(nodes.get(1), left, nodes.get(0))
 				.build();
 	}
@@ -1569,7 +1562,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(type, 4, nodes)
 				.addVariableEdge(Constants.NULL, nodes.get(0))
-				.addVariableEdge("0-x", nodes.get(1))
+				.addVariableEdge("x", nodes.get(1))
 				.addSelector(nodes.get(1), left, nodes.get(0))
 				.addNonterminalEdge(path)
 					.addTentacle(nodes.get(1))

@@ -35,7 +35,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	/**
 	 * Converts the given variable name as it occurs in a program, such as "x",
 	 * into a variable name that occurs in the heap configuration corresponding to this
-	 * program state. In particular, this includes scope information, such as "0-x".
+	 * program state.
 	 *
 	 * @param originalVariableName The variable name as it occurs in the semantics.
 	 * @return The corresponding variable name as stored in the heap configuration.
