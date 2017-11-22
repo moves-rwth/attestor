@@ -68,10 +68,6 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 		programState = programState.clone();
 		invokePrepare.prepareHeap( programState, observer );
 		
-		if( lhs instanceof Local ){
-			programState.removeVariable( ((Local)lhs).getName() );
-		}
-
 		Set<ProgramState> methodResult = method.getResult(
 				programState,
 				observer
