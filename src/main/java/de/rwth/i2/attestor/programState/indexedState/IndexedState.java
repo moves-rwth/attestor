@@ -69,7 +69,7 @@ public class IndexedState extends GeneralProgramState {
 
 	@Override
 	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
-			if(from instanceof GeneralConcreteValue) {
+		if(from instanceof GeneralConcreteValue) {
 			
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			
@@ -91,10 +91,13 @@ public class IndexedState extends GeneralProgramState {
 					
 				}
 			}
-			logger.debug("getSelectorTarget: source node did not have requested selector");
 
+			if(!isIgnoredSelectorLabel(selectorName)) {
+				throw new IllegalStateException("Required selector label " + from
+						+ "." + selectorName + " is missing.");
+			}
 		} else {
-			logger.warn("getSelectorTarget got invalid source");
+			throw new IllegalStateException("getSelectorTarget got invalid source");
 		}
 		
 		return GeneralConcreteValue.getUndefined();

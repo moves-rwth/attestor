@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.programState;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -138,6 +139,10 @@ public abstract class GeneralProgramState implements ProgramState {
         return heap.countNodes();
     }
 
+    protected static boolean isIgnoredSelectorLabel(String label) {
+		return Settings.getInstance().input().isPrimitiveSelectorLabel(label);
+	}
+
 
 	@Override
 	public int getProgramCounter() {
@@ -156,6 +161,8 @@ public abstract class GeneralProgramState implements ProgramState {
 		
 		return heap;
 	}
+
+
 
 
 	@Override

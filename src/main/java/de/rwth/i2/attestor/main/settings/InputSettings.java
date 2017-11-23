@@ -94,6 +94,19 @@ public class InputSettings {
 	private final Set<String>	usedSelectorLabels = new HashSet<>();
 	private final Set<String> grammarSelectorLabels = new HashSet<>();
 
+	/**
+	 * Selector labels corresponding to variables of primitive types.
+	 */
+	private final Set<String> primitiveSelectorLabels = new HashSet<>();
+
+	public void addPrimitiveSelectorLabel(String label) {
+		primitiveSelectorLabels.add(label);
+	}
+
+	public boolean isPrimitiveSelectorLabel(String label) {
+		return primitiveSelectorLabels.contains(label);
+	}
+
     /**
      * Sets the default path to search for all possible input files.
      * @param path The default path.

@@ -3,7 +3,9 @@ package de.rwth.i2.attestor.programState.defaultState;
 
 import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -90,20 +92,21 @@ public class DefaultProgramState extends GeneralProgramState {
 			node = heap.selectorTargetOf(node, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				// this is not an error, because assignments to fields might first check whether
-				// a selector exists.
-				return GeneralConcreteValue.getUndefined();
+				if(isIgnoredSelectorLabel(sel.getLabel())) {
+					return GeneralConcreteValue.getUndefined();
+				} else {
+					throw new IllegalStateException("Required selector label " + from + "." + sel + " is missing.");
+				}
 			}
 			
 			Type type = heap.nodeTypeOf(node);
 			
 			return new GeneralConcreteValue( type, node );
 		} else {
-			logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
+			throw new IllegalStateException("getSelectorTarget did not get a GeneralConcreteValue.");
 		}
-		
-		return GeneralConcreteValue.getUndefined();
 	}
+
 
 	@Override
 	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
@@ -186,16 +189,14 @@ public class DefaultProgramState extends GeneralProgramState {
 
 	public boolean isSubsumedBy(ProgramState otherState) {
 
-		if(otherState == this) {
+		if (otherState == this) {
 			return true;
 		}
 
-		if(otherState == null) {
-			return false;
-		}
-
-		return programCounter == otherState.getProgramCounter()
+		return otherState != null
+				&& programCounter == otherState.getProgramCounter()
 				&& scopeDepth == otherState.getScopeDepth()
 				&& heapInclusionStrategy.subsumes(heap, otherState.getHeap());
+
 	}
 }
