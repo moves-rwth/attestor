@@ -4,7 +4,7 @@ import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.iterator.TIntIterator;
@@ -71,7 +71,7 @@ public class ReturnVoidStmt extends Statement {
 		while(iter.hasNext()) {
 			int var = iter.next();
 			String name = heap.nameOf(var);
-			if(VariableScopes.hasScope(name, 0)) {//TODO
+			if( !Constants.isConstant(name) ) {
 				builder.removeVariableEdge(var);
 			}
 		}
