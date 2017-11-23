@@ -1,27 +1,23 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.junit.*;
+
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class IfStmtTest {
 	
@@ -53,7 +49,7 @@ public class IfStmtTest {
 		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 		
-		Value leftExpr = new Local( listType, "x" );
+		Value leftExpr = new Local( listType, "y" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
@@ -93,7 +89,7 @@ public class IfStmtTest {
 		testState.prepareHeap();
 		
 
-		Value origin = new Local( listType, "x" );
+		Value origin = new Local( listType, "y" );
 		Value leftExpr = new Field( listType, origin, "next" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
@@ -131,7 +127,7 @@ public class IfStmtTest {
 		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 
-		Value origin1 = new Local( listType, "x" );
+		Value origin1 = new Local( listType, "y" );
 		Value origin2 = new Field( listType, origin1, "next" );
 		Value origin3 = new Field( listType, origin2, "next" );
 		Value leftExpr = new Field( listType, origin3, "next" );
