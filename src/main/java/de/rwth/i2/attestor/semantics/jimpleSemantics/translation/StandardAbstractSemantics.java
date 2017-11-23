@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
@@ -8,14 +14,8 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.Equa
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import soot.Unit;
 import soot.jimple.InstanceFieldRef;
-import soot.util.Chain;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Translator for all standard statements/values which operate on JimpleExecutables.
@@ -228,13 +228,6 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		List<Value> translatedParams = new ArrayList<>();
 		for( soot.Value sootParam : sootParams ){
 			translatedParams.add( ( topLevel.translateValue( sootParam ) ) );
-		}
-		List<String> localNames = new ArrayList<>();
-		if( expr.getMethod().hasActiveBody() ){
-			Chain<soot.Local> locals = expr.getMethod().getActiveBody().getLocals();
-			for( soot.Local local : locals ){
-				localNames.add( local.getName() );
-			}
 		}
 
 		InvokeHelper invokeHelper;
