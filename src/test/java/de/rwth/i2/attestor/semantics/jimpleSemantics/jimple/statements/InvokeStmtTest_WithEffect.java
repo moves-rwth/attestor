@@ -58,8 +58,7 @@ public class InvokeStmtTest_WithEffect {
 		methodBody.add( new ReturnValueStmt(varY, type) );
 		method.setControlFlow( methodBody );
 		
-		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(nextOfX),
-				SingleElementUtil.createList("y"));
+		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(nextOfX));
 		stmt = new InvokeStmt(method, invokeHelper, 1);
 		
 	}

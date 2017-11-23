@@ -248,8 +248,7 @@ public class CounterexampleGeneratorTest {
         procedure.setControlFlow( controlFlow );
 
         Local varX = new Local(factorySLL.getNodeType(), "x");
-        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(varX),
-                SingleElementUtil.createList("y"));
+        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(varX));
         return new AssignInvoke(varX, procedure, invokeHelper, 1);
     }
 }

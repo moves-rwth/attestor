@@ -38,15 +38,11 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * @param argumentValues
 	 *            The values which form the arguments of the method in the
 	 *            correct ordering
-	 * @param namesOfLocals
-	 *            The names of all locals which occur within the method (so they
-	 *            can be removed afterwards).
 	 */
-	public StaticInvokeHelper(List<Value> argumentValues, List<String> namesOfLocals){
+	public StaticInvokeHelper(List<Value> argumentValues){
 
 		super();
 		this.argumentValues = argumentValues;
-		this.namesOfLocals = namesOfLocals;
 		
 		precomputePotentialViolationPoints();
 

@@ -2,14 +2,12 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
@@ -34,11 +32,7 @@ public abstract class InvokeHelper {
 	 * a list with the expressions for the arguments in the correct order
 	 */
     List<Value> argumentValues;
-	/**
-	 * the names of all locals that occur in this method.
-	 * Necessary to remove them when the scope is left.
-	 */
-    List<String> namesOfLocals;
+
 
     /**
      * All (variable,selector) pairs that might require materialization before this statement can be executed.
@@ -127,15 +121,7 @@ public abstract class InvokeHelper {
 		}
 	}
 
-	/**
-	 * removes all locals from the scope of the method from the programState
-	 * @param programState the programState at the end of the method
-	 */
-    void removeLocals(ProgramState programState){
-		for( String varName : namesOfLocals ){
-			programState.removeVariable( varName );
-		}
-	}
+
 
 	/**
 	 * removes the parameters (intermediates) from the programState

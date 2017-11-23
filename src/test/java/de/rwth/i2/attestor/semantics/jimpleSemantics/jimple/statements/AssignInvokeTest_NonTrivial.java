@@ -18,7 +18,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 
 public class AssignInvokeTest_NonTrivial {
 
@@ -42,8 +41,7 @@ public class AssignInvokeTest_NonTrivial {
 		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>()));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(),
-				SingleElementUtil.createList("x"));
+		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>());
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		

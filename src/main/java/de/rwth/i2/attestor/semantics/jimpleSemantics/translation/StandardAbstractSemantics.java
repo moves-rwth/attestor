@@ -243,9 +243,9 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 			soot.Value sootBase = instanceMethod.getBase();
 			Value translatedBase = topLevel.translateValue( sootBase );
 
-			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams, localNames);
+			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams);
 		}else{
-			invokeHelper = new StaticInvokeHelper( translatedParams, localNames);
+			invokeHelper = new StaticInvokeHelper( translatedParams);
 		}
 		return invokeHelper;
 	}

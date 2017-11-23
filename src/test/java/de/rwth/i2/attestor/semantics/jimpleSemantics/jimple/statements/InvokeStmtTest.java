@@ -39,7 +39,7 @@ public class InvokeStmtTest {
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );
 		InvokeHelper invokePrepare
-			= new InstanceInvokeHelper( var, new ArrayList<>(), new ArrayList<>() );
+			= new InstanceInvokeHelper( var, new ArrayList<>() );
 		
 		stmt = new InvokeStmt( method, invokePrepare, 1 );
 		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
