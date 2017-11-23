@@ -106,7 +106,7 @@ public class ReturnValueStmt extends Statement {
 		while(iter.hasNext()) {
 			int var = iter.next();
 			String name = heap.nameOf(var);
-			if( !Constants.isConstant(name) ) { 
+			if( ! (Constants.isConstant(name) || name.startsWith("@return")) ) { 
 				builder.removeVariableEdge(var);
 			}
 		}
