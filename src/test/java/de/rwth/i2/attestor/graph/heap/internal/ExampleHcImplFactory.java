@@ -347,7 +347,7 @@ public final class ExampleHcImplFactory {
 		return result.builder()
 				.addNodes(type, 4, nodes )
 				.addVariableEdge( Constants.NULL, nodes.get( 3 ) )
-				.addVariableEdge( "x", nodes.get( 0 ) )
+				.addVariableEdge( "y", nodes.get( 0 ) )
 				.addSelector( nodes.get( 0 ), next, nodes.get( 0 ) )
 				.addSelector( nodes.get( 1 ), next, nodes.get( 2 ) )
 				.addSelector( nodes.get( 2 ), next, nodes.get( 3 ) )

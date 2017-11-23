@@ -33,7 +33,7 @@ public class FieldTest {
 		sel = BasicSelectorLabel.getSelectorLabel("next");
 
 		Type type = Settings.getInstance().factory().getType("List");
-		local = new Local( type, "x");
+		local = new Local( type, "y");
 		expr = new Field( type, local, "next");
 	}
 
@@ -59,9 +59,9 @@ public class FieldTest {
 			assertNotNull( executable );
 			
 			GeneralConcreteValue
-			expectedRes = executable.getVariableTarget("x");
+			expectedRes = executable.getVariableTarget("y");
 			
-			assertFalse("Variable 'x' should exist.", expectedRes.isUndefined());
+			assertFalse("Variable 'y' should exist.", expectedRes.isUndefined());
 			
 			int expNode = expectedRes.getNode();
 			expNode = executable.getHeap().selectorTargetOf(expNode, sel);
@@ -114,7 +114,7 @@ public class FieldTest {
 			assertNotNull("resultHeap null", executable );
 			
 			int	expectedRes = executable
-					.getVariableTarget("x").getNode();
+					.getVariableTarget("y").getNode();
 			
 			assertEquals("doesn't return correct node", expectedRes, res);			
 			
