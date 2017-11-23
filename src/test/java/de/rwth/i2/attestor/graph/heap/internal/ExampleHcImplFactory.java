@@ -1244,7 +1244,6 @@ public final class ExampleHcImplFactory {
 				.addSelector(nodes.get(0), prev, nodes.get(2))
 				.addVariableEdge(Constants.NULL, nodes.get(2))
 				.addVariableEdge("x", nodes.get(0))
-				.addVariableEdge("y", nodes.get(1))
 				.build();
 	}
 	
