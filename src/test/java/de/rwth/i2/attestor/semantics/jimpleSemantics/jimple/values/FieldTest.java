@@ -1,5 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import static org.junit.Assert.*;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -8,11 +12,6 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class FieldTest {
 
@@ -62,7 +61,7 @@ public class FieldTest {
 			GeneralConcreteValue
 			expectedRes = executable.getVariableTarget("x");
 			
-			assertNotNull("Variable 'x' should exist.", expectedRes);
+			assertFalse("Variable 'x' should exist.", expectedRes.isUndefined());
 			
 			int expNode = expectedRes.getNode();
 			expNode = executable.getHeap().selectorTargetOf(expNode, sel);
