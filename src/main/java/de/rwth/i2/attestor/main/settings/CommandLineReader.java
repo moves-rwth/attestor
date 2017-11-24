@@ -115,31 +115,9 @@ public class CommandLineReader {
 				);
 
 		cliOptions.addOption(
-				Option.builder("at")
-				.longOpt("aggressive-abstraction-threshold")
-				.hasArg()
-				.optionalArg(true)
-				.argName("int")
-				.desc("(optional) after this threshold abstraction will ignore the distance argument (default "
-						+ Settings.getInstance().options().getAggressiveAbstractionThreshold() + ")"
-						+"(only applicable to indexed analysis)")
-				.build()
-				);
-
-		cliOptions.addOption(
-				Option.builder("ar")
-				.longOpt("aggressive-abstraction-at-return")
-				.hasArg()
-				.argName("boolean")
-				.desc("(optional) if enabled, canonization will ignore depth argument on return Statements "
-						+ "(enabled by default).")
-				.build()
-				);
-
-		cliOptions.addOption(
 				Option.builder("html")
 				.longOpt("export-to-html")
-				.desc("(optional) exports generated statespace to explorable HTML files (default is false)")
+				.desc("(optional) exports generated state space to explorable HTML files (default is false)")
 				.build()
 				);
 
@@ -163,7 +141,7 @@ public class CommandLineReader {
 
 
     /**
-     * Attempts to parse the provided command line arguments and checks whether they specify the specifcation.
+     * Attempts to parse the provided command line arguments and checks whether they specify the specification.
      * @param args The command line arguments.
      * @return true if and only if the provided command line arguments specify the specification.
      */
@@ -232,7 +210,8 @@ public class CommandLineReader {
      * @param settings All settings.
      * @return The populated output settings.
      */
-	public OutputSettings getOutputSettings( Settings settings ) {
+	@SuppressWarnings("UnusedReturnValue")
+	public OutputSettings getOutputSettings(Settings settings ) {
 		OutputSettings outputSettings = settings.output();
 
 		if(cmd.hasOption("html")) {
@@ -252,7 +231,8 @@ public class CommandLineReader {
      * @param settings All settings.
      * @return The populated option settings.
      */
-	public OptionSettings getOptionSettings( Settings settings ) {
+	@SuppressWarnings("UnusedReturnValue")
+	public OptionSettings getOptionSettings(Settings settings ) {
 		
 		OptionSettings optionSettings = settings.options();
 
@@ -272,14 +252,6 @@ public class CommandLineReader {
 			optionSettings.setMaxStateSize( Integer.valueOf(cmd.getOptionValue("mh")) );
 		}
 
-		if(cmd.hasOption("at")) {
-			optionSettings.setAggressiveAbstractionThreshold( Integer.valueOf(cmd.getOptionValue("aggr")) );
-		}
-
-		if( cmd.hasOption("ar") ){
-			optionSettings.setAggressiveReturnAbstraction( Boolean.getBoolean(cmd.getOptionValue("ar")) );
-		}
-		
 		return optionSettings;
 	}
 
@@ -289,7 +261,8 @@ public class CommandLineReader {
      * @param settings All settings.
      * @return The populated input settings.
      */
-	public InputSettings getInputSettings( Settings settings ) {
+	@SuppressWarnings("UnusedReturnValue")
+	public InputSettings getInputSettings(Settings settings ) {
 		InputSettings inputSettings = settings.input();
 
 		if( cmd.hasOption("m")){
@@ -304,7 +277,8 @@ public class CommandLineReader {
 	 * @param settings All settings.
 	 * @return The populated model checking settings.
 	 */
-	public ModelCheckingSettings getMCSettings( Settings settings ) {
+	@SuppressWarnings("UnusedReturnValue")
+	public ModelCheckingSettings getMCSettings(Settings settings ) {
 		ModelCheckingSettings mcSettings = settings.modelChecking();
 		if( cmd.hasOption("mc")){
 			mcSettings.setModelCheckingEnabled( true );

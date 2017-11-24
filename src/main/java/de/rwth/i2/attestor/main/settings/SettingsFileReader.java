@@ -43,11 +43,6 @@ public class SettingsFileReader {
 
 			jsonSettings = new JSONObject(str.toString());
 			
-			//this.input = settings.getJSONObject("input");
-			//initializeOptionsFromJson( settings.getJSONObject("options") );
-			//this.options = settings.getJSONObject("options");
-			//this.output = settings.getJSONObject("output");
-			
 		} catch (FileNotFoundException e) {
 		    logger.fatal(
 		           "The settings file '" + file + "' could not be found. Execution is aborted.\n"
@@ -63,7 +58,8 @@ public class SettingsFileReader {
      * @param settings All settings.
      * @return The populated input settings.
      */
-	public InputSettings getInputSettings( Settings settings ){
+	@SuppressWarnings("UnusedReturnValue")
+	public InputSettings getInputSettings(Settings settings ){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
 		InputSettings input = settings.input();
 
@@ -160,46 +156,40 @@ public class SettingsFileReader {
      * @param settings All settings.
      * @return The populated option settings.
      */
-	public OptionSettings getOptionSettings( Settings settings ){
+	@SuppressWarnings("UnusedReturnValue")
+	public OptionSettings getOptionSettings(Settings settings ){
 		JSONObject jsonOptions = jsonSettings.getJSONObject( "options" );
+
 		OptionSettings options = settings.options();
-		
-		if(jsonOptions.has( "mode" )) {
-			options.setIndexedMode( jsonOptions.get( "mode" ).equals( "indexed" ) );
-		}
 
-		if( jsonOptions.has( "abstractionDistance" )) {
-			options.setAbstractionDistance( jsonOptions.getInt( "abstractionDistance" ) );
-		}
+		for(String key : jsonOptions.keySet()) {
 
-		if( jsonOptions.has( "maximalStateSpace") ) {
-			options.setMaxStateSpaceSize( jsonOptions.getInt( "maximalStateSpace" ) );
-		}
-
-		if( jsonOptions.has(  "maximalHeap" ) ) {
-			options.setMaxStateSize( jsonOptions.getInt( "maximalHeap" ) );
-		}
-
-		if( jsonOptions.has( "aggressiveAbstractionThreshold" )) {
-			options.setAggressiveAbstractionThreshold( jsonOptions.getInt( "aggressiveAbstractionThreshold" ));
-		}
-
-		if( jsonOptions.has( "aggressiveReturn" ) ){
-			options.setAggressiveReturnAbstraction( jsonOptions.getBoolean( "aggressiveReturn" ) );
-		}
-
-		if( jsonOptions.has( "removeDeadVariables" ) ){
-			options.setRemoveDeadVariables( jsonOptions.getBoolean( "removeDeadVariables" ) );
-		}
-
-        if( jsonOptions.has("aggressiveNullAbstraction") ){
-			options.setAggressiveNullAbstraction( jsonOptions.getBoolean("aggressiveNullAbstraction") );
-		}
-
-		if( jsonOptions.has("garbageCollection") ) {
-        	options.setGarbageCollectionEnabled(
-        		jsonOptions.getBoolean("garbageCollection")
-			);
+			switch(key) {
+				case "mode":
+					options.setIndexedMode( jsonOptions.get(key).equals( "indexed" ) );
+					break;
+				case "abstractionDistance":
+					options.setAbstractionDistance( jsonOptions.getInt(key) );
+					break;
+				case "maximalStateSpace":
+					options.setMaxStateSpaceSize( jsonOptions.getInt(key) );
+					break;
+				case "maximalHeap":
+					options.setMaxStateSize( jsonOptions.getInt(key) );
+					break;
+				case "removeDeadVariables":
+					options.setRemoveDeadVariables( jsonOptions.getBoolean(key) );
+					break;
+				case "aggressiveNullAbstraction":
+					options.setAggressiveNullAbstraction( jsonOptions.getBoolean(key) );
+					break;
+				case "garbageCollection":
+					options.setGarbageCollectionEnabled(jsonOptions.getBoolean(key));
+					break;
+				default:
+					logger.error("Ignoring unknown option: " + key);
+					break;
+			}
 		}
 
 		return options;
@@ -210,7 +200,8 @@ public class SettingsFileReader {
      * @param settings All settings.
      * @return The populated output settings.
      */
-	public OutputSettings getOutputSettings( Settings settings ){
+	@SuppressWarnings("UnusedReturnValue")
+	public OutputSettings getOutputSettings(Settings settings ){
 		JSONObject jsonOutput = jsonSettings.getJSONObject( "output" );
 		OutputSettings output = settings.output();
 		
@@ -301,6 +292,7 @@ public class SettingsFileReader {
 	 * @param settings all settings
 	 * @return the populated model checking settings
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public ModelCheckingSettings getMCSettings(Settings settings){
 		JSONObject jsonMC = jsonSettings.getJSONObject( "modelChecking" );
 		ModelCheckingSettings mc = settings.modelChecking();

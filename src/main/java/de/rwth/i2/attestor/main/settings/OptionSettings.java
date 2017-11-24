@@ -37,18 +37,6 @@ public class OptionSettings {
 	private boolean aggressiveNullAbstraction = true;
 
 	/**
-	 * The minimal number of nodes in a heap configuration before the minimal dereference depth is ignored
-	 * and abstraction is performed as aggressive as possible.
-	 */
-	private int aggressiveAbstractionThreshold = 13;
-
-	/**
-	 * Enabling this option results in ignoring restrictions to abstractions for return statements
-	 * to reduce the number of final states.
-	 */
-	private boolean aggressiveReturnAbstraction = true;
-	
-	/**
 	 * Enabling this option results in dead variables (variables that are not accessed before being rewritten in the
 	 * following) being deleted in order to enable more possible abstractions.
 	 */
@@ -135,37 +123,6 @@ public class OptionSettings {
 					"since the dereference depth is already set to 0");
 		}
 		this.aggressiveNullAbstraction = aggressiveNullAbstraction;
-	}
-
-    /**
-     * @return The minimal size of heap configurations before restrictions to potential abstractions are ignored.
-     */
-	public int getAggressiveAbstractionThreshold() {
-		return aggressiveAbstractionThreshold;
-	}
-
-	public void setAggressiveAbstractionThreshold(int aggressiveAbstractionThreshold) {
-		if(  abstractionDistance == 0 && aggressiveAbstractionThreshold > 0){
-			logger.warn("The option 'aggressiveAbstractionThreshold' will have " +
-                    "no effect since the minimal abstraction distance is 0");
-		}
-		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
-	}
-
-    /**
-     * @return True if and only if aggressive abstraction (ignoring minimal dereference depths) is performed before
-     *         procedure returns.
-     */
-	public boolean isAggressiveReturnAbstraction() {
-		return aggressiveReturnAbstraction;
-	}
-
-	public void setAggressiveReturnAbstraction(boolean aggressiveReturnAbstraction) {
-		if(  abstractionDistance == 0 && aggressiveReturnAbstraction){
-			logger.warn("The option 'aggressiveReturnAbstraction' will have no effect " +
-					" since the abstraction distance is 0");
-		}
-		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
 
     /**
