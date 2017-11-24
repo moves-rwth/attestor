@@ -44,7 +44,12 @@ public class IndexedState extends GeneralProgramState {
 		hash = (hash << 1) ^ heap.hashCode();
 		return hash;
 	}
-	
+
+	@Override
+	protected SelectorLabel getSelectorLabel(String selectorLabelName) {
+		return new AnnotatedSelectorLabel(selectorLabelName, "");
+	}
+
 	@Override
 	public boolean equals(Object other) {
 
@@ -91,11 +96,6 @@ public class IndexedState extends GeneralProgramState {
 					
 				}
 			}
-
-			if(!isIgnoredSelectorLabel(selectorName)) {
-				throw new IllegalStateException("Required selector label " + from
-						+ "." + selectorName + " is missing.");
-			}
 		} else {
 			throw new IllegalStateException("getSelectorTarget got invalid source");
 		}
@@ -131,7 +131,7 @@ public class IndexedState extends GeneralProgramState {
 			}
 			
 			AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorName, "");
-			
+
 			this.getHeap()
 			.builder()
 			.addSelector(fromNode, newSel, dTo.getNode())

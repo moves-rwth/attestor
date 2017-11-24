@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.programState;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -139,10 +140,7 @@ public abstract class GeneralProgramState implements ProgramState {
         return heap.countNodes();
     }
 
-    protected static boolean isIgnoredSelectorLabel(String label) {
-		return Settings.getInstance().input().isPrimitiveSelectorLabel(label);
-	}
-
+    protected abstract SelectorLabel getSelectorLabel(String selectorLabelName);
 
 	@Override
 	public int getProgramCounter() {
@@ -419,13 +417,25 @@ public abstract class GeneralProgramState implements ProgramState {
 		HeapConfigurationBuilder builder = heap.builder();
 		
 		try {
-			
+
 			TIntArrayList nodes = new TIntArrayList(1);
 			builder.addNodes(type, 1, nodes);
-			
 			GeneralConcreteValue res = new GeneralConcreteValue( type,  nodes.get(0) );
 
+			Map<String,String> selectorToDefaults = type.getSelectorLabels();
+			for(Map.Entry<String,String> selectorDefault : selectorToDefaults.entrySet()) {
+
+				SelectorLabel selectorLabel = getSelectorLabel(selectorDefault.getKey());
+				int target = heap.variableTargetOf(selectorDefault.getValue());
+				if(target == HeapConfiguration.INVALID_ELEMENT) {
+					throw new IllegalStateException("default target '" + selectorDefault.getValue() + "' of selector '" + selectorDefault.getKey() + "' not found.");
+				} else {
+					builder.addSelector(nodes.get(0), selectorLabel, target);
+				}
+			}
+
 			builder.build();
+
 			return res;
 		} catch( ClassCastException e ) {
 			

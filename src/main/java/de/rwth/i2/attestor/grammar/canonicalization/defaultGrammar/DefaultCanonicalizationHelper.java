@@ -44,6 +44,7 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 		if( checker.hasMatching() ) {
 
 			Matching embedding = checker.getMatching();
+
 			return replaceEmbeddingBy( toAbstract, embedding, lhs );
 		}
 		return null;

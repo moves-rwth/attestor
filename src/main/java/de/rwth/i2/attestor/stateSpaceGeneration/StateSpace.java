@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface StateSpace {
@@ -28,7 +29,7 @@ public interface StateSpace {
     void addInitialState(ProgramState state);
     void setFinal(ProgramState state);
 
-    ProgramState getStateInStateSpace(ProgramState state);
+    void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping);
 
     void addMaterializationTransition(ProgramState from, ProgramState to);
     void addControlFlowTransition(ProgramState from, ProgramState to);

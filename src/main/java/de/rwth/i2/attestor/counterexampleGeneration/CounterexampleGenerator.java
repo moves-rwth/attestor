@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.*;
 
@@ -97,6 +98,7 @@ public final class CounterexampleGenerator {
                 .setProgram(program)
                 .addInitialState(initialState)
                 .setStateCounter(states -> {})
+                .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build();
     }
 

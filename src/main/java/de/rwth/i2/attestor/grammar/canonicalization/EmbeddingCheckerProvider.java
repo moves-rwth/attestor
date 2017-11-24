@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.semantics.AggressiveTerminalStatement;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
@@ -49,13 +50,16 @@ public class EmbeddingCheckerProvider {
 
 		Class sClass = semantics.getClass();
 
-		if( graph.countNodes() > aggressiveAbstractionThreshold || (aggressiveReturnAbstraction
+		/*
+		if(graph.countNodes() > aggressiveAbstractionThreshold || (aggressiveReturnAbstraction
 				&& (
 						sClass == ReturnValueStmt.class
 				     || sClass == ReturnVoidStmt.class
 					 || sClass == TerminalStatement.class
 				)
 		)) {
+		*/
+		if(sClass == AggressiveTerminalStatement.class) {
 			return graph.getEmbeddingsOf(pattern, 0);
 		}
 

@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
+import de.rwth.i2.attestor.semantics.util.PrimitiveTypes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.types.Type;
@@ -88,14 +89,22 @@ public class DefaultProgramState extends GeneralProgramState {
 			
 			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
 			
-			int node = dFrom.getNode();
-			node = heap.selectorTargetOf(node, sel);
+			int baseNode = dFrom.getNode();
+            Type baseNodeType = heap.nodeTypeOf(baseNode);
+            if(!baseNodeType.hasSelectorLabel(selectorName)) {
+                throw new IllegalStateException("Invalid selector '" + selectorName + "' for node of type '"
+                    + baseNodeType + "'");
+            }
+
+			int node = heap.selectorTargetOf(baseNode, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				if(isIgnoredSelectorLabel(sel.getLabel())) {
-					return GeneralConcreteValue.getUndefined();
+
+			    if(baseNodeType.isPrimitiveType(selectorName)) {
+                    return GeneralConcreteValue.getUndefined();
 				} else {
-					throw new IllegalStateException("Required selector label " + from + "." + sel + " is missing.");
+                    return GeneralConcreteValue.getUndefined();
+					//throw new IllegalStateException("Required selector label " + from + "." + sel + " is missing.");
 				}
 			}
 			
@@ -164,7 +173,12 @@ public class DefaultProgramState extends GeneralProgramState {
 	    return hash;
     }
 
-	@Override
+    @Override
+    protected SelectorLabel getSelectorLabel(String selectorLabelName) {
+	    return BasicSelectorLabel.getSelectorLabel(selectorLabelName);
+    }
+
+    @Override
 	public boolean equals(Object other) {
 
 		if(other == this) {

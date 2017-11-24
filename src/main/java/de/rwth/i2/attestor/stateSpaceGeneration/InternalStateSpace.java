@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import gnu.trove.TIntCollection;
 import gnu.trove.iterator.TIntIterator;
+import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -198,6 +199,41 @@ public class InternalStateSpace implements StateSpace {
     }
 
     @Override
+    public void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping) {
+
+        initLookupTable();
+
+        TIntIterator idIterator = finalStateIds.iterator();
+        while(idIterator.hasNext()) {
+            int id = idIterator.next();
+            ProgramState state = stateIdLookupTable.get(id);
+            potentialMergeStates.remove(state);
+            otherStates.remove(state);
+            stateIdLookupTable.remove(id);
+        }
+
+        finalStateIds.clear();
+        for(ProgramState s : newFinalStates) {
+            finalStateIds.add(s.getStateSpaceId());
+            potentialMergeStates.put(s, s);
+            stateIdLookupTable.put(s.getStateSpaceId(), s);
+        }
+
+        // redirect
+        replaceIds(controlFlowSuccessors, idMapping);
+        replaceIds(artificialInfPathsSuccessors, idMapping);
+    }
+
+    private static void replaceIds(TIntObjectMap<TIntArrayList> map, Map<Integer,Integer> idMapping) {
+
+        TIntObjectIterator<TIntArrayList> iterator = map.iterator();
+        while(iterator.hasNext()) {
+            iterator.advance();
+            iterator.value().transformValues(id -> idMapping.getOrDefault(id,id) );
+        }
+    }
+
+    @Override
     public void addMaterializationTransition(ProgramState from, ProgramState to) {
 
         addTransition(from, to, materializationSuccessors);
@@ -219,21 +255,6 @@ public class InternalStateSpace implements StateSpace {
 
         initLookupTable();
         return stateIdLookupTable.get(id);
-    }
-
-    public ProgramState getStateInStateSpace(ProgramState state) {
-
-        ProgramState result = potentialMergeStates.get(state);
-        if(result != null) {
-            return result;
-        }
-        for(ProgramState s : otherStates)  {
-
-            if(s.getHeap().equals(state.getHeap())) {
-                return s;
-            }
-        }
-        return null;
     }
 
     private void addTransition(ProgramState from, ProgramState to, TIntObjectMap<TIntArrayList> successors) {

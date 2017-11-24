@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressiveAbstractionPostProcessingStrategy;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.io.FileUtils;
@@ -230,7 +231,8 @@ public class FactorySettings {
                 .setBreadthFirstSearchEnabled(false)
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
-                .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new);
+                .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
+                .setPostProcessingStrategy(new AggressiveAbstractionPostProcessingStrategy());
 
     }
 

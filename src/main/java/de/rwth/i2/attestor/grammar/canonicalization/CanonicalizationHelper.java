@@ -12,7 +12,7 @@ public interface CanonicalizationHelper {
 	 * and replaces it with a nonterminal edge labeled with lhs. 
 	 * @param toAbstract the target graph
 	 * @param rhs the pattern graph
-	 * @param lhs the label of the replacing nonterminaledge
+	 * @param lhs the label of the replacing nonterminal edge
 	 * @param semantics the current semantics statement (necessary to configure the embedding mechanism)
 	 * @return the abstracted graph if an embedding of rhs can be found, null otherwise.
 	 */
