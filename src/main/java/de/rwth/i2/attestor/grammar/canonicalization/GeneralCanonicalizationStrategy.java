@@ -5,22 +5,15 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
-import java.util.LinkedList;
-import java.util.List;
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
 
 	private final Grammar grammar;
 	private final CanonicalizationHelper canonicalizationHelper;
-	private LinkedList<HeapConfiguration> history;
 
 	public GeneralCanonicalizationStrategy( Grammar grammar, 
 											CanonicalizationHelper canonicalizationHelper ) {
@@ -32,12 +25,7 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 	@Override
 	public ProgramState canonicalize(Semantics semantics, ProgramState state ) {
 
-		history = new LinkedList<>();
 		ProgramState result = performCanonicalization( semantics, state );
-
-		if(semantics.getClass() == TerminalStatement.class && history.size() == 1 && history.getFirst().countNonterminalEdges() == 0)	{
-			return state;
-		}
 
 		return result;
 	}
@@ -51,7 +39,6 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
 				ProgramState abstractedState =
 						canonicalizationHelper.tryReplaceMatching(state, rhs, lhs, semantics );
 				if( abstractedState != null ) {
-					history.add(rhs);
 					return performCanonicalization( semantics, abstractedState );
 				}
 			}
