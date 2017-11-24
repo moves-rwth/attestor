@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
-import de.rwth.i2.attestor.semantics.AggressiveTerminalStatement;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.HashMap;
@@ -16,11 +15,11 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
     }
 
     @Override
-    public void process(StateSpaceGenerator stateSpaceGenerator) {
+    public void process(StateSpace originalStateSpace) {
 
-        assert stateSpaceGenerator.getStateSpace().getClass() == InternalStateSpace.class;
+        assert originalStateSpace.getClass() == InternalStateSpace.class;
 
-        InternalStateSpace stateSpace = (InternalStateSpace) stateSpaceGenerator.getStateSpace();
+        InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 
         Set<ProgramState> finalStates = stateSpace.getFinalStates();
 

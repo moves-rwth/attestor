@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.semantics.AggressiveTerminalStatement;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import fj.Hash;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -247,7 +245,7 @@ public class StateSpaceGenerator {
 			}
 		}
 
-		postProcessingStrategy.process(this);
+		postProcessingStrategy.process(stateSpace);
 		totalStatesCounter.addStates(stateSpace.size());
 		return stateSpace;
 	}

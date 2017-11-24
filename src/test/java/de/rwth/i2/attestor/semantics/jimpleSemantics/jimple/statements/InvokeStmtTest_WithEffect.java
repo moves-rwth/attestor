@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.semantics.util.Constants;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -44,6 +45,7 @@ public class InvokeStmtTest_WithEffect {
 		expectedHeap = expectedState.getHeap();
 		
 		Type type = Settings.getInstance().factory().getType("List");
+		type.addSelectorLabel("next", Constants.NULL);
 		Local varX = new Local(type, "x");
 		Local varY = new Local(type, "y");
 		Field nextOfX = new Field(type, varX, "next");

@@ -210,6 +210,7 @@ public class InternalStateSpace implements StateSpace {
             potentialMergeStates.remove(state);
             otherStates.remove(state);
             stateIdLookupTable.remove(id);
+            artificialInfPathsSuccessors.remove(id);
         }
 
         finalStateIds.clear();
@@ -217,11 +218,11 @@ public class InternalStateSpace implements StateSpace {
             finalStateIds.add(s.getStateSpaceId());
             potentialMergeStates.put(s, s);
             stateIdLookupTable.put(s.getStateSpaceId(), s);
+            addArtificialInfPathsTransition(s);
         }
 
         // redirect
         replaceIds(controlFlowSuccessors, idMapping);
-        replaceIds(artificialInfPathsSuccessors, idMapping);
     }
 
     private static void replaceIds(TIntObjectMap<TIntArrayList> map, Map<Integer,Integer> idMapping) {

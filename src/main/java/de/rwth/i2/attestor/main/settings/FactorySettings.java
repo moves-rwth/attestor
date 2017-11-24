@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.types.GeneralType;
@@ -233,12 +234,28 @@ public class FactorySettings {
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
                 .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
-                .setPostProcessingStrategy(
-                        (Settings.getInstance().options().getAbstractionDistance() == 1) ?
-                            new FinalStateSubsumptionPostProcessingStrategy(stateSpaceGenerationSettings.getAggressiveCanonicalizationStrategy())
-                                : new NoPostProcessingStrategy()
-                );
+                .setPostProcessingStrategy(getPostProcessingStrategy())
+                ;
 
+    }
+
+    private PostProcessingStrategy getPostProcessingStrategy() {
+
+        OptionSettings optionSettings = Settings.getInstance().options();
+        CanonicalizationStrategy aggressiveStrategy = Settings
+                .getInstance()
+                .stateSpaceGeneration()
+                .getAggressiveCanonicalizationStrategy();
+
+        if(optionSettings.getAbstractionDistance() == 0) {
+            return new NoPostProcessingStrategy();
+        }
+
+        if(optionSettings.isIndexedMode()) {
+            return new AggressivePostProcessingStrategy(aggressiveStrategy);
+        }
+
+        return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy);
     }
 
     public ProgramState createProgramState(HeapConfiguration heapConfiguration, int scopeDepth) {
