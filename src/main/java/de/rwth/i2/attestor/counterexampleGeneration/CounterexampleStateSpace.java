@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import de.rwth.i2.attestor.semantics.AggressiveTerminalStatement;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -181,6 +183,12 @@ final class CounterexampleStateSpace implements StateSpace {
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
 
         Semantics semantics = program.getStatement(state.getProgramCounter());
+
+        // TODO
+        if(semantics instanceof TerminalStatement) {
+            semantics = new AggressiveTerminalStatement();
+        }
+
         ProgramState abstractState = canonicalizationStrategy.canonicalize(semantics, state);
         abstractState.setProgramCounter(-1);
 

@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.AggressiveTerminalStatement;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
@@ -89,7 +91,12 @@ public final class CounterexampleGenerator {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
                     ProgramState canon = s;
                     if(semantics.permitsCanonicalization()) {
-                        canon = canonicalizationStrategy.canonicalize(semantics, s);
+                        // TODO
+                        if(semantics instanceof TerminalStatement) {
+                            canon = canonicalizationStrategy.canonicalize(new AggressiveTerminalStatement(), s);
+                        } else {
+                            canon = canonicalizationStrategy.canonicalize(semantics, s);
+                        }
                     }
                     return trace.containsSubsumingState(canon);
                 })

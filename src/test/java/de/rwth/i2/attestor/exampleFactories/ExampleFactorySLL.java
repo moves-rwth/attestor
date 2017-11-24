@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -32,7 +33,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     @Override
     public Type getNodeType() {
         Type result = GeneralType.getType("list");
-        result.addSelectorLabel("next", "null");
+        result.addSelectorLabel("next", Constants.NULL);
         return result;
     }
 
