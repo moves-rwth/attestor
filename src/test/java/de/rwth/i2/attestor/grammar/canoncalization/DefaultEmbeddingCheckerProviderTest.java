@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -44,6 +45,8 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect  aggressive EmbeddingChecker
 	 */
 	@Test
+	@Deprecated
+	@Ignore
 	public void testLargeState() {
 		int aggressiveAbstractionThreshold = 2;
 		boolean aggressiveReturnAbstraction = false;
@@ -64,6 +67,8 @@ public class DefaultEmbeddingCheckerProviderTest {
 	 * expect aggressive EmbeddingChecker
 	 */
 	@Test
+	@Deprecated
+	@Ignore
 	public void testAggressiveReturn() {
 		int aggressiveAbstractionThreshold = 10;
 		boolean aggressiveReturnAbstraction = true;

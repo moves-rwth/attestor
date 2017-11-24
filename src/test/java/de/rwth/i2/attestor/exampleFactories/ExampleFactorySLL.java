@@ -31,7 +31,9 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public Type getNodeType() {
-        return GeneralType.getType("list");
+        Type result = GeneralType.getType("list");
+        result.addSelectorLabel("next", "null");
+        return result;
     }
 
     @Override

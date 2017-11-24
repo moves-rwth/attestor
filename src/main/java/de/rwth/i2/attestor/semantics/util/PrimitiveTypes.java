@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.semantics.util;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 public final class PrimitiveTypes {
 
     public static final String INT_TYPE = "int" ;

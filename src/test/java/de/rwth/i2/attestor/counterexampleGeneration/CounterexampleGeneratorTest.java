@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.St
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
@@ -189,6 +190,7 @@ public class CounterexampleGeneratorTest {
                                     .setExplorationStrategy((s,sp) -> true)
                                     .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                                     .setSemanticsOptionsSupplier(s -> this)
+                                    .setPostProcessingStrategy(new NoPostProcessingStrategy())
                                     .build()
                                     .generate();
                         }
