@@ -13,7 +13,8 @@ import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressiveAbstractionPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.io.FileUtils;
@@ -204,23 +205,23 @@ public class FactorySettings {
 
     private SSGBuilder getStateSpaceGeneratorBuilder() {
 
-        StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
+        StateSpaceGenerationSettings stateSpaceGenerationSettings = Settings.getInstance().stateSpaceGeneration();
         return StateSpaceGenerator
                 .builder()
                 .setStateLabelingStrategy(
-                        settings.getStateLabelingStrategy()
+                        stateSpaceGenerationSettings.getStateLabelingStrategy()
                 )
                 .setMaterializationStrategy(
-                        settings.getMaterializationStrategy()
+                        stateSpaceGenerationSettings.getMaterializationStrategy()
                 )
                 .setCanonizationStrategy(
-                        settings.getCanonicalizationStrategy()
+                        stateSpaceGenerationSettings.getCanonicalizationStrategy()
                 )
                 .setAbortStrategy(
-                        settings.getAbortStrategy()
+                        stateSpaceGenerationSettings.getAbortStrategy()
                 )
                 .setStateRefinementStrategy(
-                        settings.getStateRefinementStrategy()
+                        stateSpaceGenerationSettings.getStateRefinementStrategy()
                 )
                 .setStateCounter(
                         this::addGeneratedStates
@@ -232,7 +233,11 @@ public class FactorySettings {
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
                 .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
-                .setPostProcessingStrategy(new AggressiveAbstractionPostProcessingStrategy());
+                .setPostProcessingStrategy(
+                        (Settings.getInstance().options().getAbstractionDistance() == 1) ?
+                            new FinalStateSubsumptionPostProcessingStrategy()
+                                : new NoPostProcessingStrategy()
+                );
 
     }
 

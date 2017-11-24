@@ -1211,21 +1211,14 @@ public final class ExampleHcImplFactory {
 		HeapConfiguration result = getListAndConstants();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		Type type = Settings.getInstance().factory().getType("node");
-
+		Type type = Settings.getInstance().factory().getType("AssignInvokeTestNonTrivial");
 		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
 		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
 
 		return result.builder()
 				.addNodes(type, 1, nodes)
 				.addSelector(nodes.get(0), next, result.variableTargetOf(Constants.NULL))
 				.addSelector(nodes.get(0), prev, result.variableTargetOf(Constants.NULL))
-				.addSelector(nodes.get(0), left, result.variableTargetOf(Constants.NULL))
-				.addSelector(nodes.get(0), right, result.variableTargetOf(Constants.NULL))
-				.addSelector(nodes.get(0), parent, result.variableTargetOf(Constants.NULL))
 				.addVariableEdge("0-x", nodes.get(0))
 				.build();
 	}
