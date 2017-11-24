@@ -9,22 +9,26 @@ import java.util.Set;
 
 public class AggressivePostProcessingStrategy implements PostProcessingStrategy {
 
+    private CanonicalizationStrategy canonicalizationStrategy;
+
+    public AggressivePostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+        this.canonicalizationStrategy = canonicalizationStrategy;
+    }
+
     @Override
     public void process(StateSpaceGenerator stateSpaceGenerator) {
 
         assert stateSpaceGenerator.getStateSpace().getClass() == InternalStateSpace.class;
 
         InternalStateSpace stateSpace = (InternalStateSpace) stateSpaceGenerator.getStateSpace();
-        CanonicalizationStrategy canonicalizationStrategy = stateSpaceGenerator.getCanonizationStrategy();
 
         Set<ProgramState> finalStates = stateSpace.getFinalStates();
-        AggressiveTerminalStatement statement = new AggressiveTerminalStatement();
 
         Map<ProgramState,ProgramState> abstractedStates = new HashMap<>();
         Map<Integer, Integer> idMap = new HashMap<>();
 
         for(ProgramState state : finalStates) {
-            ProgramState absState = canonicalizationStrategy.canonicalize(statement,state);
+            ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = abstractedStates.put(absState,absState);
             if(oldState != null) {

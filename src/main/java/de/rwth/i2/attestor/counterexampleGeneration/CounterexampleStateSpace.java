@@ -182,14 +182,7 @@ final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
 
-        Semantics semantics = program.getStatement(state.getProgramCounter());
-
-        // TODO
-        if(semantics instanceof TerminalStatement) {
-            semantics = new AggressiveTerminalStatement();
-        }
-
-        ProgramState abstractState = canonicalizationStrategy.canonicalize(semantics, state);
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
         abstractState.setProgramCounter(-1);
 
         if(invokeCleanup != null) {

@@ -235,7 +235,7 @@ public class FactorySettings {
                 .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
                 .setPostProcessingStrategy(
                         (Settings.getInstance().options().getAbstractionDistance() == 1) ?
-                            new FinalStateSubsumptionPostProcessingStrategy()
+                            new FinalStateSubsumptionPostProcessingStrategy(stateSpaceGenerationSettings.getAggressiveCanonicalizationStrategy())
                                 : new NoPostProcessingStrategy()
                 );
 

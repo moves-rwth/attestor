@@ -18,23 +18,14 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 public class EmbeddingCheckerProvider {
 	
 	private final int minDereferenceDepth;
-	private final int aggressiveAbstractionThreshold;
-	private final boolean aggressiveReturnAbstraction;
 
 	/**
 	 * Constructs an EmbeddingCheckerProvider with the given settings
 	 * @param minDereferenceDepth the distance which has to be ensured between an embedding and
 	 * the next node referenced by a variable
-	 * @param aggressiveAbstractionThreshold any graphs larger than this threshold will be abstracted
-	 * without considering the minDereferenceDepth
-	 * @param aggressiveReturnAbstraction if enabled, terminal states will be abstracted without considering
-	 * the minDereferenceDepth
 	 */
-	public EmbeddingCheckerProvider( int minDereferenceDepth,
-			int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction) {
+	public EmbeddingCheckerProvider( int minDereferenceDepth ) {
 		this.minDereferenceDepth = minDereferenceDepth;
-		this.aggressiveAbstractionThreshold = aggressiveAbstractionThreshold;
-		this.aggressiveReturnAbstraction = aggressiveReturnAbstraction;
 	}
 
 	/**
@@ -42,26 +33,9 @@ public class EmbeddingCheckerProvider {
 	 * settings and the given semantics
 	 * @param graph the target graph
 	 * @param pattern the graph which will be embedded
-	 * @param semantics the current semantics
 	 * @return the correct EmbeddingChecker
 	 */
-	public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern,
-			Semantics semantics) {
-
-		Class sClass = semantics.getClass();
-
-		/*
-		if(graph.countNodes() > aggressiveAbstractionThreshold || (aggressiveReturnAbstraction
-				&& (
-						sClass == ReturnValueStmt.class
-				     || sClass == ReturnVoidStmt.class
-					 || sClass == TerminalStatement.class
-				)
-		)) {
-		*/
-		if(sClass == AggressiveTerminalStatement.class) {
-			return graph.getEmbeddingsOf(pattern, 0);
-		}
+	public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern) {
 
 		return graph.getEmbeddingsOf(pattern, minDereferenceDepth);
 	}

@@ -91,12 +91,7 @@ public final class CounterexampleGenerator {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
                     ProgramState canon = s;
                     if(semantics.permitsCanonicalization()) {
-                        // TODO
-                        if(semantics instanceof TerminalStatement) {
-                            canon = canonicalizationStrategy.canonicalize(new AggressiveTerminalStatement(), s);
-                        } else {
-                            canon = canonicalizationStrategy.canonicalize(semantics, s);
-                        }
+                        canon = canonicalizationStrategy.canonicalize(s);
                     }
                     return trace.containsSubsumingState(canon);
                 })

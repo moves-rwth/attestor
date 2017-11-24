@@ -37,11 +37,7 @@ public abstract class AbstractExampleFactory {
     }
 
     public CanonicalizationStrategy getCanonicalization() {
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
-                0,
-                0,
-                false
-        );
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0);
         CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
         return new GeneralCanonicalizationStrategy(getGrammar(), canonicalizationHelper);
     }

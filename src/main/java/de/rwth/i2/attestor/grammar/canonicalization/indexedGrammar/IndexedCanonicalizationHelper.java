@@ -39,18 +39,14 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
 		this.indexChecker = indexChecker;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
-	 */
 	@Override
 	public ProgramState tryReplaceMatching( ProgramState state, 
-												 HeapConfiguration rhs, Nonterminal lhs,
-												Semantics semantics ) {
+												 HeapConfiguration rhs, Nonterminal lhs ) {
 
 		ProgramState result = null;
 
 		AbstractMatchingChecker checker = 
-				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs, semantics);
+				checkerProvider.getEmbeddingChecker( state.getHeap(), rhs);
 
 		if(checker.hasMatching()) {
 			Matching embedding = checker.getMatching();

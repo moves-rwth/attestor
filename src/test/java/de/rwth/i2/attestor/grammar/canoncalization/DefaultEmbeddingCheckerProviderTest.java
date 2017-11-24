@@ -107,12 +107,9 @@ public class DefaultEmbeddingCheckerProviderTest {
 		
 		final int minDereferenceDepth = 1;
 		EmbeddingCheckerProvider checkerProvider = 
-				new EmbeddingCheckerProvider( minDereferenceDepth,
-											  aggressiveAbstractionThreshold,
-											  aggressiveReturnAbstraction 	);
-		
-	
-		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern, semantics);
+				new EmbeddingCheckerProvider( minDereferenceDepth );
+
+		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern);
 		
 		assertEquals( expected.getClass(), checker.getClass() );
 		assertEquals( expected.getPattern(), checker.getPattern());

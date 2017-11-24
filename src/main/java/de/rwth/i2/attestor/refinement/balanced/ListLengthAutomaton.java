@@ -46,7 +46,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
 
         IndexedState state = new IndexedState(heapConfiguration, 0);
-        heapConfiguration = canonicalizationStrategy.canonicalize(new ReturnVoidStmt(), state).getHeap();
+        heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
         if(countSelectorEdges(heapConfiguration) > 8) {
             return Collections.emptySet();
@@ -70,8 +70,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
-                0, true);
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0);
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

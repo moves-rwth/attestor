@@ -11,6 +11,13 @@ import java.util.Set;
 
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
+    private CanonicalizationStrategy canonicalizationStrategy;
+
+    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+
+        this.canonicalizationStrategy = canonicalizationStrategy;
+    }
+
     @Override
     public void process(StateSpaceGenerator stateSpaceGenerator) {
 
@@ -23,16 +30,13 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
             return;
         }
 
-        CanonicalizationStrategy canonicalizationStrategy = stateSpaceGenerator.getCanonizationStrategy();
-
         Set<ProgramState> finalStates = stateSpace.getFinalStates();
-        AggressiveTerminalStatement statement = new AggressiveTerminalStatement();
 
         Set<ProgramState> fullyAbstractStates = new HashSet<>();
         Map<Integer, Integer> idMap = new HashMap<>();
 
         for(ProgramState state : finalStates) {
-            ProgramState absState = canonicalizationStrategy.canonicalize(statement,state);
+            ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 

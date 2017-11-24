@@ -5,10 +5,9 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 public class MockupCanonicalizationStrategy implements CanonicalizationStrategy {
-	//private static final Logger logger = LogManager.getLogger( "TestCanonizationStrategy" );
-	
+
 	@Override
-	public ProgramState canonicalize(Semantics semantics, ProgramState state) {
+	public ProgramState canonicalize(ProgramState state) {
 		return state;
 	}
 

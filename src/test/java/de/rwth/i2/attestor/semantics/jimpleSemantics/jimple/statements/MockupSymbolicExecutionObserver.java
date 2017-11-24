@@ -31,7 +31,7 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
                 .setMaterializationStrategy(
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
-                .setCanonizationStrategy((semantics, state) -> state.clone())
+                .setCanonizationStrategy(state -> state.clone())
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))

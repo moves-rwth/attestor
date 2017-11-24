@@ -57,10 +57,8 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 		final int minDereferenceDepth = 1;
 		final int aggressiveAbstractionThreshold = 10;
 		final boolean aggressiveReturnAbstraction = false;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
-																				aggressiveAbstractionThreshold, 
-																				aggressiveReturnAbstraction);
-		
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
+
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
 		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
 		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
@@ -87,9 +85,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
 		
 		ProgramState inputState = new DefaultProgramState( getInputGraph() );
-		Statement stmt = new Skip( 0 );
-		
-		ProgramState res = canonizer.canonicalize(stmt, inputState);
+		ProgramState res = canonizer.canonicalize(inputState);
 		
 		assertEquals( expectedSimpleAbstraction().getHeap(), res.getHeap() );
 	}

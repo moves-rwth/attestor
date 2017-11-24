@@ -112,7 +112,7 @@ public class CounterexampleGeneratorTest {
             finalState = stmt.computeSuccessors(
                     materialized.clone(), factoryEmpty.getSemanticsOptionsSupplier().get(null)
             ).iterator().next();
-            finalState = factorySLL.getCanonicalization().canonicalize(stmt, finalState);
+            finalState = factorySLL.getCanonicalization().canonicalize(finalState);
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }

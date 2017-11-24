@@ -323,7 +323,7 @@ public class StateSpaceGenerator {
 	private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
 		if(semantics.permitsCanonicalization()) {
-			state = canonicalizationStrategy.canonicalize(semantics, state);
+			state = canonicalizationStrategy.canonicalize(state);
 		}
 		return state;
 	}

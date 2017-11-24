@@ -30,11 +30,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	@Before
 	public void setUp() throws Exception {
 		final int minDereferenceDepth = 1;
-		final int aggressiveAbstractionThreshold = 10;
-		final boolean aggressiveReturnAbstraction = false;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
-																				aggressiveAbstractionThreshold, 
-																				aggressiveReturnAbstraction);
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
 		canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 	}
 	
@@ -51,10 +47,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 				= new GeneralCanonicalizationStrategy( grammar, canonicalizationHelper );
 		
 		ProgramState inputState = new DefaultProgramState( getInputGraph() );
-		Statement stmt = new Skip( 0 );
-		
-		ProgramState res = canonizer.canonicalize(stmt, inputState);
-		
+		ProgramState res = canonizer.canonicalize(inputState);
 		assertEquals( expectedFullAbstraction(lhs), res );
 	}
 
