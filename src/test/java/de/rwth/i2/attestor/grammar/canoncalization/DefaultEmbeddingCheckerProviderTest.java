@@ -40,49 +40,6 @@ public class DefaultEmbeddingCheckerProviderTest {
 	}
 	
 	/**
-	 * aggressiveAbstractionThreshold &lt; graphSize.
-	 * aggressiveReturnAbstraction = false, statement != return
-	 * expect  aggressive EmbeddingChecker
-	 */
-	@Test
-	@Deprecated
-	@Ignore
-	public void testLargeState() {
-		int aggressiveAbstractionThreshold = 2;
-		boolean aggressiveReturnAbstraction = false;
-		HeapConfiguration graph = getGraphBiggerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Statement statement = new Skip(0);
-		
-		AbstractMatchingChecker expected = new EmbeddingChecker(pattern, graph );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, statement, expected );
-	}
-
-	
-	/**
-	 * aggressiveAbstractionThreshold &gt; graphSize.
-	 * aggressiveReturnAbstraction = true, statement == return
-	 * expect aggressive EmbeddingChecker
-	 */
-	@Test
-	@Deprecated
-	@Ignore
-	public void testAggressiveReturn() {
-		int aggressiveAbstractionThreshold = 10;
-		boolean aggressiveReturnAbstraction = true;
-		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Semantics semantics = new TerminalStatement();
-		
-		AbstractMatchingChecker expected = new EmbeddingChecker(pattern, graph );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, semantics, expected );
-	}
-
-	/**
 	 * aggressiveAbstractionThreshold &gt; graphSize.
 	 * aggressiveReturnAbstraction = false, statement == return
 	 * expect DepthEmbeddingChecker

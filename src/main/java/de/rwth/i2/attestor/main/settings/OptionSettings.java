@@ -57,7 +57,10 @@ public class OptionSettings {
 	 */
 	private boolean noExport = false;
 
-	private boolean garbageCollectionEnabled = false;
+	/**
+	 * If true, unreachable parts of heap are regularly eliminated.
+	 */
+	private boolean garbageCollectionEnabled = true;
 
 	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
