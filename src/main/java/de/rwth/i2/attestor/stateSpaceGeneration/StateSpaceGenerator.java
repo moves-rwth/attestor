@@ -1,16 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
+import java.util.Set;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.*;
+
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -222,7 +217,7 @@ public class StateSpaceGenerator {
 			try {
 				abortStrategy.checkAbort(stateSpace);
 			} catch(StateSpaceGenerationAbortedException e) {
-				if(state.getScopeDepth() > 0) {
+				if( ! state.isFromTopLevelStateSpace() ) {
 					throw e;
 				}
 				break;
@@ -242,7 +237,7 @@ public class StateSpaceGenerator {
 						Semantics semantics = semanticsOf(nextState);
 						nextState = stateRefinementStrategy.refine(semantics, nextState);
 						nextState = canonicalizationPhase(semantics, nextState);
-						if(state.getScopeDepth() == 0) {
+						if( state.isFromTopLevelStateSpace() ) {
 							stateLabelingStrategy.computeAtomicPropositions(nextState);
 						}
 						addingPhase(semantics, state, nextState);

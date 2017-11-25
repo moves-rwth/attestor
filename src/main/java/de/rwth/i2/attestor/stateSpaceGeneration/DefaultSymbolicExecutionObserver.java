@@ -29,9 +29,8 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
             throws StateSpaceGenerationAbortedException {
 
         HeapConfiguration heap = input.getHeap();
-        int scopeDepth = input.getScopeDepth();
 
-        ProgramState initialState = Settings.getInstance().factory().createProgramState(heap, scopeDepth);
+        ProgramState initialState = Settings.getInstance().factory().createProgramState(heap);
         return StateSpaceGenerator.builder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())

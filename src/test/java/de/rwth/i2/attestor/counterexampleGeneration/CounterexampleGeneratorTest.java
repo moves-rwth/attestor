@@ -1,16 +1,22 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import static org.junit.Assert.*;
+
+import java.util.*;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -19,18 +25,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.Assert.*;
 
 public class CounterexampleGeneratorTest {
 
@@ -133,7 +131,7 @@ public class CounterexampleGeneratorTest {
         HeapConfiguration counterexampleInput = generator.generate();
         HeapConfiguration expected = factorySLL.getListofLengthAtLeastOne();
         expected.builder()
-                .addVariableEdge("0-x", expected.nodes().get(0))
+                .addVariableEdge("x", expected.nodes().get(0))
                 .build();
         assertEquals(expected, counterexampleInput);
     }
@@ -144,7 +142,7 @@ public class CounterexampleGeneratorTest {
         ProgramState initialState = factorySLL.getInitialState();
         initialState.getHeap()
                 .builder()
-                .addVariableEdge("0-x", initialState.getHeap().nodes().get(0))
+                .addVariableEdge("x", initialState.getHeap().nodes().get(0))
                 .build();
 
         return initialState;
@@ -176,7 +174,7 @@ public class CounterexampleGeneratorTest {
 
                         @Override
                         public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
-                            ProgramState initialState = new DefaultProgramState(input.getHeap(), input.getScopeDepth());
+                            ProgramState initialState = new DefaultProgramState(input.getHeap());
                             initialState.setProgramCounter(0);
                             return StateSpaceGenerator.builder()
                                     .addInitialState(initialState)
@@ -233,7 +231,7 @@ public class CounterexampleGeneratorTest {
         HeapConfiguration expected = factorySLL
                 .getListofLengthAtLeastOne()
                 .builder()
-                .addVariableEdge("0-x", 0)
+                .addVariableEdge("x", 0)
                 .build();
 
         assertEquals(expected, counterexampleInput);
@@ -256,8 +254,7 @@ public class CounterexampleGeneratorTest {
         procedure.setControlFlow( controlFlow );
 
         Local varX = new Local(factorySLL.getNodeType(), "x");
-        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(varX),
-                SingleElementUtil.createList("x"));
+        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(varX));
         return new AssignInvoke(varX, procedure, invokeHelper, 1);
     }
 }

@@ -15,6 +15,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
@@ -43,10 +44,6 @@ public abstract class GeneralProgramState implements ProgramState {
      */
 	protected int programCounter;
 
-    /**
-     * The depth of the procedure call scope for this program state.
-     */
-	protected int scopeDepth;
 
 	/**
 	 * Id of this state in a state space
@@ -59,24 +56,12 @@ public abstract class GeneralProgramState implements ProgramState {
     protected final Set<String> atomicPropositions;
 
     /**
-     * Initializes a state with the initial program location and scope depth 0.
-     * @param heap The initial heap configuration.
-     */
-	protected GeneralProgramState(HeapConfiguration heap) {
-		
-		this.heap = heap;
-		atomicPropositions = new HashSet<>();
-	}
-
-    /**
      * Initializes a state with the initial program location 0.
      * @param heap The initial heap configuration.
-     * @param scopeDepth The initial call scope depth.
      */
-	protected GeneralProgramState(HeapConfiguration heap, int scopeDepth) {
+	protected GeneralProgramState( HeapConfiguration heap ) {
 		
 		this.heap = heap;
-		this.scopeDepth = scopeDepth;
 		atomicPropositions = new HashSet<>();
 	}
 
@@ -88,7 +73,6 @@ public abstract class GeneralProgramState implements ProgramState {
 		
 		this.heap = state.heap;
 		this.programCounter = state.programCounter;
-		this.scopeDepth = state.scopeDepth;
 		atomicPropositions = new HashSet<>(state.getAPs());
 	}
 
@@ -103,7 +87,7 @@ public abstract class GeneralProgramState implements ProgramState {
      */
     private String getScopedName(String name) {
 
-        return String.valueOf(scopeDepth) + "-" + name;
+        return  name;
     }
 
     /**
@@ -112,7 +96,9 @@ public abstract class GeneralProgramState implements ProgramState {
      */
     public String toString() {
 
-        return "ssid: " + String.valueOf(stateSpaceId) + "\npc: " + String.valueOf(programCounter) + "\nscope: " + String.valueOf(scopeDepth) + "\n" + heap;
+        return "ssid: " + String.valueOf(stateSpaceId)
+        		+ "\npc: " + String.valueOf(programCounter)
+        		+ "\n" + heap;
     }
 
     /**
@@ -121,14 +107,6 @@ public abstract class GeneralProgramState implements ProgramState {
     public int hashCode() {
 
         return heap.hashCode();
-    }
-
-    /**
-     * @return The depth of the call scope of this state.
-     */
-    public int getScopeDepth(){
-
-        return this.scopeDepth;
     }
 
     /**
@@ -159,8 +137,6 @@ public abstract class GeneralProgramState implements ProgramState {
 		
 		return heap;
 	}
-
-
 
 
 	@Override
@@ -253,24 +229,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	public String getVariableNameInHeap( String originalVariableName){
 		return getScopedName(originalVariableName);
 	}
-	
 
-	@Override
-	public void enterScope() {
-		
-		//++this.scopeDepth;
-	}
-
-	@Override
-	public void setScopeDepth(int scopeDepth) {
-		this.scopeDepth = scopeDepth;
-	}
-
-	@Override
-	public void leaveScope() {
-		
-		//--this.scopeDepth;
-	}
 
 	@Override
 	public GeneralConcreteValue getVariableTarget(String variableName) {
@@ -488,5 +447,10 @@ public abstract class GeneralProgramState implements ProgramState {
 	public int getStateSpaceId() {
 
 		return stateSpaceId;
+	}
+
+	@Override
+	public boolean isFromTopLevelStateSpace(){
+		return this.heap.externalNodes().isEmpty();
 	}
 }

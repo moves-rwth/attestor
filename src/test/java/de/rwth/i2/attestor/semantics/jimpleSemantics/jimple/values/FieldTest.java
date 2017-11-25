@@ -1,5 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import static org.junit.Assert.*;
+
+import org.junit.*;
+
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -8,11 +12,6 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class FieldTest {
 
@@ -34,7 +33,7 @@ public class FieldTest {
 		sel = BasicSelectorLabel.getSelectorLabel("next");
 
 		Type type = Settings.getInstance().factory().getType("List");
-		local = new Local( type, "x");
+		local = new Local( type, "y");
 		expr = new Field( type, local, "next");
 	}
 
@@ -60,9 +59,9 @@ public class FieldTest {
 			assertNotNull( executable );
 			
 			GeneralConcreteValue
-			expectedRes = executable.getVariableTarget("x");
+			expectedRes = executable.getVariableTarget("y");
 			
-			assertNotNull("Variable 'x' should exist.", expectedRes);
+			assertFalse("Variable 'y' should exist.", expectedRes.isUndefined());
 			
 			int expNode = expectedRes.getNode();
 			expNode = executable.getHeap().selectorTargetOf(expNode, sel);
@@ -115,7 +114,7 @@ public class FieldTest {
 			assertNotNull("resultHeap null", executable );
 			
 			int	expectedRes = executable
-					.getVariableTarget("x").getNode();
+					.getVariableTarget("y").getNode();
 			
 			assertEquals("doesn't return correct node", expectedRes, res);			
 			

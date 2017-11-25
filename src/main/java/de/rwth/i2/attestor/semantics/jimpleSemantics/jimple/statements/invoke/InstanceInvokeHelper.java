@@ -2,13 +2,13 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.List;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
@@ -42,16 +42,12 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * @param baseValue  the value on which the method is called (i.e. "this")
 	 * @param argumentValues  the values which form the arguments of the method in the
 	 *            correct ordering
-	 * @param namesOfLocals  the names of all locals which occur within the method (so they
-	 *            can be removed afterwards).
 	 */
-	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues,
-								 List<String> namesOfLocals){
+	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues){
 
 		super();
 		this.baseValue = baseValue;
 		this.argumentValues = argumentValues;
-		this.namesOfLocals = namesOfLocals;
 		
 		precomputePotentialViolationPoints();
 		getPotentialViolationPoints().addAll(baseValue.getPotentialViolationPoints());
@@ -68,8 +64,6 @@ public class InstanceInvokeHelper extends InvokeHelper {
 		removeParameters( programState );
 		//removeLocals( programState );
 		removeReturn( programState );
-
-		programState.leaveScope();
 	}
 
 	/*
@@ -102,9 +96,6 @@ public class InstanceInvokeHelper extends InvokeHelper {
 		}
 
 		appendArguments( programState, options );
-
-		programState.enterScope();
-
 	}
 
 	/*

@@ -6,22 +6,22 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
 
+import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class MaterializationTest {
 	
@@ -76,7 +76,7 @@ public class MaterializationTest {
 		for(int i=0; i < 2; i++) {
 			
 			HeapConfiguration hc = res.get(i).getHeap();
-			int x = hc.variableWith("0-x");
+			int x = hc.variableWith("x");
 			int t = hc.targetOf(x);
 			
 			

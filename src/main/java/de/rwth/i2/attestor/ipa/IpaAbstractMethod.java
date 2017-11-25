@@ -6,9 +6,7 @@ import java.util.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
@@ -56,10 +54,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 	public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
 		Set<ProgramState> result = new HashSet<>();
+		
 		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
 			ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
 			state.setProgramCounter(0);
-			state.setScopeDepth(0);
 			result.add(state);
 		}
 
@@ -97,10 +95,6 @@ public class IpaAbstractMethod extends AbstractMethod {
 		StateSpace stateSpace = observer.generateStateSpace(method, initialState);
 
 		for( ProgramState finalState : stateSpace.getFinalStates() ){
-			//otherwise, any local variables are already removed 
-			if( ! Settings.getInstance().options().isRemoveDeadVariables() ){
-				removeLocals( finalState );
-			}
 			postconditions.add( finalState.getHeap() );
 		}
 
@@ -111,18 +105,6 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return postconditions;
 	}
 
-	private void removeLocals(ProgramState finalState) {
-		final HeapConfiguration finalHeap = finalState.getHeap();
-		HeapConfigurationBuilder builder = finalHeap.clone().builder();
-		TIntArrayList variableIndices = finalHeap.variableEdges();
-		for( int i = 0; i < variableIndices.size(); i++ ){
-			final int varId = variableIndices.get(i);
-			String variableName = finalHeap.nameOf( varId );
-			if( !( Constants.isConstant(variableName) || variableName.equals("@return")) ){
-				builder.removeVariableEdge( varId );
-			}
-		}
-	}
 
 	/**
 	 * @param input

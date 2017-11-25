@@ -50,7 +50,7 @@ public class AssignInvokeTest_trivial {
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>(), new ArrayList<>());
+		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>());
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		

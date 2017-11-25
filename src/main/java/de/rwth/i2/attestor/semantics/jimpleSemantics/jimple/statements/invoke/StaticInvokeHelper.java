@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 
 /**
@@ -37,15 +38,11 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 * @param argumentValues
 	 *            The values which form the arguments of the method in the
 	 *            correct ordering
-	 * @param namesOfLocals
-	 *            The names of all locals which occur within the method (so they
-	 *            can be removed afterwards).
 	 */
-	public StaticInvokeHelper(List<Value> argumentValues, List<String> namesOfLocals){
+	public StaticInvokeHelper(List<Value> argumentValues){
 
 		super();
 		this.argumentValues = argumentValues;
-		this.namesOfLocals = namesOfLocals;
 		
 		precomputePotentialViolationPoints();
 
@@ -61,7 +58,6 @@ public class StaticInvokeHelper extends InvokeHelper {
 
 		appendArguments(programState, options);
 
-		programState.enterScope();
 	}
 
 	/**
@@ -74,8 +70,6 @@ public class StaticInvokeHelper extends InvokeHelper {
 		removeParameters(programState);
 		//removeLocals(programState);
 		removeReturn(programState);
-
-		programState.leaveScope();
 	}
 
 	@Override

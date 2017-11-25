@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.semantics.util;
 
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertFalse;
+
+import org.junit.Test;
 
 public class ConstantsTest {
 
@@ -11,7 +11,6 @@ public class ConstantsTest {
 
         assert(Constants.isConstant(Constants.NULL));
         assert(Constants.isConstant("null"));
-        assertFalse(Constants.isConstant("0-null"));
         assertFalse(Constants.isConstant("x"));
         assert(Constants.isConstant(Constants.FALSE));
         assert(Constants.isConstant(Constants.TRUE));

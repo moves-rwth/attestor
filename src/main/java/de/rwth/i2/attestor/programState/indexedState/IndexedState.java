@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
-import de.rwth.i2.attestor.programState.GeneralProgramState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -19,9 +19,9 @@ public class IndexedState extends GeneralProgramState {
 	}
 	
 	public IndexedState( HeapConfiguration heap, int scopeDepth ) {
-		
-		super( heap, scopeDepth);
+		this(heap);
 	}
+
 	
 	private IndexedState(IndexedState state) {
 		
@@ -40,7 +40,6 @@ public class IndexedState extends GeneralProgramState {
 	public int hashCode() {
 
 		int hash = programCounter;
-		hash = (hash << 1) ^ scopeDepth;
 		hash = (hash << 1) ^ heap.hashCode();
 		return hash;
 	}
@@ -68,7 +67,6 @@ public class IndexedState extends GeneralProgramState {
 		IndexedState state = (IndexedState) other;
 
 		return programCounter == state.programCounter
-			&& scopeDepth == state.scopeDepth
 			&& heap.equals(state.getHeap());
 	}
 
@@ -152,7 +150,6 @@ public class IndexedState extends GeneralProgramState {
 		HeapConfiguration newHeap = heap.clone();
 		IndexedState result = new IndexedState(newHeap);
 		result.setProgramCounter( programCounter );
-		result.scopeDepth = scopeDepth;
 		return result;
 	}
 
