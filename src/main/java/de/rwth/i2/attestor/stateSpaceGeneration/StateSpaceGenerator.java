@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

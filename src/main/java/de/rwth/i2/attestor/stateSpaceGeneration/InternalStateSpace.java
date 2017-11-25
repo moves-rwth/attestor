@@ -218,7 +218,10 @@ public class InternalStateSpace implements StateSpace {
             finalStateIds.add(s.getStateSpaceId());
             potentialMergeStates.put(s, s);
             stateIdLookupTable.put(s.getStateSpaceId(), s);
-            addArtificialInfPathsTransition(s);
+
+            TIntArrayList tIntArrayList = new TIntArrayList();
+            tIntArrayList.add(s.getStateSpaceId());
+            artificialInfPathsSuccessors.put(s.getStateSpaceId(), tIntArrayList);
         }
 
         // redirect

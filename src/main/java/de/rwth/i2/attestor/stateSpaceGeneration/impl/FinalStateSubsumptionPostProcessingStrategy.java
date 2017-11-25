@@ -21,7 +21,10 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
     public void process(StateSpace originalStateSpace) {
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
-        assert Settings.getInstance().options().getAbstractionDistance() == 0;
+
+        if(Settings.getInstance().options().getAbstractionDistance() == 0) {
+            return;
+        }
 
         InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 

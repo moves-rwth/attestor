@@ -139,18 +139,15 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         final int abstractionDifference = settings.options().getAbstractionDistance();
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference);
-        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(abstractionDifference);
-
+        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(0);
 
         CanonicalizationHelper canonicalizationHelper;
         CanonicalizationHelper aggressiveCanonicalizationHelper;
 
         if(settings.options().isIndexedMode()) {
-
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
             aggressiveCanonicalizationHelper = getIndexedCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using indexed grammar.");
-
         } else {
             canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
             aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper( aggressiveCheckerProvider );

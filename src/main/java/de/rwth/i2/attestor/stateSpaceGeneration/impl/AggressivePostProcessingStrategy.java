@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.HashMap;
@@ -19,9 +20,17 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
 
+        if(Settings.getInstance().options().getAbstractionDistance() == 0) {
+            return;
+        }
+
         InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 
         Set<ProgramState> finalStates = stateSpace.getFinalStates();
+
+        if(finalStates.size() == 1) {
+            return;
+        }
 
         Map<ProgramState,ProgramState> abstractedStates = new HashMap<>();
         Map<Integer, Integer> idMap = new HashMap<>();
