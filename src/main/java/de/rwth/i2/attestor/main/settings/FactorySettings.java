@@ -247,7 +247,7 @@ public class FactorySettings {
                 .stateSpaceGeneration()
                 .getAggressiveCanonicalizationStrategy();
 
-        if(optionSettings.getAbstractionDistance() == 0) {
+        if(!optionSettings.isPostprocessingEnabled() || optionSettings.getAbstractionDistance() == 0) {
             return new NoPostProcessingStrategy();
         }
 

@@ -186,6 +186,9 @@ public class SettingsFileReader {
 				case "garbageCollection":
 					options.setGarbageCollectionEnabled(jsonOptions.getBoolean(key));
 					break;
+				case "stateSpacePostProcessing":
+					options.setPostProcessingEnabled(jsonOptions.getBoolean(key));
+					break;
 				default:
 					logger.error("Ignoring unknown option: " + key);
 					break;

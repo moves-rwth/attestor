@@ -63,6 +63,25 @@ public class OptionSettings {
 	private boolean garbageCollectionEnabled = true;
 
 	/**
+	 * Determines if post-processing is applied to generated state spaces.
+	 */
+	private boolean postProcessingEnabled = true;
+
+	/**
+	 * @return True if post-processing is applied to generated state spaces.
+	 */
+	public boolean isPostprocessingEnabled() {
+		return postProcessingEnabled;
+	}
+
+	/**
+	 * @param
+	 */
+	public void setPostProcessingEnabled(boolean enabled) {
+		this.postProcessingEnabled = enabled;
+	}
+
+	/**
 	 * @return The maximal size of state spaces before state space generation is given up.
 	 */
 	public int getMaxStateSpaceSize() {
