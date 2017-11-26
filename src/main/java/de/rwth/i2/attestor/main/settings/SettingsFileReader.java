@@ -62,45 +62,78 @@ public class SettingsFileReader {
 	public InputSettings getInputSettings(Settings settings ){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
 		InputSettings input = settings.input();
+		boolean hasDefaultPath = false;
 
-		// path to class and json files to be analyzed
-		if( jsonInput.has( "defaultPath" ) ){
-			input.setDefaultPath( jsonInput.getString( "defaultPath" ) );
-		}
+		for(String key : jsonInput.keySet()) {
 
-		if(jsonSettings.has("scenario")) {
-			input.setScenario(jsonSettings.getString("scenario"));
-		}
-
-		JSONObject programSettings = jsonInput.getJSONObject( "program" );
-		if( programSettings.has( "classpath" )){
-			input.setClasspath( programSettings.getString( "classpath" )  );
-		}else if( !jsonInput.has( "defaultPath" )){
-			logger.error("You must define a default path or a classpath");
-		}
-		if(programSettings.has("class")) {
-			input.setClassName(programSettings.getString("class"));
-		} else {
-			logger.error("Please provide a class to be analysed.");
-		}
-		if(programSettings.has("method")) {
-			input.setMethodName(programSettings.getString("method"));
-		} else {
-			logger.error("Please provide a method to be analysed.");
-		}
-		
-		JSONObject grammarSettings = jsonInput.getJSONObject( "userDefinedGrammar" );
-		if(grammarSettings.has("file")) {
-			if (grammarSettings.has("path")) {
-				input.setPathToGrammar(grammarSettings.getString("path"));
-			} else if (!jsonInput.has("defaultPath")) {
-				logger.error("You must define a default path or a path for the grammar");
+			switch(key) {
+				case "defaultPath":
+					input.setDefaultPath( jsonInput.getString( key ) );
+					break;
+				case "scenario":
+					input.setScenario(jsonSettings.getString(key));
+					break;
+				case "program":
+					JSONObject programSettings = jsonInput.getJSONObject(key);
+					loadProgramSettings(input, programSettings);
+					break;
+				case "userDefinedGrammar":
+					JSONObject grammarSettings = jsonInput.getJSONObject(key);
+					loadGrammarSettings(input, hasDefaultPath, grammarSettings);
+					break;
+				case "predefinedGrammars":
+					JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( key );
+					loadPredefinedGrammarSettings(input, predefinedGrammarSettings);
+					break;
+				case "initialState":
+					JSONObject initialSettings = jsonInput.getJSONObject("initialState");
+					loadInitialStateSettings(input, hasDefaultPath, initialSettings);
+					break;
+				case "contracts":
+					JSONObject contractSettings = jsonInput.getJSONObject("contracts");
+					loadContracts(contractSettings, input, hasDefaultPath);
+					break;
+				default:
+					logger.error("Ignoring unknown option: " + key);
+					break;
 			}
-			input.setUserDefinedGrammarName(grammarSettings.getString("file"));
+
 		}
 
+		return input;
+	}
+
+	private void loadContracts(JSONObject contractSettings, InputSettings input, boolean hasDefaultPath) {
+			if( contractSettings.has( "path" ) ){
+				input.setPathToContracts( contractSettings.getString( "path" ) );
+			}else if( !hasDefaultPath && contractSettings.has("file")){
+				logger.error("You must define a default path or a path for the contracts");
+			}
+			JSONArray listOfFiles = contractSettings.getJSONArray("files");
+			for(int i = 0; i < listOfFiles.length(); i++ ){
+				input.addContractFile( listOfFiles.getString(i) );
+			}
+	}
+
+	private void loadInitialStateSettings(InputSettings input, boolean hasDefaultPath, JSONObject initialSettings) {
+		if( initialSettings.has( "path" ) ){
+			input.setPathToInput( initialSettings.getString( "path" ) );
+		}else if(!hasDefaultPath && initialSettings.has("file")){
+			logger.error("You must define a default path or a path for the initial state");
+		}
+		if(initialSettings.has("file")) {
+			input.setInputName(initialSettings.getString("file"));
+		} else if(input.getInputName() == null) {
+			if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
+				throw new IllegalStateException("Default initial states location not found.");
+			} else {
+				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
+			}
+		}
+	}
+
+	private void loadPredefinedGrammarSettings(InputSettings input, JSONArray predefinedGrammarSettings) {
 		// Add requested predefined grammars
-		JSONArray predefinedGrammarSettings = jsonInput.getJSONArray( "predefinedGrammars" );
 		for(int i = 0; i < predefinedGrammarSettings.length(); i++){
 			JSONObject predefinedGrammarSetting = predefinedGrammarSettings.getJSONObject(i);
 			final String grammarType = predefinedGrammarSetting.getString("type");
@@ -115,40 +148,36 @@ public class SettingsFileReader {
 				logger.warn("No predefined grammar of type " + grammarType
 						+ " available. Skipping it.");
 			}
-
-
 		}
+	}
 
-		JSONObject initialSettings = jsonInput.getJSONObject("initialState");
-		if( initialSettings.has( "path" ) ){
-			input.setPathToInput( initialSettings.getString( "path" ) );
-		}else if( (!jsonInput.has( "defaultPath" )) && initialSettings.has("file")){
-			logger.error("You must define a default path or a path for the initial state");
-		}
-		if(initialSettings.has("file")) {
-			input.setInputName(initialSettings.getString("file"));
-		} else if(input.getInputName() == null) {
-			if (SettingsFileReader.class.getClassLoader().getResource("initialStates") == null) {
-				throw new IllegalStateException("Default initial states location not found.");
-			} else {
-				input.setInitialStatesURL(SettingsFileReader.class.getClassLoader().getResource("initialStates/emptyInput.json"));
+	private void loadGrammarSettings(InputSettings input, boolean hasDefaultPath, JSONObject grammarSettings) {
+		if(grammarSettings.has("file")) {
+			if (grammarSettings.has("path")) {
+				input.setPathToGrammar(grammarSettings.getString("path"));
+			} else if (!hasDefaultPath) {
+				logger.error("You must define a default path or a path for the grammar");
 			}
+			input.setUserDefinedGrammarName(grammarSettings.getString("file"));
 		}
-		
-		if(jsonInput.has("contracts")) {
-			JSONObject contractSettings = jsonInput.getJSONObject("contracts");
-			if( contractSettings.has( "path" ) ){
-				input.setPathToContracts( contractSettings.getString( "path" ) );
-			}else if( (!jsonInput.has( "defaultPath" )) && contractSettings.has("file")){
-				logger.error("You must define a default path or a path for the contracts");
-			}
-			JSONArray listOfFiles = contractSettings.getJSONArray("files");
-			for(int i = 0; i < listOfFiles.length(); i++ ){
-				input.addContractFile( listOfFiles.getString(i) );
-			}
-		}
+	}
 
-		return input;
+	private void loadProgramSettings(InputSettings input, JSONObject programSettings) {
+		if( programSettings.has( "classpath" )) {
+			input.setClasspath(programSettings.getString("classpath"));
+		}else if(input.getClasspath() == null) {
+			logger.error("You must define a default path or a classpath");
+		}
+		if(programSettings.has("class")) {
+			input.setClassName(programSettings.getString("class"));
+		} else {
+			logger.error("Please provide a class to be analysed.");
+		}
+		if(programSettings.has("method")) {
+			input.setMethodName(programSettings.getString("method"));
+		} else {
+			logger.error("Please provide a method to be analysed.");
+		}
 	}
 
 	/**
