@@ -382,6 +382,7 @@ public abstract class GeneralProgramState implements ProgramState {
 			GeneralConcreteValue res = new GeneralConcreteValue( type,  nodes.get(0) );
 
 			Map<String,String> selectorToDefaults = type.getSelectorLabels();
+			System.out.println("Created selectors: " + selectorToDefaults);
 			for(Map.Entry<String,String> selectorDefault : selectorToDefaults.entrySet()) {
 
 				SelectorLabel selectorLabel = getSelectorLabel(selectorDefault.getKey());
