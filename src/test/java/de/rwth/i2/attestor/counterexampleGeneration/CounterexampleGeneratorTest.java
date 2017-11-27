@@ -12,19 +12,16 @@ import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -239,7 +236,7 @@ public class CounterexampleGeneratorTest {
 
     private AssignInvoke getProcedure() {
 
-        AbstractMethod procedure = new SimpleAbstractMethod("method");
+        AbstractMethod procedure = new IpaAbstractMethod("method");
 
         ExampleFactorySLL factorySLL = new ExampleFactorySLL();
 

@@ -9,11 +9,12 @@ import org.junit.*;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
@@ -34,7 +35,7 @@ public class InvokeStmtTest {
 	public void setUp() throws Exception{
 		Type type = Settings.getInstance().factory().getType( "node" );
 		Local var = new Local( type, "x" );
-		AbstractMethod method = new SimpleAbstractMethod( "method"  );
+		AbstractMethod method = new IpaAbstractMethod( "method"  );
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );
