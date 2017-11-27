@@ -22,6 +22,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 		return knownMethods.get( signature );
 	}
 
+	public static void clear(){
+		knownMethods.clear();
+	}
+	
 	final IpaContractCollection contracts = new IpaContractCollection();
 
 	public IpaAbstractMethod(String displayName) {
