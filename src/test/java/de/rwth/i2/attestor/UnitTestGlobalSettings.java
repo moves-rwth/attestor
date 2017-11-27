@@ -1,9 +1,10 @@
 package de.rwth.i2.attestor;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.main.settings.Settings;
-
 import java.io.File;
+
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.main.settings.Settings;
 
 /**
  * Global configuration of unit tests.
@@ -15,6 +16,7 @@ public final class UnitTestGlobalSettings {
     public static void reset() {
 
         BasicNonterminal.clearExistingNonterminals();
+        IpaAbstractMethod.clear();
         Settings.getInstance().resetAllSettings();
     }
 

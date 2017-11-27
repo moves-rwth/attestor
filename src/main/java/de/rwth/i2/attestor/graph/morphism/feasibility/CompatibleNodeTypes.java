@@ -1,9 +1,8 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.Graph;
-import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.graph.morphism.*;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
@@ -29,17 +28,12 @@ public class CompatibleNodeTypes implements FeasibilityFunction {
 			GeneralType patternType = (GeneralType) patternLabel;
 			GeneralType targetType = (GeneralType) targetLabel;
 			return patternType.typeEquals(targetType)
-					|| ( targetType.typeEquals( nullType ) && !isConstantType(patternType) );
+					|| ( targetType.typeEquals( nullType ) && !Constants.isConstantType(patternType.toString()) );
 		}else {
 			return patternLabel.matches(targetLabel);
 		}
 	}
 	
-	private boolean isConstantType( NodeLabel type ) {
-		return type.equals( GeneralType.getType("int") )
-				|| type.equals( GeneralType.getType("int_0"))
-				|| type.equals( GeneralType.getType("int_1"))
-				|| type.equals( GeneralType.getType("int_-1"));
-	}
+
 
 }
