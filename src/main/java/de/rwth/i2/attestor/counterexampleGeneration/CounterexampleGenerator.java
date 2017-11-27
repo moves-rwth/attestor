@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.*;
 
@@ -86,17 +87,21 @@ public final class CounterexampleGenerator {
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
                 .setExplorationStrategy((s,sp) -> {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
-                    ProgramState canon = s;
-                    if(semantics.permitsCanonicalization()) {
-                        canon = canonicalizationStrategy.canonicalize(semantics, s);
+                    if(trace.containsSubsumingState(s)) { // check the simple case first
+                        return true;
                     }
-                    return trace.containsSubsumingState(canon);
+                    if(semantics.permitsCanonicalization()) {
+                        ProgramState canon = canonicalizationStrategy.canonicalize(s);
+                        return trace.containsSubsumingState(canon);
+                    }
+                    return false;
                 })
                 .setStateSpaceSupplier(getStateSpaceSupplier())
                 .setAbortStrategy(s -> {})
                 .setProgram(program)
                 .addInitialState(initialState)
                 .setStateCounter(states -> {})
+                .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build();
     }
 

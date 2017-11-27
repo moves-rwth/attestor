@@ -54,7 +54,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         Program program = getPhase(ProgramTransformer.class).getProgram();
         StateRefinementStrategy stateRefinementStrategy = settings.stateSpaceGeneration().getStateRefinementStrategy();
         MaterializationStrategy materializationStrategy = settings.stateSpaceGeneration().getMaterializationStrategy();
-        CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getCanonicalizationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getAggressiveCanonicalizationStrategy();
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder()
                 .setProgram(program)

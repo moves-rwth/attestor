@@ -43,6 +43,7 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy())
                 .setProgram(program)
                 .addInitialState(initialState)
                 .build()

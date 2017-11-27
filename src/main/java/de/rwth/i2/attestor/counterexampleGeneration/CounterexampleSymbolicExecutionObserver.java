@@ -87,6 +87,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy())
                 .setProgram(program)
                 .addInitialState(input)
                 .build()

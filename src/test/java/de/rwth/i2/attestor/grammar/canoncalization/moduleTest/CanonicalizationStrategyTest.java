@@ -50,9 +50,7 @@ public class CanonicalizationStrategyTest {
 		final int minDereferenceDepth = 0;
 		final int aggressiveAbstractionThreshold = 10;
 		final boolean aggressiveReturnAbstraction = false;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth ,
-																				aggressiveAbstractionThreshold, 
-																				aggressiveReturnAbstraction);
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
 		CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 		
 		canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
@@ -64,7 +62,7 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest1();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest1(), test );
 		
@@ -78,7 +76,7 @@ public class CanonicalizationStrategyTest {
 		
 	
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest2(), test );
 
@@ -91,7 +89,7 @@ public class CanonicalizationStrategyTest {
 		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest3();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
 		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest3(), test );
 		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes3(), state.getHeap() );
@@ -102,7 +100,7 @@ public class CanonicalizationStrategyTest {
 		
 		HeapConfiguration test = ExampleHcImplFactory.getLongConcreteSLL();
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
 
@@ -123,7 +121,7 @@ public class CanonicalizationStrategyTest {
 		
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
-		ProgramState state = canonicalizationStrategy.canonicalize(new Skip(0), testExec);
+		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
 		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
 		TIntArrayList expectedNodes = expected.nodes();

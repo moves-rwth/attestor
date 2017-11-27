@@ -29,21 +29,17 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 		this.provider = provider;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.rwth.i2.attestor.grammar.canonicalization.MatchingHandler#tryReplaceMatching(de.rwth.i2.attestor.stateSpaceGeneration.ProgramState, de.rwth.i2.attestor.graph.heap.HeapConfiguration, de.rwth.i2.attestor.graph.Nonterminal, de.rwth.i2.attestor.stateSpaceGeneration.Semantics, boolean)
-	 */
 	@Override
 	public ProgramState tryReplaceMatching( ProgramState toAbstract, 
-			HeapConfiguration rhs, Nonterminal lhs,
-			Semantics semantics) {
-
+			HeapConfiguration rhs, Nonterminal lhs) {
 
 		AbstractMatchingChecker checker = 
-				provider.getEmbeddingChecker(toAbstract.getHeap(), rhs, semantics);
+				provider.getEmbeddingChecker(toAbstract.getHeap(), rhs);
 
 		if( checker.hasMatching() ) {
 
 			Matching embedding = checker.getMatching();
+
 			return replaceEmbeddingBy( toAbstract, embedding, lhs );
 		}
 		return null;

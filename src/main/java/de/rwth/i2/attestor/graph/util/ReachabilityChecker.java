@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.graph.util;
 
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.TIntCollection;
 import gnu.trove.iterator.TIntIterator;
@@ -50,11 +52,16 @@ public class ReachabilityChecker {
         TIntIterator iterator = heapConfiguration.attachedNonterminalEdgesOf(node).iterator();
         while(iterator.hasNext()) {
             int ntEdge = iterator.next();
-            TIntIterator attachedNodeIterator = heapConfiguration.attachedNodesOf(ntEdge).iterator();
-            while(attachedNodeIterator.hasNext()) {
-                int successorNode = attachedNodeIterator.next();
-                if (reachableNodes.add(successorNode)) {
-                    queue.add(successorNode);
+            Nonterminal label = heapConfiguration.labelOf(ntEdge);
+            TIntArrayList attachedNodes = heapConfiguration.attachedNodesOf(ntEdge);
+            int tentacle = attachedNodes.indexOf(node);
+            if(!label.isReductionTentacle(tentacle)) {
+                TIntIterator attachedNodeIterator = attachedNodes.iterator();
+                while(attachedNodeIterator.hasNext()) {
+                    int successorNode = attachedNodeIterator.next();
+                    if (reachableNodes.add(successorNode)) {
+                        queue.add(successorNode);
+                    }
                 }
             }
         }

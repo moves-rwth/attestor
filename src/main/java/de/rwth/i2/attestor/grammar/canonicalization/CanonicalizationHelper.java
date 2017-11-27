@@ -12,14 +12,12 @@ public interface CanonicalizationHelper {
 	 * and replaces it with a nonterminal edge labeled with lhs. 
 	 * @param toAbstract the target graph
 	 * @param rhs the pattern graph
-	 * @param lhs the label of the replacing nonterminaledge
-	 * @param semantics the current semantics statement (necessary to configure the embedding mechanism)
+	 * @param lhs the label of the replacing nonterminal edge
 	 * @return the abstracted graph if an embedding of rhs can be found, null otherwise.
 	 */
 	ProgramState tryReplaceMatching( ProgramState toAbstract, 
-										  HeapConfiguration rhs, Nonterminal lhs,
-										  Semantics semantics );
-	
+										  HeapConfiguration rhs, Nonterminal lhs);
+
 	/**
 	 * If the grammar type requires a modification of the graph before it can be abstracted,
 	 * it is done with this method.

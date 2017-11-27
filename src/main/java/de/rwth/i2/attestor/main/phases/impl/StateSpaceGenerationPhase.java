@@ -46,6 +46,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
                     + settings.factory().getTotalNumberOfStates());
         } catch(StateSpaceGenerationAbortedException e) {
             logger.error("State space generation has been aborted prematurely.");
+            stateSpace = stateSpaceGenerator.getStateSpace();
         }
     }
 

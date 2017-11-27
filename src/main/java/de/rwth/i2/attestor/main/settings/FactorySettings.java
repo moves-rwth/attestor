@@ -1,23 +1,30 @@
 package de.rwth.i2.attestor.main.settings;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.*;
+import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -189,46 +196,67 @@ public class FactorySettings {
 		List<ProgramState> inputStates = new ArrayList<>(inputs.size());
 		inputs.forEach(hc -> inputStates.add(createProgramState(hc)));
 
-		return getStateSpaceGeneratorBuilder()
-				.setProgram(program)
-				.addInitialStates(
-						inputStates
-						)
-				.build();
-	}
+        return getStateSpaceGeneratorBuilder()
+                .setProgram(program)
+                .addInitialStates(
+                        inputStates
+                )
+                .build();
+    }
 
 	private SSGBuilder getStateSpaceGeneratorBuilder() {
 
-		StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
-		return StateSpaceGenerator
-				.builder()
-				.setStateLabelingStrategy(
-						settings.getStateLabelingStrategy()
-						)
-				.setMaterializationStrategy(
-						settings.getMaterializationStrategy()
-						)
-				.setCanonizationStrategy(
-						settings.getCanonicalizationStrategy()
-						)
-				.setAbortStrategy(
-						settings.getAbortStrategy()
-						)
-				.setStateRefinementStrategy(
-						settings.getStateRefinementStrategy()
-						)
-				.setStateCounter(
-						this::addGeneratedStates
-						)
-				.setDeadVariableElimination(
-						Settings.getInstance().options().isRemoveDeadVariables()
-						)
-				.setBreadthFirstSearchEnabled(false)
-				.setExplorationStrategy((s,sp) -> true)
-				.setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
-				.setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new);
+        StateSpaceGenerationSettings stateSpaceGenerationSettings = Settings.getInstance().stateSpaceGeneration();
+        return StateSpaceGenerator
+                .builder()
+                .setStateLabelingStrategy(
+                        stateSpaceGenerationSettings.getStateLabelingStrategy()
+                )
+                .setMaterializationStrategy(
+                        stateSpaceGenerationSettings.getMaterializationStrategy()
+                )
+                .setCanonizationStrategy(
+                        stateSpaceGenerationSettings.getCanonicalizationStrategy()
+                )
+                .setAbortStrategy(
+                        stateSpaceGenerationSettings.getAbortStrategy()
+                )
+                .setStateRefinementStrategy(
+                        stateSpaceGenerationSettings.getStateRefinementStrategy()
+                )
+                .setStateCounter(
+                        this::addGeneratedStates
+                )
+                .setDeadVariableElimination(
+                        Settings.getInstance().options().isRemoveDeadVariables()
+                )
+                .setBreadthFirstSearchEnabled(false)
+                .setExplorationStrategy((s,sp) -> true)
+                .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
+                .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
+                .setPostProcessingStrategy(getPostProcessingStrategy())
+                ;
 
-	}
+    }
+
+    private PostProcessingStrategy getPostProcessingStrategy() {
+
+        OptionSettings optionSettings = Settings.getInstance().options();
+        CanonicalizationStrategy aggressiveStrategy = Settings
+                .getInstance()
+                .stateSpaceGeneration()
+                .getAggressiveCanonicalizationStrategy();
+
+        if(!optionSettings.isPostprocessingEnabled() || optionSettings.getAbstractionDistance() == 0) {
+            return new NoPostProcessingStrategy();
+        }
+
+        if(optionSettings.isIndexedMode()) {
+            return new AggressivePostProcessingStrategy(aggressiveStrategy);
+        }
+
+        return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy);
+    }
 
 	public ProgramState createProgramState(HeapConfiguration heapConfiguration ) {
 

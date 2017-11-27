@@ -43,7 +43,12 @@ public class IndexedState extends GeneralProgramState {
 		hash = (hash << 1) ^ heap.hashCode();
 		return hash;
 	}
-	
+
+	@Override
+	protected SelectorLabel getSelectorLabel(String selectorLabelName) {
+		return new AnnotatedSelectorLabel(selectorLabelName, "");
+	}
+
 	@Override
 	public boolean equals(Object other) {
 
@@ -67,7 +72,7 @@ public class IndexedState extends GeneralProgramState {
 
 	@Override
 	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
-			if(from instanceof GeneralConcreteValue) {
+		if(from instanceof GeneralConcreteValue) {
 			
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			
@@ -89,10 +94,8 @@ public class IndexedState extends GeneralProgramState {
 					
 				}
 			}
-			logger.debug("getSelectorTarget: source node did not have requested selector");
-
 		} else {
-			logger.warn("getSelectorTarget got invalid source");
+			throw new IllegalStateException("getSelectorTarget got invalid source");
 		}
 		
 		return GeneralConcreteValue.getUndefined();
@@ -126,7 +129,7 @@ public class IndexedState extends GeneralProgramState {
 			}
 			
 			AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorName, "");
-			
+
 			this.getHeap()
 			.builder()
 			.addSelector(fromNode, newSel, dTo.getNode())

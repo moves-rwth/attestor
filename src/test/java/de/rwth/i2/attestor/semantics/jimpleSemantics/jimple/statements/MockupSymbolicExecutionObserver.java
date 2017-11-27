@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
@@ -30,11 +31,12 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
                 .setMaterializationStrategy(
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
-                .setCanonizationStrategy((semantics, state) -> state.clone())
+                .setCanonizationStrategy(state -> state.clone())
                 .setStateCounter( s -> {} )
                 .setExplorationStrategy((s,sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver())
+                .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build()
                 .generate();
     }

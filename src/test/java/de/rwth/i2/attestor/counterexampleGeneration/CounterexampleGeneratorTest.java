@@ -20,6 +20,11 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -105,7 +110,7 @@ public class CounterexampleGeneratorTest {
             finalState = stmt.computeSuccessors(
                     materialized.clone(), factoryEmpty.getSemanticsOptionsSupplier().get(null)
             ).iterator().next();
-            finalState = factorySLL.getCanonicalization().canonicalize(stmt, finalState);
+            finalState = factorySLL.getCanonicalization().canonicalize(finalState);
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }
@@ -183,6 +188,7 @@ public class CounterexampleGeneratorTest {
                                     .setExplorationStrategy((s,sp) -> true)
                                     .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                                     .setSemanticsOptionsSupplier(s -> this)
+                                    .setPostProcessingStrategy(new NoPostProcessingStrategy())
                                     .build()
                                     .generate();
                         }

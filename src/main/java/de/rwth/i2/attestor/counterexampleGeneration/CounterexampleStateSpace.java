@@ -9,6 +9,7 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -172,10 +173,14 @@ final class CounterexampleStateSpace implements StateSpace {
        }
     }
 
+    @Override
+    public void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping) {
+        assert false;
+    }
+
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
 
-        Semantics semantics = program.getStatement(state.getProgramCounter());
-        ProgramState abstractState = canonicalizationStrategy.canonicalize(semantics, state);
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
         abstractState.setProgramCounter(-1);
 
         if(invokeCleanup != null) {
@@ -186,12 +191,6 @@ final class CounterexampleStateSpace implements StateSpace {
             }
         }
         return abstractState;
-    }
-
-    @Override
-    public ProgramState getStateInStateSpace(ProgramState state) {
-
-        return null;
     }
 
     @Override

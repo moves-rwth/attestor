@@ -6,10 +6,13 @@ import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
+import de.rwth.i2.attestor.semantics.util.PrimitiveTypes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
@@ -36,7 +39,7 @@ public class DefaultProgramState extends GeneralProgramState {
      * @param heap The underlying heap configuration.
      */
 	public DefaultProgramState(HeapConfiguration heap ) {
-		
+
 		super( heap );
 	}
 
@@ -78,24 +81,33 @@ public class DefaultProgramState extends GeneralProgramState {
 			
 			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
 			
-			int node = dFrom.getNode();
-			node = heap.selectorTargetOf(node, sel);
+			int baseNode = dFrom.getNode();
+            Type baseNodeType = heap.nodeTypeOf(baseNode);
+            if(!baseNodeType.hasSelectorLabel(selectorName)) {
+                throw new IllegalStateException("Invalid selector '" + selectorName + "' for node of type '"
+                    + baseNodeType + "'");
+            }
+
+			int node = heap.selectorTargetOf(baseNode, sel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
-				// this is not an error, because assignments to fields might first check whether
-				// a selector exists.
-				return GeneralConcreteValue.getUndefined();
+
+			    if(baseNodeType.isPrimitiveType(selectorName)) {
+                    return GeneralConcreteValue.getUndefined();
+				} else {
+                    return GeneralConcreteValue.getUndefined();
+					//throw new IllegalStateException("Required selector label " + from + "." + sel + " is missing.");
+				}
 			}
 			
 			Type type = heap.nodeTypeOf(node);
 			
 			return new GeneralConcreteValue( type, node );
 		} else {
-			logger.warn("getSelectorTarget did not get a GeneralConcreteValue.");
+			throw new IllegalStateException("getSelectorTarget did not get a GeneralConcreteValue.");
 		}
-		
-		return GeneralConcreteValue.getUndefined();
 	}
+
 
 	@Override
 	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
@@ -151,7 +163,12 @@ public class DefaultProgramState extends GeneralProgramState {
 	    return hash;
     }
 
-	@Override
+    @Override
+    protected SelectorLabel getSelectorLabel(String selectorLabelName) {
+	    return BasicSelectorLabel.getSelectorLabel(selectorLabelName);
+    }
+
+    @Override
 	public boolean equals(Object other) {
 
 		if(other == this) {
@@ -175,15 +192,13 @@ public class DefaultProgramState extends GeneralProgramState {
 
 	public boolean isSubsumedBy(ProgramState otherState) {
 
-		if(otherState == this) {
+		if (otherState == this) {
 			return true;
 		}
 
-		if(otherState == null) {
-			return false;
-		}
-
-		return programCounter == otherState.getProgramCounter()
+		return otherState != null
+				&& programCounter == otherState.getProgramCounter()
 				&& heapInclusionStrategy.subsumes(heap, otherState.getHeap());
+
 	}
 }

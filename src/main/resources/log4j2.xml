@@ -2,18 +2,28 @@
 <Configuration status="ERROR">
   <CustomLevels>
         <CustomLevel name="VERSION" intLevel="50" />
-        <CustomLevel name="REPORT" intLevel="50" />
+        <CustomLevel name="REPORT" intLevel="49" />
         <CustomLevel name="LTL-SAT" intLevel="50" />
         <CustomLevel name="LTL-UNSAT" intLevel="50" />
   </CustomLevels>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%highlight{%level}{STYLE=Logback, VERSION=blue, REPORT=Normal, LTL-SAT=green, LTL-UNSAT=red}] %msg%n"/>
+            <PatternLayout pattern="%highlight{%-10level{WARN=[Warn], DEBUG=[Debug], ERROR=[Error], TRACE=[Trace], INFO=[Info], VERSION=[Version], LTL-SAT=[SAT], LTL-UNSAT=[UNSAT]}}{STYLE=Logback, VERSION=blue, REPORT=Normal, LTL-SAT=green, LTL-UNSAT=red} %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="REPORT"  onMatch="DENY"   onMismatch="NEUTRAL"/>
+            </Filters>
     </Console>
+      <Console name="Report" target="SYSTEM_OUT">
+          <PatternLayout pattern="           %msg%n"/>
+          <Filters>
+              <ThresholdFilter level="REPORT"  onMatch="ACCEPT"   onMismatch="DENY"/>
+          </Filters>
+      </Console>
   </Appenders>
   <Loggers>
     <Root level="ERROR">
       <AppenderRef ref="Console"/>
+        <AppenderRef ref="Report"/>
     </Root>
   </Loggers>
 </Configuration>

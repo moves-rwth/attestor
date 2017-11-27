@@ -12,15 +12,17 @@ import java.util.Set;
  */
 public class StateSpaceGenerationSettings {
 
-    private AbortStrategy abortStrategy = null;
+    private AbortStrategy abortStrategy;
 
-    private CanonicalizationStrategy canonicalizationStrategy = null;
+    private CanonicalizationStrategy canonicalizationStrategy;
 
-    private MaterializationStrategy materializationStrategy = null;
+    private CanonicalizationStrategy aggressiveCanonicalizationStrategy;
 
-    private StateLabelingStrategy stateLabelingStrategy = null;
+    private MaterializationStrategy materializationStrategy;
 
-    private StateRefinementStrategy stateRefinementStrategy = null;
+    private StateLabelingStrategy stateLabelingStrategy;
+
+    private StateRefinementStrategy stateRefinementStrategy;
 
     private final Set<String> keptVariables = new HashSet<>();
 
@@ -37,6 +39,14 @@ public class StateSpaceGenerationSettings {
     public CanonicalizationStrategy getCanonicalizationStrategy() {
 
         return canonicalizationStrategy;
+    }
+
+    public CanonicalizationStrategy getAggressiveCanonicalizationStrategy() {
+        return aggressiveCanonicalizationStrategy;
+    }
+
+    public void setAggressiveCanonicalizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+        aggressiveCanonicalizationStrategy = canonicalizationStrategy;
     }
 
     public void setCanonicalizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {

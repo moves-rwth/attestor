@@ -33,19 +33,19 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
             if (settings.input().getInputName() != null) {
                 logger.debug("Reading user-defined initial state.");
                 str = FileReader.read(settings.input().getInputLocation());
-
-                String renamedStr = renamingInitialState(str);
-                if(!str.equals(renamedStr)){
-                    str = renamedStr;
-                    logger.warn("Renamed types or fields in initial state. Please ignore this warning if types or fields");
-                    logger.warn("from predefined grammars were used in initial state by accident.");
-                }
             } else {
                 logger.debug("Reading predefined empty initial state.");
                 str = FileReader.read(settings.input().getInitialStatesURL().openStream());
             }
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
+        }
+
+        String renamedStr = renamingInitialState(str);
+        if(!str.equals(renamedStr)){
+            str = renamedStr;
+            logger.warn("Renamed types or fields in initial state. Please ignore this warning if types or fields");
+            logger.warn("from predefined grammars were used in initial state by accident.");
         }
 
         JSONObject jsonObj = new JSONObject(str);

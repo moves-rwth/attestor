@@ -87,6 +87,10 @@ public class SSGBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No supplier for state spaces.");
         }
 
+        if(generator.postProcessingStrategy == null) {
+			throw new IllegalStateException("StateSpaceGenerator: No post-processing strategy.");
+		}
+
         generator.stateSpace = generator.stateSpaceSupplier.get();
 
 		for (ProgramState state : initialStates) {
@@ -230,5 +234,17 @@ public class SSGBuilder {
 	    generator.semanticsObserverSupplier = semanticsObserverSupplier;
 	    return this;
     }
-	
+
+	/**
+	 *
+	 * @param postProcessingStrategy A strategy to optimize the state space after state space generation terminated.
+	 *                               This strategy is applied for each generated state space, including procedure
+	 *                               calls.
+	 * @return The builder.
+	 */
+	public SSGBuilder setPostProcessingStrategy(PostProcessingStrategy postProcessingStrategy) {
+    	generator.postProcessingStrategy = postProcessingStrategy;
+    	return this;
+	}
+
 }

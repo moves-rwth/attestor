@@ -1,8 +1,11 @@
 package de.rwth.i2.attestor.programState;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +44,7 @@ public abstract class GeneralProgramState implements ProgramState {
      */
 	protected int programCounter;
 
- 
+
 	/**
 	 * Id of this state in a state space
 	 */
@@ -93,8 +96,8 @@ public abstract class GeneralProgramState implements ProgramState {
      */
     public String toString() {
 
-        return "ssid: " + String.valueOf(stateSpaceId) 
-        		+ "\npc: " + String.valueOf(programCounter) 
+        return "ssid: " + String.valueOf(stateSpaceId)
+        		+ "\npc: " + String.valueOf(programCounter)
         		+ "\n" + heap;
     }
 
@@ -115,6 +118,7 @@ public abstract class GeneralProgramState implements ProgramState {
         return heap.countNodes();
     }
 
+    protected abstract SelectorLabel getSelectorLabel(String selectorLabelName);
 
 	@Override
 	public int getProgramCounter() {
@@ -372,13 +376,25 @@ public abstract class GeneralProgramState implements ProgramState {
 		HeapConfigurationBuilder builder = heap.builder();
 		
 		try {
-			
+
 			TIntArrayList nodes = new TIntArrayList(1);
 			builder.addNodes(type, 1, nodes);
-			
 			GeneralConcreteValue res = new GeneralConcreteValue( type,  nodes.get(0) );
 
+			Map<String,String> selectorToDefaults = type.getSelectorLabels();
+			for(Map.Entry<String,String> selectorDefault : selectorToDefaults.entrySet()) {
+
+				SelectorLabel selectorLabel = getSelectorLabel(selectorDefault.getKey());
+				int target = heap.variableTargetOf(selectorDefault.getValue());
+				if(target == HeapConfiguration.INVALID_ELEMENT) {
+					throw new IllegalStateException("default target '" + selectorDefault.getValue() + "' of selector '" + selectorDefault.getKey() + "' not found.");
+				} else {
+					builder.addSelector(nodes.get(0), selectorLabel, target);
+				}
+			}
+
 			builder.build();
+
 			return res;
 		} catch( ClassCastException e ) {
 			
@@ -432,7 +448,7 @@ public abstract class GeneralProgramState implements ProgramState {
 
 		return stateSpaceId;
 	}
-	
+
 	@Override
 	public boolean isFromTopLevelStateSpace(){
 		return this.heap.externalNodes().isEmpty();

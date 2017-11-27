@@ -20,6 +20,7 @@ public class FailureTrace implements Trace {
     FailureTrace(Assertion failureAssertion, StateSpace stateSpace) {
 
         Assertion current = failureAssertion;
+
         do {
             int stateId = current.getProgramState();
             stateIdTrace.addFirst(stateId);

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
+import de.rwth.i2.attestor.semantics.util.PrimitiveTypes;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import soot.Unit;
@@ -344,11 +346,16 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      */
 	private Field translateField( soot.Value input ) {
 		InstanceFieldRef fieldRef = (InstanceFieldRef) input;
+
 		Value base = topLevel.translateValue( fieldRef.getBase() );
 		String name = fieldRef.getField().getName();
 		Type type = topLevel.translateType( fieldRef.getType() );
 
-		Settings.getInstance().input().addUsedSelectorLabel(name);
+		String fieldType = fieldRef.getType().toString();
+		type.addSelectorLabel(name, PrimitiveTypes.getDefaultValue(fieldType));
+
+		InputSettings inputSettings = Settings.getInstance().input();
+		inputSettings.addUsedSelectorLabel(name);
 
 		return new Field( type, base, name );
 	}

@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.*;
-
+import java.util.Set;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.*;
 
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -90,6 +90,11 @@ public class StateSpaceGenerator {
 	 * Strategy determining whether successors of a given state should also be explored.
 	 */
 	ExplorationStrategy explorationStrategy;
+
+	/**
+	 * Strategy determining post-processing after termination of state space generation
+	 */
+	PostProcessingStrategy postProcessingStrategy;
 
 	/**
 	 * Counter for the total number of states generated so far.
@@ -177,6 +182,10 @@ public class StateSpaceGenerator {
 		return explorationStrategy;
 	}
 
+	public PostProcessingStrategy getPostProcessingStrategy() {
+		return postProcessingStrategy;
+	}
+
 	public boolean isDeadVariableEliminationEnabled() {
 		return deadVariableEliminationEnabled;
 	}
@@ -237,6 +246,7 @@ public class StateSpaceGenerator {
 			}
 		}
 
+		postProcessingStrategy.process(stateSpace);
 		totalStatesCounter.addStates(stateSpace.size());
 		return stateSpace;
 	}
@@ -312,7 +322,7 @@ public class StateSpaceGenerator {
 	private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
 		if(semantics.permitsCanonicalization()) {
-			state = canonicalizationStrategy.canonicalize(semantics, state);
+			state = canonicalizationStrategy.canonicalize(state);
 		}
 		return state;
 	}

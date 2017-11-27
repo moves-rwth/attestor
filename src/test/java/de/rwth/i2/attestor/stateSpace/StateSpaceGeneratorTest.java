@@ -15,6 +15,8 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.types.Type;
 
@@ -42,6 +44,7 @@ public class StateSpaceGeneratorTest {
 				.setStateCounter(s -> {})
 				.setExplorationStrategy((s,sp) -> true)
 				.setStateSpaceSupplier(() -> new InternalStateSpace(100))
+				.setPostProcessingStrategy(new NoPostProcessingStrategy())
 				.setSemanticsOptionsSupplier(s -> new DefaultSymbolicExecutionObserver(s))
 				;
 	}

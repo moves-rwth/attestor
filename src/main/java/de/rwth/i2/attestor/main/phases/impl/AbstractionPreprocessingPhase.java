@@ -137,20 +137,26 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = getEmbeddingCheckerProvider();
+        final int abstractionDifference = settings.options().getAbstractionDistance();
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference);
+        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(0);
+
         CanonicalizationHelper canonicalizationHelper;
+        CanonicalizationHelper aggressiveCanonicalizationHelper;
 
         if(settings.options().isIndexedMode()) {
-
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
+            aggressiveCanonicalizationHelper = getIndexedCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using indexed grammar.");
-
         } else {
             canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
+            aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper( aggressiveCheckerProvider );
             logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
         }
         CanonicalizationStrategy strategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
+        CanonicalizationStrategy aggressiveStrategy = new GeneralCanonicalizationStrategy(grammar, aggressiveCanonicalizationHelper);
         settings.stateSpaceGeneration().setCanonicalizationStrategy(strategy);
+        settings.stateSpaceGeneration().setAggressiveCanonicalizationStrategy(aggressiveStrategy);
     }
 
     private void setupInclusionCheck() {
@@ -206,15 +212,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         }
 
         return nullPointerGuards;
-    }
-
-    private EmbeddingCheckerProvider getEmbeddingCheckerProvider() {
-        final int abstractionDifference = settings.options().getAbstractionDistance();
-        final int aggressiveAbstractionThreshold = settings.options().getAggressiveAbstractionThreshold();
-        final boolean aggressiveReturnAbstraction = settings.options().isAggressiveReturnAbstraction();
-        return new EmbeddingCheckerProvider(abstractionDifference ,
-                aggressiveAbstractionThreshold,
-                aggressiveReturnAbstraction);
     }
 
     private void setupAbortTest() {

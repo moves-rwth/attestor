@@ -7,6 +7,7 @@ import java.util.*;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
@@ -15,6 +16,11 @@ import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
+import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -33,7 +39,13 @@ public class AssignInvokeTest_NonTrivial {
 
 	@Before
 	public void setUp() throws Exception{
-		Type type = Settings.getInstance().factory().getType( "node" );
+		Type type = Settings.getInstance().factory().getType( "AssignInvokeTestNonTrivial" );
+
+		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		type.addSelectorLabel(next.getLabel(), Constants.NULL);
+		type.addSelectorLabel(prev.getLabel(), Constants.NULL);
+
 		Local var = new Local( type, "x" );
 
 		AbstractMethod method= IpaAbstractMethod.getMethod( "method");

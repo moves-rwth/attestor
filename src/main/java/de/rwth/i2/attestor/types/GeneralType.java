@@ -1,8 +1,12 @@
 package de.rwth.i2.attestor.types;
 
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A simple implementation of types.
@@ -27,6 +31,8 @@ public final class GeneralType implements Type {
 		nullType = new GeneralType( "NULL" );
 		existingTypes = SingleElementUtil.createMap( "NULL", nullType );
 	}
+
+	private final Map<String,String> selectorLabelNames = new HashMap<>();
 
     /**
      * Provides the type object with the requested name.
@@ -86,6 +92,24 @@ public final class GeneralType implements Type {
 
 		return this == other;
 	}
-	
-	
+
+	@Override
+	public boolean hasSelectorLabel(String name) {
+		return selectorLabelNames.containsKey(name);
+	}
+
+	@Override
+	public void addSelectorLabel(String name, String defaultValue) {
+		selectorLabelNames.put(name, defaultValue);
+	}
+
+	@Override
+	public Map<String, String> getSelectorLabels() {
+		return selectorLabelNames;
+	}
+
+	@Override
+	public boolean isPrimitiveType(String name) {
+		return !selectorLabelNames.get(name).equals(Constants.NULL);
+	}
 }

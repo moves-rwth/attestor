@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -39,45 +40,6 @@ public class DefaultEmbeddingCheckerProviderTest {
 	}
 	
 	/**
-	 * aggressiveAbstractionThreshold &lt; graphSize.
-	 * aggressiveReturnAbstraction = false, statement != return
-	 * expect  aggressive EmbeddingChecker
-	 */
-	@Test
-	public void testLargeState() {
-		int aggressiveAbstractionThreshold = 2;
-		boolean aggressiveReturnAbstraction = false;
-		HeapConfiguration graph = getGraphBiggerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Statement statement = new Skip(0);
-		
-		AbstractMatchingChecker expected = new EmbeddingChecker(pattern, graph );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, statement, expected );
-	}
-
-	
-	/**
-	 * aggressiveAbstractionThreshold &gt; graphSize.
-	 * aggressiveReturnAbstraction = true, statement == return
-	 * expect aggressive EmbeddingChecker
-	 */
-	@Test
-	public void testAggressiveReturn() {
-		int aggressiveAbstractionThreshold = 10;
-		boolean aggressiveReturnAbstraction = true;
-		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Semantics semantics = new TerminalStatement();
-		
-		AbstractMatchingChecker expected = new EmbeddingChecker(pattern, graph );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, semantics, expected );
-	}
-
-	/**
 	 * aggressiveAbstractionThreshold &gt; graphSize.
 	 * aggressiveReturnAbstraction = false, statement == return
 	 * expect DepthEmbeddingChecker
@@ -102,12 +64,9 @@ public class DefaultEmbeddingCheckerProviderTest {
 		
 		final int minDereferenceDepth = 1;
 		EmbeddingCheckerProvider checkerProvider = 
-				new EmbeddingCheckerProvider( minDereferenceDepth,
-											  aggressiveAbstractionThreshold,
-											  aggressiveReturnAbstraction 	);
-		
-	
-		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern, semantics);
+				new EmbeddingCheckerProvider( minDereferenceDepth );
+
+		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern);
 		
 		assertEquals( expected.getClass(), checker.getClass() );
 		assertEquals( expected.getPattern(), checker.getPattern());
