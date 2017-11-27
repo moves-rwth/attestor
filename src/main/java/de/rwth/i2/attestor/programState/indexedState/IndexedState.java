@@ -104,8 +104,6 @@ public class IndexedState extends GeneralProgramState {
 	@Override
 	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
 		if(from.isUndefined() || to.isUndefined()) {
-			
-			logger.warn("Specified edge has invalid source or target.");
 			return;
 		}
 		

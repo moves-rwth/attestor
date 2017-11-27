@@ -115,7 +115,7 @@ public class MarkingGenerationPhase extends AbstractPhase
             throw new IllegalStateException("No marked heap configurations could be computed.");
         }
         inputs = newInputs;
-        logger.info("Generated " + inputs.size() + " marked heap configurations.");
+        logger.info("done. Generated " + inputs.size() + " marked heap configurations.");
     }
 
     @Override

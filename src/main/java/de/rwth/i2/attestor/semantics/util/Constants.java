@@ -1,6 +1,11 @@
 package de.rwth.i2.attestor.semantics.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public final class Constants {
+
+    private static Set<String> unknownConstants = new HashSet<>();
 
     public static final String NULL = "null";
     public static final String ONE = "1";
@@ -22,5 +27,13 @@ public final class Constants {
             default:
                 return false;
         }
+    }
+
+    public static void addUnknownConstant(String name) {
+        unknownConstants.add(name);
+    }
+
+    public static boolean hasUnknownConstantOccurredBefore(String name) {
+        return unknownConstants.contains(name);
     }
 }

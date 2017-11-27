@@ -85,7 +85,7 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 	@Override
 	public Value translateValue(soot.Value input) {
 	
-		logger.warn(input + " is not supported. Replaced by undefined.");
+		logger.info("Expression " + input + " is not supported. Replaced by undefined.");
 		return new UndefinedValue();
 	}
 

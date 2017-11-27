@@ -218,7 +218,7 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 			defaultControlFlow.add(new Skip(-1));
 			res.setControlFlow(defaultControlFlow);
 
-			logger.warn("Method " + signature + " replaced by empty default method.");
+			logger.info("Method " + signature + " replaced by empty default method.");
 
 		}
 		

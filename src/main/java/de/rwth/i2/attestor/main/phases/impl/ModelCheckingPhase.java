@@ -45,9 +45,9 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
             proofStructure.build(stateSpace, formula);
             if(proofStructure.isSuccessful()) {
                 formulaResults.put(formula, true);
-                logger.info("satisfied.");
+                logger.info("done. Formula is satisfied.");
             } else {
-                logger.warn("violated.");
+                logger.warn("Formula is violated: " + formulaString);
                 allSatisfied = false;
                 formulaResults.put(formula, false);
 
@@ -68,7 +68,6 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
             return;
         }
 
-        logSum("");
         if(allSatisfied) {
             logHighlight("Model checking results: All provided LTL formulae are satisfied.");
         } else {

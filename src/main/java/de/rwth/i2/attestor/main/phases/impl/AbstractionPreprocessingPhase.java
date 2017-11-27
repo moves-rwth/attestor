@@ -87,20 +87,15 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         usedSelectors.removeAll(inputSettings.getGrammarSelectorLabels());
 
         if(!usedSelectors.isEmpty()) {
-            logger.warn("");
-            logger.warn("");
-            logger.warn("");
             logger.warn("+------------------------------------------------------------------+");
             logger.warn("| Some selector labels are not used within any grammar rule.       |");
             logger.warn("| These selector labels can never be abstracted!                   |");
+            logger.warn("| This might be intended if they refer to numerical values         |");
             logger.warn("| The selectors in question are listed below:                      |");
             for(String badSel : usedSelectors) {
-                logger.warn(String.format("| %-65s|", badSel));
+                logger.warn(String.format("| - %-63s|", badSel));
             }
             logger.warn("+------------------------------------------------------------------+");
-            logger.warn("");
-            logger.warn("");
-            logger.warn("");
         }
 
     }

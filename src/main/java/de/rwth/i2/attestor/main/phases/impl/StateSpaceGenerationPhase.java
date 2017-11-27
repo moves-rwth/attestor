@@ -65,16 +65,16 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     @Override
     public void logSummary() {
 
-        logSum("");
-        logHighlight("State space generation results");
-        logSum("+----------------------------------+--------------------------------+");
-        logSum(String.format("| # states w/ procedure calls      | %30d |",
+        logSum("+-------------------------+------------------+");
+        logHighlight("| Generated states        | Number of states |");
+        logSum("+-------------------------+------------------+");
+        logSum(String.format("| w/ procedure calls      | %16d |",
                 settings.factory().getTotalNumberOfStates()));
-        logSum(String.format("| # states w/o procedure calls     | %30d |",
+        logSum(String.format("| w/o procedure calls     | %16d |",
                 stateSpace.getStates().size()));
-        logSum(String.format("| # final states                   | %30d |",
+        logSum(String.format("| final states            | %16d |",
                 stateSpace.getFinalStateIds().size()));
-        logSum("+-----------+----------------------+--------------------------------+");
+        logSum("+-------------------------+------------------+");
     }
 
     @Override

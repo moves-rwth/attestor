@@ -20,6 +20,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+import soot.util.Cons;
 
 /**
  * A general implementation of program states that comprises most functionality when analyzing Jimple programs.
@@ -316,8 +317,11 @@ public abstract class GeneralProgramState implements ProgramState {
 			
 			return new GeneralConcreteValue( t, n );
 		} catch( NullPointerException | IllegalArgumentException e ) {
-			
-			logger.warn("Constant '" + constantName + "' not found. Returning undefined.");
+
+			if(!Constants.hasUnknownConstantOccurredBefore(constantName)) {
+				Constants.addUnknownConstant(constantName);
+				logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
+			}
 			return GeneralConcreteValue.getUndefined();
 		}
 	}

@@ -93,7 +93,6 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
             return;
         }
 
-        logSum("");
         if(allCounterexamplesDetected) {
             logHighlight("Detected counterexamples for all violated LTL formulae.");
         } else {
