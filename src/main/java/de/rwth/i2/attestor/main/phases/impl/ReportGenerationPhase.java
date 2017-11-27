@@ -176,8 +176,9 @@ public class ReportGenerationPhase extends AbstractPhase {
     public void logSummary() {
 
         if(!settings.options().isNoExport() && settings.output().isExportStateSpace()) {
+            logSum("");
             String location = settings.output().getLocationForStateSpace();
-            logSum("State space exported to '"
+            logHighlight("State space exported to '"
                     + location
                     + "'"
             );

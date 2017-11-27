@@ -74,4 +74,9 @@ public abstract class AbstractPhase {
 
         logger.log(Level.getLevel("REPORT"), message);
     }
+
+    protected  void logHighlight(String message) {
+
+        logger.log(Level.getLevel("HIGHLIGHT"), message);
+    }
 }

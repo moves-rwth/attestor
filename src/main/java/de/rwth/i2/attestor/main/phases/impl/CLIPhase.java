@@ -49,9 +49,7 @@ public class CLIPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        logSum("Analysis summary:");
-        logSum("+----------------------------------+--------------------------------+");
-        logSum("| Method: "
+        logHighlight("Analyzed method: "
                 + settings.input().getClasspath()
                 + "/"
                 + settings.input().getClassName()
@@ -61,9 +59,10 @@ public class CLIPhase extends AbstractPhase {
 
         String scenario = settings.input().getScenario();
         if(scenario != null && !scenario.isEmpty()) {
-            logSum("| Scenario: " + scenario);
+            logSum("Scenario: " + scenario);
+        } else {
+            logSum("Scenario: not specified");
         }
-        logSum("+----------------------------------+--------------------------------+");
 
     }
 

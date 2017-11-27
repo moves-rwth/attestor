@@ -68,21 +68,19 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
             return;
         }
 
-        logSum("Model checking results:");
-        logSum("+-----------+-------------------------------------------------------+");
+        logSum("");
+        if(allSatisfied) {
+            logHighlight("Model checking results: All provided LTL formulae are satisfied.");
+        } else {
+            logHighlight("Model checking results: Some provided LTL formulae are violated.");
+        }
+
         for(Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
             if(result.getValue()) {
-                logSum(String.format("| %-9s | %s", "satisfied", result.getKey().getFormulaString()));
+                logger.log(Level.getLevel("LTL-SAT"), result.getKey().getFormulaString());
             } else {
-                logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
+                logger.log(Level.getLevel("LTL-UNSAT"), result.getKey().getFormulaString());
             }
-        }
-        logSum("+-----------+-------------------------------------------------------+");
-
-        if(allSatisfied) {
-            logger.log(Level.getLevel("LTL-SAT"), "All provided LTL formulae are satisfied.");
-        } else {
-            logger.log(Level.getLevel("LTL-UNSAT"), "Some provided LTL formulae are violated.");
         }
     }
 

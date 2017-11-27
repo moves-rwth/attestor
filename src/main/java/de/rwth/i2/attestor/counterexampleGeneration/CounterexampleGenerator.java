@@ -51,13 +51,13 @@ public final class CounterexampleGenerator {
     private CounterexampleGenerator() {}
 
     /**
-     * Start generation of an abstract heap configuration that represents input states to trigger the violation
+     * Start generation of an abstract program state that represents input states to trigger the violation
      * of a previously checked LTL property that is described by the trace passed to the
      * CounterexampleGeneratorBuilder.
      *
-     * @return The found abstract heap configuration.
+     * @return The found program state.
      */
-    public HeapConfiguration generate() {
+    public ProgramState generate() {
 
         try {
             StateSpaceGenerator generator = setupStateSpaceGenerator();
@@ -65,8 +65,10 @@ public final class CounterexampleGenerator {
 
             Iterator<ProgramState>  iterator = stateSpace.getFinalStates().iterator();
             assert iterator.hasNext();
-            HeapConfiguration finalHeap = iterator.next().getHeap();
-            return ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
+            ProgramState resultState = iterator.next();
+            HeapConfiguration finalHeap = resultState.getHeap();
+            finalHeap = ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
+            return resultState.clone().shallowCopyWithUpdateHeap(finalHeap);
 
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Counterexample generation failed.");

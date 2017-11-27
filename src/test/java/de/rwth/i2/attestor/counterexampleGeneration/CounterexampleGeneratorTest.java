@@ -67,8 +67,8 @@ public class CounterexampleGeneratorTest {
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .build();
 
-        HeapConfiguration counterexampleInput = generator.generate();
-        assertEquals(input, counterexampleInput);
+        ProgramState counterexampleInput = generator.generate();
+        assertEquals(input, counterexampleInput.getHeap());
     }
 
     private Program getSetNextProgram(Type type) {
@@ -128,12 +128,12 @@ public class CounterexampleGeneratorTest {
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .build();
 
-        HeapConfiguration counterexampleInput = generator.generate();
+        ProgramState counterexampleInput = generator.generate();
         HeapConfiguration expected = factorySLL.getListofLengthAtLeastOne();
         expected.builder()
                 .addVariableEdge("x", expected.nodes().get(0))
                 .build();
-        assertEquals(expected, counterexampleInput);
+        assertEquals(expected, counterexampleInput.getHeap());
     }
 
     private ProgramState getInitialState() {
@@ -226,7 +226,7 @@ public class CounterexampleGeneratorTest {
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .build();
 
-        HeapConfiguration counterexampleInput = generator.generate();
+        ProgramState counterexampleInput = generator.generate();
 
         HeapConfiguration expected = factorySLL
                 .getListofLengthAtLeastOne()
@@ -234,7 +234,7 @@ public class CounterexampleGeneratorTest {
                 .addVariableEdge("x", 0)
                 .build();
 
-        assertEquals(expected, counterexampleInput);
+        assertEquals(expected, counterexampleInput.getHeap());
     }
 
     private AssignInvoke getProcedure() {

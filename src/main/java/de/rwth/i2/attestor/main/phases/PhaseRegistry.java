@@ -63,9 +63,13 @@ public class PhaseRegistry {
    public void logExecutionTimes() {
 
       Level REPORT = Level.getLevel("REPORT");
+      Level HIGHLIGHT = Level.getLevel("HIGHLIGHT");
 
       double elapsedVerify = 0;
       double elapsedTotal = 0;
+      logger.log(REPORT,"");
+      logger.log(REPORT,"+----------------------------------+--------------------------------+");
+      logger.log(HIGHLIGHT,"| Phase                            | Runtime                        |");
       logger.log(REPORT,"+----------------------------------+--------------------------------+");
       for(AbstractPhase p : phases) {
          double elapsed = p.getElapsedTime();
@@ -77,8 +81,8 @@ public class PhaseRegistry {
          }
       }
       logger.log(REPORT,"+----------------------------------+--------------------------------+");
-      logger.log(REPORT, String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
       logger.log(REPORT, String.format("| Total verification time          | %28.3f s |", elapsedVerify));
+      logger.log(REPORT, String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
       logger.log(REPORT, "+----------------------------------+--------------------------------+");
    }
 
