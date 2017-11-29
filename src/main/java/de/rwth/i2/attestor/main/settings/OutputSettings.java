@@ -37,41 +37,6 @@ public class OutputSettings {
 	private String folderForStateSpace = "stateSpace";
 
     /**
-     * True if and only if only the terminal states of the generated state space should be exported to a file.
-     */
-	private boolean exportTerminalStates = false;
-
-    /**
-     * The path where the exported terminal states are stored.
-     */
-	private String pathForTerminalStates;
-
-    /**
-     * The directory that is created and containsSubsumingState the exported terminal states.
-     */
-	private String folderForTerminalStates = "terminalStates";
-
-    /**
-     * True if and only if very large states should be exported separately for debugging purposes.
-     */
-	private boolean exportBigStates = false;
-
-    /**
-     * The number of states that is considered "very large".
-     */
-	private int bigStatesThreshold = 30;
-
-    /**
-     * The path where the exported very large states are stored.
-     */
-	private String pathForBigStates;
-
-    /**
-     * The directory that is created and containsSubsumingState exported very large states.
-     */
-	private String folderForBigStates = "debug";
-
-    /**
      * True if and only if the loaded grammar should be exported.
      */
 	private boolean exportGrammar = false;
@@ -128,8 +93,6 @@ public class OutputSettings {
      */
 	public void setDefaultPath( String path ){
 		pathForStateSpace = path;
-		pathForBigStates = path;
-		pathForTerminalStates = path;
 		pathForGrammar = path;
 		pathForCustomHcs = path;
 	}
@@ -168,91 +131,6 @@ public class OutputSettings {
      */
 	public String getLocationForStateSpace(){
 		return pathForStateSpace + File.separator + folderForStateSpace;
-	}
-
-    /**
-     * @return True if and only terminal states should be exported.
-     */
-	public boolean isExportTerminalStates() {
-		return exportTerminalStates;
-	}
-
-    /**
-     * @param exportTerminalStates True if and only terminal states should be exported.
-     */
-	public void setExportTerminalStates(boolean exportTerminalStates) {
-		this.exportTerminalStates = exportTerminalStates;
-	}
-
-    /**
-     *
-     * @param pathForTerminalStates The path where exported terminal states are stored.
-     */
-	public void setPathForTerminalStates(String pathForTerminalStates) {
-		this.pathForTerminalStates = pathForTerminalStates;
-	}
-
-    /**
-     * @param folderForTerminalStates The directory containing exported terminal states.
-     */
-	public void setFolderForTerminalStates(String folderForTerminalStates) {
-		this.folderForTerminalStates = folderForTerminalStates;
-	}
-
-    /**
-     * @return The fully qualified location containing exported terminal states.
-     */
-	public String getLocationForTerminalStates(){
-		return pathForTerminalStates + File.separator + folderForTerminalStates;
-	}
-
-    /**
-     * @return True if and only if very large states should be exported separately.
-     */
-	public boolean isExportBigStates() {
-		return exportBigStates;
-	}
-
-    /**
-     * @param threshold The number of states that is considered "very large".
-     */
-	public void exportBigStatesThreshold( int threshold ){
-		bigStatesThreshold = threshold;
-	}
-
-    /**
-     * @return The number of states that is considered "very large".
-     */
-	public int getBigStatesThreshold(){
-		return bigStatesThreshold;
-	}
-
-    /**
-     * @param exportBigStates True if and only if very large states should be exported separately.
-     */
-	public void setExportBigStates(boolean exportBigStates) {
-		this.exportBigStates = exportBigStates;
-	}
-
-    /**
-     * @param pathForBigStates The path where exported very large states are stored.
-     */
-	public void setPathForBigStates(String pathForBigStates) {
-		this.pathForBigStates = pathForBigStates;
-	}
-
-    /**
-     * @param folderForBigStates The directory containing exported very large states.
-     */
-	public void setFolderForBigStates(String folderForBigStates) {
-		this.folderForBigStates = folderForBigStates;
-	}
-
-    /**
-     * @return The fully qualified path to the directory containing exported very large states.
-     */
-	public String getLocationForBigStates(){
-		return pathForBigStates + File.separator + folderForBigStates;
 	}
 
     /**
@@ -402,11 +280,7 @@ public class OutputSettings {
      * @return True if and only if the current settings are consistent in the above sense.
      */
 	public boolean isValid(){
-		if( exportBigStates ){
-			if( bigStatesThreshold < 0 || pathForBigStates == null || folderForBigStates == null ){
-				return false;
-			}
-		}
+		
 		if( exportGrammar ){
 			if( pathForGrammar == null || folderForGrammar == null ){
 				return false;
@@ -414,11 +288,6 @@ public class OutputSettings {
 		}
 		if( exportStateSpace ){
 			if( pathForStateSpace == null || folderForStateSpace == null ){
-				return false;
-			}
-		}
-		if( exportTerminalStates ){
-			if( pathForTerminalStates == null || folderForTerminalStates == null ){
 				return false;
 			}
 		}
@@ -431,10 +300,8 @@ public class OutputSettings {
 	}
 
 	public void setRootPath(String rootPath) {
-		this.pathForBigStates = rootPath + File.separator + this.pathForBigStates;
 		this.pathForGrammar = rootPath + File.separator + this.pathForGrammar;
 		this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
-		this.pathForTerminalStates = rootPath + File.separator + this.pathForTerminalStates;
 		this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
 		this.folderForContracts = rootPath + File.separator + this.folderForContracts;
 	}

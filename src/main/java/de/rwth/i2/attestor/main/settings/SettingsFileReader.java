@@ -256,17 +256,7 @@ public class SettingsFileReader {
 				output.setFolderForStateSpace( jsonStateSpace.getString( "folder" ) );
 			}
 		}
-		
-		if( jsonOutput.has( "terminalStates" ) ){
-			output.setExportTerminalStates( true );
-			JSONObject jsonTerminalStates = jsonOutput.getJSONObject( "terminalStates" );
-			if( jsonTerminalStates.has( "path" ) ){
-				output.setPathForTerminalStates( jsonTerminalStates.getString( "path" ) );
-			}
-			if( jsonTerminalStates.has( "folder" ) ){
-				output.setPathForTerminalStates( jsonTerminalStates.getString( "folder" ) );
-			}
-		}
+	
 		
 		if( jsonOutput.has( "grammar" ) ){
 			output.setExportGrammar( true );
@@ -287,18 +277,6 @@ public class SettingsFileReader {
 			}
 			if( jsonGrammar.has( "folder" ) ){
 				output.setFolderForCustomHcs( jsonGrammar.getString( "folder" ) );
-			}
-		}
-		
-		if( jsonOutput.has( "bigStates" ) ){
-			output.setExportBigStates( true );
-			JSONObject jsonBS = jsonOutput.getJSONObject( "bigStates" );
-			output.exportBigStatesThreshold( jsonBS.getInt( "threshold" ) );
-			if( jsonBS.has( "path" ) ){
-				output.setPathForBigStates( jsonBS.getString( "path" ) );
-			}
-			if( jsonBS.has( "folder" ) ){
-				output.setFolderForBigStates( jsonBS.getString( "folder" ) );
 			}
 		}
 		
