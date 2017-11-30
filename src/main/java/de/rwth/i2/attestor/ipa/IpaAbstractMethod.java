@@ -26,6 +26,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		knownMethods.clear();
 	}
 	
+	private boolean isRecursive = false;
 	final IpaContractCollection contracts = new IpaContractCollection();
 
 	public IpaAbstractMethod(String displayName) {
@@ -155,6 +156,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	public IpaContractCollection getContracts() {
 		return contracts;
+	}
+
+	public void markAsRecursive() {
+		isRecursive = true;
+	}
+
+	public boolean isRecursive() {
+		return isRecursive;
 	}
 
 
