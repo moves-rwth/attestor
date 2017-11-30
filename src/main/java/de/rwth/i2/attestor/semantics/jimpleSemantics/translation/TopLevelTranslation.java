@@ -26,7 +26,7 @@ import soot.util.Chain;
  * The translation process is started by translate().
  * 
  * This class does not specify actual translation rules for statements/values/types. Those
- * can be find in the translation hierarchy starting in {@link #firstLevel}
+ * can be found in the translation hierarchy starting in {@link #firstLevel}
  * 
  * @author Hannah Arndt, Christoph
  *
@@ -43,12 +43,24 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * currently translated to program counters.
 	 */
 	private Map<Unit, Integer> currentUnitToPC;
+	
+	/**
+	 * necessary to fill the call graph during translation
+	 */
+	private IpaAbstractMethod currentMethod;
 
 	/**
 	 * The next level in the translation hierarchy. This level is the first one
 	 * to actually translate statements/values/types.
 	 */
 	private final JimpleToAbstractSemantics firstLevel;
+	
+	/**
+	 * Instance of Tarjan's Algorithm to find SCCs. Has to be filled with all call-edges
+	 * and can then be used to mark all recursive methods as such. Necessary to later compute
+	 * fixpoints for these methods instead of descending infinitely.
+	 */
+	private final TarjanAlgorithm recursiveMethodDetection = new TarjanAlgorithm();
 
 	/**
 	 * Default initialization for TopLevelTranslation.
@@ -100,10 +112,13 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 
             final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
             abstractMethod.setDisplayName(shortName);
+            recursiveMethodDetection.addMethodAsVertex(abstractMethod);
 		}
 		for (SootMethod method : methods) {
 			translateMethod(method);
 		}
+		
+		recursiveMethodDetection.markRecursiveMethods();
 	}
 
 	/**
@@ -148,8 +163,9 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * 
 	 * @param method The method to translate.
 	 */
-	private void translateMethod(SootMethod method) {
+	private void translateMethod( SootMethod method ) {
 
+		currentMethod = IpaAbstractMethod.getMethod(method.getSignature());
 		currentUnitToPC = new HashMap<>();
 
 		Chain<Unit> units = method.getActiveBody().getUnits();
@@ -169,7 +185,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 		}
 
 		logger.trace("method Name: " + method.getSignature());
-		IpaAbstractMethod.getMethod(method.getSignature()).setControlFlow(programStatements);
+		
+		currentMethod.setControlFlow(programStatements);
 
 	}
 
@@ -208,7 +225,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * @return The corresponding abstract method.
 	 */
 	public AbstractMethod getMethod(String signature) throws StateSpaceGenerationAbortedException {
-		AbstractMethod res = IpaAbstractMethod.getMethod(signature);
+		IpaAbstractMethod res = IpaAbstractMethod.getMethod(signature);
+		recursiveMethodDetection.addCallEdge(currentMethod, res);
 		if (res.getControlFlow() == null) {
 			
 			String displayName = shortMethodSignature( Scene.v().getMethod(signature) );

@@ -68,6 +68,10 @@ public class TarjanAlgorithm {
 	public void addCallEdge( IpaAbstractMethod caller, IpaAbstractMethod callee ) {
 		Vertex v = methodToVertex.get(caller);
 		Vertex u = methodToVertex.get(callee);
+		if( u == null ) {//necessary for untranslated library methods
+			addMethodAsVertex(callee);
+			u = methodToVertex.get(callee);
+		}
 		edges.get(v).add(u);
 	}
 	
