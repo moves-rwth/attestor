@@ -4,9 +4,11 @@ public final class Types {
 
     public final static Type NULL = new GeneralType(TypeNames.NULL);
     public final static Type UNDEFINED = new GeneralType(TypeNames.UNDEFINED);
+    public final static Type INT = new GeneralType(TypeNames.INT);
 
     public static boolean isConstantType(Type type) {
         return NULL.equals(type)
-                || UNDEFINED.equals(type);
+                || UNDEFINED.equals(type)
+                || INT.equals(type);
     }
 }

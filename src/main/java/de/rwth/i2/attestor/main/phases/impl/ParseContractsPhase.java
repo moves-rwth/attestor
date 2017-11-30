@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import de.rwth.i2.attestor.main.environment.Scene;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +17,10 @@ import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 
 public class ParseContractsPhase extends AbstractPhase {
+
+	public ParseContractsPhase(Scene scene) {
+		super(scene);
+	}
 
 	@Override
 	public String getName() {
@@ -45,16 +50,19 @@ public class ParseContractsPhase extends AbstractPhase {
             
             Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
+
+            JsonImporter importer = new JsonImporter(this);
+
             for( int i = 0; i < array.length(); i++ ){
             JSONObject contract = array.getJSONObject(i);
             final JSONObject jsonPrecondition = contract.getJSONObject("precondition");
-			HeapConfiguration precondition = JsonImporter.parseHC(jsonPrecondition, addUsedSelectorLabel );
+			HeapConfiguration precondition = importer.parseHC(jsonPrecondition, addUsedSelectorLabel );
             
 			List<HeapConfiguration> postconditions = new ArrayList<>();
 			JSONArray jsonPostConditions = contract.getJSONArray("postconditions");
 			for( int p = 0; p < jsonPostConditions.length(); p++ ){
 				final JSONObject jsonPostcondition = jsonPostConditions.getJSONObject(p);
-				postconditions.add( JsonImporter.parseHC(jsonPostcondition, addUsedSelectorLabel));
+				postconditions.add( importer.parseHC(jsonPostcondition, addUsedSelectorLabel));
 			}
 				abstractMethod.addContracts(precondition, postconditions);
             }

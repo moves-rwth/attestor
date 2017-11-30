@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.ipa.IpaContractCollection;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
@@ -22,6 +23,10 @@ public class ReportGenerationPhase extends AbstractPhase {
 
     private StateSpace stateSpace;
     private Program program;
+
+    public ReportGenerationPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

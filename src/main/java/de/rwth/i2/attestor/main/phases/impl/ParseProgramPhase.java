@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
@@ -10,6 +11,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 public class ParseProgramPhase extends AbstractPhase implements ProgramTransformer {
 
     private Program program;
+
+    public ParseProgramPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,11 +28,7 @@ public class UnequalExpr implements Value {
 	 * y in x != y
 	 */
 	private final Value rightExpr;
-	/**
-	 * boolean
-	 */
-	private final Type type = Settings.getInstance().factory().getType( "int" );
-	
+
 	private final ViolationPoints potentialViolationPoints;
 
 	public UnequalExpr( Value leftExpr, Value rightExpr ){
@@ -85,7 +82,7 @@ public class UnequalExpr implements Value {
 
 	@Override
 	public Type getType(){
-		return this.type;
+		return Types.INT;
 	}
 
 	public String toString(){

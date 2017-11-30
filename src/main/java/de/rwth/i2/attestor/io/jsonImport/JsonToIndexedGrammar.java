@@ -4,6 +4,7 @@ package de.rwth.i2.attestor.io.jsonImport;
 import java.util.*;
 import java.util.function.Consumer;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -19,11 +20,17 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
-public class JsonToIndexedGrammar {
+public class JsonToIndexedGrammar extends SceneObject {
+
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToGrammar" );
 
-	public static Map<Nonterminal, Collection<HeapConfiguration>>
+	public JsonToIndexedGrammar(SceneObject otherObject) {
+		super(otherObject);
+	}
+
+
+	public Map<Nonterminal, Collection<HeapConfiguration>>
 	parseForwardGrammar( JSONArray input ){
 
 		Map<Nonterminal, Collection<HeapConfiguration>> res = new HashMap<>();
@@ -71,7 +78,7 @@ public class JsonToIndexedGrammar {
 		return res;
 	}
 
-	private static IndexedNonterminal createIndexedNonterminal(int rank, String label, List<IndexSymbol> index,
+	private IndexedNonterminal createIndexedNonterminal(int rank, String label, List<IndexSymbol> index,
 			final boolean[] rts) {
 		IndexedNonterminal nt;
 		nt = (IndexedNonterminal) Settings
@@ -82,28 +89,29 @@ public class JsonToIndexedGrammar {
 		return nt;
 	}
 
-	private static int getRank( JSONObject grammarFragment ) {
+	private int getRank( JSONObject grammarFragment ) {
 
 		return grammarFragment.getInt( "rank" );
 	}
 
-	private static String getLabel( JSONObject grammarFragment ) {
+	private String getLabel( JSONObject grammarFragment ) {
 
 		return grammarFragment.getString( "nonterminal" );
 	}
 
 
-	private static List<IndexSymbol> getIndex(JSONObject grammarFragment ){
+	private List<IndexSymbol> getIndex(JSONObject grammarFragment ){
 		JSONArray index = grammarFragment.getJSONArray("index");
-		return JsonToIndexedHC.parseIndex(index);
+		JsonToIndexedHC importer = new JsonToIndexedHC(this);
+		return importer.parseIndex(index);
 	}
 
-	private static boolean hasDefinedTentacles(JSONObject grammarFragment) {
+	private boolean hasDefinedTentacles(JSONObject grammarFragment) {
 
 		return grammarFragment.has( "redundantTentacles" );
 	}
 
-	private static boolean[] getReductionTentacles( JSONObject grammarFragment ) {
+	private boolean[] getReductionTentacles( JSONObject grammarFragment ) {
 
 		JSONArray tentacles = grammarFragment.getJSONArray( "redundantTentacles" );
 		boolean[] res = new boolean[tentacles.length()];
@@ -114,7 +122,7 @@ public class JsonToIndexedGrammar {
 		return res;	
 	}
 
-	private static Set<HeapConfiguration> 
+	private Set<HeapConfiguration>
 	getGraphs(Nonterminal nt, JSONObject grammarFragment) {
 
 		Set<HeapConfiguration> res = new HashSet<>();
@@ -122,15 +130,16 @@ public class JsonToIndexedGrammar {
 
 		Consumer<String> addGrammarSelectorLabel = Settings.getInstance().input()::addGrammarSelectorLabel;
 
+		JsonToIndexedHC importer = new JsonToIndexedHC(this);
 		for( int g = 0; g < graphs.length(); g++ ){
 
-			res.add( JsonToIndexedHC.jsonToHC( graphs.getJSONObject( g ), addGrammarSelectorLabel ) );
+			res.add( importer.jsonToHC( graphs.getJSONObject( g ), addGrammarSelectorLabel ) );
 		}
 
 		return res;
 	}
 
-	private static void updateReductionTentacles(List<Nonterminal> ntsWithoutReductionTentacles,
+	private void updateReductionTentacles(List<Nonterminal> ntsWithoutReductionTentacles,
 			Map<Nonterminal, Collection<HeapConfiguration>> res) {
 
 		Deque<Pair<Nonterminal, Integer>> changedTentacles = new  ArrayDeque<>();
@@ -157,7 +166,7 @@ public class JsonToIndexedGrammar {
 	 * so that they can propagate their change to adjacent tentacles
 	 * @param adjacentNonterminals a map that stores which tentacles can affect which other tentacles
 	 */
-	private static void computeEffectOfAdjacentTentacles( Deque<Pair<Nonterminal, Integer>> changedTentacles,
+	private void computeEffectOfAdjacentTentacles( Deque<Pair<Nonterminal, Integer>> changedTentacles,
 			Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals ) {
 		for(Pair<Nonterminal, Integer> tentacle : adjacentNonterminals.keySet() ){
 			if( !tentacle.first().isReductionTentacle( tentacle.second() ) ){
@@ -179,7 +188,7 @@ public class JsonToIndexedGrammar {
 	 * @param adjacentNonterminals a map from tentacles to a set of tentacles which are affected
 	 * by their reduction-status
 	 */
-	private static void computeFixpointOfReductionTentacles(
+	private void computeFixpointOfReductionTentacles(
 			Deque<Pair<Nonterminal, Integer>> changedTentacles,
 			Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals ) {
 
@@ -204,7 +213,7 @@ public class JsonToIndexedGrammar {
 	 * @param res the rules of the grammar considered
 	 * @param adjacentNonterminals the map of adjacentTentacles to which the result will be stored
 	 */
-	private static void rememberAdjacentTentacles( List<Nonterminal> ntsWithoutReductionTentacles,
+	private void rememberAdjacentTentacles( List<Nonterminal> ntsWithoutReductionTentacles,
 			Map<Nonterminal, Collection<HeapConfiguration>> res,
 			Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals ) {
 
@@ -227,7 +236,7 @@ public class JsonToIndexedGrammar {
 	 * @param rulesForNt the set of rules for the considered nonterminal
 	 * @param adjacentNonterminals the map in which the adjacentNonterminals are stored
 	 */
-	private static void findAdjacentTentaclesFor( Nonterminal nt, int i,
+	private void findAdjacentTentaclesFor( Nonterminal nt, int i,
 			Collection<HeapConfiguration> rulesForNt,
 			Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals ) {
 
@@ -265,7 +274,7 @@ public class JsonToIndexedGrammar {
 	 * @param changedTentacles stores those tentacles for which a change occurred to consider them
 	 * in the fixpoint computation
 	 */
-	private static void setSimpleNonRedactionTentacles( List<Nonterminal> ntsWithoutReductionTentacles,
+	private void setSimpleNonRedactionTentacles( List<Nonterminal> ntsWithoutReductionTentacles,
 			Map<Nonterminal, Collection<HeapConfiguration>> res,
 			Deque<Pair<Nonterminal, Integer>> changedTentacles ) {
 
@@ -288,7 +297,7 @@ public class JsonToIndexedGrammar {
 	 * @param changedTentacles if the tentacle changed to NonReduction it will be added to this
 	 * index so that it is later propagated to tentacles it is adjacent to
 	 */
-	private static void computeSimpleNonReductionTentaclesFor( Nonterminal nt, int i,
+	private void computeSimpleNonReductionTentaclesFor( Nonterminal nt, int i,
 			Collection<HeapConfiguration> rulesForNt,
 			Deque<Pair<Nonterminal, Integer>> changedTentacles ) {
 
@@ -307,7 +316,7 @@ public class JsonToIndexedGrammar {
 	 * sets all tentacles of all nonterminals in the set to reductionTentacles
 	 * @param ntsWithoutReductionTentacles the nonterminals whose tentacles are set to reductionTentacles
 	 */
-	private static void initializeToReductionTentacles( List<Nonterminal> ntsWithoutReductionTentacles ) {
+	private void initializeToReductionTentacles( List<Nonterminal> ntsWithoutReductionTentacles ) {
 		for( Nonterminal nt : ntsWithoutReductionTentacles ){
 			for( int i = 0; i < nt.getRank(); i++ ){
 				nt.setReductionTentacle( i );

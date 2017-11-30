@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -31,7 +33,9 @@ public class ParseTest {
 
 	@Test
 	public void test(){
-		
+
+		SceneObject sceneObject = new MockupSceneObject();
+
 		try{
 			Scanner scan = new Scanner(new FileReader("src/test/resources/GraphEncodingTest.txt"));
 			StringBuilder str = new StringBuilder();
@@ -50,7 +54,8 @@ public class ParseTest {
 			 */
 			BasicNonterminal.getNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
 
-			HeapConfiguration res = JsonToDefaultHC.jsonToHC( obj, s -> {} );
+			JsonToDefaultHC importer = new JsonToDefaultHC(sceneObject);
+			HeapConfiguration res = importer.jsonToHC( obj, s -> {} );
 
 			logger.trace( "res:" + res );
 			

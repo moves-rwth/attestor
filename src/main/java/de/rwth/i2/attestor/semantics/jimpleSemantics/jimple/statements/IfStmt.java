@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -93,7 +94,7 @@ public class IfStmt extends Statement {
 			observer.update(nondeterminismMessage, programState);
 			return defaultRes;
 		}
-		if( !concreteCondition.type().equals( Settings.getInstance().factory().getType( "int" ) ) ){
+		if( !concreteCondition.type().equals(Types.INT) ){
 			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
 		}
 

@@ -1,14 +1,19 @@
 package de.rwth.i2.attestor.main.phases;
 
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractPhase {
+public abstract class AbstractPhase extends SceneObject {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
 
+    public AbstractPhase(Scene scene) {
+        super(scene);
+    }
 
     private int phaseId;
     private PhaseRegistry registry;

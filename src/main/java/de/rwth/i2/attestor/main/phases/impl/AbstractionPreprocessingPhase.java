@@ -18,6 +18,7 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMateria
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
@@ -47,6 +48,10 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
 
     private Grammar grammar;
+
+    public AbstractionPreprocessingPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

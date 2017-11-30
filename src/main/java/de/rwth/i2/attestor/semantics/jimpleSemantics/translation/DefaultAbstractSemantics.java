@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.UndefinedValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.Types;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
@@ -94,8 +95,8 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 	 */
 	@Override
 	public Type translateType(soot.Type input) {
-		
-		return Settings.getInstance().factory().getType("undefined Type");
+
+		return Types.UNDEFINED;
 	}
 
 	@Override

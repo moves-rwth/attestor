@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
@@ -25,7 +26,7 @@ public class UndefinedValue implements Value {
 	}
 
 	public Type getType(){
-		return Settings.getInstance().factory().getType( "undefined" );
+		return Types.UNDEFINED;
 	}
 
 	@Override

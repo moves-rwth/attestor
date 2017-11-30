@@ -6,6 +6,7 @@ import java.util.Set;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.VariableScopes;
+import de.rwth.i2.attestor.types.Types;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -161,9 +162,6 @@ public abstract class GeneralProgramState implements ProgramState {
 					.build();
 		}
 		
-		Type booleanType =  Settings.getInstance().factory().getType( "int" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		
 		int trueNode;
 
 	    if(heap.variableWith(Constants.TRUE) == HeapConfiguration.INVALID_ELEMENT) {
@@ -171,7 +169,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	    		
 	    		TIntArrayList nodes = new TIntArrayList(1);
 	    		copy.builder()
-	    			.addNodes(booleanType, 1, nodes)
+	    			.addNodes(Types.INT, 1, nodes)
 	    			.addVariableEdge(Constants.ONE, nodes.get(0))
 	    			.build();
 	    		trueNode = nodes.get(0);
@@ -193,7 +191,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	    		
 	    		TIntArrayList nodes = new TIntArrayList(1);
 	    		copy.builder()
-	    			.addNodes(booleanType, 1, nodes)
+	    			.addNodes(Types.INT, 1, nodes)
 	    			.addVariableEdge(Constants.ZERO, nodes.get(0))
 	    			.build();
 	    		trueNode = nodes.get(0);
@@ -215,7 +213,7 @@ public abstract class GeneralProgramState implements ProgramState {
 	    	
 	    	TIntArrayList nodes = new TIntArrayList(1);
 	    	copy.builder()
-	    		.addNodes(nullType, 1, nodes)
+	    		.addNodes(Types.NULL, 1, nodes)
 	    		.addVariableEdge(Constants.NULL, nodes.get(0))
 	    		.build();
 	    }

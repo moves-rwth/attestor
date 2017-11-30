@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -31,35 +32,36 @@ import gnu.trove.list.array.TIntArrayList;
  * @author Hannah
  *
  */
-public class JsonToIndexedHC {
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger( "JsonToIndexedHC" );
+public class JsonToIndexedHC extends SceneObject {
 
+	public JsonToIndexedHC(SceneObject sceneObject) {
+		super(sceneObject);
+	}
 
-	public static HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
+	public HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
 
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
 		JSONArray jsonNodes = obj.getJSONArray( "nodes" );
-		TIntArrayList nodes = JsonToIndexedHC.parseNodes( builder, jsonNodes );
+		TIntArrayList nodes = parseNodes( builder, jsonNodes );
 
 		JSONArray externals = obj.getJSONArray( "externals" );
-		JsonToIndexedHC.parseExternals( builder, nodes, externals );
+		parseExternals( builder, nodes, externals );
 
 		JSONArray variables = obj.getJSONArray( "variables" );
-		JsonToIndexedHC.parseVariables( builder, nodes, variables );
+		parseVariables( builder, nodes, variables );
 
 		JSONArray selectors = obj.getJSONArray( "selectors" );
 
-		JsonToIndexedHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
+		parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
 
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
-		JsonToIndexedHC.parseHyperedges( builder, nodes, hyperedges );
+		parseHyperedges( builder, nodes, hyperedges );
 
 		return builder.build();
 	}
 
-	private static void parseHyperedges( HeapConfigurationBuilder builder,
+	private void parseHyperedges( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray hyperedges ) {
 
 		for( int i = 0; i < hyperedges.length(); i++ ){
@@ -85,7 +87,7 @@ public class JsonToIndexedHC {
 		}
 	}
 
-	static List<IndexSymbol>  parseIndex(JSONArray index){
+	List<IndexSymbol>  parseIndex(JSONArray index){
 		List<IndexSymbol> res = new ArrayList<>();
 		for( int i = 0; i < index.length(); i++ ){
 			String symbol = index.getString(i);
@@ -108,7 +110,7 @@ public class JsonToIndexedHC {
 		return res;
 	}
 
-	private static void parseSelectors(HeapConfigurationBuilder builder,
+	private void parseSelectors(HeapConfigurationBuilder builder,
 									   TIntArrayList nodes,
 									   JSONArray selectors,
 									   Consumer<String> addSelectorLabelFunction) {
@@ -133,7 +135,7 @@ public class JsonToIndexedHC {
 		}
 	}
 
-	private static void parseVariables( HeapConfigurationBuilder builder,
+	private void parseVariables( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray variables ) {
 		for( int i = 0; i < variables.length(); i++ ){
 			String name = variables.getJSONObject( i ).getString( "name" );
@@ -142,7 +144,7 @@ public class JsonToIndexedHC {
 		}
 	}
 
-	private static void parseExternals( HeapConfigurationBuilder builder,
+	private void parseExternals( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray externals ) {
 
 		for( int i = 0; i < externals.length(); i++ ){
@@ -151,12 +153,12 @@ public class JsonToIndexedHC {
 		}
 	}
 
-	private static TIntArrayList parseNodes(HeapConfigurationBuilder builder, JSONArray jsonNodes ) {
+	private TIntArrayList parseNodes(HeapConfigurationBuilder builder, JSONArray jsonNodes ) {
 
 		TIntArrayList nodes = new TIntArrayList();
 		for( int i = 0; i < jsonNodes.length(); i++ ){
 			String typeName = jsonNodes.getJSONObject( i ).getString( "type" );
-			Type type = Settings.getInstance().factory().getType(typeName);
+			Type type = scene().getType(typeName);
 			int number = jsonNodes.getJSONObject( i ).getInt( "number" );
 			builder.addNodes( type, number, nodes );
 		}

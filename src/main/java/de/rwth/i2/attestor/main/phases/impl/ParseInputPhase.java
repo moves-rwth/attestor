@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.io.FileReader;
@@ -17,6 +18,10 @@ import java.util.function.Consumer;
 public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
     private final List<HeapConfiguration> inputs = new ArrayList<>();
+
+    public ParseInputPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {
@@ -55,9 +60,11 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
         Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
 
         if(settings.options().isIndexedMode()) {
-            originalInput = JsonToIndexedHC.jsonToHC( jsonObj, addUsedSelectorLabel );
+            JsonToIndexedHC importer = new JsonToIndexedHC(this);
+            originalInput = importer.jsonToHC( jsonObj, addUsedSelectorLabel );
         } else {
-            originalInput = JsonToDefaultHC.jsonToHC( jsonObj, addUsedSelectorLabel );
+            JsonToDefaultHC importer = new JsonToDefaultHC(this);
+            originalInput = importer.jsonToHC( jsonObj, addUsedSelectorLabel );
         }
         inputs.add(originalInput);
     }

@@ -84,7 +84,7 @@ public class Settings {
         optionSettings = new OptionSettings();
         outputSettings = new OutputSettings();
         factorySettings = new FactorySettings(scene);
-        grammarSettings = new GrammarSettings();
+        grammarSettings = new GrammarSettings(scene);
 		mcSettings = new ModelCheckingSettings();
 		stateSpaceGenerationSettings = new StateSpaceGenerationSettings();
     }

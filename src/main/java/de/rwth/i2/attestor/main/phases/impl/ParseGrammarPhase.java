@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.main.Attestor;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 
 import java.io.BufferedReader;
@@ -11,7 +12,11 @@ import java.util.List;
 
 public class ParseGrammarPhase extends AbstractPhase {
 
-  
+
+    public ParseGrammarPhase(Scene scene) {
+        super(scene);
+    }
+
     @Override
     public String getName() {
 

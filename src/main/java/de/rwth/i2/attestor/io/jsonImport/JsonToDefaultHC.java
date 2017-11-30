@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -16,34 +17,35 @@ import org.json.JSONObject;
 
 import java.util.function.Consumer;
 
-public class JsonToDefaultHC {
+public class JsonToDefaultHC extends SceneObject {
 
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger( "JsonToDefaultHC" );
+	public JsonToDefaultHC(SceneObject sceneObject) {
+		super(sceneObject);
+	}
 
-	public static HeapConfiguration jsonToHC(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
+	public HeapConfiguration jsonToHC(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
 		
 		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
 
 		JSONArray jsonNodes = obj.getJSONArray( "nodes" );
-		TIntArrayList nodes = JsonToDefaultHC.parseNodes( builder, jsonNodes );
+		TIntArrayList nodes = parseNodes( builder, jsonNodes );
 	
 		JSONArray externals = obj.getJSONArray( "externals" );
-		JsonToDefaultHC.parseExternals( builder, nodes, externals );
+		parseExternals( builder, nodes, externals );
 	
 		JSONArray variables = obj.getJSONArray( "variables" );
-		JsonToDefaultHC.parseVariables( builder, nodes, variables );
+		parseVariables( builder, nodes, variables );
 	
 		JSONArray selectors = obj.getJSONArray( "selectors" );
-		JsonToDefaultHC.parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
+		parseSelectors( builder, nodes, selectors, addSelectorLabelFunction );
 	
 		JSONArray hyperedges = obj.getJSONArray( "hyperedges" );
-		JsonToDefaultHC.parseHyperedges( builder, nodes, hyperedges );
+		parseHyperedges( builder, nodes, hyperedges );
 	
 		return builder.build();
 	}
 
-	private static void parseHyperedges( HeapConfigurationBuilder builder,
+	private void parseHyperedges( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray hyperedges ) {
 		for( int i = 0; i < hyperedges.length(); i++ ){
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
@@ -59,7 +61,7 @@ public class JsonToDefaultHC {
 		}
 	}
 
-	private static void parseSelectors( HeapConfigurationBuilder builder,
+	private void parseSelectors( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray selectors, Consumer<String> addSelectorLabelFunction) {
 
 		for( int i = 0; i < selectors.length(); i++ ){
@@ -74,7 +76,7 @@ public class JsonToDefaultHC {
 		}
 	}
 
-	private static void parseVariables( HeapConfigurationBuilder builder,
+	private void parseVariables( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray variables ) {
 		for( int i = 0; i < variables.length(); i++ ){
 			String name = variables.getJSONObject( i ).getString( "name" );
@@ -83,7 +85,7 @@ public class JsonToDefaultHC {
 		}
 	}
 
-	private static void parseExternals( HeapConfigurationBuilder builder,
+	private void parseExternals( HeapConfigurationBuilder builder,
 			TIntArrayList nodes, JSONArray externals ) {
 		for( int i = 0; i < externals.length(); i++ ){
 			int nodeId = externals.getInt( i );
@@ -91,11 +93,11 @@ public class JsonToDefaultHC {
 		}
 	}
 
-	private static TIntArrayList parseNodes(HeapConfigurationBuilder builder, JSONArray jsonNodes ) {
+	private TIntArrayList parseNodes(HeapConfigurationBuilder builder, JSONArray jsonNodes ) {
 		TIntArrayList nodes = new TIntArrayList();
 		for( int i = 0; i < jsonNodes.length(); i++ ){
 			String typeName = jsonNodes.getJSONObject( i ).getString( "type" );
-			Type type = Settings.getInstance().factory().getType(typeName);
+			Type type = scene().getType(typeName);
 			int number = jsonNodes.getJSONObject( i ).getInt( "number" );
 			builder.addNodes( type, number, nodes );
 		}

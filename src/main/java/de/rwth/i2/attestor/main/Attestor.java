@@ -71,18 +71,18 @@ public class Attestor {
 		registry = new PhaseRegistry(settings);
 
 		registry
-				.addPhase( new CLIPhase(args) )
-				.addPhase( new ParseProgramPhase() )
-				.addPhase( new ParseGrammarPhase() )
-				.addPhase( new ParseInputPhase() )
-				.addPhase( new ParseContractsPhase() )
-				.addPhase( new MarkingGenerationPhase() )
-				.addPhase( new GrammarRefinementPhase() )
-				.addPhase( new AbstractionPreprocessingPhase() )
-				.addPhase( new StateSpaceGenerationPhase() )
-				.addPhase( new ModelCheckingPhase() )
-				.addPhase( new CounterexampleGenerationPhase() )
-				.addPhase( new ReportGenerationPhase() )
+				.addPhase( new CLIPhase(scene, args) )
+				.addPhase( new ParseProgramPhase(scene) )
+				.addPhase( new ParseGrammarPhase(scene) )
+				.addPhase( new ParseInputPhase(scene) )
+				.addPhase( new ParseContractsPhase(scene) )
+				.addPhase( new MarkingGenerationPhase(scene) )
+				.addPhase( new GrammarRefinementPhase(scene) )
+				.addPhase( new AbstractionPreprocessingPhase(scene) )
+				.addPhase( new StateSpaceGenerationPhase(scene) )
+				.addPhase( new ModelCheckingPhase(scene) )
+				.addPhase( new CounterexampleGenerationPhase(scene) )
+				.addPhase( new ReportGenerationPhase(scene) )
 				.execute();
 
 		registry.logExecutionSummary();

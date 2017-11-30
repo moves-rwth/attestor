@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -18,6 +20,8 @@ import static org.junit.Assert.fail;
 public class TestJsonToIndexedHC {
 
 	private Consumer<String> sink = s -> {};
+	private SceneObject sceneObject;
+	private ExpectedHCs expectedHCs;
 
 	@BeforeClass
 	public static void init() {
@@ -28,6 +32,8 @@ public class TestJsonToIndexedHC {
 
 	@Before
 	public void initClass() {
+		sceneObject = new MockupSceneObject();
+		expectedHCs = new ExpectedHCs(sceneObject);
 		BasicNonterminal.getNonterminal("TestJson", 2, new boolean[]{false,false});
 	}
 	
@@ -52,11 +58,12 @@ public class TestJsonToIndexedHC {
 				+"	],\n"
 				+"	\"hyperedges\":[]\n"
 				+"}";
+
+		JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+		HeapConfiguration parsed
+			= importer.jsonToHC(new JSONObject(graphEncoding), sink);
 		
-		HeapConfiguration parsed 
-			= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
-		
-		assertEquals( ExpectedHCs.getExpected_Annotated(), parsed );
+		assertEquals( expectedHCs.getExpected_Annotated(), parsed );
 	}
 	
 	@Test
@@ -78,12 +85,13 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-		
-		HeapConfiguration parsed 
-		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+
+		JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+		HeapConfiguration parsed
+		= importer.jsonToHC(new JSONObject(graphEncoding), sink);
 	
-		assertEquals( ExpectedHCs.getExpected_Bottom(), parsed );
+		assertEquals( expectedHCs.getExpected_Bottom(), parsed );
 	}
 	
 	@Test
@@ -105,11 +113,12 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-		HeapConfiguration parsed 
-		= JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+		JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+		HeapConfiguration parsed
+		= importer.jsonToHC(new JSONObject(graphEncoding), sink);
 	
-		assertEquals( ExpectedHCs.getExpected_TwoElementIndex(), parsed );
+		assertEquals( expectedHCs.getExpected_TwoElementIndex(), parsed );
 	}
 	
 	@Test
@@ -131,10 +140,11 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+		JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+		HeapConfiguration parsed = importer.jsonToHC(new JSONObject(graphEncoding), sink);
 	
-		assertEquals( ExpectedHCs.getExpected_IndexWithVar(), parsed );
+		assertEquals( expectedHCs.getExpected_IndexWithVar(), parsed );
 	}
 	
 	@Test
@@ -156,10 +166,11 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-		HeapConfiguration parsed = JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+		JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+		HeapConfiguration parsed = importer.jsonToHC(new JSONObject(graphEncoding), sink);
 	
-		assertEquals( ExpectedHCs.getExpected_IndexWithAbs(), parsed );
+		assertEquals( expectedHCs.getExpected_IndexWithAbs(), parsed );
 	}
 	
 	@Test
@@ -182,8 +193,9 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+			JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+			importer.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -210,8 +222,9 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+			JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+			importer.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("bottom index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -238,8 +251,9 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+			JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+			importer.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("variable index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected
@@ -266,8 +280,9 @@ public class TestJsonToIndexedHC {
 				+"			\"tentacles\":[0,1]\n"
 				+"		}]\n"
 				+"}\n";
-		
-			JsonToIndexedHC.jsonToHC(new JSONObject(graphEncoding), sink);
+
+			JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+			importer.jsonToHC(new JSONObject(graphEncoding), sink);
 			fail("abstract index symbols may only occur at the end of index");
 		}catch( AssertionError e ){
 			//expected

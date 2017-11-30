@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.settings.CommandLineReader;
 import de.rwth.i2.attestor.main.settings.SettingsFileReader;
@@ -8,8 +9,9 @@ public class CLIPhase extends AbstractPhase {
 
     private final String[] args;
 
-    public CLIPhase(String[] args) {
+    public CLIPhase(Scene scene, String[] args) {
 
+        super(scene);
         this.args = args;
     }
 

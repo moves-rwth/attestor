@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
@@ -39,6 +40,10 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private List<HeapConfiguration> inputs;
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
+
+    public GrammarRefinementPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

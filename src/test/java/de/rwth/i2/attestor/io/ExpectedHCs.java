@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -16,14 +17,18 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-class ExpectedHCs {
-	
-	public static HeapConfiguration getExpected_Annotated(){
+class ExpectedHCs extends SceneObject {
+
+	protected ExpectedHCs(SceneObject otherObject) {
+		super(otherObject);
+	}
+
+	public HeapConfiguration getExpected_Annotated(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -31,7 +36,7 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_Bottom(){
+	public HeapConfiguration getExpected_Bottom(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -39,7 +44,7 @@ class ExpectedHCs {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -47,7 +52,7 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_TwoElementIndex(){
+	public HeapConfiguration getExpected_TwoElementIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -57,7 +62,7 @@ class ExpectedHCs {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -65,7 +70,7 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_IndexWithVar(){
+	public HeapConfiguration getExpected_IndexWithVar(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -75,7 +80,7 @@ class ExpectedHCs {
 		index.add(var);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -83,7 +88,7 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_IndexWithAbs(){
+	public HeapConfiguration getExpected_IndexWithAbs(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -93,7 +98,7 @@ class ExpectedHCs {
 		index.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -101,7 +106,7 @@ class ExpectedHCs {
 					.build();
 	}
 
-	public static HeapConfiguration getExpected_AbstractIndex(){
+	public HeapConfiguration getExpected_AbstractIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -111,7 +116,7 @@ class ExpectedHCs {
 		index.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -119,12 +124,12 @@ class ExpectedHCs {
 					.build();
 	}
 	
-	public static HeapConfiguration getExpected_Rule2(){
+	public HeapConfiguration getExpected_Rule2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -134,7 +139,7 @@ class ExpectedHCs {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_Rule1(){
+	public HeapConfiguration getExpected_Rule1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		IndexSymbol var = IndexVariable.getIndexVariable();
@@ -142,7 +147,7 @@ class ExpectedHCs {
 		index.add(var);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)

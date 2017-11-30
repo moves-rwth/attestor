@@ -24,6 +24,7 @@ public final class GeneralType implements Type {
 		public GeneralTypeFactory() {
 			knownTypes.put(TypeNames.NULL, Types.NULL);
 			knownTypes.put(TypeNames.UNDEFINED, Types.UNDEFINED);
+			knownTypes.put(TypeNames.INT, Types.INT);
 		}
 
 		public Type get(String name) {

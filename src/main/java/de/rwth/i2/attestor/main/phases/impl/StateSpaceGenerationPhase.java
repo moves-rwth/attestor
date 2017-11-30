@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
@@ -15,6 +16,10 @@ import java.util.List;
 public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
 
     private StateSpace stateSpace;
+
+    public StateSpaceGenerationPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
@@ -21,6 +22,10 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
     private ModelCheckingResultsTransformer modelCheckingResults;
     private final Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
+
+    public CounterexampleGenerationPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,11 +29,7 @@ public class EqualExpr implements Value {
 	 * y in x == y
 	 */
 	private final Value rightExpr;
-	/**
-	 * boolean
-	 */
-	private final Type type = Settings.getInstance().factory().getType( "int" );
-	
+
 	private final ViolationPoints potentialViolationPoints;
 
 	public EqualExpr( Value leftExpr, Value rightExpr ){
@@ -96,7 +93,7 @@ public class EqualExpr implements Value {
 
 	@Override
 	public Type getType(){
-		return this.type;
+		return Types.INT;
 	}
 
 	/**

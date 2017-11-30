@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -22,7 +24,7 @@ import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
  *
  * @author Christoph, Christina
  */
-public class GrammarSettings {
+public class GrammarSettings extends SceneObject {
 
     /**
      * The logger of this class.
@@ -47,7 +49,8 @@ public class GrammarSettings {
     /**
      * Prevents creating objects of this class outside this package.
      */
-    protected GrammarSettings() {
+    protected GrammarSettings(Scene scene) {
+        super(scene);
     }
 
     /**
@@ -140,9 +143,11 @@ public class GrammarSettings {
     private Map<Nonterminal, Collection<HeapConfiguration>> parseRules(JSONArray array) {
 
         if(Settings.getInstance().options().isIndexedMode()) {
-            return JsonToIndexedGrammar.parseForwardGrammar( array );
+            JsonToIndexedGrammar importer = new JsonToIndexedGrammar(this);
+            return importer.parseForwardGrammar(array);
         } else {
-            return JsonToGrammar.parseForwardGrammar( array );
+            JsonToGrammar importer = new JsonToGrammar(this);
+            return importer.parseForwardGrammar(array);
         }
     }
 

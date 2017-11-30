@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -43,8 +44,10 @@ public class JsonToGrammarTest {
 			scan.close();
 
 			JSONArray array = new JSONArray(str.toString());
-			
-			JsonToGrammar.parseForwardGrammar( array );
+
+			MockupSceneObject sceneObject = new MockupSceneObject();
+			JsonToGrammar importer = new JsonToGrammar(sceneObject);
+			importer.parseForwardGrammar( array );
 			
 			Nonterminal nt = BasicNonterminal.getNonterminal("DLList");
 			assertEquals( "rank", 2, nt.getRank() );
@@ -69,8 +72,10 @@ public class JsonToGrammarTest {
 			scan.close();
 
 			JSONArray array = new JSONArray(str.toString());
-			
-			JsonToGrammar.parseForwardGrammar( array );
+
+			MockupSceneObject sceneObject = new MockupSceneObject();
+			JsonToGrammar importer = new JsonToGrammar(sceneObject);
+			importer.parseForwardGrammar( array );
 			
 			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
 			assertEquals( "rank", 2, nt.getRank() );
@@ -96,8 +101,10 @@ public class JsonToGrammarTest {
 			scan.close();
 
 			JSONArray array = new JSONArray(str.toString());
-			
-			JsonToGrammar.parseForwardGrammar( array );
+
+			MockupSceneObject sceneObject = new MockupSceneObject();
+			JsonToGrammar importer = new JsonToGrammar(sceneObject);
+			importer.parseForwardGrammar( array );
 			
 			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
 			assertEquals( "rank", 2, nt.getRank() );

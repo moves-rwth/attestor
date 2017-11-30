@@ -2,18 +2,25 @@ package de.rwth.i2.attestor.io.jsonImport;
 
 import java.util.function.Consumer;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.json.JSONObject;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.settings.Settings;
 
-public class JsonImporter {
+public class JsonImporter extends SceneObject {
 
-	public static HeapConfiguration parseHC( JSONObject hc, Consumer<String> addSelectorLabelFunction  ){
+	public JsonImporter(SceneObject sceneObject) {
+		super(sceneObject);
+	}
+
+	public HeapConfiguration parseHC( JSONObject hc, Consumer<String> addSelectorLabelFunction  ){
 		if( Settings.getInstance().options().isIndexedMode() ){
-			return JsonToIndexedHC.jsonToHC( hc, addSelectorLabelFunction );
+			JsonToIndexedHC importer = new JsonToIndexedHC(this);
+			return importer.jsonToHC(hc, addSelectorLabelFunction);
 		}else{
-			return JsonToDefaultHC.jsonToHC( hc, addSelectorLabelFunction );
+			JsonToDefaultHC importer = new JsonToDefaultHC(this);
+			return importer.jsonToHC(hc, addSelectorLabelFunction);
 		}
 	}
 }

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
+import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
@@ -19,6 +20,10 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     private final Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
     private final Map<LTLFormula, Trace> counterexampleTraces = new HashMap<>();
     private boolean allSatisfied = true;
+
+    public ModelCheckingPhase(Scene scene) {
+        super(scene);
+    }
 
     @Override
     public String getName() {

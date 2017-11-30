@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
@@ -83,8 +85,12 @@ public class TestJsonToIndexedGrammar {
 		
 		
 		JSONArray jsonArray = new JSONArray( grammarEncoding );
+
+		SceneObject sceneObject = new MockupSceneObject();
+		ExpectedHCs expectedHCs = new ExpectedHCs(sceneObject);
+
 		Grammar grammar = Grammar.builder()
-							.addRules( JsonToIndexedGrammar.parseForwardGrammar( jsonArray ) )
+							.addRules( new JsonToIndexedGrammar(sceneObject).parseForwardGrammar( jsonArray ) )
 							.build();
 		
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
@@ -103,10 +109,10 @@ public class TestJsonToIndexedGrammar {
 		assertTrue( grammar.getAllLeftHandSides().contains(nt2) );
 		assertNotNull( grammar.getRightHandSidesFor(nt1) );
 		assertEquals( 1, grammar.getRightHandSidesFor(nt1).size() );
-		assertTrue("rule graph of nt1", grammar.getRightHandSidesFor(nt1).contains(ExpectedHCs.getExpected_Rule1() ));
+		assertTrue("rule graph of nt1", grammar.getRightHandSidesFor(nt1).contains(expectedHCs.getExpected_Rule1() ));
 		assertNotNull( grammar.getRightHandSidesFor(nt2) );
 		assertEquals( 1, grammar.getRightHandSidesFor(nt2).size() );
-		assertTrue("rule graph of nt2", grammar.getRightHandSidesFor(nt2).contains( ExpectedHCs.getExpected_Rule2() ));
+		assertTrue("rule graph of nt2", grammar.getRightHandSidesFor(nt2).contains( expectedHCs.getExpected_Rule2() ));
 	}
 
 }
