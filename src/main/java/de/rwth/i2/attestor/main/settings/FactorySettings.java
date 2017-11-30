@@ -8,6 +8,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
@@ -32,7 +34,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public class FactorySettings {
+public class FactorySettings extends SceneObject {
 
 	/**
 	 * The logger of this class.
@@ -43,6 +45,10 @@ public class FactorySettings {
 	 * The total number of states that has been generated since running the tool.
 	 */
 	private long totalNumberOfStates = 0;
+
+	protected FactorySettings(Scene scene) {
+		super(scene);
+	}
 
 	/**
 	 * @return A HeapConfiguration that containsSubsumingState neither nodes nor edges.
@@ -133,7 +139,7 @@ public class FactorySettings {
 	 * @return The Type.
 	 */
 	public Type getType(String name) {
-		return GeneralType.getType(name);
+		return scene().getType(name);
 	}
 
 	/**

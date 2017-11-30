@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main;
 import java.io.IOException;
 import java.util.Properties;
 
+import de.rwth.i2.attestor.main.environment.DefaultScene;
 import org.apache.logging.log4j.*;
 
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
@@ -46,6 +47,12 @@ public class Attestor {
 
 	private PhaseRegistry registry;
 
+	private DefaultScene scene = new DefaultScene();
+
+	public Attestor() {
+
+		settings.setScene(scene);
+	}
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -57,6 +64,7 @@ public class Attestor {
      *      </a>
 	 */
 	public void run(String[] args) {
+
 
 		printVersion();
 

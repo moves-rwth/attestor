@@ -1,5 +1,8 @@
 package de.rwth.i2.attestor.main.settings;
 
+import de.rwth.i2.attestor.main.environment.DefaultScene;
+import de.rwth.i2.attestor.main.environment.Scene;
+
 /**
  * A singleton that stores all global settings for Attestor.
  * The settings themselves are grouped into multiple classes within
@@ -8,6 +11,9 @@ package de.rwth.i2.attestor.main.settings;
  * @author Christoph, Christina
  */
 public class Settings {
+
+	// TODO remove
+	private Scene scene;
 
     /**
      * The single instance of this class.
@@ -61,7 +67,13 @@ public class Settings {
      * Initializes with default settings.
      */
 	private Settings(){
-	    resetAllSettings();
+		scene = new DefaultScene();
+		resetAllSettings();
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
+		resetAllSettings();
 	}
 
     /**
@@ -71,7 +83,7 @@ public class Settings {
         inputSettings = new InputSettings();
         optionSettings = new OptionSettings();
         outputSettings = new OutputSettings();
-        factorySettings = new FactorySettings();
+        factorySettings = new FactorySettings(scene);
         grammarSettings = new GrammarSettings();
 		mcSettings = new ModelCheckingSettings();
 		stateSpaceGenerationSettings = new StateSpaceGenerationSettings();

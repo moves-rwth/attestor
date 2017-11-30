@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.types.Types;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +44,7 @@ public final class GeneralConcreteValue implements ConcreteValue {
 	private GeneralConcreteValue() {
 		
 		this.node = UNDEFINED;
-		type = GeneralType.getType("undefined");
+		type = Types.UNDEFINED;
 	}
 
     /**

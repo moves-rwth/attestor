@@ -1055,6 +1055,7 @@ public class HeapConfigurationBuilderTest {
 		SelectorLabel s2 = new MockupSelector("second");
 		SelectorLabel s3 = new MockupSelector("third");
 		MockupType type = new MockupType();
+		MockupType otherType = new MockupType();
 		TIntArrayList nodes = new TIntArrayList();
 
 		hc.builder()
@@ -1062,11 +1063,11 @@ public class HeapConfigurationBuilderTest {
 				.addSelector(nodes.get(1), s2, nodes.get(0))
 				.addSelector(nodes.get(1), s1, nodes.get(0))
 				.replaceSelector(nodes.get(1), s2, s3)
-				.replaceNodeType(nodes.get(1), GeneralType.getType("otherType"))
+				.replaceNodeType(nodes.get(1), otherType)
 				.build();
 
 		assertEquals(hc.nodeTypeOf(nodes.get(0)), type);
-		assertEquals(hc.nodeTypeOf(nodes.get(1)), GeneralType.getType("otherType"));
+		assertEquals(hc.nodeTypeOf(nodes.get(1)), otherType);
 		assertEquals(hc.nodeTypeOf(nodes.get(2)), type);
 
 

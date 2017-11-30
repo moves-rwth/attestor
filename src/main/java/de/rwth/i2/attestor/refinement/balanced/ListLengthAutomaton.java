@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
@@ -21,7 +20,7 @@ import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMateriali
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
-import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -106,7 +105,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
                             for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == GeneralType.getType("NULL")) {
+                                if(rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }

@@ -17,19 +17,24 @@ import java.util.Set;
  */
 public final class GeneralType implements Type {
 
-    /**
-     * The type object corresponding to the type 'null'.
-     */
-	private static final GeneralType nullType;
+	public static final class GeneralTypeFactory {
 
-    /**
-     * Stores the unique type object for every name.
-     */
-	private static final Map<String, GeneralType> existingTypes;
-	
-	static{
-		nullType = new GeneralType( "NULL" );
-		existingTypes = SingleElementUtil.createMap( "NULL", nullType );
+		private final Map<String, Type> knownTypes = new HashMap<>();
+
+		public GeneralTypeFactory() {
+			knownTypes.put(TypeNames.NULL, Types.NULL);
+			knownTypes.put(TypeNames.UNDEFINED, Types.UNDEFINED);
+		}
+
+		public Type get(String name) {
+
+			Type result = knownTypes.get(name);
+			if(result == null) {
+				result = new GeneralType(name);
+				knownTypes.put(name, result);
+			}
+			return result;
+		}
 	}
 
 	private final Map<String,String> selectorLabelNames = new HashMap<>();
@@ -42,13 +47,7 @@ public final class GeneralType implements Type {
      * @return The type with the requested name.
      */
 	public static synchronized GeneralType getType(String name ){
-		if( !existingTypes.containsKey( name ) ){
-			
-			GeneralType res = new GeneralType( name );
-			existingTypes.put( name, res );
-		}
-		
-		return existingTypes.get( name );
+		return null;
 	}
 
     /**
@@ -59,11 +58,11 @@ public final class GeneralType implements Type {
     /**
      * @param name The name of the type to be created.
      */
-	private GeneralType(String name) {
+	protected  GeneralType(String name) {
 		
 		this.name = name;
 	}
-	
+
 	/*
 	 * Shows only the last component of the type name for readability.
 	 * e.g. if the type is "de.rwth.i2.attestor.package.subpackage.List"
@@ -100,6 +99,10 @@ public final class GeneralType implements Type {
 
 	@Override
 	public void addSelectorLabel(String name, String defaultValue) {
+
+		if(Types.isConstantType(this)) {
+			throw new IllegalStateException("Cannot assign selector labels to node of constant type.");
+		}
 		selectorLabelNames.put(name, defaultValue);
 	}
 

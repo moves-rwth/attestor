@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.types.GeneralType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,6 +32,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
 public class CounterexampleGeneratorTest {
+
+    private GeneralType.GeneralTypeFactory typeFactory = new GeneralType.GeneralTypeFactory();
 
     @BeforeClass
     public static void setupClass() {
@@ -87,7 +90,7 @@ public class CounterexampleGeneratorTest {
     public void testWithMaterialization() {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL();
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
 
         Program program = getSetNextProgram(factorySLL.getNodeType());
         Semantics stmt = program.getStatement(0);
@@ -138,7 +141,7 @@ public class CounterexampleGeneratorTest {
 
     private ProgramState getInitialState() {
 
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL();
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
         ProgramState initialState = factorySLL.getInitialState();
         initialState.getHeap()
                 .builder()
@@ -152,7 +155,7 @@ public class CounterexampleGeneratorTest {
     public void testWithProcedures() {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL();
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
 
         AssignInvoke invokeStmt = getProcedure();
         Program program = Program.builder()
@@ -241,7 +244,7 @@ public class CounterexampleGeneratorTest {
 
         AbstractMethod procedure = new SimpleAbstractMethod("method");
 
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL();
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
 
         Local varY = new Local(factorySLL.getNodeType(), "y");
         Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel().getLabel());

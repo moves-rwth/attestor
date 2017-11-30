@@ -35,7 +35,7 @@ import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
-import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.ArrayList;
@@ -201,7 +201,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                             for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == GeneralType.getType("NULL")) {
+                                if(rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }

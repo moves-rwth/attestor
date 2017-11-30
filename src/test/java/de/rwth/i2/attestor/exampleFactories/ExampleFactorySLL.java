@@ -17,8 +17,14 @@ import java.util.List;
 
 public class ExampleFactorySLL extends AbstractExampleFactory {
 
+    private final GeneralType.GeneralTypeFactory typeFactory;
+
     private Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false,true});
     private SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("next");
+
+    public ExampleFactorySLL(GeneralType.GeneralTypeFactory typeFactory) {
+        this.typeFactory = typeFactory;
+    }
 
     @Override
     public List<Nonterminal> getNonterminals() {
@@ -32,7 +38,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public Type getNodeType() {
-        Type result = GeneralType.getType("list");
+        Type result = typeFactory.get("list");
         result.addSelectorLabel("next", Constants.NULL);
         return result;
     }
