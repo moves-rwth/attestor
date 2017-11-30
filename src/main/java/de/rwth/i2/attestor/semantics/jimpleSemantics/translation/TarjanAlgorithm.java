@@ -9,7 +9,7 @@ public class TarjanAlgorithm {
 	class Vertex{
 		public IpaAbstractMethod method;
 		public int index = -1;
-		public int lowlink = 0;
+		public int lowlink = -1;
 		public boolean onStack = false;
 		
 		public Vertex( IpaAbstractMethod method ){
@@ -42,6 +42,10 @@ public class TarjanAlgorithm {
 			} else if (!method.equals(other.method))
 				return false;
 			return true;
+		}
+		
+		public String toString() {
+			return this.method.toString() + "(" + this.index + "," + this.lowlink +")";
 		}
 
 		private TarjanAlgorithm getOuterType() {
@@ -87,9 +91,11 @@ public class TarjanAlgorithm {
 		v.onStack = true;
 		
 		for( Vertex w : edges.get(v) ) {
-			if( v.index < 0 ) {
+			if( w.index < 0 ) {
 				strongconnect( w );
 				v.lowlink  = Math.min(v.lowlink, w.lowlink);
+			}else if( w.onStack ) {
+				v.lowlink  = Math.min(v.lowlink, w.index);
 			}
 		}
 		
@@ -108,7 +114,7 @@ public class TarjanAlgorithm {
 				}
 			}else {
 				Vertex s = scc.get(0);
-				if( edges.get(s).contains(s) ) { //selfloop
+				if( edges.get(s).contains(s) ) { //self loop
 					s.method.markAsRecursive();
 				}
 			}
