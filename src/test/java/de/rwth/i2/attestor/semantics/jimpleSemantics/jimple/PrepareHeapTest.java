@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
@@ -42,8 +44,11 @@ public class PrepareHeapTest {
 
 	@Before
 	public void setUp() throws Exception{
-		testGraph = ExampleHcImplFactory.getList();
-		listType = Settings.getInstance().factory().getType( "List" );
+
+		SceneObject sceneObject = new MockupSceneObject();
+		ExampleHcImplFactory hcFactory = new ExampleHcImplFactory(sceneObject);
+		testGraph = hcFactory.getList();
+		listType = sceneObject.scene().getType( "List" );
 
 		truePC = 5;
 		falsePC = 7;

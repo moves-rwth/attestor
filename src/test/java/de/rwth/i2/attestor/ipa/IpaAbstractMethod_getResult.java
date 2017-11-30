@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.ipa;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -22,9 +24,10 @@ public class IpaAbstractMethod_getResult {
 	
 	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someLabel");
 
+	SceneObject sceneObject = new MockupSceneObject();
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
-	
-	Type type = Settings.getInstance().factory().getType("someType");
+	Type type = sceneObject.scene().getType("someType");
+
 	
 	@Test
 	public void test() throws StateSpaceGenerationAbortedException{

@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,6 +23,10 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class AssignStmtTest {
 
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	@BeforeClass
 	public static void init()
 	{
@@ -27,9 +34,15 @@ public class AssignStmtTest {
 		Settings.getInstance().options().setRemoveDeadVariables(false);
 	}
 
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+	}
+
 	@Test
 	public void test(){
-		HeapConfiguration testGraph = ExampleHcImplFactory.getTLLRule();
+		HeapConfiguration testGraph = hcFactory.getTLLRule();
 		
 		
 		DefaultProgramState tmp = new DefaultProgramState(testGraph);
@@ -39,7 +52,7 @@ public class AssignStmtTest {
 		
 		String test = testGraph.toString();
 		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel("right");
-		Type type = Settings.getInstance().factory().getType( "node" );
+		Type type = sceneObject.scene().getType("node");
 
 		SettableValue lhs = new Local( type, "XYZ" );		
 		Value origin = new Local( type, "ZYX" );
@@ -77,7 +90,7 @@ public class AssignStmtTest {
 				assertEquals( "selector not set as expected", expectedNode, actualNode );
 				assertFalse( resState.getHeap().equals(input.getHeap()) );
 								
-				HeapConfiguration expectedHeap = ExampleHcImplFactory.getExpectedResult_AssignStmt();
+				HeapConfiguration expectedHeap = hcFactory.getExpectedResult_AssignStmt();
 				DefaultProgramState tmpState = new DefaultProgramState(expectedHeap);
 				tmpState.prepareHeap();
 				expectedHeap = tmpState.getHeap();

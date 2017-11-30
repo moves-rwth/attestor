@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -18,7 +20,9 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class ItentityStatementTest {
-	//private static final Logger logger = LogManager.getLogger( "ItentityStatementTest.java" );
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
 
 	private IdentityStmt stmt;
 	private HeapConfiguration inputGraph;
@@ -33,9 +37,13 @@ public class ItentityStatementTest {
 
 	@Before
 	public void setUp() throws Exception{
-		Type type = Settings.getInstance().factory().getType( "node" );
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		Type type = sceneObject.scene().getType( "node" );
 		stmt = new IdentityStmt( 1, new Local( type, "y" ), "x" );
-		inputState = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
+		inputState = new DefaultProgramState( hcFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();
 	}
@@ -49,7 +57,7 @@ public class ItentityStatementTest {
 			assertNotSame("ensure clone on state level", resState, inputState );
 			assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap() );
 			assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap() );
-			DefaultProgramState tmp = new DefaultProgramState( ExampleHcImplFactory.getListAndConstants() );
+			DefaultProgramState tmp = new DefaultProgramState( hcFactory.getListAndConstants() );
 			tmp.prepareHeap();
 			HeapConfiguration expectedGraph = tmp.getHeap();
 			assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph );

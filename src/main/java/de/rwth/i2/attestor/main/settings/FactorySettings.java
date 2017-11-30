@@ -138,6 +138,7 @@ public class FactorySettings extends SceneObject {
 	 * @param name The name of the Type.
 	 * @return The Type.
 	 */
+	@Deprecated
 	public Type getType(String name) {
 		return scene().getType(name);
 	}

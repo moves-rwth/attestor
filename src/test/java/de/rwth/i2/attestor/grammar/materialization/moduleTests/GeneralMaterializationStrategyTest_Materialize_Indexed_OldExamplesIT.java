@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -20,6 +23,8 @@ import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMateriali
 
 public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesIT {
 
+	private SceneObject sceneObject;
+	private ExampleIndexedGraphFactory graphFactory;
 	private GeneralMaterializationStrategy materializer;
 
 	@BeforeClass
@@ -29,7 +34,13 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
 
 	@Before
 	public void setUp() throws Exception {
-		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
+
+		SceneObject sceneObject = new MockupSceneObject();
+		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
+
+		BalancedTreeGrammar treeGrammar = new BalancedTreeGrammar(sceneObject);
+
+		Grammar balancedTreeGrammar = treeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
 		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
@@ -44,13 +55,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
 	@Test
 	public void testMaterialize_small_Z() {
 		
-		HeapConfiguration inputGraph 
-				= ExampleIndexedGraphFactory.getInput_MaterializeSmall_Z();
+		HeapConfiguration inputGraph = graphFactory.getInput_MaterializeSmall_Z();
 		IndexedState inputState = new IndexedState( inputGraph );
 		inputState.prepareHeap();
 		
-		HeapConfiguration expectedGraph
-				= ExampleIndexedGraphFactory.getExpected_MaterializeSmall_Z();
+		HeapConfiguration expectedGraph = graphFactory.getExpected_MaterializeSmall_Z();
 		IndexedState expectedState = new IndexedState( expectedGraph );
 		expectedState.prepareHeap();
 		
@@ -66,8 +75,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
 	
 	@Test
 	public void testMaterialize_small_sZ() {
-		HeapConfiguration inputGraph 
-				= ExampleIndexedGraphFactory.getInput_MaterializeSmall_sZ();
+		HeapConfiguration inputGraph = graphFactory.getInput_MaterializeSmall_sZ();
 		IndexedState inputState = new IndexedState(inputGraph);
 		inputState.prepareHeap();
 		
@@ -79,11 +87,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
 		//assertEquals( 3, materializedStates.size() );
 		
 		
-		IndexedState res1 = new IndexedState( ExampleIndexedGraphFactory.getExpected_MaterializeSmall2_Res1() );
+		IndexedState res1 = new IndexedState( graphFactory.getExpected_MaterializeSmall2_Res1() );
 		res1.prepareHeap();
-		IndexedState res2 = new IndexedState( ExampleIndexedGraphFactory.getExpected_MaterializeSmall2_Res2() );
+		IndexedState res2 = new IndexedState( graphFactory.getExpected_MaterializeSmall2_Res2() );
 		res2.prepareHeap();
-		IndexedState res3 = new IndexedState( ExampleIndexedGraphFactory.getExpected_MaterializeSmall2_Res3() );
+		IndexedState res3 = new IndexedState( graphFactory.getExpected_MaterializeSmall2_Res3() );
 		res3.prepareHeap();		
 		
 		assertTrue("should contain res1", materializedStates.contains(res1) );

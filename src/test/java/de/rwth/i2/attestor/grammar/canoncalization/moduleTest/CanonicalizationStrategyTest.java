@@ -2,7 +2,9 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -27,7 +29,10 @@ public class CanonicalizationStrategyTest {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "CanonicalizationStrategyTest" );
-	
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	private GeneralCanonicalizationStrategy canonicalizationStrategy;
 
 	@BeforeClass
@@ -38,13 +43,15 @@ public class CanonicalizationStrategyTest {
 	@Before
 	public void setUp() throws Exception {
 
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
 
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
-				.addRule( listLabel , ExampleHcImplFactory.getListRule1() )
-				.addRule( listLabel , ExampleHcImplFactory.getListRule2() )
-				.addRule( listLabel , ExampleHcImplFactory.getListRule3() )
+				.addRule( listLabel , hcFactory.getListRule1() )
+				.addRule( listLabel , hcFactory.getListRule2() )
+				.addRule( listLabel , hcFactory.getListRule3() )
 				.build();
 		
 		final int minDereferenceDepth = 0;
@@ -59,50 +66,48 @@ public class CanonicalizationStrategyTest {
 	@Test
 	public void testSmall() {
 
-		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest1();
+		HeapConfiguration test = hcFactory.getCanonizationTest1();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
 		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
-		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest1(), test );
+		assertEquals("Input heap should not change", hcFactory.getCanonizationTest1(), test );
 		
-		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
+		assertEquals("result not as expected", hcFactory.getCanonizationRes1(), state.getHeap() );
 	}
 	
 	@Test
 	public void testBig() {
 
-		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest2();
-		
-	
+		HeapConfiguration test = hcFactory.getCanonizationTest2();
 		DefaultProgramState testExec = new DefaultProgramState(test);
 		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
-		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest2(), test );
+		assertEquals("Input heap should not change", hcFactory.getCanonizationTest2(), test );
 
-		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes1(), state.getHeap() );
+		assertEquals("result not as expected", hcFactory.getCanonizationRes1(), state.getHeap() );
 	}
 	
 	@Test
 	public void testWithVariable() {
 
-		HeapConfiguration test = ExampleHcImplFactory.getCanonizationTest3();
+		HeapConfiguration test = hcFactory.getCanonizationTest3();
 		
 		DefaultProgramState testExec = new DefaultProgramState(test);
 		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
-		assertEquals("Input heap should not change", ExampleHcImplFactory.getCanonizationTest3(), test );
-		assertEquals("result not as expected", ExampleHcImplFactory.getCanonizationRes3(), state.getHeap() );
+		assertEquals("Input heap should not change", hcFactory.getCanonizationTest3(), test );
+		assertEquals("result not as expected", hcFactory.getCanonizationRes3(), state.getHeap() );
 	}
 	
 	@Test
 	public void testLongSllFullAbstraction() {
 		
-		HeapConfiguration test = ExampleHcImplFactory.getLongConcreteSLL();
+		HeapConfiguration test = hcFactory.getLongConcreteSLL();
 		DefaultProgramState testExec = new DefaultProgramState(test);
 		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
-		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
+		HeapConfiguration expected = hcFactory.getSLLHandle();
 
 		assertEquals(expected, state.getHeap());
 	}
@@ -110,7 +115,7 @@ public class CanonicalizationStrategyTest {
 	@Test
 	public void testLongSllFullAbstractionWithVariables() {
 		
-		HeapConfiguration test = ExampleHcImplFactory.getLongConcreteSLL().clone();
+		HeapConfiguration test = hcFactory.getLongConcreteSLL().clone();
 		
 		TIntArrayList nodes = test.nodes();
 		
@@ -123,7 +128,7 @@ public class CanonicalizationStrategyTest {
 		DefaultProgramState testExec = new DefaultProgramState(test);
 		ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 		
-		HeapConfiguration expected = ExampleHcImplFactory.getSLLHandle();
+		HeapConfiguration expected = hcFactory.getSLLHandle();
 		TIntArrayList expectedNodes = expected.nodes();
 		
 		expected.builder()

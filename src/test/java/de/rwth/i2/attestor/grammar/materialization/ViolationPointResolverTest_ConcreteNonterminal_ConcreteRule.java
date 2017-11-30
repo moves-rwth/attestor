@@ -5,6 +5,9 @@ import static org.hamcrest.Matchers.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,8 +28,8 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	public static final String NONTERMINAL_LABEL = "GrammarLogikTest_ConcreteNonterminal_ConcreteRule";
 	public static final Nonterminal NT_INDEX_Z = createIndexedNonterminalWithIndex_Z();
 	public static final Nonterminal NT_INDEX_sZ = createIndexedNonterminalWithIndex_sZ();
-	private static final HeapConfiguration RHS_CREATING_NEXT = getRule_createNext();
-	private static final HeapConfiguration RHS_NOT_CREATING_NEXT = getRule_notCreateNext();
+	private HeapConfiguration RHS_CREATING_NEXT;
+	private HeapConfiguration RHS_NOT_CREATING_NEXT;
 	private static final String SELECTOR_NAME_NEXT = "next";
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_WITH_NEXT = 0;
@@ -38,6 +41,15 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		UnitTestGlobalSettings.reset();
 	}
 
+	private SceneObject sceneObject;
+
+	@Before
+	public void setUp() {
+
+		sceneObject = new MockupSceneObject();
+		RHS_CREATING_NEXT = getRule_createNext();
+		RHS_NOT_CREATING_NEXT = getRule_notCreateNext();
+	}
 
 	@Test
 	public void testGetRuleGraphsCreatingSelectors_Success(){
@@ -91,9 +103,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 				empty() );
 	}
 
-	private static HeapConfiguration getRule_notCreateNext() {
+	private HeapConfiguration getRule_notCreateNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
@@ -112,9 +124,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 				.build();
 	}
 
-	private static HeapConfiguration getRule_createNext() {
+	private HeapConfiguration getRule_createNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NAME_NEXT );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );

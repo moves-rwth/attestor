@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.ipa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
@@ -19,7 +21,8 @@ public class IpaAbstractMethod_testReordering {
 
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
 
-	Type type = Settings.getInstance().factory().getType("someType");
+	SceneObject sceneObject = new MockupSceneObject();
+	Type type = sceneObject.scene().getType("someType");
 	String nonterminalLabel = "IpaAbstractMethodTest";
 	
 	@Test

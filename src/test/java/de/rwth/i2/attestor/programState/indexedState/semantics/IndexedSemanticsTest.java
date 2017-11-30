@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.programState.indexedState.semantics;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
@@ -12,6 +14,7 @@ import de.rwth.i2.attestor.programState.indexedState.ExampleIndexedGraphFactory;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,20 +26,24 @@ import static org.junit.Assert.fail;
 
 public class IndexedSemanticsTest {
 
-	@BeforeClass
-	public static void init() {
+	SceneObject sceneObject;
+	ExampleIndexedGraphFactory graphFactory;
 
+	@Before
+	public void init() {
 		UnitTestGlobalSettings.reset();
+		sceneObject = new MockupSceneObject();
+		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 	}
 
 	@Test
 	public void testFieldAssign() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_FieldAccess() );
+		IndexedState input = new IndexedState( graphFactory.getInput_FieldAccess() );
 		input.prepareHeap();
-		IndexedState expected = new IndexedState( ExampleIndexedGraphFactory.getExpected_FieldAccess() );
+		IndexedState expected = new IndexedState( graphFactory.getExpected_FieldAccess() );
 		expected.prepareHeap();
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");
@@ -54,12 +61,12 @@ public class IndexedSemanticsTest {
 	
 	@Test
 	public void testNew(){
-		IndexedState input = new IndexedState(ExampleIndexedGraphFactory.getExpected_FieldAccess());
+		IndexedState input = new IndexedState(graphFactory.getExpected_FieldAccess());
 		input.prepareHeap();
-		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_newNode() );
+		IndexedState expected = new IndexedState(graphFactory.getExpected_newNode() );
 		expected.prepareHeap();
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		Local varTmp = new Local(type, "tmp");
 		NewExpr expr = new NewExpr(type);
@@ -76,12 +83,12 @@ public class IndexedSemanticsTest {
 
 	@Test
 	public void testAssignField(){
-		IndexedState input = new IndexedState(ExampleIndexedGraphFactory.getExpected_newNode() );
+		IndexedState input = new IndexedState(graphFactory.getExpected_newNode() );
 		input.prepareHeap();
-		IndexedState expected = new IndexedState( ExampleIndexedGraphFactory.getExpected_fieldAssign() );
+		IndexedState expected = new IndexedState( graphFactory.getExpected_fieldAssign() );
 		expected.prepareHeap();
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		Local varTmp = new Local(type, "tmp");
 		Local varX = new Local(type, "x");
 		Field xLeft = new Field(type, varX, "left");

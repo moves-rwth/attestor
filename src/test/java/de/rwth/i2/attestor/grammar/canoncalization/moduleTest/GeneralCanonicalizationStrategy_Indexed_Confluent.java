@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +42,8 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 	private static final String NT_LABEL = "GeneralCanonicalizationStrategyIC";
 	private static final int RANK = 2;
 	private static final boolean[] isReductionTentacle = new boolean[RANK];
-	private static final Type TYPE = Settings.getInstance().factory().getType("type");
+	private final SceneObject sceneObject = new MockupSceneObject();
+	private final Type TYPE = sceneObject.scene().getType("type");
 	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	
 	private static final int sizeOfChain = 10;

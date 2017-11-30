@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +32,7 @@ import soot.util.Chain;
  * @author Hannah Arndt, Christoph
  *
  */
-public class TopLevelTranslation implements JimpleToAbstractSemantics {
+public class TopLevelTranslation extends SceneObject implements JimpleToAbstractSemantics {
 
 	/**
 	 * The logger for this class.
@@ -67,7 +68,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Sets the firstLevel of the translation hierarchy to
 	 * {@link StandardAbstractSemantics}
 	 */
-	public TopLevelTranslation() {
+	public TopLevelTranslation(SceneObject sceneObject) {
+		super(sceneObject);
 		firstLevel = new StandardAbstractSemantics(this);
 	}
 
@@ -75,7 +77,8 @@ public class TopLevelTranslation implements JimpleToAbstractSemantics {
 	 * Initializes the TopLevelTranslation with a custom first level.
 	 * @param firstLevel The custom first level of the translation process.
 	 */
-	public TopLevelTranslation( JimpleToAbstractSemantics firstLevel ){
+	public TopLevelTranslation(SceneObject sceneObject, JimpleToAbstractSemantics firstLevel ){
+		super(sceneObject);
 		this.firstLevel = firstLevel;
 		firstLevel.setTopLevel(this);
 	}

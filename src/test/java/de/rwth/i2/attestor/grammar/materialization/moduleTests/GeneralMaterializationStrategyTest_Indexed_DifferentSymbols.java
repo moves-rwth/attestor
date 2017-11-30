@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.contains;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -40,6 +42,8 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	AbstractIndexSymbol otherAbstractSymbol;
 	private static final String VIOLATION_POINT_SELECTOR = "next";
 
+	SceneObject sceneObject;
+
 	@BeforeClass
 	public static void init() {
 		UnitTestGlobalSettings.reset();
@@ -47,6 +51,9 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 	@Before
 	public void setUp() {
+
+		sceneObject = new MockupSceneObject();
+
 		oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
 		otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
 		Grammar grammar = buildSimpleGrammarWithTwoIndicesGrammars();
@@ -83,8 +90,8 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 
 	private HeapConfiguration getInput() {
-		Type someType = Settings.getInstance().factory().getType("type");
-		
+		Type someType = sceneObject.scene().getType("type");
+
 		List<IndexSymbol> indexWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
 		Nonterminal toReplace = getNonterminalWithIndex(indexWithOneIndexSymbol);
 		Nonterminal controlWithSameIndex = getNonterminalWithIndex(indexWithOneIndexSymbol);
@@ -110,7 +117,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private HeapConfiguration getExpected() {
-		Type someType = Settings.getInstance().factory().getType("type");
+		Type someType = sceneObject.scene().getType("type");
 		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		List<IndexSymbol> materializedIndex = indexForLhs();
@@ -160,7 +167,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private HeapConfiguration someRhs() {
-		Type someType = Settings.getInstance().factory().getType("type");
+		Type someType = sceneObject.scene().getType("type");
 		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();

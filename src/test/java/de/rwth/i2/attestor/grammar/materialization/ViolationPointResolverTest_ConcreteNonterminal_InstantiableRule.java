@@ -6,6 +6,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,11 +35,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	private static final Nonterminal NONTERMINAL_INSTANTIABLE = createNonterminal_Instantiable();
 	private static final Nonterminal NONTERMINAL_NON_MATCHING = createNonterminal_s();
 	
-	private static final HeapConfiguration INSTANTIABLE_RULE_CREATING_NEXT = getInstantiableRuleCreatingNext();
-	//private static final HeapConfiguration INSTANTIATED_RULE_CREATING_NEXT = getInstantiatedRuleCreatingNext();
-	private static final HeapConfiguration INSTANTIABLE_RULE_NOT_CREATING_NEXT = getInstantiableRuleNotCreatingNext();
-	
-	
+	private HeapConfiguration INSTANTIABLE_RULE_CREATING_NEXT;
+	private HeapConfiguration INSTANTIABLE_RULE_NOT_CREATING_NEXT;
+
 	private static final int TENTACLE_WITH_NEXT = 0;
 	private static final String SELECTOR_NEXT_NAME = "next";
 	private static final String OTHER_SELECTOR_NAME = "prev";
@@ -48,6 +49,14 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		UnitTestGlobalSettings.reset();
 	}
 
+	private SceneObject sceneObject;
+
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+		INSTANTIABLE_RULE_CREATING_NEXT = getInstantiableRuleCreatingNext();
+		INSTANTIABLE_RULE_NOT_CREATING_NEXT = getInstantiableRuleNotCreatingNext();
+	}
 
 
 	@Test
@@ -104,9 +113,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , index);
 	}
 
-	private static HeapConfiguration getInstantiableRuleCreatingNext() {
+	private HeapConfiguration getInstantiableRuleCreatingNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NEXT_NAME );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );
@@ -125,9 +134,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 				.build();
 	}
 	
-	private static HeapConfiguration getInstantiableRuleNotCreatingNext() {
+	private HeapConfiguration getInstantiableRuleNotCreatingNext() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( SELECTOR_NEXT_NAME );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( OTHER_SELECTOR_NAME );

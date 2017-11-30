@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
@@ -20,7 +22,9 @@ import gnu.trove.list.array.TIntArrayList;
 public class IpaContractCollectionTest {
 
 	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
-	Type type = Settings.getInstance().factory().getType("type");
+
+	SceneObject sceneObject = new MockupSceneObject();
+	Type type = sceneObject.scene().getType("type");
 
 	@Test
 	public void test() {

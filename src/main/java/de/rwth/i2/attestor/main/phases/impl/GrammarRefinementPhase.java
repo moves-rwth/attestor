@@ -133,7 +133,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 }
 
                 if(reachabilityAutomataBySelList.add(allowedSelectors)) {
-                    stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
+                    stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this,allowedSelectors));
                     logger.debug("Enable heap automaton to track reachable variables according to selectors "
                             + allowedSelectors);
                 }
@@ -146,7 +146,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                     continue;
                 }
 
-                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
+                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this));
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
                 settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
                 settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());

@@ -2,30 +2,40 @@ package de.rwth.i2.attestor.programState.indexedState;
 
 import java.util.ArrayList;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
 
 public class BalancedTreeGrammar{
 
-	public static final AnnotatedSelectorLabel SELECTOR_RIGHT_0 = new AnnotatedSelectorLabel("right", "0");
-	public static final AnnotatedSelectorLabel SELECTOR_RIGHT_1 = new AnnotatedSelectorLabel("right", "1");
-	public static final AnnotatedSelectorLabel SELECTOR_LEFT_M1 = new AnnotatedSelectorLabel("left", "-1");
-	public static final AnnotatedSelectorLabel SELECTOR_PARENT = new AnnotatedSelectorLabel("parent", "");
-	public static final AnnotatedSelectorLabel SELECTOR_RIGHT_M1 = new AnnotatedSelectorLabel("right", "-1");
-	public static final AnnotatedSelectorLabel SELECTOR_LEFT_1 = new AnnotatedSelectorLabel("left", "1");
-	public static final AnnotatedSelectorLabel SELECTOR_LEFT_0 = new AnnotatedSelectorLabel("left", "0");
-	public static final Type TYPE = Settings.getInstance().factory().getType("AVLTree");
-	public static final boolean[] IS_REDUCTION_TENTACLE = new boolean[]{false, true};
-	public static final int NT_RANK = 2;
-	public static final String NT_LABEL = "B";
+	SceneObject sceneObject;
 
-	public static  Grammar getGrammar(){
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_0 = new AnnotatedSelectorLabel("right", "0");
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_1 = new AnnotatedSelectorLabel("right", "1");
+	public AnnotatedSelectorLabel SELECTOR_LEFT_M1 = new AnnotatedSelectorLabel("left", "-1");
+	public AnnotatedSelectorLabel SELECTOR_PARENT = new AnnotatedSelectorLabel("parent", "");
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_M1 = new AnnotatedSelectorLabel("right", "-1");
+	public AnnotatedSelectorLabel SELECTOR_LEFT_1 = new AnnotatedSelectorLabel("left", "1");
+	public AnnotatedSelectorLabel SELECTOR_LEFT_0 = new AnnotatedSelectorLabel("left", "0");
+	public boolean[] IS_REDUCTION_TENTACLE = new boolean[]{false, true};
+	public int NT_RANK = 2;
+	public String NT_LABEL = "B";
+	public Type TYPE;
+
+	public BalancedTreeGrammar(SceneObject sceneObject) {
+		this.sceneObject = sceneObject;
+		TYPE = sceneObject.scene().getType("AVLTree");
+	}
+
+	public Grammar getGrammar(){
 		GrammarBuilder builder = Grammar.builder();
 		addRuleBalanced( builder );
 		addUnbalancedRuleLeft( builder );
@@ -36,7 +46,7 @@ public class BalancedTreeGrammar{
 		return builder.build();
 	}
 	
-	private static void addRuleBalanced(GrammarBuilder builder){
+	private void addRuleBalanced(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getIndexVariable();
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
@@ -48,7 +58,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createRuleBalanced() {
+	public HeapConfiguration createRuleBalanced() {
 		
 		IndexVariable var =  IndexVariable.getIndexVariable();
 		
@@ -74,7 +84,7 @@ public class BalancedTreeGrammar{
 		return rhs;
 	}
 	
-	private static void addUnbalancedRuleLeft(GrammarBuilder builder){
+	private void addUnbalancedRuleLeft(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
@@ -89,7 +99,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createUnbalancedRuleLeft() {
+	public HeapConfiguration createUnbalancedRuleLeft() {
 		
 		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -120,7 +130,7 @@ public class BalancedTreeGrammar{
 		return rhs;
 	}
 	
-	private static void addUnbalancedRuleRight(GrammarBuilder builder){
+	private void addUnbalancedRuleRight(GrammarBuilder builder){
 		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
@@ -135,7 +145,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createUnbalancedRuleRight() {
+	public HeapConfiguration createUnbalancedRuleRight() {
 		IndexVariable var = IndexVariable.getIndexVariable();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		
@@ -165,7 +175,7 @@ public class BalancedTreeGrammar{
 		return rhs;
 	}
 
-	private static void addBalancedLeafRule(GrammarBuilder builder){
+	private void addBalancedLeafRule(GrammarBuilder builder){
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
@@ -177,7 +187,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createBalancedLeafRule() {
+	public HeapConfiguration createBalancedLeafRule() {
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_0;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_0;
 		
@@ -192,7 +202,7 @@ public class BalancedTreeGrammar{
 		return rhs;
 	}
 	
-	private static void addLeftLeafRule(GrammarBuilder builder){
+	private void addLeftLeafRule(GrammarBuilder builder){
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -205,7 +215,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createLeftLeafRule() {
+	public HeapConfiguration createLeftLeafRule() {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> l = new ArrayList<>();
@@ -228,7 +238,7 @@ public class BalancedTreeGrammar{
 		return rhs;
 	}
 
-	private static void addRightLeafRule(GrammarBuilder builder){
+	private void addRightLeafRule(GrammarBuilder builder){
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
@@ -242,7 +252,7 @@ public class BalancedTreeGrammar{
 		builder.addRule(lhs, rhs);
 	}
 
-	public static HeapConfiguration createRightLeafRule() {
+	public HeapConfiguration createRightLeafRule() {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();

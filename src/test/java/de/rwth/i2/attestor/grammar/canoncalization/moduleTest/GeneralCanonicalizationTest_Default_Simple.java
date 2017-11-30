@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -13,6 +14,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.NonterminalEdgeBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
@@ -28,7 +30,8 @@ import static org.junit.Assert.assertEquals;
 public class GeneralCanonicalizationTest_Default_Simple {
 	
 	private static final int RANK = 3;
-	private static final Type TYPE = Settings.getInstance().factory().getType("type");
+	private final SceneObject sceneObject = new MockupSceneObject();
+	private final Type TYPE = sceneObject.scene().getType("type");
 	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	

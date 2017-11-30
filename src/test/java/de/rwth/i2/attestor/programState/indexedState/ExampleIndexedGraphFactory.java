@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
@@ -11,13 +13,21 @@ import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexVariable;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.BeforeClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExampleIndexedGraphFactory {
 
-	public static HeapConfiguration getBalancedTreeLeft3(){
+	private SceneObject sceneObject;
+
+	public ExampleIndexedGraphFactory(SceneObject sceneObject) {
+		this.sceneObject = sceneObject;
+	}
+
+
+	public HeapConfiguration getBalancedTreeLeft3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		HeapConfigurationBuilder builder = hc.builder();
 
@@ -40,7 +50,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
 
-		Type nodeType = Settings.getInstance().factory().getType("tree");
+		Type nodeType = sceneObject.scene().getType("tree");
 
 		TIntArrayList nodes = new TIntArrayList();
 		builder.addNodes(nodeType, 4, nodes)
@@ -54,7 +64,7 @@ public class ExampleIndexedGraphFactory {
 		return builder.build();
 	}
 
-	public static HeapConfiguration getCannotAbstractIndex(){
+	public HeapConfiguration getCannotAbstractIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		HeapConfigurationBuilder builder = hc.builder();
 
@@ -78,7 +88,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
 
-		Type nodeType = Settings.getInstance().factory().getType("tree");
+		Type nodeType = sceneObject.scene().getType("tree");
 
 		TIntArrayList nodes = new TIntArrayList();
 		builder.addNodes(nodeType, 4, nodes)
@@ -92,7 +102,7 @@ public class ExampleIndexedGraphFactory {
 		return builder.build();
 	}
 	
-	public static HeapConfiguration getInput_MaterializeSmall_Z(){
+	public HeapConfiguration getInput_MaterializeSmall_Z(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -101,7 +111,7 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
+		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
 						.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
 						.addVariableEdge("x", nodes.get(0))
 						.build();
@@ -109,13 +119,13 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeSmall_Z(){
+	public HeapConfiguration getExpected_MaterializeSmall_Z(){
 		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel("right", "0");
 		
 		HeapConfiguration res = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		res = res.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
+		res = res.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
 						.addSelector(nodes.get(0), leftLabel, nodes.get(1))
 						.addSelector(nodes.get(0), rightLabel, nodes.get(1))
 						.addVariableEdge("x", nodes.get(0))
@@ -124,7 +134,7 @@ public class ExampleIndexedGraphFactory {
 		return res;
 	}
 	
-	public static HeapConfiguration getInput_MaterializeSmall_sZ(){
+	public HeapConfiguration getInput_MaterializeSmall_sZ(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -135,7 +145,7 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
+		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
 						 .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
 						 .addVariableEdge("x", nodes.get(0))
 						 .build();
@@ -143,7 +153,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeSmall2_Res1(){
+	public HeapConfiguration getExpected_MaterializeSmall2_Res1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -156,7 +166,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 3, nodes)
+		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 3, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
 				.addSelector(nodes.get(0), right, nodes.get(2))
@@ -166,7 +176,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeSmall2_Res2(){
+	public HeapConfiguration getExpected_MaterializeSmall2_Res2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -179,7 +189,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 3, nodes)
+		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 3, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(2))
 				.addSelector(nodes.get(0), right, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
@@ -189,7 +199,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeSmall2_Res3(){
+	public HeapConfiguration getExpected_MaterializeSmall2_Res3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -205,7 +215,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
 		TIntArrayList nodes = new TIntArrayList();
-		hc = hc.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 4, nodes)
+		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 4, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
 				.addSelector(nodes.get(1), parent, nodes.get(0))
 				.addSelector(nodes.get(0), right, nodes.get(2))
@@ -217,7 +227,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getInput_MaterializeBig(){
+	public HeapConfiguration getInput_MaterializeBig(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -235,7 +245,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), left, nodes.get(1))
@@ -249,7 +259,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeBig_Res1(){
+	public HeapConfiguration getExpected_MaterializeBig_Res1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -266,7 +276,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 5, nodes)
 				.addSelector(nodes.get(0), leftM, nodes.get(1))
@@ -283,7 +293,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeBig_Res2(){
+	public HeapConfiguration getExpected_MaterializeBig_Res2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
@@ -302,7 +312,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(type, 5, nodes)
 				.addSelector(nodes.get(0), leftM, nodes.get(1))
@@ -319,7 +329,7 @@ public class ExampleIndexedGraphFactory {
 		return hc;
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeBig_Res3(){
+	public HeapConfiguration getExpected_MaterializeBig_Res3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
@@ -341,7 +351,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -360,7 +370,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeBig_Res4(){
+	public HeapConfiguration getExpected_MaterializeBig_Res4(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -385,7 +395,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -404,7 +414,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_MaterializeBig_Res5(){
+	public HeapConfiguration getExpected_MaterializeBig_Res5(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 	
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -427,7 +437,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		
 		return hc.builder().addNodes(type, 6, nodes)
@@ -446,13 +456,13 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_CanonizeSimple(){
+	public HeapConfiguration getInput_CanonizeSimple(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -461,14 +471,14 @@ public class ExampleIndexedGraphFactory {
 			.build();
 	}
 	
-	public static HeapConfiguration getExpected_CanonizeSimple(){
+	public HeapConfiguration getExpected_CanonizeSimple(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		ArrayList<IndexSymbol> index = new ArrayList<>();
 		index.add( AbstractIndexSymbol.get("X"));
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -476,7 +486,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_CanonizeVar(){
+	public HeapConfiguration getInput_CanonizeVar(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
@@ -492,7 +502,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), leftZ, nodes.get(1))
@@ -504,7 +514,7 @@ public class ExampleIndexedGraphFactory {
 				.build();		
 	}
 	
-	public static HeapConfiguration getExpected_CanonizeVar(){
+	public HeapConfiguration getExpected_CanonizeVar(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 
@@ -514,7 +524,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -522,7 +532,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_FieldAccess(){
+	public HeapConfiguration getInput_FieldAccess(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
@@ -534,7 +544,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -548,7 +558,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_FieldAccess(){
+	public HeapConfiguration getExpected_FieldAccess(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
@@ -560,7 +570,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -574,7 +584,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_newNode(){
+	public HeapConfiguration getExpected_newNode(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
@@ -586,7 +596,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -601,7 +611,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getExpected_fieldAssign(){
+	public HeapConfiguration getExpected_fieldAssign(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
@@ -614,7 +624,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -629,7 +639,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_indexCanonization_longIndex(){
+	public HeapConfiguration getInput_indexCanonization_longIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false );
@@ -650,7 +660,7 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
 				.addSelector(nodes.get(0), leftZ, nodes.get(1))
@@ -662,7 +672,7 @@ public class ExampleIndexedGraphFactory {
 				.build();		
 	}
 	
-	public static HeapConfiguration getExpected_indexCanonization_longIndex(){
+	public HeapConfiguration getExpected_indexCanonization_longIndex(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AbstractIndexSymbol abs = AbstractIndexSymbol.get("X");
@@ -671,7 +681,7 @@ public class ExampleIndexedGraphFactory {
 		index.add(abs);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
+		Type type = sceneObject.scene().getType("AVLTree");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -679,7 +689,7 @@ public class ExampleIndexedGraphFactory {
 				.build();
 	}
 	
-	public static HeapConfiguration getInput_indexCanonization_Blocked(){
+	public HeapConfiguration getInput_indexCanonization_Blocked(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -694,8 +704,8 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "");
 		
-		Type type = Settings.getInstance().factory().getType("AVLTree");
-		Type nullType = Settings.getInstance().factory().getType("NULL");
+		Type type = sceneObject.scene().getType("AVLTree");
+		Type nullType = sceneObject.scene().getType("NULL");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		HeapConfigurationBuilder builder = hc.builder();
@@ -710,15 +720,15 @@ public class ExampleIndexedGraphFactory {
 				.build();			
 	}
 	
-	public static HeapConfiguration getInput_practicalCanonize(){
+	public HeapConfiguration getInput_practicalCanonize(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
 		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		
-		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
-		Type nullType = Settings.getInstance().factory().getType("NULL");
+		Type nodeType = sceneObject.scene().getType("AVLTree");
+		Type nullType = sceneObject.scene().getType("NULL");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(nodeType, 2, nodes)
@@ -733,7 +743,7 @@ public class ExampleIndexedGraphFactory {
 					.build();
 	}
 	
-	public static HeapConfiguration getInput_practicalCanonize2(){
+	public HeapConfiguration getInput_practicalCanonize2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
@@ -741,9 +751,9 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
-		Type nullType = Settings.getInstance().factory().getType("NULL");
-		Type zType = Settings.getInstance().factory().getType("int_0");
+		Type nodeType = sceneObject.scene().getType("AVLTree");
+		Type nullType = sceneObject.scene().getType("NULL");
+		Type zType = sceneObject.scene().getType("int_0");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(nodeType, 2, nodes)
@@ -762,7 +772,7 @@ public class ExampleIndexedGraphFactory {
 					.build();
 	}
 	
-	public static HeapConfiguration getInput_practicalCanonize3(){
+	public HeapConfiguration getInput_practicalCanonize3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		List<IndexSymbol> index = new ArrayList<>();
@@ -777,12 +787,12 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
-		Type nullType = Settings.getInstance().factory().getType("NULL");
+		Type nodeType = sceneObject.scene().getType("AVLTree");
+		Type nullType = sceneObject.scene().getType("NULL");
 
-		Type mType = Settings.getInstance().factory().getType("int_-1");
-		Type zType = Settings.getInstance().factory().getType("int_0");
-		Type pType = Settings.getInstance().factory().getType( "int_1" );
+		Type mType = sceneObject.scene().getType("int_-1");
+		Type zType = sceneObject.scene().getType("int_0");
+		Type pType = sceneObject.scene().getType( "int_1" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( nodeType, 3, nodes )
@@ -808,7 +818,7 @@ public class ExampleIndexedGraphFactory {
 				.build();			
 	}
 	
-	public static HeapConfiguration getEmbedding_practicalCanonize3(){
+	public HeapConfiguration getEmbedding_practicalCanonize3(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		List<IndexSymbol> index = new ArrayList<>();
@@ -821,12 +831,12 @@ public class ExampleIndexedGraphFactory {
 		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
-		Type nodeType = Settings.getInstance().factory().getType("AVLTree");
-		Type nullType = Settings.getInstance().factory().getType("NULL");
+		Type nodeType = sceneObject.scene().getType("AVLTree");
+		Type nullType = sceneObject.scene().getType("NULL");
 
-		Type mType = Settings.getInstance().factory().getType("int_-1");
-		Type zType = Settings.getInstance().factory().getType("int_0");
-		Type pType = Settings.getInstance().factory().getType( "int_1" );
+		Type mType = sceneObject.scene().getType("int_-1");
+		Type zType = sceneObject.scene().getType("int_0");
+		Type pType = sceneObject.scene().getType( "int_1" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( nodeType, 2, nodes )
@@ -851,7 +861,7 @@ public class ExampleIndexedGraphFactory {
 				.build();			
 	}
 	
-	public static HeapConfiguration getInput_Cononize_withInstNecessary(){
+	public HeapConfiguration getInput_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
@@ -882,11 +892,11 @@ public class ExampleIndexedGraphFactory {
 		pIndex.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -917,7 +927,7 @@ public class ExampleIndexedGraphFactory {
 							.build();
 	}
 	
-	public static HeapConfiguration getExpected_Cononize_withInstNecessary(){
+	public HeapConfiguration getExpected_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
@@ -943,11 +953,11 @@ public class ExampleIndexedGraphFactory {
 		pIndex.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -972,7 +982,7 @@ public class ExampleIndexedGraphFactory {
 							.build();
 	}
 	
-	public static HeapConfiguration getRule_Cononize_withInstNecessary(){
+	public HeapConfiguration getRule_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
@@ -996,11 +1006,11 @@ public class ExampleIndexedGraphFactory {
 		pIndex.add( var );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1023,7 +1033,7 @@ public class ExampleIndexedGraphFactory {
 							.build();
 	}
 	
-	public static HeapConfiguration getInput_Embedding5(){
+	public HeapConfiguration getInput_Embedding5(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
@@ -1052,11 +1062,11 @@ public class ExampleIndexedGraphFactory {
 		pIndex.add( abs );
 		IndexedNonterminal pNt = new IndexedNonterminalImpl( "PTestInst", 5, reductionTentacles, pIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1079,7 +1089,7 @@ public class ExampleIndexedGraphFactory {
 							.build();
 	}
 	
-	public static HeapConfiguration getInput_AnnotationMaintaining(){
+	public HeapConfiguration getInput_AnnotationMaintaining(){
 		HeapConfiguration  hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "" );
@@ -1100,11 +1110,11 @@ public class ExampleIndexedGraphFactory {
 		rightIndex.add( abs );
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )
@@ -1126,7 +1136,7 @@ public class ExampleIndexedGraphFactory {
 							.build();
 	}
 	
-	public static HeapConfiguration getExpected_AnnotationMaintaining(){
+	public HeapConfiguration getExpected_AnnotationMaintaining(){
 		HeapConfiguration  hc = new InternalHeapConfiguration();
 		
 		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "1" );
@@ -1147,11 +1157,11 @@ public class ExampleIndexedGraphFactory {
 		rightIndex.add( abs );
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl( "BT", 5, reductionTentacles , rightIndex );
 		
-		Type int_m = Settings.getInstance().factory().getType( "int_-1" );
-		Type int_z = Settings.getInstance().factory().getType( "int_0" );
-		Type int_p = Settings.getInstance().factory().getType( "int_1" );
-		Type nullType = Settings.getInstance().factory().getType( "NULL" );
-		Type nodeType = Settings.getInstance().factory().getType( "AVLTree" );
+		Type int_m = sceneObject.scene().getType( "int_-1" );
+		Type int_z = sceneObject.scene().getType( "int_0" );
+		Type int_p = sceneObject.scene().getType( "int_1" );
+		Type nullType = sceneObject.scene().getType( "NULL" );
+		Type nodeType = sceneObject.scene().getType( "AVLTree" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes( int_m, 1, nodes )

@@ -2,7 +2,10 @@ package de.rwth.i2.attestor.graph.heap.internal;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,6 +21,15 @@ public class HeapConfigurationTest {
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
+	}
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
 	}
 
 	
@@ -475,8 +487,8 @@ public class HeapConfigurationTest {
 
 	@Test
 	public void testHash(){
-		final HeapConfiguration testInput = ExampleHcImplFactory.getInput_testHash();
-		final HeapConfiguration testInput_permuted = ExampleHcImplFactory.getInput_testHash_Permuted();
+		final HeapConfiguration testInput = hcFactory.getInput_testHash();
+		final HeapConfiguration testInput_permuted = hcFactory.getInput_testHash_Permuted();
 		
 		assertEquals("Inputs not considered equal", testInput, testInput_permuted);
 		assertEquals("Hash code not identical", testInput.hashCode(), testInput_permuted.hashCode() );

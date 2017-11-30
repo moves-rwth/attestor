@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
@@ -7,6 +8,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
@@ -23,11 +25,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ComplexGraphBuilderTest {
-	
-	@SuppressWarnings("unused")
+
 	private static final Logger logger = LogManager.getLogger( "GraphBuilderTest" );
 
-	private static final Type type = Settings.getInstance().factory().getType("type");
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcImplFactory;
+	private Type type;
+
 	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("selector");
 	private static final SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
 	private static final SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
@@ -48,7 +52,11 @@ public class ComplexGraphBuilderTest {
 
 	@Before
 	public void setUp() {
-		
+
+		sceneObject = new MockupSceneObject();
+		hcImplFactory = new ExampleHcImplFactory(sceneObject);
+		type = sceneObject.scene().getType("type");
+
 		result = new InternalHeapConfiguration();
 		nodes = new TIntArrayList();
 	}
@@ -652,14 +660,14 @@ public class ComplexGraphBuilderTest {
 		
 		List<HeapConfiguration> availableHcs = new ArrayList<>();
 		
-		availableHcs.add( ExampleHcImplFactory.getAdmissibleGraph() );
-		availableHcs.add( ExampleHcImplFactory.getBadTwoElementDLL() );
-		availableHcs.add( ExampleHcImplFactory.getCanonizationRes1() );
-		availableHcs.add( ExampleHcImplFactory.getEmptyGraphWithConstants() );
-		availableHcs.add( ExampleHcImplFactory.getInAdmissibleGraph() );
-		availableHcs.add( ExampleHcImplFactory.getLargerTree() );
-		availableHcs.add( ExampleHcImplFactory.getList() );
-		availableHcs.add( ExampleHcImplFactory.getListAndConstants() );
+		availableHcs.add( hcImplFactory.getAdmissibleGraph() );
+		availableHcs.add( hcImplFactory.getBadTwoElementDLL() );
+		availableHcs.add( hcImplFactory.getCanonizationRes1() );
+		availableHcs.add( hcImplFactory.getEmptyGraphWithConstants() );
+		availableHcs.add( hcImplFactory.getInAdmissibleGraph() );
+		availableHcs.add( hcImplFactory.getLargerTree() );
+		availableHcs.add( hcImplFactory.getList() );
+		availableHcs.add( hcImplFactory.getListAndConstants() );
 		
 		for(HeapConfiguration hc : availableHcs) {
 			assertEquals(hc, hc.clone());	
@@ -668,7 +676,7 @@ public class ComplexGraphBuilderTest {
 	
 	@Test
 	public void testChangeSelectorLabel(){
-		result = ExampleHcImplFactory.getInput_changeSelectorLabel();
+		result = hcImplFactory.getInput_changeSelectorLabel();
 		
 		int var = result.variableWith("x");
 		int node = result.targetOf(var);
@@ -680,6 +688,6 @@ public class ComplexGraphBuilderTest {
 			.replaceSelector(node, oldSel, newSel)
 			.build();
 		
-		assertEquals(ExampleHcImplFactory.getExpected_changeSelectorLabel(), result);
+		assertEquals(hcImplFactory.getExpected_changeSelectorLabel(), result);
 	}
 }

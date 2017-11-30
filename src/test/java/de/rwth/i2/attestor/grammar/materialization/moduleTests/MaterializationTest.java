@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
@@ -28,20 +31,26 @@ public class MaterializationTest {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "MaterializationTest" );
 
-	private static GeneralMaterializationStrategy materializer;
-	
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcImplFactory;
 
-	@BeforeClass
-	public static void init() {
+	private GeneralMaterializationStrategy materializer;
+
+
+	@Before
+	public void init() {
 
 		UnitTestGlobalSettings.reset();
-		
+
+		sceneObject = new MockupSceneObject();
+		hcImplFactory = new ExampleHcImplFactory(sceneObject);
+
 		BasicNonterminal listLabel = BasicNonterminal
 				.getNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
-				.addRule( listLabel , ExampleHcImplFactory.getListRule1())
-				.addRule( listLabel , ExampleHcImplFactory.getListRule2())
+				.addRule( listLabel , hcImplFactory.getListRule1())
+				.addRule( listLabel , hcImplFactory.getListRule2())
 				.build();
 		
 		ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
@@ -63,14 +72,14 @@ public class MaterializationTest {
 	@Test
 	public void testMaterialization() {
 		
-		HeapConfiguration testInput = ExampleHcImplFactory.getMaterializationTest();
+		HeapConfiguration testInput = hcImplFactory.getMaterializationTest();
 		DefaultProgramState inputConf = new DefaultProgramState(testInput);
 		
 		ViolationPoints vio = new ViolationPoints("x", "next");
 		
 		List<ProgramState> res = materializer.materialize(inputConf, vio);
 		
-		assertEquals("input graph should not change", ExampleHcImplFactory.getMaterializationTest(), testInput );
+		assertEquals("input graph should not change", hcImplFactory.getMaterializationTest(), testInput );
 		assertEquals(2, res.size());
 		
 		for(int i=0; i < 2; i++) {
@@ -87,8 +96,8 @@ public class MaterializationTest {
 		resHCs.add( res.get(0).getHeap() );
 		resHCs.add( res.get(1).getHeap() );
 		
-		assertTrue("first expected materialization", resHCs.contains( ExampleHcImplFactory.getMaterializationRes1() ) );
-		assertTrue("second expected materialization", resHCs.contains( ExampleHcImplFactory.getMaterializationRes2() ) );
+		assertTrue("first expected materialization", resHCs.contains( hcImplFactory.getMaterializationRes1() ) );
+		assertTrue("second expected materialization", resHCs.contains( hcImplFactory.getMaterializationRes2() ) );
 	}
 
 }

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.InputSettings;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import soot.jimple.InstanceFieldRef;
  * @author Hannah Arndt, Christoph
  *
  */
-public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
+public class StandardAbstractSemantics extends SceneObject implements JimpleToAbstractSemantics {
 
 	/**
 	 * The logger of this class.
@@ -47,7 +48,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
      *
 	 * @param topLevel The topmost level in the translation hierarchy.
 	 */
-	StandardAbstractSemantics(TopLevelTranslation topLevel ){
+	StandardAbstractSemantics(SceneObject sceneObject, TopLevelTranslation topLevel ){
+		super(sceneObject);
 		this.topLevel = topLevel;
 		this.nextLevel = new DefaultAbstractSemantics( topLevel );
 	}
@@ -55,7 +57,8 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
     /**
      * Default initialization
      */
-	public StandardAbstractSemantics() {
+	public StandardAbstractSemantics(SceneObject sceneObject) {
+		super(sceneObject);
 		this.nextLevel = new DefaultAbstractSemantics( topLevel );
 	}
 	
@@ -159,7 +162,7 @@ public class StandardAbstractSemantics implements JimpleToAbstractSemantics {
 		// getEscapedName was recently removed in soot.Type
 		//String name = input.getEscapedName();
 		String name = input.toString();
-		return Settings.getInstance().factory().getType( name );
+		return scene().getType(name);
 	}
 	
 	/**

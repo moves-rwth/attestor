@@ -6,6 +6,9 @@ import static org.junit.Assert.assertThat;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,23 +22,21 @@ import de.rwth.i2.attestor.programState.indexedState.index.*;
 
 public class GrammarTest {
 
-	public static final Nonterminal DEFAULT_NONTERMINAL = constructDefaultNonterminal();
-	public static final Nonterminal CONCRETE_INDEXED_NONTERMINAL = constructConcreteIndexedNonterminal();
-	public static final Nonterminal INSTANTIABLE_INDEXED_NONTERMINAL = constructInstantiableIndexedNonterminal();
-	public static final HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_1 = ExampleHcImplFactory.getListRule1();
-	public static final HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_2 = ExampleHcImplFactory.getListRule2();
-	public static final Set<HeapConfiguration> RHS_FOR_DEFAULT_NONTERMINAL =
-			constructRhsForDefaultNonterminal();
-	public static final HeapConfiguration RHS_FOR_CONCRETE_INDEXED_NONTERMINAL_1 = 
-			BalancedTreeGrammar.createBalancedLeafRule();
-	public static final Set<HeapConfiguration> RHS_FOR_CONCRETE_INDEXED_NONTERMINAL =
-			constructRhsForConcreteIndexedNonterminal();
-	public static final HeapConfiguration RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_1 = 
-			BalancedTreeGrammar.createUnbalancedRuleLeft();
-	public static final HeapConfiguration RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_2 = 
-			BalancedTreeGrammar.createUnbalancedRuleRight();
-	public static final Set<HeapConfiguration> RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL = 
-			constructRhsForInstantiableIndexedNonterminal();
+	public Nonterminal DEFAULT_NONTERMINAL;
+	public Nonterminal CONCRETE_INDEXED_NONTERMINAL;
+	public Nonterminal INSTANTIABLE_INDEXED_NONTERMINAL;
+	public Set<HeapConfiguration> RHS_FOR_DEFAULT_NONTERMINAL;
+	public HeapConfiguration RHS_FOR_CONCRETE_INDEXED_NONTERMINAL_1;
+	public Set<HeapConfiguration> RHS_FOR_CONCRETE_INDEXED_NONTERMINAL;
+	public HeapConfiguration RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_1;
+	public HeapConfiguration RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_2;
+	public Set<HeapConfiguration> RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL;
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+	private BalancedTreeGrammar balancedTreeGrammar;
+	public HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_1;
+	public HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_2;
 
 	@BeforeClass
 	public static void init() {
@@ -43,7 +44,25 @@ public class GrammarTest {
 		UnitTestGlobalSettings.reset();
 	}
 
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+		balancedTreeGrammar  = new BalancedTreeGrammar(sceneObject);
 
+		DEFAULT_NONTERMINAL = constructDefaultNonterminal();
+		CONCRETE_INDEXED_NONTERMINAL = constructConcreteIndexedNonterminal();
+		INSTANTIABLE_INDEXED_NONTERMINAL = constructInstantiableIndexedNonterminal();
+
+		RHS_FOR_DEFAULT_NONTERMINAL_1 = hcFactory.getListRule1();
+		RHS_FOR_DEFAULT_NONTERMINAL_2 = hcFactory.getListRule2();
+		RHS_FOR_CONCRETE_INDEXED_NONTERMINAL_1 = balancedTreeGrammar.createBalancedLeafRule();
+		RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_1 = balancedTreeGrammar.createUnbalancedRuleLeft();
+		RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_2 = balancedTreeGrammar.createUnbalancedRuleRight();
+		RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL = constructRhsForInstantiableIndexedNonterminal();
+		RHS_FOR_DEFAULT_NONTERMINAL = constructRhsForDefaultNonterminal();
+		RHS_FOR_CONCRETE_INDEXED_NONTERMINAL = constructRhsForConcreteIndexedNonterminal();
+	}
 
 	@Test
 	public void testGrammarOnDefaultNonterminal(){
@@ -197,34 +216,34 @@ public class GrammarTest {
 		assertThat( testGrammar.getRightHandSidesFor(DEFAULT_NONTERMINAL), empty() );
 	}
 
-	private static Nonterminal constructDefaultNonterminal() {
+	private Nonterminal constructDefaultNonterminal() {
 		final boolean[] reductionTentacles = new boolean[]{false,true};
 		final int rank = 2;
 		final String label = "List";
 		return BasicNonterminal.getNonterminal(label, rank, reductionTentacles);
 	}
 
-	private static Set<HeapConfiguration> constructRhsForDefaultNonterminal(){
+	private Set<HeapConfiguration> constructRhsForDefaultNonterminal(){
 		Set<HeapConfiguration> rhs = new HashSet<>();
 		rhs.add( RHS_FOR_DEFAULT_NONTERMINAL_1 );
 		rhs.add( RHS_FOR_DEFAULT_NONTERMINAL_2 );
 		return rhs;
 	}
 
-	private static IndexedNonterminal constructConcreteIndexedNonterminal() {
+	private IndexedNonterminal constructConcreteIndexedNonterminal() {
 		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( bottom );
 		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
 	}
 
-	private static Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal(){
+	private Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal(){
 		Set<HeapConfiguration> rhs = new HashSet<>();
 		rhs.add( RHS_FOR_CONCRETE_INDEXED_NONTERMINAL_1 );
 		return rhs;
 	}
 
-	private static Nonterminal constructInstantiableIndexedNonterminal() {
+	private Nonterminal constructInstantiableIndexedNonterminal() {
 		final IndexVariable var = IndexVariable.getIndexVariable();
 		final ConcreteIndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
@@ -233,7 +252,7 @@ public class GrammarTest {
 		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
 	}
 
-	private static Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {
+	private Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {
 		Set<HeapConfiguration> rhs = new HashSet<>();
 		rhs.add( RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_1 );
 		rhs.add( RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_2 );

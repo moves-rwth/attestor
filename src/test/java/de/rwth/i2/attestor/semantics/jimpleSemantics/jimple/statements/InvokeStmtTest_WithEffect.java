@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import org.junit.*;
 
@@ -23,7 +25,11 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
 public class InvokeStmtTest_WithEffect {
-	
+
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	private DefaultProgramState testInput;
 	private HeapConfiguration expectedHeap;
 	private InvokeStmt stmt;
@@ -37,14 +43,18 @@ public class InvokeStmtTest_WithEffect {
 
 	@Before
 	public void setUp() throws Exception {
-		testInput = new DefaultProgramState( ExampleHcImplFactory.getInput_InvokeWithEffect() );
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		testInput = new DefaultProgramState( hcFactory.getInput_InvokeWithEffect() );
 		testInput.prepareHeap();
 		
-		DefaultProgramState expectedState = new DefaultProgramState( ExampleHcImplFactory.getExpectedResult_InvokeWithEffect() );
+		DefaultProgramState expectedState = new DefaultProgramState( hcFactory.getExpectedResult_InvokeWithEffect() );
 		expectedState.prepareHeap();
 		expectedHeap = expectedState.getHeap();
 		
-		Type type = Settings.getInstance().factory().getType("List");
+		Type type = sceneObject.scene().getType("List");
 		type.addSelectorLabel("next", Constants.NULL);
 		Local varX = new Local(type, "x");
 		Local varY = new Local(type, "y");

@@ -2,6 +2,8 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import static org.junit.Assert.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -15,10 +17,14 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class FieldTest {
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	private Field expr;
 	private Local local;
 	private HeapConfiguration testGraph;
 	private BasicSelectorLabel sel;
+
 
 	@BeforeClass
 	public static void init()
@@ -28,11 +34,14 @@ public class FieldTest {
 
 	@Before
 	public void setUp() throws Exception {
-		
-		testGraph = ExampleHcImplFactory.getListAndConstants();
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		testGraph = hcFactory.getListAndConstants();
 		sel = BasicSelectorLabel.getSelectorLabel("next");
 
-		Type type = Settings.getInstance().factory().getType("List");
+		Type type = sceneObject.scene().getType("List");
 		local = new Local( type, "y");
 		expr = new Field( type, local, "next");
 	}
@@ -121,7 +130,7 @@ public class FieldTest {
 			HeapConfiguration resultHeap = executable.getHeap();
 			assertFalse("heap should have changed", testState.getHeap().equals(resultHeap) );
 			
-			HeapConfiguration expectedGraph = ExampleHcImplFactory.getListAndConstantsWithChange();
+			HeapConfiguration expectedGraph = hcFactory.getListAndConstantsWithChange();
 			DefaultProgramState expectedState = new DefaultProgramState(expectedGraph);
 			expectedState.prepareHeap();
 			

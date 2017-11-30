@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -27,6 +29,8 @@ public class DefaultGrammarResponseApplierTest {
 	private static final String UNIQUE_NT_LABEL = "DefaultGrammarResponseApplier";
 	private static final int RANK = 2;
 
+	private SceneObject sceneObject;
+
 	@BeforeClass
 	public static void init() {
 		UnitTestGlobalSettings.reset();
@@ -34,6 +38,7 @@ public class DefaultGrammarResponseApplierTest {
 
 	@Before
 	public void setUp() throws Exception {
+		sceneObject = new MockupSceneObject();
 	}
 
 	@Test
@@ -133,7 +138,7 @@ public class DefaultGrammarResponseApplierTest {
 
 	private HeapConfiguration getInputGraph() {
 		InternalHeapConfiguration hc = new InternalHeapConfiguration();
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL,
 															RANK, 
 															REDUCTION_TENTACLES );
@@ -149,7 +154,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -163,7 +168,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_ApplySimpleRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -176,7 +181,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createBigRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -195,7 +200,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_applyBigRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -212,7 +217,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration createOtherBigRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
@@ -231,7 +236,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration expectedResult_applyOtherBigRule(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 

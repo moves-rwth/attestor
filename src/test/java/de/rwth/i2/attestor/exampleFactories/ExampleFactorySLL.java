@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -17,13 +18,12 @@ import java.util.List;
 
 public class ExampleFactorySLL extends AbstractExampleFactory {
 
-    private final GeneralType.GeneralTypeFactory typeFactory;
 
     private Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false,true});
     private SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("next");
 
-    public ExampleFactorySLL(GeneralType.GeneralTypeFactory typeFactory) {
-        this.typeFactory = typeFactory;
+    public ExampleFactorySLL(SceneObject sceneObject) {
+        super(sceneObject);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public Type getNodeType() {
-        Type result = typeFactory.get("list");
+        Type result = scene().getType("list");
         result.addSelectorLabel("next", Constants.NULL);
         return result;
     }

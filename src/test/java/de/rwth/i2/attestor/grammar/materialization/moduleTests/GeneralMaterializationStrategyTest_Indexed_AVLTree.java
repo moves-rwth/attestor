@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -28,6 +30,9 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 
+	private SceneObject sceneObject;
+	private BalancedTreeGrammar treeGrammar;
+
 	private static final AbstractIndexSymbol ABSTRACT_INDEX_SYMBOL = AbstractIndexSymbol.get("X");
 	private static final ConcreteIndexSymbol INDEX_SYMBOL_Z = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 	private static final ConcreteIndexSymbol INDEX_SYMBOL_S = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -41,7 +46,11 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 
 	@Before
 	public void setUp() throws Exception {
-		Grammar balancedTreeGrammar = BalancedTreeGrammar.getGrammar();
+
+		sceneObject = new MockupSceneObject();
+		treeGrammar = new BalancedTreeGrammar(sceneObject);
+
+		Grammar balancedTreeGrammar = treeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver(balancedTreeGrammar);
 		
 		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
@@ -272,13 +281,13 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private HeapConfiguration getGraphWithReferenzNonterminalWithIndex(List<IndexSymbol> index,
 			List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		
 		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt );
-		Type type = BalancedTreeGrammar.TYPE;
+		Type type = treeGrammar.TYPE;
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -297,12 +306,12 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private HeapConfiguration getAppliedBalancedLeafRule_WithReferenceIndex(List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
+		String label = treeGrammar.NT_LABEL;
 		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label , indexForReferenceNt  );
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_0;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_0;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_0;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_0;
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 4, nodes)
@@ -321,14 +330,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private HeapConfiguration getAppliedLeftLeafRuleWithReferenceIndex(List<IndexSymbol> indexForReferenceNt) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_1;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_M1;
-		SelectorLabel parentLabel = BalancedTreeGrammar.SELECTOR_PARENT;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_1;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_M1;
+		SelectorLabel parentLabel = treeGrammar.SELECTOR_PARENT;
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		List<IndexSymbol> index_Z = getIndex_Z();
 		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
 		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt  );
@@ -354,14 +363,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 			List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_M1;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_1;
-		SelectorLabel parentLabel = BalancedTreeGrammar.SELECTOR_PARENT;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_M1;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_1;
+		SelectorLabel parentLabel = treeGrammar.SELECTOR_PARENT;
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		List<IndexSymbol> index_Z = getIndex_Z();
 		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
 		IndexedNonterminal referenceNt = 
@@ -388,14 +397,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 						List<IndexSymbol> indexForReferenceNonterminal ) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_0;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_0;
-		SelectorLabel parentLabel = BalancedTreeGrammar.SELECTOR_PARENT;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_0;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_0;
+		SelectorLabel parentLabel = treeGrammar.SELECTOR_PARENT;
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
 		IndexedNonterminal referenceNt = 
@@ -428,14 +437,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 															List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_1;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_M1;
-		SelectorLabel parentLabel = BalancedTreeGrammar.SELECTOR_PARENT;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_1;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_M1;
+		SelectorLabel parentLabel = treeGrammar.SELECTOR_PARENT;
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
 				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);
@@ -470,14 +479,14 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 															List<IndexSymbol> rightIndex, List<IndexSymbol> indexForReferenceNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = BalancedTreeGrammar.TYPE;
-		SelectorLabel leftLabel = BalancedTreeGrammar.SELECTOR_LEFT_M1;
-		SelectorLabel rightLabel = BalancedTreeGrammar.SELECTOR_RIGHT_1;
-		SelectorLabel parentLabel = BalancedTreeGrammar.SELECTOR_PARENT;
+		Type type = treeGrammar.TYPE;
+		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_M1;
+		SelectorLabel rightLabel = treeGrammar.SELECTOR_RIGHT_1;
+		SelectorLabel parentLabel = treeGrammar.SELECTOR_PARENT;
 		
-		String label = BalancedTreeGrammar.NT_LABEL;
-		int rank = BalancedTreeGrammar.NT_RANK;
-		boolean[] isReductionTentacle = BalancedTreeGrammar.IS_REDUCTION_TENTACLE;
+		String label = treeGrammar.NT_LABEL;
+		int rank = treeGrammar.NT_RANK;
+		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		
 		IndexedNonterminal ntLeft = 
 				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);

@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -30,6 +32,8 @@ public class AssignInvokeTest_trivial {
 	private HeapConfiguration inputGraph;
 	private DefaultProgramState inputState;
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
 
 	@BeforeClass
 	public static void init() {
@@ -40,8 +44,11 @@ public class AssignInvokeTest_trivial {
 	@Before
 	public void setUp() throws Exception{
 		Settings.getInstance().grammar().setGrammar( Grammar.builder().build() );
-		
-		Type type = Settings.getInstance().factory().getType( "node" );
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		Type type = hcFactory.scene().getType( "node" );
 		Local var 
 			= new Local( type, "x" );
 
@@ -54,7 +61,7 @@ public class AssignInvokeTest_trivial {
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		
-		inputGraph = ExampleHcImplFactory.getListAndConstants();
+		inputGraph = hcFactory.getListAndConstants();
 		inputState = new DefaultProgramState( inputGraph );
 	}
 
@@ -67,7 +74,7 @@ public class AssignInvokeTest_trivial {
 			assertNotSame( resState, inputState );
 			assertNotSame( inputGraph, resState.getHeap() );
 			assertSame( inputGraph, inputState.getHeap() );
-			assertEquals( ExampleHcImplFactory.getListAndConstants(), inputGraph );
+			assertEquals( hcFactory.getListAndConstants(), inputGraph );
 			assertEquals( inputGraph, resState.getHeap());
 		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail("unexpected exception: " + e.getMessage());

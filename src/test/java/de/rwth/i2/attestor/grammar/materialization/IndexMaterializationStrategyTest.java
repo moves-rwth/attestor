@@ -5,7 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,6 +37,12 @@ public class IndexMaterializationStrategyTest {
 		UnitTestGlobalSettings.reset();
 	}
 
+	private SceneObject sceneObject;
+
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+	}
 
 	@Test
 	public void testOn_Materializable_EmptyIndex_EmptyMaterialization() throws CannotMaterializeException {
@@ -361,7 +370,7 @@ public class IndexMaterializationStrategyTest {
 	private HeapConfiguration graphWithOneNonterminalAndIndex(List<IndexSymbol> index) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
 
@@ -380,7 +389,7 @@ public class IndexMaterializationStrategyTest {
 			List<IndexSymbol> index2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 
 		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
 		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, index2);
@@ -404,7 +413,7 @@ public class IndexMaterializationStrategyTest {
 			List<IndexSymbol> indexForIndexedNonterminal) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
 												 REDUCTION_TENTACLES, 

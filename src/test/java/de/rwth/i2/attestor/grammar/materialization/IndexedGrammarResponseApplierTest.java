@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -28,6 +30,9 @@ public class IndexedGrammarResponseApplierTest {
 	private static final String UNIQUE_NT_LABEL = "IndexedGrammarResponseApplierTest";
 	private static final int RANK = 2;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false};
+
+	private SceneObject sceneObject;
+
 	@BeforeClass
 	public static void init() {
 
@@ -37,6 +42,7 @@ public class IndexedGrammarResponseApplierTest {
 
 	@Before
 	public void setUp() throws Exception {
+		sceneObject = new MockupSceneObject();
 	}
 
 	@Test
@@ -77,7 +83,7 @@ public class IndexedGrammarResponseApplierTest {
 		List<IndexSymbol> someIndex = new ArrayList<>();
 		
 		InternalHeapConfiguration hc = new InternalHeapConfiguration();
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 												 RANK, 
 												 REDUCTION_TENTACLES,
@@ -104,7 +110,7 @@ public class IndexedGrammarResponseApplierTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -120,7 +126,7 @@ public class IndexedGrammarResponseApplierTest {
 		
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
 				 RANK, 
 				 REDUCTION_TENTACLES,

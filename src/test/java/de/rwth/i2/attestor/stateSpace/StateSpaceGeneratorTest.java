@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -25,6 +27,9 @@ public class StateSpaceGeneratorTest {
 
 	private SSGBuilder ssgBuilder;
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	@BeforeClass
 	public static void init()
 	{
@@ -34,6 +39,9 @@ public class StateSpaceGeneratorTest {
 
 	@Before
 	public void setup() {
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
 
 	    ssgBuilder = StateSpaceGenerator.builder()
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
@@ -52,7 +60,7 @@ public class StateSpaceGeneratorTest {
 	@Test
 	public void testGenerate1() {
 	
-		HeapConfiguration initialGraph = ExampleHcImplFactory.getEmptyGraphWithConstants();
+		HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 		
 		List<Semantics> programInstructions = new ArrayList<>();
 		programInstructions.add( new Skip( 1 ) );
@@ -80,9 +88,9 @@ public class StateSpaceGeneratorTest {
 	@Test
 	public void testGenerateNew() {		
 		HeapConfiguration initialGraph 
-				= ExampleHcImplFactory.getEmptyGraphWithConstants();
+				= hcFactory.getEmptyGraphWithConstants();
 		
-		Type type = Settings.getInstance().factory().getType( "type" );
+		Type type = sceneObject.scene().getType( "type" );
 		
 		List<Semantics> programInstructions = new ArrayList<>();
 		Statement skipStmt = new Skip( 1 );
@@ -111,7 +119,7 @@ public class StateSpaceGeneratorTest {
 		assertEquals( 4, res.getStates().size() );
 		assertEquals( 1, res.getFinalStates().size() );
 		assertFalse( initialGraph.equals( res.getFinalStates().iterator().next().getHeap() ) );
-		HeapConfiguration expectedState = ExampleHcImplFactory.getExpectedResultTestGenerateNew();
+		HeapConfiguration expectedState = hcFactory.getExpectedResultTestGenerateNew();
 		assertEquals(expectedState, res.getFinalStates().iterator().next().getHeap());
 
 		for(ProgramState state : res.getStates()) {
@@ -146,7 +154,7 @@ public class StateSpaceGeneratorTest {
 	@Test
 	public void testGenerateIf() {
 		
-		HeapConfiguration initialGraph = ExampleHcImplFactory.getEmptyGraphWithConstants();
+		HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 		
 		List<Semantics> programInstructions = new ArrayList<>();
 		Statement ifStmt = new IfStmt( new IntConstant( 1 ), 1, 2, new HashSet<>());

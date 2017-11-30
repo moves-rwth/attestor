@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.markings;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -21,6 +23,9 @@ import static junit.framework.TestCase.assertEquals;
 
 public class MarkedHcGeneratorTest {
 
+   private SceneObject sceneObject;
+   private ExampleHcImplFactory hcFactory;
+
    private Grammar grammar;
    private Nonterminal nt;
    private Type type;
@@ -30,13 +35,16 @@ public class MarkedHcGeneratorTest {
 
       UnitTestGlobalSettings.reset();
 
+      sceneObject = new MockupSceneObject();
+      hcFactory = new ExampleHcImplFactory(sceneObject);
+
       nt = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
-      type = Settings.getInstance().factory().getType("List");
+      type = sceneObject.scene().getType("List");
       Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
       rules.put(nt, new HashSet<>());
-      rules.get(nt).add(ExampleHcImplFactory.getListRule1());
-      rules.get(nt).add(ExampleHcImplFactory.getListRule2());
-      rules.get(nt).add(ExampleHcImplFactory.getListRule3());
+      rules.get(nt).add(hcFactory.getListRule1());
+      rules.get(nt).add(hcFactory.getListRule2());
+      rules.get(nt).add(hcFactory.getListRule3());
 
       grammar = new Grammar(rules);
    }
@@ -44,7 +52,7 @@ public class MarkedHcGeneratorTest {
    @Test
    public void testSingleMarkingNoNonterminals() {
 
-      HeapConfiguration hc = ExampleHcImplFactory.getEmptyGraphWithConstants();
+      HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
       Marking marking = new Marking("x");
 
       Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
@@ -56,7 +64,7 @@ public class MarkedHcGeneratorTest {
    @Test
    public void testMultipleMarkingsNoNonterminals() {
 
-      HeapConfiguration hc = ExampleHcImplFactory.getTree();
+      HeapConfiguration hc = hcFactory.getTree();
       Marking marking = new Marking("y", "left", "right");
 
       Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
@@ -74,7 +82,7 @@ public class MarkedHcGeneratorTest {
    @Test
    public void testSingleMarkingWithNonterminals() {
 
-      HeapConfiguration hc = ExampleHcImplFactory.getEmptyHc();
+      HeapConfiguration hc = hcFactory.getEmptyHc();
       TIntArrayList nodes = new TIntArrayList();
 
       hc = hc.builder()
@@ -98,7 +106,7 @@ public class MarkedHcGeneratorTest {
       );
 
       nodes.clear();
-      HeapConfiguration unfoldedHc = ExampleHcImplFactory.getEmptyHc()
+      HeapConfiguration unfoldedHc = hcFactory.getEmptyHc()
               .builder()
               .addNodes(type, 3, nodes)
               .addNonterminalEdge(nt)

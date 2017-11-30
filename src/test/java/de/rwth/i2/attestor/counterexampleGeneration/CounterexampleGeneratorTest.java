@@ -4,7 +4,10 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.types.GeneralType;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,19 +36,26 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 
 public class CounterexampleGeneratorTest {
 
-    private GeneralType.GeneralTypeFactory typeFactory = new GeneralType.GeneralTypeFactory();
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
     @BeforeClass
     public static void setupClass() {
         UnitTestGlobalSettings.reset();
     }
 
+    @Before
+    public void setUp() {
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
+    }
+
     @Test
     public void testTrivial() {
 
-        HeapConfiguration input = ExampleHcImplFactory.getList();
+        HeapConfiguration input = hcFactory.getList();
         ProgramState initialState = new DefaultProgramState(input.clone());
-        Type type = Settings.getInstance().factory().getType("List");
+        Type type = sceneObject.scene().getType("List");
         Program program = getSetNextProgram(type);
 
         ProgramState finalState = null;
@@ -90,7 +100,7 @@ public class CounterexampleGeneratorTest {
     public void testWithMaterialization() {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
         Program program = getSetNextProgram(factorySLL.getNodeType());
         Semantics stmt = program.getStatement(0);
@@ -141,7 +151,7 @@ public class CounterexampleGeneratorTest {
 
     private ProgramState getInitialState() {
 
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
         ProgramState initialState = factorySLL.getInitialState();
         initialState.getHeap()
                 .builder()
@@ -155,7 +165,7 @@ public class CounterexampleGeneratorTest {
     public void testWithProcedures() {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
         AssignInvoke invokeStmt = getProcedure();
         Program program = Program.builder()
@@ -244,7 +254,7 @@ public class CounterexampleGeneratorTest {
 
         AbstractMethod procedure = new SimpleAbstractMethod("method");
 
-        ExampleFactorySLL factorySLL = new ExampleFactorySLL(typeFactory);
+        ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
         Local varY = new Local(factorySLL.getNodeType(), "y");
         Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel().getLabel());

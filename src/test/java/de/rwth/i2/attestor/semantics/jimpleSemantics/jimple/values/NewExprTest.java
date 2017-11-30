@@ -1,9 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.util.Constants;
@@ -16,7 +18,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class NewExprTest {
-	
+
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcImplFactory;
+
 	private NewExpr expr;
 	private HeapConfiguration testGraph;
 
@@ -28,11 +33,14 @@ public class NewExprTest {
 
 	@Before
 	public void setUp(){
-		Type type = Settings.getInstance().factory().getType( "NewExprTestNode");
+
+		sceneObject = new MockupSceneObject();
+		hcImplFactory = new ExampleHcImplFactory(sceneObject);
+		Type type = sceneObject.scene().getType( "NewExprTestNode");
         BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
         type.addSelectorLabel(next.getLabel(), Constants.NULL);
 		expr = new NewExpr(type);
-		testGraph = ExampleHcImplFactory.getThreeElementDLLWithConstants();
+		testGraph = hcImplFactory.getThreeElementDLLWithConstants();
 	}
 
 	@Test
@@ -50,7 +58,7 @@ public class NewExprTest {
 			assertEquals("testGraph changed", hash, testGraph.hashCode());
 			assertEquals("node number did not increase by one", oldNodeNumber + 1, executable.getHeap().countNodes());
 			assertFalse( testGraph.equals(executable.getHeap()));
-			HeapConfiguration expected = ExampleHcImplFactory.getExepectedResultTestNewExprTest();
+			HeapConfiguration expected = hcImplFactory.getExepectedResultTestNewExprTest();
 			assertEquals(expected, executable.getHeap());
 		} catch (NotSufficientlyMaterializedException e) {
 			fail("unexpected exception");

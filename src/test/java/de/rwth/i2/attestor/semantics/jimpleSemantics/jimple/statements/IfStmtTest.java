@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -26,6 +28,9 @@ public class IfStmtTest {
 	private int falsePC;
 	private Type listType;
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	@BeforeClass
 	public static void init()
 	{
@@ -34,8 +39,12 @@ public class IfStmtTest {
 
 	@Before
 	public void setUp() throws Exception{
-		testGraph = ExampleHcImplFactory.getListAndConstants();
-		listType = Settings.getInstance().factory().getType( "node" );
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		testGraph = hcFactory.getListAndConstants();
+		listType = sceneObject.scene().getType( "node" );
 
 		truePC = 5;
 		falsePC = 7;

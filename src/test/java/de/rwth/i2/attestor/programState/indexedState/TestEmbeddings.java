@@ -1,12 +1,15 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -14,13 +17,19 @@ import static org.junit.Assert.assertTrue;
 
 public class TestEmbeddings {
 	
-	private static HeapConfiguration rhs1;
-	private static HeapConfiguration rhs2;
+	private HeapConfiguration rhs1;
+	private HeapConfiguration rhs2;
+
+	private SceneObject sceneObject;
+	private ExampleIndexedGraphFactory graphFactory;
 	
-	@BeforeClass
-	public static void init(){
+	@Before
+	public void init(){
 
 		UnitTestGlobalSettings.reset();
+
+		sceneObject = new MockupSceneObject();
+		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 		
 
 		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel("left", "0");
@@ -28,19 +37,19 @@ public class TestEmbeddings {
 		
 		rhs1 = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		rhs1 = rhs1.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes)
+		rhs1 = rhs1.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
 						.setExternal( nodes.get(0))
 						.setExternal(nodes.get(1))
 						.addSelector(nodes.get(0), leftLabel, nodes.get(1))
 						.addSelector(nodes.get(0), rightLabel, nodes.get(1))
 						.build();
 		
-		Type zType = Settings.getInstance().factory().getType("int_0");
+		Type zType = sceneObject.scene().getType("int_0");
 		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
 		
 		rhs2 = new InternalHeapConfiguration();
 		TIntArrayList nodes2 = new TIntArrayList();
-		rhs2 = rhs2.builder().addNodes(Settings.getInstance().factory().getType("AVLTree"), 2, nodes2)
+		rhs2 = rhs2.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes2)
 						.addNodes(zType, 1, nodes2 )
 						.setExternal( nodes2.get(0))
 						.setExternal(nodes2.get(1))
@@ -53,7 +62,7 @@ public class TestEmbeddings {
 
 	@Test
 	public void testCanonizePractical() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_practicalCanonize() );
+		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize() );
 		input.prepareHeap();
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0);
 		assertTrue( checker.hasMatching() );
@@ -61,7 +70,7 @@ public class TestEmbeddings {
 	
 	@Test
 	public void testCanonizePractical2() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_practicalCanonize2() );
+		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize2() );
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0);
@@ -70,11 +79,11 @@ public class TestEmbeddings {
 	
 	@Test
 	public void testCanonizePractical3() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_practicalCanonize3() );
+		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize3() );
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-		        ExampleIndexedGraphFactory.getEmbedding_practicalCanonize3(), 0
+		        graphFactory.getEmbedding_practicalCanonize3(), 0
 		);
 
 		assertTrue( checker.hasMatching() );
@@ -82,11 +91,11 @@ public class TestEmbeddings {
 	
 	@Test
 	public void testCanonizeWithInst() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_Cononize_withInstNecessary() );
+		IndexedState input = new IndexedState( graphFactory.getInput_Cononize_withInstNecessary() );
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                ExampleIndexedGraphFactory.getRule_Cononize_withInstNecessary(), 0
+                graphFactory.getRule_Cononize_withInstNecessary(), 0
         );
 
 		assertTrue( checker.hasMatching() );
@@ -95,11 +104,11 @@ public class TestEmbeddings {
 	@Test
 	public void testEmbedding5() {
 		//smaller version of testCanonizeWithInst()
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_Embedding5() );
+		IndexedState input = new IndexedState( graphFactory.getInput_Embedding5() );
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                ExampleIndexedGraphFactory.getRule_Cononize_withInstNecessary(), 0
+                graphFactory.getRule_Cononize_withInstNecessary(), 0
         );
 
 		assertTrue( checker.hasMatching() );

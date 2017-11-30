@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
@@ -7,6 +8,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -21,6 +23,8 @@ public class GraphMaterializerTest {
 	public static int RANK = 2;
 	public static int NODE_FOR_TO_REPLACE = 1;
 
+	private SceneObject sceneObject;
+
 	@BeforeClass
 	public static void init() {
 
@@ -30,6 +34,7 @@ public class GraphMaterializerTest {
 
 	@Before
 	public void setUp() throws Exception {
+		sceneObject = new MockupSceneObject();
 	}
 
 	@Test
@@ -60,7 +65,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createOneNonterminalInput(Nonterminal toReplace) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -74,7 +79,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createSimpleRule() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -89,7 +94,7 @@ public class GraphMaterializerTest {
 	private HeapConfiguration createExpectedMaterializedGraph() {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();

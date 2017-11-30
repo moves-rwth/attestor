@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import static org.junit.Assert.assertEquals;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +25,8 @@ import gnu.trove.list.array.TIntArrayList;
 public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
 	private static int RANK = 2;
-	private static final Type TYPE = Settings.getInstance().factory().getType("type");
+	private final SceneObject sceneObject = new MockupSceneObject();
+	private final Type TYPE = sceneObject.scene().getType("type");
 	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategyTest_getActualViolationPoint;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolverTest_Default;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
@@ -7,17 +8,20 @@ import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
 public class TestGraphs {
-	
+
+	private static SceneObject sceneObject = new MockupSceneObject();
+
 	public static HeapConfiguration getInput_getActualViolationPoints_Default(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR);
 		
@@ -31,7 +35,7 @@ public class TestGraphs {
 	public static HeapConfiguration getInput_getActualViolationPoints_Indexed(){
 		HeapConfiguration hc =  new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
@@ -46,7 +50,7 @@ public class TestGraphs {
 	public static HeapConfiguration getInput_getActualViolationPoints_Mixed(){
 		HeapConfiguration hc =  new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
+		Type type = sceneObject.scene().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
@@ -76,7 +80,7 @@ public class TestGraphs {
 	
 	public static HeapConfiguration getRuleGraph_CreatingNextAt0_PrevAt1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
@@ -93,7 +97,7 @@ public class TestGraphs {
 	
 	public static HeapConfiguration getRuleGraph_CreatingNext(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
@@ -116,7 +120,7 @@ public class TestGraphs {
 	
 	public static HeapConfiguration getRuleGraph_creatingPrevAt1(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
 		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
@@ -139,7 +143,7 @@ public class TestGraphs {
 	
 	public static HeapConfiguration getRuleGraph_creatingNoSelector(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		Type nodeType = Settings.getInstance().factory().getType("type");
+		Type nodeType = sceneObject.scene().getType("type");
 		
 		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		

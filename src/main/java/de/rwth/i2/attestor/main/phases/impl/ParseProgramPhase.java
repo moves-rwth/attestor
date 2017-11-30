@@ -26,7 +26,7 @@ public class ParseProgramPhase extends AbstractPhase implements ProgramTransform
     protected void executePhase() {
 
         InputSettings inputSettings = settings.input();
-        JimpleParser programParser = new JimpleParser(new StandardAbstractSemantics());
+        JimpleParser programParser = new JimpleParser(this, new StandardAbstractSemantics(this));
         program = programParser.parse(
                 inputSettings.getClasspath(),
                 inputSettings.getClassName(),

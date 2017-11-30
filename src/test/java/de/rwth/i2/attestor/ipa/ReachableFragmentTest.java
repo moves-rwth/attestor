@@ -3,6 +3,9 @@ package de.rwth.i2.attestor.ipa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.types.Types;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.*;
@@ -16,8 +19,9 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class ReachableFragmentTest {
 
+	SceneObject sceneObject = new MockupSceneObject();
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
-	Type type = Settings.getInstance().factory().getType("someType");
+	Type type = sceneObject.scene().getType("someType");
 	SelectorLabel nextLabel = BasicSelectorLabel.getSelectorLabel("next");
 
 
@@ -462,11 +466,11 @@ public class ReachableFragmentTest {
 	}
 
 	private Type getSomeType() {
-		return Settings.getInstance().factory().getType("someType");
+		return sceneObject.scene().getType("someType");
 	}
 
 	private Type getNullType() {
-		return Settings.getInstance().factory().getType("NULL");
+		return Types.NULL;
 	}
 	
 

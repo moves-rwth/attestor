@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -27,6 +29,9 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class AssignInvokeTest_NonTrivial {
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	private AssignInvoke stmt;
 	private HeapConfiguration inputGraph;
 	private DefaultProgramState inputState;
@@ -39,7 +44,11 @@ public class AssignInvokeTest_NonTrivial {
 
 	@Before
 	public void setUp() throws Exception{
-		Type type = Settings.getInstance().factory().getType( "AssignInvokeTestNonTrivial" );
+
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
+
+		Type type = sceneObject.scene().getType( "AssignInvokeTestNonTrivial" );
 
 		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
 		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
@@ -57,7 +66,7 @@ public class AssignInvokeTest_NonTrivial {
 		
 		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
 		
-		inputGraph = ExampleHcImplFactory.getListAndConstants();
+		inputGraph = hcFactory.getListAndConstants();
 		inputState = new DefaultProgramState( inputGraph );
 	}
 
@@ -70,9 +79,9 @@ public class AssignInvokeTest_NonTrivial {
 			assertNotSame( resState, inputState );
 			assertNotSame( inputGraph, resState.getHeap() );
 			assertSame( inputGraph, inputState.getHeap() );
-			assertEquals( ExampleHcImplFactory.getListAndConstants(), inputGraph );
+			assertEquals( hcFactory.getListAndConstants(), inputGraph );
 			assertFalse( inputGraph.equals( resState.getHeap() ) );
-			assertEquals(ExampleHcImplFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
+			assertEquals(hcFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
 		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
 			fail("unexpected exception: " + e.getMessage());
 		}

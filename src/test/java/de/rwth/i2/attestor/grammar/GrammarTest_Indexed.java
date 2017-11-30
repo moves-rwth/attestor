@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -26,6 +28,9 @@ public class GrammarTest_Indexed {
 	
 	private Nonterminal nonterminal;
 
+	SceneObject sceneObject;
+	BalancedTreeGrammar treeGrammar;
+
 
 	@BeforeClass
 	public static void init() {
@@ -36,7 +41,11 @@ public class GrammarTest_Indexed {
 
 	@Before
 	public void setUp() throws Exception {
-		Grammar grammar = BalancedTreeGrammar.getGrammar();
+
+		sceneObject = new MockupSceneObject();
+		treeGrammar = new BalancedTreeGrammar(sceneObject);
+
+		Grammar grammar = treeGrammar.getGrammar();
 		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
 
 		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
@@ -62,7 +71,7 @@ public class GrammarTest_Indexed {
 					 response.getRulesForMaterialization(emptyMaterialization);
 		 
 		 assertEquals( 1, result.size() );
-		 assertTrue( result.contains( BalancedTreeGrammar.createBalancedLeafRule() ) );
+		 assertTrue( result.contains( treeGrammar.createBalancedLeafRule() ) );
 	}
 
 	@Test
@@ -86,7 +95,7 @@ public class GrammarTest_Indexed {
 				 response.getRulesForMaterialization(emptyMaterialization);
 		 
 		 assertEquals( 3, result.size() );
-		 assertTrue( result.contains( BalancedTreeGrammar.createLeftLeafRule()) );
+		 assertTrue( result.contains( treeGrammar.createLeftLeafRule()) );
 		 for( HeapConfiguration ruleInResult : result ){
 		 TIntIterator ntIterator = ruleInResult.nonterminalEdges().iterator();
 		 while( ntIterator.hasNext() ){
@@ -94,7 +103,7 @@ public class GrammarTest_Indexed {
 			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
 			 assertTrue("leftLeafRule not instantiatied", nt.getIndex().hasConcreteIndex() );
 		 }
-		 assertTrue( result.contains( BalancedTreeGrammar.createRightLeafRule()) );
+		 assertTrue( result.contains( treeGrammar.createRightLeafRule()) );
 		 }
 		
 	}

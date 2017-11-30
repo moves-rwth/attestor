@@ -3,6 +3,7 @@ package de.rwth.i2.attestor;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
@@ -16,6 +17,9 @@ public class RecursiveMethodDetectionTest {
 
 	@Test
 	public void test() {
+
+		SceneObject sceneObject = new MockupSceneObject();
+
 		try {
 			String classpath = "src\\test\\resources";
 			new SootInitializer().initialize(classpath );
@@ -42,8 +46,8 @@ public class RecursiveMethodDetectionTest {
 
 		SootClass sootClass = Scene.v().getSootClass( "RecursionDetectionInput" );
 		Scene.v().setMainClass( sootClass );
-		
-		TopLevelTranslation translator = new TopLevelTranslation( new StandardAbstractSemantics() );
+
+		TopLevelTranslation translator = new TopLevelTranslation(sceneObject,  new StandardAbstractSemantics(sceneObject) );
 		translator.translate();
 		
 		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: void <init>()>").isRecursive() );

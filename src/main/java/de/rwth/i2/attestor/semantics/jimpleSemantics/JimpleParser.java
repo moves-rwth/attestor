@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics;
 
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
@@ -19,7 +20,7 @@ import soot.options.Options;
  *
  * @author Hannah Arndt, Christoph
  */
-public class JimpleParser implements ProgramParser {
+public class JimpleParser extends SceneObject implements ProgramParser {
 
     /**
      * The logger of this parser.
@@ -35,7 +36,8 @@ public class JimpleParser implements ProgramParser {
      * Creates a new parser.
      * @param translationDef The underlying translation of Jimple objects to our own semantics objects.
      */
-	public JimpleParser( JimpleToAbstractSemantics translationDef ) {
+	public JimpleParser(SceneObject sceneObject, JimpleToAbstractSemantics translationDef ) {
+		super(sceneObject);
 		this.translationDef = translationDef;
 	}
 
@@ -80,7 +82,7 @@ public class JimpleParser implements ProgramParser {
 		SootClass sootClass = Scene.v().getSootClass( classname );
 		Scene.v().setMainClass( sootClass );
 		
-		TopLevelTranslation translator = new TopLevelTranslation( translationDef );
+		TopLevelTranslation translator = new TopLevelTranslation(this, translationDef );
 		translator.translate();
 		
 		String mainMethodName = sootClass.getMethodByName( entryPoint ).getSignature();

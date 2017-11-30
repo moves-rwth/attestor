@@ -2,6 +2,9 @@ package de.rwth.i2.attestor.graph.morphism;
 
 import static org.junit.Assert.assertFalse;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,16 +16,24 @@ import de.rwth.i2.attestor.graph.morphism.checkers.VF2IsomorphismChecker;
 
 public class IsomorphismCheckerTest {
 
+	private SceneObject sceneObject;
+	private ExampleHcImplFactory hcFactory;
+
 	@BeforeClass
 	public static void init() {
-
 		UnitTestGlobalSettings.reset();
+	}
+
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
+		hcFactory = new ExampleHcImplFactory(sceneObject);
 	}
 
 	@Test 
 	public void checkIdenticalGraphs() {
 		
-		Graph g = (Graph) ExampleHcImplFactory.getListRule1();
+		Graph g = (Graph) hcFactory.getListRule1();
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run(g,g);
 		assert(checker.hasMorphism());
@@ -31,7 +42,7 @@ public class IsomorphismCheckerTest {
 	@Test 
 	public void checkClonedGraphs() {
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getListRule1();
+		HeapConfiguration g1 = hcFactory.getListRule1();
 		HeapConfiguration g2 = g1.clone();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
@@ -42,8 +53,8 @@ public class IsomorphismCheckerTest {
 	@Test 
 	public void checkTwoFactoryCopies() {
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getListRule1();
-		HeapConfiguration g2 = ExampleHcImplFactory.getListRule1();
+		HeapConfiguration g1 = hcFactory.getListRule1();
+		HeapConfiguration g2 = hcFactory.getListRule1();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) g1, (Graph) g2);
@@ -53,8 +64,8 @@ public class IsomorphismCheckerTest {
 	@Test
 	public void checkNegative() {
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getListRule1();
-		HeapConfiguration g2 = ExampleHcImplFactory.getListRule2();
+		HeapConfiguration g1 = hcFactory.getListRule1();
+		HeapConfiguration g2 = hcFactory.getListRule2();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) g1, (Graph) g2);
@@ -64,7 +75,7 @@ public class IsomorphismCheckerTest {
 	@Test
 	public void checkIdenticalWithNonterminals() {
 	
-		HeapConfiguration g1 = ExampleHcImplFactory.getListRule3();
+		HeapConfiguration g1 = hcFactory.getListRule3();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) g1, (Graph) g1);	
@@ -76,8 +87,8 @@ public class IsomorphismCheckerTest {
 	@Test 
 	public void checkTwoFactoryCopiesWithNonterminals() {
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getListRule3();
-		HeapConfiguration g2 = ExampleHcImplFactory.getListRule3();
+		HeapConfiguration g1 = hcFactory.getListRule3();
+		HeapConfiguration g2 = hcFactory.getListRule3();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) g1, (Graph) g2);
@@ -88,8 +99,8 @@ public class IsomorphismCheckerTest {
 	@Test
 	public void testGraphWithConstants() {
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getListAndConstantsWithChange();
-		HeapConfiguration g2 = ExampleHcImplFactory.getListAndConstantsWithChange().clone();
+		HeapConfiguration g1 = hcFactory.getListAndConstantsWithChange();
+		HeapConfiguration g2 = hcFactory.getListAndConstantsWithChange().clone();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) g1, (Graph) g2);
@@ -101,8 +112,8 @@ public class IsomorphismCheckerTest {
 	@Test
 	public void testExpectedResultBoolList(){
 		
-		HeapConfiguration g1 = ExampleHcImplFactory.getExpectedResult_AssignStmt();
-		HeapConfiguration g2 = ExampleHcImplFactory.getExpectedResult_AssignStmt();
+		HeapConfiguration g1 = hcFactory.getExpectedResult_AssignStmt();
+		HeapConfiguration g2 = hcFactory.getExpectedResult_AssignStmt();
 		
 		int var = g2.variableWith("XYZ");
 		int node = g2.targetOf( var );
@@ -122,7 +133,7 @@ public class IsomorphismCheckerTest {
 	public void testRejectSubgraphs() {
 		
 		HeapConfiguration empty = new InternalHeapConfiguration();
-		HeapConfiguration list = ExampleHcImplFactory.getList();
+		HeapConfiguration list = hcFactory.getList();
 		
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
@@ -132,8 +143,8 @@ public class IsomorphismCheckerTest {
 	
 	@Test
 	public void testHeapsWithDifferentIndices(){
-		HeapConfiguration oneIndex = ExampleHcImplFactory.getInput_DifferentIndices_1();
-		HeapConfiguration otherIndex = ExampleHcImplFactory.getInput_DifferentIndices_2();
+		HeapConfiguration oneIndex = hcFactory.getInput_DifferentIndices_1();
+		HeapConfiguration otherIndex = hcFactory.getInput_DifferentIndices_2();
 		
 		VF2IsomorphismChecker checker = new VF2IsomorphismChecker();
 		checker.run( (Graph) oneIndex, (Graph) otherIndex);

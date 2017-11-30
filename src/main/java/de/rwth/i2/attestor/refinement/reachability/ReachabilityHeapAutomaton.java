@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.refinement.reachability;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.FactorySettings;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
@@ -16,19 +18,19 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.*;
 
-public class ReachabilityHeapAutomaton implements HeapAutomaton {
+public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutomaton {
 
     private final Set<SelectorLabel> trackedSelectorLabels;
 
-    public ReachabilityHeapAutomaton() {
-
+    public ReachabilityHeapAutomaton(SceneObject sceneObject) {
+        super(sceneObject);
         trackedSelectorLabels = Collections.emptySet();
     }
 
-    public ReachabilityHeapAutomaton(Set<String> allowedSelectorLabels) {
+    public ReachabilityHeapAutomaton(SceneObject sceneObject, Set<String> allowedSelectorLabels) {
+        super(sceneObject);
 
         trackedSelectorLabels = new HashSet<>(allowedSelectorLabels.size());
-
         for(String label : allowedSelectorLabels) {
             trackedSelectorLabels.add(Settings.getInstance().factory().getSelectorLabel(label));
         }
@@ -72,7 +74,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
         ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
         FactorySettings factory = Settings.getInstance().factory();
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
-        Type type = factory.getType("kernelNode");
+        Type type = scene().getType("kernelNode");
         int rank = canonicalHc.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList(rank);
         builder.addNodes(type, rank, nodes);
@@ -95,7 +97,7 @@ public class ReachabilityHeapAutomaton implements HeapAutomaton {
         ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
         FactorySettings factory = Settings.getInstance().factory();
         HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
-        Type type = factory.getType("kernelNode");
+        Type type = scene().getType("kernelNode");
         int varCount = canonicalHc.countVariableEdges();
         TIntArrayList nodes = new TIntArrayList(varCount);
         builder.addNodes(type, varCount, nodes);

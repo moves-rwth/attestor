@@ -1,7 +1,9 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
@@ -17,6 +19,8 @@ import static org.junit.Assert.*;
 
 public class TestAVLIndexCanoization {
 
+	private SceneObject sceneObject;
+	private ExampleIndexedGraphFactory graphFactory;
 	private IndexCanonizationStrategyImpl canonizer;
 
 	@BeforeClass
@@ -28,6 +32,9 @@ public class TestAVLIndexCanoization {
 	@Before
 	public void setup(){
 
+		sceneObject = new MockupSceneObject();
+		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
+
 		Set<String> nullPointerGuards = new HashSet<>();
 		nullPointerGuards.add("left");
 		nullPointerGuards.add("right");
@@ -37,7 +44,7 @@ public class TestAVLIndexCanoization {
 	
 	@Test
 	public void testCanonizeIndex() {
-		HeapConfiguration graph = ExampleIndexedGraphFactory.getBalancedTreeLeft3();
+		HeapConfiguration graph = graphFactory.getBalancedTreeLeft3();
 
 		IndexedNonterminal leftNonterminal = getLabelOfVar(graph, "left");
 		assertEquals("left before", 4, leftNonterminal.getIndex().size());
@@ -68,7 +75,7 @@ public class TestAVLIndexCanoization {
 	
 	@Test
 	public void testCanonizeIndex2() {
-		HeapConfiguration graph = ExampleIndexedGraphFactory.getCannotAbstractIndex();
+		HeapConfiguration graph = graphFactory.getCannotAbstractIndex();
 		
 		IndexedNonterminal leftNonterminal = getLabelOfVar(graph, "left");
 		
@@ -98,9 +105,9 @@ public class TestAVLIndexCanoization {
 	
 	@Test
 	public void testCanonizeIndex_Blocked(){
-		HeapConfiguration input = ExampleIndexedGraphFactory.getInput_indexCanonization_Blocked();
+		HeapConfiguration input = graphFactory.getInput_indexCanonization_Blocked();
 		canonizer.canonizeIndex(input);
-		assertEquals(ExampleIndexedGraphFactory.getInput_indexCanonization_Blocked(), input);		
+		assertEquals(graphFactory.getInput_indexCanonization_Blocked(), input);
 	}
 
 }

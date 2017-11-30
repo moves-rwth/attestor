@@ -5,6 +5,9 @@ import static org.junit.Assert.fail;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,13 +31,20 @@ public class IndexedMaterializationRuleManagerTest {
 	public static final int RANK = 3;
 	public static final String UNIQUE_NT_LABEL = "FakeViolationPointResolver";
 	public static final boolean[] REDUCTION_TENTACLES = new boolean[]{false,false};
-	
+
+	private SceneObject sceneObject;
+
 	IndexedNonterminal requestNonterminal = createRequestNonterminal();
 
 	@BeforeClass
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
+	}
+
+	@Before
+	public void setUp() {
+		sceneObject = new MockupSceneObject();
 	}
 
 
@@ -233,8 +243,8 @@ public class IndexedMaterializationRuleManagerTest {
 	private HeapConfiguration uninstantiatedRhsWithoutNonterminal(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
-		
+		Type type = sceneObject.scene().getType("type");
+
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
 			.build();
@@ -246,11 +256,11 @@ public class IndexedMaterializationRuleManagerTest {
 	
 //##### One Nonterminal #######
 	
-	private static HeapConfiguration graphWithOneNonterminalWithIndex( List<IndexSymbol> index) {
+	private HeapConfiguration graphWithOneNonterminalWithIndex( List<IndexSymbol> index) {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
-		
+		Type type = sceneObject.scene().getType("type");
+
 		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -336,8 +346,8 @@ public class IndexedMaterializationRuleManagerTest {
 																  List<IndexSymbol> index2 ){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		Type type = Settings.getInstance().factory().getType("type");
-		
+		Type type = sceneObject.scene().getType("type");
+
 		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
 		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, index2);
 		
