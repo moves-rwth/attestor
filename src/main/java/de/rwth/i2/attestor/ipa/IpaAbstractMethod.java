@@ -92,7 +92,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
 	}
 
-	private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
+	List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
 			throws StateSpaceGenerationAbortedException {
 
 		List<HeapConfiguration> postconditions = new ArrayList<>();
