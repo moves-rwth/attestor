@@ -3,6 +3,7 @@ package de.rwth.i2.attestor;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
@@ -14,6 +15,7 @@ import soot.options.Options;
 
 public class RecursiveMethodDetectionTest {
 
+	@Ignore
 	@Test
 	public void test() {
 		try {
