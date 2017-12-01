@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.types.Type;
  * @author Christoph, Hannah
  */
 public interface ProgramState extends Cloneable, LabelledProgramState, State {
-
+	
 	/**
 	 * @return The program location of this state.
 	 */
@@ -47,6 +47,11 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 *         for this program state.
 	 */
 	HeapConfiguration getHeap();
+	
+	/**
+	 * @return the stateSpace this state is a part of.
+	 */
+	StateSpace getStateSpace();
 
 	/**
 	 * @return The size of the heap configuration corresponding to this program state.
