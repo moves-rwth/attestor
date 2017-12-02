@@ -134,16 +134,6 @@ public class FactorySettings extends SceneObject {
 	}
 
 	/**
-	 * Creates a Type with the provided name.
-	 * @param name The name of the Type.
-	 * @return The Type.
-	 */
-	@Deprecated
-	public Type getType(String name) {
-		return scene().getType(name);
-	}
-
-	/**
 	 * Creates an object to export state spaces.
 	 * @param directory the directory to which the exportet files are written
 	 * @param filename The name of the file the state space should be exported to.
