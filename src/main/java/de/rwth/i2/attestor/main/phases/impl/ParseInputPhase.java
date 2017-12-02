@@ -59,7 +59,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
         Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
 
-        if(settings.options().isIndexedMode()) {
+        if(scene().options().isIndexedMode()) {
             JsonToIndexedHC importer = new JsonToIndexedHC(this);
             originalInput = importer.jsonToHC( jsonObj, addUsedSelectorLabel );
         } else {

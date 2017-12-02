@@ -58,7 +58,7 @@ public class MarkedHcGeneratorTest {
 
       Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(hc, grammar, marking);
+      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
       assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
    }
 
@@ -79,7 +79,7 @@ public class MarkedHcGeneratorTest {
               .build()
       );
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(hc, grammar, marking);
+      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
       assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
    }
 
@@ -125,7 +125,7 @@ public class MarkedHcGeneratorTest {
               .build();
       expectedMarkedHcs.add(unfoldedHc);
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(hc, grammar, marking);
+      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
 
       assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
    }

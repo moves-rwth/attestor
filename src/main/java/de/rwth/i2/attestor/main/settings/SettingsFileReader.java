@@ -182,17 +182,12 @@ public class SettingsFileReader {
 
 	/**
      * Populates all option settings from the parsed settings file.
-     * @param settings All settings.
-     * @return The populated option settings.
+     * @param options The options object to populate.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public OptionSettings getOptionSettings(Settings settings ){
+	public void getOptionSettings(OptionSettings options){
 		JSONObject jsonOptions = jsonSettings.getJSONObject( "options" );
 
-		OptionSettings options = settings.options();
-
 		for(String key : jsonOptions.keySet()) {
-
 			switch(key) {
 				case "mode":
 					options.setIndexedMode( jsonOptions.get(key).equals( "indexed" ) );
@@ -223,8 +218,6 @@ public class SettingsFileReader {
 					break;
 			}
 		}
-
-		return options;
 	}
 
     /**

@@ -114,7 +114,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         MaterializationStrategy strategy;
 
-        if(settings.options().isIndexedMode()) {
+        if(scene().options().isIndexedMode()) {
             ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
 
             IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
@@ -142,14 +142,15 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupCanonicalization() {
 
-        final int abstractionDifference = settings.options().getAbstractionDistance();
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference);
-        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(0);
+        final int abstractionDifference = scene().options().getAbstractionDistance();
+        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference, aggressiveNullAbstraction);
+        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(0, aggressiveNullAbstraction);
 
         CanonicalizationHelper canonicalizationHelper;
         CanonicalizationHelper aggressiveCanonicalizationHelper;
 
-        if(settings.options().isIndexedMode()) {
+        if(scene().options().isIndexedMode()) {
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
             aggressiveCanonicalizationHelper = getIndexedCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using indexed grammar.");
@@ -166,8 +167,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupInclusionCheck() {
 
-        final int abstractionDistance = settings.options().getAbstractionDistance();
-        if(abstractionDistance > 0 && !settings.options().isIndexedMode()) {
+        final int abstractionDistance = scene().options().getAbstractionDistance();
+        if(abstractionDistance > 0 && !scene().options().isIndexedMode()) {
             DefaultProgramState.setHeapInclusionStrategy(new MinDistanceInclusionStrategy(grammar));
             logger.debug("Setup inclusion strategy to isomorphism checking with materialization.");
         } else {
@@ -221,8 +222,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbortTest() {
 
-        int stateSpaceBound = settings.options().getMaxStateSpaceSize();
-        int stateBound = settings.options().getMaxStateSize();
+        int stateSpaceBound = scene().options().getMaxStateSpaceSize();
+        int stateBound = scene().options().getMaxStateSize();
         settings.stateSpaceGeneration()
                 .setAbortStrategy(
                         new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
@@ -249,7 +250,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         StateSpaceGenerationSettings stateSpaceGenerationSettings = settings.stateSpaceGeneration();
         StateRefinementStrategy stateRefinementStrategy = stateSpaceGenerationSettings.getStateRefinementStrategy();
-        boolean isGarbageCollectionEnabled = settings.options().isGarbageCollectionEnabled();
+        boolean isGarbageCollectionEnabled = scene().options().isGarbageCollectionEnabled();
 
         if(stateRefinementStrategy == null) {
             if(isGarbageCollectionEnabled) {

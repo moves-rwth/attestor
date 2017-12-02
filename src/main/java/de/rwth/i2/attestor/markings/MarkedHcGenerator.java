@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.iterator.TIntIterator;
@@ -28,7 +29,7 @@ import java.util.Stack;
  *
  * @author Christoph
  */
-public class MarkedHcGenerator {
+public class MarkedHcGenerator extends SceneObject {
 
     private final Grammar grammar;
     private final Marking marking;
@@ -44,13 +45,15 @@ public class MarkedHcGenerator {
 
     /**
      * Start generating all marked HeapConfigurations.
+     * @param sceneObject Parent scene object
      * @param initialHc The HeapConfigurations whose unfolded HeapConfigurations shall be marked.
      * @param grammar The grammar specifying materialization and canonicalization.
      * @param marking A specification of the variable that should traverse every node in the unfolded HeapConfigurations
      *                and the selectors that should also be marked.
      */
-    public MarkedHcGenerator(HeapConfiguration initialHc, Grammar grammar, Marking marking) {
+    public MarkedHcGenerator(SceneObject sceneObject, HeapConfiguration initialHc, Grammar grammar, Marking marking) {
 
+        super(sceneObject);
         this.grammar = grammar;
         this.marking = marking;
         this.universalVariableName = marking.getUniversalVariableName();
@@ -165,10 +168,11 @@ public class MarkedHcGenerator {
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
         int minAbstractionDistance = (marking.isMarkAllSuccessors() || !marking.getRequiredSelectors().isEmpty()) ? 1 : 0;
+        boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
 
         for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, minAbstractionDistance);
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, minAbstractionDistance, aggressiveNullAbstraction);
                 if(checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()

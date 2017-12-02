@@ -13,14 +13,16 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 public class EmbeddingCheckerProvider {
 	
 	private final int minDereferenceDepth;
+	private final boolean aggressiveNullAbstractionEnabled;
 
 	/**
 	 * Constructs an EmbeddingCheckerProvider with the given settings
 	 * @param minDereferenceDepth the distance which has to be ensured between an embedding and
 	 * the next node referenced by a variable
 	 */
-	public EmbeddingCheckerProvider( int minDereferenceDepth ) {
+	public EmbeddingCheckerProvider( int minDereferenceDepth, boolean aggressiveNullAbstractionEnabled ) {
 		this.minDereferenceDepth = minDereferenceDepth;
+		this.aggressiveNullAbstractionEnabled = aggressiveNullAbstractionEnabled;
 	}
 
 	/**
@@ -32,7 +34,7 @@ public class EmbeddingCheckerProvider {
 	 */
 	public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern) {
 
-		return graph.getEmbeddingsOf(pattern, minDereferenceDepth);
+		return graph.getEmbeddingsOf(pattern, minDereferenceDepth, aggressiveNullAbstractionEnabled);
 	}
 
 }

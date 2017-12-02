@@ -37,7 +37,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        if(settings.options().isNoExport()) {
+        if(scene().options().isNoExport()) {
             return;
         }
 
@@ -180,7 +180,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if(!settings.options().isNoExport() && settings.output().isExportStateSpace()) {
+        if(!scene().options().isNoExport() && settings.output().isExportStateSpace()) {
             String location = settings.output().getLocationForStateSpace();
             logSum("State space exported to '"
                     + location

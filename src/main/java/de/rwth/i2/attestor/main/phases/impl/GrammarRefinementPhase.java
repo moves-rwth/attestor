@@ -65,7 +65,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         updateHeapAutomata();
 
-        if(settings.options().isIndexedMode()) {
+        if(scene().options().isIndexedMode()) {
 
             // in the long run, we should make this an option in the settings
             if(BasicNonterminal.hasNonterminal("BT"))  {
@@ -76,8 +76,8 @@ public class GrammarRefinementPhase extends AbstractPhase
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
         Grammar grammar =  settings.grammar().getGrammar();
 
-        if(automaton != null && grammar != null && !settings.options().isIndexedMode()) {
-            settings.options().setGrammarRefinementEnabled(true);
+        if(automaton != null && grammar != null && !scene().options().isIndexedMode()) {
+            scene().options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
             settings.grammar().setGrammar(grammar);
@@ -86,7 +86,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private void updateHeapAutomata() {
 
-        boolean isIndexedMode = settings.options().isIndexedMode();
+        boolean isIndexedMode = scene().options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
         boolean hasBtreeAutomaton = false;
@@ -102,7 +102,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
             if(!hasBimapAutomaton && bimap.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(grammar));
+                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(this, grammar));
                 hasBimapAutomaton = true;
                 logger.debug("Enable checking for lists of equal length.");
             } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
@@ -112,7 +112,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 logger.debug("Enable checking for balanced trees.");
             } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
+                stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(this, grammar));
                 hasLanguageInclusionAutomaton = true;
                 logger.debug("Enable language inclusion checks to determine heap shapes.");
             } else if(reachableBySelPattern.matcher(ap).matches()) {

@@ -23,8 +23,10 @@ public class MinDistanceEmbeddingChecker extends AbstractMatchingChecker{
 	 * @param target The HeapConfiguration in which embeddings should be searched for.
 	 * @param depth The minimal distance between an element of a found embedding and a variable in the pattern
      *              HeapConfiguration.
+	 * @param aggressiveNullAbstractionEnabled True if aggressive null abstraction is enabled.
 	 */
-	public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target, int depth) {
-		super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth));
+	public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target,
+									   int depth, boolean aggressiveNullAbstractionEnabled) {
+		super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth, aggressiveNullAbstractionEnabled));
 	}
 }

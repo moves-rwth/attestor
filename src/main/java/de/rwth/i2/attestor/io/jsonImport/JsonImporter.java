@@ -15,7 +15,7 @@ public class JsonImporter extends SceneObject {
 	}
 
 	public HeapConfiguration parseHC( JSONObject hc, Consumer<String> addSelectorLabelFunction  ){
-		if( Settings.getInstance().options().isIndexedMode() ){
+		if( scene().options().isIndexedMode() ){
 			JsonToIndexedHC importer = new JsonToIndexedHC(this);
 			return importer.jsonToHC(hc, addSelectorLabelFunction);
 		}else{

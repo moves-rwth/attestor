@@ -560,10 +560,12 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 	}
 
 	@Override
-	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDepth) {
+	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
+												   int minAbstractionDepth, boolean aggressiveNullAbstractionEnabled) {
 
 		if(minAbstractionDepth > 0) {
-			return new MinDistanceEmbeddingChecker(pattern, this, minAbstractionDepth);
+			return new MinDistanceEmbeddingChecker(pattern, this,
+					minAbstractionDepth, aggressiveNullAbstractionEnabled);
 
 		} else {
 			return new EmbeddingChecker(pattern, this);

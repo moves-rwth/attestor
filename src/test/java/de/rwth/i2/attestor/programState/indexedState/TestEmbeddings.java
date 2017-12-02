@@ -22,6 +22,7 @@ public class TestEmbeddings {
 
 	private SceneObject sceneObject;
 	private ExampleIndexedGraphFactory graphFactory;
+	private boolean aggressiveNullAbstraction;
 
 	@Before
 	public void init(){
@@ -30,6 +31,7 @@ public class TestEmbeddings {
 
 		sceneObject = new MockupSceneObject();
 		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
+		aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 		
 
 		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
@@ -64,7 +66,7 @@ public class TestEmbeddings {
 	public void testCanonizePractical() {
 		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize() );
 		input.prepareHeap();
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0);
+		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
 		assertTrue( checker.hasMatching() );
 	}
 	
@@ -73,7 +75,7 @@ public class TestEmbeddings {
 		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize2() );
 		input.prepareHeap();
 				
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0);
+		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
 		assertTrue( checker.hasMatching() );
 	}
 	
@@ -83,7 +85,7 @@ public class TestEmbeddings {
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-		        graphFactory.getEmbedding_practicalCanonize3(), 0
+		        graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction
 		);
 
 		assertTrue( checker.hasMatching() );
@@ -95,7 +97,7 @@ public class TestEmbeddings {
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0
+                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
         );
 
 		assertTrue( checker.hasMatching() );
@@ -108,7 +110,7 @@ public class TestEmbeddings {
 		input.prepareHeap();
 				
 		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0
+                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
         );
 
 		assertTrue( checker.hasMatching() );

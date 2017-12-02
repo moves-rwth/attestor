@@ -113,7 +113,7 @@ public class MarkingGenerationPhase extends AbstractPhase
         Grammar grammar = settings.grammar().getGrammar();
         List<HeapConfiguration> newInputs = new ArrayList<>();
         for(HeapConfiguration input : inputs) {
-            MarkedHcGenerator generator = new MarkedHcGenerator(input, grammar, marking);
+            MarkedHcGenerator generator = new MarkedHcGenerator(this, input, grammar, marking);
             newInputs.addAll(generator.getMarkedHcs());
         }
         if(newInputs.isEmpty()) {

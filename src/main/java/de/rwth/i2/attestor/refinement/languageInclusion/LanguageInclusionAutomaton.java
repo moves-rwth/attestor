@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -13,12 +14,13 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
+public class LanguageInclusionAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
     private final Grammar grammar;
 
-    public LanguageInclusionAutomaton(Grammar grammar) {
+    public LanguageInclusionAutomaton(SceneObject sceneObject, Grammar grammar) {
 
+        super(sceneObject);
         this.grammar = grammar;
     }
 
@@ -54,9 +56,11 @@ public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
+        boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
+
         for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0);
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0, aggressiveNullAbstraction);
                 if(checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()

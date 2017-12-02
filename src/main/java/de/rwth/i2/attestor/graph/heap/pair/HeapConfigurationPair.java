@@ -218,9 +218,11 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     }
 
     @Override
-    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance) {
+    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
+                                                   int minAbstractionDistance,
+                                                   boolean aggressiveNullAbstractionEnabled) {
 
-        return actual.getEmbeddingsOf(pattern, minAbstractionDistance);
+        return actual.getEmbeddingsOf(pattern, minAbstractionDistance, aggressiveNullAbstractionEnabled);
     }
 
     @Override

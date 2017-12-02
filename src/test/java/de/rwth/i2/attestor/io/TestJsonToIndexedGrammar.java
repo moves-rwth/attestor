@@ -87,6 +87,7 @@ public class TestJsonToIndexedGrammar {
 		JSONArray jsonArray = new JSONArray( grammarEncoding );
 
 		SceneObject sceneObject = new MockupSceneObject();
+		sceneObject.scene().options().setIndexedMode(true);
 		ExpectedHCs expectedHCs = new ExpectedHCs(sceneObject);
 
 		Grammar grammar = Grammar.builder()

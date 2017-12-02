@@ -80,7 +80,7 @@ public class FactorySettings extends SceneObject {
 	 * @return true if and only if an indexed analysis is performed.
 	 */
 	private boolean requiresIndexedSymbols() {
-		return Settings.getInstance().options().isIndexedMode();
+		return scene().options().isIndexedMode();
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class FactorySettings extends SceneObject {
 	 */
 	private boolean requiresRefinedSymbols() {
 
-		return Settings.getInstance().options().isGrammarRefinementEnabled();
+		return scene().options().isGrammarRefinementEnabled();
 	}
 
 	/**
@@ -211,11 +211,11 @@ public class FactorySettings extends SceneObject {
                         this::addGeneratedStates
                 )
                 .setDeadVariableElimination(
-                        Settings.getInstance().options().isRemoveDeadVariables()
+                        scene().options().isRemoveDeadVariables()
                 )
                 .setBreadthFirstSearchEnabled(false)
                 .setExplorationStrategy((s,sp) -> true)
-                .setStateSpaceSupplier(() -> new InternalStateSpace(Settings.getInstance().options().getMaxStateSpaceSize()))
+                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
                 .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 ;
@@ -224,7 +224,7 @@ public class FactorySettings extends SceneObject {
 
     private PostProcessingStrategy getPostProcessingStrategy() {
 
-        OptionSettings optionSettings = Settings.getInstance().options();
+        OptionSettings optionSettings = scene().options();
         CanonicalizationStrategy aggressiveStrategy = Settings
                 .getInstance()
                 .stateSpaceGeneration()

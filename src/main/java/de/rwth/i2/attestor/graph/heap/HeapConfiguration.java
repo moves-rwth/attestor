@@ -229,10 +229,12 @@ public interface HeapConfiguration {
 	 *
 	 * @param pattern The HeapConfiguration to search for.
 	 * @param minAbstractionDistance The minimal distance between a variable and an embedding.
+	 * @param aggressiveNullAbstractionEnabled True if aggressive null abstraction is enabled.
 	 *
 	 * @return An AbstractMatchingChecker to iterate through all found embeddings.
 	 */
-	AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance);
+	AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
+											int minAbstractionDistance, boolean aggressiveNullAbstractionEnabled);
 
 	/**
 	 * @param variableName The name of the requested variable.

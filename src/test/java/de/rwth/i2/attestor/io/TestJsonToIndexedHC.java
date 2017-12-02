@@ -27,12 +27,12 @@ public class TestJsonToIndexedHC {
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
-		Settings.getInstance().options().setIndexedMode(true);
 	}
 
 	@Before
 	public void initClass() {
 		sceneObject = new MockupSceneObject();
+		sceneObject.scene().options().setIndexedMode(true);
 		expectedHCs = new ExpectedHCs(sceneObject);
 		BasicNonterminal.getNonterminal("TestJson", 2, new boolean[]{false,false});
 	}

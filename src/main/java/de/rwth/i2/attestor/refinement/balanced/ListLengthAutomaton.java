@@ -12,6 +12,8 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -28,13 +30,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ListLengthAutomaton implements StatelessHeapAutomaton {
+public class ListLengthAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
     private final Grammar grammar;
     private CanonicalizationStrategy canonicalizationStrategy;
 
-    public ListLengthAutomaton(Grammar grammar) {
+    public ListLengthAutomaton(SceneObject sceneObject, Grammar grammar) {
 
+        super(sceneObject);
         this.grammar = grammar;
         setupCanonicalization();
     }
@@ -69,7 +72,8 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0);
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
+                scene().options().getAggressiveNullAbstraction());
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

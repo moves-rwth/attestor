@@ -33,7 +33,8 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	@Before
 	public void setUp() throws Exception {
 		final int minDereferenceDepth = 1;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
+		final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
 		canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 	}
 	

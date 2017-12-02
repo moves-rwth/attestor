@@ -55,9 +55,8 @@ public class CanonicalizationStrategyTest {
 				.build();
 		
 		final int minDereferenceDepth = 0;
-		final int aggressiveAbstractionThreshold = 10;
-		final boolean aggressiveReturnAbstraction = false;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
+		final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
 		CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
 		
 		canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

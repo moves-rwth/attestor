@@ -142,7 +142,7 @@ public class GrammarSettings extends SceneObject {
      */
     private Map<Nonterminal, Collection<HeapConfiguration>> parseRules(JSONArray array) {
 
-        if(Settings.getInstance().options().isIndexedMode()) {
+        if(scene().options().isIndexedMode()) {
             JsonToIndexedGrammar importer = new JsonToIndexedGrammar(this);
             return importer.parseForwardGrammar(array);
         } else {

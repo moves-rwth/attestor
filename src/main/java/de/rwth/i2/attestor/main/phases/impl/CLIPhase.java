@@ -34,7 +34,7 @@ public class CLIPhase extends AbstractPhase {
             SettingsFileReader settingsReader =
                     new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
             settingsReader.getInputSettings( settings );
-            settingsReader.getOptionSettings( settings );
+            settingsReader.getOptionSettings( scene().options() );
             settingsReader.getOutputSettings( settings );
             settingsReader.getMCSettings( settings );
         }

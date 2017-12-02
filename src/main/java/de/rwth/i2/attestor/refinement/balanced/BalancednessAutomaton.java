@@ -81,7 +81,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0);
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0, scene().options().getAggressiveNullAbstraction());
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

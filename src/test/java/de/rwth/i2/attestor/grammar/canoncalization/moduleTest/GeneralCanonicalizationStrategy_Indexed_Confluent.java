@@ -55,7 +55,8 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
 		IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
 		
 		final int minDereferenceDepth = 1;
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth);
+		final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
 
 		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
 		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
