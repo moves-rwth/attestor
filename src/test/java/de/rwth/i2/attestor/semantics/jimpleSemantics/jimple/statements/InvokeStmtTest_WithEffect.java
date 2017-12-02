@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import org.junit.*;
@@ -13,7 +14,6 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
@@ -55,11 +55,13 @@ public class InvokeStmtTest_WithEffect {
 		expectedHeap = expectedState.getHeap();
 		
 		Type type = sceneObject.scene().getType("List");
-		type.addSelectorLabel("next", Constants.NULL);
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+
+		type.addSelectorLabel(next, Constants.NULL);
 		Local varX = new Local(type, "x");
 		Local varY = new Local(type, "y");
-		Field nextOfX = new Field(type, varX, "next");
-		Field nextOfY = new Field(type, varY, "next");
+		Field nextOfX = new Field(type, varX, next);
+		Field nextOfY = new Field(type, varY, next);
 		
 		AbstractMethod method = new IpaAbstractMethod("method");
 		List<Semantics> methodBody = new ArrayList<>();

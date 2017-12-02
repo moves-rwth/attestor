@@ -35,7 +35,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getSimpleDLL() {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel sel = scene().getSelectorLabel("next");
 		BasicNonterminal nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false, false, false});
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
@@ -52,8 +52,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getBadTwoElementDLL() {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -70,8 +70,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getTwoElementDLL() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -87,11 +87,11 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getThreeElementDLL() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
-		type.addSelectorLabel(next.getLabel(), Constants.NULL);
-		type.addSelectorLabel(prev.getLabel(), Constants.NULL);
+		type.addSelectorLabel(next, Constants.NULL);
+		type.addSelectorLabel(prev, Constants.NULL);
 		TIntArrayList nodes = new TIntArrayList();
 
 		return result.builder()
@@ -108,11 +108,11 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getThreeElementDLLWithConstants() {
 
 		HeapConfiguration result = getEmptyGraphWithConstants();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
-		type.addSelectorLabel(next.getLabel(), Constants.NULL);
-		type.addSelectorLabel(prev.getLabel(), Constants.NULL);
+		type.addSelectorLabel(next, Constants.NULL);
+		type.addSelectorLabel(prev, Constants.NULL);
 		TIntArrayList nodes = new TIntArrayList();
 
 		return result.builder()
@@ -129,8 +129,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getFiveElementDLL() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -152,8 +152,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 	public HeapConfiguration getBrokenFourElementDLL() {
 
 		HeapConfiguration result = new InternalHeapConfiguration();
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -175,14 +175,14 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 
 		Type type = scene().getType("node");
-		type.addSelectorLabel(left.getLabel(), Constants.NULL);
-		type.addSelectorLabel(right.getLabel(), Constants.NULL);
-		type.addSelectorLabel(parent.getLabel(), Constants.NULL);
+		type.addSelectorLabel(left, Constants.NULL);
+		type.addSelectorLabel(right, Constants.NULL);
+		type.addSelectorLabel(parent, Constants.NULL);
 
 		BasicNonterminal nT = BasicNonterminal.getNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
 
@@ -208,9 +208,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 
 		BasicNonterminal nT = BasicNonterminal.getNonterminal( "Tree", 4, new boolean[]{false,false,false,false} );
 		
@@ -236,8 +236,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
 
 		return result.builder()
 				.addNodes(type, 3, nodes )
@@ -254,9 +254,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 
 		return result.builder()
 				.addNodes(type, 6, nodes )
@@ -276,9 +276,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 
 		return result.builder()
 				.addNodes(type, 6, nodes )
@@ -295,10 +295,10 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel next = scene().getSelectorLabel("next");
 
 		Type type = scene().getType("List");
-		type.addSelectorLabel(next.getLabel(), Constants.NULL);
+		type.addSelectorLabel(next, Constants.NULL);
 
 		Type intType = scene().getType("int");
 
@@ -342,9 +342,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel next = scene().getSelectorLabel("next");
 		Type type = scene().getType("List");
-		type.addSelectorLabel(next.getLabel(), Constants.NULL);
+		type.addSelectorLabel(next, Constants.NULL);
 
 
 		return result.builder()
@@ -365,7 +365,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("List");
 
 		Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false, true});
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel next = scene().getSelectorLabel("next");
 
 		return result.builder()
 				.addNodes(type, 2, nodes )
@@ -385,7 +385,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type type = scene().getType("List");
 
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel next = scene().getSelectorLabel("next");
 		
 		return result.builder()
 				.addNodes(type, 4, nodes )
@@ -407,8 +407,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		return empty.builder()
 				.addNodes(defaultType, 3, nodes )
@@ -430,8 +430,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
 		
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		return empty.builder()
 				.addNodes(defaultType, 3, nodes )
@@ -458,8 +458,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
 		
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		return empty.builder()
 				.addNodes(defaultType, 3, nodes)
@@ -480,8 +480,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.BoolList");
 		
-		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSelector = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		return empty.builder()
 				.addNodes(defaultType, 3, nodes)
@@ -500,8 +500,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
-		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSelector = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
 		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
@@ -528,8 +528,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.EasyList");
-		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSelector = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
 		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
@@ -552,8 +552,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration empty = getEmptyGraphWithConstants();
 
 		Type defaultType = scene().getType("de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.programs.NormalList");
-		BasicSelectorLabel nextSelector = BasicSelectorLabel.getSelectorLabel( "next" );
-		BasicSelectorLabel valSelector = BasicSelectorLabel.getSelectorLabel( "value" );
+		SelectorLabel nextSelector = scene().getSelectorLabel( "next" );
+		SelectorLabel valSelector = scene().getSelectorLabel( "value" );
 
 		int nullNode =  empty.targetOf(empty.variableWith(Constants.NULL));
 		int trueNode =  empty.targetOf(empty.variableWith(Constants.TRUE));
@@ -581,7 +581,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -598,7 +598,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -635,7 +635,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -653,7 +653,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -708,8 +708,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("DLL");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
-		BasicSelectorLabel prevSel = BasicSelectorLabel.getSelectorLabel("p");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
+		SelectorLabel prevSel = scene().getSelectorLabel("p");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -727,8 +727,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("DLL");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
-		BasicSelectorLabel prevSel = BasicSelectorLabel.getSelectorLabel("p");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
+		SelectorLabel prevSel = scene().getSelectorLabel("p");
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("List", 2, new boolean []{false,false});
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -748,8 +748,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("DLL");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
-		BasicSelectorLabel prevSel = BasicSelectorLabel.getSelectorLabel("p");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
+		SelectorLabel prevSel = scene().getSelectorLabel("p");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -771,8 +771,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("DLL");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
-		BasicSelectorLabel prevSel = BasicSelectorLabel.getSelectorLabel("p");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
+		SelectorLabel prevSel = scene().getSelectorLabel("p");
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -794,8 +794,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("DLL");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
-		BasicSelectorLabel prevSel = BasicSelectorLabel.getSelectorLabel("p");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
+		SelectorLabel prevSel = scene().getSelectorLabel("p");
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -877,7 +877,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -894,7 +894,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type listType = scene().getType("List");
 
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("List", 2,new boolean[] {false,true} );
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -915,7 +915,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -963,7 +963,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -979,7 +979,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -1009,7 +1009,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -1027,7 +1027,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 
 		Type listType = scene().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
 
 		return result.builder()
@@ -1063,7 +1063,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 
 		Type listType = scene().getType("RListNode");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
 			
 		return result.builder()
 				.addNodes(listType, 2, nodes)
@@ -1079,7 +1079,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 
 		Type listType = scene().getType("RListNode");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel("n");
+		SelectorLabel nextSel = scene().getSelectorLabel("n");
 		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("RList",2,new boolean[]{false,false});
 			
 		return result.builder()
@@ -1099,7 +1099,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		BasicNonterminal n2 = BasicNonterminal.getNonterminal( "ReductionTest_N2", 3, new boolean[]{false,false,false} );
 		
 		Type type = scene().getType("node");
-		BasicSelectorLabel sel1 = BasicSelectorLabel.getSelectorLabel("sel1");
+		SelectorLabel sel1 = scene().getSelectorLabel("sel1");
 
 		return result.builder()
 				.addNodes( type, 4, nodes )
@@ -1135,8 +1135,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("node");
-		BasicSelectorLabel sel1 = BasicSelectorLabel.getSelectorLabel("sel1");
-		BasicSelectorLabel sel2 = BasicSelectorLabel.getSelectorLabel("sel2");
+		SelectorLabel sel1 = scene().getSelectorLabel("sel1");
+		SelectorLabel sel2 = scene().getSelectorLabel("sel2");
 
 		return result.builder()
 				.addNodes( type, 3, nodes )
@@ -1154,7 +1154,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type listType = scene().getType("List");
-		BasicSelectorLabel nextSel = BasicSelectorLabel.getSelectorLabel( "next" );
+		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
 		
 		return result.builder()
 				.addNodes(listType, 10, nodes)
@@ -1202,7 +1202,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType( "NewExprTestNode");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
+		SelectorLabel next = scene().getSelectorLabel("next");
 
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1216,8 +1216,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("AssignInvokeTestNonTrivial");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1234,9 +1234,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type type = scene().getType("node");
 
-		BasicSelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		BasicSelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 
 		BasicNonterminal nT = BasicNonterminal.getNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
 		
@@ -1262,8 +1262,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		
 		return result.builder()
 				.addNodes(type, 3, nodes)
@@ -1282,8 +1282,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		
 		return result.builder()
 				.addNodes(type, 3, nodes)
@@ -1300,9 +1300,12 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "?");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "?");
+
+		SelectorLabel basicLeft = scene().getSelectorLabel("left");
+		SelectorLabel basicRight = scene().getSelectorLabel("right");
+
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "?");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "?");
 		Type type = scene().getType("type");
 		
 		return result.builder()
@@ -1319,10 +1322,12 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
-		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "?");
-		AnnotatedSelectorLabel left2 = new AnnotatedSelectorLabel("left", "2");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "?");
+
+		SelectorLabel basicLeft = scene().getSelectorLabel("left");
+		SelectorLabel basicRight = scene().getSelectorLabel("right");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "?");
+		AnnotatedSelectorLabel left2 = new AnnotatedSelectorLabel(basicLeft, "2");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "?");
 		Type type = scene().getType("type");
 		
 		return result.builder()
@@ -1341,8 +1346,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
 		
 		return result.builder()
 				.addNodes(type, 2, nodes)
@@ -1359,9 +1364,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
-		BasicSelectorLabel parent = BasicSelectorLabel.getSelectorLabel("parent");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
+		SelectorLabel parent = scene().getSelectorLabel("parent");
 		
 		return result.builder()
 				.addNodes(type, 3, nodes)
@@ -1399,9 +1404,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
-		BasicSelectorLabel list = BasicSelectorLabel.getSelectorLabel("list");
+		SelectorLabel next = scene().getSelectorLabel("next");
+		SelectorLabel prev = scene().getSelectorLabel("prev");
+		SelectorLabel list = scene().getSelectorLabel("list");
 		BasicNonterminal dllLabel = BasicNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
@@ -1503,8 +1508,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
 		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
 		
 		return result.builder()
 				.addNodes(type, 9, nodes)
@@ -1574,7 +1579,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type type = scene().getType("List");
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel left = scene().getSelectorLabel("left");
 		
 		return result.builder()
 				.addNodes(type, 2, nodes)
@@ -1590,7 +1595,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		Type type = scene().getType("List");
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel left = scene().getSelectorLabel("left");
 		
 		return result.builder()
 				.addNodes(type, 2, nodes)
@@ -1607,7 +1612,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("List");
 		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
+		SelectorLabel left = scene().getSelectorLabel("left");
 		return result.builder()
 				.addNodes(type, 4, nodes)
 				.addVariableEdge(Constants.NULL, nodes.get(0))
@@ -1633,8 +1638,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("List");
 		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
 				
 		return result.builder().addNodes(type, 3, nodes)
 				.addVariableEdge("some-variable0", nodes.get(1))
@@ -1655,8 +1660,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type type = scene().getType("List");
 		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
 		
-		SelectorLabel left = BasicSelectorLabel.getSelectorLabel("left");
-		SelectorLabel right = BasicSelectorLabel.getSelectorLabel("right");
+		SelectorLabel left = scene().getSelectorLabel("left");
+		SelectorLabel right = scene().getSelectorLabel("right");
 				
 		return result.builder().addNodes(type, 3, nodes)
 				.setExternal(nodes.get(1))

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.InputSettings;
 import java.util.ArrayList;
@@ -44,17 +45,6 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
     private TopLevelTranslation topLevel;
 
 	/**
-	 * Sets the topLevel to the given argument and nextLevel to {@link DefaultAbstractSemantics}.
-     *
-	 * @param topLevel The topmost level in the translation hierarchy.
-	 */
-	StandardAbstractSemantics(SceneObject sceneObject, TopLevelTranslation topLevel ){
-		super(sceneObject);
-		this.topLevel = topLevel;
-		this.nextLevel = new DefaultAbstractSemantics( topLevel );
-	}
-
-    /**
      * Default initialization
      */
 	public StandardAbstractSemantics(SceneObject sceneObject) {
@@ -352,15 +342,16 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 
 		Value base = topLevel.translateValue( fieldRef.getBase() );
 		String name = fieldRef.getField().getName();
+		SelectorLabel fieldLabel = scene().getSelectorLabel(name);
 		Type type = topLevel.translateType( fieldRef.getType() );
 
 		String fieldType = fieldRef.getType().toString();
-		type.addSelectorLabel(name, PrimitiveTypes.getDefaultValue(fieldType));
+		type.addSelectorLabel(fieldLabel, PrimitiveTypes.getDefaultValue(fieldType));
 
 		InputSettings inputSettings = Settings.getInstance().input();
 		inputSettings.addUsedSelectorLabel(name);
 
-		return new Field( type, base, name );
+		return new Field( type, base, fieldLabel);
 	}
 
     /**

@@ -155,7 +155,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -169,7 +169,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -183,7 +183,7 @@ public class DefaultGrammarResponseApplierTest {
 
 		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -202,7 +202,7 @@ public class DefaultGrammarResponseApplierTest {
 
 		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -219,7 +219,7 @@ public class DefaultGrammarResponseApplierTest {
 
 		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -238,7 +238,7 @@ public class DefaultGrammarResponseApplierTest {
 
 		Type type = sceneObject.scene().getType("type");
 		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)

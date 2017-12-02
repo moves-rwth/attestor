@@ -32,7 +32,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 	private static final int RANK = 3;
 	private final SceneObject sceneObject = new MockupSceneObject();
 	private final Type TYPE = sceneObject.scene().getType("type");
-	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
+	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before

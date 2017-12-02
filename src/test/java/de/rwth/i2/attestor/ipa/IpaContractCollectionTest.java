@@ -21,10 +21,10 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaContractCollectionTest {
 
-	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
 
-	SceneObject sceneObject = new MockupSceneObject();
-	Type type = sceneObject.scene().getType("type");
+	private final SceneObject sceneObject = new MockupSceneObject();
+	private final Type type = sceneObject.scene().getType("type");
+	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
 
 	@Test
 	public void test() {

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
@@ -25,8 +26,9 @@ class ExpectedHCs extends SceneObject {
 
 	public HeapConfiguration getExpected_Annotated(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
+
+		SelectorLabel basicSel = scene().getSelectorLabel("label");
+		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
 		
 		Type type = scene().getType("type");
 		
@@ -126,8 +128,9 @@ class ExpectedHCs extends SceneObject {
 	
 	public HeapConfiguration getExpected_Rule2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel("label", "ann");
+
+		SelectorLabel basicSel = scene().getSelectorLabel("label");
+		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
 		
 		Type type = scene().getType("type");
 		

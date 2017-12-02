@@ -22,7 +22,7 @@ public class ReachableFragmentTest {
 	SceneObject sceneObject = new MockupSceneObject();
 	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
 	Type type = sceneObject.scene().getType("someType");
-	SelectorLabel nextLabel = BasicSelectorLabel.getSelectorLabel("next");
+	SelectorLabel nextLabel = sceneObject.scene().getSelectorLabel("next");
 
 
 	@Test

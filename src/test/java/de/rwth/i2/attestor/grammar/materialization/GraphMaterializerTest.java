@@ -80,7 +80,7 @@ public class GraphMaterializerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)
@@ -95,7 +95,7 @@ public class GraphMaterializerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)

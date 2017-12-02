@@ -22,8 +22,9 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = sceneObject.scene().getType("type");
-		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(
-				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR);
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel(
+				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR
+		);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -37,7 +38,7 @@ public class TestGraphs {
 		
 		Type type = sceneObject.scene().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
-				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
+				sceneObject.scene().getSelectorLabel(GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR),
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -52,9 +53,9 @@ public class TestGraphs {
 		
 		Type type = sceneObject.scene().getType("type");
 		AnnotatedSelectorLabel annotatedSel = new AnnotatedSelectorLabel(
-				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR, 
+				sceneObject.scene().getSelectorLabel(GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATED_SELECTOR),
 				GeneralMaterializationStrategyTest_getActualViolationPoint.ANNOTATION );
-		BasicSelectorLabel defaultSel = BasicSelectorLabel.getSelectorLabel(
+		SelectorLabel defaultSel = sceneObject.scene().getSelectorLabel(
 				GeneralMaterializationStrategyTest_getActualViolationPoint.DEFAULT_SELECTOR );
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -82,8 +83,8 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = sceneObject.scene().getType("type");
 		
-		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()
@@ -99,8 +100,8 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = sceneObject.scene().getType("type");
 		
-		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
 		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		
@@ -122,8 +123,8 @@ public class TestGraphs {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		Type nodeType = sceneObject.scene().getType("type");
 		
-		SelectorLabel next = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
-		SelectorLabel prev = BasicSelectorLabel.getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
+		SelectorLabel next = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_NEXT );
+		SelectorLabel prev = sceneObject.scene().getSelectorLabel( ViolationPointResolverTest_Default.SELECTOR_NAME_PREV );
 		
 		BasicNonterminal nonterminal = ViolationPointResolverTest_Default.DEFAULT_NONTERMINAL;
 		

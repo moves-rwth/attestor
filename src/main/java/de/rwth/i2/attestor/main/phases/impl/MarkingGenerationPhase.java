@@ -103,7 +103,7 @@ public class MarkingGenerationPhase extends AbstractPhase
             logger.info("Computing marked inputs to track neighbourhood identities...");
             marking = new Marking("neighbourhood", true);
             markInputs(marking);
-            stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(marking));
+            stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(this, marking));
         }
 
     }

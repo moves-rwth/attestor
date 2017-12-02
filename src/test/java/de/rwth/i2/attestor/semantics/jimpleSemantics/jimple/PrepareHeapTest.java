@@ -2,10 +2,10 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
@@ -31,6 +31,8 @@ import static org.junit.Assert.*;
 public class PrepareHeapTest {
 	//private static final Logger logger = LogManager.getLogger( "PrepareHeapTest.java" );
 
+	private SceneObject sceneObject = new MockupSceneObject();
+
 	private HeapConfiguration testGraph;
 	private int truePC;
 	private int falsePC;
@@ -45,7 +47,6 @@ public class PrepareHeapTest {
 	@Before
 	public void setUp() throws Exception{
 
-		SceneObject sceneObject = new MockupSceneObject();
 		ExampleHcImplFactory hcFactory = new ExampleHcImplFactory(sceneObject);
 		testGraph = hcFactory.getList();
 		listType = sceneObject.scene().getType( "List" );
@@ -84,8 +85,11 @@ public class PrepareHeapTest {
 
 	@Test
 	public void testWithField(){
+
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+
 		Value origin = new Local( listType, "x" );
-		Value leftExpr = new Field( listType, origin, "next" );
+		Value leftExpr = new Field( listType, origin, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
@@ -110,11 +114,12 @@ public class PrepareHeapTest {
 
 	@Test
 	public void testToTrue(){
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
 
 		Value origin1 = new Local( listType, "x" );
-		Value origin2 = new Field( listType, origin1, "next" );
-		Value origin3 = new Field( listType, origin2, "next" );
-		Value leftExpr = new Field( listType, origin3, "next" );
+		Value origin2 = new Field( listType, origin1, next);
+		Value origin3 = new Field( listType, origin2, next);
+		Value leftExpr = new Field( listType, origin3, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());

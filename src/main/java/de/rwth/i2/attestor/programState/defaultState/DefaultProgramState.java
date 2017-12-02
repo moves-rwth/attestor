@@ -8,11 +8,9 @@ import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
-import de.rwth.i2.attestor.semantics.util.PrimitiveTypes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
@@ -68,7 +66,7 @@ public class DefaultProgramState extends GeneralProgramState {
 	}
 
 	@Override
-	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
+	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
 		
 		if(from != null && from.getClass() == GeneralConcreteValue.class) {
 
@@ -79,20 +77,18 @@ public class DefaultProgramState extends GeneralProgramState {
 				return dFrom;
 			}
 			
-			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
-			
 			int baseNode = dFrom.getNode();
             Type baseNodeType = heap.nodeTypeOf(baseNode);
-            if(!baseNodeType.hasSelectorLabel(selectorName)) {
-                throw new IllegalStateException("Invalid selector '" + selectorName + "' for node of type '"
+            if(!baseNodeType.hasSelectorLabel(selectorLabel)) {
+                throw new IllegalStateException("Invalid selector '" + selectorLabel + "' for node of type '"
                     + baseNodeType + "'");
             }
 
-			int node = heap.selectorTargetOf(baseNode, sel);
+			int node = heap.selectorTargetOf(baseNode, selectorLabel);
 			
 			if(node == HeapConfiguration.INVALID_ELEMENT) {
 
-			    if(baseNodeType.isPrimitiveType(selectorName)) {
+			    if(baseNodeType.isPrimitiveType(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
 				} else {
                     return GeneralConcreteValue.getUndefined();
@@ -110,39 +106,29 @@ public class DefaultProgramState extends GeneralProgramState {
 
 
 	@Override
-	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
+	public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
 		
 		if(from.isUndefined() || to.isUndefined()) {
-			
 			logger.warn("Specified edge has undefined source or target.");
 			return;
 		}
 		
 		if(from.getClass() == GeneralConcreteValue.class && to.getClass() == GeneralConcreteValue.class) {
-
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 			GeneralConcreteValue dTo = (GeneralConcreteValue) to;
-			
-			BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel(selectorName);
-			
 			int fromNode = dFrom.getNode();
-			
 			try {
-				
-				if(heap.selectorTargetOf(fromNode, sel) != HeapConfiguration.INVALID_ELEMENT) {
-					heap.builder().removeSelector(fromNode, sel).build();
+				if(heap.selectorTargetOf(fromNode, selectorLabel) != HeapConfiguration.INVALID_ELEMENT) {
+					heap.builder().removeSelector(fromNode, selectorLabel).build();
 				}
-				
 				heap
 				.builder()
-				.addSelector(fromNode, sel, dTo.getNode())
+				.addSelector(fromNode, selectorLabel, dTo.getNode())
 				.build();
 			} catch(IllegalArgumentException e) {
-				
 				getHeap().builder().build();
 				logger.warn("Specified edge has invalid source or target.");
             }
-			
 		}
 	}
 
@@ -163,10 +149,6 @@ public class DefaultProgramState extends GeneralProgramState {
 	    return hash;
     }
 
-    @Override
-    protected SelectorLabel getSelectorLabel(String selectorLabelName) {
-	    return BasicSelectorLabel.getSelectorLabel(selectorLabelName);
-    }
 
     @Override
 	public boolean equals(Object other) {
@@ -192,13 +174,11 @@ public class DefaultProgramState extends GeneralProgramState {
 
 	public boolean isSubsumedBy(ProgramState otherState) {
 
-		if (otherState == this) {
-			return true;
-		}
-
-		return otherState != null
-				&& programCounter == otherState.getProgramCounter()
-				&& heapInclusionStrategy.subsumes(heap, otherState.getHeap());
+		return otherState == this
+				|| (otherState != null
+					&& programCounter == otherState.getProgramCounter()
+					&& heapInclusionStrategy.subsumes(heap, otherState.getHeap())
+				);
 
 	}
 }

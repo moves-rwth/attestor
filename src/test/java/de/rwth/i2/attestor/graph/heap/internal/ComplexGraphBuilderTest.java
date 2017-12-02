@@ -32,15 +32,17 @@ public class ComplexGraphBuilderTest {
 	private ExampleHcImplFactory hcImplFactory;
 	private Type type;
 
-	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("selector");
-	private static final SelectorLabel selA = BasicSelectorLabel.getSelectorLabel("a");
-	private static final SelectorLabel selB = BasicSelectorLabel.getSelectorLabel("b");
-	private static final BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-	private static final BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
-	
-	private static final BasicNonterminal nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false,false,false});
-	private static final BasicNonterminal nt2 = BasicNonterminal.getNonterminal("2", 2, new boolean[]{false,false});
-	
+	private SelectorLabel sel;
+	private SelectorLabel selA;
+	private SelectorLabel selB;
+	private SelectorLabel next;
+	private SelectorLabel prev;
+	private SelectorLabel left;
+	private SelectorLabel right;
+
+	private BasicNonterminal nt;
+	private BasicNonterminal nt2;
+
 	private HeapConfiguration result;
 	private TIntArrayList nodes;
 
@@ -56,6 +58,17 @@ public class ComplexGraphBuilderTest {
 		sceneObject = new MockupSceneObject();
 		hcImplFactory = new ExampleHcImplFactory(sceneObject);
 		type = sceneObject.scene().getType("type");
+
+		sel = sceneObject.scene().getSelectorLabel("selector");
+		selA = sceneObject.scene().getSelectorLabel("a");
+		selB = sceneObject.scene().getSelectorLabel("b");
+		next = sceneObject.scene().getSelectorLabel("next");
+		prev = sceneObject.scene().getSelectorLabel("prev");
+		left = sceneObject.scene().getSelectorLabel("left");
+		right = sceneObject.scene().getSelectorLabel("right");
+
+		nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false,false,false});
+		nt2 = BasicNonterminal.getNonterminal("2", 2, new boolean[]{false,false});
 
 		result = new InternalHeapConfiguration();
 		nodes = new TIntArrayList();
@@ -681,8 +694,8 @@ public class ComplexGraphBuilderTest {
 		int var = result.variableWith("x");
 		int node = result.targetOf(var);
 		
-		AnnotatedSelectorLabel oldSel = new AnnotatedSelectorLabel("left", "?");
-		AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel("left", "2");
+		AnnotatedSelectorLabel oldSel = new AnnotatedSelectorLabel(left, "?");
+		AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(left, "2");
 		
 		result.builder()
 			.replaceSelector(node, oldSel, newSel)

@@ -22,11 +22,11 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod_getResult {
 	
-	private static final SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someLabel");
 
-	SceneObject sceneObject = new MockupSceneObject();
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
-	Type type = sceneObject.scene().getType("someType");
+	private final SceneObject sceneObject = new MockupSceneObject();
+	private final IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
+	private final Type type = sceneObject.scene().getType("someType");
+	private final SelectorLabel sel = sceneObject.scene().getSelectorLabel("someLabel");
 
 	
 	@Test

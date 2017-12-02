@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.environment.SceneObject;
@@ -65,7 +66,10 @@ public class MarkedHcGeneratorTest {
    public void testMultipleMarkingsNoNonterminals() {
 
       HeapConfiguration hc = hcFactory.getTree();
-      Marking marking = new Marking("y", "left", "right");
+      SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+      SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
+
+      Marking marking = new Marking("y", left, right);
 
       Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
       expectedMarkedHcs.add( hc.clone().builder()

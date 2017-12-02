@@ -71,7 +71,7 @@ public class JsonToDefaultHC extends SceneObject {
 
 			addSelectorLabelFunction.accept(name);
 			builder.addSelector( nodes.get( originID ),
-					BasicSelectorLabel.getSelectorLabel(name),
+					scene().getSelectorLabel(name),
 					nodes.get( targetID ) );
 		}
 	}

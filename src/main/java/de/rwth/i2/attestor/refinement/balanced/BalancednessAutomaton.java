@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -26,14 +27,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BalancednessAutomaton implements StatelessHeapAutomaton {
+public class BalancednessAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
     private final Grammar grammar;
     private CanonicalizationStrategy canonicalizationStrategy;
+    private BalancednessHelper helper;
 
-    public BalancednessAutomaton(Grammar grammar) {
-
+    public BalancednessAutomaton(SceneObject sceneObject, Grammar grammar) {
+        super(sceneObject);
         this.grammar = grammar;
+        SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+        SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
+        helper = new BalancednessHelper(left, right);
         setupCanonicalization();
     }
 
@@ -41,7 +46,7 @@ public class BalancednessAutomaton implements StatelessHeapAutomaton {
     public Set<String> transition(HeapConfiguration heapConfiguration) {
 
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
-        BalancednessHelper.updateSelectorAnnotations(heapConfiguration);
+        helper.updateSelectorAnnotations(heapConfiguration);
 
         IndexedState state = new IndexedState(heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();

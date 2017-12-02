@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -129,8 +130,9 @@ public class JsonToIndexedHC extends SceneObject {
 			int targetID = selectorInJson.getInt( "target" );
             
 			addSelectorLabelFunction.accept(name);
+			SelectorLabel sel = scene().getSelectorLabel(name);
 			builder.addSelector( nodes.get( originID ),
-					new AnnotatedSelectorLabel(name, annotation),
+					new AnnotatedSelectorLabel(sel, annotation),
 					nodes.get( targetID ) );
 		}
 	}

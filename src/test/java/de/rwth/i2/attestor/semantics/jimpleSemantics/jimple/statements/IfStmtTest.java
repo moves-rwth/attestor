@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
@@ -96,10 +96,11 @@ public class IfStmtTest {
 		
 		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
-		
+
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
 
 		Value origin = new Local( listType, "y" );
-		Value leftExpr = new Field( listType, origin, "next" );
+		Value leftExpr = new Field( listType, origin, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		
@@ -132,14 +133,15 @@ public class IfStmtTest {
 	@Test
 	public void testToTrue(){
 		int hash = testGraph.hashCode();
-		
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+
 		DefaultProgramState testState = new DefaultProgramState( testGraph );
 		testState.prepareHeap();
 
 		Value origin1 = new Local( listType, "y" );
-		Value origin2 = new Field( listType, origin1, "next" );
-		Value origin3 = new Field( listType, origin2, "next" );
-		Value leftExpr = new Field( listType, origin3, "next" );
+		Value origin2 = new Field( listType, origin1, next);
+		Value origin3 = new Field( listType, origin2, next);
+		Value leftExpr = new Field( listType, origin3, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
 		

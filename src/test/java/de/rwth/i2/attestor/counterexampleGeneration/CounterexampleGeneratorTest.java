@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.types.GeneralType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
@@ -28,8 +27,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -85,11 +82,12 @@ public class CounterexampleGeneratorTest {
     }
 
     private Program getSetNextProgram(Type type) {
+        SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
         return Program.builder()
                 .addStatement(
                         new AssignStmt(
                                 new Local(type, "x"),
-                                new Field(type, new Local(type, "x"), "next"),
+                                new Field(type, new Local(type, "x"), next),
                                 -1, Collections.emptySet()
                         )
                 )
@@ -257,7 +255,7 @@ public class CounterexampleGeneratorTest {
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
         Local varY = new Local(factorySLL.getNodeType(), "y");
-        Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel().getLabel());
+        Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel());
 
         List<Semantics> controlFlow = new ArrayList<>();
         controlFlow.add( new IdentityStmt(1, varY, "@parameter0:"));

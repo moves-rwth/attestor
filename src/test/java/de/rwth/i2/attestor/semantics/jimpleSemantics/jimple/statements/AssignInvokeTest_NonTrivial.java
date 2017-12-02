@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
@@ -50,10 +51,10 @@ public class AssignInvokeTest_NonTrivial {
 
 		Type type = sceneObject.scene().getType( "AssignInvokeTestNonTrivial" );
 
-		BasicSelectorLabel next = BasicSelectorLabel.getSelectorLabel("next");
-		BasicSelectorLabel prev = BasicSelectorLabel.getSelectorLabel("prev");
-		type.addSelectorLabel(next.getLabel(), Constants.NULL);
-		type.addSelectorLabel(prev.getLabel(), Constants.NULL);
+		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+		SelectorLabel prev = sceneObject.scene().getSelectorLabel("prev");
+		type.addSelectorLabel(next, Constants.NULL);
+		type.addSelectorLabel(prev, Constants.NULL);
 
 		Local var = new Local( type, "x" );
 

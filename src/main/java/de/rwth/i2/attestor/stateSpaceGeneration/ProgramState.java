@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.types.Type;
@@ -108,19 +109,19 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 	 * Gets the target of the given selector starting at a given object on the heap.
 	 *
 	 * @param from The element on the heap whose selectors should be considered.
-	 * @param selectorName The name of the selector.
+	 * @param selectorLabel The label of the selector.
 	 * @return The element on the heap that is the target of the selector.
 	 */
-	ConcreteValue getSelectorTarget(ConcreteValue from, String selectorName);
+	ConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel);
 
 	/**
 	 * (Re)sets the given selector starting at the given object on the heap to a (new) target.
 	 *
 	 * @param from The element on the heap whose selectors should be considered.
-	 * @param selectorName The name of the selector.
+	 * @param selectorLabel The label of the selector.
 	 * @param to The element on the heap that should be the target of the selector.
 	 */
-	void setSelector(ConcreteValue from, String selectorName, ConcreteValue to);
+	void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to);
 
 	/**
 	 * Adds a new element on the heap to the executable and returns it.

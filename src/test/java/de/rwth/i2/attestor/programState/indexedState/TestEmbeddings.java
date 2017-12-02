@@ -22,7 +22,7 @@ public class TestEmbeddings {
 
 	private SceneObject sceneObject;
 	private ExampleIndexedGraphFactory graphFactory;
-	
+
 	@Before
 	public void init(){
 
@@ -32,8 +32,8 @@ public class TestEmbeddings {
 		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 		
 
-		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel("right", "0");
+		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
+		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");
 		
 		rhs1 = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
@@ -45,7 +45,7 @@ public class TestEmbeddings {
 						.build();
 		
 		Type zType = sceneObject.scene().getType("int_0");
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("balancing"), "");
 		
 		rhs2 = new InternalHeapConfiguration();
 		TIntArrayList nodes2 = new TIntArrayList();

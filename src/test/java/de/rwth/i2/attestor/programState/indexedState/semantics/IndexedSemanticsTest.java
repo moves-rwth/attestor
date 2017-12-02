@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.programState.indexedState.semantics;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
@@ -15,7 +15,6 @@ import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -26,8 +25,8 @@ import static org.junit.Assert.fail;
 
 public class IndexedSemanticsTest {
 
-	SceneObject sceneObject;
-	ExampleIndexedGraphFactory graphFactory;
+	private SceneObject sceneObject;
+	private ExampleIndexedGraphFactory graphFactory;
 
 	@Before
 	public void init() {
@@ -44,9 +43,10 @@ public class IndexedSemanticsTest {
 		expected.prepareHeap();
 		
 		Type type = sceneObject.scene().getType("AVLTree");
+		SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
 		
 		Local varX = new Local(type, "x");
-		Field xLeft = new Field(type, varX, "left");
+		Field xLeft = new Field(type, varX, left);
 		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>());
 		try {
 			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver());
@@ -89,9 +89,11 @@ public class IndexedSemanticsTest {
 		expected.prepareHeap();
 		
 		Type type = sceneObject.scene().getType("AVLTree");
+		SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+
 		Local varTmp = new Local(type, "tmp");
 		Local varX = new Local(type, "x");
-		Field xLeft = new Field(type, varX, "left");
+		Field xLeft = new Field(type, varX, left);
 		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>());
 		
 		try {

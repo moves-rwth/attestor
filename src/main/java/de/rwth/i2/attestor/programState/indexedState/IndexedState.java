@@ -17,12 +17,8 @@ public class IndexedState extends GeneralProgramState {
 	public IndexedState( HeapConfiguration heap ) {
 		super( heap);
 	}
-	
-	public IndexedState( HeapConfiguration heap, int scopeDepth ) {
-		this(heap);
-	}
 
-	
+
 	private IndexedState(IndexedState state) {
 		
 		super( state );
@@ -42,11 +38,6 @@ public class IndexedState extends GeneralProgramState {
 		int hash = programCounter;
 		hash = (hash << 1) ^ heap.hashCode();
 		return hash;
-	}
-
-	@Override
-	protected SelectorLabel getSelectorLabel(String selectorLabelName) {
-		return new AnnotatedSelectorLabel(selectorLabelName, "");
 	}
 
 	@Override
@@ -71,27 +62,23 @@ public class IndexedState extends GeneralProgramState {
 	}
 
 	@Override
-	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
+	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
 		if(from instanceof GeneralConcreteValue) {
-			
 			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
-			
 			if(dFrom.isUndefined()) {
 				logger.debug("getSelectorTarget: origin is undefined. Returning undefined.");
 				return dFrom;
 			}
 
 			int node = dFrom.getNode();
-			
+			String selectorName = selectorLabel.getLabel();
+
 			for( SelectorLabel label : getHeap().selectorLabelsOf(node) ){
-				
 				AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
-				
 				if( sel.hasLabel(selectorName) ){
 					int target = getHeap().selectorTargetOf(node, sel);
 					Type type = getHeap().nodeTypeOf(target);
 					return new GeneralConcreteValue( type, target );
-					
 				}
 			}
 		} else {
@@ -102,9 +89,8 @@ public class IndexedState extends GeneralProgramState {
 	}
 
 	@Override
-	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
+	public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
 		if(from.isUndefined() || to.isUndefined()) {
-			
 			logger.warn("Specified edge has invalid source or target.");
 			return;
 		}
@@ -115,6 +101,7 @@ public class IndexedState extends GeneralProgramState {
 			GeneralConcreteValue dTo = (GeneralConcreteValue) to;
 			
 			int fromNode = dFrom.getNode();
+			String selectorName = selectorLabel.getLabel();
 			
 			for( SelectorLabel label : getHeap().selectorLabelsOf(fromNode)  ){
 				
@@ -128,7 +115,7 @@ public class IndexedState extends GeneralProgramState {
 				}
 			}
 			
-			AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorName, "");
+			AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorLabel);
 
 			this.getHeap()
 			.builder()

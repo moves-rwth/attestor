@@ -78,7 +78,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 			int t = hc.targetOf(x);
 			
 			
-			assertTrue(hc.selectorLabelsOf(t).contains(BasicSelectorLabel.getSelectorLabel("next")));
+			assertTrue(hc.selectorLabelsOf(t).contains(sceneObject.scene().getSelectorLabel("next")));
 		}
 		
 		List<HeapConfiguration> resHCs = new ArrayList<>();

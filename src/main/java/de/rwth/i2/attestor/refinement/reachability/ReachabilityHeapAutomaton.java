@@ -32,7 +32,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
 
         trackedSelectorLabels = new HashSet<>(allowedSelectorLabels.size());
         for(String label : allowedSelectorLabels) {
-            trackedSelectorLabels.add(Settings.getInstance().factory().getSelectorLabel(label));
+            trackedSelectorLabels.add(scene().getSelectorLabel(label));
         }
     }
 
@@ -84,7 +84,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
             for (int j = 0; j < rank; j++) {
                 int to = canonicalHc.externalNodeAt(j);
                 if (reachabilityHelper.isReachable(from, to)) {
-                    builder.addSelector(nodes.get(i), factory.getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
+                    builder.addSelector(nodes.get(i), scene().getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
                 }
             }
         }
@@ -112,7 +112,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
                 int varTo = variables.get(j);
                 int to = canonicalHc.targetOf(varTo);
                 if (reachabilityHelper.isReachable(from, to)) {
-                    builder.addSelector(kernelFrom, factory.getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
+                    builder.addSelector(kernelFrom, scene().getSelectorLabel("@" + String.valueOf(j)), nodes.get(j));
                 }
             }
         }

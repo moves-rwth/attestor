@@ -12,11 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
@@ -45,7 +43,6 @@ public abstract class GeneralProgramState implements ProgramState {
      */
 	protected int programCounter;
 
-
 	/**
 	 * Id of this state in a state space
 	 */
@@ -54,7 +51,7 @@ public abstract class GeneralProgramState implements ProgramState {
     /**
      * The atomic propositions assigned to this state.
      */
-    protected final Set<String> atomicPropositions;
+    private final Set<String> atomicPropositions;
 
     /**
      * Initializes a state with the initial program location 0.
@@ -118,8 +115,6 @@ public abstract class GeneralProgramState implements ProgramState {
 
         return heap.countNodes();
     }
-
-    protected abstract SelectorLabel getSelectorLabel(String selectorLabelName);
 
 	@Override
 	public int getProgramCounter() {
@@ -379,10 +374,10 @@ public abstract class GeneralProgramState implements ProgramState {
 			builder.addNodes(type, 1, nodes);
 			GeneralConcreteValue res = new GeneralConcreteValue( type,  nodes.get(0) );
 
-			Map<String,String> selectorToDefaults = type.getSelectorLabels();
-			for(Map.Entry<String,String> selectorDefault : selectorToDefaults.entrySet()) {
+			Map<SelectorLabel,String> selectorToDefaults = type.getSelectorLabels();
+			for(Map.Entry<SelectorLabel,String> selectorDefault : selectorToDefaults.entrySet()) {
 
-				SelectorLabel selectorLabel = getSelectorLabel(selectorDefault.getKey());
+				SelectorLabel selectorLabel = selectorDefault.getKey();
 				int target = heap.variableTargetOf(selectorDefault.getValue());
 				if(target == HeapConfiguration.INVALID_ELEMENT) {
 					throw new IllegalStateException("default target '" + selectorDefault.getValue() + "' of selector '" + selectorDefault.getKey() + "' not found.");

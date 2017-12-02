@@ -20,7 +20,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
 
     private Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false,true});
-    private SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("next");
+    private SelectorLabel sel = scene().getSelectorLabel("next");
 
     public ExampleFactorySLL(SceneObject sceneObject) {
         super(sceneObject);
@@ -39,7 +39,8 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     @Override
     public Type getNodeType() {
         Type result = scene().getType("list");
-        result.addSelectorLabel("next", Constants.NULL);
+        SelectorLabel next = scene().getSelectorLabel("next");
+        result.addSelectorLabel(next, Constants.NULL);
         return result;
     }
 

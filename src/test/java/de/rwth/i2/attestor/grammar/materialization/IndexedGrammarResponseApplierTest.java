@@ -111,7 +111,7 @@ public class IndexedGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -131,7 +131,7 @@ public class IndexedGrammarResponseApplierTest {
 				 RANK, 
 				 REDUCTION_TENTACLES,
 				 someIndex );
-		SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("someSelectorLabel");
+		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 3, nodes)

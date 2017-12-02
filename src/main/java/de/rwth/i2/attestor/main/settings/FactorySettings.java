@@ -120,20 +120,6 @@ public class FactorySettings extends SceneObject {
 	}
 
 	/**
-	 * Creates a SelectorLabel with the provided label.
-	 * @param label A String describing this SelectorLabel.
-	 * @return The SelectorLabel.
-	 */
-	public SelectorLabel getSelectorLabel(String label)  {
-
-		if(requiresIndexedSymbols()) {
-			return new AnnotatedSelectorLabel(label, "");
-		} else {
-			return BasicSelectorLabel.getSelectorLabel(label);
-		}
-	}
-
-	/**
 	 * Creates an object to export state spaces.
 	 * @param directory the directory to which the exportet files are written
 	 * @param filename The name of the file the state space should be exported to.

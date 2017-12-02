@@ -37,7 +37,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
 	private static final boolean[] isReductionTentacle = new boolean[RANK];
 	private final SceneObject sceneObject = new MockupSceneObject();
 	private final Type TYPE = sceneObject.scene().getType("type");
-	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
+	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
 
 	private IndexedCanonicalizationHelper matchingHandler;
 	

@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.*;
 import java.util.function.Predicate;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,10 +37,16 @@ public class MatchingSelectorDistanceHelperTest {
 	
 	@Test
 	public void testHasMatch_OnSelectors(){
+
+		SceneObject sceneObject = new MockupSceneObject();
+		SelectorLabel basicA = sceneObject.scene().getSelectorLabel("a");
+		SelectorLabel basicB = sceneObject.scene().getSelectorLabel("b");
+		SelectorLabel basicC = sceneObject.scene().getSelectorLabel("c");
+
 		List<SelectorLabel> selectorList = new ArrayList<>();
-		selectorList.add( BasicSelectorLabel.getSelectorLabel("a") );
-		selectorList.add( new AnnotatedSelectorLabel("b", "a") );
-		selectorList.add( new AnnotatedSelectorLabel("c","c") );
+		selectorList.add( basicA );
+		selectorList.add( new AnnotatedSelectorLabel(basicB, "a") );
+		selectorList.add( new AnnotatedSelectorLabel(basicC,"c") );
 		
 		Predicate<SelectorLabel> matchingFunction = a -> a.hasLabel("a");
 		assertTrue( MatchingUtil.containsMatch(selectorList, matchingFunction) );
@@ -49,10 +57,16 @@ public class MatchingSelectorDistanceHelperTest {
 	
 	@Test
 	public void testHasMatch_OnCollection(){
+
+		SceneObject sceneObject = new MockupSceneObject();
+		SelectorLabel basicA = sceneObject.scene().getSelectorLabel("a");
+		SelectorLabel basicB = sceneObject.scene().getSelectorLabel("b");
+		SelectorLabel basicC = sceneObject.scene().getSelectorLabel("c");
+
 		Collection<SelectorLabel> selectorCollection = new HashSet<>();
-		selectorCollection.add( BasicSelectorLabel.getSelectorLabel("a") );
-		selectorCollection.add( new AnnotatedSelectorLabel("b", "a") );
-		selectorCollection.add( new AnnotatedSelectorLabel("c", "c") );
+		selectorCollection.add( basicA );
+		selectorCollection.add( new AnnotatedSelectorLabel(basicB, "a") );
+		selectorCollection.add( new AnnotatedSelectorLabel(basicC, "c") );
 		
 		Predicate<SelectorLabel> matchingFunction = a -> a.hasLabel("a");
 		assertTrue( MatchingUtil.containsMatch(selectorCollection, matchingFunction) );

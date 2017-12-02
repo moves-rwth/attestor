@@ -65,7 +65,7 @@ public class ParseTest {
 			assertEquals( "nr of variables",  2, res.countVariableEdges() );
 			assertEquals( "selector at 0", 1, res.selectorLabelsOf( res.externalNodeAt( 0 ) ).size() );
 			assertEquals( "selector at 0 is next", 
-					BasicSelectorLabel.getSelectorLabel("next"),
+					sceneObject.scene().getSelectorLabel("next"),
 					res.selectorLabelsOf( res.externalNodeAt(0) ).get(0) );
 
 		}catch( FileNotFoundException e ){

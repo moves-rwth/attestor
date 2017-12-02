@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
@@ -18,13 +19,16 @@ public class BalancedTreeGrammar{
 
 	SceneObject sceneObject;
 
-	public AnnotatedSelectorLabel SELECTOR_RIGHT_0 = new AnnotatedSelectorLabel("right", "0");
-	public AnnotatedSelectorLabel SELECTOR_RIGHT_1 = new AnnotatedSelectorLabel("right", "1");
-	public AnnotatedSelectorLabel SELECTOR_LEFT_M1 = new AnnotatedSelectorLabel("left", "-1");
-	public AnnotatedSelectorLabel SELECTOR_PARENT = new AnnotatedSelectorLabel("parent", "");
-	public AnnotatedSelectorLabel SELECTOR_RIGHT_M1 = new AnnotatedSelectorLabel("right", "-1");
-	public AnnotatedSelectorLabel SELECTOR_LEFT_1 = new AnnotatedSelectorLabel("left", "1");
-	public AnnotatedSelectorLabel SELECTOR_LEFT_0 = new AnnotatedSelectorLabel("left", "0");
+	private SelectorLabel basicLeft;
+	private SelectorLabel basicRight;
+	private SelectorLabel basicParent;
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_0;
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_1;
+	public AnnotatedSelectorLabel SELECTOR_LEFT_M1;
+	public AnnotatedSelectorLabel SELECTOR_PARENT;
+	public AnnotatedSelectorLabel SELECTOR_RIGHT_M1;
+	public AnnotatedSelectorLabel SELECTOR_LEFT_1;
+	public AnnotatedSelectorLabel SELECTOR_LEFT_0;
 	public boolean[] IS_REDUCTION_TENTACLE = new boolean[]{false, true};
 	public int NT_RANK = 2;
 	public String NT_LABEL = "B";
@@ -33,6 +37,16 @@ public class BalancedTreeGrammar{
 	public BalancedTreeGrammar(SceneObject sceneObject) {
 		this.sceneObject = sceneObject;
 		TYPE = sceneObject.scene().getType("AVLTree");
+		basicLeft = sceneObject.scene().getSelectorLabel("left");
+		basicRight = sceneObject.scene().getSelectorLabel("right");
+		basicParent = sceneObject.scene().getSelectorLabel("parent");
+		SELECTOR_RIGHT_0 = new AnnotatedSelectorLabel(basicRight, "0");
+		SELECTOR_RIGHT_1 = new AnnotatedSelectorLabel(basicRight, "1");
+		SELECTOR_LEFT_M1 = new AnnotatedSelectorLabel(basicLeft, "-1");
+		SELECTOR_PARENT = new AnnotatedSelectorLabel(basicParent, "");
+		SELECTOR_RIGHT_M1 = new AnnotatedSelectorLabel(basicRight, "-1");
+		SELECTOR_LEFT_1 = new AnnotatedSelectorLabel(basicLeft, "1");
+		SELECTOR_LEFT_0 = new AnnotatedSelectorLabel(basicLeft, "0");
 	}
 
 	public Grammar getGrammar(){

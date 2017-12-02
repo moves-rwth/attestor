@@ -27,7 +27,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 	private static int RANK = 2;
 	private final SceneObject sceneObject = new MockupSceneObject();
 	private final Type TYPE = sceneObject.scene().getType("type");
-	private static final SelectorLabel SEL = BasicSelectorLabel.getSelectorLabel("sel");
+	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
 	CanonicalizationHelper canonicalizationHelper;
 	
 	@Before

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -27,9 +28,9 @@ public class Field implements SettableValue {
 	 */
     private final Value originValue;
 	/**
-	 * the name of the field / selector
+	 * the field / selector
 	 */
-    private final String fieldName;
+    private final SelectorLabel selectorLabel;
 	/**
 	 * the expected type of this expression
 	 */
@@ -37,13 +38,13 @@ public class Field implements SettableValue {
 	
 	private final ViolationPoints potentialViolationPoints;
 
-	public Field( Type type, Value originValue, String fieldName ){
+	public Field( Type type, Value originValue, SelectorLabel selectorLabel){
 
 		this.type = type;
 		this.originValue = originValue;
-		this.fieldName = fieldName;
+		this.selectorLabel = selectorLabel;
 		
-		potentialViolationPoints = new ViolationPoints(originValue.toString(), fieldName);
+		potentialViolationPoints = new ViolationPoints(originValue.toString(), selectorLabel.getLabel());
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class Field implements SettableValue {
 				throw new NullPointerDereferenceException(originValue);
 			}
 			
-			return programState.getSelectorTarget( concreteOrigin, fieldName );
+			return programState.getSelectorTarget( concreteOrigin, selectorLabel);
 		}
 	}
 
@@ -95,7 +96,7 @@ public class Field implements SettableValue {
 		if( concreteOrigin.isUndefined() ){
             logger.warn( "Origin evaluated to undefined. Field is not reassigned" );
 		}else{
-			programState.setSelector( concreteOrigin, fieldName, concreteTarget );
+			programState.setSelector( concreteOrigin, selectorLabel, concreteTarget );
 		}
 	}
 
@@ -109,7 +110,7 @@ public class Field implements SettableValue {
 	 * "origin.field"
 	 */
 	public String toString(){
-		return originValue + "." + fieldName;
+		return originValue + "." + selectorLabel.getLabel();
 	}
 
 	@Override

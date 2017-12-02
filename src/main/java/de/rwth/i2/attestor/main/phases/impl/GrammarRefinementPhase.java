@@ -69,7 +69,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
             // in the long run, we should make this an option in the settings
             if(BasicNonterminal.hasNonterminal("BT"))  {
-                settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+                settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy(this));
             }
         }
 
@@ -107,7 +107,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 logger.debug("Enable checking for lists of equal length.");
             } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
                 Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(grammar));
+                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(this, grammar));
                 hasBtreeAutomaton = true;
                 logger.debug("Enable checking for balanced trees.");
             } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {

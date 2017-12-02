@@ -4,6 +4,7 @@ import java.util.*;
 
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
@@ -13,12 +14,22 @@ import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
-public class BalancednessStateRefinementStrategy implements StateRefinementStrategy {
+public class BalancednessStateRefinementStrategy extends SceneObject implements StateRefinementStrategy {
+
+    private BalancednessHelper helper;
+
+    public BalancednessStateRefinementStrategy(SceneObject sceneObject) {
+        super(sceneObject);
+        SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+        SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
+        helper = new BalancednessHelper(left, right);
+    }
+
 
     @Override
     public ProgramState refine(Semantics semantics, ProgramState state) {
 
-        BalancednessHelper.updateSelectorAnnotations(state.getHeap());
+        helper.updateSelectorAnnotations(state.getHeap());
         return state;
     }
 }
@@ -26,7 +37,15 @@ public class BalancednessStateRefinementStrategy implements StateRefinementStrat
 
 class BalancednessHelper {
 
-    static void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
+    private SelectorLabel left;
+    private SelectorLabel right;
+
+    BalancednessHelper(SelectorLabel left, SelectorLabel right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
 
         Map<Integer, Integer> heights = new HashMap<>();
         Set<Integer> visited = new HashSet<>();
@@ -58,7 +77,7 @@ class BalancednessHelper {
         }
     }
 
-    private static void initializeNodesWithNts( HeapConfiguration hc,
+    private void initializeNodesWithNts( HeapConfiguration hc,
                                                 Map<Integer, Integer> heights,
                                                 Set<Integer> visited,
                                                 Queue<Integer> queue ) {
@@ -88,7 +107,7 @@ class BalancednessHelper {
         }
     }
 
-    private static void initializeLeaves( HeapConfiguration hc,
+    private void initializeLeaves( HeapConfiguration hc,
                                           Map<Integer, Integer> heights,
                                           Set<Integer> visited,
                                           Queue<Integer> queue,
@@ -106,7 +125,7 @@ class BalancednessHelper {
         }
     }
 
-    private static boolean tryComputeHeightAndAdjustAnnotations
+    private boolean tryComputeHeightAndAdjustAnnotations
             ( int node,
               HeapConfiguration hc,
               Map<Integer, Integer> heights
@@ -143,17 +162,19 @@ class BalancednessHelper {
         return false;
     }
 
-    private static void adjustAnnotations( int node,
+    private void adjustAnnotations( int node,
                                            HeapConfiguration hc, AnnotatedSelectorLabel leftLabel,
                                            AnnotatedSelectorLabel rightLabel, int diff ) {
-        AnnotatedSelectorLabel newLeft = new AnnotatedSelectorLabel( "left", "" +  diff );
-        AnnotatedSelectorLabel newRight = new AnnotatedSelectorLabel( "right", ""+ (-diff) );
+
+
+        AnnotatedSelectorLabel newLeft = new AnnotatedSelectorLabel( left, "" +  diff );
+        AnnotatedSelectorLabel newRight = new AnnotatedSelectorLabel( right, ""+ (-diff) );
         hc.builder().replaceSelector( node, leftLabel, newLeft )
                 .replaceSelector( node, rightLabel, newRight )
                 .build();
     }
 
-    private static void addParentToQueue(HeapConfiguration hc, int node, Queue<Integer> queue, Set<Integer> visited){
+    private void addParentToQueue(HeapConfiguration hc, int node, Queue<Integer> queue, Set<Integer> visited){
 
         for(SelectorLabel sel : hc.selectorLabelsOf(node)) {
             if(sel.hasLabel("parent")) {

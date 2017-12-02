@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 import static org.junit.Assert.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
@@ -23,7 +24,7 @@ public class FieldTest {
 	private Field expr;
 	private Local local;
 	private HeapConfiguration testGraph;
-	private BasicSelectorLabel sel;
+	private SelectorLabel sel;
 
 
 	@BeforeClass
@@ -39,11 +40,11 @@ public class FieldTest {
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
 		testGraph = hcFactory.getListAndConstants();
-		sel = BasicSelectorLabel.getSelectorLabel("next");
+		sel = sceneObject.scene().getSelectorLabel("next");
 
 		Type type = sceneObject.scene().getType("List");
 		local = new Local( type, "y");
-		expr = new Field( type, local, "next");
+		expr = new Field( type, local, sel);
 	}
 
 	

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -51,12 +52,12 @@ public class AssignStmtTest {
 		testGraph = tmp.getHeap();
 		
 		String test = testGraph.toString();
-		BasicSelectorLabel sel = BasicSelectorLabel.getSelectorLabel("right");
+		SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
 		Type type = sceneObject.scene().getType("node");
 
 		SettableValue lhs = new Local( type, "XYZ" );		
 		Value origin = new Local( type, "ZYX" );
-		Value rhs = new Field( type, origin, "right" );
+		Value rhs = new Field( type, origin, right );
 
 		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>());
 		try{
@@ -82,7 +83,7 @@ public class AssignStmtTest {
 				
 				int varZYX = hc.variableWith("ZYX");
 				int targetZYX = hc.targetOf(varZYX);
-				int expectedNode = hc.selectorTargetOf(targetZYX, sel);
+				int expectedNode = hc.selectorTargetOf(targetZYX, right);
 				
 				int varXYZ = hc.variableWith("XYZ");
 				int actualNode = hc.targetOf(varXYZ);

@@ -4,14 +4,28 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class AnnotatedSelectorLabel implements SelectorLabel {
-	//private static final Logger logger = LogManager.getLogger( "AnnotatedSelectorLabel" );
 
 	private final BasicSelectorLabel basicSelectorLabel;
 	private final String annotation;
 	
-	public AnnotatedSelectorLabel( String label, String annotation ) {
-		basicSelectorLabel = BasicSelectorLabel.getSelectorLabel(label);
+	public AnnotatedSelectorLabel( SelectorLabel basicSelectorLabel, String annotation ) {
+
+		assert basicSelectorLabel instanceof BasicSelectorLabel;
+		this.basicSelectorLabel = (BasicSelectorLabel) basicSelectorLabel;
 		this.annotation = annotation;
+	}
+
+	public AnnotatedSelectorLabel(SelectorLabel selectorLabel) {
+
+		if(selectorLabel instanceof AnnotatedSelectorLabel) {
+			AnnotatedSelectorLabel other = (AnnotatedSelectorLabel) selectorLabel;
+			this.basicSelectorLabel = other.basicSelectorLabel;
+			this.annotation = other.annotation;
+		} else {
+			assert selectorLabel instanceof BasicSelectorLabel;
+			this.basicSelectorLabel = (BasicSelectorLabel) selectorLabel;
+			this.annotation = "";
+		}
 	}
 
 	@Override
@@ -47,15 +61,12 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 		} else if (!annotation.equals(other.annotation))
 			return false;
 		if (basicSelectorLabel == null) {
-			if (other.basicSelectorLabel != null)
-				return false;
-		} else if (!basicSelectorLabel.equals(other.basicSelectorLabel))
-			return false;
-		return true;
+			return other.basicSelectorLabel == null;
+		} else return basicSelectorLabel.equals(other.basicSelectorLabel);
 	}
 
 	public boolean hasLabel( String label ){
-		return this.basicSelectorLabel.equals( BasicSelectorLabel.getSelectorLabel(label) );
+		return basicSelectorLabel.hasLabel(label);
 	}
 	
 	@Override

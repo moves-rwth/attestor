@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.contains;
 import java.util.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
@@ -118,7 +119,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	
 	private HeapConfiguration getExpected() {
 		Type someType = sceneObject.scene().getType("type");
-		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
+		SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		List<IndexSymbol> materializedIndex = indexForLhs();
 		materializedIndex.add(oneAbstractSymbol);
@@ -168,7 +169,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	
 	private HeapConfiguration someRhs() {
 		Type someType = sceneObject.scene().getType("type");
-		BasicSelectorLabel selectorLabel = BasicSelectorLabel.getSelectorLabel(VIOLATION_POINT_SELECTOR);
+		SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return new InternalHeapConfiguration().builder()

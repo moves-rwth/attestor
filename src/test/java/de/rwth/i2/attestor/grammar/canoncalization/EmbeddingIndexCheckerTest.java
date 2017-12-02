@@ -365,7 +365,7 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = treeGrammar.TYPE;
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
 
 	
 		TIntArrayList nodes = new TIntArrayList();
@@ -378,8 +378,8 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = treeGrammar.TYPE;
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
-		
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
+
 		Nonterminal nt = getMatchingNonterminalWithIndex( index );
 
 	
@@ -399,8 +399,8 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = treeGrammar.TYPE;
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
-		
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
+
 		Nonterminal matchingNt = getMatchingNonterminalWithIndex( toMatch );
 		Nonterminal referenceNt = getReferenceNonterminalWithIndex( reference );
 
@@ -426,8 +426,8 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = treeGrammar.TYPE;
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
-		
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
+
 		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( toMatch1 );
 		Nonterminal referenceNt1 = getReferenceNonterminalWithIndex( reference1 );
 		
@@ -464,8 +464,8 @@ public class EmbeddingIndexCheckerTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		Type type = treeGrammar.TYPE;
-		SelectorLabel label = BasicSelectorLabel.getSelectorLabel("label");
-		
+		SelectorLabel label = sceneObject.scene().getSelectorLabel("label");
+
 		Nonterminal matchingNt1 = getMatchingNonterminalWithIndex( index1 );
 		
 		Nonterminal matchingNt2 = getOtherMatchingNonterminalWithIndex( index2 );

@@ -25,14 +25,13 @@ public class Marking {
      * @param markingName The name of the universally quantified variable that should traverse every node.
      * @param requiredSelectors The (sub)set of selectors that should additionally be marked.
      */
-    public Marking(String markingName, String... requiredSelectors) {
+    public Marking(String markingName, SelectorLabel... requiredSelectors) {
 
         this.markingName = markingName;
 
         requiredSelectorLabels = new ArrayList<>(requiredSelectors.length);
 
-        for(String s : requiredSelectors) {
-            SelectorLabel label = Settings.getInstance().factory().getSelectorLabel(s);
+        for(SelectorLabel label : requiredSelectors) {
             requiredSelectorLabels.add(label);
         }
 

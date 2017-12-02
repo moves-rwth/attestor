@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -21,9 +22,20 @@ import java.util.List;
 public class ExampleIndexedGraphFactory {
 
 	private SceneObject sceneObject;
+	private SelectorLabel basicLeft;
+	private SelectorLabel basicRight;
+	private SelectorLabel basicParent;
+	private SelectorLabel basicBalancing;
+	private SelectorLabel basicBalance;
 
 	public ExampleIndexedGraphFactory(SceneObject sceneObject) {
 		this.sceneObject = sceneObject;
+		basicLeft = sceneObject.scene().getSelectorLabel("left");
+		basicRight = sceneObject.scene().getSelectorLabel("right");
+		basicParent = sceneObject.scene().getSelectorLabel("parent");
+		basicBalancing = sceneObject.scene().getSelectorLabel("balancing");
+		basicBalance = sceneObject.scene().getSelectorLabel("balance");
+
 	}
 
 
@@ -47,8 +59,8 @@ public class ExampleIndexedGraphFactory {
 		rightIndex.add(bottom);
 		IndexedNonterminal rightNonterminal = new IndexedNonterminalImpl("B", rightIndex );
 
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "+1");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "-1");
 
 		Type nodeType = sceneObject.scene().getType("tree");
 
@@ -85,8 +97,8 @@ public class ExampleIndexedGraphFactory {
 		rightIndex.add(bottom);
 		IndexedNonterminal rightNonterminal = new IndexedNonterminalImpl("B", rightIndex );
 
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "+1");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "+1");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "-1");
 
 		Type nodeType = sceneObject.scene().getType("tree");
 
@@ -120,8 +132,8 @@ public class ExampleIndexedGraphFactory {
 	}
 	
 	public HeapConfiguration getExpected_MaterializeSmall_Z(){
-		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel("right", "0");
+		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(basicRight, "0");
 		
 		HeapConfiguration res = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
@@ -161,9 +173,9 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", index);
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "1");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "-1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "1");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "-1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 3, nodes)
@@ -184,9 +196,9 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", index);
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 3, nodes)
@@ -210,9 +222,9 @@ public class ExampleIndexedGraphFactory {
 		indexR.add(bottom);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl("B", indexR);
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		TIntArrayList nodes = new TIntArrayList();
 		hc = hc.builder().addNodes(sceneObject.scene().getType("AVLTree"), 4, nodes)
@@ -241,9 +253,9 @@ public class ExampleIndexedGraphFactory {
 		rightIndex.add(abs);
 		IndexedNonterminal rightNt = new IndexedNonterminalImpl("B", rightIndex);
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -272,9 +284,9 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal rightANt = new IndexedNonterminalImpl("B", rightAIndex);
 		
 		
-		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -306,11 +318,11 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBIndex);
 		
 		
-		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel("left", "1");
-		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
-		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel(basicLeft, "1");
+		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel(basicRight, "-1");
+		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -345,11 +357,11 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBIndex);
 		
 		
-		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -389,11 +401,11 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBIndex);
 		
 		
-		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel("left", "1");
-		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel(basicLeft, "1");
+		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel(basicRight, "-1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -433,9 +445,9 @@ public class ExampleIndexedGraphFactory {
 		IndexedNonterminal rightBNt = new IndexedNonterminalImpl("B", rightBIndex);
 		
 		
-		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel("left", "-1");
-		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel("right", "1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftM = new AnnotatedSelectorLabel(basicLeft, "-1");
+		AnnotatedSelectorLabel rightP = new AnnotatedSelectorLabel(basicRight, "1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -459,8 +471,8 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_CanonizeSimple(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		
@@ -498,9 +510,9 @@ public class ExampleIndexedGraphFactory {
 		indexRight.add(abs);
 		IndexedNonterminal ntRight = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, indexRight);
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -535,9 +547,9 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_FieldAccess(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> index = new ArrayList<>();
@@ -561,9 +573,9 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getExpected_FieldAccess(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> index = new ArrayList<>();
@@ -587,9 +599,9 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getExpected_newNode(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> index = new ArrayList<>();
@@ -614,10 +626,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getExpected_fieldAssign(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel leftU = new AnnotatedSelectorLabel("left", "");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel leftU = new AnnotatedSelectorLabel(basicLeft, "");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> index = new ArrayList<>();
@@ -656,9 +668,9 @@ public class ExampleIndexedGraphFactory {
 		indexRight.add(bottom);
 		IndexedNonterminal ntRight = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, indexRight);
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		TIntArrayList nodes = new TIntArrayList();
@@ -701,8 +713,8 @@ public class ExampleIndexedGraphFactory {
 		index.add(bottom);
 		IndexedNonterminal nt = new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, index);
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "");
 		
 		Type type = sceneObject.scene().getType("AVLTree");
 		Type nullType = sceneObject.scene().getType("NULL");
@@ -723,9 +735,9 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_practicalCanonize(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
 		
 		Type nodeType = sceneObject.scene().getType("AVLTree");
 		Type nullType = sceneObject.scene().getType("NULL");
@@ -746,10 +758,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_practicalCanonize2(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalancing, "");
 		
 		Type nodeType = sceneObject.scene().getType("AVLTree");
 		Type nullType = sceneObject.scene().getType("NULL");
@@ -780,12 +792,12 @@ public class ExampleIndexedGraphFactory {
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
 		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, index );
 		
-		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel("left", "0");
-		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel("right", "0");
-		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel("left", "1");
-		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
+		AnnotatedSelectorLabel leftZ = new AnnotatedSelectorLabel(basicLeft, "0");
+		AnnotatedSelectorLabel rightZ = new AnnotatedSelectorLabel(basicRight, "0");
+		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel(basicLeft, "1");
+		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel(basicRight, "-1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalancing, "");
 		
 		Type nodeType = sceneObject.scene().getType("AVLTree");
 		Type nullType = sceneObject.scene().getType("NULL");
@@ -826,10 +838,10 @@ public class ExampleIndexedGraphFactory {
 		boolean [] reductionTentacles = new boolean[]{false, true, true, true, true};
 		IndexedNonterminal nt = new IndexedNonterminalImpl( "BTestpC3", 5, reductionTentacles, index );
 		
-		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel("left", "1");
-		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel("right", "-1");
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel("parent", "");
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel("balancing", "");
+		AnnotatedSelectorLabel leftP = new AnnotatedSelectorLabel(basicLeft, "1");
+		AnnotatedSelectorLabel rightM = new AnnotatedSelectorLabel(basicRight, "-1");
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "");
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalancing, "");
 		
 		Type nodeType = sceneObject.scene().getType("AVLTree");
 		Type nullType = sceneObject.scene().getType("NULL");
@@ -864,10 +876,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "0" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( basicRight, "0" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
@@ -930,10 +942,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getExpected_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "0" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
@@ -985,10 +997,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getRule_Cononize_withInstNecessary(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "0" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol var = IndexVariable.getIndexVariable();
@@ -1036,10 +1048,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_Embedding5(){
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "0" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "0" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "0" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "0" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
@@ -1092,10 +1104,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getInput_AnnotationMaintaining(){
 		HeapConfiguration  hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
@@ -1139,10 +1151,10 @@ public class ExampleIndexedGraphFactory {
 	public HeapConfiguration getExpected_AnnotationMaintaining(){
 		HeapConfiguration  hc = new InternalHeapConfiguration();
 		
-		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel( "left", "1" );
-		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel( "right", "-1" );
-		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel( "parent", "" );
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel( "balance", "" );
+		AnnotatedSelectorLabel left = new AnnotatedSelectorLabel(basicLeft, "1" );
+		AnnotatedSelectorLabel right = new AnnotatedSelectorLabel(basicRight, "-1" );
+		AnnotatedSelectorLabel parent = new AnnotatedSelectorLabel(basicParent, "" );
+		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(basicBalance, "" );
 		
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
