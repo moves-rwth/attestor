@@ -62,7 +62,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
 
 	private Nonterminal getNonterminal() {
 		boolean[] isReductionTentacle = new boolean[RANK];
-		return BasicNonterminal.getNonterminal("GeneralCanonicalizationDS", RANK, isReductionTentacle );
+		return sceneObject.scene().createNonterminal("GeneralCanonicalizationDS", RANK, isReductionTentacle );
 	}
 
 	private HeapConfiguration getPattern() {

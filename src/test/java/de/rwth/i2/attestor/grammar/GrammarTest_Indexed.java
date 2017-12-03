@@ -60,8 +60,9 @@ public class GrammarTest_Indexed {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> index = new ArrayList<>();
 		index.add(bottom);
-		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
-		 
+		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
+		nonterminal = new IndexedNonterminalImpl(nt, index);
+
 			MaterializationAndRuleResponse response = 
 					(MaterializationAndRuleResponse) 
 					grammarManager.getRulesFor( nonterminal, 0, "left");
@@ -84,8 +85,9 @@ public class GrammarTest_Indexed {
 		ArrayList<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(bottom);
-		nonterminal = new IndexedNonterminalImpl("B", 2, new boolean[]{false,true}, index);
-		
+		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
+		nonterminal = new IndexedNonterminalImpl(nt, index);
+
 		MaterializationAndRuleResponse response = 
 				(MaterializationAndRuleResponse) 
 				grammarManager.getRulesFor( nonterminal, 0, "left");
@@ -100,8 +102,8 @@ public class GrammarTest_Indexed {
 		 TIntIterator ntIterator = ruleInResult.nonterminalEdges().iterator();
 		 while( ntIterator.hasNext() ){
 			 int ntId = ntIterator.next();
-			 IndexedNonterminal nt = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", nt.getIndex().hasConcreteIndex() );
+			 IndexedNonterminal indexedNonterminal = (IndexedNonterminal) ruleInResult.labelOf( ntId );
+			 assertTrue("leftLeafRule not instantiatied", indexedNonterminal.getIndex().hasConcreteIndex() );
 		 }
 		 assertTrue( result.contains( treeGrammar.createRightLeafRule()) );
 		 }

@@ -53,7 +53,7 @@ public class AssignInvokeTest_trivial {
 			= new Local( type, "x" );
 
 
-		AbstractMethod method = new SimpleAbstractMethod( "method");
+		AbstractMethod method = new SimpleAbstractMethod(sceneObject, "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add( new Skip( -1 ) );
 		method.setControlFlow( defaultControlFlow );

@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.programState.indexedState;
 import java.util.List;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
@@ -11,31 +12,14 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
 
 	protected final Index index;
-	protected  final BasicNonterminal basicNonterminal;
+	protected  final Nonterminal basicNonterminal;
 
-	public IndexedNonterminalImpl(String label,
-                                  int rank,
-                                  boolean[] isReductionTentacle,
-                                  List<IndexSymbol> index){
-
-		this.basicNonterminal = BasicNonterminal.getNonterminal( label, rank, isReductionTentacle );
-
-		this.index = new Index(index);
-	}
-
-
-	public IndexedNonterminalImpl(String label, List<IndexSymbol> index ){
-		this.basicNonterminal = BasicNonterminal.getNonterminal(label);
-		this.index = new Index(index);
-	}
-
-	private IndexedNonterminalImpl(BasicNonterminal basicNonterminal, List<IndexSymbol> index ){
+	public IndexedNonterminalImpl(Nonterminal basicNonterminal, List<IndexSymbol> index ){
 		this.basicNonterminal = basicNonterminal;
-
-        this.index = new Index(index);
+		this.index = new Index(index);
 	}
 
-	protected IndexedNonterminalImpl(BasicNonterminal basicNonterminal, Index index) {
+	protected IndexedNonterminalImpl(Nonterminal basicNonterminal, Index index) {
 
 	    this.basicNonterminal = basicNonterminal;
 	    this.index = index;

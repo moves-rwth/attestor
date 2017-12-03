@@ -20,7 +20,7 @@ import gnu.trove.list.array.TIntArrayList;
 public class ReachableFragmentTest {
 
 	SceneObject sceneObject = new MockupSceneObject();
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
+	IpaAbstractMethod ipa = new IpaAbstractMethod(sceneObject, "testMethod" );
 	Type type = sceneObject.scene().getType("someType");
 	SelectorLabel nextLabel = sceneObject.scene().getSelectorLabel("next");
 
@@ -210,7 +210,7 @@ public class ReachableFragmentTest {
 		Type type = getSomeType();
 		final int rank = 2;
 		final boolean[] isReductionTentacle = new boolean[rank];
-		Nonterminal nt = BasicNonterminal.getNonterminal("AbstractMethodIpaTest", rank, isReductionTentacle);
+		Nonterminal nt = sceneObject.scene().createNonterminal("AbstractMethodIpaTest", rank, isReductionTentacle);
 
 		return hc.builder().addNodes(type, rank, nodes)
 				.addVariableEdge("@this", nodes.get(0))
@@ -362,7 +362,7 @@ public class ReachableFragmentTest {
 
 		final int rank = 1;
 		final boolean[] isReductionTentacle = new boolean[]{false};
-		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+		Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
 
 
 		return hc.builder().addNodes(type, rank, nodes)
@@ -421,7 +421,7 @@ public class ReachableFragmentTest {
 		Type nullType = getNullType();
 		final int rank = 1;
 		final boolean[] isReductionTentacle = new boolean[rank];
-		Nonterminal nt = BasicNonterminal.getNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+		Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder()

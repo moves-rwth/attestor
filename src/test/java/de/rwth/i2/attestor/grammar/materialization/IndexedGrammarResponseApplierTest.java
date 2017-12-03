@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.*;
 
+import com.sun.org.apache.regexp.internal.RE;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
@@ -84,10 +85,8 @@ public class IndexedGrammarResponseApplierTest {
 		
 		InternalHeapConfiguration hc = new InternalHeapConfiguration();
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
-												 RANK, 
-												 REDUCTION_TENTACLES,
-												 someIndex );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt = new IndexedNonterminalImpl(bnt, someIndex );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -127,10 +126,8 @@ public class IndexedGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL,
-				 RANK, 
-				 REDUCTION_TENTACLES,
-				 someIndex );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt = new IndexedNonterminalImpl(bnt, someIndex );
 		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();

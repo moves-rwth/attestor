@@ -22,7 +22,7 @@ public class BalancednessStateRefinementStrategy extends SceneObject implements 
         super(sceneObject);
         SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
         SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
-        helper = new BalancednessHelper(left, right);
+        helper = new BalancednessHelper(this, left, right);
     }
 
 
@@ -35,12 +35,13 @@ public class BalancednessStateRefinementStrategy extends SceneObject implements 
 }
 
 
-class BalancednessHelper {
+class BalancednessHelper extends SceneObject {
 
     private SelectorLabel left;
     private SelectorLabel right;
 
-    BalancednessHelper(SelectorLabel left, SelectorLabel right) {
+    BalancednessHelper(SceneObject sceneObject, SelectorLabel left, SelectorLabel right) {
+        super(sceneObject);
         this.left = left;
         this.right = right;
     }
@@ -82,7 +83,7 @@ class BalancednessHelper {
                                                 Set<Integer> visited,
                                                 Queue<Integer> queue ) {
 
-        Nonterminal btLabel = BasicNonterminal.getNonterminal("BT");
+        Nonterminal btLabel = scene().getNonterminal("BT");
 
         TIntArrayList ntEdges = hc.nonterminalEdges();
 

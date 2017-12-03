@@ -76,7 +76,7 @@ public class JsonToIndexedHC extends SceneObject {
 				IndexedNonterminal indexedNt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
 				nt = indexedNt.getWithIndex(index);
 			}else{
-				nt = BasicNonterminal.getNonterminal(label);
+				nt = scene().getNonterminal(label);
 			}
 
 			TIntArrayList tentacles = new TIntArrayList(nt.getRank());

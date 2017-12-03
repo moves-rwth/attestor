@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
@@ -8,6 +9,8 @@ import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMateria
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,11 +21,13 @@ import static org.mockito.Mockito.verify;
 
 public class DefaultMaterializationRuleManagerTest {
 
+	private SceneObject sceneObject;
 
-	@BeforeClass
-	public static void init() {
+	@Before
+	public void init() {
 
         UnitTestGlobalSettings.reset();
+        sceneObject = new MockupSceneObject();
     }
 
 
@@ -32,7 +37,7 @@ public class DefaultMaterializationRuleManagerTest {
 		final int tentacle = 3;
 		final boolean[] isReductionTentacle = new boolean[]{true, false};
 		final String uniqueLabel = "testDelegationOfRequest";
-		final Nonterminal toReplace = BasicNonterminal.getNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
+		final Nonterminal toReplace = sceneObject.scene().createNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
 		
 		final String requestedSelector = "someSelector";
 		
@@ -52,24 +57,24 @@ public class DefaultMaterializationRuleManagerTest {
 	@Test
 	public void testWhetherResponseComplete(){
 		
-		ViolationPointResolver grammarLogic = new FakeViolationPointResolverForDefault();
+		FakeViolationPointResolverForDefault grammarLogic = new FakeViolationPointResolverForDefault(sceneObject);
 		MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
 		
 		GrammarResponse actualResponse;
 		try {
-			Nonterminal nonterminal = FakeViolationPointResolverForDefault.DEFAULT_NONTERMINAL;
+
 			int tentacleForNext = 0;
 			String requestLabel = "some label";
-			actualResponse = ruleManager.getRulesFor(nonterminal, 
+			actualResponse = ruleManager.getRulesFor(grammarLogic.DEFAULT_NONTERMINAL,
 													tentacleForNext, 
 													requestLabel);
 		
 			assertTrue( actualResponse instanceof DefaultGrammarResponse );
 			DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
 			assertTrue(defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT) );
+					.contains( grammarLogic.RHS_CREATING_NEXT) );
 			assertTrue( defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT_PREV ));
+					.contains( grammarLogic.RHS_CREATING_NEXT_PREV ));
 			
 		} catch (UnexpectedNonterminalTypeException e) {
 			fail("Unexpected exception");

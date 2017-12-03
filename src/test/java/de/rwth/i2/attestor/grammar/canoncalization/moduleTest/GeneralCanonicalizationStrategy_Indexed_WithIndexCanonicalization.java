@@ -119,7 +119,8 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
 
 	private Nonterminal getNonterminal( List<IndexSymbol> index ) {
-		return new IndexedNonterminalImpl(NT_LABEL, RANK, isReductionTentacle, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, RANK, isReductionTentacle);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 
 

@@ -26,8 +26,8 @@ import gnu.trove.list.array.TIntArrayList;
 public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 	public static final String NONTERMINAL_LABEL = "GrammarLogikTest_ConcreteNonterminal_ConcreteRule";
-	public static final Nonterminal NT_INDEX_Z = createIndexedNonterminalWithIndex_Z();
-	public static final Nonterminal NT_INDEX_sZ = createIndexedNonterminalWithIndex_sZ();
+	public Nonterminal NT_INDEX_Z;
+	public Nonterminal NT_INDEX_sZ;
 	private HeapConfiguration RHS_CREATING_NEXT;
 	private HeapConfiguration RHS_NOT_CREATING_NEXT;
 	private static final String SELECTOR_NAME_NEXT = "next";
@@ -47,6 +47,8 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	public void setUp() {
 
 		sceneObject = new MockupSceneObject();
+		NT_INDEX_Z = createIndexedNonterminalWithIndex_Z();
+		NT_INDEX_sZ = createIndexedNonterminalWithIndex_sZ();
 		RHS_CREATING_NEXT = getRule_createNext();
 		RHS_NOT_CREATING_NEXT = getRule_notCreateNext();
 	}
@@ -143,7 +145,7 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 
 
 
-	private static Nonterminal createIndexedNonterminalWithIndex_sZ() {
+	private Nonterminal createIndexedNonterminalWithIndex_sZ() {
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol( "s", false );
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
@@ -151,16 +153,18 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 		index.add(s);
 		index.add(bottom);
 
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, index );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, 2, new boolean[]{false,false});
+		return new IndexedNonterminalImpl(bnt, index );
 	}
 
-	private static Nonterminal createIndexedNonterminalWithIndex_Z() {
+	private Nonterminal createIndexedNonterminalWithIndex_Z() {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(bottom);
 
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, new boolean[]{false, false}, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, 2, new boolean[]{false,false});
+		return new IndexedNonterminalImpl(bnt, index );
 	}
 
 

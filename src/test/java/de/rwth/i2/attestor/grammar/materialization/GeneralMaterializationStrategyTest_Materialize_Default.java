@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,8 +44,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 		sceneObject = new MockupSceneObject();
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
-		BasicNonterminal listLabel = BasicNonterminal
-				.getNonterminal( "List", 2, new boolean[] { false, true } );
+		Nonterminal listLabel = sceneObject.scene().createNonterminal("List", 2, new boolean[] { false, true } );
 
 		Grammar grammar = Grammar.builder()
 				.addRule( listLabel , hcFactory.getListRule1() )

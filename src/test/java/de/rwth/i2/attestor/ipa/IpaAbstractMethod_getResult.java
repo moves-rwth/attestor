@@ -24,7 +24,7 @@ public class IpaAbstractMethod_getResult {
 	
 
 	private final SceneObject sceneObject = new MockupSceneObject();
-	private final IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
+	private final IpaAbstractMethod ipa = new IpaAbstractMethod(sceneObject, "testMethod" );
 	private final Type type = sceneObject.scene().getType("someType");
 	private final SelectorLabel sel = sceneObject.scene().getSelectorLabel("someLabel");
 

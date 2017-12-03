@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.Pair;
@@ -18,7 +19,7 @@ import gnu.trove.list.array.TIntArrayList;
  * @author hannah
  *
  */
-public class ReachableFragmentComputer {
+public class ReachableFragmentComputer extends SceneObject {
 
 	private String displayName;
 	HeapConfiguration input;
@@ -31,8 +32,8 @@ public class ReachableFragmentComputer {
 
 
 
-	public ReachableFragmentComputer(String displayName, HeapConfiguration input) {
-		super();
+	public ReachableFragmentComputer(SceneObject sceneObject, String displayName, HeapConfiguration input) {
+		super(sceneObject);
 		this.displayName = displayName;
 		this.input = input;
 	}
@@ -416,7 +417,7 @@ public class ReachableFragmentComputer {
 	 */
 	private Nonterminal getContractNonterminal( int rank ) {
 		final boolean[] isReductionTentacle = new boolean[rank];
-		Nonterminal nt = BasicNonterminal.getNonterminal(displayName + rank, rank, isReductionTentacle);
+		Nonterminal nt = scene().createNonterminal(displayName + rank, rank, isReductionTentacle);
 		return nt;
 	}
 

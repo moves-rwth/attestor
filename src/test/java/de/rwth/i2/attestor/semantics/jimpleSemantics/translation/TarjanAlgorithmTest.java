@@ -3,23 +3,31 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 
 public class TarjanAlgorithmTest {
 
+	private SceneObject sceneObject;
+
+	@Before
+	public void setUp() {
+
+		sceneObject = new MockupSceneObject();
+	}
+
 	//only single, non-recursive method
 	@Test
 	public void testTrivial() {
 		TarjanAlgorithm algorithm = new TarjanAlgorithm();
-		
-		IpaAbstractMethod m1 = new IpaAbstractMethod("non-recursive 1");
+		IpaAbstractMethod m1 = new IpaAbstractMethod(sceneObject, "non-recursive 1");
 		algorithm.addMethodAsVertex(m1);
-	
-		
 		algorithm.markRecursiveMethods();
-		
 		assertFalse( m1.isRecursive() );
 	}
 	
@@ -27,14 +35,14 @@ public class TarjanAlgorithmTest {
 	public void testCallChain() {
 		TarjanAlgorithm algorithm = new TarjanAlgorithm();
 		
-		IpaAbstractMethod m1 = new IpaAbstractMethod("non-recursive 1");
+		IpaAbstractMethod m1 = new IpaAbstractMethod(sceneObject,"non-recursive 1");
 		algorithm.addMethodAsVertex(m1);
 		
-		IpaAbstractMethod m2 = new IpaAbstractMethod("non-recursive 2");
+		IpaAbstractMethod m2 = new IpaAbstractMethod(sceneObject,"non-recursive 2");
 		algorithm.addMethodAsVertex(m2);
 		algorithm.addCallEdge(m1, m2);
 		
-		IpaAbstractMethod m3 = new IpaAbstractMethod("non-recursive 3");
+		IpaAbstractMethod m3 = new IpaAbstractMethod(sceneObject,"non-recursive 3");
 		algorithm.addMethodAsVertex(m3);
 		algorithm.addCallEdge(m2, m3);
 		
@@ -49,7 +57,7 @@ public class TarjanAlgorithmTest {
 	public void testDirectRecursion() {
 		TarjanAlgorithm algorithm = new TarjanAlgorithm();
 		
-		IpaAbstractMethod m1 = new IpaAbstractMethod("recursive 1");
+		IpaAbstractMethod m1 = new IpaAbstractMethod(sceneObject,"recursive 1");
 		algorithm.addMethodAsVertex(m1);
 		algorithm.addCallEdge(m1, m1);
 	
@@ -64,14 +72,14 @@ public class TarjanAlgorithmTest {
 	public void testIndirectRecursion() {
 		TarjanAlgorithm algorithm = new TarjanAlgorithm();
 		
-		IpaAbstractMethod m1 = new IpaAbstractMethod("recursive 1");
+		IpaAbstractMethod m1 = new IpaAbstractMethod(sceneObject, "recursive 1");
 		algorithm.addMethodAsVertex(m1);
 		
-		IpaAbstractMethod m2 = new IpaAbstractMethod("recursive 2");
+		IpaAbstractMethod m2 = new IpaAbstractMethod(sceneObject, "recursive 2");
 		algorithm.addMethodAsVertex(m2);
 		algorithm.addCallEdge(m1, m2);
 		
-		IpaAbstractMethod m3 = new IpaAbstractMethod("recursive 3");
+		IpaAbstractMethod m3 = new IpaAbstractMethod(sceneObject, "recursive 3");
 		algorithm.addMethodAsVertex(m3);
 		algorithm.addCallEdge(m2, m3);
 		algorithm.addCallEdge(m3, m1);
@@ -87,19 +95,19 @@ public class TarjanAlgorithmTest {
 	public void testMixedSetting() {
 		TarjanAlgorithm algorithm = new TarjanAlgorithm();
 		
-		IpaAbstractMethod m1 = new IpaAbstractMethod("recursive 1");
+		IpaAbstractMethod m1 = new IpaAbstractMethod(sceneObject, "recursive 1");
 		algorithm.addMethodAsVertex(m1);
 		
-		IpaAbstractMethod m2 = new IpaAbstractMethod("recursive 2");
+		IpaAbstractMethod m2 = new IpaAbstractMethod(sceneObject, "recursive 2");
 		algorithm.addMethodAsVertex(m2);
 		algorithm.addCallEdge(m1, m2);
 		
-		IpaAbstractMethod m3 = new IpaAbstractMethod("recursive 3");
+		IpaAbstractMethod m3 = new IpaAbstractMethod(sceneObject, "recursive 3");
 		algorithm.addMethodAsVertex(m3);
 		algorithm.addCallEdge(m2, m3);
 		algorithm.addCallEdge(m3, m3);
 		
-		IpaAbstractMethod m4 = new IpaAbstractMethod("recursive 4");
+		IpaAbstractMethod m4 = new IpaAbstractMethod(sceneObject, "recursive 4");
 		algorithm.addMethodAsVertex(m4);
 		algorithm.addCallEdge(m3, m4);
 		

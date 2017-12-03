@@ -113,7 +113,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 			String shortName = shortMethodSignature(method);
 			String signature = method.getSignature();
 
-            final IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
+            final IpaAbstractMethod abstractMethod = scene().getMethod(signature);
             abstractMethod.setDisplayName(shortName);
             recursiveMethodDetection.addMethodAsVertex(abstractMethod);
 		}
@@ -168,7 +168,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 	 */
 	private void translateMethod( SootMethod method ) {
 
-		currentMethod = IpaAbstractMethod.getMethod(method.getSignature());
+		currentMethod = scene().getMethod(method.getSignature());
 		currentUnitToPC = new HashMap<>();
 
 		Chain<Unit> units = method.getActiveBody().getUnits();
@@ -228,7 +228,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 	 * @return The corresponding abstract method.
 	 */
 	public AbstractMethod getMethod(String signature) throws StateSpaceGenerationAbortedException {
-		IpaAbstractMethod res = IpaAbstractMethod.getMethod(signature);
+		IpaAbstractMethod res = scene().getMethod(signature);
 		recursiveMethodDetection.addCallEdge(currentMethod, res);
 		if (res.getControlFlow() == null) {
 			

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +47,7 @@ public class CanonicalizationStrategyTest {
 		sceneObject = new MockupSceneObject();
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] { false, true } );
+		Nonterminal listLabel = sceneObject.scene().createNonterminal( "List", 2, new boolean[] { false, true } );
 		
 		Grammar grammar = Grammar.builder()
 				.addRule( listLabel , hcFactory.getListRule1() )

@@ -6,6 +6,8 @@ import java.util.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
@@ -13,24 +15,26 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
-	private static Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
+	public static final class Factory extends SceneObject {
+		private Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
 
-	public static IpaAbstractMethod getMethod( String signature ){
-		if( ! knownMethods.containsKey(signature) ){
-			knownMethods.put(signature, new IpaAbstractMethod( signature ) );
+		public Factory(Scene scene) {
+			super(scene);
 		}
-		return knownMethods.get( signature );
+
+		public IpaAbstractMethod get(String signature ){
+			if( ! knownMethods.containsKey(signature) ){
+				knownMethods.put(signature, new IpaAbstractMethod(this, signature ) );
+			}
+			return knownMethods.get( signature );
+		}
 	}
 
-	public static void clear(){
-		knownMethods.clear();
-	}
-	
 	private boolean isRecursive = false;
 	final IpaContractCollection contracts = new IpaContractCollection();
 
-	public IpaAbstractMethod(String displayName) {
-		super();
+	public IpaAbstractMethod(SceneObject sceneObject, String displayName) {
+		super(sceneObject);
 		super.setDisplayName(displayName);
 	}
 
@@ -116,7 +120,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 	 * @return <reachableFragment,remainingFragment>
 	 */
 	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
-		ReachableFragmentComputer helper = new ReachableFragmentComputer( this.toString(), input );
+		ReachableFragmentComputer helper = new ReachableFragmentComputer(this, this.toString(), input );
 		return helper.prepareInput();
 	}
 

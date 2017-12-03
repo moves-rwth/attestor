@@ -39,7 +39,7 @@ public class MarkedHcGeneratorTest {
       sceneObject = new MockupSceneObject();
       hcFactory = new ExampleHcImplFactory(sceneObject);
 
-      nt = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
+      nt = sceneObject.scene().createNonterminal( "List", 2, new boolean []{false,true} );
       type = sceneObject.scene().getType("List");
       Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
       rules.put(nt, new HashSet<>());

@@ -63,7 +63,7 @@ public class InvokeStmtTest_WithEffect {
 		Field nextOfX = new Field(type, varX, next);
 		Field nextOfY = new Field(type, varY, next);
 		
-		AbstractMethod method = new IpaAbstractMethod("method");
+		AbstractMethod method = new IpaAbstractMethod(sceneObject,"method");
 		List<Semantics> methodBody = new ArrayList<>();
 		methodBody.add( new IdentityStmt(1, varY, "@parameter0:"));
 		

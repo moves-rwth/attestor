@@ -34,7 +34,7 @@ public class TestJsonToIndexedHC {
 		sceneObject = new MockupSceneObject();
 		sceneObject.scene().options().setIndexedMode(true);
 		expectedHCs = new ExpectedHCs(sceneObject);
-		BasicNonterminal.getNonterminal("TestJson", 2, new boolean[]{false,false});
+		sceneObject.scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
 	}
 	
 	@Test

@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.io;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
@@ -100,10 +101,11 @@ public class TestJsonToIndexedGrammar {
 		List<IndexSymbol> index1 = new ArrayList<>();
 		index1.add(s);
 		index1.add(var);
-		IndexedNonterminal nt1 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,true}, index1);
+		Nonterminal bnt = sceneObject.scene().createNonterminal("TestJson", 2, new boolean[]{false,true});
+		IndexedNonterminal nt1 = new IndexedNonterminalImpl(bnt, index1);
 		List<IndexSymbol> index2 = new ArrayList<>();
 		index2.add(bottom);
-		IndexedNonterminal nt2 = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,true}, index2);
+		IndexedNonterminal nt2 = new IndexedNonterminalImpl(bnt, index2);
 		
 		assertTrue( grammar.getAllLeftHandSides().contains(nt1) );
 		assertTrue( grammar.getAllLeftHandSides().contains(nt2) );

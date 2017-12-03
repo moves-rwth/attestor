@@ -10,11 +10,7 @@ import java.util.Map;
 /**
  * A simple standard implementation of nonterminal symbols.
  *
- * Exactly one object is created for every label. These objects can be accessed through
- * {@link BasicNonterminal#getNonterminal(String)}.
- *
- * New nonterminals should be created through
- * {@link BasicNonterminal#getNonterminal(String, int, boolean[])}.
+ * Exactly one object is created for every label.
  *
  * @author Christoph
  */
@@ -25,75 +21,48 @@ public final class BasicNonterminal implements Nonterminal {
 	 */
 	private static final Logger logger = LogManager.getLogger( "BasicNonterminal" );
 
-	/**
-	 * Stores the unique nonterminal object corresponding to each label.
-	 */
-	private static final Map<String, BasicNonterminal> existingNonterminals = new HashMap<>();
+	public static final class Factory {
 
-	/**
-	 * Method to remove all stored existing nonterminals.
-	 */
-	public static synchronized void clearExistingNonterminals() {
-		existingNonterminals.clear();
-	}
+		private final Map<String, BasicNonterminal> knownNonterminals = new HashMap<>();
 
-	/**
-	 * Method to check whether a nonterminal with the given label already exists
-	 * @param label The label
-	 * @return True iff a BasicNonterminal with label 'label' exists.
-	 */
-	public static boolean hasNonterminal(String label) {
-		return existingNonterminals.containsKey( label );
-	}
-
-	/**
-	 * Method to access already existing nonterminal symbols.
-	 * @param label The label of a requested already existing nonterminal symbol.
-	 * @return The nonterminal symbol with the requested label.
-	 */
-	public static synchronized BasicNonterminal getNonterminal(String label ){
-
-		if( !existingNonterminals.containsKey( label ) ){
-			logger.fatal( "requested nonterminal does not exist" );
-			logger.fatal( "requested was: " + label );
-			logger.fatal( "have: " + existingNonterminals );
-			throw new IllegalArgumentException("Requested nonterminal does not exist.");
-		}
-		return existingNonterminals.get( label );
-	}
-
-	/**
-	 * Method to get or create nonterminal symbols.
-	 * @param label The label of the requested nonterminal symbol.
-	 * @param rank The rank of the requested nonterminal symbol.
-	 * @param isReductionTentacle An array of length rank that determines for every tentacle whether it is a
-	 *                            reduction tentacle (value true) or not (value false).
-	 * @return The requested nonterminal symbol. If this object does not exist, it will be created first.
-	 */
-	public static synchronized BasicNonterminal getNonterminal(String label, int rank, boolean [] isReductionTentacle ){
-
-		BasicNonterminal res;
-		
-		if( !existingNonterminals.containsKey( label ) ){
-			
-			res = new BasicNonterminal( label, rank, isReductionTentacle );
-			existingNonterminals.put( label, res );
-		}else{
-			res = existingNonterminals.get( label );
-			/*
-			if( res.getRank() != rank ){
-				logger.warn( label + ": rank of stored nonterminal does not match. got: " + res.getRank() + " request: " + rank );
+		public BasicNonterminal get(String name) {
+			if( !knownNonterminals.containsKey( name ) ){
+				logger.fatal( "requested nonterminal does not exist" );
+				logger.fatal( "requested was: " + name );
+				logger.fatal( "have: " + knownNonterminals);
+				throw new IllegalArgumentException("Requested nonterminal does not exist.");
 			}
-			for( int i = 0; i < isReductionTentacle.length; i++){
-				if( res.isReductionTentacle[i] != isReductionTentacle[i] ){
-					logger.warn( label +  ": " + i + "th  reduction tentacle of stored nonterminal does not match. got: " + res.isReductionTentacle[i] + " request: " + isReductionTentacle[i] );
+			return knownNonterminals.get( name );
+		}
+
+		/**
+		 * Method to create nonterminal symbols. If the nonterminal already exists, a reference to the existing one
+		 * will be returned.
+		 * @param label The label of the requested nonterminal symbol.
+		 * @param rank The rank of the requested nonterminal symbol.
+		 * @param isReductionTentacle An array of length rank that determines for every tentacle whether it is a
+		 *                            reduction tentacle (value true) or not (value false).
+		 * @return The requested nonterminal symbol. If this object does not exist, it will be created first.
+		 */
+		public BasicNonterminal create(String label, int rank, boolean [] isReductionTentacle ){
+
+			BasicNonterminal res;
+			if( !knownNonterminals.containsKey( label ) ){
+				res = new BasicNonterminal( label, rank, isReductionTentacle );
+				knownNonterminals.put( label, res );
+			}else{
+				res = knownNonterminals.get( label );
+				if( res.getRank() != rank ){
+					logger.warn( label + ": rank of stored nonterminal does not match. got: " + res.getRank() + " request: " + rank );
+				}
+				for( int i = 0; i < isReductionTentacle.length; i++){
+					if( res.isReductionTentacle[i] != isReductionTentacle[i] ){
+						logger.warn( label +  ": " + i + "th  reduction tentacle of stored nonterminal does not match. got: " + res.isReductionTentacle[i] + " request: " + isReductionTentacle[i] );
+					}
 				}
 			}
-			*/
+			return res;
 		}
-		
-		return res;
-	
 	}
 
 	/**

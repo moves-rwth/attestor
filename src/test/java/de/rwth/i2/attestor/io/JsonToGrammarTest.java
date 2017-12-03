@@ -49,7 +49,7 @@ public class JsonToGrammarTest {
 			JsonToGrammar importer = new JsonToGrammar(sceneObject);
 			importer.parseForwardGrammar( array );
 			
-			Nonterminal nt = BasicNonterminal.getNonterminal("DLList");
+			Nonterminal nt = sceneObject.scene().getNonterminal("DLList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertFalse( nt.isReductionTentacle( 1 ) );			
@@ -77,7 +77,7 @@ public class JsonToGrammarTest {
 			JsonToGrammar importer = new JsonToGrammar(sceneObject);
 			importer.parseForwardGrammar( array );
 			
-			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
+			Nonterminal nt = sceneObject.scene().getNonterminal("SLList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertTrue( nt.isReductionTentacle( 1 ) );
@@ -106,7 +106,7 @@ public class JsonToGrammarTest {
 			JsonToGrammar importer = new JsonToGrammar(sceneObject);
 			importer.parseForwardGrammar( array );
 			
-			Nonterminal nt = BasicNonterminal.getNonterminal("SinglyLinkedList");
+			Nonterminal nt = sceneObject.scene().getNonterminal("SinglyLinkedList");
 			assertEquals( "rank", 2, nt.getRank() );
 			assertFalse( nt.isReductionTentacle( 0 ));
 			assertTrue( nt.isReductionTentacle( 1 ) );

@@ -38,7 +38,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         this.grammar = grammar;
         SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
         SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
-        helper = new BalancednessHelper(left, right);
+        helper = new BalancednessHelper(this, left, right);
         setupCanonicalization();
     }
 

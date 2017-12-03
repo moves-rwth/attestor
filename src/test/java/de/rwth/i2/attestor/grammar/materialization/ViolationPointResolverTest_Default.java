@@ -6,7 +6,10 @@ import static org.hamcrest.Matchers.*;
 import java.util.Collection;
 import java.util.Map;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -19,26 +22,32 @@ import org.junit.BeforeClass;
 
 public class ViolationPointResolverTest_Default {
 
-	public static final BasicNonterminal DEFAULT_NONTERMINAL =
-			createDefaultNonterminal();
 	public static final int TENTACLE_FOR_NEXT = 0;
 	public static final int TENTACLE_WITHOUT_NEXT = 1;
 	public static final String SELECTOR_NAME_NEXT = "next";
 	public static final int TENTACLE_FOR_PREV = 1;
 	public static final String SELECTOR_NAME_PREV = "prev";
-	public static final HeapConfiguration RHS_CREATING_NEXT = 
-			TestGraphs.getRuleGraph_CreatingNext();
-	public static final HeapConfiguration RHS_CREATING_NEXT_PREV = 
-			TestGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
-	public static final HeapConfiguration RHS_CREATING_PREV = 
-			TestGraphs.getRuleGraph_creatingPrevAt1();
-	public static final HeapConfiguration RHS_CREATING_NO_SELECTOR = 
-			TestGraphs.getRuleGraph_creatingNoSelector();
 
-	@BeforeClass
-	public static void init() {
+	private SceneObject sceneObject;
+
+	public Nonterminal DEFAULT_NONTERMINAL;
+	public HeapConfiguration RHS_CREATING_NEXT;
+	public HeapConfiguration RHS_CREATING_NEXT_PREV;
+	public HeapConfiguration RHS_CREATING_PREV;
+	public HeapConfiguration RHS_CREATING_NO_SELECTOR;
+
+	@Before
+	public void init() {
 
 		UnitTestGlobalSettings.reset();
+		sceneObject = new MockupSceneObject();
+		TestGraphs testGraphs = new TestGraphs(sceneObject);
+		DEFAULT_NONTERMINAL = createDefaultNonterminal();
+		RHS_CREATING_NEXT = testGraphs.getRuleGraph_CreatingNext();
+		RHS_CREATING_NEXT_PREV = testGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
+		RHS_CREATING_PREV = testGraphs.getRuleGraph_creatingPrevAt1();
+		RHS_CREATING_NO_SELECTOR = testGraphs.getRuleGraph_creatingNoSelector();
+
 	}
 
 
@@ -106,7 +115,7 @@ public class ViolationPointResolverTest_Default {
 	}
 
 
-	private static BasicNonterminal createDefaultNonterminal(){
-		return BasicNonterminal.getNonterminal("GrammarLogikTest", 2, new boolean[]{false,false});
+	private Nonterminal createDefaultNonterminal(){
+		return sceneObject.scene().createNonterminal("GrammarLogikTest", 2, new boolean[]{false,false});
 	}
 }

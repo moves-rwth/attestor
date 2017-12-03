@@ -52,7 +52,7 @@ public class ParseTest {
 			/*
 			 * store nonterminal for sake of testing. Normally the nonterminals should be created by reading a grammar
 			 */
-			BasicNonterminal.getNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
+			sceneObject.scene().createNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
 
 			JsonToDefaultHC importer = new JsonToDefaultHC(sceneObject);
 			HeapConfiguration res = importer.jsonToHC( obj, s -> {} );

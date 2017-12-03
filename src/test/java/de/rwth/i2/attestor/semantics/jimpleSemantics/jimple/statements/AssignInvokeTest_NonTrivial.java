@@ -58,7 +58,7 @@ public class AssignInvokeTest_NonTrivial {
 
 		Local var = new Local( type, "x" );
 
-		AbstractMethod method= IpaAbstractMethod.getMethod( "method");
+		AbstractMethod method= sceneObject.scene().getMethod( "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
 		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>()));
 		defaultControlFlow.add( new ReturnValueStmt(var, type) );

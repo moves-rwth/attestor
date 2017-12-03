@@ -164,7 +164,8 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 	}
 	
 	private Nonterminal getNonterminalWithIndex( List<IndexSymbol> index ) {
-		return new IndexedNonterminalImpl(LABEL, RANK, REDUCTION_TENTACLEs, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(LABEL, RANK, REDUCTION_TENTACLEs);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 	
 	private HeapConfiguration someRhs() {

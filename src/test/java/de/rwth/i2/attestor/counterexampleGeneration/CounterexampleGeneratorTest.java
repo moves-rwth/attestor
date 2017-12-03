@@ -250,7 +250,7 @@ public class CounterexampleGeneratorTest {
 
     private AssignInvoke getProcedure() {
 
-        AbstractMethod procedure = new SimpleAbstractMethod("method");
+        AbstractMethod procedure = new SimpleAbstractMethod(sceneObject, "method");
 
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 

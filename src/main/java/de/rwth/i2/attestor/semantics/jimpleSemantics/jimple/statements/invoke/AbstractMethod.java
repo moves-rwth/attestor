@@ -1,11 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractMethod {
+public abstract class AbstractMethod extends SceneObject {
 
 	/**
 	 * the abstract semantic of the method.
@@ -39,8 +40,8 @@ public abstract class AbstractMethod {
 	 */
 	protected String displayName;
 
-	public AbstractMethod( ) {
-		super();
+	public AbstractMethod(SceneObject sceneObject) {
+		super(sceneObject);
 	}
 	
 	public void setDisplayName( String displayName ){

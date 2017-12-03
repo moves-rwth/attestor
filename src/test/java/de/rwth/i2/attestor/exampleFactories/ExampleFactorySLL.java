@@ -19,11 +19,13 @@ import java.util.List;
 public class ExampleFactorySLL extends AbstractExampleFactory {
 
 
-    private Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false,true});
-    private SelectorLabel sel = scene().getSelectorLabel("next");
+    private Nonterminal nt;
+    private SelectorLabel sel;
 
     public ExampleFactorySLL(SceneObject sceneObject) {
         super(sceneObject);
+        nt = scene().createNonterminal("SLL", 2, new boolean[]{false,true});
+        sel = scene().getSelectorLabel("next");
     }
 
     @Override

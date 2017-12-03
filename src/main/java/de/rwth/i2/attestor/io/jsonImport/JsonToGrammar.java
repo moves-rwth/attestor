@@ -40,12 +40,12 @@ public class JsonToGrammar extends SceneObject {
 
 			if( hasDefinedTentacles(grammarFragment) ) {
 
-				BasicNonterminal.getNonterminal(label, rank, getReductionTentacles(grammarFragment));
+				scene().createNonterminal(label, rank, getReductionTentacles(grammarFragment));
 			} else {
 
 				boolean[] rts = new boolean[rank];
 				Arrays.fill(rts, false);
-				Nonterminal nt = BasicNonterminal.getNonterminal( label, rank, rts);
+				Nonterminal nt = scene().createNonterminal( label, rank, rts);
 				ntsWithoutReductionTentacles.add(nt);
 			}
 
@@ -54,7 +54,7 @@ public class JsonToGrammar extends SceneObject {
 		for(int i=0; i < input.length(); i++) {
 			JSONObject grammarFragment = input.getJSONObject( i );
 			String label = getLabel(grammarFragment);
-			Nonterminal nt = BasicNonterminal.getNonterminal(label);
+			Nonterminal nt = scene().getNonterminal(label);
 			res.put( nt,  getGraphs(nt, grammarFragment) );
 		}
 

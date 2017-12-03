@@ -6,19 +6,23 @@ import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 
 public class FakeViolationPointResolverForDefault extends ViolationPointResolver {
 
+	private SceneObject sceneObject;
 
-	public static final HeapConfiguration RHS_CREATING_NEXT = 
-			TestGraphs.getRuleGraph_CreatingNext();
-	public static final HeapConfiguration RHS_CREATING_NEXT_PREV = 
-			TestGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
-	public static final BasicNonterminal DEFAULT_NONTERMINAL =
-			createDefaultNonterminal();
-	
-	public FakeViolationPointResolverForDefault() {
+	public HeapConfiguration RHS_CREATING_NEXT;
+	public HeapConfiguration RHS_CREATING_NEXT_PREV;
+	public Nonterminal DEFAULT_NONTERMINAL;
+
+	public FakeViolationPointResolverForDefault(SceneObject sceneObject) {
 		super(null);
+		this.sceneObject = sceneObject;
+		TestGraphs testGraphs = new TestGraphs(sceneObject);
+		RHS_CREATING_NEXT = testGraphs.getRuleGraph_CreatingNext();
+		RHS_CREATING_NEXT_PREV = testGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
+		DEFAULT_NONTERMINAL = createDefaultNonterminal();
 	}
 
 	@Override
@@ -34,10 +38,10 @@ public class FakeViolationPointResolverForDefault extends ViolationPointResolver
 		return res;
 	}
 	
-	private static BasicNonterminal createDefaultNonterminal() {
+	private Nonterminal createDefaultNonterminal() {
 		int rank = 3;
 		final boolean[] isReductionTentacle = new boolean[]{true, false};
 		final String uniqueLabel = "DefaultMaterializationRuleManagerTest";
-		return BasicNonterminal.getNonterminal(uniqueLabel, rank, isReductionTentacle);
+		return sceneObject.scene().createNonterminal(uniqueLabel, rank, isReductionTentacle);
 	}
 }

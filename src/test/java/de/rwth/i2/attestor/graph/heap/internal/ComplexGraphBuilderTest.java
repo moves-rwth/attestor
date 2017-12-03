@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
@@ -40,8 +41,8 @@ public class ComplexGraphBuilderTest {
 	private SelectorLabel left;
 	private SelectorLabel right;
 
-	private BasicNonterminal nt;
-	private BasicNonterminal nt2;
+	private Nonterminal nt;
+	private Nonterminal nt2;
 
 	private HeapConfiguration result;
 	private TIntArrayList nodes;
@@ -67,8 +68,8 @@ public class ComplexGraphBuilderTest {
 		left = sceneObject.scene().getSelectorLabel("left");
 		right = sceneObject.scene().getSelectorLabel("right");
 
-		nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false,false,false});
-		nt2 = BasicNonterminal.getNonterminal("2", 2, new boolean[]{false,false});
+		nt = sceneObject.scene().createNonterminal("3", 3, new boolean[]{false,false,false});
+		nt2 = sceneObject.scene().createNonterminal("2", 2, new boolean[]{false,false});
 
 		result = new InternalHeapConfiguration();
 		nodes = new TIntArrayList();

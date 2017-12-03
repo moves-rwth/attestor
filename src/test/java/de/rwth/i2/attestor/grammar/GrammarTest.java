@@ -220,7 +220,7 @@ public class GrammarTest {
 		final boolean[] reductionTentacles = new boolean[]{false,true};
 		final int rank = 2;
 		final String label = "List";
-		return BasicNonterminal.getNonterminal(label, rank, reductionTentacles);
+		return sceneObject.scene().createNonterminal(label, rank, reductionTentacles);
 	}
 
 	private Set<HeapConfiguration> constructRhsForDefaultNonterminal(){
@@ -234,7 +234,8 @@ public class GrammarTest {
 		ConcreteIndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( bottom );
-		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
+		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
+		return new IndexedNonterminalImpl(nt, lhsIndex );
 	}
 
 	private Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal(){
@@ -249,7 +250,8 @@ public class GrammarTest {
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( s);
 		lhsIndex.add(var);
-		return new IndexedNonterminalImpl("B", 2, new boolean[]{false, true}, lhsIndex );
+		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
+		return new IndexedNonterminalImpl(nt, lhsIndex );
 	}
 
 	private Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {

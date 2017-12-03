@@ -50,7 +50,7 @@ public class JsonToDefaultHC extends SceneObject {
 		for( int i = 0; i < hyperedges.length(); i++ ){
 			JSONObject hyperedge = hyperedges.getJSONObject( i );
 			String label = hyperedge.getString( "label" );
-			Nonterminal nt = BasicNonterminal.getNonterminal(label);
+			Nonterminal nt = scene().getNonterminal(label);
 			
 			TIntArrayList tentacles = new TIntArrayList();
 			for( int tentacleNr = 0; tentacleNr < hyperedge.getJSONArray( "tentacles" ).length(); tentacleNr++){

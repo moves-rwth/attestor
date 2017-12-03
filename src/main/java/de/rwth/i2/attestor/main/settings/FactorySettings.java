@@ -65,14 +65,16 @@ public class FactorySettings extends SceneObject {
 	public Nonterminal getNonterminal(String label) {
 		if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
 			logger.warn("Refinement of indexed grammars is not supported yet.");
-			return new IndexedNonterminalImpl(label, new ArrayList<>());
+			Nonterminal basicNonterminal = scene().getNonterminal(label);
+			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
 			//throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
 		} else if(requiresIndexedSymbols()) {
-			return new IndexedNonterminalImpl(label, new ArrayList<>());
+			Nonterminal basicNonterminal = scene().getNonterminal(label);
+			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
 		} else if(requiresRefinedSymbols()) {
-			return new RefinedDefaultNonterminal(BasicNonterminal.getNonterminal(label), null);
+			return new RefinedDefaultNonterminal(scene().getNonterminal(label), null);
 		} else {
-			return BasicNonterminal.getNonterminal(label);
+			return scene().getNonterminal(label);
 		}
 	}
 
@@ -103,19 +105,19 @@ public class FactorySettings extends SceneObject {
 	 */
 	public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
+		Nonterminal basicNonterminal = scene().createNonterminal(label, rank, isReductionTentacle);
 		if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
 			logger.warn("Refinement of indexed grammars is not supported yet.");
-			return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
 			// throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
 		} else if(requiresIndexedSymbols()) {
-			return new IndexedNonterminalImpl(label, rank, isReductionTentacle, new ArrayList<>());
+			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
 		} else if(requiresRefinedSymbols()) {
 			return new RefinedDefaultNonterminal(
-					BasicNonterminal.getNonterminal(label, rank, isReductionTentacle),
-					null
+					basicNonterminal,null
 					);
 		} else {
-			return BasicNonterminal.getNonterminal(label, rank, isReductionTentacle);
+			return basicNonterminal;
 		}
 	}
 

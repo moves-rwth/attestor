@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -65,8 +66,9 @@ public class BalancedTreeGrammar{
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
 		lhsIndex.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
-		
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
+
 		HeapConfiguration rhs = createRuleBalanced();
 		
 		builder.addRule(lhs, rhs);
@@ -78,10 +80,11 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
+		Nonterminal bnt = sceneObject.scene().getNonterminal(NT_LABEL);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(bnt, r);
 		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(bnt,l);
 
 		HeapConfiguration rhs = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
@@ -106,8 +109,9 @@ public class BalancedTreeGrammar{
 		lhsIndex.add( s );
 		lhsIndex.add( s );
 		lhsIndex.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
-		
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
+
 		HeapConfiguration rhs = createUnbalancedRuleLeft();
 		
 		builder.addRule(lhs, rhs);
@@ -120,11 +124,12 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
+		Nonterminal bnt = sceneObject.scene().getNonterminal(NT_LABEL);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(bnt, r);
 		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(s);
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(bnt,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_M1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -152,8 +157,9 @@ public class BalancedTreeGrammar{
 		lhsIndex.add( s );
 		lhsIndex.add( s );
 		lhsIndex.add(var);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
-		
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
+
 		HeapConfiguration rhs = createUnbalancedRuleRight();
 		
 		builder.addRule(lhs, rhs);
@@ -166,10 +172,11 @@ public class BalancedTreeGrammar{
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(s);
 		r.add(var);
-		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL, r);
+		Nonterminal bnt = sceneObject.scene().getNonterminal(NT_LABEL);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(bnt, r);
 		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(var);
-		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(bnt,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -194,8 +201,9 @@ public class BalancedTreeGrammar{
 
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( bottom );
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
-		
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
+
 		HeapConfiguration rhs = createBalancedLeafRule();
 		
 		builder.addRule(lhs, rhs);
@@ -222,7 +230,8 @@ public class BalancedTreeGrammar{
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		lhsIndex.add( s );
 		lhsIndex.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
 
 		HeapConfiguration rhs = createLeftLeafRule();
 		
@@ -234,7 +243,8 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<IndexSymbol> l = new ArrayList<>();
 		l.add(bottom);
-		IndexedNonterminal leftNt = new IndexedNonterminalImpl(NT_LABEL,l);
+		Nonterminal bnt = sceneObject.scene().getNonterminal(NT_LABEL);
+		IndexedNonterminal leftNt = new IndexedNonterminalImpl(bnt,l);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_M1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;
@@ -259,7 +269,8 @@ public class BalancedTreeGrammar{
 		ArrayList<IndexSymbol> lhsIndex = new ArrayList<>();
 		lhsIndex.add( s );
 		lhsIndex.add(bottom);
-		IndexedNonterminal lhs = new IndexedNonterminalImpl(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE, lhsIndex );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, NT_RANK, IS_REDUCTION_TENTACLE);
+		IndexedNonterminal lhs = new IndexedNonterminalImpl(bnt, lhsIndex );
 
 		HeapConfiguration rhs = createRightLeafRule();
 		
@@ -271,7 +282,8 @@ public class BalancedTreeGrammar{
 		
 		ArrayList<IndexSymbol> r = new ArrayList<>();
 		r.add(bottom);
-		IndexedNonterminal rightNt = new IndexedNonterminalImpl(NT_LABEL,r);
+		Nonterminal bnt = sceneObject.scene().getNonterminal(NT_LABEL);
+		IndexedNonterminal rightNt = new IndexedNonterminalImpl(bnt,r);
 		AnnotatedSelectorLabel leftLabel = SELECTOR_LEFT_M1;
 		AnnotatedSelectorLabel rightLabel = SELECTOR_RIGHT_1;
 		AnnotatedSelectorLabel parentLabel = SELECTOR_PARENT;

@@ -33,8 +33,7 @@ public class IndexedMaterializationRuleManagerTest {
 	public static final boolean[] REDUCTION_TENTACLES = new boolean[]{false,false};
 
 	private SceneObject sceneObject;
-
-	IndexedNonterminal requestNonterminal = createRequestNonterminal();
+	IndexedNonterminal requestNonterminal;
 
 	@BeforeClass
 	public static void init() {
@@ -45,6 +44,7 @@ public class IndexedMaterializationRuleManagerTest {
 	@Before
 	public void setUp() {
 		sceneObject = new MockupSceneObject();
+		requestNonterminal = createRequestNonterminal();
 	}
 
 
@@ -145,12 +145,12 @@ public class IndexedMaterializationRuleManagerTest {
 	
 	@Test
 	public void testDefaultCaseOnIndexedManager(){
-		ViolationPointResolver grammarLogik = new FakeViolationPointResolverForDefault();
+		FakeViolationPointResolverForDefault grammarLogik = new FakeViolationPointResolverForDefault(sceneObject);
 		MaterializationRuleManager ruleManager = new IndexedMaterializationRuleManager( grammarLogik, null );
 		
 		GrammarResponse actualResponse;
 		try {
-			Nonterminal nonterminal = FakeViolationPointResolverForDefault.DEFAULT_NONTERMINAL;
+			Nonterminal nonterminal = grammarLogik.DEFAULT_NONTERMINAL;
 			int tentacleForNext = 0;
 			String requestLabel = "some label";
 			actualResponse = ruleManager.getRulesFor(nonterminal, 
@@ -160,9 +160,9 @@ public class IndexedMaterializationRuleManagerTest {
 			assertTrue( actualResponse instanceof DefaultGrammarResponse );
 			DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
 			assertTrue(defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT) );
+					.contains( grammarLogik.RHS_CREATING_NEXT) );
 			assertTrue( defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT_PREV ));
+					.contains( grammarLogik.RHS_CREATING_NEXT_PREV ));
 			
 		} catch (UnexpectedNonterminalTypeException e) {
 			fail("Unexpected exception");
@@ -210,10 +210,11 @@ public class IndexedMaterializationRuleManagerTest {
 
 		final IndexSymbol someAbstractIndexSymbol = AbstractIndexSymbol.get("SomeAbstractIndexSymbol");
 		index.add(someAbstractIndexSymbol);
-		return new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 	
-	private static Collection<Nonterminal> createExampleNts() {
+	private Collection<Nonterminal> createExampleNts() {
 		
 		IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
@@ -224,12 +225,13 @@ public class IndexedMaterializationRuleManagerTest {
 		index1.add(a);
 		index1.add(s);
 		index1.add(bottom1);
-		IndexedNonterminal nt1 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		IndexedNonterminal nt1 = new IndexedNonterminalImpl(bnt, index1);
 		
 		List<IndexSymbol> index2 = new ArrayList<>();
 		index2.add(s);
 		index2.add(var);
-		IndexedNonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index2);
+		IndexedNonterminal nt2 = new IndexedNonterminalImpl(bnt, index2);
 		
 		Set<Nonterminal> result = new HashSet<>();
 		result.add( nt1 );
@@ -261,7 +263,8 @@ public class IndexedMaterializationRuleManagerTest {
 		
 		Type type = sceneObject.scene().getType("type");
 
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt = new IndexedNonterminalImpl(bnt, index);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -348,8 +351,9 @@ public class IndexedMaterializationRuleManagerTest {
 		
 		Type type = sceneObject.scene().getType("type");
 
-		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
-		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, index2);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt1 = new IndexedNonterminalImpl(bnt, index1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(bnt, index2);
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)

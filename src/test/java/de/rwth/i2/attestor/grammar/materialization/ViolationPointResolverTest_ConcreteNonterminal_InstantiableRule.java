@@ -31,10 +31,10 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	private static final int NONTERMINAL_RANK = 2;
 	private static final String NONTERMINAL_LABEL = "GrammarLogikText_Concrete_Instatiable";
 	
-	private static final Nonterminal NONTERMINAL_INDEX_Z = createNonterminal_Z();
-	private static final Nonterminal NONTERMINAL_INSTANTIABLE = createNonterminal_Instantiable();
-	private static final Nonterminal NONTERMINAL_NON_MATCHING = createNonterminal_s();
-	
+	private Nonterminal NONTERMINAL_INDEX_Z;
+	private Nonterminal NONTERMINAL_INSTANTIABLE;
+	private Nonterminal NONTERMINAL_NON_MATCHING;
+
 	private HeapConfiguration INSTANTIABLE_RULE_CREATING_NEXT;
 	private HeapConfiguration INSTANTIABLE_RULE_NOT_CREATING_NEXT;
 
@@ -54,6 +54,9 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 	@Before
 	public void setUp() {
 		sceneObject = new MockupSceneObject();
+		NONTERMINAL_INDEX_Z = createNonterminal_Z();
+		NONTERMINAL_INSTANTIABLE = createNonterminal_Instantiable();
+		NONTERMINAL_NON_MATCHING = createNonterminal_s();
 		INSTANTIABLE_RULE_CREATING_NEXT = getInstantiableRuleCreatingNext();
 		INSTANTIABLE_RULE_NOT_CREATING_NEXT = getInstantiableRuleNotCreatingNext();
 	}
@@ -82,35 +85,31 @@ public class ViolationPointResolverTest_ConcreteNonterminal_InstantiableRule {
 		
 	}
 	
-
-
-
-
-	private static Nonterminal createNonterminal_Z() {
+	private Nonterminal createNonterminal_Z() {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		List<IndexSymbol> index = SingleElementUtil.createList( bottom );
-				
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 
-	private static Nonterminal createNonterminal_Instantiable() {
+	private Nonterminal createNonterminal_Instantiable() {
 		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = SingleElementUtil.createList( var );
-		
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 	
-	private static Nonterminal createNonterminal_s() {
+	private Nonterminal createNonterminal_s() {
 		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(var);
-		
 		boolean[] reductionTentacles = new boolean[]{false,false};
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles , index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK, reductionTentacles);
+		return new IndexedNonterminalImpl(bnt, index);
 	}
 
 	private HeapConfiguration getInstantiableRuleCreatingNext() {

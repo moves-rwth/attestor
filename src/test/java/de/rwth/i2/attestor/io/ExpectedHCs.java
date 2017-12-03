@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.io;
 
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -44,8 +45,9 @@ class ExpectedHCs extends SceneObject {
 		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false, false}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -62,8 +64,9 @@ class ExpectedHCs extends SceneObject {
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(bottom);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -80,8 +83,9 @@ class ExpectedHCs extends SceneObject {
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(var);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -98,8 +102,9 @@ class ExpectedHCs extends SceneObject {
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -116,8 +121,9 @@ class ExpectedHCs extends SceneObject {
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(s);
 		index.add(abs);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,false}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -148,8 +154,9 @@ class ExpectedHCs extends SceneObject {
 		IndexSymbol var = IndexVariable.getIndexVariable();
 		List<IndexSymbol> index = new ArrayList<>();
 		index.add(var);
-		IndexedNonterminal nt = new IndexedNonterminalImpl("TestJson", 2, new boolean[]{false,true}, index);
-		
+		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		Type type = scene().getType("type");
 		
 		TIntArrayList nodes = new TIntArrayList();

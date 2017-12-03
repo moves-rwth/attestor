@@ -372,7 +372,8 @@ public class IndexMaterializationStrategyTest {
 
 		Type type = sceneObject.scene().getType("type");
 
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt = new IndexedNonterminalImpl(bnt, index);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -391,8 +392,9 @@ public class IndexMaterializationStrategyTest {
 
 		Type type = sceneObject.scene().getType("type");
 
-		Nonterminal nt1 = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES, index1);
-		Nonterminal nt2 = new IndexedNonterminalImpl(UNIQUE_NT_LABEL, index2);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt1 = new IndexedNonterminalImpl(bnt, index1);
+		Nonterminal nt2 = new IndexedNonterminalImpl(bnt, index2);
 
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
@@ -415,12 +417,10 @@ public class IndexMaterializationStrategyTest {
 
 		Type type = sceneObject.scene().getType("type");
 
-		Nonterminal nt = new IndexedNonterminalImpl( UNIQUE_NT_LABEL, RANK,
-												 REDUCTION_TENTACLES, 
-												 indexForIndexedNonterminal);
-		BasicNonterminal defaultNt = BasicNonterminal.getNonterminal(UNIQUE_NT_LABEL,
-																RANK, REDUCTION_TENTACLES);
-		
+		Nonterminal bnt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES);
+		Nonterminal nt = new IndexedNonterminalImpl(bnt, indexForIndexedNonterminal);
+		Nonterminal defaultNt = sceneObject.scene().getNonterminal(UNIQUE_NT_LABEL);
+
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 2, nodes)
 				.addNonterminalEdge(nt)

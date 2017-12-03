@@ -75,7 +75,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     		 String filename = settings.output().getContractRequests().get( signature );
     		 FileWriter writer = new FileWriter( directory + File.separator + filename);
     		 
-    		 IpaContractCollection contracts = IpaAbstractMethod.getMethod(signature).getContracts();
+    		 IpaContractCollection contracts = scene().getMethod(signature).getContracts();
     		 
     		 ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
     	     exporter.export( signature, contracts );

@@ -335,7 +335,8 @@ public class EmbeddingIndexCheckerTest {
 		String label = "matching_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index);
 		return nt;
 	}
 	
@@ -343,7 +344,8 @@ public class EmbeddingIndexCheckerTest {
 		String label = "matching2_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle, index );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index);
 		return nt;
 	}
 	
@@ -351,7 +353,8 @@ public class EmbeddingIndexCheckerTest {
 		String label = "reference_EmbeddingIndexChecker";
 		int rank = 2;
 		boolean[] isReductionTentacle = new boolean [rank];
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index);
 		return nt;
 	}
 

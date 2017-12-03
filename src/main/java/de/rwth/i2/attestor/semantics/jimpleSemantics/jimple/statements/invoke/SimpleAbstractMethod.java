@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
@@ -29,8 +30,8 @@ public class SimpleAbstractMethod extends AbstractMethod {
 	 */
 	private final Map<HeapConfiguration, Set<ProgramState>> knownInputs = new HashMap<>();
 
-	public SimpleAbstractMethod( String signature){
-		this(signature, signature);
+	public SimpleAbstractMethod(SceneObject sceneObject, String signature){
+		this(sceneObject, signature, signature);
 	}
 
 	@Override
@@ -39,8 +40,8 @@ public class SimpleAbstractMethod extends AbstractMethod {
 		return knownInputs.get(input.getHeap());
 	}
 
-	public SimpleAbstractMethod( String signature, String displayName){
-		super( );
+	public SimpleAbstractMethod(SceneObject sceneObject, String signature, String displayName){
+		super(sceneObject);
 		super.setDisplayName(displayName);
 	}
 

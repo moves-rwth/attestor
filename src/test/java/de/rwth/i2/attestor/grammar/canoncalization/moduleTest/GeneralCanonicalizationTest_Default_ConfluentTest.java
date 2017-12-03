@@ -58,7 +58,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
 	private Nonterminal getNonterminal() {
 		boolean[] isReductionTentacle = new boolean[RANK];
-		return BasicNonterminal.getNonterminal("some label", RANK, isReductionTentacle );
+		return sceneObject.scene().createNonterminal("some label", RANK, isReductionTentacle );
 	}
 	
 	private HeapConfiguration getPattern1() {

@@ -59,7 +59,7 @@ public class GraphMaterializerTest {
 		String uniqueLabel = "GraphMaterializerTest";
 		boolean [] reductionTentacles = new boolean[]{true,false};
 		
-		return BasicNonterminal.getNonterminal(uniqueLabel, RANK, reductionTentacles);
+		return sceneObject.scene().createNonterminal(uniqueLabel, RANK, reductionTentacles);
 	}
 	
 	private HeapConfiguration createOneNonterminalInput(Nonterminal toReplace) {

@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -24,6 +27,8 @@ public class IndexMatcherTest {
 	static final IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
 	static final IndexSymbol a = ConcreteIndexSymbol.getIndexSymbol("a", false);
 	static final IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+
+	private SceneObject sceneObject;
 	
 	IndexMatcher indexMatcher;
 
@@ -36,6 +41,7 @@ public class IndexMatcherTest {
 
 	@Before
 	public void setUp() throws Exception {
+		sceneObject = new MockupSceneObject();
 		IndexMaterializationStrategy indexGrammar = new IndexGrammarForTests();
 		indexMatcher = new IndexMatcher( indexGrammar );
 	}
@@ -108,7 +114,8 @@ public class IndexMatcherTest {
 
 	private IndexedNonterminal createMaterializableNonterminal(List<IndexSymbol> index) {
 		index.add( ABSTRACT_INDEX_SYMBOL );
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
+		Nonterminal nt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK , REDUCTION_TENTACLES);
+		return new IndexedNonterminalImpl(nt, index);
 	}
 
 	private List<IndexSymbol> getIndexPrefix() {
@@ -121,7 +128,8 @@ public class IndexMatcherTest {
 		List<IndexSymbol> index = getIndexPrefix();
 		index.add(a);
 		index.add( IndexVariable.getIndexVariable() );
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, NONTERMINAL_RANK, REDUCTION_TENTACLES, index);
+		Nonterminal nt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK , REDUCTION_TENTACLES);
+		return new IndexedNonterminalImpl(nt, index);
 	}
 
 	private IndexedNonterminal createConcreteNonterminal() {
@@ -130,7 +138,8 @@ public class IndexMatcherTest {
 		index.add(a);
 		index.add(s);
 		index.add(bottom);
-		return new IndexedNonterminalImpl(NONTERMINAL_LABEL, 2, REDUCTION_TENTACLES, index);
+		Nonterminal nt = sceneObject.scene().createNonterminal(NONTERMINAL_LABEL, NONTERMINAL_RANK , REDUCTION_TENTACLES);
+		return new IndexedNonterminalImpl(nt, index);
 	}
 
 }

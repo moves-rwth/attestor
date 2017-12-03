@@ -19,9 +19,9 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IpaAbstractMethod_testReordering {
 
-	IpaAbstractMethod ipa = new IpaAbstractMethod( "testMethod" );
 
 	SceneObject sceneObject = new MockupSceneObject();
+	IpaAbstractMethod ipa = new IpaAbstractMethod(sceneObject, "testMethod" );
 	Type type = sceneObject.scene().getType("someType");
 	String nonterminalLabel = "IpaAbstractMethodTest";
 	
@@ -104,11 +104,11 @@ public class IpaAbstractMethod_testReordering {
 		}
 		
 		int rank = tentacles.size();
-		Nonterminal nt = BasicNonterminal.getNonterminal( nonterminalLabel + rank, rank, new boolean[rank]);
+		Nonterminal nt = sceneObject.scene().createNonterminal(nonterminalLabel + rank, rank, new boolean[rank]);
 		
 		int positionOfNonterminal = builder.addNonterminalEdgeAndReturnId( nt, tentacles );
 		
-		return new Pair<HeapConfiguration, Integer>( addVariables(builder.build()), positionOfNonterminal );
+		return new Pair<>( addVariables(builder.build()), positionOfNonterminal );
 		
 	}
 

@@ -139,7 +139,7 @@ public class DefaultGrammarResponseApplierTest {
 	private HeapConfiguration getInputGraph() {
 		InternalHeapConfiguration hc = new InternalHeapConfiguration();
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL,
+		Nonterminal nt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL,
 															RANK, 
 															REDUCTION_TENTACLES );
 
@@ -182,7 +182,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		Nonterminal nt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -201,7 +201,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		Nonterminal nt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -218,7 +218,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		Nonterminal nt = sceneObject.scene().createNonterminal(UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();
@@ -237,7 +237,7 @@ public class DefaultGrammarResponseApplierTest {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 
 		Type type = sceneObject.scene().getType("type");
-		Nonterminal nt = BasicNonterminal.getNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
+		Nonterminal nt = sceneObject.scene().createNonterminal( UNIQUE_NT_LABEL, RANK, REDUCTION_TENTACLES );
 		SelectorLabel sel = sceneObject.scene().getSelectorLabel("someSelectorLabel");
 
 		TIntArrayList nodes = new TIntArrayList();

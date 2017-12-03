@@ -50,15 +50,15 @@ public class RecursiveMethodDetectionTest {
 		TopLevelTranslation translator = new TopLevelTranslation(sceneObject,  new StandardAbstractSemantics(sceneObject) );
 		translator.translate();
 		
-		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: void <init>()>").isRecursive() );
-		assertTrue( IpaAbstractMethod.getMethod("<RecursionDetectionInput: int indirectRecursion1()>").isRecursive());
-		assertTrue( IpaAbstractMethod.getMethod("<RecursionDetectionInput: int indirectRecursion2(int)>").isRecursive());
-		assertFalse(IpaAbstractMethod.getMethod("<RecursionDetectionInput: int callSeveral()>").isRecursive() );
-		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: void main(String[])>").isRecursive() );
-		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: int noCalls(int)>").isRecursive() );
-		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: int nonRecursiveCaller()>").isRecursive() );
-		assertFalse( IpaAbstractMethod.getMethod("<RecursionDetectionInput: boolean nonRecursiveCallee(boolean)>").isRecursive() );
-		assertTrue( IpaAbstractMethod.getMethod("<RecursionDetectionInput: int selfLoop(int)>").isRecursive() );
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void <init>()>").isRecursive() );
+		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion1()>").isRecursive());
+		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion2(int)>").isRecursive());
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int callSeveral()>").isRecursive() );
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void main(String[])>").isRecursive() );
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int noCalls(int)>").isRecursive() );
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int nonRecursiveCaller()>").isRecursive() );
+		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: boolean nonRecursiveCallee(boolean)>").isRecursive() );
+		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int selfLoop(int)>").isRecursive() );
 		
 	
 	}

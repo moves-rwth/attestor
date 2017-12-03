@@ -2,11 +2,13 @@ package de.rwth.i2.attestor.grammar.materialization;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
@@ -290,9 +292,10 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		String label = treeGrammar.NT_LABEL;
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index);
 		
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt );
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(bnt, indexForReferenceNt );
 		Type type = treeGrammar.TYPE;
 		
 		TIntArrayList nodes = new TIntArrayList();
@@ -313,7 +316,8 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		HeapConfiguration hc = new InternalHeapConfiguration();
 		
 		String label = treeGrammar.NT_LABEL;
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label , indexForReferenceNt  );
+		Nonterminal bnt = sceneObject.scene().getNonterminal(label);
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(bnt, indexForReferenceNt  );
 		
 		Type type = treeGrammar.TYPE;
 		SelectorLabel leftLabel = treeGrammar.SELECTOR_LEFT_0;
@@ -345,8 +349,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		List<IndexSymbol> index_Z = getIndex_Z();
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
-		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(label, indexForReferenceNt  );
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index_Z);
+		IndexedNonterminal referenceNt = new IndexedNonterminalImpl(bnt, indexForReferenceNt  );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -378,9 +383,10 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
 		List<IndexSymbol> index_Z = getIndex_Z();
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index_Z);
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index_Z);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
+				new IndexedNonterminalImpl(bnt, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 5, nodes)
@@ -412,10 +418,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		String label = treeGrammar.NT_LABEL;
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
-		
-		IndexedNonterminal nt = new IndexedNonterminalImpl(label,rank,isReductionTentacle,index);
+
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt,index);
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
+				new IndexedNonterminalImpl(bnt, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -453,13 +460,14 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		String label = treeGrammar.NT_LABEL;
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
-		
-		IndexedNonterminal ntLeft = 
-				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);
+
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal ntLeft =
+				new IndexedNonterminalImpl(bnt, leftIndex);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminalImpl(label, rightIndex );
+				new IndexedNonterminalImpl(bnt, rightIndex );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
+				new IndexedNonterminalImpl(bnt, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)
@@ -496,13 +504,14 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 		String label = treeGrammar.NT_LABEL;
 		int rank = treeGrammar.NT_RANK;
 		boolean[] isReductionTentacle = treeGrammar.IS_REDUCTION_TENTACLE;
-		
-		IndexedNonterminal ntLeft = 
-				new IndexedNonterminalImpl(label,rank,isReductionTentacle, leftIndex);
+
+		Nonterminal bnt = sceneObject.scene().createNonterminal(label,rank,isReductionTentacle);
+		IndexedNonterminal ntLeft =
+				new IndexedNonterminalImpl(bnt, leftIndex);
 		IndexedNonterminal ntRight =
-				new IndexedNonterminalImpl(label, rightIndex );
+				new IndexedNonterminalImpl(bnt, rightIndex );
 		IndexedNonterminal referenceNt = 
-				new IndexedNonterminalImpl(label, indexForReferenceNonterminal );
+				new IndexedNonterminalImpl(bnt, indexForReferenceNonterminal );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		return hc.builder().addNodes(type, 6, nodes)

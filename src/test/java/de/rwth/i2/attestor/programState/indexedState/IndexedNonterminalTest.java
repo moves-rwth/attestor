@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
@@ -35,7 +38,9 @@ public class IndexedNonterminalTest {
 		index.add( s );
 		index.add( s );
 		index.add( bottom );
-		testNonterminal = new IndexedNonterminalImpl( "Test", 3, new boolean [] {false,false,false}, index );
+		SceneObject sceneObject = new MockupSceneObject();
+		Nonterminal bnt = sceneObject.scene().createNonterminal("Test", 3, new boolean[]{false,false,false});
+		testNonterminal = new IndexedNonterminalImpl(bnt, index );
 	}
 
 	@Test

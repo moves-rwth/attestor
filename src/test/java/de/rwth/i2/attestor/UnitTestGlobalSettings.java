@@ -15,8 +15,6 @@ public final class UnitTestGlobalSettings {
 
     public static void reset() {
 
-        BasicNonterminal.clearExistingNonterminals();
-        IpaAbstractMethod.clear();
         Settings.getInstance().resetAllSettings();
     }
 

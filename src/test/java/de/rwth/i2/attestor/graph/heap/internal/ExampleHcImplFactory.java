@@ -36,7 +36,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		
 		HeapConfiguration result = new InternalHeapConfiguration();
 		SelectorLabel sel = scene().getSelectorLabel("next");
-		BasicNonterminal nt = BasicNonterminal.getNonterminal("3", 3, new boolean[]{false, false, false});
+		Nonterminal nt = scene().createNonterminal("3", 3, new boolean[]{false, false, false});
 		Type type = scene().getType("node");
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -184,7 +184,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		type.addSelectorLabel(right, Constants.NULL);
 		type.addSelectorLabel(parent, Constants.NULL);
 
-		BasicNonterminal nT = BasicNonterminal.getNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
+		Nonterminal nT = scene().createNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
 
 		return result.builder()
 				.addNodes(type, 7,  nodes )
@@ -212,7 +212,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		SelectorLabel right = scene().getSelectorLabel("right");
 		SelectorLabel parent = scene().getSelectorLabel("parent");
 
-		BasicNonterminal nT = BasicNonterminal.getNonterminal( "Tree", 4, new boolean[]{false,false,false,false} );
+		Nonterminal nT = scene().createNonterminal( "Tree", 4, new boolean[]{false,false,false,false} );
 		
 		return result.builder()
 				.addNodes(type, 7, nodes )
@@ -364,7 +364,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type type = scene().getType("List");
 
-		Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false, true});
+		Nonterminal nt = scene().createNonterminal("SLL", 2, new boolean[]{false, true});
 		SelectorLabel next = scene().getSelectorLabel("next");
 
 		return result.builder()
@@ -599,7 +599,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("List");
 		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean []{false,true} );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -617,7 +617,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[]{false,true} );
 			
 		TIntArrayList nodes = new TIntArrayList();
 
@@ -636,7 +636,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("List");
 		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean []{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -654,7 +654,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("List");
 		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean []{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -671,7 +671,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[]{false,true} );
 			
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -691,7 +691,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[]{false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -729,7 +729,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type listType = scene().getType("DLL");
 		SelectorLabel nextSel = scene().getSelectorLabel("n");
 		SelectorLabel prevSel = scene().getSelectorLabel("p");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("List", 2, new boolean []{false,false});
+		Nonterminal listLabel = scene().createNonterminal("List", 2, new boolean []{false,false});
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -773,7 +773,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type listType = scene().getType("DLL");
 		SelectorLabel nextSel = scene().getSelectorLabel("n");
 		SelectorLabel prevSel = scene().getSelectorLabel("p");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
+		Nonterminal listLabel = scene().createNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -796,7 +796,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type listType = scene().getType("DLL");
 		SelectorLabel nextSel = scene().getSelectorLabel("n");
 		SelectorLabel prevSel = scene().getSelectorLabel("p");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
+		Nonterminal listLabel = scene().createNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -817,7 +817,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("DLL");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("DLL4", 4, new boolean []{false,false});
+		Nonterminal listLabel = scene().createNonterminal("DLL4", 4, new boolean []{false,false});
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -861,7 +861,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] {false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[] {false,true} );
 		
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -895,7 +895,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		Type listType = scene().getType("List");
 
 		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("List", 2,new boolean[] {false,true} );
+		Nonterminal listLabel = scene().createNonterminal("List", 2,new boolean[] {false,true} );
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -930,7 +930,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] {false,true});
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[] {false,true});
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -945,7 +945,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[] {false,true});
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[] {false,true});
 
 		TIntArrayList nodes = new TIntArrayList();
 		
@@ -1028,7 +1028,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
 		SelectorLabel nextSel = scene().getSelectorLabel( "next" );
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean []{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean []{false,true} );
 
 		return result.builder()
 				.addNodes(listType, 3, nodes)
@@ -1046,7 +1046,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("de.rwth.i2.attestor.abstraction.programs.LongList");
 
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[]{false,true} );
 			
 		return result.builder()
 				.addNodes(listType, 3, nodes)
@@ -1080,7 +1080,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 
 		Type listType = scene().getType("RListNode");
 		SelectorLabel nextSel = scene().getSelectorLabel("n");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal("RList",2,new boolean[]{false,false});
+		Nonterminal listLabel = scene().createNonterminal("RList",2,new boolean[]{false,false});
 			
 		return result.builder()
 				.addNodes(listType, 3, nodes)
@@ -1096,7 +1096,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		BasicNonterminal n2 = BasicNonterminal.getNonterminal( "ReductionTest_N2", 3, new boolean[]{false,false,false} );
+		Nonterminal n2 = scene().createNonterminal( "ReductionTest_N2", 3, new boolean[]{false,false,false} );
 		
 		Type type = scene().getType("node");
 		SelectorLabel sel1 = scene().getSelectorLabel("sel1");
@@ -1116,7 +1116,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		HeapConfiguration result = new InternalHeapConfiguration();
 		TIntArrayList nodes = new TIntArrayList();
 		
-		BasicNonterminal n1 = BasicNonterminal.getNonterminal( "ReductionTest_N1", 3, new boolean[]{false,false,false} );
+		Nonterminal n1 = scene().createNonterminal( "ReductionTest_N1", 3, new boolean[]{false,false,false} );
 
 		Type type = scene().getType("node");
 
@@ -1176,7 +1176,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type listType = scene().getType("List");
-		BasicNonterminal listLabel = BasicNonterminal.getNonterminal( "List", 2, new boolean[]{false,true} );
+		Nonterminal listLabel = scene().createNonterminal( "List", 2, new boolean[]{false,true} );
 		
 		return result.builder()
 				.addNodes(listType, 2, nodes)
@@ -1238,7 +1238,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		SelectorLabel right = scene().getSelectorLabel("right");
 		SelectorLabel parent = scene().getSelectorLabel("parent");
 
-		BasicNonterminal nT = BasicNonterminal.getNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
+		Nonterminal nT = scene().createNonterminal( "TLL", 4, new boolean[]{false,false,false,false} );
 		
 		return result.builder()
 				.addNodes(type, 7, nodes)
@@ -1386,7 +1386,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal dllLabel = BasicNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
+		Nonterminal dllLabel = scene().createNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
 				.addNodes(type, 4, nodes)
@@ -1407,7 +1407,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		SelectorLabel next = scene().getSelectorLabel("next");
 		SelectorLabel prev = scene().getSelectorLabel("prev");
 		SelectorLabel list = scene().getSelectorLabel("list");
-		BasicNonterminal dllLabel = BasicNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
+		Nonterminal dllLabel = scene().createNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
 				.addNodes(type, 6, nodes)
@@ -1432,7 +1432,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal dllLabel = BasicNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
+		Nonterminal dllLabel = scene().createNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
 				.addNodes(type, 4, nodes)
@@ -1450,7 +1450,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal dllLabel = BasicNonterminal.getNonterminal( "DLL", 3, new boolean[]{true, false, true} );
+		Nonterminal dllLabel = scene().createNonterminal( "DLL", 3, new boolean[]{true, false, true} );
 	
 		return result.builder()
 				.addNodes(type, 4, nodes)
@@ -1472,8 +1472,9 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
-	
+		Nonterminal bnt = scene().createNonterminal("DifferentIndices", 1, new boolean[]{false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
 		return result.builder()
 				.addNodes(type, 1, nodes)
 				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0)}))
@@ -1492,7 +1493,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		IndexedNonterminal nt = new IndexedNonterminalImpl("DifferentIndices", 1, new boolean[]{false}, index);
+		Nonterminal bnt = scene().createNonterminal("DifferentIndices", 1, new boolean[]{false});
+		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
 	
 		return result.builder()
 				.addNodes(type, 1, nodes)
@@ -1505,8 +1507,8 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
-		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
+		Nonterminal tree = scene().createNonterminal("tree", 2, new boolean[]{false,false});
+		Nonterminal path = scene().createNonterminal("path", 3, new boolean[]{false,false});
 		
 		SelectorLabel left = scene().getSelectorLabel("left");
 		SelectorLabel right = scene().getSelectorLabel("right");
@@ -1551,7 +1553,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
+		Nonterminal path = scene().createNonterminal("path", 3, new boolean[]{false,false});
 		
 
 		return result.builder()
@@ -1610,7 +1612,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal path = BasicNonterminal.getNonterminal("path", 3, new boolean[]{false,false});
+		Nonterminal path = scene().createNonterminal("path", 3, new boolean[]{false,false});
 		
 		SelectorLabel left = scene().getSelectorLabel("left");
 		return result.builder()
@@ -1636,7 +1638,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
+		Nonterminal tree = scene().createNonterminal("tree", 2, new boolean[]{false,false});
 		
 		SelectorLabel left = scene().getSelectorLabel("left");
 		SelectorLabel right = scene().getSelectorLabel("right");
@@ -1658,7 +1660,7 @@ public final class ExampleHcImplFactory extends SceneObject {
 		TIntArrayList nodes = new TIntArrayList();
 		
 		Type type = scene().getType("List");
-		BasicNonterminal tree = BasicNonterminal.getNonterminal("tree", 2, new boolean[]{false,false});
+		Nonterminal tree = scene().createNonterminal("tree", 2, new boolean[]{false,false});
 		
 		SelectorLabel left = scene().getSelectorLabel("left");
 		SelectorLabel right = scene().getSelectorLabel("right");

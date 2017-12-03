@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -52,7 +53,7 @@ public class JsonToIndexedGrammar extends SceneObject {
 					List<IndexSymbol> index = getIndex(grammarFragment);
 					nt = createIndexedNonterminal(rank, label, index, rts);
 				}else{
-					nt = BasicNonterminal.getNonterminal(label, rank, rts);
+					nt = scene().createNonterminal(label, rank, rts);
 				}
 
 			} else {
@@ -64,7 +65,7 @@ public class JsonToIndexedGrammar extends SceneObject {
 					List<IndexSymbol> index = getIndex(grammarFragment);
 					nt = createIndexedNonterminal(rank, label, index, rts);
 				}else{
-					nt = BasicNonterminal.getNonterminal(label, rank, rts);
+					nt = scene().createNonterminal(label, rank, rts);
 				}
 
 				ntsWithoutReductionTentacles.add(nt);
@@ -80,13 +81,8 @@ public class JsonToIndexedGrammar extends SceneObject {
 
 	private IndexedNonterminal createIndexedNonterminal(int rank, String label, List<IndexSymbol> index,
 			final boolean[] rts) {
-		IndexedNonterminal nt;
-		nt = (IndexedNonterminal) Settings
-				.getInstance()
-				.factory()
-				.createNonterminal(label, rank, rts);
-		nt = nt.getWithIndex(index);
-		return nt;
+		Nonterminal basicNt = scene().createNonterminal(label, rank, rts);
+		return new IndexedNonterminalImpl(basicNt, index);
 	}
 
 	private int getRank( JSONObject grammarFragment ) {

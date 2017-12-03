@@ -46,7 +46,7 @@ public class ParseContractsPhase extends AbstractPhase {
     
             JSONObject obj = new JSONObject(str);
             String signature = obj.getString("method");
-            IpaAbstractMethod abstractMethod = IpaAbstractMethod.getMethod(signature);
+            IpaAbstractMethod abstractMethod = scene().getMethod(signature);
             
             Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
