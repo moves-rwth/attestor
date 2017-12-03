@@ -235,7 +235,7 @@ public class SettingsFileReader {
 		}
 
 		if( jsonOutput.has("enabled") ) {
-			settings.options().setNoExport(!jsonOutput.getBoolean("enabled"));
+			output.setNoExport(!jsonOutput.getBoolean("enabled"));
 		}
 		
 		if( jsonOutput.has( "stateSpace" ) ){

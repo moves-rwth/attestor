@@ -235,10 +235,10 @@ public class FactorySettings extends SceneObject {
         }
 
         if(optionSettings.isIndexedMode()) {
-            return new AggressivePostProcessingStrategy(aggressiveStrategy);
+            return new AggressivePostProcessingStrategy(aggressiveStrategy, optionSettings.getAbstractionDistance());
         }
 
-        return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy);
+        return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy, optionSettings.getAbstractionDistance());
     }
 
 	public ProgramState createProgramState(HeapConfiguration heapConfiguration ) {

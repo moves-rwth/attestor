@@ -11,10 +11,13 @@ import java.util.Set;
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
     private CanonicalizationStrategy canonicalizationStrategy;
+    private int minAbstractionDistance;
 
-    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+                                                       int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.minAbstractionDistance = minAbstractionDistance;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
 
-        if(Settings.getInstance().options().getAbstractionDistance() == 0) {
+        if(minAbstractionDistance == 0) {
             return;
         }
 

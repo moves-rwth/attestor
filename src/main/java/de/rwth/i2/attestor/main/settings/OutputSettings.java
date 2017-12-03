@@ -87,6 +87,26 @@ public class OutputSettings {
 	 */
 	private Map<String, String> requiredContracts;
 
+
+	/**
+	 * If true, no export happens.
+	 */
+	private boolean noExport = false;
+
+	/**
+	 * @return True if and only if no export should be performed.
+	 */
+	public boolean isNoExport() {
+		return noExport;
+	}
+
+	/**
+	 * @param enabled True if no export should be performed.
+	 */
+	public void setNoExport(boolean enabled) {
+		noExport = enabled;
+	}
+
     /**
      * Sets the default path for all exports.
      * @param path The default path.

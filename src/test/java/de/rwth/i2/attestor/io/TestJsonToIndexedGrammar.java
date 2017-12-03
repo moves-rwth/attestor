@@ -27,7 +27,6 @@ public class TestJsonToIndexedGrammar {
 	public static void init() {
 
 		UnitTestGlobalSettings.reset();
-		Settings.getInstance().options().setIndexedMode(true);
 	}
 
 	@Test

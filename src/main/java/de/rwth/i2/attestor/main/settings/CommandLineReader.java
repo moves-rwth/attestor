@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.main.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +16,7 @@ import java.io.File;
  *
  * @author Hannah Arndt, Christoph, Christina
  */
-public class CommandLineReader {
+public class CommandLineReader extends SceneObject {
 
 	/**
 	 * The logger of this class.
@@ -33,7 +35,11 @@ public class CommandLineReader {
 
 	private String parsingError;
 
-    /**
+	public  CommandLineReader(SceneObject sceneObject) {
+		super(sceneObject);
+	}
+
+	/**
      * Initializes the specification of the command line interface.
      * This method should always be called first.
      */
@@ -88,7 +94,7 @@ public class CommandLineReader {
 				Option.builder("ad")
 				.longOpt("depth")
 				.desc("(optional) sets the abstraction distance (default is "
-						+ Settings.getInstance().options().getAbstractionDistance() + ")")
+						+ scene().options().getAbstractionDistance() + ")")
 				.hasArg()
 				.argName("int")
 				.build()
@@ -98,7 +104,7 @@ public class CommandLineReader {
 				Option.builder("msp")
 				.longOpt("maxStateSpace")
 				.desc("(optional) stops the analysis if the generated state space is larger than specified (default is " 
-						+ Settings.getInstance().options().getMaxStateSpaceSize() + ")")
+						+ scene().options().getMaxStateSpaceSize() + ")")
 				.hasArg()
 				.argName("int")
 				.build()
@@ -108,7 +114,7 @@ public class CommandLineReader {
 				Option.builder("mh")
 				.longOpt("maxHeap")
 				.desc("(optional) stops the analysis if a graph larger than specified is encountered (default is "
-						+ Settings.getInstance().options().getMaxStateSize() + ")")
+						+ scene().options().getMaxStateSize() + ")")
 				.hasArg()
 				.argName("int")
 				.build()
@@ -214,6 +220,10 @@ public class CommandLineReader {
 	public OutputSettings getOutputSettings(Settings settings ) {
 		OutputSettings outputSettings = settings.output();
 
+		if(cmd.hasOption("ne"))	{
+			outputSettings.setNoExport(true);
+		}
+
 		if(cmd.hasOption("html")) {
 			outputSettings.setExportStateSpace( true );
 		}
@@ -231,15 +241,8 @@ public class CommandLineReader {
      * @param settings All settings.
      * @return The populated option settings.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public OptionSettings getOptionSettings(Settings settings ) {
+	public void updateOptions(OptionSettings optionSettings ) {
 		
-		OptionSettings optionSettings = settings.options();
-
-		if(cmd.hasOption("ne"))	{
-			optionSettings.setNoExport(true);
-		}
-
 		if(cmd.hasOption("ad")) {
 			optionSettings.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
 		}
@@ -251,8 +254,6 @@ public class CommandLineReader {
 		if(cmd.hasOption("mh")) {
 			optionSettings.setMaxStateSize( Integer.valueOf(cmd.getOptionValue("mh")) );
 		}
-
-		return optionSettings;
 	}
 
     /**

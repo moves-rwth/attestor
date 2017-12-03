@@ -10,9 +10,12 @@ import java.util.Set;
 public class AggressivePostProcessingStrategy implements PostProcessingStrategy {
 
     private CanonicalizationStrategy canonicalizationStrategy;
+    private int minAbstractionDistance;
 
-    public AggressivePostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+    public AggressivePostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+                                            int minAbstractionDistance) {
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.minAbstractionDistance = minAbstractionDistance;
     }
 
     @Override
@@ -20,7 +23,7 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
 
-        if(Settings.getInstance().options().getAbstractionDistance() == 0) {
+        if(minAbstractionDistance == 0) {
             return;
         }
 

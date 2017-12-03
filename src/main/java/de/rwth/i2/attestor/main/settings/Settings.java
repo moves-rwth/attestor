@@ -97,13 +97,6 @@ public class Settings {
 	}
 
     /**
-     * @return All settings to customize the execution of the analysis.
-     */
-	public OptionSettings options(){
-		return optionSettings;
-	}
-
-    /**
      * @return All settings to customize how state spaces are exported.
      */
 	public OutputSettings output() {

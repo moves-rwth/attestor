@@ -53,11 +53,6 @@ public class OptionSettings {
 	private boolean grammarRefinementEnabled = false;
 
 	/**
-	 * If true, no export happens.
-	 */
-	private boolean noExport = false;
-
-	/**
 	 * If true, unreachable parts of heap are regularly eliminated.
 	 */
 	private boolean garbageCollectionEnabled = true;
@@ -185,20 +180,6 @@ public class OptionSettings {
 	public boolean isGrammarRefinementEnabled() {
 
 		return grammarRefinementEnabled;
-	}
-
-	/**
-	 * @return True if and only if no export should be performed.
-	 */
-	public boolean isNoExport() {
-		return noExport;
-	}
-
-	/**
-	 * @param enabled True if no export should be performed.
-	 */
-	public void setNoExport(boolean enabled) {
-		noExport = enabled;
 	}
 
 	/**

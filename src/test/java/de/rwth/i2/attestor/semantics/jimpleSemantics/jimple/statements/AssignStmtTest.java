@@ -32,12 +32,12 @@ public class AssignStmtTest {
 	public static void init()
 	{
 		UnitTestGlobalSettings.reset();
-		Settings.getInstance().options().setRemoveDeadVariables(false);
 	}
 
 	@Before
 	public void setUp() {
 		sceneObject = new MockupSceneObject();
+		sceneObject.scene().options().setRemoveDeadVariables(false);
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 	}
 

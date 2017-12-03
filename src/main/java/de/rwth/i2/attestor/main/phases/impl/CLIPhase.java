@@ -24,7 +24,7 @@ public class CLIPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        CommandLineReader commandLineReader = new CommandLineReader();
+        CommandLineReader commandLineReader = new CommandLineReader(this);
         commandLineReader.setupCLI();
         if(!commandLineReader.loadSettings(args)) {
             commandLineReader.printHelp();
@@ -39,7 +39,7 @@ public class CLIPhase extends AbstractPhase {
             settingsReader.getMCSettings( settings );
         }
         commandLineReader.getInputSettings(  settings );
-        commandLineReader.getOptionSettings( settings );
+        commandLineReader.updateOptions( scene().options() );
         commandLineReader.getOutputSettings( settings );
         commandLineReader.getMCSettings( settings );
 
