@@ -6,18 +6,19 @@ import gnu.trove.iterator.TIntIterator;
 
 public class IndexedHeapConfigurationUtil {
 
-	public static boolean hasInstantiatiatedIndices( HeapConfiguration hc ){
-		TIntIterator ntIterator = hc.nonterminalEdges().iterator();
-		while( ntIterator.hasNext() ){
-			int ntId = ntIterator.next();
-			Nonterminal nt = hc.labelOf( ntId );
-			if( nt instanceof IndexedNonterminal){
-				IndexedNonterminal indexedNt = (IndexedNonterminal) nt ;
-				if( ! indexedNt.getIndex().hasConcreteIndex() ){
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+    public static boolean hasInstantiatiatedIndices(HeapConfiguration hc) {
+
+        TIntIterator ntIterator = hc.nonterminalEdges().iterator();
+        while (ntIterator.hasNext()) {
+            int ntId = ntIterator.next();
+            Nonterminal nt = hc.labelOf(ntId);
+            if (nt instanceof IndexedNonterminal) {
+                IndexedNonterminal indexedNt = (IndexedNonterminal) nt;
+                if (!indexedNt.getIndex().hasConcreteIndex()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

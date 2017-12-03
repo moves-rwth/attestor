@@ -21,7 +21,7 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
 
     public VariableRelationsAutomaton(String lhs, String rhs) {
 
-        if(lhs.contains(".")) {
+        if (lhs.contains(".")) {
             String[] split = lhs.split("[.]");
             this.lhs = returnHotfix(split[0].trim());
             this.lhsField = split[1].trim();
@@ -30,7 +30,7 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
             this.lhsField = null;
         }
 
-        if(rhs.contains(".")) {
+        if (rhs.contains(".")) {
             String[] split = rhs.split("[.]");
             this.rhs = returnHotfix(split[0].trim());
             this.rhsField = split[1].trim();
@@ -44,7 +44,8 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
     }
 
     private String returnHotfix(String name) {
-        if(name.startsWith("return")) {
+
+        if (name.startsWith("return")) {
             return "@" + name;
         }
         return name;
@@ -59,27 +60,27 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
         // This is a hotfix because the LTL parser does not like @ symbols...
 
         TIntIterator varIter = heapConfiguration.variableEdges().iterator();
-        while(varIter.hasNext()
+        while (varIter.hasNext()
                 && (lhsNode == HeapConfiguration.INVALID_ELEMENT || rhsNode == HeapConfiguration.INVALID_ELEMENT)) {
             int var = varIter.next();
 
             // remove scoping information first
             String name = VariableScopes.getName(heapConfiguration.nameOf(var));
 
-            if(lhsNode == HeapConfiguration.INVALID_ELEMENT) {
-               lhsNode = getNode(heapConfiguration, var, name, lhs, lhsField);
+            if (lhsNode == HeapConfiguration.INVALID_ELEMENT) {
+                lhsNode = getNode(heapConfiguration, var, name, lhs, lhsField);
             }
 
-            if(rhsNode == HeapConfiguration.INVALID_ELEMENT) {
+            if (rhsNode == HeapConfiguration.INVALID_ELEMENT) {
                 rhsNode = getNode(heapConfiguration, var, name, rhs, rhsField);
             }
         }
 
-        if(lhsNode == HeapConfiguration.INVALID_ELEMENT || rhsNode == HeapConfiguration.INVALID_ELEMENT) {
+        if (lhsNode == HeapConfiguration.INVALID_ELEMENT || rhsNode == HeapConfiguration.INVALID_ELEMENT) {
             return Collections.emptySet();
         }
 
-        if(lhsNode == rhsNode) {
+        if (lhsNode == rhsNode) {
             return equalityAPs;
         }
 
@@ -88,13 +89,13 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
 
     private int getNode(HeapConfiguration hc, int varEdge, String hcVar, String var, String field) {
 
-        if(hcVar.equals(var)) {
-            int node  = hc.targetOf(varEdge);
-            if(field != null && node != HeapConfiguration.INVALID_ELEMENT) {
+        if (hcVar.equals(var)) {
+            int node = hc.targetOf(varEdge);
+            if (field != null && node != HeapConfiguration.INVALID_ELEMENT) {
 
                 boolean foundSelector = false;
-                for(SelectorLabel sel : hc.selectorLabelsOf(node)) {
-                    if(sel.getLabel().equals(lhsField)) {
+                for (SelectorLabel sel : hc.selectorLabelsOf(node)) {
+                    if (sel.getLabel().equals(lhsField)) {
                         return hc.selectorTargetOf(
                                 node,
                                 sel

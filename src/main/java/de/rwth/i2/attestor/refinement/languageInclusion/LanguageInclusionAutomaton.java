@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -13,12 +14,13 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
+public class LanguageInclusionAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
     private final Grammar grammar;
 
-    public LanguageInclusionAutomaton(Grammar grammar) {
+    public LanguageInclusionAutomaton(SceneObject sceneObject, Grammar grammar) {
 
+        super(sceneObject);
         this.grammar = grammar;
     }
 
@@ -30,11 +32,11 @@ public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
         heapConfiguration = canonicalizeCurrent(heapConfiguration);
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        if(ntEdges.size() != 1 || hasSelectorEdges(heapConfiguration)) {
+        if (ntEdges.size() != 1 || hasSelectorEdges(heapConfiguration)) {
             return Collections.emptySet();
         }
 
-        String label = heapConfiguration.labelOf( ntEdges.get(0) ).getLabel();
+        String label = heapConfiguration.labelOf(ntEdges.get(0)).getLabel();
 
         return Collections.singleton("{ L(" + label + ") }");
 
@@ -45,7 +47,7 @@ public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
         heapConfiguration = heapConfiguration.clone();
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int varEdge = iter.next();
             builder.removeVariableEdge(varEdge);
         }
@@ -54,14 +56,16 @@ public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0);
-                if(checker.hasMatching()) {
+        boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
+
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0, aggressiveNullAbstraction);
+                if (checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()
                             .builder()
-                            .replaceMatching( embedding, lhs)
+                            .replaceMatching(embedding, lhs)
                             .build();
                     return canonicalizeCurrent(abstractedHc);
                 }
@@ -74,9 +78,9 @@ public class LanguageInclusionAutomaton implements StatelessHeapAutomaton {
     private boolean hasSelectorEdges(HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
-            if(!heapConfiguration.successorNodesOf(node).isEmpty()) {
+            if (!heapConfiguration.successorNodesOf(node).isEmpty()) {
                 return true;
             }
         }

@@ -13,6 +13,7 @@ public abstract class AbstractCompatibleNeighbours implements FeasibilityFunctio
     private final boolean checkEqualityOnExternal;
 
     public AbstractCompatibleNeighbours(boolean checkEqualityOnExternal) {
+
         this.checkEqualityOnExternal = checkEqualityOnExternal;
     }
 
@@ -34,22 +35,22 @@ public abstract class AbstractCompatibleNeighbours implements FeasibilityFunctio
 
         TIntArrayList targetMatches = new TIntArrayList(adjacentNodesOfP.size());
 
-        for(int i=0; i < adjacentNodesOfP.size(); i++) {
+        for (int i = 0; i < adjacentNodesOfP.size(); i++) {
 
             int adjP = adjacentNodesOfP.get(i);
-            if(pattern.containsMatch(adjP)) {
+            if (pattern.containsMatch(adjP)) {
 
                 int match = pattern.getMatch(adjP);
-                if(checkEquality && !adjacentNodesOfT.contains(match)) {
+                if (checkEquality && !adjacentNodesOfT.contains(match)) {
                     return false;
                 }
                 targetMatches.add(match);
             }
         }
 
-        for(int i=0; i < adjacentNodesOfT.size(); i++) {
+        for (int i = 0; i < adjacentNodesOfT.size(); i++) {
             int adjT = adjacentNodesOfT.get(i);
-            if(checkEquality && target.containsMatch(adjT) && !targetMatches.contains(adjT)) {
+            if (checkEquality && target.containsMatch(adjT) && !targetMatches.contains(adjT)) {
                 return false;
             }
         }

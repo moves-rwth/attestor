@@ -3,72 +3,75 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Locals represent local variables
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public class Local implements SettableValue {
 
-	private static final Logger logger = LogManager.getLogger( "Local" );
+    private static final Logger logger = LogManager.getLogger("Local");
 
-	/**
-	 * the expected type
-	 */
-	private final Type type;
-	/**
-	 * the name of the local variable
-	 */
-	private final String name;
+    /**
+     * the expected type
+     */
+    private final Type type;
+    /**
+     * the name of the local variable
+     */
+    private final String name;
 
-	public Local( Type type, String name ){
-		this.type = type;
-		this.name = name;
+    public Local(Type type, String name) {
 
-	}
+        this.type = type;
+        this.name = name;
 
-	public String getName(){
-		return this.name;
-	}
+    }
 
-	public Type getType(){
-		return this.type;
-	}
+    public String getName() {
 
-	@Override
-	public ConcreteValue evaluateOn( ProgramState programState ) throws NotSufficientlyMaterializedException{
+        return this.name;
+    }
 
-		return programState.getVariableTarget( this.getName() );
-	}
+    public Type getType() {
 
-	/**
-	 * sets the variable in programState to concreteTarget
-	 */
-	@Override
-	public void setValue(ProgramState programState, ConcreteValue concreteTarget )
-			throws NotSufficientlyMaterializedException{
+        return this.type;
+    }
 
-		programState.setVariable( this.getName(), concreteTarget );
-	}
+    @Override
+    public ConcreteValue evaluateOn(ProgramState programState) {
 
-	@Override
-	public boolean needsMaterialization( ProgramState programState ){
-		return false;
-	}
+        return programState.getVariableTarget(this.getName());
+    }
+
+    /**
+     * sets the variable in programState to concreteTarget
+     */
+    @Override
+    public void setValue(ProgramState programState, ConcreteValue concreteTarget) {
+
+        programState.setVariable(this.getName(), concreteTarget);
+    }
+
+    @Override
+    public boolean needsMaterialization(ProgramState programState) {
+
+        return false;
+    }
 
 
-	public String toString(){
-		return name;
-	}
+    public String toString() {
 
-	@Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return ViolationPoints.getEmptyViolationPoints();
-	}
+        return name;
+    }
+
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
+
+        return ViolationPoints.getEmptyViolationPoints();
+    }
 
 }

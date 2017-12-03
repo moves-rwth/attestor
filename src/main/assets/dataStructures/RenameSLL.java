@@ -1,9 +1,9 @@
 // Please adapt the following mapping here
-@Rename ListNode -> YourListTypeHere
-@Rename next -> YourNextFieldNameHere
+@Rename ListNode->YourListTypeHere
+@Rename next->YourNextFieldNameHere
 
-public class ListNode{
+public class ListNode {
 
-	private ListNode next;
-	
+    private ListNode next;
+
 }

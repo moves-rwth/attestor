@@ -1,27 +1,27 @@
 package de.rwth.i2.attestor.main.phases;
 
-import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractPhase {
+public abstract class AbstractPhase extends SceneObject {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
-
-
     private int phaseId;
     private PhaseRegistry registry;
-
     private long startTime;
     private long finishTime;
+    public AbstractPhase(Scene scene) {
 
-    protected Settings settings;
+        super(scene);
+    }
 
-    protected void register(int phaseId, PhaseRegistry registry, Settings settings) {
+    protected void register(int phaseId, PhaseRegistry registry) {
+
         this.phaseId = phaseId;
         this.registry = registry;
-        this.settings = settings;
     }
 
     public abstract String getName();
@@ -32,6 +32,7 @@ public abstract class AbstractPhase {
     }
 
     protected <T> T getPhase(Class<T> phaseType) {
+
         return registry.getMostRecentPhase(phaseId, phaseType);
     }
 
@@ -49,21 +50,24 @@ public abstract class AbstractPhase {
             executePhase();
             finishTime = System.nanoTime();
             logSuccess();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logFail(e);
         }
     }
 
     private void logStart() {
-        logger.debug(getName() +  " started.");
+
+        logger.debug(getName() + " started.");
     }
 
 
     private void logSuccess() {
+
         logger.debug(getName() + " finished.");
     }
 
     private void logFail(Exception e) {
+
         logger.fatal(getName() + " failed.");
         logger.fatal(e.getMessage());
         e.printStackTrace();

@@ -23,7 +23,7 @@ public final class Constants {
 
     public static boolean isConstant(String name) {
 
-        switch(name) {
+        switch (name) {
             case NULL:
             case ONE:
             case ZERO:

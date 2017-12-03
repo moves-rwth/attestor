@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.exampleFactories;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -17,28 +15,41 @@ import java.util.List;
 
 public class ExampleFactorySLL extends AbstractExampleFactory {
 
-    private Nonterminal nt = BasicNonterminal.getNonterminal("SLL", 2, new boolean[]{false,true});
-    private SelectorLabel sel = BasicSelectorLabel.getSelectorLabel("next");
+
+    private Nonterminal nt;
+    private SelectorLabel sel;
+
+    public ExampleFactorySLL(SceneObject sceneObject) {
+
+        super(sceneObject);
+        nt = scene().createNonterminal("SLL", 2, new boolean[]{false, true});
+        sel = scene().getSelectorLabel("next");
+    }
 
     @Override
     public List<Nonterminal> getNonterminals() {
+
         return Collections.singletonList(nt);
     }
 
     @Override
     public List<SelectorLabel> getSelectorLabels() {
+
         return Collections.singletonList(sel);
     }
 
     @Override
     public Type getNodeType() {
-        Type result = GeneralType.getType("list");
-        result.addSelectorLabel("next", Constants.NULL);
+
+        Type result = scene().getType("list");
+        SelectorLabel next = scene().getSelectorLabel("next");
+        result.addSelectorLabel(next, Constants.NULL);
         return result;
     }
 
     @Override
     public Grammar getGrammar() {
+
         return Grammar
                 .builder()
                 .addRule(nt, getSLLRule1())
@@ -49,6 +60,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public HeapConfiguration getInput() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -61,10 +73,12 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     public SelectorLabel getNextSel() {
+
         return sel;
     }
 
     public HeapConfiguration getListofLengthAtLeastOne() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -78,6 +92,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule1() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -89,6 +104,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule2() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -104,6 +120,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule3() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()

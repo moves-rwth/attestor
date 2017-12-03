@@ -29,16 +29,16 @@ public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
 
         // This case may occur if the marking is currently not part of the reachable fragment
         // considered by an interprocedural analysis.
-        if(markedNode == HeapConfiguration.INVALID_ELEMENT) {
+        if (markedNode == HeapConfiguration.INVALID_ELEMENT) {
             return Collections.emptySet();
         }
 
         Set<String> result = new HashSet<>();
         TIntIterator iter = heapConfiguration.attachedVariablesOf(markedNode).iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int var = iter.next();
             String label = VariableScopes.getName(heapConfiguration.nameOf(var));
-            if(!Markings.isMarking(label) && !Constants.isConstant(label)) {
+            if (!Markings.isMarking(label) && !Constants.isConstant(label)) {
                 result.add("{ visited(" + label + ") }");
             }
         }

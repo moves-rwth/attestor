@@ -4,43 +4,46 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 
 public class MockupNonterminal implements Nonterminal {
 
-	private final String label;
-	private final int rank;
-	
-	public MockupNonterminal(String label, int rank) {
-		
-		this.label = label;
-		this.rank = rank;
-	}
-	
-	@Override
-	public int getRank() {
-		
-		return rank;
-	}
+    private final String label;
+    private final int rank;
 
-	@Override
-	public boolean isReductionTentacle(int tentacle) {
-		
-		return false;
-	}
-	
-	public String toString() {
-		return label;
-	}
+    public MockupNonterminal(String label, int rank) {
 
-	@Override
-	public void setReductionTentacle(int tentacle) {
+        this.label = label;
+        this.rank = rank;
+    }
 
-	}
+    @Override
+    public int getRank() {
 
-	@Override
-	public void unsetReductionTentacle(int tentacle) {
-	}
+        return rank;
+    }
 
-	@Override
-	public String getLabel() {
-		return label;
-	}
+    @Override
+    public boolean isReductionTentacle(int tentacle) {
+
+        return false;
+    }
+
+    public String toString() {
+
+        return label;
+    }
+
+    @Override
+    public void setReductionTentacle(int tentacle) {
+
+    }
+
+    @Override
+    public void unsetReductionTentacle(int tentacle) {
+
+    }
+
+    @Override
+    public String getLabel() {
+
+        return label;
+    }
 
 }

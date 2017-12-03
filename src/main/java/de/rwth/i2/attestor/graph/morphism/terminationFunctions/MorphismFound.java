@@ -7,18 +7,17 @@ import de.rwth.i2.attestor.graph.morphism.VF2State;
 /**
  * Determines whether a given {@link VF2State} corresponds to a complete graph morphism
  * and thus no further steps have to be executed to find a morphism.
- * 
- * @author Christoph
  *
+ * @author Christoph
  */
 public class MorphismFound implements TerminationFunction {
 
-	@Override
-	public boolean eval(VF2State state) {
-		
-		VF2PatternGraphData pattern = state.getPattern();
-		
-		return pattern.getMatchingSize() == pattern.getGraph().size();		
-	}
+    @Override
+    public boolean eval(VF2State state) {
+
+        VF2PatternGraphData pattern = state.getPattern();
+
+        return pattern.getMatchingSize() == pattern.getGraph().size();
+    }
 
 }

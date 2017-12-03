@@ -5,16 +5,15 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 
 public class MockupAbortStrategy implements AbortStrategy {
-	//private static final Logger logger = LogManager.getLogger( "TestAbortStrategy" );
-	
-	@Override
-	public void checkAbort(StateSpace stateSpace ) throws StateSpaceGenerationAbortedException {
+    //private static final Logger logger = LogManager.getLogger( "TestAbortStrategy" );
 
-		if(stateSpace.getStates().size() >= 50) {
-			throw new StateSpaceGenerationAbortedException();
-		}
-	}
-	
+    @Override
+    public void checkAbort(StateSpace stateSpace) throws StateSpaceGenerationAbortedException {
 
-	
+        if (stateSpace.getStates().size() >= 50) {
+            throw new StateSpaceGenerationAbortedException();
+        }
+    }
+
+
 }

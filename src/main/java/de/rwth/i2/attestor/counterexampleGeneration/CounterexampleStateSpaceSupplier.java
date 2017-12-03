@@ -43,7 +43,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         assert finalStatesOfPreviousProcedure != null;
 
         Set<ProgramState> requiredFinalStates = new HashSet<>(finalStatesOfPreviousProcedure.size());
-        for(ProgramState state : finalStatesOfPreviousProcedure) {
+        for (ProgramState state : finalStatesOfPreviousProcedure) {
             requiredFinalStates.add(state.shallowCopyUpdatePC(-1));
         }
 

@@ -6,6 +6,5 @@
  * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke invoke}
  *
  * @author Hannah Arndt
- *
  */
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;

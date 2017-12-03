@@ -12,6 +12,7 @@ public interface SemanticsObserverSupplier {
 
     /**
      * Provides a new SymbolicExecutionObserver configured for the given state space generator.
+     *
      * @param generator The state space generator that uses the semantics observer.
      * @return The configured SymbolicExecutionObserver object.
      */

@@ -3,7 +3,7 @@
  * such as Statements, Values and Types to semantics objects of our symbolic
  * execution.
  * <br><br>
- * The translation process starts in TopLevelTranslation which 
+ * The translation process starts in TopLevelTranslation which
  * does no translation itself but organises the translation.
  * <br><br>
  * The process is organised in layers. Each layer can hand down statements
@@ -24,6 +24,5 @@
  * at the top-layer and will never use the "old" rules.
  *
  * @author Hannah Arndt, Christoph
- *
  */
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;

@@ -7,26 +7,29 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class InternalNonterminalEdgeBuilder implements NonterminalEdgeBuilder {
 
-	final Nonterminal nt;
-	final HeapConfigurationBuilder parentBuilder;
-	final TIntArrayList tentacles = new TIntArrayList();
-	
-	public InternalNonterminalEdgeBuilder(Nonterminal nt,
-			HeapConfigurationBuilder heapConfigurationBuilder) {
-		this.nt = nt;
-		parentBuilder = heapConfigurationBuilder;
-	}
+    final Nonterminal nt;
+    final HeapConfigurationBuilder parentBuilder;
+    final TIntArrayList tentacles = new TIntArrayList();
 
-	@Override
-	public NonterminalEdgeBuilder addTentacle(int tentacle) {
-		tentacles.add(tentacle);
-		return this;
-	}
+    public InternalNonterminalEdgeBuilder(Nonterminal nt,
+                                          HeapConfigurationBuilder heapConfigurationBuilder) {
 
-	@Override
-	public HeapConfigurationBuilder build() {
-		parentBuilder.addNonterminalEdge(nt, tentacles);
-		return parentBuilder;
-	}
+        this.nt = nt;
+        parentBuilder = heapConfigurationBuilder;
+    }
+
+    @Override
+    public NonterminalEdgeBuilder addTentacle(int tentacle) {
+
+        tentacles.add(tentacle);
+        return this;
+    }
+
+    @Override
+    public HeapConfigurationBuilder build() {
+
+        parentBuilder.addNonterminalEdge(nt, tentacles);
+        return parentBuilder;
+    }
 
 }

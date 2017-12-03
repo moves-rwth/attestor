@@ -16,6 +16,7 @@ public interface RefinedNonterminal extends Nonterminal {
 
     /**
      * Provides the same symbol with the provided annotation.
+     *
      * @param state The new annotation.
      * @return An annotated symbol with the provided state. The symbol itself is the same as this object.
      */

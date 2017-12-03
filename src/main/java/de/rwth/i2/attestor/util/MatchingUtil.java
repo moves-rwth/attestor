@@ -10,13 +10,14 @@ import java.util.function.Predicate;
  */
 public class MatchingUtil {
 
-	public static <T> boolean containsMatch(Collection<T> selectorCollection, Predicate<T> matchingFunction) {
-		for( T element : selectorCollection ){
-			if( matchingFunction.test( element ) ){
-				return true;
-			}
-		}
-		return false;	
-	}
+    public static <T> boolean containsMatch(Collection<T> selectorCollection, Predicate<T> matchingFunction) {
+
+        for (T element : selectorCollection) {
+            if (matchingFunction.test(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -12,6 +12,7 @@ public class ZipUtils {
      * @throws IOException extraction failed
      */
     public static void unzip(InputStream source, File target) throws IOException {
+
         final ZipInputStream zipStream = new ZipInputStream(source);
         ZipEntry nextEntry;
         while ((nextEntry = zipStream.getNextEntry()) != null) {
@@ -35,6 +36,7 @@ public class ZipUtils {
     }
 
     private static void copy(final InputStream source, final OutputStream target) throws IOException {
+
         final int bufferSize = 4 * 1024;
         final byte[] buffer = new byte[bufferSize];
 
