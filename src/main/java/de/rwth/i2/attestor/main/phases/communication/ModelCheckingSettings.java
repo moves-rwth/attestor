@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.settings;
+package de.rwth.i2.attestor.main.phases.communication;
 
 import de.rwth.i2.attestor.LTLFormula;
 
@@ -7,7 +7,7 @@ import java.util.Set;
 
 
 /**
- * The collection of the model checking related settings including the
+ * The collection of the model checking related communication including the
  * formulae.
  *
  * @author christina

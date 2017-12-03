@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.environment;
+package de.rwth.i2.attestor.main.scene;
 
 import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.BasicSelectorLabel;
@@ -7,17 +7,14 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
-import de.rwth.i2.attestor.main.settings.OptionSettings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
-import sun.security.x509.IPAddressName;
 
 import java.util.ArrayList;
 
@@ -27,7 +24,7 @@ public class DefaultScene implements Scene {
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
     private final IpaAbstractMethod.Factory ipaFactory = new IpaAbstractMethod.Factory(this);
-    private final OptionSettings options = new OptionSettings();
+    private final Options options = new Options();
 
     private long totalNumberOfStates = 0;
 
@@ -112,7 +109,7 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public OptionSettings options() {
+    public Options options() {
         return options;
     }
 }

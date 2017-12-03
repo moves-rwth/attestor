@@ -1,16 +1,15 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import static org.junit.Assert.*;
-
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.util.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
-import de.rwth.i2.attestor.util.Pair;
+import static org.junit.Assert.*;
 
 public class GeneralMaterializationStrategyTest_getActualViolationPoint {
 	

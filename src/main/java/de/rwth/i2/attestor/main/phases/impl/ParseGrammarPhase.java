@@ -8,11 +8,11 @@ import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
 import de.rwth.i2.attestor.main.Attestor;
-import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
-import de.rwth.i2.attestor.main.settings.InputSettings;
+import de.rwth.i2.attestor.main.scene.Scene;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;

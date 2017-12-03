@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonte
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.junit.Before;
 import org.junit.Test;
 

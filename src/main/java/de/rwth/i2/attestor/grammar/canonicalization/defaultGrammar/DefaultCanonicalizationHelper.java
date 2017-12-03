@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 /**
  * This class provides the methods to canonicalisation which are specific for
@@ -22,7 +21,7 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 	
 	/**
 	 * @param provider generates a EmbeddingChecker for given graph and pattern. Responsible
-	 * to generate the correct one for given settings and semantics.
+	 * to generate the correct one for given communication and semantics.
 	 */
 	public DefaultCanonicalizationHelper( EmbeddingCheckerProvider provider ) {
 		super();

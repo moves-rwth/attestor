@@ -2,10 +2,10 @@ package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import org.junit.Before;
 import org.junit.Test;
 

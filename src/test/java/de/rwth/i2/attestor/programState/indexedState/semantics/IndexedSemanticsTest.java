@@ -2,15 +2,15 @@ package de.rwth.i2.attestor.programState.indexedState.semantics;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.ExampleIndexedGraphFactory;
+import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.programState.indexedState.ExampleIndexedGraphFactory;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;

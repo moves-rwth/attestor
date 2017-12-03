@@ -1,11 +1,12 @@
-package de.rwth.i2.attestor.main.settings;
+package de.rwth.i2.attestor.main.phases.communication;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
- * All global settings regarding input files.
+ * All global communication regarding input files.
  *
  * @author Christoph, Christina
  */

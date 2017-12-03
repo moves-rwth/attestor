@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import soot.Scene;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import soot.Scene;
 
 /**
  * Takes care of the necessary soot initialisations for parsing.
@@ -53,11 +52,11 @@ public class SootInitializer {
 	}
 	
 	/**
-	 * This method determines the path to the Java runtime environment.
+	 * This method determines the path to the Java runtime scene.
 	 * 
 	 * Note that this is a workaround since Soot determines a wrong Java classpath on certain versions of MacOS.
 	 *
-	 * @return the path to the runtime environment
+	 * @return the path to the runtime scene
 	 */
 	private static String defaultJavaClassPath() {
 		StringBuilder sb = new StringBuilder();
@@ -67,7 +66,7 @@ public class SootInitializer {
             // G.v().out.println("Using JRE runtime: " + rtJar.getAbsolutePath());
             sb.append(rtJar.getAbsolutePath());
         } else {
-            // in case we're not in JRE environment, try JDK
+            // in case we're not in JRE scene, try JDK
             rtJar = new File(System.getProperty("java.home") + File.separator + "jre" + File.separator + "lib" + File.separator + "rt.jar");
             if (rtJar.exists() && rtJar.isFile()) {
                 // G.v().out.println("Using JDK runtime: " + rtJar.getAbsolutePath());

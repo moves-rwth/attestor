@@ -1,15 +1,19 @@
 package de.rwth.i2.attestor.io.settings;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
-import de.rwth.i2.attestor.main.settings.*;
-import org.apache.logging.log4j.*;
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.main.scene.Options;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.LTLFormula;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
 
 /**
  * @author Hannah Arndt, Christoph, Christina
@@ -28,7 +32,7 @@ public class SettingsFileReader {
 
     /**
      * Creates a SettingsFileReader to parse a JSON file.
-     * @param file A JSON file that containsSubsumingState settings.
+     * @param file A JSON file that containsSubsumingState communication.
      */
 	public SettingsFileReader( String file ) {
 		Scanner scan;
@@ -44,7 +48,7 @@ public class SettingsFileReader {
 			
 		} catch (FileNotFoundException e) {
 		    logger.fatal(
-		           "The settings file '" + file + "' could not be found. Execution is aborted.\n"
+		           "The communication file '" + file + "' could not be found. Execution is aborted.\n"
                     + "\tThe home directory of this tool is '" + System.getProperty("user.dir") + "'"
             );
 			logger.fatal("Settings file '" + file + "' could not be found. Aborting.");
@@ -53,9 +57,9 @@ public class SettingsFileReader {
 	}
 
     /**
-     * Populates all input settings from the parsed settings file.
-     * @param input All input settings.
-     * @return The populated input settings.
+     * Populates all input communication from the parsed communication file.
+     * @param input All input communication.
+     * @return The populated input communication.
      */
 	public void getInputSettings(InputSettings input){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
@@ -175,10 +179,10 @@ public class SettingsFileReader {
 	}
 
 	/**
-     * Populates all option settings from the parsed settings file.
+     * Populates all option communication from the parsed communication file.
      * @param options The options object to populate.
      */
-	public void getOptionSettings(OptionSettings options){
+	public void getOptionSettings(Options options){
 		JSONObject jsonOptions = jsonSettings.getJSONObject( "options" );
 
 		for(String key : jsonOptions.keySet()) {
@@ -215,8 +219,8 @@ public class SettingsFileReader {
 	}
 
     /**
-     * Populates all output settings from the parsed settings file.
-     * @param output All output settings.
+     * Populates all output communication from the parsed communication file.
+     * @param output All output communication.
      */
 	public void getOutputSettings(OutputSettings output){
 		JSONObject jsonOutput = jsonSettings.getJSONObject( "output" );
@@ -280,8 +284,8 @@ public class SettingsFileReader {
 	}
 
 	/**
-	 * Populates the model checking settings with the input from the parsed settings file.
-	 * @param mc all model checking settings
+	 * Populates the model checking communication with the input from the parsed communication file.
+	 * @param mc all model checking communication
 	 */
 	public void getMCSettings(ModelCheckingSettings mc){
 		JSONObject jsonMC = jsonSettings.getJSONObject( "modelChecking" );

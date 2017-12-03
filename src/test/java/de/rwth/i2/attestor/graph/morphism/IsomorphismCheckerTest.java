@@ -1,16 +1,15 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import static org.junit.Assert.assertFalse;
-
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2IsomorphismChecker;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
 
 public class IsomorphismCheckerTest {
 

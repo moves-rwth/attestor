@@ -1,8 +1,11 @@
 package de.rwth.i2.attestor.io.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.*;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +27,7 @@ public class CommandLineReader extends SceneObject {
     /**
      * A specification of the available command line options.
      */
-    private Options cliOptions;
+    private org.apache.commons.cli.Options cliOptions;
 
     /**
      * The underlying command line parser.
@@ -43,7 +46,7 @@ public class CommandLineReader extends SceneObject {
      */
 	public void setupCLI() {
 
-		cliOptions = new Options();
+		cliOptions = new org.apache.commons.cli.Options();
 
 		cliOptions.addOption(
 				Option.builder("ne")
@@ -63,11 +66,11 @@ public class CommandLineReader extends SceneObject {
 
 		cliOptions.addOption( 
 				Option.builder("sf")
-				.longOpt( "settings-file" )
+				.longOpt( "communication-file" )
 				.hasArg()
 				.argName( "path" )
-				.desc( "file that containsSubsumingState the settings to be executed."
-						+ "Can be overwritten by additional command line settings" )
+				.desc( "file that containsSubsumingState the communication to be executed."
+						+ "Can be overwritten by additional command line communication" )
 				.build()
 				);
 
@@ -178,14 +181,14 @@ public class CommandLineReader extends SceneObject {
 	}
 
     /**
-     * @return true if and only if a settings file has been provided in the command line arguments.
+     * @return true if and only if a communication file has been provided in the command line arguments.
      */
 	public boolean hasSettingsFile(){
 		return cmd.hasOption( "sf" );
 	}
 	
     /**
-     * @return The path to the settings file provided in the command line arguments.
+     * @return The path to the communication file provided in the command line arguments.
      */
 	public String getPathToSettingsFile(){
 		if( hasRootPath() ){
@@ -209,9 +212,9 @@ public class CommandLineReader extends SceneObject {
 	}
 
     /**
-     * Populates all settings that customize how state spaces are exported
+     * Populates all communication that customize how state spaces are exported
      * with data extracted from the command line arguments.
-     * @param outputSettings All output settings.
+     * @param outputSettings All output communication.
      */
 	public void getOutputSettings(OutputSettings outputSettings ) {
 
@@ -229,31 +232,30 @@ public class CommandLineReader extends SceneObject {
 	}
 
     /**
-     * Populates all settings that customize how the analysis is performed
+     * Populates all communication that customize how the analysis is performed
      * with data extracted from the command line arguments.
-     * @param settings All settings.
-     * @return The populated option settings.
+     * @param options All options.
      */
-	public void updateOptions(OptionSettings optionSettings ) {
+	public void updateOptions(Options options) {
 		
 		if(cmd.hasOption("ad")) {
-			optionSettings.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
+			options.setAbstractionDistance( Integer.valueOf(cmd.getOptionValue("ad")) );
 		}
 
 		if(cmd.hasOption("msp")) {
-			optionSettings.setMaxStateSpaceSize( Integer.valueOf(cmd.getOptionValue("msp")) );
+			options.setMaxStateSpaceSize( Integer.valueOf(cmd.getOptionValue("msp")) );
 		}
 
 		if(cmd.hasOption("mh")) {
-			optionSettings.setMaxStateSize( Integer.valueOf(cmd.getOptionValue("mh")) );
+			options.setMaxStateSize( Integer.valueOf(cmd.getOptionValue("mh")) );
 		}
 	}
 
     /**
-     * Populates all settings that customize which input files are loaded
+     * Populates all communication that customize which input files are loaded
      * with data extracted from the command line arguments.
-     * @param settings All input settings.
-     * @return The populated input settings.
+     * @param settings All input communication.
+     * @return The populated input communication.
      */
 	public void getInputSettings(InputSettings settings ) {
 
@@ -263,8 +265,8 @@ public class CommandLineReader extends SceneObject {
 	}
 
 	/**
-	 * Populates all settings that customize if and how model checking is performed.
-	 * @param mcSettings All settings.
+	 * Populates all communication that customize if and how model checking is performed.
+	 * @param mcSettings All communication.
 	 */
 	public void getMCSettings(ModelCheckingSettings mcSettings) {
 		if( cmd.hasOption("mc")){
@@ -284,14 +286,14 @@ public class CommandLineReader extends SceneObject {
 
     /**
      * Checks whether the provided command line arguments are valid in the sense
-     * that a settings file has been provided.
+     * that a communication file has been provided.
      * @param cmd The parsed command line arguments.
-     * @return true if and only if a settings file has been provided.
+     * @return true if and only if a communication file has been provided.
      */
 	private boolean commandLineIsValid(CommandLine cmd){
 
 		if(!cmd.hasOption("sf")) {
-			parsingError = "The mandatory option -sf <path to settings file> is missing.";
+			parsingError = "The mandatory option -sf <path to communication file> is missing.";
 			return false;
 		}
 

@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.environment;
+package de.rwth.i2.attestor.main.scene;
 
 public abstract class SceneObject {
 

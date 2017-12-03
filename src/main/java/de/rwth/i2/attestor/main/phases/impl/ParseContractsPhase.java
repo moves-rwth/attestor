@@ -1,22 +1,21 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import de.rwth.i2.attestor.main.environment.Scene;
-import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
-import de.rwth.i2.attestor.main.settings.InputSettings;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonImporter;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.main.scene.Scene;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ParseContractsPhase extends AbstractPhase {
 

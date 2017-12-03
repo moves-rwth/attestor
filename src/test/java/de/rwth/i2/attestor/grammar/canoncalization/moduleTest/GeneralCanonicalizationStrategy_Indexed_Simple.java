@@ -1,14 +1,6 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.*;
-
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -16,16 +8,28 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
-import de.rwth.i2.attestor.programState.indexedState.index.*;
+import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexVariable;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class GeneralCanonicalizationStrategy_Indexed_Simple {
 

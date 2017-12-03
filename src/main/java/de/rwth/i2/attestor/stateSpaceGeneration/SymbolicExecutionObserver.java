@@ -17,7 +17,7 @@ public interface SymbolicExecutionObserver {
     void update(Object handler, ProgramState input);
 
     /**
-     * Generates a new state space using the same internal settings as the calling state space
+     * Generates a new state space using the same internal communication as the calling state space
      * generation.
      * @param program The program that should be symbolic executed to generate a state space.
      * @param input The program state determining the input for the symbolic execution.

@@ -3,8 +3,7 @@ package de.rwth.i2.attestor.io.hcToJava;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.Ignore;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

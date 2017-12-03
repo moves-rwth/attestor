@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
-import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.io.FileReader;
-import de.rwth.i2.attestor.main.settings.InputSettings;
+import de.rwth.i2.attestor.main.scene.Scene;
 import org.json.JSONObject;
 
 import java.io.IOException;

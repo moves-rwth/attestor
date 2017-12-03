@@ -1,17 +1,17 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
-import static org.junit.Assert.*;
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.*;
-
-import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
+import static org.junit.Assert.*;
 
 
 public class IndexedNonterminalTest {

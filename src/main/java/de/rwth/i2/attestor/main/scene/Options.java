@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.settings;
+package de.rwth.i2.attestor.main.scene;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,12 +11,12 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class OptionSettings {
+public class Options {
 
 	/**
 	 * The logger of this class.
 	 */
-	private static final Logger logger = LogManager.getLogger( "OptionSettings");
+	private static final Logger logger = LogManager.getLogger( "Options");
 
 	/**
 	 * The maximal number of states before state space generation is given up.

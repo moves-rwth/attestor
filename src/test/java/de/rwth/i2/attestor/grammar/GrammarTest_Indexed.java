@@ -1,15 +1,6 @@
 package de.rwth.i2.attestor.grammar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.*;
-
 import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
@@ -17,9 +8,22 @@ import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonte
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.programState.indexedState.*;
-import de.rwth.i2.attestor.programState.indexedState.index.*;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.BalancedTreeGrammar;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
+import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import gnu.trove.iterator.TIntIterator;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GrammarTest_Indexed {
 

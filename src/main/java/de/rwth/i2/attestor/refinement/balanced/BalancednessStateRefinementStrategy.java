@@ -1,18 +1,19 @@
 package de.rwth.i2.attestor.refinement.balanced;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
-import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.*;
 
 public class BalancednessStateRefinementStrategy extends SceneObject implements StateRefinementStrategy {
 

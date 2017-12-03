@@ -1,14 +1,15 @@
 package de.rwth.i2.attestor.main;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import de.rwth.i2.attestor.main.environment.DefaultScene;
-import org.apache.logging.log4j.*;
-
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.impl.*;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.main.scene.DefaultScene;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**
@@ -16,7 +17,7 @@ import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
  *
  *  To start a program analysis it suffices to call {Attestor#run(args)}, where args are the command line arguments
  * passed, for example, to a main method.
- * In particular, these arguments have to include the path to a settings file customizing the analysis.
+ * In particular, these arguments have to include the path to a communication file customizing the analysis.
  * <br>
  * The execution of Attestor consists of phases. Any fatal failure of a phase (that is an exception caught
  * by the method starting the phase) aborts further execution.
@@ -50,7 +51,7 @@ public class Attestor {
 	/**
 	 * Runs attestor to perform a program analysis.
 	 *
-	 * @param args The command line arguments determining settings and analysis customizations.
+	 * @param args The command line arguments determining communication and analysis customizations.
      *
      * @see <a href="https://github.com/moves-rwth/attestor/wiki/Command-Line-Options">
      *          Explanation of all command line options

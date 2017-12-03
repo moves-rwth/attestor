@@ -1,17 +1,19 @@
 package de.rwth.i2.attestor.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.*;
-import java.util.function.Predicate;
-
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MatchingSelectorDistanceHelperTest {
 

@@ -1,21 +1,21 @@
 package de.rwth.i2.attestor.grammar;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.*;
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.programState.indexedState.index.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.main.environment.SceneObject;
-import org.junit.*;
-
-import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.programState.indexedState.index.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.*;
 
 public class IndexMatcherTest {
 

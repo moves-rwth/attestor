@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor;
 
-import de.rwth.i2.attestor.main.environment.DefaultScene;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.scene.DefaultScene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 
 public class MockupSceneObject extends SceneObject {
 

@@ -2,12 +2,14 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.io.settings.CommandLineReader;
 import de.rwth.i2.attestor.io.settings.SettingsFileReader;
-import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
-import de.rwth.i2.attestor.main.settings.*;
+import de.rwth.i2.attestor.main.scene.Scene;
 
 public class CLIPhase extends AbstractPhase
         implements InputSettingsTransformer, OutputSettingsTransformer, MCSettingsTransformer {

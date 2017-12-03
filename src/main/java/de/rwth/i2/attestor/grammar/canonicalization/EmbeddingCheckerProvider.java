@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 
 /**
  * This class is responsible to select the correct embeddingChecker
- * for given settings and semantics
+ * for given communication and semantics
  * 
  * @author Hannah
  *
@@ -16,7 +16,7 @@ public class EmbeddingCheckerProvider {
 	private final boolean aggressiveNullAbstractionEnabled;
 
 	/**
-	 * Constructs an EmbeddingCheckerProvider with the given settings
+	 * Constructs an EmbeddingCheckerProvider with the given communication
 	 * @param minDereferenceDepth the distance which has to be ensured between an embedding and
 	 * the next node referenced by a variable
 	 */
@@ -27,7 +27,7 @@ public class EmbeddingCheckerProvider {
 
 	/**
 	 * For the given target and pattern, gets the correct EmbeddingCheckerType for the stored 
-	 * settings and the given semantics
+	 * communication and the given semantics
 	 * @param graph the target graph
 	 * @param pattern the graph which will be embedded
 	 * @return the correct EmbeddingChecker

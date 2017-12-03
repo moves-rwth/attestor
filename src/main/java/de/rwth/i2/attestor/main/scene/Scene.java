@@ -1,11 +1,9 @@
-package de.rwth.i2.attestor.main.environment;
+package de.rwth.i2.attestor.main.scene;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
-import de.rwth.i2.attestor.main.settings.OptionSettings;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
@@ -27,6 +25,6 @@ public interface Scene {
     void addNumberOfGeneratedStates(int states);
     long getNumberOfGeneratedStates();
 
-    OptionSettings options();
+    Options options();
 
 }

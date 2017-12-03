@@ -1,23 +1,22 @@
 package de.rwth.i2.attestor.io.jsonImport;
 
 
-import java.util.*;
-import java.util.function.Consumer;
-
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
+import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
+import de.rwth.i2.attestor.util.Pair;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
-import de.rwth.i2.attestor.util.Pair;
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class JsonToIndexedGrammar extends SceneObject {
 

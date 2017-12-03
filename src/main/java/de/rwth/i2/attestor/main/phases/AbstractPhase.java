@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.main.phases;
 
-import de.rwth.i2.attestor.main.environment.Scene;
-import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

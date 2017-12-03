@@ -1,16 +1,18 @@
-package de.rwth.i2.attestor.main.settings;
-
-import java.io.File;
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package de.rwth.i2.attestor.main.phases.communication;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * All settings related to exporting artifacts.
+ * All communication related to exporting artifacts.
  *
  * @author Hannah Arndt, Christoph
  */
@@ -244,9 +246,6 @@ public class OutputSettings {
 		return pathForCustomHcs + File.separator + folderForCustomHcs;
 	}
 	
-	/**
-	 * @param exportCustomHcs True if and only if the generated contracts should be exported.
-	 */
 	public boolean isExportContracts() {
 		return exportContracts;
 	}
@@ -297,7 +296,7 @@ public class OutputSettings {
 
     /**
      * Checks whether all necessary paths and names are present for objects that should be exported.
-     * @return True if and only if the current settings are consistent in the above sense.
+     * @return True if and only if the current communication are consistent in the above sense.
      */
 	public boolean isValid(){
 		
