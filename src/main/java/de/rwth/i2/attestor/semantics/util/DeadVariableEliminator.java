@@ -2,12 +2,8 @@ package de.rwth.i2.attestor.semantics.util;
 
 
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.StateSpaceGenerationSettings;
 import de.rwth.i2.attestor.markings.Markings;
-import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 
 import java.util.Set;
 

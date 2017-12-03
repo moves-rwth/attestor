@@ -39,11 +39,6 @@ public class Settings {
 	private OutputSettings outputSettings;
 
     /**
-     * Settings regarding the creation of objects.
-     */
-	private FactorySettings factorySettings;
-
-    /**
      * Settings regarding the graph grammars underlying the analysis.
      */
 	private GrammarSettings grammarSettings;
@@ -52,11 +47,6 @@ public class Settings {
 	 * Settings customizing whether and how model checking is performed.
 	 */
 	private ModelCheckingSettings mcSettings;
-
-	/**
-	 * Settings customizing the state space generation.
-	 */
-	private StateSpaceGenerationSettings stateSpaceGenerationSettings;
 
     /**
      * Initializes with default settings.
@@ -77,10 +67,8 @@ public class Settings {
 	public void resetAllSettings() {
         inputSettings = new InputSettings();
         outputSettings = new OutputSettings();
-        factorySettings = new FactorySettings(scene);
         grammarSettings = new GrammarSettings(scene);
 		mcSettings = new ModelCheckingSettings();
-		stateSpaceGenerationSettings = new StateSpaceGenerationSettings();
     }
 
     /**
@@ -95,13 +83,6 @@ public class Settings {
      */
 	public OutputSettings output() {
 		return outputSettings;
-	}
-
-    /**
-     * @return A factory()() to create (customized) objects.
-     */
-	public FactorySettings factory() {
-		return factorySettings;
 	}
 
     /**
@@ -120,9 +101,4 @@ public class Settings {
 		inputSettings.setRootPath( rootPath );
 		outputSettings.setRootPath( rootPath );
 	}
-
-    public StateSpaceGenerationSettings stateSpaceGeneration() {
-
-        return stateSpaceGenerationSettings;
-    }
 }

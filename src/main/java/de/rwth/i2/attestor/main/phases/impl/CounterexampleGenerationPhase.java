@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -57,9 +58,12 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     private void checkCounterexample(LTLFormula formula, Trace trace) {
 
         Program program = getPhase(ProgramTransformer.class).getProgram();
-        StateRefinementStrategy stateRefinementStrategy = settings.stateSpaceGeneration().getStateRefinementStrategy();
-        MaterializationStrategy materializationStrategy = settings.stateSpaceGeneration().getMaterializationStrategy();
-        CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getAggressiveCanonicalizationStrategy();
+
+        StateSpaceGenerationTransformer transformer = getPhase(StateSpaceGenerationTransformer.class);
+
+        StateRefinementStrategy stateRefinementStrategy = transformer.getStateRefinementStrategy();
+        MaterializationStrategy materializationStrategy = transformer.getMaterializationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = transformer.getAggressiveCanonicalizationStrategy();
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder(this)
                 .setProgram(program)
