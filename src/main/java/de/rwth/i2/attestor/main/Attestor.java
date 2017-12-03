@@ -9,7 +9,6 @@ import org.apache.logging.log4j.*;
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.impl.*;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.main.settings.Settings;
 
 
 /**
@@ -43,16 +42,10 @@ public class Attestor {
 
 	private static final Logger logger = LogManager.getLogger( "Attestor" );
 
-	private final Settings settings = Settings.getInstance();
-
 	private PhaseRegistry registry;
 
 	private DefaultScene scene = new DefaultScene();
 
-	public Attestor() {
-
-		settings.setScene(scene);
-	}
 
 	/**
 	 * Runs attestor to perform a program analysis.
@@ -68,7 +61,7 @@ public class Attestor {
 
 		printVersion();
 
-		registry = new PhaseRegistry(settings);
+		registry = new PhaseRegistry();
 
 		registry
 				.addPhase( new CLIPhase(scene, args) )

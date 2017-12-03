@@ -8,10 +8,8 @@ import java.util.*;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
@@ -19,7 +17,6 @@ import de.rwth.i2.attestor.grammar.testUtil.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
@@ -34,12 +31,6 @@ public class IndexedMaterializationRuleManagerTest {
 
 	private SceneObject sceneObject;
 	IndexedNonterminal requestNonterminal;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() {

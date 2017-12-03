@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.refinement.identicalNeighbourhood;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import gnu.trove.iterator.TIntIterator;

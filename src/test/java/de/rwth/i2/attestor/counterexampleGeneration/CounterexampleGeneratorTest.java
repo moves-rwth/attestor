@@ -8,10 +8,8 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -35,11 +33,6 @@ public class CounterexampleGeneratorTest {
 
     private SceneObject sceneObject;
     private ExampleHcImplFactory hcFactory;
-
-    @BeforeClass
-    public static void setupClass() {
-        UnitTestGlobalSettings.reset();
-    }
 
     @Before
     public void setUp() {

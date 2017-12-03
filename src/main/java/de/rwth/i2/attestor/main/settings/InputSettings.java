@@ -91,9 +91,6 @@ public class InputSettings {
      */
 	private String inputName;
 
-	private final Set<String>	usedSelectorLabels = new HashSet<>();
-	private final Set<String> grammarSelectorLabels = new HashSet<>();
-
     /**
      * Sets the default path to search for all possible input files.
      * @param path The default path.
@@ -241,16 +238,6 @@ public class InputSettings {
 		return pathToInput + File.separator + inputName;
 	}
 
-	/**
-     * @return Checks whether all paths and file names, i.e. grammar, class, classpath, method, and initial state,
-     *         have been set.
-     */
-	public boolean isComplete() {
-		return className != null && classpath != null && methodName != null
-				&& pathToGrammar != null && userDefinedGrammarName != null
-				&& pathToInput != null && inputName != null;
-	}
-
 	public void setRootPath(String rootPath) {
 		this.classpath = rootPath + File.separator +  this.classpath;
 		this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
@@ -282,11 +269,6 @@ public class InputSettings {
 		return usedPredefinedGrammars;
 	}
 
-
-	public HashMap<String,String> getRenaming(String predefinedGrammar) {
-		return this.grammar2RenameMap.get(predefinedGrammar);
-	}
-
 	public void setInitialStatesURL(URL resource) {
 		this.initialStatesURL = resource;
 	}
@@ -294,25 +276,4 @@ public class InputSettings {
 	public String getRenamingLocation(String predefinedGrammar) {
 		return this.pathsToGrammar2RenameDefininition.get( predefinedGrammar );
 	}
-
-	public void addGrammarSelectorLabel(String selector) {
-		grammarSelectorLabels.add(selector);
-	}
-
-	public void addUsedSelectorLabel(String selector) {
-		usedSelectorLabels.add(selector);
-	}
-
-	public Set<String> getGrammarSelectorLabels() {
-		return grammarSelectorLabels;
-	}
-
-	public Set<String> getUsedSelectorLabels() {
-		return usedSelectorLabels;
-	}
-
-
-
-
-
 }

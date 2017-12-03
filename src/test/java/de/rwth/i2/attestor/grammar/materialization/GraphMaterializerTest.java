@@ -1,19 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -24,13 +19,6 @@ public class GraphMaterializerTest {
 	public static int NODE_FOR_TO_REPLACE = 1;
 
 	private SceneObject sceneObject;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setUp() throws Exception {

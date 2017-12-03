@@ -6,19 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.CannotMaterializeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.types.Type;
@@ -29,13 +25,6 @@ public class IndexMaterializationStrategyTest {
 	private static final String UNIQUE_NT_LABEL = "IndexMaterializationStrategyTest";
 	private static final int RANK = 3;
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false,true};
-
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	private SceneObject sceneObject;
 

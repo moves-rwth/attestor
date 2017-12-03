@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -30,12 +29,6 @@ public class IfStmtTest {
 
 	private SceneObject sceneObject;
 	private ExampleHcImplFactory hcFactory;
-
-	@BeforeClass
-	public static void init()
-	{
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() throws Exception{

@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -22,12 +20,6 @@ public class TestAVLIndexCanoization {
 	private SceneObject sceneObject;
 	private ExampleIndexedGraphFactory graphFactory;
 	private IndexCanonizationStrategyImpl canonizer;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setup(){

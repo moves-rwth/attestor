@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
 import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
 import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
-import de.rwth.i2.attestor.main.settings.Settings;
 
 /**
  * A specialized {@link MorphismChecker} to determine embeddings between a pattern graph

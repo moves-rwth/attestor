@@ -3,16 +3,13 @@ package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 import static org.junit.Assert.assertEquals;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -20,7 +17,6 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import gnu.trove.list.array.TIntArrayList;
@@ -36,11 +32,6 @@ public class CanonicalizationStrategyTest {
 
 	private GeneralCanonicalizationStrategy canonicalizationStrategy;
 
-	@BeforeClass
-    public static void init() {
-	   UnitTestGlobalSettings.reset();
-    }
-	
 	@Before
 	public void setUp() throws Exception {
 

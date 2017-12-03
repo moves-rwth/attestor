@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.main.phases;
 
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,12 +20,9 @@ public abstract class AbstractPhase extends SceneObject {
     private long startTime;
     private long finishTime;
 
-    protected Settings settings;
-
-    protected void register(int phaseId, PhaseRegistry registry, Settings settings) {
+    protected void register(int phaseId, PhaseRegistry registry) {
         this.phaseId = phaseId;
         this.registry = registry;
-        this.settings = settings;
     }
 
     public abstract String getName();

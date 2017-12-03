@@ -9,11 +9,8 @@ import java.util.*;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -37,12 +34,6 @@ public class GrammarTest {
 	private BalancedTreeGrammar balancedTreeGrammar;
 	public HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_1;
 	public HeapConfiguration RHS_FOR_DEFAULT_NONTERMINAL_2;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() {

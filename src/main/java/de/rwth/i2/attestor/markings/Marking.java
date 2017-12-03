@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.markings;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.main.settings.Settings;
 
 import java.util.ArrayList;
 import java.util.List;

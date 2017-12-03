@@ -1,17 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -25,8 +22,6 @@ public class DefaultMaterializationRuleManagerTest {
 
 	@Before
 	public void init() {
-
-        UnitTestGlobalSettings.reset();
         sceneObject = new MockupSceneObject();
     }
 

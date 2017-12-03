@@ -1,19 +1,16 @@
 package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexVariable;
 import org.json.JSONArray;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,13 +19,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestJsonToIndexedGrammar {
-
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Test
 	public void testParseForwardGrammar() {

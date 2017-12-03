@@ -6,19 +6,16 @@ import static org.mockito.Mockito.*;
 
 import java.util.*;
 
-import com.sun.org.apache.regexp.internal.RE;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.types.Type;
@@ -33,13 +30,6 @@ public class IndexedGrammarResponseApplierTest {
 	private static final boolean[] REDUCTION_TENTACLES = new boolean[]{true,false};
 
 	private SceneObject sceneObject;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setUp() throws Exception {

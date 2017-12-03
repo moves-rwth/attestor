@@ -6,8 +6,10 @@ import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.io.FileReader;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -36,13 +38,15 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
         String str;
 
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+
         try {
-            if (settings.input().getInputName() != null) {
+            if (inputSettings.getInputName() != null) {
                 logger.debug("Reading user-defined initial state.");
-                str = FileReader.read(settings.input().getInputLocation());
+                str = FileReader.read(inputSettings.getInputLocation());
             } else {
                 logger.debug("Reading predefined empty initial state.");
-                str = FileReader.read(settings.input().getInitialStatesURL().openStream());
+                str = FileReader.read(inputSettings.getInitialStatesURL().openStream());
             }
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
@@ -59,7 +63,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
         HeapConfiguration originalInput;
 
-        Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
+        Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
 
         if(scene().options().isIndexedMode()) {
             JsonToIndexedHC importer = new JsonToIndexedHC(this);

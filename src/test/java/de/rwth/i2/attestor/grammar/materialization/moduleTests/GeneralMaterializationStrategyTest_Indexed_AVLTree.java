@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.*;
@@ -41,10 +40,7 @@ public class GeneralMaterializationStrategyTest_Indexed_AVLTree {
 	private static final String VIOLATIONPOINT_VARIABLE = "x";
 	private GeneralMaterializationStrategy materializer;
 
-	@BeforeClass
-	public static void init() {
-		UnitTestGlobalSettings.reset();
-	}
+
 
 	@Before
 	public void setUp() throws Exception {

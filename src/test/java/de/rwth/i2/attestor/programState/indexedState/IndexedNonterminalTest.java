@@ -10,24 +10,15 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 
 
 public class IndexedNonterminalTest {
-	//private static final Logger logger = LogManager.getLogger( "IndexedNonterminalTest" );
 
 	private IndexedNonterminal testNonterminal;
 	private ConcreteIndexSymbol s;
 	private ConcreteIndexSymbol bottom;
-
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void testIndexedNonterminal() {

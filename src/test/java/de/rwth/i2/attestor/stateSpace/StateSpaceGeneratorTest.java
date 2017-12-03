@@ -8,34 +8,23 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.types.Type;
 
 public class StateSpaceGeneratorTest {
-	//private static final Logger logger = LogManager.getLogger( "StateSpaceGeneratorTest" );
 
 	private SSGBuilder ssgBuilder;
 
 	private SceneObject sceneObject;
 	private ExampleHcImplFactory hcFactory;
-
-	@BeforeClass
-	public static void init()
-	{
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setup() {

@@ -2,14 +2,13 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.InputSettings;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
@@ -348,8 +347,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		String fieldType = fieldRef.getType().toString();
 		type.addSelectorLabel(fieldLabel, PrimitiveTypes.getDefaultValue(fieldType));
 
-		InputSettings inputSettings = Settings.getInstance().input();
-		inputSettings.addUsedSelectorLabel(name);
+		scene().options().addUsedSelectorLabel(name);
 
 		return new Field( type, base, fieldLabel);
 	}

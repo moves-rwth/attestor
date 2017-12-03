@@ -7,11 +7,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -25,13 +22,6 @@ public class FieldTest {
 	private Local local;
 	private HeapConfiguration testGraph;
 	private SelectorLabel sel;
-
-
-	@BeforeClass
-	public static void init()
-	{
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() throws Exception {

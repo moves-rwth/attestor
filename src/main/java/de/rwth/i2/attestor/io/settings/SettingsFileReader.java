@@ -1,9 +1,10 @@
-package de.rwth.i2.attestor.main.settings;
+package de.rwth.i2.attestor.io.settings;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import de.rwth.i2.attestor.main.settings.*;
 import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,8 +12,6 @@ import org.json.JSONObject;
 import de.rwth.i2.attestor.LTLFormula;
 
 /**
- * Populates {@link Settings} from a settings file.
- *
  * @author Hannah Arndt, Christoph, Christina
  */
 public class SettingsFileReader {
@@ -55,13 +54,11 @@ public class SettingsFileReader {
 
     /**
      * Populates all input settings from the parsed settings file.
-     * @param settings All settings.
+     * @param input All input settings.
      * @return The populated input settings.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public InputSettings getInputSettings(Settings settings ){
+	public void getInputSettings(InputSettings input){
 		JSONObject jsonInput = jsonSettings.getJSONObject( "input" );
-		InputSettings input = settings.input();
 		boolean hasDefaultPath = false;
 
 		for(String key : jsonInput.keySet()) {
@@ -97,10 +94,7 @@ public class SettingsFileReader {
 					logger.error("Ignoring unknown option: " + key);
 					break;
 			}
-
 		}
-
-		return input;
 	}
 
 	private void loadContracts(JSONObject contractSettings, InputSettings input, boolean hasDefaultPath) {
@@ -222,14 +216,11 @@ public class SettingsFileReader {
 
     /**
      * Populates all output settings from the parsed settings file.
-     * @param settings All settings.
-     * @return The populated output settings.
+     * @param output All output settings.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public OutputSettings getOutputSettings(Settings settings ){
+	public void getOutputSettings(OutputSettings output){
 		JSONObject jsonOutput = jsonSettings.getJSONObject( "output" );
-		OutputSettings output = settings.output();
-		
+
 		if( jsonOutput.has( "defaultPath" )){
 			output.setDefaultPath( jsonOutput.getString( "defaultPath" ) );
 		}
@@ -283,22 +274,17 @@ public class SettingsFileReader {
 				JSONObject request = requestArray.getJSONObject(i);
 				String signature = request.getString("signature");
 				String filename = request.getString("filename");
-				settings.output().addRequiredContract(signature, filename);
+				output.addRequiredContract(signature, filename);
 			}
 		}
-		
-		return output;
 	}
 
 	/**
 	 * Populates the model checking settings with the input from the parsed settings file.
-	 * @param settings all settings
-	 * @return the populated model checking settings
+	 * @param mc all model checking settings
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public ModelCheckingSettings getMCSettings(Settings settings){
+	public void getMCSettings(ModelCheckingSettings mc){
 		JSONObject jsonMC = jsonSettings.getJSONObject( "modelChecking" );
-		ModelCheckingSettings mc = settings.modelChecking();
 
 		if( jsonMC.has( "enabled" )){
 			mc.setModelCheckingEnabled(jsonMC.getBoolean("enabled"));
@@ -317,8 +303,6 @@ public class SettingsFileReader {
 				}
 			}
 		}
-
-		return mc;
 	}
 	
 }

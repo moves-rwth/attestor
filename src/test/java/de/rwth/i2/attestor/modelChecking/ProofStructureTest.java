@@ -2,14 +2,11 @@ package de.rwth.i2.attestor.modelChecking;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -23,12 +20,6 @@ public class ProofStructureTest extends InternalStateSpace {
 
 	public ProofStructureTest(){
 		super(0);
-	}
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
 	}
 
 	@Before

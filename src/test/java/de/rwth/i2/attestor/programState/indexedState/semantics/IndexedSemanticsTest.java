@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.programState.indexedState.semantics;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
@@ -30,7 +29,6 @@ public class IndexedSemanticsTest {
 
 	@Before
 	public void init() {
-		UnitTestGlobalSettings.reset();
 		sceneObject = new MockupSceneObject();
 		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 	}

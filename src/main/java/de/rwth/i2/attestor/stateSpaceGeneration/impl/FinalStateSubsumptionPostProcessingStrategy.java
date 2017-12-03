@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.HashMap;

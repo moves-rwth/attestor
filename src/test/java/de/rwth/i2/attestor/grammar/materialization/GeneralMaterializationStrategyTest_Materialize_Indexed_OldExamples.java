@@ -9,7 +9,6 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.*;
@@ -24,13 +23,6 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamples 
 	private SceneObject sceneObject;
 	private ExampleIndexedGraphFactory graphFactory;
 	private GeneralMaterializationStrategy materializer;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setUp() throws Exception {

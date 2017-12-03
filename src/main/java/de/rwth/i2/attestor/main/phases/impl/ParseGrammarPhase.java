@@ -11,6 +11,8 @@ import de.rwth.i2.attestor.main.Attestor;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -42,14 +44,15 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
     @Override
     protected void executePhase() {
 
-        boolean hasUserDefinedGrammar = settings.input().getUserDefinedGrammarName() != null;
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        boolean hasUserDefinedGrammar = inputSettings.getUserDefinedGrammarName() != null;
         if(hasUserDefinedGrammar) {
             loadGrammarFromFile(
-                   settings.input().getGrammarLocation()
+                   inputSettings.getGrammarLocation()
             );
         }
         
-        boolean hasPredefinedGrammars = settings.input().getUsedPredefinedGrammars() != null;
+        boolean hasPredefinedGrammars = inputSettings.getUsedPredefinedGrammars() != null;
         if( hasPredefinedGrammars ) {
             loadPredefinedGrammars();
         }
@@ -57,16 +60,17 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
 
     private void loadPredefinedGrammars() {
 
-        List<String> usedPredefinedGrammars = settings.input().getUsedPredefinedGrammars();
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        List<String> usedPredefinedGrammars = inputSettings.getUsedPredefinedGrammars();
 
         if(usedPredefinedGrammars == null) {
             logger.warn( "No suitable predefined grammar could be found" );
             return;
         }
 
-        for ( String predefinedGrammar : settings.input().getUsedPredefinedGrammars() ) {
+        for ( String predefinedGrammar : inputSettings.getUsedPredefinedGrammars() ) {
             logger.debug("Loading predefined grammar " + predefinedGrammar);
-            String locationOfRenamingMap = settings.input().getRenamingLocation( predefinedGrammar );
+            String locationOfRenamingMap = inputSettings.getRenamingLocation( predefinedGrammar );
             try{
                 renamingMap = parseRenamingMap( locationOfRenamingMap );
                 loadGrammarFromURL(Attestor.class.getClassLoader()

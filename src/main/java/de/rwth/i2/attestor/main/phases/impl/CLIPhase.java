@@ -1,13 +1,22 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
+import de.rwth.i2.attestor.io.settings.CommandLineReader;
+import de.rwth.i2.attestor.io.settings.SettingsFileReader;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.settings.CommandLineReader;
-import de.rwth.i2.attestor.main.settings.SettingsFileReader;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
+import de.rwth.i2.attestor.main.settings.*;
 
-public class CLIPhase extends AbstractPhase {
+public class CLIPhase extends AbstractPhase
+        implements InputSettingsTransformer, OutputSettingsTransformer, MCSettingsTransformer {
 
     private final String[] args;
+
+    private final InputSettings inputSettings = new InputSettings();
+    private final OutputSettings outputSettings = new OutputSettings();
+    private final ModelCheckingSettings modelCheckingSettings = new ModelCheckingSettings();
 
     public CLIPhase(Scene scene, String[] args) {
 
@@ -33,18 +42,20 @@ public class CLIPhase extends AbstractPhase {
         if( commandLineReader.hasSettingsFile() ){
             SettingsFileReader settingsReader =
                     new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
-            settingsReader.getInputSettings( settings );
+            settingsReader.getInputSettings( inputSettings );
             settingsReader.getOptionSettings( scene().options() );
-            settingsReader.getOutputSettings( settings );
-            settingsReader.getMCSettings( settings );
+            settingsReader.getOutputSettings( outputSettings );
+            settingsReader.getMCSettings( modelCheckingSettings );
         }
-        commandLineReader.getInputSettings(  settings );
+        commandLineReader.getInputSettings( inputSettings );
         commandLineReader.updateOptions( scene().options() );
-        commandLineReader.getOutputSettings( settings );
-        commandLineReader.getMCSettings( settings );
+        commandLineReader.getOutputSettings( outputSettings );
+        commandLineReader.getMCSettings( modelCheckingSettings );
 
         if( commandLineReader.hasRootPath() ){
-            settings.setRootPath( commandLineReader.getRootPath() );
+            String rootPath = commandLineReader.getRootPath();
+            inputSettings.setRootPath( rootPath );
+            outputSettings.setRootPath( rootPath );
         }
     }
 
@@ -54,14 +65,14 @@ public class CLIPhase extends AbstractPhase {
         logSum("Analysis summary:");
         logSum("+----------------------------------+--------------------------------+");
         logSum("| Method: "
-                + settings.input().getClasspath()
+                + inputSettings.getClasspath()
                 + "/"
-                + settings.input().getClassName()
+                + inputSettings.getClassName()
                 + "."
-                + settings.input().getMethodName()
+                + inputSettings.getMethodName()
         );
 
-        String scenario = settings.input().getScenario();
+        String scenario = inputSettings.getScenario();
         if(scenario != null && !scenario.isEmpty()) {
             logSum("| Scenario: " + scenario);
         }
@@ -73,5 +84,20 @@ public class CLIPhase extends AbstractPhase {
     public boolean isVerificationPhase() {
 
         return false;
+    }
+
+    @Override
+    public InputSettings getInputSettings() {
+        return inputSettings;
+    }
+
+    @Override
+    public ModelCheckingSettings getMcSettings() {
+        return modelCheckingSettings;
+    }
+
+    @Override
+    public OutputSettings getOutputSettings() {
+        return outputSettings;
     }
 }

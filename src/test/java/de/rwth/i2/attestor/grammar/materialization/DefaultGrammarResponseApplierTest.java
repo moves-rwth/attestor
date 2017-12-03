@@ -12,12 +12,10 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
@@ -31,10 +29,7 @@ public class DefaultGrammarResponseApplierTest {
 
 	private SceneObject sceneObject;
 
-	@BeforeClass
-	public static void init() {
-		UnitTestGlobalSettings.reset();
-	}
+
 
 	@Before
 	public void setUp() throws Exception {

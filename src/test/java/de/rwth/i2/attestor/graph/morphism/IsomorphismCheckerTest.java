@@ -5,10 +5,8 @@ import static org.junit.Assert.assertFalse;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
@@ -19,10 +17,7 @@ public class IsomorphismCheckerTest {
 	private SceneObject sceneObject;
 	private ExampleHcImplFactory hcFactory;
 
-	@BeforeClass
-	public static void init() {
-		UnitTestGlobalSettings.reset();
-	}
+
 
 	@Before
 	public void setUp() {

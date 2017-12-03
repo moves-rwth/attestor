@@ -5,10 +5,8 @@ import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.settings.ModelCheckingSettings;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
@@ -101,7 +99,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
 
-        Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
+        ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
+        Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();
 
         for(String ap : requiredAPs) {
 

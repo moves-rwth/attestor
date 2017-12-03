@@ -5,21 +5,11 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 
 public class DefaultIndexMaterializationTest {
 	
 	private DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Test
 	public void test_X_to_sX() {

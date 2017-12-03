@@ -15,8 +15,10 @@ import de.rwth.i2.attestor.ipa.IpaContractCollection;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.main.settings.OutputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.ZipUtils;
 
@@ -24,6 +26,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
     private StateSpace stateSpace;
     private Program program;
+    private OutputSettings outputSettings;
 
     public ReportGenerationPhase(Scene scene) {
         super(scene);
@@ -38,7 +41,9 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        if(settings.output().isNoExport()) {
+        outputSettings = getPhase(OutputSettingsTransformer.class) .getOutputSettings();
+
+        if(outputSettings.isNoExport()) {
             return;
         }
 
@@ -46,19 +51,19 @@ public class ReportGenerationPhase extends AbstractPhase {
         program = getPhase(ProgramTransformer.class).getProgram();
 
         try {
-            if (settings.output().isExportGrammar()) {
+            if (outputSettings.isExportGrammar()) {
                 exportGrammar();
             }
 
-            if (settings.output().isExportStateSpace()) {
+            if (outputSettings.isExportStateSpace()) {
                 exportStateSpace();
             }
 
-            if (settings.output().isExportCustomHcs()) {
+            if (outputSettings.isExportCustomHcs()) {
                 exportCustomHcs();
             }
             
-            if( settings.output().isExportContracts() ) {
+            if(outputSettings.isExportContracts() ) {
             	exportContracts();
             }
             
@@ -69,11 +74,12 @@ public class ReportGenerationPhase extends AbstractPhase {
     }
     
     private void exportContracts() throws IOException {
-    	String directory = settings.output().getDirectoryForContracts();
+
+    	String directory = outputSettings.getDirectoryForContracts();
     	FileUtils.createDirectories( directory );
-    	for( String signature : settings.output().getContractRequests().keySet() ) {
+    	for( String signature : outputSettings.getContractRequests().keySet() ) {
     		
-    		 String filename = settings.output().getContractRequests().get( signature );
+    		 String filename = outputSettings.getContractRequests().get( signature );
     		 FileWriter writer = new FileWriter( directory + File.separator + filename);
     		 
     		 IpaContractCollection contracts = scene().getMethod(signature).getContracts();
@@ -86,7 +92,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     
     private void exportCustomHcs() throws IOException {
 
-        String location = settings.output().getLocationForCustomHcs();
+        String location = outputSettings.getLocationForCustomHcs();
 
         // Copy necessary libraries
         InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
@@ -97,7 +103,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         // Generate JSON files for prebooked HCs and their summary
         CustomHcListExporter exporter = new JsonCustomHcListExporter();
-        exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
+        exporter.export(location + File.separator + "customHcsData", outputSettings.getCustomHcSet());
 
         logger.info("Custom HCs exported to '"
                 + location
@@ -107,7 +113,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     private void exportStateSpace() throws IOException {
 
         logger.info("Exporting state space...");
-        String location = settings.output().getLocationForStateSpace();
+        String location = outputSettings.getLocationForStateSpace();
 
         exportStateSpace(
                 location + File.separator + "data",
@@ -140,7 +146,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         logger.info("Exporting grammar...");
 
-        String location = settings.output().getLocationForGrammar();
+        String location = outputSettings.getLocationForGrammar();
 
         // Copy necessary libraries
         InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
@@ -182,8 +188,8 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if(!settings.output().isNoExport() && settings.output().isExportStateSpace()) {
-            String location = settings.output().getLocationForStateSpace();
+        if(!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
+            String location = outputSettings.getLocationForStateSpace();
             logSum("State space exported to '"
                     + location
                     + "'"

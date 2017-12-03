@@ -8,19 +8,15 @@ import java.util.List;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -40,8 +36,6 @@ public class MaterializationTest {
 
 	@Before
 	public void init() {
-
-		UnitTestGlobalSettings.reset();
 
 		sceneObject = new MockupSceneObject();
 		hcImplFactory = new ExampleHcImplFactory(sceneObject);

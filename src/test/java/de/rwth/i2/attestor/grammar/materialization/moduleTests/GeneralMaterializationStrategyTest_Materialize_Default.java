@@ -10,16 +10,12 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -35,8 +31,6 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 	
 	@Before
 	public void setUp() throws Exception {
-
-		UnitTestGlobalSettings.reset();
 
 		sceneObject = new MockupSceneObject();
 		hcFactory = new ExampleHcImplFactory(sceneObject);

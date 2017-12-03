@@ -1,15 +1,12 @@
 package de.rwth.i2.attestor.graph.morphism;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -20,10 +17,7 @@ public class EmbeddingTest {
 	private SceneObject sceneObject;
 	ExampleHcImplFactory hcImplFactory;
 
-	@BeforeClass
-	public static void init() {
-		UnitTestGlobalSettings.reset();
-	}
+
 
 	@Before
 	public void setUp() {

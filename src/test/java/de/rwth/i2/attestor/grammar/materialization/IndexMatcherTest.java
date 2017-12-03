@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.testUtil.IndexGrammarForTests;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -32,13 +31,6 @@ public class IndexMatcherTest {
 	private SceneObject sceneObject;
 	
 	IndexMatcher indexMatcher;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setUp() throws Exception {

@@ -8,15 +8,12 @@ import java.util.*;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
@@ -34,12 +31,6 @@ public class ViolationPointResolverTest_ConcreteNonterminal_ConcreteRule {
 	private static final String OTHER_SELECTOR_NAME = "prev";
 	private static final int TENTACLE_WITH_NEXT = 0;
 	private static final int TENTACLE_NOT_CREATING_NEXT = 1;
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	private SceneObject sceneObject;
 

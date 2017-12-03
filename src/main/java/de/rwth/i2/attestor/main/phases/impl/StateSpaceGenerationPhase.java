@@ -3,10 +3,8 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
@@ -115,12 +113,14 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
     private void printAnalyzedMethod() {
 
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+
         logger.info("Analyzing '"
-                + settings.input().getClasspath()
+                + inputSettings.getClasspath()
                 + "/"
-                + settings.input().getClassName()
+                + inputSettings.getClassName()
                 + "."
-                + settings.input().getMethodName()
+                + inputSettings.getMethodName()
                 + "'..."
         );
     }

@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -27,12 +24,9 @@ public class TestEmbeddings {
 	@Before
 	public void init(){
 
-		UnitTestGlobalSettings.reset();
-
 		sceneObject = new MockupSceneObject();
 		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 		aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-		
 
 		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
 		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");

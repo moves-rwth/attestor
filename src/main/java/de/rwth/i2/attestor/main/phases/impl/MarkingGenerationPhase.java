@@ -6,7 +6,9 @@ import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.main.settings.ModelCheckingSettings;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
@@ -46,8 +48,8 @@ public class MarkingGenerationPhase extends AbstractPhase
     protected void executePhase() {
 
         inputs = getPhase(InputTransformer.class).getInputs();
-        Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
-
+        ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
+        Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();
 
         StateLabelingStrategyBuilderTransformer prev = getPhase(StateLabelingStrategyBuilderTransformer.class);
         if(prev == null) {

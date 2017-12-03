@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
@@ -30,14 +29,6 @@ public class GrammarTest_Indexed {
 
 	SceneObject sceneObject;
 	BalancedTreeGrammar treeGrammar;
-
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
 
 	@Before
 	public void setUp() throws Exception {

@@ -7,18 +7,14 @@ import java.util.Collection;
 import java.util.Map;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-
-import org.junit.BeforeClass;
 
 public class ViolationPointResolverTest_Default {
 
@@ -39,7 +35,6 @@ public class ViolationPointResolverTest_Default {
 	@Before
 	public void init() {
 
-		UnitTestGlobalSettings.reset();
 		sceneObject = new MockupSceneObject();
 		TestGraphs testGraphs = new TestGraphs(sceneObject);
 		DEFAULT_NONTERMINAL = createDefaultNonterminal();

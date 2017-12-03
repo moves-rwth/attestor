@@ -70,6 +70,11 @@ public class OptionSettings {
 	 */
 	private final Set<String> keptVariables = new HashSet<>();
 
+	private final Set<String> usedSelectorLabels = new HashSet<>();
+	private final Set<String> grammarSelectorLabels = new HashSet<>();
+
+
+
 	public void addKeptVariable(String unscopedVariableName) {
 		keptVariables.add(unscopedVariableName);
 	}
@@ -210,5 +215,20 @@ public class OptionSettings {
 	 */
 	public void setGarbageCollectionEnabled(boolean enabled) {
 		this.garbageCollectionEnabled = enabled;
+	}
+
+	public void addGrammarSelectorLabel(String selector) {
+		grammarSelectorLabels.add(selector);
+	}
+
+	public void addUsedSelectorLabel(String selector) {
+		usedSelectorLabels.add(selector);
+	}
+
+	public Set<String> getGrammarSelectorLabels() {
+		return grammarSelectorLabels;
+	}
+	public Set<String> getUsedSelectorLabels() {
+		return usedSelectorLabels;
 	}
 }

@@ -4,8 +4,10 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.main.settings.ModelCheckingSettings;
 import de.rwth.i2.attestor.modelChecking.FailureTrace;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -34,7 +36,8 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     @Override
     protected void executePhase() {
 
-        Set<LTLFormula> formulae = settings.modelChecking().getFormulae();
+        ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
+        Set<LTLFormula> formulae = mcSettings.getFormulae();
         if(formulae.isEmpty()) {
             logger.debug("No LTL formulae have been provided.");
             return;

@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 
@@ -11,7 +8,6 @@ import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -23,13 +19,6 @@ import static org.junit.Assert.fail;
 
 public class ParseTest {
 	private static final Logger logger = LogManager.getLogger( "ParseTest.java" );
-
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Test
 	public void test(){

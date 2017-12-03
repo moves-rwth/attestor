@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import org.junit.*;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
@@ -33,13 +32,6 @@ public class InvokeStmtTest_WithEffect {
 	private DefaultProgramState testInput;
 	private HeapConfiguration expectedHeap;
 	private InvokeStmt stmt;
-
-
-	@BeforeClass
-	public static void init()
-	{
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() throws Exception {

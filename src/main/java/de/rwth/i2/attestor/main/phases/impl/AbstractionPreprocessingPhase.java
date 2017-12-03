@@ -21,6 +21,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
@@ -92,9 +93,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     private void checkSelectors() {
 
-        InputSettings inputSettings = settings.input();
-        Set<String> usedSelectors = new HashSet<>(inputSettings.getUsedSelectorLabels());
-        usedSelectors.removeAll(inputSettings.getGrammarSelectorLabels());
+        Set<String> usedSelectors = new HashSet<>(scene().options().getUsedSelectorLabels());
+        usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
 
         if(!usedSelectors.isEmpty()) {
             logger.warn("");

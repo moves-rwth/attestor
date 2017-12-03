@@ -3,11 +3,9 @@ package de.rwth.i2.attestor.grammar.materialization;
 import static org.junit.Assert.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
@@ -32,7 +30,6 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
 	@Before
 	public void setUp() throws Exception {
 
-		UnitTestGlobalSettings.reset();
 		sceneObject = new MockupSceneObject();
 		testGraphs = new TestGraphs(sceneObject);
 		materializer = new GeneralMaterializationStrategy( null, null );

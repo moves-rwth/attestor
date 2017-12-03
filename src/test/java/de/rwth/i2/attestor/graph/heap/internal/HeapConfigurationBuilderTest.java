@@ -2,27 +2,17 @@ package de.rwth.i2.attestor.graph.heap.internal;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.graph.morphism.Morphism;
-import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HeapConfigurationBuilderTest {
 
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
-	
 	/**
 	 * Tests the intended usage of builders to add new nodes.
 	 */

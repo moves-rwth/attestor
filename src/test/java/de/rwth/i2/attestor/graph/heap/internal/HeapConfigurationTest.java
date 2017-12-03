@@ -3,10 +3,8 @@ package de.rwth.i2.attestor.graph.heap.internal;
 import static org.junit.Assert.*;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -16,12 +14,6 @@ import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 
 public class HeapConfigurationTest {
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
 
 	private SceneObject sceneObject;
 	private ExampleHcImplFactory hcFactory;

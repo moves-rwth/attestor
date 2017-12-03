@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.json.JSONObject;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.settings.Settings;
 
 public class JsonImporter extends SceneObject {
 

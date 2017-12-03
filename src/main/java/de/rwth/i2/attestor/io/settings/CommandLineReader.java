@@ -1,8 +1,8 @@
-package de.rwth.i2.attestor.main.settings;
+package de.rwth.i2.attestor.io.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.main.settings.*;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +11,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 /**
- * Parses the provided command line options in order to populate
- * {@link Settings}.
  *
  * @author Hannah Arndt, Christoph, Christina
  */
@@ -213,12 +211,9 @@ public class CommandLineReader extends SceneObject {
     /**
      * Populates all settings that customize how state spaces are exported
      * with data extracted from the command line arguments.
-     * @param settings All settings.
-     * @return The populated output settings.
+     * @param outputSettings All output settings.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public OutputSettings getOutputSettings(Settings settings ) {
-		OutputSettings outputSettings = settings.output();
+	public void getOutputSettings(OutputSettings outputSettings ) {
 
 		if(cmd.hasOption("ne"))	{
 			outputSettings.setNoExport(true);
@@ -231,8 +226,6 @@ public class CommandLineReader extends SceneObject {
 		if( cmd.hasOption("ghtml")){
 			outputSettings.setExportGrammar( true );
 		}
-		
-		return outputSettings;
 	}
 
     /**
@@ -259,31 +252,23 @@ public class CommandLineReader extends SceneObject {
     /**
      * Populates all settings that customize which input files are loaded
      * with data extracted from the command line arguments.
-     * @param settings All settings.
+     * @param settings All input settings.
      * @return The populated input settings.
      */
-	@SuppressWarnings("UnusedReturnValue")
-	public InputSettings getInputSettings(Settings settings ) {
-		InputSettings inputSettings = settings.input();
+	public void getInputSettings(InputSettings settings ) {
 
 		if( cmd.hasOption("m")){
-			inputSettings.setMethodName(cmd.getOptionValue("m"));
+			settings.setMethodName(cmd.getOptionValue("m"));
 		}
-		
-		return inputSettings;
 	}
 
 	/**
 	 * Populates all settings that customize if and how model checking is performed.
-	 * @param settings All settings.
-	 * @return The populated model checking settings.
+	 * @param mcSettings All settings.
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public ModelCheckingSettings getMCSettings(Settings settings ) {
-		ModelCheckingSettings mcSettings = settings.modelChecking();
+	public void getMCSettings(ModelCheckingSettings mcSettings) {
 		if( cmd.hasOption("mc")){
 			mcSettings.setModelCheckingEnabled( true );
-
 			String formulaString = cmd.getOptionValue("mc");
 			for(String formula : formulaString.split(",")){
 				LTLFormula ltlFormula;
@@ -295,8 +280,6 @@ public class CommandLineReader extends SceneObject {
 				}
 			}
 		}
-
-		return mcSettings;
 	}
 
     /**
@@ -317,8 +300,6 @@ public class CommandLineReader extends SceneObject {
 					"You might want to try '-rp .'";
 			return false;
 		}
-
 		return true;
 	}
-
 }

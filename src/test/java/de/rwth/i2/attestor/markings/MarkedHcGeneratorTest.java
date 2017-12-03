@@ -1,15 +1,12 @@
 package de.rwth.i2.attestor.markings;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
@@ -33,8 +30,6 @@ public class MarkedHcGeneratorTest {
 
    @Before
    public void setup() {
-
-      UnitTestGlobalSettings.reset();
 
       sceneObject = new MockupSceneObject();
       hcFactory = new ExampleHcImplFactory(sceneObject);

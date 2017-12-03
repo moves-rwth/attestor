@@ -1,15 +1,12 @@
 package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -23,15 +20,6 @@ public class JsonToGrammarTest {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger( "JsonToGrammarTest" );
 
-
-	@BeforeClass
-	public static void init() {
-
-		UnitTestGlobalSettings.reset();
-	}
-
-
-	
 	@Test
 	public void testConstructNonterminals() {
 		Scanner scan;

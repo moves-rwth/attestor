@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.rwth.i2.attestor.main.environment.Scene;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.main.settings.InputSettings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,9 +31,11 @@ public class ParseContractsPhase extends AbstractPhase {
 
 	@Override
 	protected void executePhase() {
-		ArrayList<String> fileNames = settings.input().getContractFileNames();
+
+		InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+		ArrayList<String> fileNames = inputSettings.getContractFileNames();
 		if( ! fileNames.isEmpty() ){
-			String path = settings.input().getPathToContracts();
+			String path = inputSettings.getPathToContracts();
 			for( String fileName : fileNames ){
 				loadContract( path, fileName );
 			}
@@ -48,7 +52,7 @@ public class ParseContractsPhase extends AbstractPhase {
             String signature = obj.getString("method");
             IpaAbstractMethod abstractMethod = scene().getMethod(signature);
             
-            Consumer<String> addUsedSelectorLabel = settings.input()::addUsedSelectorLabel;
+            Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
 
             JsonImporter importer = new JsonImporter(this);

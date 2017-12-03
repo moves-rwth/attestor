@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.main.phases;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,20 +11,17 @@ public class PhaseRegistry {
 
    private static final Logger logger = LogManager.getLogger("PhaseRegistry");
 
-   private final Settings settings;
-
    private final List<AbstractPhase> phases;
 
-   public PhaseRegistry(Settings settings) {
+   public PhaseRegistry() {
 
-      this.settings = settings;
       phases = new ArrayList<>();
    }
 
    public PhaseRegistry addPhase(AbstractPhase phase) {
 
       int size = phases.size();
-      phase.register(size, this, settings);
+      phase.register(size, this);
       phases.add(phase);
       return this;
    }
@@ -43,10 +39,6 @@ public class PhaseRegistry {
 
    public <T> T getMostRecentPhase(Class<T> phaseType) {
       return getMostRecentPhase(phases.size(), phaseType);
-   }
-
-   protected Settings getSettings() {
-      return settings;
    }
 
    public void execute() {

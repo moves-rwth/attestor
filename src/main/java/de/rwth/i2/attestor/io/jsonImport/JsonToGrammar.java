@@ -1,10 +1,8 @@
 package de.rwth.i2.attestor.io.jsonImport;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -94,7 +92,7 @@ public class JsonToGrammar extends SceneObject {
 		Set<HeapConfiguration> res = new HashSet<>();
 		JSONArray graphs = grammarFragment.getJSONArray( "rules" );
 
-		Consumer<String> addGrammarSelectorLabel = Settings.getInstance().input()::addGrammarSelectorLabel;
+		Consumer<String> addGrammarSelectorLabel = scene().options()::addGrammarSelectorLabel;
 
 		JsonToDefaultHC importer = new JsonToDefaultHC(this);
 		for( int g = 0; g < graphs.length(); g++ ){

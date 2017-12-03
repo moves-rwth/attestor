@@ -8,14 +8,10 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -24,15 +20,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 public class AssignStmtTest {
 
-
 	private SceneObject sceneObject;
 	private ExampleHcImplFactory hcFactory;
-
-	@BeforeClass
-	public static void init()
-	{
-		UnitTestGlobalSettings.reset();
-	}
 
 	@Before
 	public void setUp() {
@@ -44,8 +33,7 @@ public class AssignStmtTest {
 	@Test
 	public void test(){
 		HeapConfiguration testGraph = hcFactory.getTLLRule();
-		
-		
+
 		DefaultProgramState tmp = new DefaultProgramState(testGraph);
 		
 		tmp.prepareHeap();
