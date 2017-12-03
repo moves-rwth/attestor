@@ -245,12 +245,12 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
     @Override
     public Grammar getGrammar() {
 
-        return null;
+        return grammar;
     }
 
     @Override
     public Map<String, String> getRenamingMap() {
 
-        return null;
+        return renamingMap;
     }
 }

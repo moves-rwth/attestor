@@ -34,7 +34,7 @@ public class PhaseRegistry {
                 return phaseType.cast(phase);
             }
         }
-        return null;
+        throw new IllegalArgumentException("No suitable phase transformer could be found: " + phaseType);
     }
 
     public <T> T getMostRecentPhase(Class<T> phaseType) {

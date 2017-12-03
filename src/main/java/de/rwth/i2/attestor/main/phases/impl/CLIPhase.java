@@ -9,10 +9,13 @@ import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 
 public class CLIPhase extends AbstractPhase
-        implements InputSettingsTransformer, OutputSettingsTransformer, MCSettingsTransformer {
+        implements InputSettingsTransformer, OutputSettingsTransformer,
+        MCSettingsTransformer, StateLabelingStrategyBuilderTransformer {
 
     private final String[] args;
 
@@ -103,5 +106,10 @@ public class CLIPhase extends AbstractPhase
     public OutputSettings getOutputSettings() {
 
         return outputSettings;
+    }
+
+    @Override
+    public AutomatonStateLabelingStrategyBuilder getStrategy() {
+        return null;
     }
 }
