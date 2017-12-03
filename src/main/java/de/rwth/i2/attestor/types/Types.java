@@ -9,7 +9,6 @@ public final class Types {
     public static boolean isConstantType(Type type) {
 
         return NULL.equals(type)
-                || UNDEFINED.equals(type)
-                || INT.equals(type);
+                || UNDEFINED.equals(type);
     }
 }

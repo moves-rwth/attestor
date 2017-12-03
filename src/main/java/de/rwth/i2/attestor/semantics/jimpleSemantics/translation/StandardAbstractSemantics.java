@@ -164,7 +164,6 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
     private Statement translateAssignStmt(soot.jimple.Stmt input, int pc) {
 
         soot.jimple.AssignStmt stmt = (soot.jimple.AssignStmt) input;
-
         SettableValue lhs = (SettableValue) topLevel.translateValue(stmt.getLeftOp());
         if (stmt.containsInvokeExpr()) {
             soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();

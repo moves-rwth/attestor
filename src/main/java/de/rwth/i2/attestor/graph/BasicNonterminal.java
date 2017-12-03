@@ -93,10 +93,8 @@ public final class BasicNonterminal implements Nonterminal {
         public BasicNonterminal get(String name) {
 
             if (!knownNonterminals.containsKey(name)) {
-                logger.fatal("requested nonterminal does not exist");
-                logger.fatal("requested was: " + name);
-                logger.fatal("have: " + knownNonterminals);
-                throw new IllegalArgumentException("Requested nonterminal does not exist.");
+                throw new IllegalArgumentException("Requested nonterminal does not exist. Requested was "
+                    + name + ". Known nonterminals are: " + knownNonterminals);
             }
             return knownNonterminals.get(name);
         }
