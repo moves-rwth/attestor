@@ -172,12 +172,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
             InvokeHelper invokePrepare = createInvokeHelper(invokeExpr);
             invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));
             AbstractMethod method;
-            try {
-                method = topLevel.getMethod(invokeExpr.getMethod().getSignature());
-            } catch (StateSpaceGenerationAbortedException e) {
-                logger.fatal("Unexpected exception");
-                throw new IllegalStateException(e.getMessage());
-            }
+            method = topLevel.getMethod(invokeExpr.getMethod().getSignature());
             return new AssignInvoke(this, lhs, method, invokePrepare, pc + 1);
         } else {
             Value rhs = topLevel.translateValue(stmt.getRightOp());
@@ -199,14 +194,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
         // SootMethod method = expr.getMethod();
 
         String name = expr.getMethod().getSignature();
-        AbstractMethod translatedMethod;
-        try {
-            translatedMethod = topLevel.getMethod(name);
-        } catch (StateSpaceGenerationAbortedException e) {
-            logger.fatal("Unexpected exception");
-            throw new IllegalStateException(e.getMessage());
-        }
-        // List<Type> types = method.getParameterTypes()
+        AbstractMethod translatedMethod = topLevel.getMethod(name);
 
         InvokeHelper invokePrepare = createInvokeHelper(expr);
         invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));

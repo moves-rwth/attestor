@@ -40,22 +40,16 @@ public class NewExprTest {
         int hash = testGraph.hashCode();
         int oldNodeNumber = testGraph.countNodes();
 
-        try {
-            DefaultProgramState executable = new DefaultProgramState(testGraph.clone());
+        DefaultProgramState executable = new DefaultProgramState(testGraph.clone());
 
-            expr.evaluateOn(executable);
+        expr.evaluateOn(executable);
 
-            assertNotNull("testGraph null", testGraph);
-            assertEquals("testGraph changed", hash, testGraph.hashCode());
-            assertEquals("node number did not increase by one", oldNodeNumber + 1, executable.getHeap().countNodes());
-            assertFalse(testGraph.equals(executable.getHeap()));
-            HeapConfiguration expected = hcImplFactory.getExepectedResultTestNewExprTest();
-            assertEquals(expected, executable.getHeap());
-        } catch (NotSufficientlyMaterializedException e) {
-            fail("unexpected exception");
-            e.printStackTrace();
-        }
-
+        assertNotNull("testGraph null", testGraph);
+        assertEquals("testGraph changed", hash, testGraph.hashCode());
+        assertEquals("node number did not increase by one", oldNodeNumber + 1, executable.getHeap().countNodes());
+        assertFalse(testGraph.equals(executable.getHeap()));
+        HeapConfiguration expected = hcImplFactory.getExepectedResultTestNewExprTest();
+        assertEquals(expected, executable.getHeap());
     }
 
 }

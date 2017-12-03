@@ -89,11 +89,6 @@ public class JimpleParser extends SceneObject implements ProgramParser {
 
         String mainMethodName = sootClass.getMethodByName(entryPoint).getSignature();
 
-        try {
-            return translator.getMethod(mainMethodName).getControlFlow();
-        } catch (StateSpaceGenerationAbortedException e) {
-            logger.fatal("Unexpected exception");
-            throw new IllegalStateException(e.getMessage());
-        }
+        return translator.getMethod(mainMethodName).getControlFlow();
     }
 }
