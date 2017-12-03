@@ -3,15 +3,13 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
+import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.concretization.Concretizer;
 import de.rwth.i2.attestor.grammar.concretization.NaiveConcretizer;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
@@ -25,8 +23,9 @@ import java.util.Set;
 
 public class CounterexampleGenerationPhase extends AbstractPhase implements CounterexampleTransformer {
 
-    private final Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
+    private final Map<LTLFormula, ProgramState> counterexamples = new HashMap<>();
     private ModelCheckingResultsTransformer modelCheckingResults;
+    private Grammar grammar;
 
     public CounterexampleGenerationPhase(Scene scene) {
 
@@ -44,6 +43,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     protected void executePhase() {
 
         modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
+        grammar = getPhase(GrammarTransformer.class).getGrammar();
         for (Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
             if (!result.getValue()) {
                 LTLFormula formula = result.getKey();
@@ -90,7 +90,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
     private ProgramState determineConcreteInput(ProgramState badInput) {
 
-        Concretizer concretizer = new NaiveConcretizer(settings.grammar().getGrammar());
+        Concretizer concretizer = new NaiveConcretizer(grammar);
         List<HeapConfiguration> concreteBadInput = concretizer.concretize(badInput.getHeap(), 1);
 
         if(concreteBadInput.isEmpty()) {
