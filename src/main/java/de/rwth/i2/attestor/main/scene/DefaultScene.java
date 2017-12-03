@@ -49,11 +49,11 @@ public class DefaultScene implements Scene {
     @Override
     public Nonterminal getNonterminal(String name) {
 
+        // note that we *never* return IndexedNonterminal here as these are created using a
+        // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.get(name);
         if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (options.isIndexedMode()) {
-            return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
         } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(basicNonterminal, null);
         } else {
@@ -64,11 +64,11 @@ public class DefaultScene implements Scene {
     @Override
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
 
+        // note that we *never* return IndexedNonterminal here as these are created using a
+        // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.create(label, rank, isReductionTentacle);
         if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (options.isIndexedMode()) {
-            return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
         } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(
                     basicNonterminal, null
