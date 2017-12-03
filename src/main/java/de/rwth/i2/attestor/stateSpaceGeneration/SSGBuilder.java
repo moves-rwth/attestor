@@ -1,17 +1,17 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class provides methods to safely initialize a StateSpaceGenerator.
- * The only means to create a new StateSpaceGenerator is through the static method
- * {@link StateSpaceGenerator#builder()}.
  *
  * @author Christoph
  *
  */
-public class SSGBuilder {
+public class SSGBuilder extends SceneObject {
 	
 	/**
 	 * The initial state passed to the state space generation
@@ -28,9 +28,10 @@ public class SSGBuilder {
 	 * Creates a new builder representing an everywhere
 	 * uninitialized StateSpaceGenerator.
 	 */
-    SSGBuilder() {
+    SSGBuilder(SceneObject sceneObject) {
+    	super(sceneObject);
 		initialStates = new ArrayList<>();
-		generator = new StateSpaceGenerator();
+		generator = new StateSpaceGenerator(sceneObject);
 	}
 	
 	/**

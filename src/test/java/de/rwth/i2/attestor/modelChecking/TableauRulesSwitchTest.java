@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.modelChecking;
 
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
 
 public class TableauRulesSwitchTest extends InternalStateSpace {
 
+	private SceneObject sceneObject;
 	private HeapConfiguration hc;
 	private DefaultProgramState state;
 
@@ -32,7 +35,8 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Before
 	public void setup() {
 
-		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		sceneObject = new MockupSceneObject();
+		hc = sceneObject.scene().createHeapConfiguration();
 		state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
 		this.addStateIfAbsent(state);
@@ -106,7 +110,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	@Test
 	public void caseAFalseTerm(){
 		
-		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		HeapConfiguration hc = sceneObject.scene().createHeapConfiguration();
 		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
 
@@ -166,7 +170,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 	public void ANegStateform(){
 		// Generate assertion
 
-		HeapConfiguration hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		HeapConfiguration hc = sceneObject.scene().createHeapConfiguration();
 		DefaultProgramState state = new DefaultProgramState(hc);
 		state.addAP("{ sll }");
 		this.addStateIfAbsent(state);

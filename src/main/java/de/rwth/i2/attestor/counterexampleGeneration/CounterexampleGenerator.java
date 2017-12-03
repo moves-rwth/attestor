@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
@@ -29,7 +30,7 @@ import java.util.*;
  *
  * @author Christoph
  */
-public final class CounterexampleGenerator {
+public final class CounterexampleGenerator extends SceneObject {
 
     private Program program;
     private Trace trace;
@@ -41,14 +42,14 @@ public final class CounterexampleGenerator {
     /**
      * @return A builder object to construct a new CounterexampleGenerator.
      */
-    public static CounterexampleGeneratorBuilder builder() {
-        return new CounterexampleGeneratorBuilder();
+    public static CounterexampleGeneratorBuilder builder(SceneObject sceneObject) {
+        return new CounterexampleGeneratorBuilder(sceneObject);
     }
 
     /**
      * Prevent construction of CounterexampleGenerator without using CounterexampleGeneratorBuilder.builder().
      */
-    private CounterexampleGenerator() {}
+    private CounterexampleGenerator(SceneObject sceneObject) { super(sceneObject);}
 
     /**
      * Start generation of an abstract heap configuration that represents input states to trigger the violation
@@ -77,7 +78,7 @@ public final class CounterexampleGenerator {
 
         ProgramState initialState = getInitialState();
         return StateSpaceGenerator
-                .builder()
+                .builder(this)
                 .setStateLabelingStrategy(s -> {})
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
@@ -127,8 +128,8 @@ public final class CounterexampleGenerator {
 
         private CounterexampleGenerator generator;
 
-        CounterexampleGeneratorBuilder() {
-            generator = new CounterexampleGenerator();
+        CounterexampleGeneratorBuilder(SceneObject sceneObject) {
+            generator = new CounterexampleGenerator(sceneObject);
         }
 
         /**

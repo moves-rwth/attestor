@@ -61,7 +61,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         MaterializationStrategy materializationStrategy = settings.stateSpaceGeneration().getMaterializationStrategy();
         CanonicalizationStrategy canonicalizationStrategy = settings.stateSpaceGeneration().getAggressiveCanonicalizationStrategy();
 
-        CounterexampleGenerator generator = CounterexampleGenerator.builder()
+        CounterexampleGenerator generator = CounterexampleGenerator.builder(this)
                 .setProgram(program)
                 .setTrace(trace)
                 .setDeadVariableEliminationEnabled(scene().options().isRemoveDeadVariables())

@@ -90,7 +90,7 @@ public class Attestor {
 	}
 
 	public long getTotalNumberOfStates() {
-		return settings.factory().getTotalNumberOfStates();
+		return scene.getNumberOfGeneratedStates();
 	}
 
 	public int getNumberOfStatesWithoutProcedureCalls() {

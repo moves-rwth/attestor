@@ -36,89 +36,9 @@ import java.util.List;
  */
 public class FactorySettings extends SceneObject {
 
-	/**
-	 * The logger of this class.
-	 */
-	private static final Logger logger = LogManager.getLogger( "FactorySettings");
-
-	/**
-	 * The total number of states that has been generated since running the tool.
-	 */
-	private long totalNumberOfStates = 0;
 
 	protected FactorySettings(Scene scene) {
 		super(scene);
-	}
-
-	/**
-	 * @return A HeapConfiguration that containsSubsumingState neither nodes nor edges.
-	 */
-	public HeapConfiguration createEmptyHeapConfiguration() {
-		return new InternalHeapConfiguration();
-	}
-
-	/**
-	 * Creates a Nonterminal symbol with the provided label.
-	 * @param label The label of the Nonterminal.
-	 * @return The Nonterminal.
-	 */
-	public Nonterminal getNonterminal(String label) {
-		if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-			logger.warn("Refinement of indexed grammars is not supported yet.");
-			Nonterminal basicNonterminal = scene().getNonterminal(label);
-			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-			//throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-		} else if(requiresIndexedSymbols()) {
-			Nonterminal basicNonterminal = scene().getNonterminal(label);
-			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-		} else if(requiresRefinedSymbols()) {
-			return new RefinedDefaultNonterminal(scene().getNonterminal(label), null);
-		} else {
-			return scene().getNonterminal(label);
-		}
-	}
-
-	/**
-	 * @return true if and only if an indexed analysis is performed.
-	 */
-	private boolean requiresIndexedSymbols() {
-		return scene().options().isIndexedMode();
-	}
-
-	/**
-	 * @return True if and only if heap automata are required.
-	 */
-	private boolean requiresRefinedSymbols() {
-
-		return scene().options().isGrammarRefinementEnabled();
-	}
-
-	/**
-	 * Creates a Nonterminal symbol with the provided parameters.
-	 * @param label The label of the Nonterminal symbol.
-	 * @param rank The number of nodes that have to be attached to an edge labeled with this Nonterminal.
-	 * @param isReductionTentacle An array of length rank that determines for each tentacle whether it is a reduction
-	 *                            tentacle or not. The i-th tentacle is a reduction tentacle if replacing a hyperedge
-	 *                            labeled with this Nonterminal never creates an outgoing edge at the i-th external
-	 *                            node.
-	 * @return The Nonterminal.
-	 */
-	public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
-
-		Nonterminal basicNonterminal = scene().createNonterminal(label, rank, isReductionTentacle);
-		if(requiresIndexedSymbols() && requiresRefinedSymbols()) {
-			logger.warn("Refinement of indexed grammars is not supported yet.");
-			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-			// throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-		} else if(requiresIndexedSymbols()) {
-			return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-		} else if(requiresRefinedSymbols()) {
-			return new RefinedDefaultNonterminal(
-					basicNonterminal,null
-					);
-		} else {
-			return basicNonterminal;
-		}
 	}
 
 	/**
@@ -140,46 +60,10 @@ public class FactorySettings extends SceneObject {
 		writer.close();
 	}
 
-	/**
-	 * Adds a number of previously generated states to the global state counter.
-	 * @param states The number of freshly generated states.
-	 */
-	private void addGeneratedStates(int states) {
-
-		assert(states >= 0);
-
-		totalNumberOfStates += states;
-	}
-
-	/**
-	 * Resets the global state counter.
-	 */
-	public void resetTotalNumberOfStates() {
-		totalNumberOfStates = 0;
-	}
-
-	/**
-	 * @return The total number of states generated since running the tool.
-	 */
-	public long getTotalNumberOfStates() {
-		return totalNumberOfStates;
-	}
-
-
-	public StateSpaceGenerator createStateSpaceGenerator(Program program, HeapConfiguration input ) {
-
-		return getStateSpaceGeneratorBuilder()
-				.setProgram(program)
-				.addInitialState(
-						createProgramState(input)
-						)
-				.build();
-	}
-
 	public StateSpaceGenerator createStateSpaceGenerator(Program program,
 			List<HeapConfiguration> inputs, int scopeDepth) {
 		List<ProgramState> inputStates = new ArrayList<>(inputs.size());
-		inputs.forEach(hc -> inputStates.add(createProgramState(hc)));
+		inputs.forEach(hc -> inputStates.add(scene().createProgramState(hc)));
 
         return getStateSpaceGeneratorBuilder()
                 .setProgram(program)
@@ -193,7 +77,7 @@ public class FactorySettings extends SceneObject {
 
         StateSpaceGenerationSettings stateSpaceGenerationSettings = Settings.getInstance().stateSpaceGeneration();
         return StateSpaceGenerator
-                .builder()
+                .builder(this)
                 .setStateLabelingStrategy(
                         stateSpaceGenerationSettings.getStateLabelingStrategy()
                 )
@@ -210,7 +94,7 @@ public class FactorySettings extends SceneObject {
                         stateSpaceGenerationSettings.getStateRefinementStrategy()
                 )
                 .setStateCounter(
-                        this::addGeneratedStates
+                		scene()::addNumberOfGeneratedStates
                 )
                 .setDeadVariableElimination(
                         scene().options().isRemoveDeadVariables()
@@ -242,20 +126,4 @@ public class FactorySettings extends SceneObject {
 
         return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy, optionSettings.getAbstractionDistance());
     }
-
-	public ProgramState createProgramState(HeapConfiguration heapConfiguration ) {
-
-		ProgramState result;
-
-		if(requiresIndexedSymbols()) {
-			result = new IndexedState(heapConfiguration);
-		} else {
-			result = new DefaultProgramState(heapConfiguration);
-		}
-
-
-		result.setProgramCounter(0);
-		result.prepareHeap();
-		return result;
-	}
 }

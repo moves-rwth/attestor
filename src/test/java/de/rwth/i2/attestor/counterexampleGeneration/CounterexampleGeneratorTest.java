@@ -58,7 +58,7 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             finalState = program.getStatement(0)
-                    .computeSuccessors(initialState.clone(), new MockupSymbolicExecutionObserver()).iterator().next();
+                    .computeSuccessors(initialState.clone(), new MockupSymbolicExecutionObserver(sceneObject)).iterator().next();
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }
@@ -69,7 +69,7 @@ public class CounterexampleGeneratorTest {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
         CounterexampleGenerator generator = CounterexampleGenerator
-                .builder()
+                .builder(sceneObject)
                 .setProgram(program)
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factoryEmpty.getCanonicalization())
@@ -119,7 +119,7 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             finalState = stmt.computeSuccessors(
-                    materialized.clone(), factoryEmpty.getSemanticsOptionsSupplier().get(null)
+                    materialized.clone(), factoryEmpty.getSemanticsOptionsSupplier(sceneObject).get(null)
             ).iterator().next();
             finalState = factorySLL.getCanonicalization().canonicalize(finalState);
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
@@ -131,7 +131,7 @@ public class CounterexampleGeneratorTest {
                 .addState(finalState);
 
         CounterexampleGenerator generator = CounterexampleGenerator
-                .builder()
+                .builder(sceneObject)
                 .setProgram(program)
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factorySLL.getCanonicalization())
@@ -187,7 +187,7 @@ public class CounterexampleGeneratorTest {
                         public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
                             ProgramState initialState = new DefaultProgramState(input.getHeap());
                             initialState.setProgramCounter(0);
-                            return StateSpaceGenerator.builder()
+                            return StateSpaceGenerator.builder(sceneObject)
                                     .addInitialState(initialState)
                                     .setProgram(program)
                                     .setStateRefinementStrategy(new NoStateRefinementStrategy())
@@ -229,7 +229,7 @@ public class CounterexampleGeneratorTest {
                 .addState(finalState.shallowCopyUpdatePC(-1));
 
         CounterexampleGenerator generator = CounterexampleGenerator
-                .builder()
+                .builder(sceneObject)
                 .setProgram(program)
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factorySLL.getCanonicalization())

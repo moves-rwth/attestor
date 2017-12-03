@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.modelChecking;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.UnitTestGlobalSettings;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
 
 public class ProofStructureTest extends InternalStateSpace {
 
+	private SceneObject sceneObject;
 	private HeapConfiguration hc;
 
 	public ProofStructureTest(){
@@ -31,7 +34,8 @@ public class ProofStructureTest extends InternalStateSpace {
 	@Before
 	public void setup() {
 
-		hc = Settings.getInstance().factory().createEmptyHeapConfiguration();
+		sceneObject = new MockupSceneObject();
+		hc = sceneObject.scene().createHeapConfiguration();
 	}
 
 	@Test

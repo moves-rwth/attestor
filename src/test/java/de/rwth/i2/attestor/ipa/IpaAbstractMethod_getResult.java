@@ -39,7 +39,7 @@ public class IpaAbstractMethod_getResult {
 		ProgramState input = createInput();
 		HeapConfiguration expected = createExpected();
 		
-		assertThat( ipa.getIPAResult(input, new MockupSymbolicExecutionObserver()), contains( expected ) );
+		assertThat( ipa.getIPAResult(input, new MockupSymbolicExecutionObserver(sceneObject)), contains( expected ) );
 	}
 
 

@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import java.util.Set;
+
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,15 +22,35 @@ import java.util.*;
  * @author christoph
  *
  */
-public class StateSpaceGenerator {
+public class StateSpaceGenerator extends SceneObject {
+
+	protected StateSpaceGenerator(SceneObject otherObject) {
+		super(otherObject);
+	}
 
 	/**
 	 * @return An SSGBuilder which is the only means to create a new
 	 * StateSpaceGenerator object.
 	 */
-	public static SSGBuilder builder() {
-		return new SSGBuilder();
-	}	
+	public static SSGBuilder builder(SceneObject sceneObject) {
+		return new SSGBuilder(sceneObject);
+	}
+
+	public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
+		return new SSGBuilder(stateSpaceGenerator)
+				.setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
+				.setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
+				.setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
+				.setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
+				.setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
+				.setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
+				.setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
+				.setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+				.setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
+				.setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
+				.setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+				.setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
+	}
 
 	private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
 

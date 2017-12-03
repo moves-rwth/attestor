@@ -18,7 +18,7 @@ public class Settings {
     /**
      * The single instance of this class.
      */
-	private static final Settings instance = new Settings();
+	private static final Settings instance = new Settings(); // TODO
 
     /**
      * @return The unique instance of this class.

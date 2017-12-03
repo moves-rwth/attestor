@@ -30,20 +30,8 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
 
         HeapConfiguration heap = input.getHeap();
 
-        ProgramState initialState = Settings.getInstance().factory().createProgramState(heap);
-        return StateSpaceGenerator.builder()
-                .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
-                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
-                .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
-                .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
-                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
-                .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
-                .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
-                .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
-                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy())
+        ProgramState initialState = stateSpaceGenerator.scene().createProgramState(heap);
+        return StateSpaceGenerator.builder(stateSpaceGenerator)
                 .setProgram(program)
                 .addInitialState(initialState)
                 .build()

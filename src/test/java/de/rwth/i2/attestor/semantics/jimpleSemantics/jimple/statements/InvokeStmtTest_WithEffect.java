@@ -80,7 +80,7 @@ public class InvokeStmtTest_WithEffect {
 	@Test
 	public void testComputeSuccessors() {
 		try {
-			Set<ProgramState> resStates = stmt.computeSuccessors( testInput, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> resStates = stmt.computeSuccessors( testInput, new MockupSymbolicExecutionObserver(sceneObject) );
 			assertEquals( 1, resStates.size() );
 			assertEquals( expectedHeap, resStates.iterator().next().getHeap() );
 		} catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {

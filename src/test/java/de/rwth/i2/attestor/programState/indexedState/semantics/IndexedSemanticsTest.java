@@ -49,7 +49,7 @@ public class IndexedSemanticsTest {
 		Field xLeft = new Field(type, varX, left);
 		AssignStmt stmt = new AssignStmt(varX, xLeft, 0, new HashSet<>());
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver());
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {
@@ -72,7 +72,7 @@ public class IndexedSemanticsTest {
 		NewExpr expr = new NewExpr(type);
 		AssignStmt stmt = new AssignStmt(varTmp, expr, 0, new HashSet<>());
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver());
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {
@@ -97,7 +97,7 @@ public class IndexedSemanticsTest {
 		AssignStmt stmt = new AssignStmt(xLeft, varTmp, 0, new HashSet<>());
 		
 		try {
-			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver());
+			Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 			assertEquals(1, result.size());
 			assertEquals(expected, result.iterator().next());
 		} catch (NotSufficientlyMaterializedException e) {

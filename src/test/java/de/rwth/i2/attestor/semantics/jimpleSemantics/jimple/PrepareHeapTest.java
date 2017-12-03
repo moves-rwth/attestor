@@ -66,7 +66,7 @@ public class PrepareHeapTest {
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver());
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject));
 			
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -97,7 +97,7 @@ public class PrepareHeapTest {
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			
@@ -128,7 +128,7 @@ public class PrepareHeapTest {
 			DefaultProgramState input = new DefaultProgramState( testGraph );
 			input.prepareHeap();
 
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
 
 			assertEquals( "result should have size 1", 1, res.size() );
 			

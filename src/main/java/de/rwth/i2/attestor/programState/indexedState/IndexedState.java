@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
 public class IndexedState extends GeneralProgramState {
+
 	private static final Logger logger = LogManager.getLogger( "IndexedState" );
 
 	public IndexedState( HeapConfiguration heap ) {

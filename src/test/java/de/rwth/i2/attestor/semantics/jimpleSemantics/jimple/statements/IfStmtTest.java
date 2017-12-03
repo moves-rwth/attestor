@@ -67,7 +67,7 @@ public class IfStmtTest {
 		try{
 			DefaultProgramState input = testState.clone();
 					
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
 			
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );
@@ -108,7 +108,7 @@ public class IfStmtTest {
 
 		try{
 			DefaultProgramState input = testState.clone();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
 			
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );
@@ -151,7 +151,7 @@ public class IfStmtTest {
 			DefaultProgramState input = testState.clone();
 			
 			
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver() );
+			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
 
 			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
 			assertEquals( "result should have size 1", 1, res.size() );

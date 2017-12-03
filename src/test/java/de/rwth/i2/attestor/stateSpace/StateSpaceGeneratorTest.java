@@ -43,7 +43,7 @@ public class StateSpaceGeneratorTest {
 		sceneObject = new MockupSceneObject();
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
-	    ssgBuilder = StateSpaceGenerator.builder()
+	    ssgBuilder = StateSpaceGenerator.builder(sceneObject)
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())

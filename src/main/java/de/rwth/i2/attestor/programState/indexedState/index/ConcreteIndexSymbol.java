@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConcreteIndexSymbol implements IndexSymbol {
-	//private static final Logger logger = LogManager.getLogger( "IndexSymbol" );
 
+	// TODO
 	private static final Map<String, ConcreteIndexSymbol> existingIndexSymbols = new HashMap<>();
 	
 	public static ConcreteIndexSymbol getIndexSymbol(String label, boolean isBottom ){

@@ -42,7 +42,7 @@ public class JsonToIndexedHC extends SceneObject {
 
 	public HeapConfiguration jsonToHC( JSONObject obj, Consumer<String> addSelectorLabelFunction ) {
 
-		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
+		HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
 
 		JSONArray jsonNodes = obj.getJSONArray( "nodes" );
 		TIntArrayList nodes = parseNodes( builder, jsonNodes );

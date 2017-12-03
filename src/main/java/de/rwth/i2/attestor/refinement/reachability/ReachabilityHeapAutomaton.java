@@ -72,8 +72,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
     private HeapConfiguration constructExternalKernel(HeapConfiguration canonicalHc) {
 
         ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
-        FactorySettings factory = Settings.getInstance().factory();
-        HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
+        HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
         Type type = scene().getType("kernelNode");
         int rank = canonicalHc.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList(rank);
@@ -95,8 +94,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
     private HeapConfiguration constructVariableKernel(HeapConfiguration canonicalHc) {
 
         ReachabilityHelper reachabilityHelper = new ReachabilityHelper(canonicalHc, trackedSelectorLabels);
-        FactorySettings factory = Settings.getInstance().factory();
-        HeapConfigurationBuilder builder = factory.createEmptyHeapConfiguration().builder();
+        HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
         Type type = scene().getType("kernelNode");
         int varCount = canonicalHc.countVariableEdges();
         TIntArrayList nodes = new TIntArrayList(varCount);

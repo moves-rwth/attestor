@@ -30,8 +30,6 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     @Override
     protected void executePhase() {
 
-        settings.factory().resetTotalNumberOfStates();
-
         Program program = getPhase(ProgramTransformer.class).getProgram();
         List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
 
@@ -48,7 +46,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         try {
             stateSpace = stateSpaceGenerator.generate();
             logger.info("State space generation finished. #states: "
-                    + settings.factory().getTotalNumberOfStates());
+                    + scene().getNumberOfGeneratedStates());
         } catch(StateSpaceGenerationAbortedException e) {
             logger.error("State space generation has been aborted prematurely.");
             stateSpace = stateSpaceGenerator.getStateSpace();
@@ -72,7 +70,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
         logSum("+----------------------------------+--------------------------------+");
         logSum(String.format("| # states w/ procedure calls      | %30d |",
-                settings.factory().getTotalNumberOfStates()));
+                scene().getNumberOfGeneratedStates()));
         logSum(String.format("| # states w/o procedure calls     | %30d |",
                 stateSpace.getStates().size()));
         logSum(String.format("| # final states                   | %30d |",

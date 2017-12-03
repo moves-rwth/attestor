@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.refinement.pointsTo;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
@@ -11,7 +12,11 @@ import gnu.trove.list.array.TIntArrayList;
 
 import java.util.*;
 
-public class PointsToHeapAutomaton implements HeapAutomaton {
+public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton {
+
+    public PointsToHeapAutomaton(SceneObject otherObject) {
+        super(otherObject);
+    }
 
     @Override
     public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
@@ -39,7 +44,7 @@ public class PointsToHeapAutomaton implements HeapAutomaton {
 
     private HeapConfiguration computeKernel(HeapConfiguration heapConfiguration) {
 
-        HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
+        HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
         int countExt = heapConfiguration.countExternalNodes();
         TIntArrayList nodes = new TIntArrayList( countExt );
 

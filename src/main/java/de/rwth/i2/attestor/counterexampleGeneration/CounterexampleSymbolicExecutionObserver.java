@@ -75,19 +75,8 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
             throws StateSpaceGenerationAbortedException {
 
         return StateSpaceGenerator
-                .builder()
-                .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
-                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
-                .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
-                .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
-                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
+                .builder(stateSpaceGenerator)
                 .setExplorationStrategy(new CounterexampleExplorationStrategy())
-                .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
-                .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
-                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy())
                 .setProgram(program)
                 .addInitialState(input)
                 .build()

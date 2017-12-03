@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class AbstractIndexSymbol implements IndexSymbol {
 
+	// TODO
 	private static final Map<String, AbstractIndexSymbol> existingSymbols = new HashMap<>();
 
 	public static synchronized AbstractIndexSymbol get(String label ){

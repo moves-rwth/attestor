@@ -26,7 +26,7 @@ public class DefaultProgramState extends GeneralProgramState {
      */
 	private static final Logger logger = LogManager.getLogger( "DefaultProgramState" );
 
-	private static HeapInclusionStrategy heapInclusionStrategy = new NormalFormInclusionStrategy();
+	private static HeapInclusionStrategy heapInclusionStrategy = new NormalFormInclusionStrategy(); // TODO
 
 	public static void setHeapInclusionStrategy(HeapInclusionStrategy strategy) {
 		heapInclusionStrategy = strategy;

@@ -1,17 +1,12 @@
 package de.rwth.i2.attestor.io.jsonImport;
 
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.environment.SceneObject;
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +20,7 @@ public class JsonToDefaultHC extends SceneObject {
 
 	public HeapConfiguration jsonToHC(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
 		
-		HeapConfigurationBuilder builder = Settings.getInstance().factory().createEmptyHeapConfiguration().builder();
+		HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
 
 		JSONArray jsonNodes = obj.getJSONArray( "nodes" );
 		TIntArrayList nodes = parseNodes( builder, jsonNodes );

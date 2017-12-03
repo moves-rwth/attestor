@@ -17,6 +17,7 @@ public class Variable implements NodeLabel{
 	/**
 	 * Caches all already created Variables together with their wrapped strings.
 	 */
+	// TODO
 	private static final Map<String, Variable> existingLabels = new HashMap<>();
 	
 	/**
