@@ -20,6 +20,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
 import de.rwth.i2.attestor.main.settings.InputSettings;
@@ -66,7 +67,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
     @Override
     protected void executePhase() {
 
-        grammar = settings.grammar().getGrammar();
+        grammar = getPhase(GrammarTransformer.class).getGrammar();
 
         checkSelectors();
 
@@ -192,7 +193,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
         Set<String> nullPointerGuards = new HashSet<>();
 
-        Grammar grammar = settings.grammar().getGrammar();
         for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
             if(lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;

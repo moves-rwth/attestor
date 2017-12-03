@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
@@ -110,7 +111,7 @@ public class MarkingGenerationPhase extends AbstractPhase
 
     private void markInputs(Marking marking) {
 
-        Grammar grammar = settings.grammar().getGrammar();
+        Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
         List<HeapConfiguration> newInputs = new ArrayList<>();
         for(HeapConfiguration input : inputs) {
             MarkedHcGenerator generator = new MarkedHcGenerator(this, input, grammar, marking);

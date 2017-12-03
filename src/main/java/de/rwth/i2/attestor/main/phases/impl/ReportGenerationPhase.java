@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.ipa.IpaContractCollection;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -150,7 +151,8 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         // Generate JSON files
         GrammarExporter exporter = new JsonGrammarExporter();
-        exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
+        exporter.export(location + File.separator + "grammarData",
+                getPhase(GrammarTransformer.class).getGrammar());
 
         logger.info("done. Grammar exported to '" + location + "'");
     }

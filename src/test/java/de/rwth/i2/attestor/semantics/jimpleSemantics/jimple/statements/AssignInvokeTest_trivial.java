@@ -43,7 +43,9 @@ public class AssignInvokeTest_trivial {
 
 	@Before
 	public void setUp() throws Exception{
-		Settings.getInstance().grammar().setGrammar( Grammar.builder().build() );
+
+		// TODO
+		//Settings.getInstance().grammar().setGrammar( Grammar.builder().build() );
 
 		sceneObject = new MockupSceneObject();
 		hcFactory = new ExampleHcImplFactory(sceneObject);

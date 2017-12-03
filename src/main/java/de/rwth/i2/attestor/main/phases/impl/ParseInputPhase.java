@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.io.FileReader;
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ParseInputPhase extends AbstractPhase implements InputTransformer {
@@ -72,8 +74,9 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
     private String renamingInitialState(String str) {
 
         // Modify initial state (replace all keys in rename by its values)
-        if(settings.grammar().getRenamingMap() != null){
-            for(HashMap.Entry<String, String> renaming : settings.grammar().getRenamingMap().entrySet()){
+        Map<String, String> renamingMap = getPhase(GrammarTransformer.class).getRenamingMap();
+        if(renamingMap != null){
+            for(HashMap.Entry<String, String> renaming : renamingMap.entrySet()){
                 str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
             }
         }

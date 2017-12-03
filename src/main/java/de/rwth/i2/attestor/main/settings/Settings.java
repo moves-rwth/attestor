@@ -38,11 +38,6 @@ public class Settings {
      */
 	private OutputSettings outputSettings;
 
-    /**
-     * Settings regarding the graph grammars underlying the analysis.
-     */
-	private GrammarSettings grammarSettings;
-
 	/**
 	 * Settings customizing whether and how model checking is performed.
 	 */
@@ -67,7 +62,6 @@ public class Settings {
 	public void resetAllSettings() {
         inputSettings = new InputSettings();
         outputSettings = new OutputSettings();
-        grammarSettings = new GrammarSettings(scene);
 		mcSettings = new ModelCheckingSettings();
     }
 
@@ -83,13 +77,6 @@ public class Settings {
      */
 	public OutputSettings output() {
 		return outputSettings;
-	}
-
-    /**
-     * @return All settings regarding the graph grammar underlying the analysis.
-     */
-	public GrammarSettings grammar() {
-	    return grammarSettings;
 	}
 
 	/**

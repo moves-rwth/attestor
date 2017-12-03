@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.environment.Scene;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
@@ -22,14 +23,12 @@ import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomato
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class GrammarRefinementPhase extends AbstractPhase
-        implements InputTransformer, StateLabelingStrategyBuilderTransformer, StateSpaceGenerationTransformer {
+        implements InputTransformer, StateLabelingStrategyBuilderTransformer,
+        StateSpaceGenerationTransformer, GrammarTransformer {
 
     private static final Pattern btree = Pattern.compile("^btree$");
     private static final Pattern bimap = Pattern.compile("^bimap$");
@@ -44,6 +43,8 @@ public class GrammarRefinementPhase extends AbstractPhase
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
     private StateRefinementStrategy stateRefinementStrategy;
 
+    private Grammar grammar;
+
     public GrammarRefinementPhase(Scene scene) {
         super(scene);
     }
@@ -57,7 +58,7 @@ public class GrammarRefinementPhase extends AbstractPhase
     @Override
     protected void executePhase() {
 
-
+        grammar = getPhase(GrammarTransformer.class).getGrammar();
         inputs = getPhase(InputTransformer.class).getInputs();
 
         stateLabelingStrategyBuilder = getPhase(StateLabelingStrategyBuilderTransformer.class).getStrategy();
@@ -80,13 +81,11 @@ public class GrammarRefinementPhase extends AbstractPhase
         }
 
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
-        Grammar grammar =  settings.grammar().getGrammar();
 
         if(automaton != null && grammar != null && !scene().options().isIndexedMode()) {
             scene().options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
-            settings.grammar().setGrammar(grammar);
         }
     }
 
@@ -107,17 +106,14 @@ public class GrammarRefinementPhase extends AbstractPhase
         for(String ap : requiredAPs) {
 
             if(!hasBimapAutomaton && bimap.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new ListLengthAutomaton(this, grammar));
                 hasBimapAutomaton = true;
                 logger.debug("Enable checking for lists of equal length.");
             } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new BalancednessAutomaton(this, grammar));
                 hasBtreeAutomaton = true;
                 logger.debug("Enable checking for balanced trees.");
             } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
                 stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(this, grammar));
                 hasLanguageInclusionAutomaton = true;
                 logger.debug("Enable language inclusion checks to determine heap shapes.");
@@ -268,5 +264,15 @@ public class GrammarRefinementPhase extends AbstractPhase
     @Override
     public StateRefinementStrategy getStateRefinementStrategy() {
         return stateRefinementStrategy;
+    }
+
+    @Override
+    public Grammar getGrammar() {
+        return grammar;
+    }
+
+    @Override
+    public Map<String, String> getRenamingMap() {
+        return getPhase(GrammarTransformer.class).getRenamingMap();
     }
 }
