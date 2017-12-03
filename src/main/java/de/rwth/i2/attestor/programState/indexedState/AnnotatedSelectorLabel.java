@@ -5,13 +5,18 @@ import de.rwth.i2.attestor.graph.BasicSelectorLabel;
 
 public class AnnotatedSelectorLabel implements SelectorLabel {
 
-	private final BasicSelectorLabel basicSelectorLabel;
+	private final BasicSelectorLabel selectorLabel;
 	private final String annotation;
 	
-	public AnnotatedSelectorLabel( SelectorLabel basicSelectorLabel, String annotation ) {
+	public AnnotatedSelectorLabel( SelectorLabel selectorLabel, String annotation ) {
 
-		assert basicSelectorLabel instanceof BasicSelectorLabel;
-		this.basicSelectorLabel = (BasicSelectorLabel) basicSelectorLabel;
+		if(selectorLabel instanceof AnnotatedSelectorLabel) {
+			AnnotatedSelectorLabel other = (AnnotatedSelectorLabel) selectorLabel;
+			this.selectorLabel = other.selectorLabel;
+		} else {
+			assert selectorLabel instanceof BasicSelectorLabel;
+			this.selectorLabel = (BasicSelectorLabel) selectorLabel;
+		}
 		this.annotation = annotation;
 	}
 
@@ -19,11 +24,11 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 
 		if(selectorLabel instanceof AnnotatedSelectorLabel) {
 			AnnotatedSelectorLabel other = (AnnotatedSelectorLabel) selectorLabel;
-			this.basicSelectorLabel = other.basicSelectorLabel;
+			this.selectorLabel = other.selectorLabel;
 			this.annotation = other.annotation;
 		} else {
 			assert selectorLabel instanceof BasicSelectorLabel;
-			this.basicSelectorLabel = (BasicSelectorLabel) selectorLabel;
+			this.selectorLabel = (BasicSelectorLabel) selectorLabel;
 			this.annotation = "";
 		}
 	}
@@ -42,7 +47,7 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
-		result = prime * result + ((basicSelectorLabel == null) ? 0 : basicSelectorLabel.hashCode());
+		result = prime * result + ((selectorLabel == null) ? 0 : selectorLabel.hashCode());
 		return result;
 	}
 
@@ -60,23 +65,23 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
 				return false;
 		} else if (!annotation.equals(other.annotation))
 			return false;
-		if (basicSelectorLabel == null) {
-			return other.basicSelectorLabel == null;
-		} else return basicSelectorLabel.equals(other.basicSelectorLabel);
+		if (selectorLabel == null) {
+			return other.selectorLabel == null;
+		} else return selectorLabel.equals(other.selectorLabel);
 	}
 
 	public boolean hasLabel( String label ){
-		return basicSelectorLabel.hasLabel(label);
+		return selectorLabel.hasLabel(label);
 	}
 	
 	@Override
 	public String getLabel( ){
-		return this.basicSelectorLabel.toString();
+		return this.selectorLabel.toString();
 	}
 	
 	@Override
 	public String toString(){
-		return basicSelectorLabel.toString() + "[" + this.annotation + "]";
+		return selectorLabel.toString() + "[" + this.annotation + "]";
 	}
 
     public String getAnnotation() {

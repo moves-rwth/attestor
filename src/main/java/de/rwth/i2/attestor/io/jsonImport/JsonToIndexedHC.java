@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.environment.SceneObject;
+import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -73,7 +74,8 @@ public class JsonToIndexedHC extends SceneObject {
 			if( hyperedge.has("index") ){
 				List<IndexSymbol> index = parseIndex( hyperedge.getJSONArray("index") );
 
-				IndexedNonterminal indexedNt = (IndexedNonterminal) Settings.getInstance().factory().getNonterminal(label);
+				Nonterminal bnt = scene().getNonterminal(label);
+				IndexedNonterminal indexedNt = new IndexedNonterminalImpl(bnt, index);
 				nt = indexedNt.getWithIndex(index);
 			}else{
 				nt = scene().getNonterminal(label);
