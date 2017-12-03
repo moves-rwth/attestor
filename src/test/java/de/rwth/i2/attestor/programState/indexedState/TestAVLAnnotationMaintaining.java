@@ -35,7 +35,7 @@ public class TestAVLAnnotationMaintaining {
 		IndexedState expected = new IndexedState(graphFactory.getExpected_AnnotationMaintaining());
 
 		BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy(sceneObject);
-		strategy.refine(new Skip(0), input);
+		strategy.refine(new Skip(sceneObject, 0), input);
 
 		assertEquals(expected, input);
 	}

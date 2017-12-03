@@ -65,15 +65,15 @@ public class InvokeStmtTest_WithEffect {
 		
 		AbstractMethod method = new IpaAbstractMethod(sceneObject,"method");
 		List<Semantics> methodBody = new ArrayList<>();
-		methodBody.add( new IdentityStmt(1, varY, "@parameter0:"));
+		methodBody.add( new IdentityStmt(sceneObject,1, varY, "@parameter0:"));
 		
 		HashSet<String> liveVariables = new HashSet<>();	
-		methodBody.add( new AssignStmt(nextOfY, varY, 2, liveVariables));
-		methodBody.add( new ReturnValueStmt(varY, type) );
+		methodBody.add( new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
+		methodBody.add( new ReturnValueStmt(sceneObject, varY, type) );
 		method.setControlFlow( methodBody );
 		
-		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(nextOfX));
-		stmt = new InvokeStmt(method, invokeHelper, 1);
+		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
+		stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);
 		
 	}
 

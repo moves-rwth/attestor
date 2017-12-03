@@ -3,6 +3,9 @@ package de.rwth.i2.attestor.main.settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Collects all options that customize the state space generation.
  *
@@ -61,6 +64,19 @@ public class OptionSettings {
 	 * Determines if post-processing is applied to generated state spaces.
 	 */
 	private boolean postProcessingEnabled = true;
+
+	/**
+	 * The set of variables that will never ever be eliminated.
+	 */
+	private final Set<String> keptVariables = new HashSet<>();
+
+	public void addKeptVariable(String unscopedVariableName) {
+		keptVariables.add(unscopedVariableName);
+	}
+
+	public boolean isKeptVariableName(String unscopedVariableName) {
+		return keptVariables.contains(unscopedVariableName);
+	}
 
 	/**
 	 * @return True if post-processing is applied to generated state spaces.

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
@@ -37,8 +38,8 @@ public class IdentityStmt extends Statement {
 	 */
 	private final String rhs;
 
-	public IdentityStmt( int nextPC, SettableValue lhs, String rhs ){
-		super();
+	public IdentityStmt(SceneObject sceneObject, int nextPC, SettableValue lhs, String rhs ){
+		super(sceneObject);
 		this.nextPC = nextPC;
 		this.lhs = lhs;
 		this.rhs = rhs.split( " " ) [0];

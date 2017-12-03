@@ -42,7 +42,7 @@ public class ItentityStatementTest {
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
 		Type type = sceneObject.scene().getType( "node" );
-		stmt = new IdentityStmt( 1, new Local( type, "y" ), "x" );
+		stmt = new IdentityStmt(sceneObject, 1, new Local( type, "y" ), "x" );
 		inputState = new DefaultProgramState( hcFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();

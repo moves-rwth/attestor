@@ -59,7 +59,7 @@ public class AssignStmtTest {
 		Value origin = new Local( type, "ZYX" );
 		Value rhs = new Field( type, origin, right );
 
-		AssignStmt stmt = new AssignStmt(lhs, rhs, 2, new HashSet<>());
+		AssignStmt stmt = new AssignStmt(sceneObject, lhs, rhs, 2, new HashSet<>());
 		try{
 			
 			DefaultProgramState input = new DefaultProgramState(testGraph);

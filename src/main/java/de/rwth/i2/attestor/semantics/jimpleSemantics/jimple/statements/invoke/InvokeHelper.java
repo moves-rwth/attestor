@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
  * @author Hannah Arndt
  *
  */
-public abstract class InvokeHelper {
+public abstract class InvokeHelper extends SceneObject {
 
 	private static final Logger logger = LogManager.getLogger( "InvokePrepare" );
 
@@ -75,7 +76,8 @@ public abstract class InvokeHelper {
 	 */
 	public abstract void cleanHeap( ProgramState programState, SymbolicExecutionObserver options );
 	
-	InvokeHelper() {
+	InvokeHelper(SceneObject sceneObject) {
+		super(sceneObject);
 		potentialViolationPoints = new ViolationPoints();
 	}
 	
@@ -116,7 +118,8 @@ public abstract class InvokeHelper {
 			}
 
 			if(options.isDeadVariableEliminationEnabled()) {
-				DeadVariableEliminator.removeDeadVariables( argumentValues.get( i ).toString(), programState, liveVariableNames );
+				DeadVariableEliminator.removeDeadVariables(this, argumentValues.get( i ).toString(),
+						programState, liveVariableNames );
 			}
 		}
 	}

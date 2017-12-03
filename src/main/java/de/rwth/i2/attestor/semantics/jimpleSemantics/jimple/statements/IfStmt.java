@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
@@ -49,8 +50,9 @@ public class IfStmt extends Statement {
 
 	private final NondeterminismMessage nondeterminismMessage;
 
-	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
+	public IfStmt(SceneObject sceneObject, Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
 
+		super(sceneObject);
 		this.conditionValue = condition;
 		this.truePC = truePC;
 		this.falsePC = falsePC;
@@ -99,7 +101,8 @@ public class IfStmt extends Statement {
 		}
 
 		if(observer.isDeadVariableEliminationEnabled()) {
-			DeadVariableEliminator.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
+			DeadVariableEliminator.removeDeadVariables(this, conditionValue.toString(),
+					programState, liveVariableNames);
 		}
 
 		if( concreteCondition.equals( trueValue ) ){

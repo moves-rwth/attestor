@@ -49,7 +49,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
      */
 	public StandardAbstractSemantics(SceneObject sceneObject) {
 		super(sceneObject);
-		this.nextLevel = new DefaultAbstractSemantics( topLevel );
+		this.nextLevel = new DefaultAbstractSemantics(this, topLevel );
 	}
 	
 	@Override
@@ -177,10 +177,10 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 				logger.fatal("Unexpected exception");
 				throw new IllegalStateException(e.getMessage());
 			}
-			return new AssignInvoke( lhs, method, invokePrepare, pc + 1 );
+			return new AssignInvoke(this, lhs, method, invokePrepare, pc + 1 );
 		}else{
 			Value rhs = topLevel.translateValue( stmt.getRightOp() );
-			return new AssignStmt( lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input));
+			return new AssignStmt(this, lhs, rhs, pc + 1, LiveVariableHelper.extractLiveVariables(input));
 		}
 	}
 
@@ -209,7 +209,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		InvokeHelper invokePrepare = createInvokeHelper( expr );
 		invokePrepare.setLiveVariableNames( LiveVariableHelper.extractLiveVariables( input ) );
 		logger.trace( "recognized InvokeStmt. " + name );
-		return new InvokeStmt( translatedMethod, invokePrepare, pc + 1 );
+		return new InvokeStmt(this, translatedMethod, invokePrepare, pc + 1 );
 	}
 	
 	/**
@@ -231,9 +231,9 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 			soot.Value sootBase = instanceMethod.getBase();
 			Value translatedBase = topLevel.translateValue( sootBase );
 
-			invokeHelper = new InstanceInvokeHelper( translatedBase, translatedParams);
+			invokeHelper = new InstanceInvokeHelper(this, translatedBase, translatedParams);
 		}else{
-			invokeHelper = new StaticInvokeHelper( translatedParams);
+			invokeHelper = new StaticInvokeHelper(this, translatedParams);
 		}
 		return invokeHelper;
 	}
@@ -242,7 +242,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
      * @return The translated return void statement.
      */
 	private ReturnVoidStmt translateReturnVoidStmt() {
-		return new ReturnVoidStmt();
+		return new ReturnVoidStmt(this);
 	}
 
     /**
@@ -254,7 +254,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		soot.jimple.ReturnStmt stmt = (soot.jimple.ReturnStmt) input;
 		Value returnValue = topLevel.translateValue( stmt.getOp() );
 		Type expectedType = topLevel.translateType( stmt.getOp().getType() );
-		return new ReturnValueStmt( returnValue, expectedType );
+		return new ReturnValueStmt(this, returnValue, expectedType );
 	}
 
     /**
@@ -267,7 +267,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		soot.jimple.IdentityStmt stmt = (soot.jimple.IdentityStmt) input;
 		SettableValue lhs = (SettableValue) topLevel.translateValue( stmt.getLeftOp() );
 		String rhs = stmt.getRightOp().toString();
-		return new IdentityStmt( pc + 1, lhs, rhs );
+		return new IdentityStmt(this, pc + 1, lhs, rhs );
 	}
 
     /**
@@ -279,7 +279,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		soot.jimple.GotoStmt stmt = (soot.jimple.GotoStmt) input;
 		Unit successor = stmt.getTarget();
 		int successorPC = topLevel.getPCforUnit( successor );
-		return new GotoStmt( successorPC );
+		return new GotoStmt(this, successorPC );
 	}
 
     /**
@@ -294,7 +294,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 		Unit trueSuccessor = stmt.getTarget();
 		int truePC = topLevel.getPCforUnit( trueSuccessor );
 		int falsePC = pc + 1;
-		return new IfStmt( condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input) );
+		return new IfStmt(this, condition, truePC, falsePC, LiveVariableHelper.extractLiveVariables(input) );
 	}
 
     /**

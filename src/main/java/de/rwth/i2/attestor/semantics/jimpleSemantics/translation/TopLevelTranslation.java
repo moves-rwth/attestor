@@ -90,10 +90,6 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 	 * Assumes that soot.Scene already containsSubsumingState the Jimple code that should be
 	 * translated.
 	 * 
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#SimpleAbstractMethod(String)
-	 *      AbstractMethod(String name)
-	 * @see de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod#setControlFlow(List)
-	 *      AbstractMethod.setControlFlow(List program)
 	 * @see #translateMethod(SootMethod)
 	 */
 	public void translate() {
@@ -236,7 +232,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 			res.setDisplayName(displayName);
 			
 			List<Semantics> defaultControlFlow = new ArrayList<>();
-			defaultControlFlow.add(new Skip(-1));
+			defaultControlFlow.add(new Skip(this,-1));
 			res.setControlFlow(defaultControlFlow);
 
 			logger.warn("Method " + signature + " replaced by empty default method.");

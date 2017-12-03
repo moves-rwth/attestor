@@ -45,12 +45,12 @@ public class InvokeStmtTest {
 		Local var = new Local( type, "x" );
 		AbstractMethod method = new SimpleAbstractMethod(sceneObject, "method"  );
 		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add( new Skip( -1 ) );
+		defaultControlFlow.add( new Skip(sceneObject, -1 ) );
 		method.setControlFlow( defaultControlFlow );
 		InvokeHelper invokePrepare
-			= new InstanceInvokeHelper( var, new ArrayList<>() );
+			= new InstanceInvokeHelper(sceneObject, var, new ArrayList<>() );
 		
-		stmt = new InvokeStmt( method, invokePrepare, 1 );
+		stmt = new InvokeStmt(sceneObject, method, invokePrepare, 1 );
 		inputState = new DefaultProgramState( hcFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();

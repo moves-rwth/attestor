@@ -86,6 +86,7 @@ public class CounterexampleGeneratorTest {
         return Program.builder()
                 .addStatement(
                         new AssignStmt(
+                                sceneObject,
                                 new Local(type, "x"),
                                 new Field(type, new Local(type, "x"), next),
                                 -1, Collections.emptySet()
@@ -168,7 +169,7 @@ public class CounterexampleGeneratorTest {
         AssignInvoke invokeStmt = getProcedure();
         Program program = Program.builder()
                 .addStatement(invokeStmt)
-                .addStatement(new Skip(2))
+                .addStatement(new Skip(sceneObject,2))
                 .addStatement(new TerminalStatement())
                 .build();
 
@@ -258,14 +259,14 @@ public class CounterexampleGeneratorTest {
         Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel());
 
         List<Semantics> controlFlow = new ArrayList<>();
-        controlFlow.add( new IdentityStmt(1, varY, "@parameter0:"));
+        controlFlow.add( new IdentityStmt(sceneObject,1, varY, "@parameter0:"));
 
-        controlFlow.add( new AssignStmt(varY, fieldN, 2, Collections.emptySet()));
-        controlFlow.add( new ReturnValueStmt(varY, factorySLL.getNodeType()) );
+        controlFlow.add( new AssignStmt(sceneObject, varY, fieldN, 2, Collections.emptySet()));
+        controlFlow.add( new ReturnValueStmt(sceneObject, varY, factorySLL.getNodeType()) );
         procedure.setControlFlow( controlFlow );
 
         Local varX = new Local(factorySLL.getNodeType(), "x");
-        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(SingleElementUtil.createList(varX));
-        return new AssignInvoke(varX, procedure, invokeHelper, 1);
+        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(varX));
+        return new AssignInvoke(sceneObject, varX, procedure, invokeHelper, 1);
     }
 }

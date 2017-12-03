@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.BranchingSkip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
@@ -26,7 +27,7 @@ import java.util.List;
  * @author Hannah Arndt, Christoph
  *
  */
-public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
+public class DefaultAbstractSemantics extends SceneObject implements JimpleToAbstractSemantics {
 
     /**
      * The logger of this class.
@@ -42,7 +43,8 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
      * Initializes this translation level.
      * @param topLevel The top level of the translation hierarchy.
      */
-	DefaultAbstractSemantics(TopLevelTranslation topLevel ) {
+	DefaultAbstractSemantics(SceneObject sceneObject, TopLevelTranslation topLevel ) {
+		super(sceneObject);
 		this.topLevel = topLevel;
 	}
 
@@ -60,12 +62,12 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 			if( targets.size() >= 2){
 				Unit leftTarget = targets.get(0).getUnit();
 				Unit rightTarget = targets.get(1).getUnit();
-				res = new BranchingSkip( topLevel.getPCforUnit(leftTarget), topLevel.getPCforUnit(rightTarget));
+				res = new BranchingSkip(this, topLevel.getPCforUnit(leftTarget), topLevel.getPCforUnit(rightTarget));
 			}else if(targets.size() == 1 ){
 				Unit target = targets.get(0).getUnit();
-				res = new Skip(topLevel.getPCforUnit(target) ); 
+				res = new Skip(this, topLevel.getPCforUnit(target) );
 			}else{
-				res = new Skip(-1);
+				res = new Skip(this,-1);
 			}
 			if( targets.size() > 2 ){
 				logger.warn("Only the first two targets are considered");
@@ -75,7 +77,7 @@ public class DefaultAbstractSemantics implements JimpleToAbstractSemantics {
 		}
 		logger.warn("Warning: " + input + " is not supported. Replaced by undefined.");
 
-		res = new Skip( pc+1);
+		res = new Skip(this, pc+1);
 		return res;
 	}
 

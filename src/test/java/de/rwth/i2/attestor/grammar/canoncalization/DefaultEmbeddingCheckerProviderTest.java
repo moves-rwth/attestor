@@ -40,7 +40,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 		boolean aggressiveReturnAbstraction = true;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
 		HeapConfiguration pattern = getPattern();
-		Statement statement = new Skip(0);
+		Statement statement = new Skip(sceneObject,0);
 		boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
 		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1, aggressiveNullAbstraction );
@@ -60,7 +60,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 		boolean aggressiveReturnAbstraction = false;
 		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
 		HeapConfiguration pattern = getPattern();
-		Statement statement = new ReturnVoidStmt();
+		Statement statement = new ReturnVoidStmt(sceneObject);
 
 		boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1, aggressiveNullAbstraction );

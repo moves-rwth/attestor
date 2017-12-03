@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import java.util.*;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,8 +35,8 @@ public class ReturnValueStmt extends Statement {
 	 */
 	private final Type expectedType;
 
-	public ReturnValueStmt( Value returnValue, Type type ){
-		super();
+	public ReturnValueStmt(SceneObject sceneObject, Value returnValue, Type type ){
+		super(sceneObject);
 		this.returnValue = returnValue;
 		this.expectedType = type;
 	}

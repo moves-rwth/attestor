@@ -75,7 +75,7 @@ public class MarkingGenerationPhase extends AbstractPhase
 
             if(visitedByPattern.matcher(s).matches()) {
                 String varName = s.split("[\\(\\)]")[1];
-                settings.stateSpaceGeneration().addKeptVariable(varName);
+                scene().options().addKeptVariable(varName);
                 requiresVisitedByMarking = true;
             }
 

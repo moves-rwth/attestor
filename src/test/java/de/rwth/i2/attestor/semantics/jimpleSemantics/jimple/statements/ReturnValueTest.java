@@ -42,7 +42,7 @@ public class ReturnValueTest {
 		hcFactory = new ExampleHcImplFactory(sceneObject);
 
 		Type type = sceneObject.scene().getType( "node" );
-		stmt = new ReturnValueStmt( new Local( type, "x" ), type );
+		stmt = new ReturnValueStmt(sceneObject, new Local( type, "x" ), type );
 		inputState = new DefaultProgramState( hcFactory.getListAndConstants() );
 		inputState.prepareHeap();
 		inputGraph = inputState.getHeap();

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,9 +40,9 @@ public class StaticInvokeHelper extends InvokeHelper {
 	 *            The values which form the arguments of the method in the
 	 *            correct ordering
 	 */
-	public StaticInvokeHelper(List<Value> argumentValues){
+	public StaticInvokeHelper(SceneObject sceneObject, List<Value> argumentValues){
 
-		super();
+		super(sceneObject);
 		this.argumentValues = argumentValues;
 		
 		precomputePotentialViolationPoints();

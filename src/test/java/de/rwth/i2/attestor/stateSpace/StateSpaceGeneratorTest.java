@@ -63,8 +63,8 @@ public class StateSpaceGeneratorTest {
 		HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 		
 		List<Semantics> programInstructions = new ArrayList<>();
-		programInstructions.add( new Skip( 1 ) );
-		programInstructions.add( new ReturnVoidStmt() );
+		programInstructions.add( new Skip(sceneObject, 1 ) );
+		programInstructions.add( new ReturnVoidStmt(sceneObject) );
 		Program mainProgram = new Program( programInstructions );
 
 
@@ -93,12 +93,12 @@ public class StateSpaceGeneratorTest {
 		Type type = sceneObject.scene().getType( "type" );
 		
 		List<Semantics> programInstructions = new ArrayList<>();
-		Statement skipStmt = new Skip( 1 );
+		Statement skipStmt = new Skip(sceneObject, 1 );
 		programInstructions.add( skipStmt );
-		Statement assignStmt = new AssignStmt( new Local( type, "x" ), new NewExpr( type ),
+		Statement assignStmt = new AssignStmt(sceneObject, new Local( type, "x" ), new NewExpr( type ),
                 2, new HashSet<>());
 		programInstructions.add( assignStmt );
-		Statement returnStmt = new ReturnVoidStmt();
+		Statement returnStmt = new ReturnVoidStmt(sceneObject);
 		programInstructions.add( returnStmt );
 
 		Program mainProgram = new Program( programInstructions );
@@ -157,11 +157,11 @@ public class StateSpaceGeneratorTest {
 		HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 		
 		List<Semantics> programInstructions = new ArrayList<>();
-		Statement ifStmt = new IfStmt( new IntConstant( 1 ), 1, 2, new HashSet<>());
+		Statement ifStmt = new IfStmt(sceneObject, new IntConstant( 1 ), 1, 2, new HashSet<>());
 		programInstructions.add( ifStmt );
-		Statement firstReturn = new ReturnVoidStmt();
+		Statement firstReturn = new ReturnVoidStmt(sceneObject);
 		programInstructions.add( firstReturn );
-		Statement secondReturn = new ReturnValueStmt( new IntConstant( 0 ), null );
+		Statement secondReturn = new ReturnValueStmt(sceneObject, new IntConstant( 0 ), null );
 		programInstructions.add( secondReturn );
 		Program mainProgram = new Program( programInstructions );
 

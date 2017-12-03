@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
@@ -42,8 +43,8 @@ public class AssignStmt extends Statement {
 	
 	private final Set<String> liveVariableNames;
 
-	public AssignStmt( SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames){
-		super();
+	public AssignStmt(SceneObject sceneObject, SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames){
+		super(sceneObject);
 		this.rhs = rhs;
 		this.lhs = lhs;
 		this.nextPC = nextPC;
@@ -92,8 +93,11 @@ public class AssignStmt extends Statement {
 		}
 
 		if(observer.isDeadVariableEliminationEnabled()) {
-			DeadVariableEliminator.removeDeadVariables(rhs.toString(), programState, liveVariableNames);
-			DeadVariableEliminator.removeDeadVariables(lhs.toString(), programState, liveVariableNames);
+			DeadVariableEliminator.removeDeadVariables(this, rhs.toString(),
+					programState, liveVariableNames);
+
+			DeadVariableEliminator.removeDeadVariables(this, lhs.toString(),
+					programState, liveVariableNames);
 		}
 
 		ProgramState result = programState.clone();

@@ -55,11 +55,11 @@ public class AssignInvokeTest_trivial {
 
 		AbstractMethod method = new SimpleAbstractMethod(sceneObject, "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add( new Skip( -1 ) );
+		defaultControlFlow.add( new Skip(sceneObject, -1 ) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>());
+		InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 		
-		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
+		stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1 );
 		
 		inputGraph = hcFactory.getListAndConstants();
 		inputState = new DefaultProgramState( inputGraph );

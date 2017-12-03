@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,9 +40,10 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 	 */
 	private final int nextPC;
 
-	public AssignInvoke( SettableValue lhs, AbstractMethod method, InvokeHelper invokePrepare,
-			int nextPC ){
-		super();
+	public AssignInvoke(SceneObject sceneObject, SettableValue lhs,
+						AbstractMethod method, InvokeHelper invokePrepare,
+						int nextPC ){
+		super(sceneObject);
 		this.lhs = lhs;
 		this.method = method;
 		this.invokePrepare = invokePrepare;

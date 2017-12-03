@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import java.util.List;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,9 +44,9 @@ public class InstanceInvokeHelper extends InvokeHelper {
 	 * @param argumentValues  the values which form the arguments of the method in the
 	 *            correct ordering
 	 */
-	public InstanceInvokeHelper( Value baseValue, List<Value> argumentValues){
+	public InstanceInvokeHelper(SceneObject sceneObject, Value baseValue, List<Value> argumentValues){
 
-		super();
+		super(sceneObject);
 		this.baseValue = baseValue;
 		this.argumentValues = argumentValues;
 		
@@ -91,7 +92,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 			String type = "";
 			programState.setIntermediate( "@this:" + type, concreteBase );
 			if(options.isDeadVariableEliminationEnabled()) {
-				DeadVariableEliminator.removeDeadVariables( baseValue.toString(), programState, liveVariableNames );
+				DeadVariableEliminator.removeDeadVariables(this, baseValue.toString(), programState, liveVariableNames );
 			}
 		}
 

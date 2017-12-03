@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -25,8 +26,8 @@ public class BranchingSkip extends Statement {
 	 */
 	private final int rightSuccessor;
 
-	public BranchingSkip( int leftSuccessor, int rightSuccessor ){
-		super();
+	public BranchingSkip(SceneObject sceneObject, int leftSuccessor, int rightSuccessor ){
+		super(sceneObject);
 		this.leftSuccessor = leftSuccessor;
 		this.rightSuccessor = rightSuccessor;
 	}

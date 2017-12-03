@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
@@ -21,7 +22,8 @@ public class GotoStmt extends Statement {
 	 */
 	private final int nextPC;
 
-	public GotoStmt( int nextPC ){
+	public GotoStmt(SceneObject sceneObject, int nextPC ){
+		super(sceneObject);
 		this.nextPC = nextPC;
 	}
 

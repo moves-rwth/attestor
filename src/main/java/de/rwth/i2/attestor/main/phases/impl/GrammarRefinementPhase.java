@@ -127,8 +127,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
-                settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
-                settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 String[] selectors = parameters[1].split("\\]")[0].split(",");
                 Set<String> allowedSelectors = new HashSet<>(selectors.length);
                 for(String sel : selectors) {
@@ -151,8 +151,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this));
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
-                settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
-                settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
                 logger.debug("Enable heap automaton to track reachable variables");
             } else if(equalityPattern.matcher(ap).matches()) {
@@ -172,8 +172,8 @@ public class GrammarRefinementPhase extends AbstractPhase
         Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
         if(trackedVariableRelations.add(trackedPair)) {
            stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-           settings.stateSpaceGeneration().addKeptVariable(lhs);
-           settings.stateSpaceGeneration().addKeptVariable(rhs);
+           scene().options().addKeptVariable(lhs);
+           scene().options().addKeptVariable(rhs);
            logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }

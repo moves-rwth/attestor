@@ -34,11 +34,6 @@ public class Settings {
 	private InputSettings inputSettings;
 
     /**
-     * Settings customizing the analysis that is executed.
-     */
-	private OptionSettings optionSettings;
-
-    /**
      * Settings customizing how state space are exported.
      */
 	private OutputSettings outputSettings;
@@ -81,7 +76,6 @@ public class Settings {
      */
 	public void resetAllSettings() {
         inputSettings = new InputSettings();
-        optionSettings = new OptionSettings();
         outputSettings = new OutputSettings();
         factorySettings = new FactorySettings(scene);
         grammarSettings = new GrammarSettings(scene);

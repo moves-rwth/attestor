@@ -4,6 +4,7 @@ import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -17,13 +18,16 @@ import gnu.trove.iterator.TIntIterator;
  */
 public class ReturnVoidStmt extends Statement {
 
+	public ReturnVoidStmt(SceneObject sceneObject) {
+		super(sceneObject);
+	}
+
 	/**
 	 * removes all locals of the current scope from the heap,
 	 * and returns the resulting heap with exit location (-1)
 	 */
 	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
-			throws NotSufficientlyMaterializedException{
+	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer) {
 
 		observer.update(this, programState);
 

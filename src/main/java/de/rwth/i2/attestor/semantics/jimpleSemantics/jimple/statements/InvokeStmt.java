@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import java.util.Set;
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
@@ -34,8 +35,8 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
 	 */
 	private final int nextPC;
 
-	public InvokeStmt( AbstractMethod method, InvokeHelper invokePrepare, int nextPC ){
-		super();
+	public InvokeStmt(SceneObject sceneObject, AbstractMethod method, InvokeHelper invokePrepare, int nextPC ){
+		super(sceneObject);
 		this.method = method;
 		this.invokePrepare = invokePrepare;
 		this.nextPC = nextPC;

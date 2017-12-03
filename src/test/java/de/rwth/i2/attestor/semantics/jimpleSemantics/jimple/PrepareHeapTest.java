@@ -61,7 +61,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Local( listType, "x" );
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
+		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
@@ -92,7 +92,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
+		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );
@@ -122,7 +122,7 @@ public class PrepareHeapTest {
 		Value leftExpr = new Field( listType, origin3, next);
 		Value rightExpr = new NullConstant();
 		Value condition = new EqualExpr( leftExpr, rightExpr );
-		Statement stmt = new IfStmt( condition, truePC, falsePC, new HashSet<>());
+		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
 
 		try{
 			DefaultProgramState input = new DefaultProgramState( testGraph );

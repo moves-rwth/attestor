@@ -24,8 +24,6 @@ public class StateSpaceGenerationSettings {
 
     private StateRefinementStrategy stateRefinementStrategy;
 
-    private final Set<String> keptVariables = new HashSet<>();
-
     public AbortStrategy getAbortStrategy() {
 
         return abortStrategy;
@@ -82,15 +80,5 @@ public class StateSpaceGenerationSettings {
     public void setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 
         this.stateRefinementStrategy = stateRefinementStrategy;
-    }
-
-    public void addKeptVariable(String unscopedVariableName) {
-
-        keptVariables.add(unscopedVariableName);
-    }
-
-    public boolean isKeptVariableName(String unscopedVariableName) {
-
-        return keptVariables.contains(unscopedVariableName);
     }
 }

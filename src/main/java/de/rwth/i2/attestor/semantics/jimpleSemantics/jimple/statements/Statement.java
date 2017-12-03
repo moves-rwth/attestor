@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
+import de.rwth.i2.attestor.main.environment.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 
 /**
@@ -10,7 +11,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
  * @author Hannah Arndt
  *
  */
-public abstract class Statement implements Semantics {
+public abstract class Statement extends SceneObject implements Semantics {
 
 	/**
 	 * True if and only if canonicalization should be performed
@@ -18,7 +19,11 @@ public abstract class Statement implements Semantics {
 	 */
 	private boolean isCanonicalizationPermitted = true;
 
-    /**
+	protected Statement(SceneObject otherObject) {
+		super(otherObject);
+	}
+
+	/**
      *
      * @return True if and only if canonicalization should be performed
      *         immediately after executing this statement.

@@ -60,12 +60,12 @@ public class AssignInvokeTest_NonTrivial {
 
 		AbstractMethod method= sceneObject.scene().getMethod( "method");
 		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add(new AssignStmt(var, new NewExpr(type), 1, new HashSet<>()));
-		defaultControlFlow.add( new ReturnValueStmt(var, type) );
+		defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new HashSet<>()));
+		defaultControlFlow.add( new ReturnValueStmt(sceneObject, var, type) );
 		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper( new ArrayList<>());
+		InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 		
-		stmt = new AssignInvoke( var, method, invokePrepare, 1 );
+		stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1 );
 		
 		inputGraph = hcFactory.getListAndConstants();
 		inputState = new DefaultProgramState( inputGraph );
