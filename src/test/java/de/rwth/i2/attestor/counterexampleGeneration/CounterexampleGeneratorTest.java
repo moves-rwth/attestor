@@ -40,6 +40,7 @@ public class CounterexampleGeneratorTest {
 
     @Before
     public void setUp() {
+
         sceneObject = new MockupSceneObject();
         hcFactory = new ExampleHcImplFactory(sceneObject);
     }
@@ -79,6 +80,7 @@ public class CounterexampleGeneratorTest {
     }
 
     private Program getSetNextProgram(Type type) {
+
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
         return Program.builder()
                 .addStatement(
@@ -106,8 +108,8 @@ public class CounterexampleGeneratorTest {
                 .getMaterialization()
                 .materialize(initialState.clone(), stmt.getPotentialViolationPoints());
         ProgramState materialized = null;
-        for(ProgramState s : mat) {
-            if(!s.getHeap().nonterminalEdges().isEmpty()) {
+        for (ProgramState s : mat) {
+            if (!s.getHeap().nonterminalEdges().isEmpty()) {
                 materialized = s;
                 break;
             }
@@ -166,7 +168,7 @@ public class CounterexampleGeneratorTest {
         AssignInvoke invokeStmt = getProcedure();
         Program program = Program.builder()
                 .addStatement(invokeStmt)
-                .addStatement(new Skip(sceneObject,2))
+                .addStatement(new Skip(sceneObject, 2))
                 .addStatement(new TerminalStatement())
                 .build();
 
@@ -183,6 +185,7 @@ public class CounterexampleGeneratorTest {
 
                         @Override
                         public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
+
                             ProgramState initialState = new DefaultProgramState(input.getHeap());
                             initialState.setProgramCounter(0);
                             return StateSpaceGenerator.builder(sceneObject)
@@ -193,8 +196,9 @@ public class CounterexampleGeneratorTest {
                                     .setStateLabelingStrategy(new NoStateLabelingStrategy())
                                     .setMaterializationStrategy(factorySLL.getMaterialization())
                                     .setCanonizationStrategy(factorySLL.getCanonicalization())
-                                    .setStateCounter( s -> {} )
-                                    .setExplorationStrategy((s,sp) -> true)
+                                    .setStateCounter(s -> {
+                                    })
+                                    .setExplorationStrategy((s, sp) -> true)
                                     .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                                     .setSemanticsOptionsSupplier(s -> this)
                                     .setPostProcessingStrategy(new NoPostProcessingStrategy())
@@ -204,13 +208,14 @@ public class CounterexampleGeneratorTest {
 
                         @Override
                         public boolean isDeadVariableEliminationEnabled() {
+
                             return false;
                         }
                     }
             );
             assertEquals(2, successors.size());
-            for(ProgramState s : successors) {
-                if(s.getHeap().countNonterminalEdges() == 2) {
+            for (ProgramState s : successors) {
+                if (s.getHeap().countNonterminalEdges() == 2) {
                     finalState = s;
                     break;
                 }
@@ -256,11 +261,11 @@ public class CounterexampleGeneratorTest {
         Field fieldN = new Field(factorySLL.getNodeType(), varY, factorySLL.getNextSel());
 
         List<Semantics> controlFlow = new ArrayList<>();
-        controlFlow.add( new IdentityStmt(sceneObject,1, varY, "@parameter0:"));
+        controlFlow.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));
 
-        controlFlow.add( new AssignStmt(sceneObject, varY, fieldN, 2, Collections.emptySet()));
-        controlFlow.add( new ReturnValueStmt(sceneObject, varY, factorySLL.getNodeType()) );
-        procedure.setControlFlow( controlFlow );
+        controlFlow.add(new AssignStmt(sceneObject, varY, fieldN, 2, Collections.emptySet()));
+        controlFlow.add(new ReturnValueStmt(sceneObject, varY, factorySLL.getNodeType()));
+        procedure.setControlFlow(controlFlow);
 
         Local varX = new Local(factorySLL.getNodeType(), "x");
         StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(varX));

@@ -7,6 +7,7 @@ public class NoCanonicalizationStrategy implements CanonicalizationStrategy {
 
     @Override
     public ProgramState canonicalize(ProgramState state) {
+
         return state;
     }
 }

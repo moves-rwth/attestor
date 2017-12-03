@@ -49,18 +49,18 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
         IndexedState state = new IndexedState(heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
-        if(countSelectorEdges(heapConfiguration) > 8) {
+        if (countSelectorEdges(heapConfiguration) > 8) {
             return Collections.emptySet();
         }
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        if(ntEdges.size() % 2 == 0) {
+        if (ntEdges.size() % 2 == 0) {
             Set<Index> indices = new HashSet<>();
-            for(int i=0; i < ntEdges.size(); i++) {
+            for (int i = 0; i < ntEdges.size(); i++) {
                 IndexedNonterminal nt = (IndexedNonterminal) heapConfiguration.labelOf(ntEdges.get(i));
                 indices.add(nt.getIndex());
             }
-            if(indices.size() == ntEdges.size() / 2) {
+            if (indices.size() == ntEdges.size() / 2) {
                 return Collections.singleton("{ bimap }");
             }
 
@@ -79,16 +79,17 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+
         CanonicalizationHelper canonicalizationHelper;
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-        IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
         EmbeddingIndexChecker indexChecker =
-                new EmbeddingIndexChecker( indexMatcher,
-                        materializer );
+                new EmbeddingIndexChecker(indexMatcher,
+                        materializer);
 
-        canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
+        canonicalizationHelper = new IndexedCanonicalizationHelper(indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
     }
 
@@ -96,19 +97,19 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
         Set<String> nullPointerGuards = new HashSet<>();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            if(lhs instanceof IndexedNonterminal) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if (lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
-                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                if (iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
 
                         TIntIterator iter = rhs.nodes().iterator();
-                        while(iter.hasNext()) {
+                        while (iter.hasNext()) {
                             int node = iter.next();
-                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+                            for (SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == Types.NULL) {
+                                if (rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }
@@ -126,7 +127,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
         heapConfiguration = heapConfiguration.clone();
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int varEdge = iter.next();
             builder.removeVariableEdge(varEdge);
         }
@@ -137,7 +138,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
         int count = 0;
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             count += heapConfiguration.selectorLabelsOf(node).size();
         }

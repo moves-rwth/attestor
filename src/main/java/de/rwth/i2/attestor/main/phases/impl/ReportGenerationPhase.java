@@ -34,6 +34,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     private OutputSettings outputSettings;
 
     public ReportGenerationPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -46,9 +47,9 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        outputSettings = getPhase(OutputSettingsTransformer.class) .getOutputSettings();
+        outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 
-        if(outputSettings.isNoExport()) {
+        if (outputSettings.isNoExport()) {
             return;
         }
 
@@ -67,34 +68,34 @@ public class ReportGenerationPhase extends AbstractPhase {
             if (outputSettings.isExportCustomHcs()) {
                 exportCustomHcs();
             }
-            
-            if(outputSettings.isExportContracts() ) {
-            	exportContracts();
+
+            if (outputSettings.isExportContracts()) {
+                exportContracts();
             }
-            
-        } catch(IOException e) {
+
+        } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
 
     }
-    
+
     private void exportContracts() throws IOException {
 
-    	String directory = outputSettings.getDirectoryForContracts();
-    	FileUtils.createDirectories( directory );
-    	for( String signature : outputSettings.getContractRequests().keySet() ) {
-    		
-    		 String filename = outputSettings.getContractRequests().get( signature );
-    		 FileWriter writer = new FileWriter( directory + File.separator + filename);
-    		 
-    		 IpaContractCollection contracts = scene().getMethod(signature).getContracts();
-    		 
-    		 ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
-    	     exporter.export( signature, contracts );
-    	     writer.close();
-    	}
+        String directory = outputSettings.getDirectoryForContracts();
+        FileUtils.createDirectories(directory);
+        for (String signature : outputSettings.getContractRequests().keySet()) {
+
+            String filename = outputSettings.getContractRequests().get(signature);
+            FileWriter writer = new FileWriter(directory + File.separator + filename);
+
+            IpaContractCollection contracts = scene().getMethod(signature).getContracts();
+
+            ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
+            exporter.export(signature, contracts);
+            writer.close();
+        }
     }
-    
+
     private void exportCustomHcs() throws IOException {
 
         String location = outputSettings.getLocationForCustomHcs();
@@ -127,7 +128,7 @@ public class ReportGenerationPhase extends AbstractPhase {
         );
 
         Set<ProgramState> states = stateSpace.getStates();
-        for(ProgramState state : states) {
+        for (ProgramState state : states) {
             int i = state.getStateSpaceId();
             exportHeapConfiguration(
                     location + File.separator + "data",
@@ -183,7 +184,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         FileUtils.createDirectories(directory);
         Writer writer = new BufferedWriter(
-                new OutputStreamWriter( new FileOutputStream(directory + File.separator + "statespace.json") )
+                new OutputStreamWriter(new FileOutputStream(directory + File.separator + "statespace.json"))
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
         exporter.export(stateSpace, program);
@@ -193,7 +194,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if(!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
+        if (!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
             String location = outputSettings.getLocationForStateSpace();
             logSum("State space exported to '"
                     + location

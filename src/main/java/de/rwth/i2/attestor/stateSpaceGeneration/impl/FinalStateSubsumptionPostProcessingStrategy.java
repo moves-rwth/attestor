@@ -24,13 +24,13 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
 
-        if(minAbstractionDistance == 0) {
+        if (minAbstractionDistance == 0) {
             return;
         }
 
         InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 
-        if(stateSpace.getFinalStateIds().size() == 1) {
+        if (stateSpace.getFinalStateIds().size() == 1) {
             return;
         }
 
@@ -39,27 +39,27 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
         Set<ProgramState> fullyAbstractStates = new HashSet<>();
         Map<Integer, Integer> idMap = new HashMap<>();
 
-        for(ProgramState state : finalStates) {
+        for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 
-            if(oldState != null) {
+            if (oldState != null) {
                 idMap.put(state.getStateSpaceId(), oldState.getStateSpaceId());
             } else {
                 idMap.put(state.getStateSpaceId(), absState.getStateSpaceId());
             }
         }
 
-        if(fullyAbstractStates.size() < finalStates.size()) {
+        if (fullyAbstractStates.size() < finalStates.size()) {
             stateSpace.updateFinalStates(fullyAbstractStates, idMap);
         }
     }
 
     private ProgramState addIfAbsent(ProgramState absState, Set<ProgramState> abstractedStates) {
 
-        for(ProgramState state : abstractedStates) {
-            if(absState.isSubsumedBy(state)) {
+        for (ProgramState state : abstractedStates) {
+            if (absState.isSubsumedBy(state)) {
                 return state;
             }
         }

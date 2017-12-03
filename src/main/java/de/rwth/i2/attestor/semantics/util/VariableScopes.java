@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.semantics.util;
 
 import de.rwth.i2.attestor.markings.Markings;
-import de.rwth.i2.attestor.semantics.util.Constants;
 
 import java.util.regex.Pattern;
 
@@ -13,7 +12,7 @@ public class VariableScopes {
 
     public static String getScopedName(String name, int scopeDepth) {
 
-        if(isScoped(name)) {
+        if (isScoped(name)) {
             return scopeDepth + SCOPE_DELIMITER + getName(name);
         }
 
@@ -37,7 +36,7 @@ public class VariableScopes {
             if (scope.length > 1) {
                 return Integer.valueOf(scope[0]);
             }
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             // intended
         }
 
@@ -52,7 +51,7 @@ public class VariableScopes {
 
     public static String getName(String scopedName) {
 
-        if(!isScoped(scopedName)) {
+        if (!isScoped(scopedName)) {
             return scopedName;
         }
 

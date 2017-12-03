@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 class MockupType implements Type {
+
     @Override
     public boolean hasSelectorLabel(SelectorLabel selectorLabel) {
+
         return false;
     }
 
@@ -19,11 +21,13 @@ class MockupType implements Type {
 
     @Override
     public Map<SelectorLabel, String> getSelectorLabels() {
+
         return new HashMap<>();
     }
 
     @Override
     public boolean isPrimitiveType(SelectorLabel selectorLabel) {
+
         return false;
     }
 }

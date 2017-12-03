@@ -24,147 +24,150 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class IfStmtTest {
-	
-	private HeapConfiguration testGraph;
-	private int truePC;
-	private int falsePC;
-	private Type listType;
 
-	private SceneObject sceneObject;
-	private ExampleHcImplFactory hcFactory;
+    private HeapConfiguration testGraph;
+    private int truePC;
+    private int falsePC;
+    private Type listType;
 
-	@Before
-	public void setUp() throws Exception{
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
-		sceneObject = new MockupSceneObject();
-		hcFactory = new ExampleHcImplFactory(sceneObject);
+    @Before
+    public void setUp() throws Exception {
 
-		testGraph = hcFactory.getListAndConstants();
-		listType = sceneObject.scene().getType( "node" );
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
 
-		truePC = 5;
-		falsePC = 7;
+        testGraph = hcFactory.getListAndConstants();
+        listType = sceneObject.scene().getType("node");
 
-	}
+        truePC = 5;
+        falsePC = 7;
 
-	@Test
-	public void testWithLocal(){
-		int hash = testGraph.hashCode();
-		
-		DefaultProgramState testState = new DefaultProgramState( testGraph );
-		testState.prepareHeap();
-		
-		Value leftExpr = new Local( listType, "y" );
-		Value rightExpr = new NullConstant();
-		Value condition = new EqualExpr( leftExpr, rightExpr );
-		
-		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>() );
+    }
 
-		try{
-			DefaultProgramState input = testState.clone();
-					
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
-			
-			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
-			assertEquals( "result should have size 1", 1, res.size() );
-			
-			for(ProgramState resProgramState : res) {
-				
-				DefaultProgramState resState = (DefaultProgramState) resProgramState;
-				
-				assertTrue( "condition should evaluate to false", resState.getProgramCounter() == falsePC );
-				assertFalse( "condition has evaluated to true", resState.getProgramCounter() == truePC );
-				assertNotNull( "resHeap null", resState.getHeap() );	
+    @Test
+    public void testWithLocal() {
 
-				assertTrue( "Heap after evaluating condition should not change",
-							testState.getHeap().equals(resState.getHeap()));
-			}
+        int hash = testGraph.hashCode();
 
-		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e){
-			fail( "Unexpected Exception: " + e.getMessage() );
-		}
+        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        testState.prepareHeap();
 
-	}
+        Value leftExpr = new Local(listType, "y");
+        Value rightExpr = new NullConstant();
+        Value condition = new EqualExpr(leftExpr, rightExpr);
 
-	@Test
-	public void testWithField(){
-		int hash = testGraph.hashCode();
-		
-		DefaultProgramState testState = new DefaultProgramState( testGraph );
-		testState.prepareHeap();
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
 
-		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+        try {
+            DefaultProgramState input = testState.clone();
 
-		Value origin = new Local( listType, "y" );
-		Value leftExpr = new Field( listType, origin, next);
-		Value rightExpr = new NullConstant();
-		Value condition = new EqualExpr( leftExpr, rightExpr );
-		
-		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
-		try{
-			DefaultProgramState input = testState.clone();
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
-			
-			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
-			assertEquals( "result should have size 1", 1, res.size() );
-			
-			for(ProgramState resProgramState : res) {
-			
-				DefaultProgramState resState = (DefaultProgramState) resProgramState;
-				
-				assertTrue( "condition should evaluate to false", resState.getProgramCounter() == falsePC );
-				assertFalse( "condition has evaluated to true", resState.getProgramCounter() == truePC );
-				
-				assertTrue( "Heap after evaluating condition should not change",
-						testState.getHeap().equals(resState.getHeap()));
-			}
+            assertEquals("test Graph changed", hash, testGraph.hashCode());
+            assertEquals("result should have size 1", 1, res.size());
 
-			
-		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
-			fail( "Unexpected Exception: " + e.getMessage() );
-		}
-	}
+            for (ProgramState resProgramState : res) {
 
-	@Test
-	public void testToTrue(){
-		int hash = testGraph.hashCode();
-		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+                DefaultProgramState resState = (DefaultProgramState) resProgramState;
 
-		DefaultProgramState testState = new DefaultProgramState( testGraph );
-		testState.prepareHeap();
+                assertTrue("condition should evaluate to false", resState.getProgramCounter() == falsePC);
+                assertFalse("condition has evaluated to true", resState.getProgramCounter() == truePC);
+                assertNotNull("resHeap null", resState.getHeap());
 
-		Value origin1 = new Local( listType, "y" );
-		Value origin2 = new Field( listType, origin1, next);
-		Value origin3 = new Field( listType, origin2, next);
-		Value leftExpr = new Field( listType, origin3, next);
-		Value rightExpr = new NullConstant();
-		Value condition = new EqualExpr( leftExpr, rightExpr );
-		
-		Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+                assertTrue("Heap after evaluating condition should not change",
+                        testState.getHeap().equals(resState.getHeap()));
+            }
 
-		try{
-			DefaultProgramState input = testState.clone();
-			
-			
-			Set<ProgramState> res = stmt.computeSuccessors( input, new MockupSymbolicExecutionObserver(sceneObject) );
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            fail("Unexpected Exception: " + e.getMessage());
+        }
 
-			assertEquals( "test Graph changed", hash, testGraph.hashCode() );
-			assertEquals( "result should have size 1", 1, res.size() );
-			
-			for(ProgramState resProgramState : res) {
+    }
 
-				DefaultProgramState resState = (DefaultProgramState) resProgramState;
-				
-				assertFalse( "condition should evaluate to true, but got false", resState.getProgramCounter() == falsePC );
-				assertTrue( "condition should evaluate to true", resState.getProgramCounter() == truePC );
-				
-				assertTrue( "Heap after evaluating condition should not change",
-						testState.getHeap().equals(resState.getHeap()));
-			}
-		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
-			fail( "Unexpected Exception: " + e.getMessage() );
-		}
-	}
+    @Test
+    public void testWithField() {
+
+        int hash = testGraph.hashCode();
+
+        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        testState.prepareHeap();
+
+        SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+
+        Value origin = new Local(listType, "y");
+        Value leftExpr = new Field(listType, origin, next);
+        Value rightExpr = new NullConstant();
+        Value condition = new EqualExpr(leftExpr, rightExpr);
+
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+
+        try {
+            DefaultProgramState input = testState.clone();
+            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+
+            assertEquals("test Graph changed", hash, testGraph.hashCode());
+            assertEquals("result should have size 1", 1, res.size());
+
+            for (ProgramState resProgramState : res) {
+
+                DefaultProgramState resState = (DefaultProgramState) resProgramState;
+
+                assertTrue("condition should evaluate to false", resState.getProgramCounter() == falsePC);
+                assertFalse("condition has evaluated to true", resState.getProgramCounter() == truePC);
+
+                assertTrue("Heap after evaluating condition should not change",
+                        testState.getHeap().equals(resState.getHeap()));
+            }
+
+
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            fail("Unexpected Exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testToTrue() {
+
+        int hash = testGraph.hashCode();
+        SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+
+        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        testState.prepareHeap();
+
+        Value origin1 = new Local(listType, "y");
+        Value origin2 = new Field(listType, origin1, next);
+        Value origin3 = new Field(listType, origin2, next);
+        Value leftExpr = new Field(listType, origin3, next);
+        Value rightExpr = new NullConstant();
+        Value condition = new EqualExpr(leftExpr, rightExpr);
+
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+
+        try {
+            DefaultProgramState input = testState.clone();
+
+
+            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+
+            assertEquals("test Graph changed", hash, testGraph.hashCode());
+            assertEquals("result should have size 1", 1, res.size());
+
+            for (ProgramState resProgramState : res) {
+
+                DefaultProgramState resState = (DefaultProgramState) resProgramState;
+
+                assertFalse("condition should evaluate to true, but got false", resState.getProgramCounter() == falsePC);
+                assertTrue("condition should evaluate to true", resState.getProgramCounter() == truePC);
+
+                assertTrue("Heap after evaluating condition should not change",
+                        testState.getHeap().equals(resState.getHeap()));
+            }
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            fail("Unexpected Exception: " + e.getMessage());
+        }
+    }
 
 }

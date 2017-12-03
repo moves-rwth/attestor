@@ -18,6 +18,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     private StateSpace stateSpace;
 
     public StateSpaceGenerationPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -41,14 +42,15 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
             stateSpace = stateSpaceGenerator.generate();
             logger.info("State space generation finished. #states: "
                     + scene().getNumberOfGeneratedStates());
-        } catch(StateSpaceGenerationAbortedException e) {
+        } catch (StateSpaceGenerationAbortedException e) {
             logger.error("State space generation has been aborted prematurely.");
             stateSpace = stateSpaceGenerator.getStateSpace();
         }
     }
 
     private StateSpaceGenerator createStateSpaceGenerator(Program program,
-                                                         List<HeapConfiguration> inputs) {
+                                                          List<HeapConfiguration> inputs) {
+
         List<ProgramState> inputStates = new ArrayList<>(inputs.size());
         inputs.forEach(hc -> inputStates.add(scene().createProgramState(hc)));
 
@@ -88,7 +90,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
                         scene().options().isRemoveDeadVariables()
                 )
                 .setBreadthFirstSearchEnabled(false)
-                .setExplorationStrategy((s,sp) -> true)
+                .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
                 .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
                 .setPostProcessingStrategy(getPostProcessingStrategy())
@@ -100,11 +102,11 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         StateSpaceGenerationTransformer settings = getPhase(StateSpaceGenerationTransformer.class);
         CanonicalizationStrategy aggressiveStrategy = settings.getAggressiveCanonicalizationStrategy();
 
-        if(!scene().options().isPostprocessingEnabled() || scene().options().getAbstractionDistance() == 0) {
+        if (!scene().options().isPostprocessingEnabled() || scene().options().getAbstractionDistance() == 0) {
             return new NoPostProcessingStrategy();
         }
 
-        if(scene().options().isIndexedMode()) {
+        if (scene().options().isIndexedMode()) {
             return new AggressivePostProcessingStrategy(aggressiveStrategy, scene().options().getAbstractionDistance());
         }
 

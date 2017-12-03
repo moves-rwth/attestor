@@ -8,5 +8,6 @@ import java.util.Set;
 public interface CounterexampleTransformer {
 
     Set<LTLFormula> getFormulasWithCounterexamples();
+
     HeapConfiguration getInputOf(LTLFormula formula);
 }

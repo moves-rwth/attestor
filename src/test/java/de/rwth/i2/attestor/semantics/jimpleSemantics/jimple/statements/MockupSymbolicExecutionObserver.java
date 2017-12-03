@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class MockupSymbolicExecutionObserver extends SceneObject implements SymbolicExecutionObserver {
 
     public MockupSymbolicExecutionObserver(SceneObject sceneObject) {
+
         super(sceneObject);
     }
 
@@ -36,8 +37,9 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
                 .setCanonizationStrategy(state -> state.clone())
-                .setStateCounter( s -> {} )
-                .setExplorationStrategy((s,sp) -> true)
+                .setStateCounter(s -> {
+                })
+                .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver(this))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
@@ -48,6 +50,7 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
 
     @Override
     public boolean isDeadVariableEliminationEnabled() {
+
         return false;
     }
 }

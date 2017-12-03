@@ -5,4 +5,5 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages;
  * to the executed statement.
  */
 public interface ExecutionMessage {
+
 }

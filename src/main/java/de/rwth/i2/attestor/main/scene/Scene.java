@@ -14,7 +14,8 @@ public interface Scene {
     SelectorLabel getSelectorLabel(String name);
 
     Nonterminal getNonterminal(String name);
-    Nonterminal createNonterminal(String label, int rank, boolean [] isReductionTentacle );
+
+    Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle);
 
     HeapConfiguration createHeapConfiguration();
 
@@ -23,6 +24,7 @@ public interface Scene {
     IpaAbstractMethod getMethod(String name);
 
     void addNumberOfGeneratedStates(int states);
+
     long getNumberOfGeneratedStates();
 
     Options options();

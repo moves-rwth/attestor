@@ -20,151 +20,160 @@ import java.util.List;
 
 class ExpectedHCs extends SceneObject {
 
-	protected ExpectedHCs(SceneObject otherObject) {
-		super(otherObject);
-	}
+    protected ExpectedHCs(SceneObject otherObject) {
 
-	public HeapConfiguration getExpected_Annotated(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
+        super(otherObject);
+    }
 
-		SelectorLabel basicSel = scene().getSelectorLabel("label");
-		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
-		
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-				.addSelector(nodes.get(0), sel, nodes.get(1))
-				.build();
-	}
-	
-	public HeapConfiguration getExpected_Bottom(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(bottom);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+    public HeapConfiguration getExpected_Annotated() {
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-				.build();
-	}
-	
-	public HeapConfiguration getExpected_TwoElementIndex(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(s);
-		index.add(bottom);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+        HeapConfiguration hc = new InternalHeapConfiguration();
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-				.build();
-	}
-	
-	public HeapConfiguration getExpected_IndexWithVar(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol var = IndexVariable.getIndexVariable();
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(s);
-		index.add(var);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+        SelectorLabel basicSel = scene().getSelectorLabel("label");
+        AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-				.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-				.build();
-	}
-	
-	public HeapConfiguration getExpected_IndexWithAbs(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol abs = AbstractIndexSymbol.get( "X" );
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(s);
-		index.add(abs);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+        Type type = scene().getType("type");
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-					.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-					.build();
-	}
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addSelector(nodes.get(0), sel, nodes.get(1))
+                .build();
+    }
 
-	public HeapConfiguration getExpected_AbstractIndex(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol abs = AbstractIndexSymbol.get("X");
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(s);
-		index.add(abs);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+    public HeapConfiguration getExpected_Bottom() {
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-					.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-					.build();
-	}
-	
-	public HeapConfiguration getExpected_Rule2(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
+        HeapConfiguration hc = new InternalHeapConfiguration();
 
-		SelectorLabel basicSel = scene().getSelectorLabel("label");
-		AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
-		
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-				.setExternal(nodes.get(0))
-				.setExternal( nodes.get(1) )
-				.addSelector(nodes.get(0), sel, nodes.get(1))
-				.build();
-	}
-	
-	public HeapConfiguration getExpected_Rule1(){
-		HeapConfiguration hc = new InternalHeapConfiguration();
+        IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(bottom);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
 
-		IndexSymbol var = IndexVariable.getIndexVariable();
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add(var);
-		Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false,false});
-		IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+        Type type = scene().getType("type");
 
-		Type type = scene().getType("type");
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 2, nodes)
-					.setExternal(nodes.get(0))
-					.setExternal( nodes.get(1) )
-					.addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
-					.build();
-	}
-	
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_TwoElementIndex() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+        IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(s);
+        index.add(bottom);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_IndexWithVar() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+        IndexSymbol var = IndexVariable.getIndexVariable();
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(s);
+        index.add(var);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_IndexWithAbs() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+        IndexSymbol abs = AbstractIndexSymbol.get("X");
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(s);
+        index.add(abs);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_AbstractIndex() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+        IndexSymbol abs = AbstractIndexSymbol.get("X");
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(s);
+        index.add(abs);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_Rule2() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        SelectorLabel basicSel = scene().getSelectorLabel("label");
+        AnnotatedSelectorLabel sel = new AnnotatedSelectorLabel(basicSel, "ann");
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .addSelector(nodes.get(0), sel, nodes.get(1))
+                .build();
+    }
+
+    public HeapConfiguration getExpected_Rule1() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        IndexSymbol var = IndexVariable.getIndexVariable();
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(var);
+        Nonterminal bnt = scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
+        IndexedNonterminal nt = new IndexedNonterminalImpl(bnt, index);
+
+        Type type = scene().getType("type");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 2, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .addNonterminalEdge(nt, new TIntArrayList(new int[]{nodes.get(0), nodes.get(1)}))
+                .build();
+    }
+
 
 }

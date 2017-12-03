@@ -18,62 +18,63 @@ import static org.mockito.Mockito.verify;
 
 public class DefaultMaterializationRuleManagerTest {
 
-	private SceneObject sceneObject;
+    private SceneObject sceneObject;
 
-	@Before
-	public void init() {
+    @Before
+    public void init() {
+
         sceneObject = new MockupSceneObject();
     }
 
 
-	@Test
-	public void testDelegationOfRequest() {
-		
-		final int tentacle = 3;
-		final boolean[] isReductionTentacle = new boolean[]{true, false};
-		final String uniqueLabel = "testDelegationOfRequest";
-		final Nonterminal toReplace = sceneObject.scene().createNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
-		
-		final String requestedSelector = "someSelector";
-		
-		ViolationPointResolver vioResolverMock = mock(ViolationPointResolver.class);
-		DefaultMaterializationRuleManager ruleManager 
-			= new DefaultMaterializationRuleManager( vioResolverMock );
-		
-		
-		try {
-			ruleManager.getRulesFor(toReplace, tentacle, requestedSelector);
-		} catch (UnexpectedNonterminalTypeException e) {
-			fail("Unexpected exception");
-		}
-		verify( vioResolverMock ).getRulesCreatingSelectorFor(toReplace, tentacle, requestedSelector);
-	}
-	
-	@Test
-	public void testWhetherResponseComplete(){
-		
-		FakeViolationPointResolverForDefault grammarLogic = new FakeViolationPointResolverForDefault(sceneObject);
-		MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
-		
-		GrammarResponse actualResponse;
-		try {
+    @Test
+    public void testDelegationOfRequest() {
 
-			int tentacleForNext = 0;
-			String requestLabel = "some label";
-			actualResponse = ruleManager.getRulesFor(grammarLogic.DEFAULT_NONTERMINAL,
-													tentacleForNext, 
-													requestLabel);
-		
-			assertTrue( actualResponse instanceof DefaultGrammarResponse );
-			DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
-			assertTrue(defaultResponse.getApplicableRules()
-					.contains( grammarLogic.RHS_CREATING_NEXT) );
-			assertTrue( defaultResponse.getApplicableRules()
-					.contains( grammarLogic.RHS_CREATING_NEXT_PREV ));
-			
-		} catch (UnexpectedNonterminalTypeException e) {
-			fail("Unexpected exception");
-		}
-	}
-	
+        final int tentacle = 3;
+        final boolean[] isReductionTentacle = new boolean[]{true, false};
+        final String uniqueLabel = "testDelegationOfRequest";
+        final Nonterminal toReplace = sceneObject.scene().createNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
+
+        final String requestedSelector = "someSelector";
+
+        ViolationPointResolver vioResolverMock = mock(ViolationPointResolver.class);
+        DefaultMaterializationRuleManager ruleManager
+                = new DefaultMaterializationRuleManager(vioResolverMock);
+
+
+        try {
+            ruleManager.getRulesFor(toReplace, tentacle, requestedSelector);
+        } catch (UnexpectedNonterminalTypeException e) {
+            fail("Unexpected exception");
+        }
+        verify(vioResolverMock).getRulesCreatingSelectorFor(toReplace, tentacle, requestedSelector);
+    }
+
+    @Test
+    public void testWhetherResponseComplete() {
+
+        FakeViolationPointResolverForDefault grammarLogic = new FakeViolationPointResolverForDefault(sceneObject);
+        MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
+
+        GrammarResponse actualResponse;
+        try {
+
+            int tentacleForNext = 0;
+            String requestLabel = "some label";
+            actualResponse = ruleManager.getRulesFor(grammarLogic.DEFAULT_NONTERMINAL,
+                    tentacleForNext,
+                    requestLabel);
+
+            assertTrue(actualResponse instanceof DefaultGrammarResponse);
+            DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
+            assertTrue(defaultResponse.getApplicableRules()
+                    .contains(grammarLogic.RHS_CREATING_NEXT));
+            assertTrue(defaultResponse.getApplicableRules()
+                    .contains(grammarLogic.RHS_CREATING_NEXT_PREV));
+
+        } catch (UnexpectedNonterminalTypeException e) {
+            fail("Unexpected exception");
+        }
+    }
+
 }

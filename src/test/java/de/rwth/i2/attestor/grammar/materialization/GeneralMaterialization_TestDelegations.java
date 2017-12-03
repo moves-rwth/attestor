@@ -5,17 +5,18 @@ import org.junit.Test;
 
 public class GeneralMaterialization_TestDelegations {
 
-	GeneralMaterializationStrategy materializer;
+    GeneralMaterializationStrategy materializer;
 
-	@BeforeClass
-	public static void init() {
-	}
+    @BeforeClass
+    public static void init() {
+
+    }
 
 
-	@Test
-	public void testDefault() {
-		
-		
-	}
+    @Test
+    public void testDefault() {
+
+
+    }
 
 }

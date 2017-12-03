@@ -17,12 +17,12 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
     private final HeapConfigurationBuilder partnerBuilder;
     private final TIntIntMap ntEdgeRelation;
 
-    HeapConfigurationPairBuilder(HeapConfigurationPair hc)  {
+    HeapConfigurationPairBuilder(HeapConfigurationPair hc) {
 
-       this.hc = hc;
-       this.actualBuilder = hc.actual.builder();
-       this.partnerBuilder = hc.pairedHeapConfiguration.builder();
-       this.ntEdgeRelation = hc.ntEdgeRelation;
+        this.hc = hc;
+        this.actualBuilder = hc.actual.builder();
+        this.partnerBuilder = hc.pairedHeapConfiguration.builder();
+        this.ntEdgeRelation = hc.ntEdgeRelation;
     }
 
     @Override
@@ -50,6 +50,7 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
 
     @Override
     public HeapConfigurationBuilder removeNode(int node) {
+
         this.actualBuilder.removeNode(node);
         return this;
     }

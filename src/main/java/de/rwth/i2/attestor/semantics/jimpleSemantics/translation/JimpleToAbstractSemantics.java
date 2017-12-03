@@ -23,32 +23,32 @@ public interface JimpleToAbstractSemantics {
      *
      * @param topLevel The first level that is invoked during the translation.
      */
-	void setTopLevel(TopLevelTranslation topLevel);
-	
-	/**
-	 * Translates Jimple statements to instances of
+    void setTopLevel(TopLevelTranslation topLevel);
+
+    /**
+     * Translates Jimple statements to instances of
      * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement}.
      *
-	 * @param input The Jimple statement to translate.
-	 * @param pc The program counter associated to this statement.
-	 * @return The translated statement.
-	 */
+     * @param input The Jimple statement to translate.
+     * @param pc    The program counter associated to this statement.
+     * @return The translated statement.
+     */
     Statement translateStatement(soot.jimple.Stmt input, int pc);
 
-	/**
-	 * Translates Jimple values to instances of
+    /**
+     * Translates Jimple values to instances of
      * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value}.
      *
-	 * @param input the Jimple value to translate.
-	 * @return The translated value.
-	 */
+     * @param input the Jimple value to translate.
+     * @return The translated value.
+     */
     Value translateValue(soot.Value input);
 
-	/**
-	 * Translates Jimple types into {@link Type}.
+    /**
+     * Translates Jimple types into {@link Type}.
      *
-	 * @param input The type to translate.
-	 * @return The translated type.
-	 */
+     * @param input The type to translate.
+     * @return The translated type.
+     */
     Type translateType(soot.Type input);
 }

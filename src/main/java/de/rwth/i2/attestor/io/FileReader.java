@@ -12,18 +12,21 @@ import java.util.Scanner;
 public class FileReader {
 
     public static String read(String filename) throws FileNotFoundException {
-        Scanner scan = new Scanner(new java.io.FileReader( filename ) );
+
+        Scanner scan = new Scanner(new java.io.FileReader(filename));
 
         return scannerToString(scan);
     }
 
-    public static String read(InputStream stream){
+    public static String read(InputStream stream) {
+
         java.util.Scanner s = new Scanner(stream);
 
         return scannerToString(s);
     }
 
-    private static String scannerToString(Scanner scan){
+    private static String scannerToString(Scanner scan) {
+
         StringBuilder str = new StringBuilder("");
         while (scan.hasNext()) {
             str.append(scan.nextLine());

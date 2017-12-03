@@ -14,33 +14,36 @@ import java.util.Set;
  */
 public class ModelCheckingSettings {
 
+    private final Set<String> requiredAtomicPropositions = new HashSet<>();
+    // Contains all LTL formulae model checking should be performed for.
+    private final Set<LTLFormula> formulae;
     // Indicates whether model checking is conducted.
     private boolean modelCheckingEnabled = false;
 
-    private final Set<String> requiredAtomicPropositions = new HashSet<>();
+    public ModelCheckingSettings() {
 
-    // Contains all LTL formulae model checking should be performed for.
-    private final Set<LTLFormula> formulae;
-
-    public ModelCheckingSettings(){
         this.formulae = new HashSet<>();
     }
 
-    public boolean isModelCheckingEnabled(){
+    public boolean isModelCheckingEnabled() {
+
         return this.modelCheckingEnabled;
     }
 
-    public void setModelCheckingEnabled(boolean enabled){
+    public void setModelCheckingEnabled(boolean enabled) {
+
         this.modelCheckingEnabled = enabled;
     }
 
-    public Set<LTLFormula> getFormulae(){
+    public Set<LTLFormula> getFormulae() {
+
         return this.formulae;
     }
 
-    public void addFormula(LTLFormula formula){
+    public void addFormula(LTLFormula formula) {
+
         this.formulae.add(formula);
-        for(String ap : formula.getApList()) {
+        for (String ap : formula.getApList()) {
             requiredAtomicPropositions.add(extractAP(ap));
         }
     }
@@ -48,7 +51,7 @@ public class ModelCheckingSettings {
     private String extractAP(String apString) {
 
         String[] apContents = apString.split("[\\{\\}]");
-        if(apContents.length < 2) {
+        if (apContents.length < 2) {
             return null;
         }
         return apContents[1].trim();

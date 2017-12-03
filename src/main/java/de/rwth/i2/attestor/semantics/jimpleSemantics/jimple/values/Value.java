@@ -8,22 +8,21 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 /**
  * Values model all kinds of expressions. They can be evaluated on
  * JimpleExecutables to obtain their concrete value.
- * 
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public interface Value {
 
-	ConcreteValue evaluateOn(ProgramState programState)
-			throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
+    ConcreteValue evaluateOn(ProgramState programState)
+            throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
 
-	boolean needsMaterialization(ProgramState programState);
+    boolean needsMaterialization(ProgramState programState);
 
-	Type getType();
+    Type getType();
 
-	/**
-	 * @return The (variable,selector) pairs that might require materialization before this expression
-	 * 		   can be evaluated.
-	 */
-	ViolationPoints getPotentialViolationPoints();
+    /**
+     * @return The (variable,selector) pairs that might require materialization before this expression
+     * can be evaluated.
+     */
+    ViolationPoints getPotentialViolationPoints();
 }

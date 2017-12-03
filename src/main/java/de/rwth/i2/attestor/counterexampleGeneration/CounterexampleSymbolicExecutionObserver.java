@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import java.util.Collections;
-import java.util.Set;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * A tailored observer that determines the required successor states of
@@ -35,11 +35,11 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     @Override
     public void update(Object handler, ProgramState input) {
 
-        if( input.isFromTopLevelStateSpace() && handler instanceof InvokeCleanup) {
+        if (input.isFromTopLevelStateSpace() && handler instanceof InvokeCleanup) {
             updateInvoke((InvokeCleanup) handler, input);
-        } else if(handler instanceof AbstractMethod) {
-            updateMethod( (AbstractMethod) handler, input);
-        } else if(handler.getClass() == NondeterminismMessage.class) {
+        } else if (handler instanceof AbstractMethod) {
+            updateMethod((AbstractMethod) handler, input);
+        } else if (handler.getClass() == NondeterminismMessage.class) {
             /* Since nondeterminism due to overapproximation cannot occur during counterexample generation
                (we never perform abstraction), we know at this point that nondeterminism was caused by
                some kind of unsupported operation, such as arithmetical operations. In this case, we play
@@ -51,6 +51,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     }
 
     private void updateInvoke(InvokeCleanup invokeCleanup, ProgramState input) {
+
         requiredFinalState = trace.getSuccessor(input);
         stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup, this);
     }
@@ -58,7 +59,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     private void updateMethod(AbstractMethod method, ProgramState input) {
 
         method.setReuseResults(false);
-        if(requiredFinalState != null) {
+        if (requiredFinalState != null) {
             requiredNoOfFinalStates = 1;
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(
                     Collections.singleton(requiredFinalState)
@@ -83,15 +84,18 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
                 .generate();
     }
 
-    private final class CounterexampleExplorationStrategy implements ExplorationStrategy {
-        @Override
-        public boolean check(ProgramState state, StateSpace stateSpace) {
-            return stateSpace.getFinalStates().size() < requiredNoOfFinalStates;
-        }
-    }
-
     @Override
     public boolean isDeadVariableEliminationEnabled() {
+
         return stateSpaceGenerator.isDeadVariableEliminationEnabled();
+    }
+
+    private final class CounterexampleExplorationStrategy implements ExplorationStrategy {
+
+        @Override
+        public boolean check(ProgramState state, StateSpace stateSpace) {
+
+            return stateSpace.getFinalStates().size() < requiredNoOfFinalStates;
+        }
     }
 }

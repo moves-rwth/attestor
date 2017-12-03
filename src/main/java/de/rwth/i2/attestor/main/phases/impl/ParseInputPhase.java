@@ -24,6 +24,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
     private final List<HeapConfiguration> inputs = new ArrayList<>();
 
     public ParseInputPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -53,7 +54,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
         }
 
         String renamedStr = renamingInitialState(str);
-        if(!str.equals(renamedStr)){
+        if (!str.equals(renamedStr)) {
             str = renamedStr;
             logger.warn("Renamed types or fields in initial state. Please ignore this warning if types or fields");
             logger.warn("from predefined grammars were used in initial state by accident.");
@@ -65,12 +66,12 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
         Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
 
-        if(scene().options().isIndexedMode()) {
+        if (scene().options().isIndexedMode()) {
             JsonToIndexedHC importer = new JsonToIndexedHC(this);
-            originalInput = importer.jsonToHC( jsonObj, addUsedSelectorLabel );
+            originalInput = importer.jsonToHC(jsonObj, addUsedSelectorLabel);
         } else {
             JsonToDefaultHC importer = new JsonToDefaultHC(this);
-            originalInput = importer.jsonToHC( jsonObj, addUsedSelectorLabel );
+            originalInput = importer.jsonToHC(jsonObj, addUsedSelectorLabel);
         }
         inputs.add(originalInput);
     }
@@ -79,9 +80,9 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
 
         // Modify initial state (replace all keys in rename by its values)
         Map<String, String> renamingMap = getPhase(GrammarTransformer.class).getRenamingMap();
-        if(renamingMap != null){
-            for(HashMap.Entry<String, String> renaming : renamingMap.entrySet()){
-                str = str.replaceAll("\"" + renaming.getKey() +"\"", "\"" + renaming.getValue() + "\"");
+        if (renamingMap != null) {
+            for (HashMap.Entry<String, String> renaming : renamingMap.entrySet()) {
+                str = str.replaceAll("\"" + renaming.getKey() + "\"", "\"" + renaming.getValue() + "\"");
             }
         }
         return str;

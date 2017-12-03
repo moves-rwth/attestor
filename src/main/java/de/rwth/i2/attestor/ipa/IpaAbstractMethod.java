@@ -18,162 +18,168 @@ import java.util.*;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
-	public static final class Factory extends SceneObject {
-		private Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
+    final IpaContractCollection contracts = new IpaContractCollection();
+    private boolean isRecursive = false;
+    public IpaAbstractMethod(SceneObject sceneObject, String displayName) {
 
-		public Factory(Scene scene) {
-			super(scene);
-		}
+        super(sceneObject);
+        super.setDisplayName(displayName);
+    }
 
-		public IpaAbstractMethod get(String signature ){
-			if( ! knownMethods.containsKey(signature) ){
-				knownMethods.put(signature, new IpaAbstractMethod(this, signature ) );
-			}
-			return knownMethods.get( signature );
-		}
-	}
+    @Override
+    public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
 
-	private boolean isRecursive = false;
-	final IpaContractCollection contracts = new IpaContractCollection();
+        try {
+            return getResultStates(input, observer);
+        } catch (StateSpaceGenerationAbortedException e) {
+            throw new IllegalStateException("No contract found");
+        }
+    }
 
-	public IpaAbstractMethod(SceneObject sceneObject, String displayName) {
-		super(sceneObject);
-		super.setDisplayName(displayName);
-	}
+    public void addContracts(HeapConfiguration precondition, List<HeapConfiguration> postconditions) {
 
-	@Override
-	public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
-		try {
-			return getResultStates(input, observer);
-		} catch (StateSpaceGenerationAbortedException e) {
-			throw new IllegalStateException("No contract found");
-		}
-	}
+        contracts.addPostconditionsTp(precondition, postconditions);
+    }
 
+    @Override
+    public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
+            throws StateSpaceGenerationAbortedException {
 
-	public void addContracts( HeapConfiguration precondition, List<HeapConfiguration> postconditions ){
-		contracts.addPostconditionsTp(precondition, postconditions);
-	}
+        observer.update(this, input);
+        return getResultStates(input, observer);
+    }
 
-	@Override
-	public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
-			throws StateSpaceGenerationAbortedException {
+    public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
+            throws StateSpaceGenerationAbortedException {
 
-		observer.update(this, input);
-		return getResultStates(input, observer);
-	}
+        Set<ProgramState> result = new HashSet<>();
 
-	public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
-			throws StateSpaceGenerationAbortedException {
-		Set<ProgramState> result = new HashSet<>();
-		
-		for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
-			ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
-			state.setProgramCounter(0);
-			result.add(state);
-		}
+        for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
+            ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
+            state.setProgramCounter(0);
+            result.add(state);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public List<HeapConfiguration> getIPAResult( ProgramState input, SymbolicExecutionObserver observer )
-			throws StateSpaceGenerationAbortedException{
-		HeapConfiguration currentConfig = input.getHeap();
-		Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> splittedConfig = prepareInput( currentConfig );
-		HeapConfiguration reachableFragment = splittedConfig.first();
-		HeapConfiguration remainingFragment = splittedConfig.second().first(); 
-		int placeholderPos = splittedConfig.second().second();
+    public List<HeapConfiguration> getIPAResult(ProgramState input, SymbolicExecutionObserver observer)
+            throws StateSpaceGenerationAbortedException {
 
-		List<HeapConfiguration> postconditions;
-		if( !contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled() ){ 
+        HeapConfiguration currentConfig = input.getHeap();
+        Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> splittedConfig = prepareInput(currentConfig);
+        HeapConfiguration reachableFragment = splittedConfig.first();
+        HeapConfiguration remainingFragment = splittedConfig.second().first();
+        int placeholderPos = splittedConfig.second().second();
 
-			postconditions = computeContract( input, reachableFragment, observer );
+        List<HeapConfiguration> postconditions;
+        if (!contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled()) {
 
-		}else{
-			int [] reordering = contracts.getReordering( reachableFragment );
-			remainingFragment = adaptExternalOrdering( reachableFragment, remainingFragment, 
-					placeholderPos, reordering );
-			postconditions = contracts.getPostconditions(reachableFragment);
-		}
-		return applyContract(remainingFragment, placeholderPos, postconditions );
+            postconditions = computeContract(input, reachableFragment, observer);
 
-	}
+        } else {
+            int[] reordering = contracts.getReordering(reachableFragment);
+            remainingFragment = adaptExternalOrdering(reachableFragment, remainingFragment,
+                    placeholderPos, reordering);
+            postconditions = contracts.getPostconditions(reachableFragment);
+        }
+        return applyContract(remainingFragment, placeholderPos, postconditions);
 
-	private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
-			throws StateSpaceGenerationAbortedException {
+    }
 
-		List<HeapConfiguration> postconditions = new ArrayList<>();
-		ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
-		StateSpace stateSpace = observer.generateStateSpace(method, initialState);
+    private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
+            throws StateSpaceGenerationAbortedException {
 
-		for( ProgramState finalState : stateSpace.getFinalStates() ){
-			postconditions.add( finalState.getHeap() );
-		}
+        List<HeapConfiguration> postconditions = new ArrayList<>();
+        ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
+        StateSpace stateSpace = observer.generateStateSpace(method, initialState);
 
-		if( isReuseResultsEnabled() ) {
-			contracts.addContract(reachableFragment, postconditions);
-		}
+        for (ProgramState finalState : stateSpace.getFinalStates()) {
+            postconditions.add(finalState.getHeap());
+        }
 
-		return postconditions;
-	}
+        if (isReuseResultsEnabled()) {
+            contracts.addContract(reachableFragment, postconditions);
+        }
 
+        return postconditions;
+    }
 
-	/**
-	 * @param input
-	 * @return <reachableFragment,remainingFragment>
-	 */
-	protected Pair<HeapConfiguration, Pair<HeapConfiguration,Integer>> prepareInput( HeapConfiguration input ){
-		ReachableFragmentComputer helper = new ReachableFragmentComputer(this, this.toString(), input );
-		return helper.prepareInput();
-	}
+    /**
+     * @param input
+     * @return <reachableFragment,remainingFragment>
+     */
+    protected Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> prepareInput(HeapConfiguration input) {
 
-	private List<HeapConfiguration> applyContract( HeapConfiguration remainingFragment,
-			int contractPlaceholderEdge,
-			List<HeapConfiguration> contracts ){
+        ReachableFragmentComputer helper = new ReachableFragmentComputer(this, this.toString(), input);
+        return helper.prepareInput();
+    }
 
-		List<HeapConfiguration> result = new ArrayList<>();
-		for( HeapConfiguration contract : contracts ){
-			HeapConfigurationBuilder builder = remainingFragment.clone().builder();
-			builder.replaceNonterminalEdge(contractPlaceholderEdge, contract);
-			result.add( builder.build() );
-		}
+    private List<HeapConfiguration> applyContract(HeapConfiguration remainingFragment,
+                                                  int contractPlaceholderEdge,
+                                                  List<HeapConfiguration> contracts) {
 
-		return result;
-	}
+        List<HeapConfiguration> result = new ArrayList<>();
+        for (HeapConfiguration contract : contracts) {
+            HeapConfigurationBuilder builder = remainingFragment.clone().builder();
+            builder.replaceNonterminalEdge(contractPlaceholderEdge, contract);
+            result.add(builder.build());
+        }
 
+        return result;
+    }
 
-	protected HeapConfiguration adaptExternalOrdering( HeapConfiguration reachableFragment, 
-			HeapConfiguration remainingFragment,
-			int placeholderPosition,
-			int[] reordering 
-			)
-					throws IllegalArgumentException {
+    protected HeapConfiguration adaptExternalOrdering(HeapConfiguration reachableFragment,
+                                                      HeapConfiguration remainingFragment,
+                                                      int placeholderPosition,
+                                                      int[] reordering
+    )
+            throws IllegalArgumentException {
 
-		TIntArrayList oldTentacles = remainingFragment.attachedNodesOf( placeholderPosition );
-		TIntArrayList newTentacles = new TIntArrayList();
-		for (int aReordering : reordering) {
-			newTentacles.add(oldTentacles.get(aReordering));
-		} 
+        TIntArrayList oldTentacles = remainingFragment.attachedNodesOf(placeholderPosition);
+        TIntArrayList newTentacles = new TIntArrayList();
+        for (int aReordering : reordering) {
+            newTentacles.add(oldTentacles.get(aReordering));
+        }
 
-		Nonterminal label = remainingFragment.labelOf(placeholderPosition);
-		return remainingFragment.builder().removeNonterminalEdge(placeholderPosition)
-				.addNonterminalEdge(label, newTentacles ).build();
+        Nonterminal label = remainingFragment.labelOf(placeholderPosition);
+        return remainingFragment.builder().removeNonterminalEdge(placeholderPosition)
+                .addNonterminalEdge(label, newTentacles).build();
 
-	}
+    }
 
-	public IpaContractCollection getContracts() {
-		return contracts;
-	}
+    public IpaContractCollection getContracts() {
 
-	public void markAsRecursive() {
-		isRecursive = true;
-	}
+        return contracts;
+    }
 
-	public boolean isRecursive() {
-		return isRecursive;
-	}
+    public void markAsRecursive() {
 
+        isRecursive = true;
+    }
 
+    public boolean isRecursive() {
+
+        return isRecursive;
+    }
+
+    public static final class Factory extends SceneObject {
+
+        private Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
+
+        public Factory(Scene scene) {
+
+            super(scene);
+        }
+
+        public IpaAbstractMethod get(String signature) {
+
+            if (!knownMethods.containsKey(signature)) {
+                knownMethods.put(signature, new IpaAbstractMethod(this, signature));
+            }
+            return knownMethods.get(signature);
+        }
+    }
 
 
 }

@@ -11,52 +11,57 @@ import java.util.Map;
  */
 public class BasicSelectorLabel implements SelectorLabel {
 
-	public static class Factory {
-
-		private final Map<String, SelectorLabel> knownSelectorLabels = new HashMap<>();
-
-		public SelectorLabel get(String name) {
-			SelectorLabel result  = knownSelectorLabels.get(name);
-			if(result == null) {
-				result = new BasicSelectorLabel(name);
-				knownSelectorLabels.put(name, result);
-			}
-			return result;
-		}
-	}
-
     /**
      * The label of the selector label.
      */
-	private final String label;
+    private final String label;
 
     /**
      * Creates a selector label.
+     *
      * @param label The name of the label.
      */
-	private BasicSelectorLabel(String label) {
-		this.label = label;
-	}
-	
-	@Override
-	public int compareTo(SelectorLabel other) {
-		return this.toString().compareTo( other.toString() );
-	}
-	
-	public String toString(){
-		return label;
-	}
+    private BasicSelectorLabel(String label) {
 
-	@Override
-	public boolean hasLabel(String label) {
-		
-		return this.label.equals(label);
-	}
+        this.label = label;
+    }
 
-	@Override
-	public String getLabel() {
-		
-		return label;
-	}
-	
+    @Override
+    public int compareTo(SelectorLabel other) {
+
+        return this.toString().compareTo(other.toString());
+    }
+
+    public String toString() {
+
+        return label;
+    }
+
+    @Override
+    public boolean hasLabel(String label) {
+
+        return this.label.equals(label);
+    }
+
+    @Override
+    public String getLabel() {
+
+        return label;
+    }
+
+    public static class Factory {
+
+        private final Map<String, SelectorLabel> knownSelectorLabels = new HashMap<>();
+
+        public SelectorLabel get(String name) {
+
+            SelectorLabel result = knownSelectorLabels.get(name);
+            if (result == null) {
+                result = new BasicSelectorLabel(name);
+                knownSelectorLabels.put(name, result);
+            }
+            return result;
+        }
+    }
+
 }

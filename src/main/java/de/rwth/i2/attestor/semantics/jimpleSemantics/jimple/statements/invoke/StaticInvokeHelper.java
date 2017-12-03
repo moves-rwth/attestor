@@ -21,60 +21,58 @@ import java.util.List;
  * and stores them in the heap, by setting the corresponding intermediates.<br>
  * Also manages the variable scope of the method and cleans the heap after the execution
  * of the method.
- *  
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public class StaticInvokeHelper extends InvokeHelper {
-	
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger( "StaticInvokeHelper" );
 
-	/**
-	 * creates a helper class for a specific invoke statement.
-	 * 
-	 * @see InvokeHelper
-	 * 
-	 * @param argumentValues
-	 *            The values which form the arguments of the method in the
-	 *            correct ordering
-	 */
-	public StaticInvokeHelper(SceneObject sceneObject, List<Value> argumentValues){
+    @SuppressWarnings("unused")
+    private static final Logger logger = LogManager.getLogger("StaticInvokeHelper");
 
-		super(sceneObject);
-		this.argumentValues = argumentValues;
-		
-		precomputePotentialViolationPoints();
+    /**
+     * creates a helper class for a specific invoke statement.
+     *
+     * @param argumentValues The values which form the arguments of the method in the
+     *                       correct ordering
+     * @see InvokeHelper
+     */
+    public StaticInvokeHelper(SceneObject sceneObject, List<Value> argumentValues) {
 
-	}
+        super(sceneObject);
+        this.argumentValues = argumentValues;
 
-	/**
-	 * evaluates the expressions for the arguments and appends them to the heap.
-	 * sets the current scope the the method's scope.
-	 */
-	@Override
-	public void prepareHeap(ProgramState programState, SymbolicExecutionObserver options)
-			throws NotSufficientlyMaterializedException{
+        precomputePotentialViolationPoints();
 
-		appendArguments(programState, options);
+    }
 
-	}
+    /**
+     * evaluates the expressions for the arguments and appends them to the heap.
+     * sets the current scope the the method's scope.
+     */
+    @Override
+    public void prepareHeap(ProgramState programState, SymbolicExecutionObserver options)
+            throws NotSufficientlyMaterializedException {
 
-	/**
-	 * removes all remaining intermediates and local variables.
-	 * leaves the method's scope.
-	 */
-	@Override
-	public void cleanHeap(ProgramState programState, SymbolicExecutionObserver options){
+        appendArguments(programState, options);
 
-		removeParameters(programState);
-		//removeLocals(programState);
-		removeReturn(programState);
-	}
+    }
 
-	@Override
-	public String baseValueString() {
-		return "";
-	}
+    /**
+     * removes all remaining intermediates and local variables.
+     * leaves the method's scope.
+     */
+    @Override
+    public void cleanHeap(ProgramState programState, SymbolicExecutionObserver options) {
+
+        removeParameters(programState);
+        //removeLocals(programState);
+        removeReturn(programState);
+    }
+
+    @Override
+    public String baseValueString() {
+
+        return "";
+    }
 
 }

@@ -32,11 +32,11 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
         heapConfiguration = canonicalizeCurrent(heapConfiguration);
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        if(ntEdges.size() != 1 || hasSelectorEdges(heapConfiguration)) {
+        if (ntEdges.size() != 1 || hasSelectorEdges(heapConfiguration)) {
             return Collections.emptySet();
         }
 
-        String label = heapConfiguration.labelOf( ntEdges.get(0) ).getLabel();
+        String label = heapConfiguration.labelOf(ntEdges.get(0)).getLabel();
 
         return Collections.singleton("{ L(" + label + ") }");
 
@@ -47,7 +47,7 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
         heapConfiguration = heapConfiguration.clone();
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int varEdge = iter.next();
             builder.removeVariableEdge(varEdge);
         }
@@ -58,14 +58,14 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
 
         boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
                 AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0, aggressiveNullAbstraction);
-                if(checker.hasMatching()) {
+                if (checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()
                             .builder()
-                            .replaceMatching( embedding, lhs)
+                            .replaceMatching(embedding, lhs)
                             .build();
                     return canonicalizeCurrent(abstractedHc);
                 }
@@ -78,9 +78,9 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
     private boolean hasSelectorEdges(HeapConfiguration heapConfiguration) {
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
-            if(!heapConfiguration.successorNodesOf(node).isEmpty()) {
+            if (!heapConfiguration.successorNodesOf(node).isEmpty()) {
                 return true;
             }
         }

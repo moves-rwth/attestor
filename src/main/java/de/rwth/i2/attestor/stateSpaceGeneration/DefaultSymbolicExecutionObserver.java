@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
  * The options passed to every Semantics object by a state space generator to configure the symbolic execution.
+ *
  * @author Christoph
  */
 public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserver {

@@ -43,16 +43,16 @@ public class TestGenerator {
 
         try {
 
-           Class<?> testedClass = Class.forName(packageName + "." + className);
-           Class<?>[] parameterTypes = new Class[parameterTypeNames.size()];
-           for(int i=0; i < parameterTypeNames.size(); i++) {
-               parameterTypes[i] = Class.forName(parameterTypeNames.get(i));
-           }
-           Method testedMethod = testedClass.getMethod(methodName, parameterTypes);
-           assert testedMethod != null;
+            Class<?> testedClass = Class.forName(packageName + "." + className);
+            Class<?>[] parameterTypes = new Class[parameterTypeNames.size()];
+            for (int i = 0; i < parameterTypeNames.size(); i++) {
+                parameterTypes[i] = Class.forName(parameterTypeNames.get(i));
+            }
+            Method testedMethod = testedClass.getMethod(methodName, parameterTypes);
+            assert testedMethod != null;
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("The provided class to test could not be found.");
-        } catch(NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("The provided method to test could not be found.");
         }
     }
@@ -61,7 +61,7 @@ public class TestGenerator {
 
         int counter = 0;
         int varId = input.variableWith("@param" + counter);
-        while(varId != HeapConfiguration.INVALID_ELEMENT) {
+        while (varId != HeapConfiguration.INVALID_ELEMENT) {
             String name = input.nameOf(varId);
             int varTarget = input.targetOf(varId);
             Type targetType = input.nodeTypeOf(varTarget);
@@ -100,6 +100,7 @@ public class TestGenerator {
     }
 
     private void beginClass() throws IOException {
+
         StringBuilder builder = new StringBuilder();
         builder.append("class ")
                 .append(className)
@@ -139,7 +140,7 @@ public class TestGenerator {
                 .append("@Test")
                 .append(System.lineSeparator())
                 .append("public void test")
-                .append(methodName.substring(0,1).toUpperCase())
+                .append(methodName.substring(0, 1).toUpperCase())
                 .append(methodName.substring(1))
                 .append("() {")
                 .append(System.lineSeparator())
@@ -150,13 +151,13 @@ public class TestGenerator {
                 .append(INDENT)
                 .append(methodName)
                 .append("(");
-                for(int i=0; i < parameterNames.size(); i++)  {
-                    builder.append(parameterNames.get(i));
-                    if(i < parameterNames.size()-1) {
-                        builder.append(", ");
-                    }
-                }
-                builder.append(");")
+        for (int i = 0; i < parameterNames.size(); i++) {
+            builder.append(parameterNames.get(i));
+            if (i < parameterNames.size() - 1) {
+                builder.append(", ");
+            }
+        }
+        builder.append(");")
                 .append(System.lineSeparator())
                 .append(INDENT)
                 .append("} catch(Exception e) {")
@@ -172,7 +173,7 @@ public class TestGenerator {
                 .append(INDENT)
                 .append("} catch(Exception e) {")
                 .append("}")
-                        ;
+        ;
         writer.write(builder.toString());
     }
 

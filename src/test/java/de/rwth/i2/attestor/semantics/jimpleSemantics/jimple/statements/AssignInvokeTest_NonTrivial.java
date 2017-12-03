@@ -29,62 +29,63 @@ import static org.junit.Assert.*;
 
 public class AssignInvokeTest_NonTrivial {
 
-	private SceneObject sceneObject;
-	private ExampleHcImplFactory hcFactory;
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
-	private AssignInvoke stmt;
-	private HeapConfiguration inputGraph;
-	private DefaultProgramState inputState;
+    private AssignInvoke stmt;
+    private HeapConfiguration inputGraph;
+    private DefaultProgramState inputState;
 
-	@Before
-	public void setUp() throws Exception{
+    @Before
+    public void setUp() throws Exception {
 
-		sceneObject = new MockupSceneObject();
-		hcFactory = new ExampleHcImplFactory(sceneObject);
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
 
-		Type type = sceneObject.scene().getType( "AssignInvokeTestNonTrivial" );
+        Type type = sceneObject.scene().getType("AssignInvokeTestNonTrivial");
 
-		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
-		SelectorLabel prev = sceneObject.scene().getSelectorLabel("prev");
-		type.addSelectorLabel(next, Constants.NULL);
-		type.addSelectorLabel(prev, Constants.NULL);
+        SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+        SelectorLabel prev = sceneObject.scene().getSelectorLabel("prev");
+        type.addSelectorLabel(next, Constants.NULL);
+        type.addSelectorLabel(prev, Constants.NULL);
 
-		Local var = new Local( type, "x" );
+        Local var = new Local(type, "x");
 
-		AbstractMethod method= sceneObject.scene().getMethod( "method");
-		List<Semantics> defaultControlFlow = new ArrayList<>();
-		defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new HashSet<>()));
-		defaultControlFlow.add( new ReturnValueStmt(sceneObject, var, type) );
-		method.setControlFlow( defaultControlFlow );
-		InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
-		
-		stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1 );
-		
-		inputGraph = hcFactory.getListAndConstants();
-		inputState = new DefaultProgramState( inputGraph );
-	}
+        AbstractMethod method = sceneObject.scene().getMethod("method");
+        List<Semantics> defaultControlFlow = new ArrayList<>();
+        defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new HashSet<>()));
+        defaultControlFlow.add(new ReturnValueStmt(sceneObject, var, type));
+        method.setControlFlow(defaultControlFlow);
+        InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 
-	@Test
-	public void testComputeSuccessors(){
-		try{
-			Set<ProgramState> resStates = stmt.computeSuccessors( inputState, new MockupSymbolicExecutionObserver(sceneObject) );
-			assertEquals( 1, resStates.size() );
-			DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
-			assertNotSame( resState, inputState );
-			assertNotSame( inputGraph, resState.getHeap() );
-			assertSame( inputGraph, inputState.getHeap() );
-			assertEquals( hcFactory.getListAndConstants(), inputGraph );
-			assertFalse( inputGraph.equals( resState.getHeap() ) );
-			assertEquals(hcFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
-		}catch( NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e ){
-			fail("unexpected exception: " + e.getMessage());
-		}
-	}
-	
+        stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
+
+        inputGraph = hcFactory.getListAndConstants();
+        inputState = new DefaultProgramState(inputGraph);
+    }
+
+    @Test
+    public void testComputeSuccessors() {
+
+        try {
+            Set<ProgramState> resStates = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
+            assertEquals(1, resStates.size());
+            DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
+            assertNotSame(resState, inputState);
+            assertNotSame(inputGraph, resState.getHeap());
+            assertSame(inputGraph, inputState.getHeap());
+            assertEquals(hcFactory.getListAndConstants(), inputGraph);
+            assertFalse(inputGraph.equals(resState.getHeap()));
+            assertEquals(hcFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            fail("unexpected exception: " + e.getMessage());
+        }
+    }
 
 
-	@Test
-	public void testNeedsMaterialization(){
-		assertFalse( stmt.needsMaterialization( inputState ) );
-	}
+    @Test
+    public void testNeedsMaterialization() {
+
+        assertFalse(stmt.needsMaterialization(inputState));
+    }
 }

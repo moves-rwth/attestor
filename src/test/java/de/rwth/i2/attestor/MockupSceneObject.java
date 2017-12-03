@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 public class MockupSceneObject extends SceneObject {
 
     public MockupSceneObject() {
+
         super(new DefaultScene());
     }
 }

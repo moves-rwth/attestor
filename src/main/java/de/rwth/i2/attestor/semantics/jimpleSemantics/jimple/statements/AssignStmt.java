@@ -19,114 +19,115 @@ import java.util.Set;
 
 /**
  * AssignStmts model assignments of locals or fields to values e.g. x.y = z
- * 
- * @author hannah
  *
+ * @author hannah
  */
 public class AssignStmt extends Statement {
 
-	private static final Logger logger = LogManager.getLogger( "AssignStmt" );
-	/**
-	 * the element to which something will be assigned (e.g. variable or field)
-	 */
-	private final SettableValue lhs;
-	/**
-	 * The expression that will be assigned
-	 */
-	private final Value rhs;
-	/**
-	 * the program counter of the successor state
-	 */
-	private final int nextPC;
-	
-	private final ViolationPoints potentialViolationPoints;
-	
-	private final Set<String> liveVariableNames;
+    private static final Logger logger = LogManager.getLogger("AssignStmt");
+    /**
+     * the element to which something will be assigned (e.g. variable or field)
+     */
+    private final SettableValue lhs;
+    /**
+     * The expression that will be assigned
+     */
+    private final Value rhs;
+    /**
+     * the program counter of the successor state
+     */
+    private final int nextPC;
 
-	public AssignStmt(SceneObject sceneObject, SettableValue lhs , Value rhs , int nextPC, Set<String> liveVariableNames){
-		super(sceneObject);
-		this.rhs = rhs;
-		this.lhs = lhs;
-		this.nextPC = nextPC;
-		this.liveVariableNames = liveVariableNames;
+    private final ViolationPoints potentialViolationPoints;
 
-		potentialViolationPoints = new ViolationPoints();
-		potentialViolationPoints.addAll(lhs.getPotentialViolationPoints());
-		potentialViolationPoints.addAll(rhs.getPotentialViolationPoints());
-		
-		
-	}
+    private final Set<String> liveVariableNames;
 
-	/**
-	 * evaluates the rhs and assigns it to the left hand side. In case the rhs
-	 * evaluates to undefined, the variable will be removed from the heap (It
-	 * will not point to its old value). <br>
-	 * If the types of the lhs and the rhs do not match, there will be a
-	 * warning, but the assignment will still be realized.<br>
-	 * 
-	 * If the variable in rhs is not live in this statement, it will be removed from the heap
-	 * to enable abstraction at this point.
-	 * 
-	 * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
-	 */
-	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
-			throws NotSufficientlyMaterializedException {
+    public AssignStmt(SceneObject sceneObject, SettableValue lhs, Value rhs, int nextPC, Set<String> liveVariableNames) {
 
-		observer.update(this, programState);
+        super(sceneObject);
+        this.rhs = rhs;
+        this.lhs = lhs;
+        this.nextPC = nextPC;
+        this.liveVariableNames = liveVariableNames;
 
-		programState = programState.clone();
-		ConcreteValue concreteRHS;
-		
-		try {
-			concreteRHS = rhs.evaluateOn( programState );
-		} catch (NullPointerDereferenceException e) {
-			logger.error( e.getErrorMessage(this) );
-			concreteRHS = programState.getUndefined();
-		}
-
-		try {
-		    lhs.evaluateOn(programState); // enforce materialization if necessary
-			lhs.setValue(programState, concreteRHS );
-		} catch (NullPointerDereferenceException e) {
-			logger.error(e.getErrorMessage(this));
-		}
-
-		if(observer.isDeadVariableEliminationEnabled()) {
-			DeadVariableEliminator.removeDeadVariables(this, rhs.toString(),
-					programState, liveVariableNames);
-
-			DeadVariableEliminator.removeDeadVariables(this, lhs.toString(),
-					programState, liveVariableNames);
-		}
-
-		ProgramState result = programState.clone();
-		result.setProgramCounter(nextPC);
-		
-		return SingleElementUtil.createSet( result );
-	}
-
-	@Override
-	public boolean needsMaterialization( ProgramState programState ){
-		
-		return rhs.needsMaterialization( programState ) || lhs.needsMaterialization( programState );
-	}
+        potentialViolationPoints = new ViolationPoints();
+        potentialViolationPoints.addAll(lhs.getPotentialViolationPoints());
+        potentialViolationPoints.addAll(rhs.getPotentialViolationPoints());
 
 
-	public String toString(){
-		return lhs.toString() + " = " + rhs.toString() + ";";
-	}
+    }
 
-	@Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return potentialViolationPoints;
-	}
+    /**
+     * evaluates the rhs and assigns it to the left hand side. In case the rhs
+     * evaluates to undefined, the variable will be removed from the heap (It
+     * will not point to its old value). <br>
+     * If the types of the lhs and the rhs do not match, there will be a
+     * warning, but the assignment will still be realized.<br>
+     * <p>
+     * If the variable in rhs is not live in this statement, it will be removed from the heap
+     * to enable abstraction at this point.
+     *
+     * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
+     */
+    @Override
+    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+            throws NotSufficientlyMaterializedException {
 
-	@Override
-	public Set<Integer> getSuccessorPCs() {
-		
-		return SingleElementUtil.createSet(nextPC);
-	}
-	
+        observer.update(this, programState);
+
+        programState = programState.clone();
+        ConcreteValue concreteRHS;
+
+        try {
+            concreteRHS = rhs.evaluateOn(programState);
+        } catch (NullPointerDereferenceException e) {
+            logger.error(e.getErrorMessage(this));
+            concreteRHS = programState.getUndefined();
+        }
+
+        try {
+            lhs.evaluateOn(programState); // enforce materialization if necessary
+            lhs.setValue(programState, concreteRHS);
+        } catch (NullPointerDereferenceException e) {
+            logger.error(e.getErrorMessage(this));
+        }
+
+        if (observer.isDeadVariableEliminationEnabled()) {
+            DeadVariableEliminator.removeDeadVariables(this, rhs.toString(),
+                    programState, liveVariableNames);
+
+            DeadVariableEliminator.removeDeadVariables(this, lhs.toString(),
+                    programState, liveVariableNames);
+        }
+
+        ProgramState result = programState.clone();
+        result.setProgramCounter(nextPC);
+
+        return SingleElementUtil.createSet(result);
+    }
+
+    @Override
+    public boolean needsMaterialization(ProgramState programState) {
+
+        return rhs.needsMaterialization(programState) || lhs.needsMaterialization(programState);
+    }
+
+
+    public String toString() {
+
+        return lhs.toString() + " = " + rhs.toString() + ";";
+    }
+
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
+
+        return potentialViolationPoints;
+    }
+
+    @Override
+    public Set<Integer> getSuccessorPCs() {
+
+        return SingleElementUtil.createSet(nextPC);
+    }
+
 }

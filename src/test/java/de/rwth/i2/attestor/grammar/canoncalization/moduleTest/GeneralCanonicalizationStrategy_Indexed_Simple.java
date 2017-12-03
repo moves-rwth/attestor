@@ -33,126 +33,133 @@ import static org.junit.Assert.assertEquals;
 
 public class GeneralCanonicalizationStrategy_Indexed_Simple {
 
-	private static final String NT_LABEL = "GeneralCanonicalizationStrategyIS";
-	private static final int RANK = 2;
-	private static final boolean[] isReductionTentacle = new boolean[RANK];
-	private final SceneObject sceneObject = new MockupSceneObject();
-	private final Type TYPE = sceneObject.scene().getType("type");
-	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
+    private static final String NT_LABEL = "GeneralCanonicalizationStrategyIS";
+    private static final int RANK = 2;
+    private static final boolean[] isReductionTentacle = new boolean[RANK];
+    private final SceneObject sceneObject = new MockupSceneObject();
+    private final Type TYPE = sceneObject.scene().getType("type");
+    private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
 
-	private IndexedCanonicalizationHelper matchingHandler;
-	
-	@Before
-	public void init() {
-		IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
-		
-		final int minDereferenceDepth = 1;
-		final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
+    private IndexedCanonicalizationHelper matchingHandler;
 
-		IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
-		DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-		IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
-		EmbeddingIndexChecker indexChecker = 
-				new EmbeddingIndexChecker( indexMatcher, 
-											materializer );
-		
-		matchingHandler = new IndexedCanonicalizationHelper(fakeIndexStrategy,checkerProvider, indexChecker);
-		
-	}
+    @Before
+    public void init() {
 
-	@Test
-	public void test() {
-		
-		List<IndexSymbol> lhsIndex = makeInstantiable(getIndexPrefix());
-		Nonterminal lhs = getNonterminal( lhsIndex  );
-		HeapConfiguration rhs = getPattern();
-		Grammar grammar = Grammar.builder().addRule( lhs, rhs ).build();
-		
-		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, matchingHandler );
-		
-		ProgramState inputState = new DefaultProgramState( getSimpleGraph() );
-		ProgramState res = canonizer.canonicalize(inputState);
+        IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
 
-		assertEquals( expectedSimpleAbstraction().getHeap(), res.getHeap() );
-	}
+        final int minDereferenceDepth = 1;
+        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
 
+        IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
+        DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
+        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
+        EmbeddingIndexChecker indexChecker =
+                new EmbeddingIndexChecker(indexMatcher,
+                        materializer);
 
+        matchingHandler = new IndexedCanonicalizationHelper(fakeIndexStrategy, checkerProvider, indexChecker);
 
-	private List<IndexSymbol> getEmptyIndex() {
-		List<IndexSymbol> index = new ArrayList<>();
-		return index;
-	}
-	
-	private List<IndexSymbol> getIndexPrefix() {
-		List<IndexSymbol> index = getEmptyIndex();
-		index.add( DefaultIndexMaterialization.SYMBOL_s );
-		return index;
-	}
+    }
 
-	private List<IndexSymbol> makeConcrete( List<IndexSymbol> index ){
-		List<IndexSymbol> indexCopy = new ArrayList<>( index );
-		indexCopy.add( DefaultIndexMaterialization.SYMBOL_Z );
-		return indexCopy;
-	}
-	
-	private List<IndexSymbol> makeInstantiable( List<IndexSymbol> index ){
-		List<IndexSymbol> indexCopy = new ArrayList<>( index );
-		indexCopy.add( IndexVariable.getIndexVariable() );
-		return indexCopy;
-	}
+    @Test
+    public void test() {
+
+        List<IndexSymbol> lhsIndex = makeInstantiable(getIndexPrefix());
+        Nonterminal lhs = getNonterminal(lhsIndex);
+        HeapConfiguration rhs = getPattern();
+        Grammar grammar = Grammar.builder().addRule(lhs, rhs).build();
+
+        GeneralCanonicalizationStrategy canonizer
+                = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
+
+        ProgramState inputState = new DefaultProgramState(getSimpleGraph());
+        ProgramState res = canonizer.canonicalize(inputState);
+
+        assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
+    }
 
 
-	private Nonterminal getNonterminal( List<IndexSymbol> index ) {
-		Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, RANK, isReductionTentacle);
-		return new IndexedNonterminalImpl(bnt, index);
-	}
+    private List<IndexSymbol> getEmptyIndex() {
+
+        List<IndexSymbol> index = new ArrayList<>();
+        return index;
+    }
+
+    private List<IndexSymbol> getIndexPrefix() {
+
+        List<IndexSymbol> index = getEmptyIndex();
+        index.add(DefaultIndexMaterialization.SYMBOL_s);
+        return index;
+    }
+
+    private List<IndexSymbol> makeConcrete(List<IndexSymbol> index) {
+
+        List<IndexSymbol> indexCopy = new ArrayList<>(index);
+        indexCopy.add(DefaultIndexMaterialization.SYMBOL_Z);
+        return indexCopy;
+    }
+
+    private List<IndexSymbol> makeInstantiable(List<IndexSymbol> index) {
+
+        List<IndexSymbol> indexCopy = new ArrayList<>(index);
+        indexCopy.add(IndexVariable.getIndexVariable());
+        return indexCopy;
+    }
 
 
+    private Nonterminal getNonterminal(List<IndexSymbol> index) {
 
-	private HeapConfiguration getPattern() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(TYPE, 3, nodes)
-				.addNonterminalEdge( getNonterminal( makeInstantiable(getEmptyIndex()) ))
-					.addTentacle(nodes.get(0))
-					.addTentacle(nodes.get(1))
-					.build()
-				.addSelector(nodes.get(1), SEL , nodes.get(2) )
-				.setExternal(nodes.get(0))
-				.setExternal(nodes.get(2))
-				.build();
-	}
-	
+        Nonterminal bnt = sceneObject.scene().createNonterminal(NT_LABEL, RANK, isReductionTentacle);
+        return new IndexedNonterminalImpl(bnt, index);
+    }
 
-	private HeapConfiguration getSimpleGraph() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(TYPE, 3, nodes)
-				.addNonterminalEdge( getNonterminal( makeConcrete(getEmptyIndex()) ))
-					.addTentacle(nodes.get(0))
-					.addTentacle(nodes.get(1))
-					.build()
-				.addSelector(nodes.get(1), SEL , nodes.get(2) )
-				.build();
-	}
-	
-	private ProgramState expectedSimpleAbstraction() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		hc =  hc.builder().addNodes(TYPE, 2, nodes)
-				.addNonterminalEdge( getNonterminal( makeConcrete(getIndexPrefix()) ))
-					.addTentacle(nodes.get(0))
-					.addTentacle(nodes.get(1))
-					.build()
-				.build();
-		
-		return new IndexedState( hc );
-	}
+
+    private HeapConfiguration getPattern() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(TYPE, 3, nodes)
+                .addNonterminalEdge(getNonterminal(makeInstantiable(getEmptyIndex())))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addSelector(nodes.get(1), SEL, nodes.get(2))
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(2))
+                .build();
+    }
+
+
+    private HeapConfiguration getSimpleGraph() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(TYPE, 3, nodes)
+                .addNonterminalEdge(getNonterminal(makeConcrete(getEmptyIndex())))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addSelector(nodes.get(1), SEL, nodes.get(2))
+                .build();
+    }
+
+    private ProgramState expectedSimpleAbstraction() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        hc = hc.builder().addNodes(TYPE, 2, nodes)
+                .addNonterminalEdge(getNonterminal(makeConcrete(getIndexPrefix())))
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .build();
+
+        return new IndexedState(hc);
+    }
 
 
 }

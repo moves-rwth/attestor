@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.programState.indexedState.index;
 
 public interface IndexSymbol {
 
-	String toString();
+    String toString();
 
-	boolean isBottom();
+    boolean isBottom();
 
 }

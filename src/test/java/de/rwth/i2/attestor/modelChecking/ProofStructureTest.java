@@ -15,501 +15,504 @@ import static org.junit.Assert.*;
 
 public class ProofStructureTest extends InternalStateSpace {
 
-	private SceneObject sceneObject;
-	private HeapConfiguration hc;
+    private SceneObject sceneObject;
+    private HeapConfiguration hc;
 
-	public ProofStructureTest(){
-		super(0);
-	}
+    public ProofStructureTest() {
 
-	@Before
-	public void setup() {
+        super(0);
+    }
 
-		sceneObject = new MockupSceneObject();
-		hc = sceneObject.scene().createHeapConfiguration();
-	}
+    @Before
+    public void setup() {
 
-	@Test
-	public void buildProofStructureTestAndStateform(){
-		
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("({dll} & {tree})");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        sceneObject = new MockupSceneObject();
+        hc = sceneObject.scene().createHeapConfiguration();
+    }
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ tree }");
-		state1.setProgramCounter(1);
+    @Test
+    public void buildProofStructureTestAndStateform() {
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertEquals(proofStruct.getLeaves().size(), 2);
-		boolean successful = true;
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure one leaf is not successful
-			if(!assertion.isTrue()){
-				successful = false;
-			}
-		}
-		assertFalse(successful);
-		
-		assertTrue(proofStruct.size() == 4);
-		assertFalse(proofStruct.isSuccessful());
-	}
-	
-	@Test
-	public void buildProofStructureTestOrStateform(){
-		
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("({dll} | {tree})");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("({dll} & {tree})");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ tree }");
-		state1.setProgramCounter(1);
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ tree }");
+        state1.setProgramCounter(1);
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertEquals(proofStruct.getLeaves().size(), 1);
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure the one leaf is successful
-			assertTrue(assertion.isTrue());
-		}
-		
-		assertTrue(proofStruct.size() <= 3 && proofStruct.size() >= 2);
-		assertTrue(proofStruct.isSuccessful());
-	}
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-	@Test
-	public void buildProofStructureTestNextLtlform(){
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.build(this, formula);
 
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("X {dll}");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        // Expected output
+        assertEquals(proofStruct.getLeaves().size(), 2);
+        boolean successful = true;
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure one leaf is not successful
+            if (!assertion.isTrue()) {
+                successful = false;
+            }
+        }
+        assertFalse(successful);
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ dll }");
-		state1.setProgramCounter(1);
+        assertTrue(proofStruct.size() == 4);
+        assertFalse(proofStruct.isSuccessful());
+    }
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
+    @Test
+    public void buildProofStructureTestOrStateform() {
 
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("({dll} | {tree})");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		assertTrue(proofStruct.isSuccessful());
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ tree }");
+        state1.setProgramCounter(1);
 
-	}
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-	
-	@Test 
-	public void buildProofStructureTestNextNegLtlform(){
-		
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("X ! {dll}");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ tree }");
-		state1.setProgramCounter(1);
-		
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertEquals(proofStruct.getLeaves().size(), 1);
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure all leaves are successful
-			assertTrue(assertion.isTrue());
-			
-		}
-		assertTrue(proofStruct.size() == 2);
-		assertTrue(proofStruct.isSuccessful());
-		
-	}
-	
-	@Test
-	public void buildProofStructureTestUntilLtlform(){
-		
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("({dll} U {tree})");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        // Expected output
+        assertEquals(proofStruct.getLeaves().size(), 1);
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure the one leaf is successful
+            assertTrue(assertion.isTrue());
+        }
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ tree }");
-		state1.setProgramCounter(1);
+        assertTrue(proofStruct.size() <= 3 && proofStruct.size() >= 2);
+        assertTrue(proofStruct.isSuccessful());
+    }
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertEquals(proofStruct.getLeaves().size(), 3);
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure all leaves are successful
-			assertTrue(assertion.isTrue());
-			
-		}
-		assertTrue(proofStruct.size() <= 9 && proofStruct.size() >= 7);
-		assertTrue(proofStruct.isSuccessful());
-	}
+    @Test
+    public void buildProofStructureTestNextLtlform() {
 
-	@Test
-	public void buildProofStructureTestTrueUntil(){
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("X {dll}");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("(true U {tree})");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ dll }");
+        state1.setProgramCounter(1);
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.setProgramCounter(1);
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
 
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
+        assertTrue(proofStruct.isSuccessful());
 
-		// Make sure that verification fails
-		assertFalse(proofStruct.isSuccessful());
-	}
-
-	@Test
-	public void buildProofStructureTestNegFinally(){
-
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("! F { tree }");
-			formula.toPNF();
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
-
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.setProgramCounter(1);
-		initialState.addAP("{ dll }");
-		state1.addAP("{ tree }");
-
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-
-		// Make sure that verification fails
-		assertFalse(proofStruct.isSuccessful());
-	}
-
-	@Test
-	public void buildProofStructureTestGloballyFinally(){
-
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("G F { tree }");
-			formula.toPNF();
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
-
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.setProgramCounter(1);
-		initialState.addAP("{ dll }");
-		state1.addAP("{ tree }");
-
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
-
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-
-		// Make sure that verification succeeds
-		assertTrue(proofStruct.isSuccessful());
-	}
+    }
 
 
+    @Test
+    public void buildProofStructureTestNextNegLtlform() {
 
-	@Test
-	public void buildProofStructureTestImpliesFalse(){
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("X ! {dll}");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("(F {tree} -> false)");
-			formula.toPNF();
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ tree }");
+        state1.setProgramCounter(1);
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.setProgramCounter(1);
-		initialState.addAP("{ dll }");
-		state1.addAP("{ tree }");
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
 
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
+        // Expected output
+        assertEquals(proofStruct.getLeaves().size(), 1);
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure all leaves are successful
+            assertTrue(assertion.isTrue());
 
-		// Make sure that verification fails
-		assertFalse(proofStruct.isSuccessful());
-	}
+        }
+        assertTrue(proofStruct.size() == 2);
+        assertTrue(proofStruct.isSuccessful());
 
-	@Test
-	public void buildProofStructureTestImpliesFalseLoop(){
+    }
 
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("(F {tree} -> false)");
-			formula.toPNF();
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+    @Test
+    public void buildProofStructureTestUntilLtlform() {
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.setProgramCounter(1);
-		initialState.addAP("{ dll }");
-		state1.addAP("{ tree }");
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("({dll} U {tree})");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, initialState);
-		this.addControlFlowTransition(initialState, state1);
-		this.addArtificialInfPathsTransition(state1);
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ tree }");
+        state1.setProgramCounter(1);
 
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-		// Make sure that verification fails
-		assertFalse(proofStruct.isSuccessful());
-	}
-	
-	@Test
-	public void buildProofStructureTestUntilWithCycle(){
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("({dll} U {tree})");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
-		
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		//this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, initialState);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertEquals(proofStruct.getLeaves().size(), 1);
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure all leaves are successful
-			assertTrue(assertion.isTrue());
-			
-		}
-		assertTrue(proofStruct.size() >= 4 && proofStruct.size() <= 5);
-		assertFalse(proofStruct.isSuccessful());
-	}
-	
-	@Test 
-	public void buildProofStructureTestUntilOrRelease(){
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("(({sll} U {dll}) | ({dll} R {sll}))");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        // Expected output
+        assertEquals(proofStruct.getLeaves().size(), 3);
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure all leaves are successful
+            assertTrue(assertion.isTrue());
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ sll }");
+        }
+        assertTrue(proofStruct.size() <= 9 && proofStruct.size() >= 7);
+        assertTrue(proofStruct.isSuccessful());
+    }
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		this.addControlFlowTransition(initialState, initialState);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		assertEquals(proofStruct.getLeaves().size(), 2);
-		for(Assertion assertion : proofStruct.getLeaves()){
-			// Make sure all leaves are successful
-			assertTrue(assertion.isTrue());
-			
-		}
-		assertTrue(proofStruct.isSuccessful());
-		
-		
-	}
-	
-	@Test 
-	public void buildProofStructureTestUntilAndRelease(){
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("(({sll} U {dll}) & ({dll} R {sll}))");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
-		
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ sll }");
+    @Test
+    public void buildProofStructureTestTrueUntil() {
 
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		//this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, initialState);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("(true U {tree})");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
 
-		HashSet<Assertion> leaves = proofStruct.getLeaves();
-		assertEquals(2, leaves.size());
-		for(Assertion assertion : leaves){
-			// Make sure all leaves are successful
-			assertTrue(assertion.isTrue());
-			
-		}
-		assertFalse(proofStruct.isSuccessful());
-	}
-	
-	@Test
-	public void buildProofStructureComplexTest(){
-		
-		LTLFormula formula = null;
-		try{
-			formula = new LTLFormula("X({sll} U ({tree} R X {dll}))");
-		} catch(Exception e) {
-			fail("Formula should parse correctly. No Parser and Lexer exception expected!");
-		}
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.setProgramCounter(1);
 
-		DefaultProgramState initialState = new DefaultProgramState(hc);
-		initialState.addAP("{ dll }");
-		initialState.setProgramCounter(0);
-		DefaultProgramState state1 = new DefaultProgramState(hc);
-		state1.addAP("{ sll }");
-		state1.setProgramCounter(1);
-		DefaultProgramState state2 = new DefaultProgramState(hc);
-		state2.addAP("{ tree }");
-		state2.setProgramCounter(2);
-		
-		
-		this.addStateIfAbsent(initialState);
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
 
-		initialState.setProgramCounter(0);
-		this.addStateIfAbsent(initialState);
-		this.addInitialState(initialState);
-		state1.setProgramCounter(1);
-		this.addStateIfAbsent(state1);
-		this.addControlFlowTransition(initialState, state1);
-		this.addControlFlowTransition(state1, state1);
-		state2.setProgramCounter(2);
-		this.addStateIfAbsent(state2);
-		this.addControlFlowTransition(state1, state2);
-		this.addControlFlowTransition(state2, initialState);
-		
-		ProofStructure proofStruct = new ProofStructure();
-		proofStruct.setBuildFullStructure();
-		proofStruct.build(this, formula);
-		
-		// Expected output
-		assertFalse(proofStruct.isSuccessful());
-	}
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Make sure that verification fails
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureTestNegFinally() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("! F { tree }");
+            formula.toPNF();
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.setProgramCounter(1);
+        initialState.addAP("{ dll }");
+        state1.addAP("{ tree }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Make sure that verification fails
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureTestGloballyFinally() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("G F { tree }");
+            formula.toPNF();
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.setProgramCounter(1);
+        initialState.addAP("{ dll }");
+        state1.addAP("{ tree }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Make sure that verification succeeds
+        assertTrue(proofStruct.isSuccessful());
+    }
+
+
+    @Test
+    public void buildProofStructureTestImpliesFalse() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("(F {tree} -> false)");
+            formula.toPNF();
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.setProgramCounter(1);
+        initialState.addAP("{ dll }");
+        state1.addAP("{ tree }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Make sure that verification fails
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureTestImpliesFalseLoop() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("(F {tree} -> false)");
+            formula.toPNF();
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.setProgramCounter(1);
+        initialState.addAP("{ dll }");
+        state1.addAP("{ tree }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, initialState);
+        this.addControlFlowTransition(initialState, state1);
+        this.addArtificialInfPathsTransition(state1);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Make sure that verification fails
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureTestUntilWithCycle() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("({dll} U {tree})");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        //this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, initialState);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Expected output
+        assertEquals(proofStruct.getLeaves().size(), 1);
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure all leaves are successful
+            assertTrue(assertion.isTrue());
+
+        }
+        assertTrue(proofStruct.size() >= 4 && proofStruct.size() <= 5);
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureTestUntilOrRelease() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("(({sll} U {dll}) | ({dll} R {sll}))");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ sll }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        this.addControlFlowTransition(initialState, initialState);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        assertEquals(proofStruct.getLeaves().size(), 2);
+        for (Assertion assertion : proofStruct.getLeaves()) {
+            // Make sure all leaves are successful
+            assertTrue(assertion.isTrue());
+
+        }
+        assertTrue(proofStruct.isSuccessful());
+
+
+    }
+
+    @Test
+    public void buildProofStructureTestUntilAndRelease() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("(({sll} U {dll}) & ({dll} R {sll}))");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ sll }");
+
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        //this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, initialState);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        HashSet<Assertion> leaves = proofStruct.getLeaves();
+        assertEquals(2, leaves.size());
+        for (Assertion assertion : leaves) {
+            // Make sure all leaves are successful
+            assertTrue(assertion.isTrue());
+
+        }
+        assertFalse(proofStruct.isSuccessful());
+    }
+
+    @Test
+    public void buildProofStructureComplexTest() {
+
+        LTLFormula formula = null;
+        try {
+            formula = new LTLFormula("X({sll} U ({tree} R X {dll}))");
+        } catch (Exception e) {
+            fail("Formula should parse correctly. No Parser and Lexer exception expected!");
+        }
+
+        DefaultProgramState initialState = new DefaultProgramState(hc);
+        initialState.addAP("{ dll }");
+        initialState.setProgramCounter(0);
+        DefaultProgramState state1 = new DefaultProgramState(hc);
+        state1.addAP("{ sll }");
+        state1.setProgramCounter(1);
+        DefaultProgramState state2 = new DefaultProgramState(hc);
+        state2.addAP("{ tree }");
+        state2.setProgramCounter(2);
+
+
+        this.addStateIfAbsent(initialState);
+
+        initialState.setProgramCounter(0);
+        this.addStateIfAbsent(initialState);
+        this.addInitialState(initialState);
+        state1.setProgramCounter(1);
+        this.addStateIfAbsent(state1);
+        this.addControlFlowTransition(initialState, state1);
+        this.addControlFlowTransition(state1, state1);
+        state2.setProgramCounter(2);
+        this.addStateIfAbsent(state2);
+        this.addControlFlowTransition(state1, state2);
+        this.addControlFlowTransition(state2, initialState);
+
+        ProofStructure proofStruct = new ProofStructure();
+        proofStruct.setBuildFullStructure();
+        proofStruct.build(this, formula);
+
+        // Expected output
+        assertFalse(proofStruct.isSuccessful());
+    }
 }

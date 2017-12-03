@@ -17,99 +17,101 @@ import static org.hamcrest.Matchers.*;
 
 public class ViolationPointResolverTest_Default {
 
-	public static final int TENTACLE_FOR_NEXT = 0;
-	public static final int TENTACLE_WITHOUT_NEXT = 1;
-	public static final String SELECTOR_NAME_NEXT = "next";
-	public static final int TENTACLE_FOR_PREV = 1;
-	public static final String SELECTOR_NAME_PREV = "prev";
+    public static final int TENTACLE_FOR_NEXT = 0;
+    public static final int TENTACLE_WITHOUT_NEXT = 1;
+    public static final String SELECTOR_NAME_NEXT = "next";
+    public static final int TENTACLE_FOR_PREV = 1;
+    public static final String SELECTOR_NAME_PREV = "prev";
+    public Nonterminal DEFAULT_NONTERMINAL;
+    public HeapConfiguration RHS_CREATING_NEXT;
+    public HeapConfiguration RHS_CREATING_NEXT_PREV;
+    public HeapConfiguration RHS_CREATING_PREV;
+    public HeapConfiguration RHS_CREATING_NO_SELECTOR;
+    private SceneObject sceneObject;
 
-	private SceneObject sceneObject;
+    @Before
+    public void init() {
 
-	public Nonterminal DEFAULT_NONTERMINAL;
-	public HeapConfiguration RHS_CREATING_NEXT;
-	public HeapConfiguration RHS_CREATING_NEXT_PREV;
-	public HeapConfiguration RHS_CREATING_PREV;
-	public HeapConfiguration RHS_CREATING_NO_SELECTOR;
+        sceneObject = new MockupSceneObject();
+        TestGraphs testGraphs = new TestGraphs(sceneObject);
+        DEFAULT_NONTERMINAL = createDefaultNonterminal();
+        RHS_CREATING_NEXT = testGraphs.getRuleGraph_CreatingNext();
+        RHS_CREATING_NEXT_PREV = testGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
+        RHS_CREATING_PREV = testGraphs.getRuleGraph_creatingPrevAt1();
+        RHS_CREATING_NO_SELECTOR = testGraphs.getRuleGraph_creatingNoSelector();
 
-	@Before
-	public void init() {
-
-		sceneObject = new MockupSceneObject();
-		TestGraphs testGraphs = new TestGraphs(sceneObject);
-		DEFAULT_NONTERMINAL = createDefaultNonterminal();
-		RHS_CREATING_NEXT = testGraphs.getRuleGraph_CreatingNext();
-		RHS_CREATING_NEXT_PREV = testGraphs.getRuleGraph_CreatingNextAt0_PrevAt1();
-		RHS_CREATING_PREV = testGraphs.getRuleGraph_creatingPrevAt1();
-		RHS_CREATING_NO_SELECTOR = testGraphs.getRuleGraph_creatingNoSelector();
-
-	}
+    }
 
 
-	@Test
-	public void testgetRulesCreatingSelector_Successful() {
-		Grammar testGrammar = Grammar.builder().addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT_PREV)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_PREV)
-				.build();
-		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
+    @Test
+    public void testgetRulesCreatingSelector_Successful() {
+
+        Grammar testGrammar = Grammar.builder().addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT_PREV)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_PREV)
+                .build();
+        ViolationPointResolver grammarLogik = new ViolationPointResolver(testGrammar);
 
 
-		Map<Nonterminal, Collection<HeapConfiguration>> selectedRules
-			=  grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL, 
-														TENTACLE_FOR_NEXT, 
-														SELECTOR_NAME_NEXT );
-		assertThat( selectedRules.keySet(), hasSize(1) );
-		assertThat( selectedRules.get(DEFAULT_NONTERMINAL),
-				containsInAnyOrder( RHS_CREATING_NEXT_PREV, RHS_CREATING_NEXT)
-				);
-		
-		selectedRules = grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL, 
-				TENTACLE_FOR_PREV, SELECTOR_NAME_PREV );
-		assertThat( selectedRules.keySet(), hasSize(1) );
-		assertThat( selectedRules.get(DEFAULT_NONTERMINAL),
-				containsInAnyOrder( RHS_CREATING_NEXT_PREV, RHS_CREATING_PREV));
-	}
+        Map<Nonterminal, Collection<HeapConfiguration>> selectedRules
+                = grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL,
+                TENTACLE_FOR_NEXT,
+                SELECTOR_NAME_NEXT);
+        assertThat(selectedRules.keySet(), hasSize(1));
+        assertThat(selectedRules.get(DEFAULT_NONTERMINAL),
+                containsInAnyOrder(RHS_CREATING_NEXT_PREV, RHS_CREATING_NEXT)
+        );
 
-	@Test
-	public void testGetRulesCreatingSelector_WrongTentacle() {
-		Grammar testGrammar = Grammar.builder().addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT_PREV)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_PREV)
-				.build();
-		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
+        selectedRules = grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL,
+                TENTACLE_FOR_PREV, SELECTOR_NAME_PREV);
+        assertThat(selectedRules.keySet(), hasSize(1));
+        assertThat(selectedRules.get(DEFAULT_NONTERMINAL),
+                containsInAnyOrder(RHS_CREATING_NEXT_PREV, RHS_CREATING_PREV));
+    }
 
+    @Test
+    public void testGetRulesCreatingSelector_WrongTentacle() {
 
-		Map<Nonterminal, Collection<HeapConfiguration>> selectedRules 
-				= grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL, 
-						TENTACLE_WITHOUT_NEXT, 
-						SELECTOR_NAME_NEXT ); 
-		assertThat( selectedRules.keySet(),
-				empty()
-				);
-	}
-
-	@Test
-	public void testGetRulesCreatingSelector_ImpossibleSelector(){
-		Grammar testGrammar = Grammar.builder()
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
-				.addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
-				.build();
-		ViolationPointResolver grammarLogik = new ViolationPointResolver( testGrammar );
+        Grammar testGrammar = Grammar.builder().addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT_PREV)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_PREV)
+                .build();
+        ViolationPointResolver grammarLogik = new ViolationPointResolver(testGrammar);
 
 
-		Map<Nonterminal, Collection<HeapConfiguration>> selectedRules
-			= grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL, 
-					TENTACLE_WITHOUT_NEXT, 
-					SELECTOR_NAME_PREV );
-		assertThat( selectedRules.keySet(),
-				empty()
-				);
-	}
+        Map<Nonterminal, Collection<HeapConfiguration>> selectedRules
+                = grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL,
+                TENTACLE_WITHOUT_NEXT,
+                SELECTOR_NAME_NEXT);
+        assertThat(selectedRules.keySet(),
+                empty()
+        );
+    }
+
+    @Test
+    public void testGetRulesCreatingSelector_ImpossibleSelector() {
+
+        Grammar testGrammar = Grammar.builder()
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NEXT)
+                .addRule(DEFAULT_NONTERMINAL, RHS_CREATING_NO_SELECTOR)
+                .build();
+        ViolationPointResolver grammarLogik = new ViolationPointResolver(testGrammar);
 
 
-	private Nonterminal createDefaultNonterminal(){
-		return sceneObject.scene().createNonterminal("GrammarLogikTest", 2, new boolean[]{false,false});
-	}
+        Map<Nonterminal, Collection<HeapConfiguration>> selectedRules
+                = grammarLogik.getRulesCreatingSelectorFor(DEFAULT_NONTERMINAL,
+                TENTACLE_WITHOUT_NEXT,
+                SELECTOR_NAME_PREV);
+        assertThat(selectedRules.keySet(),
+                empty()
+        );
+    }
+
+
+    private Nonterminal createDefaultNonterminal() {
+
+        return sceneObject.scene().createNonterminal("GrammarLogikTest", 2, new boolean[]{false, false});
+    }
 }

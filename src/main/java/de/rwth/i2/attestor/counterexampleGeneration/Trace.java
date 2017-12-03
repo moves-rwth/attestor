@@ -16,10 +16,16 @@ public interface Trace {
     List<Integer> getStateIdTrace();
 
     ProgramState getInitialState();
+
     ProgramState getFinalState();
+
     int size();
+
     ProgramState getSuccessor(ProgramState state);
+
     boolean containsSubsumingState(ProgramState state);
+
     boolean isEmpty();
+
     Iterator<ProgramState> iterator();
 }

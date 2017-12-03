@@ -9,77 +9,78 @@ import java.util.List;
 
 public class PhaseRegistry {
 
-   private static final Logger logger = LogManager.getLogger("PhaseRegistry");
+    private static final Logger logger = LogManager.getLogger("PhaseRegistry");
 
-   private final List<AbstractPhase> phases;
+    private final List<AbstractPhase> phases;
 
-   public PhaseRegistry() {
+    public PhaseRegistry() {
 
-      phases = new ArrayList<>();
-   }
+        phases = new ArrayList<>();
+    }
 
-   public PhaseRegistry addPhase(AbstractPhase phase) {
+    public PhaseRegistry addPhase(AbstractPhase phase) {
 
-      int size = phases.size();
-      phase.register(size, this);
-      phases.add(phase);
-      return this;
-   }
+        int size = phases.size();
+        phase.register(size, this);
+        phases.add(phase);
+        return this;
+    }
 
-   protected  <T> T getMostRecentPhase(int currentPhase, Class<T> phaseType) {
+    protected <T> T getMostRecentPhase(int currentPhase, Class<T> phaseType) {
 
-      for(int i=currentPhase-1; i >= 0; i--) {
-         AbstractPhase phase = phases.get(i);
-         if(phaseType.isInstance(phase)) {
-            return phaseType.cast(phase);
-         }
-      }
-      return null;
-   }
+        for (int i = currentPhase - 1; i >= 0; i--) {
+            AbstractPhase phase = phases.get(i);
+            if (phaseType.isInstance(phase)) {
+                return phaseType.cast(phase);
+            }
+        }
+        return null;
+    }
 
-   public <T> T getMostRecentPhase(Class<T> phaseType) {
-      return getMostRecentPhase(phases.size(), phaseType);
-   }
+    public <T> T getMostRecentPhase(Class<T> phaseType) {
 
-   public void execute() {
+        return getMostRecentPhase(phases.size(), phaseType);
+    }
 
-      try {
-         for (AbstractPhase p : phases) {
-            p.run();
-         }
-      } catch(Exception e) {
-         logger.fatal(e.getMessage());
-      }
-   }
+    public void execute() {
 
-   public void logExecutionTimes() {
+        try {
+            for (AbstractPhase p : phases) {
+                p.run();
+            }
+        } catch (Exception e) {
+            logger.fatal(e.getMessage());
+        }
+    }
 
-      Level REPORT = Level.getLevel("REPORT");
+    public void logExecutionTimes() {
 
-      double elapsedVerify = 0;
-      double elapsedTotal = 0;
-      logger.log(REPORT,"+----------------------------------+--------------------------------+");
-      for(AbstractPhase p : phases) {
-         double elapsed = p.getElapsedTime();
-         elapsedTotal += elapsed;
-         logger.log(REPORT, String.format("| %-32s | %28.3f s |", p.getName(), elapsed));
+        Level REPORT = Level.getLevel("REPORT");
 
-         if(p.isVerificationPhase()) {
-            elapsedVerify += elapsed;
-         }
-      }
-      logger.log(REPORT,"+----------------------------------+--------------------------------+");
-      logger.log(REPORT, String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
-      logger.log(REPORT, String.format("| Total verification time          | %28.3f s |", elapsedVerify));
-      logger.log(REPORT, "+----------------------------------+--------------------------------+");
-   }
+        double elapsedVerify = 0;
+        double elapsedTotal = 0;
+        logger.log(REPORT, "+----------------------------------+--------------------------------+");
+        for (AbstractPhase p : phases) {
+            double elapsed = p.getElapsedTime();
+            elapsedTotal += elapsed;
+            logger.log(REPORT, String.format("| %-32s | %28.3f s |", p.getName(), elapsed));
 
-   public void logExecutionSummary() {
+            if (p.isVerificationPhase()) {
+                elapsedVerify += elapsed;
+            }
+        }
+        logger.log(REPORT, "+----------------------------------+--------------------------------+");
+        logger.log(REPORT, String.format("| Total runtime                    | %28.3f s |", elapsedTotal));
+        logger.log(REPORT, String.format("| Total verification time          | %28.3f s |", elapsedVerify));
+        logger.log(REPORT, "+----------------------------------+--------------------------------+");
+    }
 
-      for(AbstractPhase p : phases) {
-         p.logSummary();
-      }
-   }
+    public void logExecutionSummary() {
+
+        for (AbstractPhase p : phases) {
+            p.logSummary();
+        }
+    }
 
 }
 

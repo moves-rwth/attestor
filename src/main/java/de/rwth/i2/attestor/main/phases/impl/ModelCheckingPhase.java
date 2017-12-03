@@ -24,6 +24,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     private boolean allSatisfied = true;
 
     public ModelCheckingPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -38,20 +39,20 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
 
         ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
         Set<LTLFormula> formulae = mcSettings.getFormulae();
-        if(formulae.isEmpty()) {
+        if (formulae.isEmpty()) {
             logger.debug("No LTL formulae have been provided.");
             return;
         }
 
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
 
-        for(LTLFormula formula : formulae) {
+        for (LTLFormula formula : formulae) {
 
             String formulaString = formula.getFormulaString();
             logger.info("Checking formula: " + formulaString + "...");
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
-            if(proofStructure.isSuccessful()) {
+            if (proofStructure.isSuccessful()) {
                 formulaResults.put(formula, true);
                 logger.info("satisfied.");
             } else {
@@ -59,11 +60,11 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
                 allSatisfied = false;
                 formulaResults.put(formula, false);
 
-                if(scene().options().isIndexedMode()) {
+                if (scene().options().isIndexedMode()) {
                     logger.warn("Counterexample generation for indexed grammars is not supported yet.");
                 } else {
                     FailureTrace failureTrace = proofStructure.getFailureTrace();
-                    counterexampleTraces.put(formula, failureTrace) ;
+                    counterexampleTraces.put(formula, failureTrace);
                 }
             }
         }
@@ -72,14 +73,14 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     @Override
     public void logSummary() {
 
-        if(formulaResults.isEmpty()) {
+        if (formulaResults.isEmpty()) {
             return;
         }
 
         logSum("Model checking results:");
         logSum("+-----------+-------------------------------------------------------+");
-        for(Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
-            if(result.getValue()) {
+        for (Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
+            if (result.getValue()) {
                 logSum(String.format("| %-9s | %s", "satisfied", result.getKey().getFormulaString()));
             } else {
                 logSum(String.format("| %-9s | %s", "violated", result.getKey().getFormulaString()));
@@ -87,7 +88,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
         }
         logSum("+-----------+-------------------------------------------------------+");
 
-        if(allSatisfied) {
+        if (allSatisfied) {
             logger.log(Level.getLevel("LTL-SAT"), "All provided LTL formulae are satisfied.");
         } else {
             logger.log(Level.getLevel("LTL-UNSAT"), "Some provided LTL formulae are violated.");
@@ -108,7 +109,8 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
 
     @Override
     public Trace getTraceOf(LTLFormula formula) {
-        if(counterexampleTraces.containsKey(formula)) {
+
+        if (counterexampleTraces.containsKey(formula)) {
             return counterexampleTraces.get(formula);
         }
         return null;

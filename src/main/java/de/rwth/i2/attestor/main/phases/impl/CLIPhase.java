@@ -37,27 +37,27 @@ public class CLIPhase extends AbstractPhase
 
         CommandLineReader commandLineReader = new CommandLineReader(this);
         commandLineReader.setupCLI();
-        if(!commandLineReader.loadSettings(args)) {
+        if (!commandLineReader.loadSettings(args)) {
             commandLineReader.printHelp();
             throw new IllegalArgumentException(commandLineReader.getParsingError());
         }
-        if( commandLineReader.hasSettingsFile() ){
+        if (commandLineReader.hasSettingsFile()) {
             SettingsFileReader settingsReader =
-                    new SettingsFileReader(  commandLineReader.getPathToSettingsFile() );
-            settingsReader.getInputSettings( inputSettings );
-            settingsReader.getOptionSettings( scene().options() );
-            settingsReader.getOutputSettings( outputSettings );
-            settingsReader.getMCSettings( modelCheckingSettings );
+                    new SettingsFileReader(commandLineReader.getPathToSettingsFile());
+            settingsReader.getInputSettings(inputSettings);
+            settingsReader.getOptionSettings(scene().options());
+            settingsReader.getOutputSettings(outputSettings);
+            settingsReader.getMCSettings(modelCheckingSettings);
         }
-        commandLineReader.getInputSettings( inputSettings );
-        commandLineReader.updateOptions( scene().options() );
-        commandLineReader.getOutputSettings( outputSettings );
-        commandLineReader.getMCSettings( modelCheckingSettings );
+        commandLineReader.getInputSettings(inputSettings);
+        commandLineReader.updateOptions(scene().options());
+        commandLineReader.getOutputSettings(outputSettings);
+        commandLineReader.getMCSettings(modelCheckingSettings);
 
-        if( commandLineReader.hasRootPath() ){
+        if (commandLineReader.hasRootPath()) {
             String rootPath = commandLineReader.getRootPath();
-            inputSettings.setRootPath( rootPath );
-            outputSettings.setRootPath( rootPath );
+            inputSettings.setRootPath(rootPath);
+            outputSettings.setRootPath(rootPath);
         }
     }
 
@@ -75,7 +75,7 @@ public class CLIPhase extends AbstractPhase
         );
 
         String scenario = inputSettings.getScenario();
-        if(scenario != null && !scenario.isEmpty()) {
+        if (scenario != null && !scenario.isEmpty()) {
             logSum("| Scenario: " + scenario);
         }
         logSum("+----------------------------------+--------------------------------+");
@@ -90,16 +90,19 @@ public class CLIPhase extends AbstractPhase
 
     @Override
     public InputSettings getInputSettings() {
+
         return inputSettings;
     }
 
     @Override
     public ModelCheckingSettings getMcSettings() {
+
         return modelCheckingSettings;
     }
 
     @Override
     public OutputSettings getOutputSettings() {
+
         return outputSettings;
     }
 }

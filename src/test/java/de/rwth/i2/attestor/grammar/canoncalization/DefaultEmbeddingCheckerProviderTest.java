@@ -18,83 +18,88 @@ import static org.junit.Assert.assertEquals;
 
 public class DefaultEmbeddingCheckerProviderTest {
 
-	private SceneObject sceneObject;
+    private SceneObject sceneObject;
 
-	public DefaultEmbeddingCheckerProviderTest() {
-		this.sceneObject = new MockupSceneObject();
-	}
+    public DefaultEmbeddingCheckerProviderTest() {
 
-	/**
-	 * aggressiveAbstractionThreshold &gt; graphSize.
-	 * aggressiveReturnAbstraction = true, statement != return
-	 * expect DepthEmbeddingChecker
-	 */
-	@Test
-	public void testSimpleCase() {
-		int aggressiveAbstractionThreshold = 10;
-		boolean aggressiveReturnAbstraction = true;
-		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Statement statement = new Skip(sceneObject,0);
-		boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        this.sceneObject = new MockupSceneObject();
+    }
 
-		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1, aggressiveNullAbstraction );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, statement, expected );
-	}
-	
-	/**
-	 * aggressiveAbstractionThreshold &gt; graphSize.
-	 * aggressiveReturnAbstraction = false, statement == return
-	 * expect DepthEmbeddingChecker
-	 */
-	@Test
-	public void testNormalReturn() {
-		int aggressiveAbstractionThreshold = 10;
-		boolean aggressiveReturnAbstraction = false;
-		HeapConfiguration graph = getGraphSmallerThan( aggressiveAbstractionThreshold );
-		HeapConfiguration pattern = getPattern();
-		Statement statement = new ReturnVoidStmt(sceneObject);
+    /**
+     * aggressiveAbstractionThreshold &gt; graphSize.
+     * aggressiveReturnAbstraction = true, statement != return
+     * expect DepthEmbeddingChecker
+     */
+    @Test
+    public void testSimpleCase() {
 
-		boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-		AbstractMatchingChecker expected = graph.getEmbeddingsOf( pattern, 1, aggressiveNullAbstraction );
-		
-		performTest( aggressiveAbstractionThreshold, aggressiveReturnAbstraction, 
-					 graph, pattern, statement, expected );
-	}
+        int aggressiveAbstractionThreshold = 10;
+        boolean aggressiveReturnAbstraction = true;
+        HeapConfiguration graph = getGraphSmallerThan(aggressiveAbstractionThreshold);
+        HeapConfiguration pattern = getPattern();
+        Statement statement = new Skip(sceneObject, 0);
+        boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+
+        AbstractMatchingChecker expected = graph.getEmbeddingsOf(pattern, 1, aggressiveNullAbstraction);
+
+        performTest(aggressiveAbstractionThreshold, aggressiveReturnAbstraction,
+                graph, pattern, statement, expected);
+    }
+
+    /**
+     * aggressiveAbstractionThreshold &gt; graphSize.
+     * aggressiveReturnAbstraction = false, statement == return
+     * expect DepthEmbeddingChecker
+     */
+    @Test
+    public void testNormalReturn() {
+
+        int aggressiveAbstractionThreshold = 10;
+        boolean aggressiveReturnAbstraction = false;
+        HeapConfiguration graph = getGraphSmallerThan(aggressiveAbstractionThreshold);
+        HeapConfiguration pattern = getPattern();
+        Statement statement = new ReturnVoidStmt(sceneObject);
+
+        boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        AbstractMatchingChecker expected = graph.getEmbeddingsOf(pattern, 1, aggressiveNullAbstraction);
+
+        performTest(aggressiveAbstractionThreshold, aggressiveReturnAbstraction,
+                graph, pattern, statement, expected);
+    }
 
 
-	private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
-			HeapConfiguration graph, HeapConfiguration pattern, Semantics semantics, AbstractMatchingChecker expected) {
-		
-		final int minDereferenceDepth = 1;
-		boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-		EmbeddingCheckerProvider checkerProvider =
-				new EmbeddingCheckerProvider( minDereferenceDepth, aggressiveNullAbstraction );
+    private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
+                             HeapConfiguration graph, HeapConfiguration pattern, Semantics semantics, AbstractMatchingChecker expected) {
 
-		AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker( graph, pattern);
-		
-		assertEquals( expected.getClass(), checker.getClass() );
-		assertEquals( expected.getPattern(), checker.getPattern());
-		assertEquals( expected.getTarget(), checker.getTarget() );
-	}
+        final int minDereferenceDepth = 1;
+        boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        EmbeddingCheckerProvider checkerProvider =
+                new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
 
-	private HeapConfiguration getPattern() {
-	HeapConfiguration hc =  new InternalHeapConfiguration();
-		
-		Type type = sceneObject.scene().getType("someType");
+        AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker(graph, pattern);
 
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, 1, nodes).build();
-	}
+        assertEquals(expected.getClass(), checker.getClass());
+        assertEquals(expected.getPattern(), checker.getPattern());
+        assertEquals(expected.getTarget(), checker.getTarget());
+    }
 
-	private HeapConfiguration getGraphSmallerThan( int aggressiveAbstractionThreshold ) {
-		HeapConfiguration hc =  new InternalHeapConfiguration();
-		
-		Type type = sceneObject.scene().getType("someType");
+    private HeapConfiguration getPattern() {
 
-		TIntArrayList nodes = new TIntArrayList();
-		return hc.builder().addNodes(type, aggressiveAbstractionThreshold - 1, nodes).build();
-	}
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        Type type = sceneObject.scene().getType("someType");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, 1, nodes).build();
+    }
+
+    private HeapConfiguration getGraphSmallerThan(int aggressiveAbstractionThreshold) {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        Type type = sceneObject.scene().getType("someType");
+
+        TIntArrayList nodes = new TIntArrayList();
+        return hc.builder().addNodes(type, aggressiveAbstractionThreshold - 1, nodes).build();
+    }
 }

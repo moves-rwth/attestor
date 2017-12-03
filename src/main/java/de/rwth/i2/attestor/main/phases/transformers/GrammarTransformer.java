@@ -7,5 +7,6 @@ import java.util.Map;
 public interface GrammarTransformer {
 
     Grammar getGrammar();
+
     Map<String, String> getRenamingMap();
 }

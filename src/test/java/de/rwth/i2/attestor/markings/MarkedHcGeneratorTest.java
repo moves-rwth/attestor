@@ -21,107 +21,107 @@ import static junit.framework.TestCase.assertEquals;
 
 public class MarkedHcGeneratorTest {
 
-   private SceneObject sceneObject;
-   private ExampleHcImplFactory hcFactory;
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
-   private Grammar grammar;
-   private Nonterminal nt;
-   private Type type;
+    private Grammar grammar;
+    private Nonterminal nt;
+    private Type type;
 
-   @Before
-   public void setup() {
+    @Before
+    public void setup() {
 
-      sceneObject = new MockupSceneObject();
-      hcFactory = new ExampleHcImplFactory(sceneObject);
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
 
-      nt = sceneObject.scene().createNonterminal( "List", 2, new boolean []{false,true} );
-      type = sceneObject.scene().getType("List");
-      Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
-      rules.put(nt, new HashSet<>());
-      rules.get(nt).add(hcFactory.getListRule1());
-      rules.get(nt).add(hcFactory.getListRule2());
-      rules.get(nt).add(hcFactory.getListRule3());
+        nt = sceneObject.scene().createNonterminal("List", 2, new boolean[]{false, true});
+        type = sceneObject.scene().getType("List");
+        Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
+        rules.put(nt, new HashSet<>());
+        rules.get(nt).add(hcFactory.getListRule1());
+        rules.get(nt).add(hcFactory.getListRule2());
+        rules.get(nt).add(hcFactory.getListRule3());
 
-      grammar = new Grammar(rules);
-   }
+        grammar = new Grammar(rules);
+    }
 
-   @Test
-   public void testSingleMarkingNoNonterminals() {
+    @Test
+    public void testSingleMarkingNoNonterminals() {
 
-      HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
-      Marking marking = new Marking("x");
+        HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
+        Marking marking = new Marking("x");
 
-      Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
-      assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
-   }
+        MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
+        assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
+    }
 
-   @Test
-   public void testMultipleMarkingsNoNonterminals() {
+    @Test
+    public void testMultipleMarkingsNoNonterminals() {
 
-      HeapConfiguration hc = hcFactory.getTree();
-      SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
-      SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
+        HeapConfiguration hc = hcFactory.getTree();
+        SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+        SelectorLabel right = sceneObject.scene().getSelectorLabel("right");
 
-      Marking marking = new Marking("y", left, right);
+        Marking marking = new Marking("y", left, right);
 
-      Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
-      expectedMarkedHcs.add( hc.clone().builder()
-              .addVariableEdge(marking.getUniversalVariableName(), 0)
-              .addVariableEdge(marking.getSelectorVariableName("left"), 1)
-              .addVariableEdge(marking.getSelectorVariableName("right"), 2)
-              .build()
-      );
+        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        expectedMarkedHcs.add(hc.clone().builder()
+                .addVariableEdge(marking.getUniversalVariableName(), 0)
+                .addVariableEdge(marking.getSelectorVariableName("left"), 1)
+                .addVariableEdge(marking.getSelectorVariableName("right"), 2)
+                .build()
+        );
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
-      assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
-   }
+        MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
+        assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
+    }
 
-   @Test
-   public void testSingleMarkingWithNonterminals() {
+    @Test
+    public void testSingleMarkingWithNonterminals() {
 
-      HeapConfiguration hc = hcFactory.getEmptyHc();
-      TIntArrayList nodes = new TIntArrayList();
+        HeapConfiguration hc = hcFactory.getEmptyHc();
+        TIntArrayList nodes = new TIntArrayList();
 
-      hc = hc.builder()
-              .addNodes(type, 2, nodes)
-              .addNonterminalEdge(nt)
-              .addTentacle(nodes.get(0))
-              .addTentacle(nodes.get(1))
-              .build()
-              .build();
+        hc = hc.builder()
+                .addNodes(type, 2, nodes)
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .build();
 
-      Marking marking = new Marking("z");
-      Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        Marking marking = new Marking("z");
+        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
 
-      expectedMarkedHcs.add( hc.clone().builder()
-              .addVariableEdge(marking.getUniversalVariableName(), nodes.get(0))
-              .build()
-      );
-      expectedMarkedHcs.add( hc.clone().builder()
-              .addVariableEdge(marking.getUniversalVariableName(), nodes.get(1))
-              .build()
-      );
+        expectedMarkedHcs.add(hc.clone().builder()
+                .addVariableEdge(marking.getUniversalVariableName(), nodes.get(0))
+                .build()
+        );
+        expectedMarkedHcs.add(hc.clone().builder()
+                .addVariableEdge(marking.getUniversalVariableName(), nodes.get(1))
+                .build()
+        );
 
-      nodes.clear();
-      HeapConfiguration unfoldedHc = hcFactory.getEmptyHc()
-              .builder()
-              .addNodes(type, 3, nodes)
-              .addNonterminalEdge(nt)
-              .addTentacle(nodes.get(0))
-              .addTentacle(nodes.get(1))
-              .build()
-              .addVariableEdge(marking.getUniversalVariableName(), nodes.get(1))
-              .addNonterminalEdge(nt)
-              .addTentacle(nodes.get(1))
-              .addTentacle(nodes.get(2))
-              .build()
-              .build();
-      expectedMarkedHcs.add(unfoldedHc);
+        nodes.clear();
+        HeapConfiguration unfoldedHc = hcFactory.getEmptyHc()
+                .builder()
+                .addNodes(type, 3, nodes)
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addVariableEdge(marking.getUniversalVariableName(), nodes.get(1))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(2))
+                .build()
+                .build();
+        expectedMarkedHcs.add(unfoldedHc);
 
-      MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
+        MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
 
-      assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
-   }
+        assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
+    }
 }

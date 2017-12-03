@@ -11,23 +11,24 @@ import static org.junit.Assert.assertEquals;
 
 public class TestAVLAnnotationMaintaining {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
 
-	@Test
-	public void test() {
+    }
 
-		SceneObject sceneObject = new MockupSceneObject();
-		ExampleIndexedGraphFactory graphFactory = new ExampleIndexedGraphFactory(sceneObject);
+    @Test
+    public void test() {
 
-		IndexedState input = new IndexedState( graphFactory.getInput_AnnotationMaintaining() );
-		IndexedState expected = new IndexedState(graphFactory.getExpected_AnnotationMaintaining());
+        SceneObject sceneObject = new MockupSceneObject();
+        ExampleIndexedGraphFactory graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
-		BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy(sceneObject);
-		strategy.refine(new Skip(sceneObject, 0), input);
+        IndexedState input = new IndexedState(graphFactory.getInput_AnnotationMaintaining());
+        IndexedState expected = new IndexedState(graphFactory.getExpected_AnnotationMaintaining());
 
-		assertEquals(expected, input);
-	}
+        BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy(sceneObject);
+        strategy.refine(new Skip(sceneObject, 0), input);
+
+        assertEquals(expected, input);
+    }
 
 }

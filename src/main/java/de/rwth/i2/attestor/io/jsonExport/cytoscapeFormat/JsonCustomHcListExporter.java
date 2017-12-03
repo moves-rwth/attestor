@@ -1,15 +1,17 @@
 package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
-import java.io.*;
-import java.util.List;
-
-import org.json.JSONWriter;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
 import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+import org.json.JSONWriter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
 
 /**
  * Created by christina on 23.08.17.
@@ -25,9 +27,9 @@ public class JsonCustomHcListExporter implements CustomHcListExporter {
         writer.close();
 
         // Export the single hcs
-        for(HcLabelPair cur : hcList){
+        for (HcLabelPair cur : hcList) {
             exportHeapConfiguration(directory + File.separator + cur.getLabel() + ".json",
-                        cur.getHc());
+                    cur.getHc());
         }
 
     }
@@ -37,7 +39,7 @@ public class JsonCustomHcListExporter implements CustomHcListExporter {
         JSONWriter jsonWriter = new JSONWriter(writer);
 
         jsonWriter.array();
-        for(HcLabelPair cur : list) {
+        for (HcLabelPair cur : list) {
 
             String label = cur.getLabel();
 

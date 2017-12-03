@@ -14,6 +14,7 @@ import java.util.*;
 public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton {
 
     public PointsToHeapAutomaton(SceneObject otherObject) {
+
         super(otherObject);
     }
 
@@ -32,7 +33,7 @@ public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton 
         heapConfiguration = heapConfiguration.clone();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        for(int i=0; i < statesOfNonterminals.size(); i++) {
+        for (int i = 0; i < statesOfNonterminals.size(); i++) {
             int edge = ntEdges.get(i);
             PointsToHeapAutomatonState state = (PointsToHeapAutomatonState) statesOfNonterminals.get(i);
             HeapConfiguration stateKernel = state.kernel;
@@ -45,7 +46,7 @@ public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton 
 
         HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
         int countExt = heapConfiguration.countExternalNodes();
-        TIntArrayList nodes = new TIntArrayList( countExt );
+        TIntArrayList nodes = new TIntArrayList(countExt);
 
         addExternalsAndSelectors(builder, nodes, heapConfiguration);
         addVariablesAndSelectors(builder, nodes, heapConfiguration);
@@ -57,19 +58,19 @@ public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton 
 
         int countExt = heapConfiguration.countExternalNodes();
 
-        for(int i=0; i < heapConfiguration.countExternalNodes(); i++) {
+        for (int i = 0; i < heapConfiguration.countExternalNodes(); i++) {
             int ext = heapConfiguration.externalNodeAt(i);
             Type type = heapConfiguration.nodeTypeOf(ext);
             builder.addNodes(type, 1, nodes);
-            builder.setExternal( nodes.get(i) );
+            builder.setExternal(nodes.get(i));
         }
 
-        for(int i=0; i < countExt; i++) {
+        for (int i = 0; i < countExt; i++) {
             int ext = heapConfiguration.externalNodeAt(i);
-            for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(ext)) {
+            for (SelectorLabel sel : heapConfiguration.selectorLabelsOf(ext)) {
                 int target = heapConfiguration.selectorTargetOf(ext, sel);
-                if(heapConfiguration.isExternalNode(target)) {
-                    int extTo =  nodes.get( heapConfiguration.externalIndexOf(target) );
+                if (heapConfiguration.isExternalNode(target)) {
+                    int extTo = nodes.get(heapConfiguration.externalIndexOf(target));
                     builder.addSelector(nodes.get(i), sel, extTo);
                 }
             }
@@ -83,33 +84,33 @@ public class PointsToHeapAutomaton extends SceneObject implements HeapAutomaton 
         TIntArrayList variables = heapConfiguration.variableEdges();
         TIntArrayList variableTargets = new TIntArrayList(variables.size());
 
-        for(int i=0; i < variables.size(); i++) {
+        for (int i = 0; i < variables.size(); i++) {
             int var = variables.get(i);
             String varName = heapConfiguration.nameOf(var);
             int varTarget = heapConfiguration.targetOf(var);
             variableTargets.add(varTarget);
-            if(heapConfiguration.isExternalNode(varTarget)) {
-                int ext = nodes.get( heapConfiguration.externalIndexOf(varTarget) );
+            if (heapConfiguration.isExternalNode(varTarget)) {
+                int ext = nodes.get(heapConfiguration.externalIndexOf(varTarget));
                 builder.addVariableEdge(varName, ext);
             } else {
                 Type type = heapConfiguration.nodeTypeOf(varTarget);
                 builder.addNodes(type, 1, nodes);
-                builder.addVariableEdge(varName, nodes.get(nodes.size()-1));
+                builder.addVariableEdge(varName, nodes.get(nodes.size() - 1));
             }
         }
 
-        for(int i=0; i < variables.size(); i++) {
+        for (int i = 0; i < variables.size(); i++) {
             int var = variables.get(i);
             int hcSource = heapConfiguration.targetOf(var);
-            if(!heapConfiguration.isExternalNode(hcSource)) {
+            if (!heapConfiguration.isExternalNode(hcSource)) {
                 int source = nodes.get(countExt + i);
-                for(SelectorLabel sel : heapConfiguration.selectorLabelsOf(hcSource)) {
+                for (SelectorLabel sel : heapConfiguration.selectorLabelsOf(hcSource)) {
                     int hcTarget = heapConfiguration.selectorTargetOf(hcSource, sel);
-                    if(heapConfiguration.isExternalNode(hcTarget)) {
-                        int target = nodes.get( heapConfiguration.externalIndexOf(hcTarget) );
+                    if (heapConfiguration.isExternalNode(hcTarget)) {
+                        int target = nodes.get(heapConfiguration.externalIndexOf(hcTarget));
                         builder.addSelector(source, sel, target);
-                    } else if(variableTargets.contains(hcTarget)) {
-                        int target = nodes.get( countExt + variableTargets.indexOf(hcTarget) );
+                    } else if (variableTargets.contains(hcTarget)) {
+                        int target = nodes.get(countExt + variableTargets.indexOf(hcTarget));
                         builder.addSelector(source, sel, target);
                     }
                 }
@@ -145,7 +146,7 @@ class PointsToHeapAutomatonState extends HeapAutomatonState {
         Set<String> result = new HashSet<>();
 
         TIntArrayList variables = kernel.variableEdges();
-        for(int i=0; i < variables.size(); i++) {
+        for (int i = 0; i < variables.size(); i++) {
             int varFrom = variables.get(i);
             int from = kernel.targetOf(varFrom);
             String fromLabel = kernel.nameOf(from);
@@ -153,10 +154,10 @@ class PointsToHeapAutomatonState extends HeapAutomatonState {
                 int varTo = variables.get(j);
                 int to = kernel.targetOf(varTo);
                 String toLabel = kernel.nameOf(to);
-                if(to == from) {
-                   result.add(fromLabel + " == " + toLabel);
+                if (to == from) {
+                    result.add(fromLabel + " == " + toLabel);
                 } else {
-                   result.add(fromLabel + " != " + toLabel);
+                    result.add(fromLabel + " != " + toLabel);
                 }
             }
         }
@@ -173,15 +174,15 @@ class PointsToHeapAutomatonState extends HeapAutomatonState {
     @Override
     public boolean equals(Object otherObject) {
 
-        if(otherObject == this) {
+        if (otherObject == this) {
             return true;
         }
 
-        if(otherObject == null) {
+        if (otherObject == null) {
             return false;
         }
 
-        if(otherObject.getClass() != PointsToHeapAutomatonState.class) {
+        if (otherObject.getClass() != PointsToHeapAutomatonState.class) {
             return false;
         }
 

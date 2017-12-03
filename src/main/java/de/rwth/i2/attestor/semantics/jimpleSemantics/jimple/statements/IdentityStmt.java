@@ -17,76 +17,79 @@ import java.util.Set;
 
 /**
  * IdentityStmt models statements like x = {@literal @}this or x = {@literal @}param_1
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public class IdentityStmt extends Statement {
 
-	private static final Logger logger = LogManager.getLogger( "IdentityStmt" );
+    private static final Logger logger = LogManager.getLogger("IdentityStmt");
 
-	/**
-	 * the program counter of the successor statement
-	 */
-	private final int nextPC;
-	/**
-	 * the value to which something will be assigned
-	 */
-	private final SettableValue lhs;
-	/**
-	 * the string representation of the argument that will be assigned,
-	 * {@literal @}this, {@literal @}parameter_n
-	 */
-	private final String rhs;
+    /**
+     * the program counter of the successor statement
+     */
+    private final int nextPC;
+    /**
+     * the value to which something will be assigned
+     */
+    private final SettableValue lhs;
+    /**
+     * the string representation of the argument that will be assigned,
+     * {@literal @}this, {@literal @}parameter_n
+     */
+    private final String rhs;
 
-	public IdentityStmt(SceneObject sceneObject, int nextPC, SettableValue lhs, String rhs ){
-		super(sceneObject);
-		this.nextPC = nextPC;
-		this.lhs = lhs;
-		this.rhs = rhs.split( " " ) [0];
-	}
+    public IdentityStmt(SceneObject sceneObject, int nextPC, SettableValue lhs, String rhs) {
 
-	/**
-	 * gets the value for the intermediate specified in {@link #rhs} from the heap 
-	 * and assigns {@link #lhs} to it. Upon this the intermediate is deleted from the heap
-	 * (i.e. this statement can only be called once per intermediate)
-	 */
-	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
-			throws NotSufficientlyMaterializedException{
+        super(sceneObject);
+        this.nextPC = nextPC;
+        this.lhs = lhs;
+        this.rhs = rhs.split(" ")[0];
+    }
 
-		observer.update(this, programState);
+    /**
+     * gets the value for the intermediate specified in {@link #rhs} from the heap
+     * and assigns {@link #lhs} to it. Upon this the intermediate is deleted from the heap
+     * (i.e. this statement can only be called once per intermediate)
+     */
+    @Override
+    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+            throws NotSufficientlyMaterializedException {
 
-		programState = programState.clone();
-		ConcreteValue concreteRHS = programState.removeIntermediate( rhs );
+        observer.update(this, programState);
 
-		try {
-			lhs.setValue( programState, concreteRHS );
-		} catch (NullPointerDereferenceException e) {
-			logger.error(e.getErrorMessage(this));
-		}
+        programState = programState.clone();
+        ConcreteValue concreteRHS = programState.removeIntermediate(rhs);
 
-		return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
-	}
+        try {
+            lhs.setValue(programState, concreteRHS);
+        } catch (NullPointerDereferenceException e) {
+            logger.error(e.getErrorMessage(this));
+        }
 
-	@Override
-	public boolean needsMaterialization( ProgramState programState ){
-		return lhs.needsMaterialization( programState );
-	}
-
-	public String toString(){
-		return lhs + " = " + rhs + ";";
-	}
+        return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
+    }
 
     @Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return lhs.getPotentialViolationPoints();
-	}
-	
-	@Override
-	public Set<Integer> getSuccessorPCs() {
-		
-		return SingleElementUtil.createSet(nextPC);
-	}
+    public boolean needsMaterialization(ProgramState programState) {
+
+        return lhs.needsMaterialization(programState);
+    }
+
+    public String toString() {
+
+        return lhs + " = " + rhs + ";";
+    }
+
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
+
+        return lhs.getPotentialViolationPoints();
+    }
+
+    @Override
+    public Set<Integer> getSuccessorPCs() {
+
+        return SingleElementUtil.createSet(nextPC);
+    }
 
 }

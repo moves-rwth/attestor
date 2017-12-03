@@ -11,18 +11,18 @@ import java.util.Map;
  * General interface for possible classes of an object
  * modeled by a node in a {@link HeapConfiguration}
  * or a {@link Value}.
- * 
- * @author Christoph
  *
+ * @author Christoph
  */
 public interface Type extends NodeLabel {
 
     /**
      * Checks whether a node with this type has an outgoing selector label
      * with the given name.
+     *
      * @param selectorLabel The selector label in question
      * @return true if and only if nodes with this type may have outgoing selector
-     *         edges with the given name.
+     * edges with the given name.
      */
     boolean hasSelectorLabel(SelectorLabel selectorLabel);
 

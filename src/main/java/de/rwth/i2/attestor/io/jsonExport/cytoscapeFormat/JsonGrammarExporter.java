@@ -1,18 +1,17 @@
 package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-
-import org.json.JSONWriter;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.FileUtils;
+import org.json.JSONWriter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Created by christina on 18.08.17.
@@ -27,16 +26,15 @@ public class JsonGrammarExporter implements GrammarExporter {
         exportGrammar(writer, grammar);
         writer.close();
 
-        for(Nonterminal nt : grammar.getAllLeftHandSides()){
+        for (Nonterminal nt : grammar.getAllLeftHandSides()) {
             int count = 1;
-            for(HeapConfiguration hc : grammar.getRightHandSidesFor(nt)){
+            for (HeapConfiguration hc : grammar.getRightHandSidesFor(nt)) {
                 exportHeapConfiguration(directory + File.separator + nt.toString() + "Rule" + count + ".json",
                         hc);
                 count++;
             }
 
         }
-
 
 
     }
@@ -46,7 +44,7 @@ public class JsonGrammarExporter implements GrammarExporter {
         JSONWriter jsonWriter = new JSONWriter(writer);
 
         jsonWriter.array();
-        for(Nonterminal nonterminal : grammar.getAllLeftHandSides()) {
+        for (Nonterminal nonterminal : grammar.getAllLeftHandSides()) {
 
             String nonterminalName = nonterminal.toString();
             int ruleNumber = grammar.getRightHandSidesFor(nonterminal).size();

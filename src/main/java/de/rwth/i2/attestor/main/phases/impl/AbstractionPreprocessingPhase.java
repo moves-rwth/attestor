@@ -54,6 +54,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
     private Grammar grammar;
 
     public AbstractionPreprocessingPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -94,7 +95,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
         Set<String> usedSelectors = new HashSet<>(scene().options().getUsedSelectorLabels());
         usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
 
-        if(!usedSelectors.isEmpty()) {
+        if (!usedSelectors.isEmpty()) {
             logger.warn("");
             logger.warn("");
             logger.warn("");
@@ -102,7 +103,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
             logger.warn("| Some selector labels are not used within any grammar rule.       |");
             logger.warn("| These selector labels can never be abstracted!                   |");
             logger.warn("| The selectors in question are listed below:                      |");
-            for(String badSel : usedSelectors) {
+            for (String badSel : usedSelectors) {
                 logger.warn(String.format("| %-65s|", badSel));
             }
             logger.warn("+------------------------------------------------------------------+");
@@ -115,26 +116,26 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     private void setupMaterialization() {
 
-        if(scene().options().isIndexedMode()) {
-            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+        if (scene().options().isIndexedMode()) {
+            ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
 
-            IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
+            IndexMatcher indexMatcher = new IndexMatcher(new DefaultIndexMaterialization());
             MaterializationRuleManager grammarManager =
                     new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 
             GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier( new IndexMaterializationStrategy(),
-                            new GraphMaterializer() );
+                    new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(),
+                            new GraphMaterializer());
 
-            materializationStrategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
+            materializationStrategy = new GeneralMaterializationStrategy(grammarManager, ruleApplier);
             logger.debug("Setup materialization using indexed grammars.");
         } else {
-            ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+            ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
             MaterializationRuleManager grammarManager =
                     new DefaultMaterializationRuleManager(vioResolver);
             GrammarResponseApplier ruleApplier =
-                    new DefaultGrammarResponseApplier( new GraphMaterializer() );
-            materializationStrategy = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
+                    new DefaultGrammarResponseApplier(new GraphMaterializer());
+            materializationStrategy = new GeneralMaterializationStrategy(grammarManager, ruleApplier);
             logger.debug("Setup materialization using standard hyperedge replacement grammars.");
         }
     }
@@ -149,13 +150,13 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
         CanonicalizationHelper canonicalizationHelper;
         CanonicalizationHelper aggressiveCanonicalizationHelper;
 
-        if(scene().options().isIndexedMode()) {
+        if (scene().options().isIndexedMode()) {
             canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
             aggressiveCanonicalizationHelper = getIndexedCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using indexed grammar.");
         } else {
-            canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
-            aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper( aggressiveCheckerProvider );
+            canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
+            aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
         }
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
@@ -165,7 +166,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
     private void setupInclusionCheck() {
 
         final int abstractionDistance = scene().options().getAbstractionDistance();
-        if(abstractionDistance > 0 && !scene().options().isIndexedMode()) {
+        if (abstractionDistance > 0 && !scene().options().isIndexedMode()) {
             DefaultProgramState.setHeapInclusionStrategy(new MinDistanceInclusionStrategy(grammar));
             logger.debug("Setup inclusion strategy to isomorphism checking with materialization.");
         } else {
@@ -174,16 +175,17 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+
         CanonicalizationHelper canonicalizationHelper;
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializationStrategy = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-        IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
         EmbeddingIndexChecker indexChecker =
-                new EmbeddingIndexChecker( indexMatcher,
-                        materializationStrategy );
+                new EmbeddingIndexChecker(indexMatcher,
+                        materializationStrategy);
 
-        canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
+        canonicalizationHelper = new IndexedCanonicalizationHelper(indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
     }
 
@@ -191,19 +193,19 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
         Set<String> nullPointerGuards = new HashSet<>();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            if(lhs instanceof IndexedNonterminal) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if (lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
-                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                if (iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
 
                         TIntIterator iterator = rhs.nodes().iterator();
-                        while(iterator.hasNext()) {
+                        while (iterator.hasNext()) {
                             int node = iterator.next();
-                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+                            for (SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == Types.NULL) {
+                                if (rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }
@@ -233,27 +235,28 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
         stateLabelingStrategy = getPhase(StateLabelingStrategyBuilderTransformer.class)
                 .getStrategy()
                 .build();
-        if(stateLabelingStrategy == null) {
-            stateLabelingStrategy = s -> {};
+        if (stateLabelingStrategy == null) {
+            stateLabelingStrategy = s -> {
+            };
         }
     }
 
     private void setupStateRefinement() {
 
         StateSpaceGenerationTransformer oldTransformer = getPhase(StateSpaceGenerationTransformer.class);
-        if(oldTransformer != null) {
+        if (oldTransformer != null) {
             stateRefinementStrategy = oldTransformer.getStateRefinementStrategy();
         }
 
         boolean isGarbageCollectionEnabled = scene().options().isGarbageCollectionEnabled();
 
-        if(stateRefinementStrategy == null) {
-            if(isGarbageCollectionEnabled) {
+        if (stateRefinementStrategy == null) {
+            if (isGarbageCollectionEnabled) {
                 stateRefinementStrategy = new GarbageCollector();
             } else {
                 stateRefinementStrategy = new NoStateRefinementStrategy();
             }
-        } else if(isGarbageCollectionEnabled){
+        } else if (isGarbageCollectionEnabled) {
 
             List<StateRefinementStrategy> strategies = new ArrayList<>(2);
             strategies.add(stateRefinementStrategy);
@@ -266,31 +269,37 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     @Override
     public AbortStrategy getAbortStrategy() {
+
         return abortStrategy;
     }
 
     @Override
     public CanonicalizationStrategy getCanonicalizationStrategy() {
+
         return canonicalizationStrategy;
     }
 
     @Override
     public CanonicalizationStrategy getAggressiveCanonicalizationStrategy() {
+
         return aggressiveCanonicalizationStrategy;
     }
 
     @Override
     public MaterializationStrategy getMaterializationStrategy() {
+
         return materializationStrategy;
     }
 
     @Override
     public StateLabelingStrategy getStateLabelingStrategy() {
+
         return stateLabelingStrategy;
     }
 
     @Override
     public StateRefinementStrategy getStateRefinementStrategy() {
+
         return stateRefinementStrategy;
     }
 }

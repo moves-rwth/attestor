@@ -15,52 +15,52 @@ import static org.junit.Assert.assertTrue;
 
 public class RecursiveMethodDetectionTest {
 
-	@Test
-	public void test() {
+    @Test
+    public void test() {
 
-		SceneObject sceneObject = new MockupSceneObject();
+        SceneObject sceneObject = new MockupSceneObject();
 
-		try {
-			String classpath = "src\\test\\resources";
-			new SootInitializer().initialize(classpath );
-		
+        try {
+            String classpath = "src\\test\\resources";
+            new SootInitializer().initialize(classpath);
 
-			Options.v().parse( new String [] { "-p", "jb",  "use-original-names:true" });
+
+            Options.v().parse(new String[]{"-p", "jb", "use-original-names:true"});
 
             /*
              This enables jimple annotations to find dead variables.
              Since dead variables may prevent abstraction, we need this information
              in order to delete them manually.
              */
-			Options.v().parse( new String[]{"-p", "jap.lvtagger", "enabled:true"} );
-		
-			Options.v().parse( new String [] {"-pp", "-keep-line-number", "-f", "jimple", "RecursionDetectionInput" } );
-			Scene.v().loadNecessaryClasses();
+            Options.v().parse(new String[]{"-p", "jap.lvtagger", "enabled:true"});
 
-			PackManager.v().runPacks();
+            Options.v().parse(new String[]{"-pp", "-keep-line-number", "-f", "jimple", "RecursionDetectionInput"});
+            Scene.v().loadNecessaryClasses();
+
+            PackManager.v().runPacks();
 
 
-		} catch(Exception e) {
-			throw e;
-		}
+        } catch (Exception e) {
+            throw e;
+        }
 
-		SootClass sootClass = Scene.v().getSootClass( "RecursionDetectionInput" );
-		Scene.v().setMainClass( sootClass );
+        SootClass sootClass = Scene.v().getSootClass("RecursionDetectionInput");
+        Scene.v().setMainClass(sootClass);
 
-		TopLevelTranslation translator = new TopLevelTranslation(sceneObject,  new StandardAbstractSemantics(sceneObject) );
-		translator.translate();
-		
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void <init>()>").isRecursive() );
-		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion1()>").isRecursive());
-		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion2(int)>").isRecursive());
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int callSeveral()>").isRecursive() );
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void main(String[])>").isRecursive() );
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int noCalls(int)>").isRecursive() );
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int nonRecursiveCaller()>").isRecursive() );
-		assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: boolean nonRecursiveCallee(boolean)>").isRecursive() );
-		assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int selfLoop(int)>").isRecursive() );
-		
-	
-	}
+        TopLevelTranslation translator = new TopLevelTranslation(sceneObject, new StandardAbstractSemantics(sceneObject));
+        translator.translate();
+
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void <init>()>").isRecursive());
+        assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion1()>").isRecursive());
+        assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int indirectRecursion2(int)>").isRecursive());
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int callSeveral()>").isRecursive());
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: void main(String[])>").isRecursive());
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int noCalls(int)>").isRecursive());
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: int nonRecursiveCaller()>").isRecursive());
+        assertFalse(sceneObject.scene().getMethod("<RecursionDetectionInput: boolean nonRecursiveCallee(boolean)>").isRecursive());
+        assertTrue(sceneObject.scene().getMethod("<RecursionDetectionInput: int selfLoop(int)>").isRecursive());
+
+
+    }
 
 }

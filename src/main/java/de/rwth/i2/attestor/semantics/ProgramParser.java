@@ -7,25 +7,26 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Program;
  * {@link Program} that can be analyzed.
  *
  * @author Hannah Arndt, Christoph
- *
  */
 public interface ProgramParser {
 
     /**
      * Transforms a source code file into a Program that can be analyzed.
+     *
      * @param classpath The path to a source code file
      * @param classname The name of the class to transform into a Program.
      * @return The program generated from the source code file.
      */
-	Program parse( String classpath, String classname );
+    Program parse(String classpath, String classname);
 
     /**
      * Transforms a source code file into a Program that can be analyzed.
-     * @param classpath The path to a source code file
-     * @param classname The name of the class to transform into a Program.
+     *
+     * @param classpath  The path to a source code file
+     * @param classname  The name of the class to transform into a Program.
      * @param entryPoint The initial method that is invoked on running the parsed program.
      * @return The program generated from the source code file.
      */
-	Program parse( String classpath, String classname, String entryPoint );
+    Program parse(String classpath, String classname, String entryPoint);
 
 }

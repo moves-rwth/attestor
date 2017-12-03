@@ -27,82 +27,80 @@ import static org.junit.Assert.assertTrue;
 
 public class GrammarTest_Indexed {
 
-	private MaterializationRuleManager grammarManager;
-	
-	private Nonterminal nonterminal;
+    SceneObject sceneObject;
+    BalancedTreeGrammar treeGrammar;
+    private MaterializationRuleManager grammarManager;
+    private Nonterminal nonterminal;
 
-	SceneObject sceneObject;
-	BalancedTreeGrammar treeGrammar;
+    @Before
+    public void setUp() throws Exception {
 
-	@Before
-	public void setUp() throws Exception {
+        sceneObject = new MockupSceneObject();
+        treeGrammar = new BalancedTreeGrammar(sceneObject);
 
-		sceneObject = new MockupSceneObject();
-		treeGrammar = new BalancedTreeGrammar(sceneObject);
+        Grammar grammar = treeGrammar.getGrammar();
+        ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
 
-		Grammar grammar = treeGrammar.getGrammar();
-		ViolationPointResolver vioResolver = new ViolationPointResolver( grammar );
+        IndexMatcher indexMatcher = new IndexMatcher(new DefaultIndexMaterialization());
+        grammarManager =
+                new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
+    }
 
-		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
-		grammarManager = 
-				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
-	}
-	
-	@Test
-	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_Z() 
-												throws UnexpectedNonterminalTypeException {
-		
-		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		ArrayList<IndexSymbol> index = new ArrayList<>();
-		index.add(bottom);
-		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
-		nonterminal = new IndexedNonterminalImpl(nt, index);
+    @Test
+    public void testGetRuleGraphsCreatingSelectorNonterminalIntString_Z()
+            throws UnexpectedNonterminalTypeException {
 
-			MaterializationAndRuleResponse response = 
-					(MaterializationAndRuleResponse) 
-					grammarManager.getRulesFor( nonterminal, 0, "left");
+        IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+        ArrayList<IndexSymbol> index = new ArrayList<>();
+        index.add(bottom);
+        Nonterminal nt = sceneObject.scene().createNonterminal("B", 2, new boolean[]{false, true});
+        nonterminal = new IndexedNonterminalImpl(nt, index);
 
-			final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
-			 Collection<HeapConfiguration> result = 
-					 response.getRulesForMaterialization(emptyMaterialization);
-		 
-		 assertEquals( 1, result.size() );
-		 assertTrue( result.contains( treeGrammar.createBalancedLeafRule() ) );
-	}
+        MaterializationAndRuleResponse response =
+                (MaterializationAndRuleResponse)
+                        grammarManager.getRulesFor(nonterminal, 0, "left");
 
-	@Test
-	public void testGetRuleGraphsCreatingSelectorNonterminalIntString_sZ() 
-			throws UnexpectedNonterminalTypeException {
-				
-		IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
-		IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
-		
-		ArrayList<IndexSymbol> index = new ArrayList<>();
-		index.add(s);
-		index.add(bottom);
-		Nonterminal nt = sceneObject.scene().createNonterminal("B", 2 , new boolean[]{false, true});
-		nonterminal = new IndexedNonterminalImpl(nt, index);
+        final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
+        Collection<HeapConfiguration> result =
+                response.getRulesForMaterialization(emptyMaterialization);
 
-		MaterializationAndRuleResponse response = 
-				(MaterializationAndRuleResponse) 
-				grammarManager.getRulesFor( nonterminal, 0, "left");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(treeGrammar.createBalancedLeafRule()));
+    }
 
-		final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
-		 Collection<HeapConfiguration> result = 
-				 response.getRulesForMaterialization(emptyMaterialization);
-		 
-		 assertEquals( 3, result.size() );
-		 assertTrue( result.contains( treeGrammar.createLeftLeafRule()) );
-		 for( HeapConfiguration ruleInResult : result ){
-		 TIntIterator ntIterator = ruleInResult.nonterminalEdges().iterator();
-		 while( ntIterator.hasNext() ){
-			 int ntId = ntIterator.next();
-			 IndexedNonterminal indexedNonterminal = (IndexedNonterminal) ruleInResult.labelOf( ntId );
-			 assertTrue("leftLeafRule not instantiatied", indexedNonterminal.getIndex().hasConcreteIndex() );
-		 }
-		 assertTrue( result.contains( treeGrammar.createRightLeafRule()) );
-		 }
-		
-	}
+    @Test
+    public void testGetRuleGraphsCreatingSelectorNonterminalIntString_sZ()
+            throws UnexpectedNonterminalTypeException {
+
+        IndexSymbol s = ConcreteIndexSymbol.getIndexSymbol("s", false);
+        IndexSymbol bottom = ConcreteIndexSymbol.getIndexSymbol("Z", true);
+
+        ArrayList<IndexSymbol> index = new ArrayList<>();
+        index.add(s);
+        index.add(bottom);
+        Nonterminal nt = sceneObject.scene().createNonterminal("B", 2, new boolean[]{false, true});
+        nonterminal = new IndexedNonterminalImpl(nt, index);
+
+        MaterializationAndRuleResponse response =
+                (MaterializationAndRuleResponse)
+                        grammarManager.getRulesFor(nonterminal, 0, "left");
+
+        final ArrayList<IndexSymbol> emptyMaterialization = new ArrayList<>();
+        Collection<HeapConfiguration> result =
+                response.getRulesForMaterialization(emptyMaterialization);
+
+        assertEquals(3, result.size());
+        assertTrue(result.contains(treeGrammar.createLeftLeafRule()));
+        for (HeapConfiguration ruleInResult : result) {
+            TIntIterator ntIterator = ruleInResult.nonterminalEdges().iterator();
+            while (ntIterator.hasNext()) {
+                int ntId = ntIterator.next();
+                IndexedNonterminal indexedNonterminal = (IndexedNonterminal) ruleInResult.labelOf(ntId);
+                assertTrue("leftLeafRule not instantiatied", indexedNonterminal.getIndex().hasConcreteIndex());
+            }
+            assertTrue(result.contains(treeGrammar.createRightLeafRule()));
+        }
+
+    }
 
 }

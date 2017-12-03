@@ -19,357 +19,359 @@ import java.util.Set;
  * This yields a builder object to configure the analysis used during
  * state space generation.
  * <br>
- *  The generation of a StateSpace itself is started by invoking generate().
- *  
- * @author christoph
+ * The generation of a StateSpace itself is started by invoking generate().
  *
+ * @author christoph
  */
 public class StateSpaceGenerator extends SceneObject {
 
-	protected StateSpaceGenerator(SceneObject otherObject) {
-		super(otherObject);
-	}
+    private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
+    /**
+     * Stores the program configurations that still have
+     * to be executed by the state space generation
+     */
+    final LinkedList<ProgramState> unexploredConfigurations = new LinkedList<>();
+    /**
+     * Stores the state space generated upon instantiation of
+     * this generator.
+     */
+    StateSpace stateSpace;
+    /**
+     * The control flow of the program together with the
+     * abstract semantics of each statement
+     */
+    Program program;
+    /**
+     * Strategy guiding the materialization of states.
+     * This strategy is invoked whenever an abstract transfer
+     * function cannot be executed.
+     */
+    MaterializationStrategy materializationStrategy;
+    /**
+     * Strategy guiding the canonicalization of states.
+     * This strategy is invoked after execution of abstract transfer
+     * functions in order to generalize.
+     */
+    CanonicalizationStrategy canonicalizationStrategy;
+    /**
+     * Strategy determining when to give up on further state space
+     * exploration.
+     */
+    AbortStrategy abortStrategy;
+    /**
+     * Strategy determining the labels of states in the state space
+     */
+    StateLabelingStrategy stateLabelingStrategy;
+    /**
+     * Strategy determining how states are refined prior to canonicalization
+     */
+    StateRefinementStrategy stateRefinementStrategy;
+    /**
+     * Strategy determining whether successors of a given state should also be explored.
+     */
+    ExplorationStrategy explorationStrategy;
+    /**
+     * Strategy determining post-processing after termination of state space generation
+     */
+    PostProcessingStrategy postProcessingStrategy;
+    /**
+     * Counter for the total number of states generated so far.
+     */
+    TotalStatesCounter totalStatesCounter;
+    /**
+     * Flag that determines whether dead variables may be eliminated after
+     * a single step of the symbolic execution.
+     * Whether variables are actually eliminated depends on the executed
+     * statement.
+     */
+    boolean deadVariableEliminationEnabled;
+    /**
+     * Flag that determines whether the state space is generated in a depth-first
+     * or breadth-first fashion.
+     */
+    boolean breadthFirstSearchEnabled;
+    /**
+     * The options for this state space generator that configure the individual
+     * steps of the symbolic execution.
+     */
+    SymbolicExecutionObserver symbolicExecutionObserver;
+    /**
+     * Functional interface to obtain instances of state spaces.
+     */
+    StateSpaceSupplier stateSpaceSupplier;
+    /**
+     * Functional interface determining the semantics options passed to Semantics objects during
+     * symbolic execution
+     */
+    SemanticsObserverSupplier semanticsObserverSupplier;
 
-	/**
-	 * @return An SSGBuilder which is the only means to create a new
-	 * StateSpaceGenerator object.
-	 */
-	public static SSGBuilder builder(SceneObject sceneObject) {
-		return new SSGBuilder(sceneObject);
-	}
+    protected StateSpaceGenerator(SceneObject otherObject) {
 
-	public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
-		return new SSGBuilder(stateSpaceGenerator)
-				.setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-				.setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
-				.setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
-				.setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
-				.setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-				.setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
-				.setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
-				.setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
-				.setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-				.setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
-				.setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
-				.setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
-	}
+        super(otherObject);
+    }
 
-	private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
+    /**
+     * @return An SSGBuilder which is the only means to create a new
+     * StateSpaceGenerator object.
+     */
+    public static SSGBuilder builder(SceneObject sceneObject) {
 
-	@FunctionalInterface
-	public interface TotalStatesCounter {
+        return new SSGBuilder(sceneObject);
+    }
 
-		void addStates(int states);
-	}
+    public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
 
-	/**
-	 * Stores the state space generated upon instantiation of
-	 * this generator.
-	 */
-	StateSpace stateSpace;
+        return new SSGBuilder(stateSpaceGenerator)
+                .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
+                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
+                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
+                .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
+                .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
+                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
+                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
+                .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+                .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
+                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
+                .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
+    }
 
-	/**
-	 * Stores the program configurations that still have
-	 * to be executed by the state space generation
-	 */
-	final LinkedList<ProgramState> unexploredConfigurations = new LinkedList<>();
+    /**
+     * @return The strategy determining when state space generation is aborted.
+     */
+    public AbortStrategy getAbortStrategy() {
 
-	/**
-	 * The control flow of the program together with the
-	 * abstract semantics of each statement
-	 */
-	Program program;
+        return abortStrategy;
+    }
 
-	/**
-	 * Strategy guiding the materialization of states.
-	 * This strategy is invoked whenever an abstract transfer
-	 * function cannot be executed.
-	 */
-	MaterializationStrategy materializationStrategy;
+    /**
+     * @return The strategy determining how materialization is performed.
+     */
+    public MaterializationStrategy getMaterializationStrategy() {
 
-	/**
-	 * Strategy guiding the canonicalization of states.
-	 * This strategy is invoked after execution of abstract transfer
-	 * functions in order to generalize.
-	 */
-	CanonicalizationStrategy canonicalizationStrategy;
+        return materializationStrategy;
+    }
 
-	/**
-	 * Strategy determining when to give up on further state space
-	 * exploration.
-	 */
-	AbortStrategy abortStrategy;
+    /**
+     * @return The strategy determining how canonicalization is performed.
+     */
+    public CanonicalizationStrategy getCanonizationStrategy() {
 
-	/**
-	 * Strategy determining the labels of states in the state space
-	 */
-	StateLabelingStrategy stateLabelingStrategy;
+        return canonicalizationStrategy;
+    }
 
-	/**
-	 * Strategy determining how states are refined prior to canonicalization
-	 */
-	StateRefinementStrategy stateRefinementStrategy;
+    /**
+     * @return The strategy determining how states are labeled with atomic propositions.
+     */
+    public StateLabelingStrategy getStateLabelingStrategy() {
 
-	/**
-	 * Strategy determining whether successors of a given state should also be explored.
-	 */
-	ExplorationStrategy explorationStrategy;
+        return stateLabelingStrategy;
+    }
 
-	/**
-	 * Strategy determining post-processing after termination of state space generation
-	 */
-	PostProcessingStrategy postProcessingStrategy;
+    /**
+     * @return The strategy determining how states are refined prior to canonicalization.
+     */
+    public StateRefinementStrategy getStateRefinementStrategy() {
 
-	/**
-	 * Counter for the total number of states generated so far.
-	 */
-	TotalStatesCounter totalStatesCounter;
+        return stateRefinementStrategy;
+    }
 
-	/**
-	 * Flag that determines whether dead variables may be eliminated after
-	 * a single step of the symbolic execution.
-	 * Whether variables are actually eliminated depends on the executed
-	 * statement.
-	 */
-	boolean deadVariableEliminationEnabled;
+    public StateSpaceSupplier getStateSpaceSupplier() {
 
-	/**
-	 * Flag that determines whether the state space is generated in a depth-first
-	 * or breadth-first fashion.
-	 */
-	boolean breadthFirstSearchEnabled;
+        return stateSpaceSupplier;
+    }
 
-	/**
-	 * The options for this state space generator that configure the individual
-	 * steps of the symbolic execution.
-	 */
-	SymbolicExecutionObserver symbolicExecutionObserver;
+    public SemanticsObserverSupplier getSemanticsObserverSupplier() {
 
-	/**
-	 * Functional interface to obtain instances of state spaces.
-	 */
-	StateSpaceSupplier stateSpaceSupplier;
+        return semanticsObserverSupplier;
+    }
 
-	/**
-	 * Functional interface determining the semantics options passed to Semantics objects during
-	 * symbolic execution
-	 */
-	SemanticsObserverSupplier semanticsObserverSupplier;
+    /**
+     * @return The strategy determining whether successors of a given state should be explored or not.
+     */
+    public ExplorationStrategy getExplorationStrategy() {
 
-	/**
-	 * @return The strategy determining when state space generation is aborted.
-	 */
-	public AbortStrategy getAbortStrategy() {
-		return abortStrategy;
-	}
+        return explorationStrategy;
+    }
 
-	/**
-	 * @return The strategy determining how materialization is performed.
-	 */
-	public MaterializationStrategy getMaterializationStrategy() {
-		return materializationStrategy;
-	}
+    public PostProcessingStrategy getPostProcessingStrategy() {
 
-	/**
-	 * @return The strategy determining how canonicalization is performed.
-	 */
-	public CanonicalizationStrategy getCanonizationStrategy() {
-		return canonicalizationStrategy;
-	}
+        return postProcessingStrategy;
+    }
 
-	/**
-	 * @return The strategy determining how states are labeled with atomic propositions.
-	 */
-	public StateLabelingStrategy getStateLabelingStrategy() {
-		return stateLabelingStrategy;
-	}
+    public boolean isDeadVariableEliminationEnabled() {
 
-	/**
-	 * @return The strategy determining how states are refined prior to canonicalization.
-	 */
-	public StateRefinementStrategy getStateRefinementStrategy() {
-		return stateRefinementStrategy;
-	}
+        return deadVariableEliminationEnabled;
+    }
 
-	public StateSpaceSupplier getStateSpaceSupplier() {
-		return stateSpaceSupplier;
-	}
+    public boolean isBreadthFirstSearchEnabled() {
 
-	public SemanticsObserverSupplier getSemanticsObserverSupplier() {
-		return semanticsObserverSupplier;
-	}
+        return breadthFirstSearchEnabled;
+    }
 
-	/**
-	 * @return The strategy determining whether successors of a given state should be explored or not.
-	 */
-	public ExplorationStrategy getExplorationStrategy() {
-		return explorationStrategy;
-	}
+    public StateSpace getStateSpace() {
 
-	public PostProcessingStrategy getPostProcessingStrategy() {
-		return postProcessingStrategy;
-	}
+        return stateSpace;
+    }
 
-	public boolean isDeadVariableEliminationEnabled() {
-		return deadVariableEliminationEnabled;
-	}
+    public TotalStatesCounter getTotalStatesCounter() {
 
-	public boolean isBreadthFirstSearchEnabled() {
-		return breadthFirstSearchEnabled;
-	}
+        return totalStatesCounter;
+    }
 
-	public StateSpace getStateSpace() {
+    /**
+     * Attempts to generate a StateSpace according to the
+     * underlying analysis.
+     *
+     * @return The generated StateSpace.
+     */
+    public StateSpace generate() throws StateSpaceGenerationAbortedException {
 
-		return stateSpace;
-	}
+        while (hasUnexploredStates()) {
 
-	public TotalStatesCounter getTotalStatesCounter() {
-		return totalStatesCounter;
-	}
+            ProgramState state = nextUnexploredState();
 
-	/**
-	 * Attempts to generate a StateSpace according to the
-	 * underlying analysis.
-	 * @return The generated StateSpace.
-	 */
-	public StateSpace generate() throws StateSpaceGenerationAbortedException {
+            try {
+                abortStrategy.checkAbort(stateSpace);
+            } catch (StateSpaceGenerationAbortedException e) {
+                if (!state.isFromTopLevelStateSpace()) {
+                    throw e;
+                }
+                break;
+            }
 
-		while( hasUnexploredStates() ){
+            Semantics stateSemantics = semanticsOf(state);
+            boolean isSufficientlyMaterialized = materializationPhase(stateSemantics, state);
 
-			ProgramState state = nextUnexploredState();
+            if (isSufficientlyMaterialized) {
+                Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
+                if (successorStates.isEmpty()) {
+                    stateSpace.setFinal(state);
+                    // Add self-loop to each final state
+                    stateSpace.addArtificialInfPathsTransition(state);
+                } else {
+                    successorStates.forEach(nextState -> {
+                        Semantics semantics = semanticsOf(nextState);
+                        nextState = stateRefinementStrategy.refine(semantics, nextState);
+                        nextState = canonicalizationPhase(semantics, nextState);
+                        if (state.isFromTopLevelStateSpace()) {
+                            stateLabelingStrategy.computeAtomicPropositions(nextState);
+                        }
+                        addingPhase(semantics, state, nextState);
+                    });
+                }
+            }
+        }
 
-			try {
-				abortStrategy.checkAbort(stateSpace);
-			} catch(StateSpaceGenerationAbortedException e) {
-				if( ! state.isFromTopLevelStateSpace() ) {
-					throw e;
-				}
-				break;
-			}
+        postProcessingStrategy.process(stateSpace);
+        totalStatesCounter.addStates(stateSpace.size());
+        return stateSpace;
+    }
 
-			Semantics stateSemantics = semanticsOf(state);
-			boolean isSufficientlyMaterialized = materializationPhase(stateSemantics, state);
+    /**
+     * @return true iff further states can and should be generated.
+     */
+    private boolean hasUnexploredStates() {
 
-			if(isSufficientlyMaterialized) {
-				Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
-				if(successorStates.isEmpty()) {
-					stateSpace.setFinal(state);
-					// Add self-loop to each final state
-					stateSpace.addArtificialInfPathsTransition(state);
-				} else {
-					successorStates.forEach(nextState -> {
-						Semantics semantics = semanticsOf(nextState);
-						nextState = stateRefinementStrategy.refine(semantics, nextState);
-						nextState = canonicalizationPhase(semantics, nextState);
-						if( state.isFromTopLevelStateSpace() ) {
-							stateLabelingStrategy.computeAtomicPropositions(nextState);
-						}
-						addingPhase(semantics, state, nextState);
-					});
-				}
-			}
-		}
+        return !unexploredConfigurations.isEmpty();
+    }
 
-		postProcessingStrategy.process(stateSpace);
-		totalStatesCounter.addStates(stateSpace.size());
-		return stateSpace;
-	}
+    private ProgramState nextUnexploredState() {
 
-	/**
-	 * @return true iff further states can and should be generated.
-	 */
-	private boolean hasUnexploredStates() throws StateSpaceGenerationAbortedException {
-		return !unexploredConfigurations.isEmpty();
-	}
+        if (breadthFirstSearchEnabled) {
+            return unexploredConfigurations.removeFirst();
+        } else {
+            return unexploredConfigurations.removeLast();
+        }
+    }
 
-	private ProgramState nextUnexploredState() {
+    protected void addUnexploredState(ProgramState state) {
 
-		if(breadthFirstSearchEnabled) {
-			return unexploredConfigurations.removeFirst();
-		} else {
-			return unexploredConfigurations.removeLast();
-		}
-	}
+        if (explorationStrategy.check(state, stateSpace)) {
+            unexploredConfigurations.addLast(state);
+        }
+    }
 
-	protected void addUnexploredState(ProgramState state) {
+    private Semantics semanticsOf(ProgramState state) {
 
-		if(explorationStrategy.check(state, stateSpace)) {
-			unexploredConfigurations.addLast(state);
-		}
-	}
+        return program.getStatement(state.getProgramCounter());
+    }
 
-	private Semantics semanticsOf(ProgramState state) {
-		return program.getStatement(state.getProgramCounter());
-	}
+    /**
+     * In the materialization phase violation points of the given state are removed until the current statement
+     * can be executed. The materialized states are immediately added to the state space as successors of the
+     * given state.
+     *
+     * @param semantics The statement that should be executed next and thus determines the necessary materialization.
+     * @param state     The program state that should be materialized.
+     * @return True if and only if no materialization is needed.
+     */
+    private boolean materializationPhase(Semantics semantics, ProgramState state) {
 
-	/**
-	 * In the materialization phase violation points of the given state are removed until the current statement
-	 * can be executed. The materialized states are immediately added to the state space as successors of the
-	 * given state.
-	 * @param semantics The statement that should be executed next and thus determines the necessary materialization.
-	 * @param state The program state that should be materialized.
-	 * @return True if and only if no materialization is needed.
-	 */
-	private boolean materializationPhase(Semantics semantics, ProgramState state) {
+        List<ProgramState> materialized = materializationStrategy.materialize(
+                state,
+                semantics.getPotentialViolationPoints()
+        );
 
-		List<ProgramState> materialized = materializationStrategy.materialize(
-				state,
-				semantics.getPotentialViolationPoints()
-		);
+        for (ProgramState m : materialized) {
+            // performance optimization that prevents isomorphism checks against states in the state space.
+            stateSpace.addState(m);
+            addUnexploredState(m);
+            stateSpace.addMaterializationTransition(state, m);
+        }
+        return materialized.isEmpty();
+    }
 
-		for(ProgramState m : materialized) {
-			// performance optimization that prevents isomorphism checks against states in the state space.
-			stateSpace.addState(m);
-			addUnexploredState(m);
-			stateSpace.addMaterializationTransition(state, m);
-		}
-		return materialized.isEmpty();
-	}
+    /**
+     * Computes canonical successors of the given program state.
+     *
+     * @param semantics The statement that should be executed.
+     * @param state     The program state whose successor states shall be computed.
+     */
+    private Set<ProgramState> executionPhase(Semantics semantics, ProgramState state)
+            throws StateSpaceGenerationAbortedException {
 
-	/**
-	 * Computes canonical successors of the given program state.
-	 *
-	 * @param semantics The statement that should be executed.
-	 * @param state The program state whose successor states shall be computed.
-	 */
-	private Set<ProgramState> executionPhase(Semantics semantics, ProgramState state)
-			throws StateSpaceGenerationAbortedException {
+        try {
+            return semantics.computeSuccessors(state, symbolicExecutionObserver);
+        } catch (NotSufficientlyMaterializedException e) {
+            logger.error("A state could not be sufficiently materialized.");
+            return Collections.emptySet();
+        }
+    }
 
-		try {
-			return semantics.computeSuccessors(state, symbolicExecutionObserver);
-		} catch (NotSufficientlyMaterializedException e) {
-			logger.error("A state could not be sufficiently materialized.");
-			return Collections.emptySet();
-		}
-	}
+    private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
-	private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
+        if (semantics.permitsCanonicalization()) {
+            state = canonicalizationStrategy.canonicalize(state);
+        }
+        return state;
+    }
 
-		if(semantics.permitsCanonicalization()) {
-			state = canonicalizationStrategy.canonicalize(state);
-		}
-		return state;
-	}
+    /**
+     * Adds a state as a successor of the given previous state to the state space
+     * provided to no subsuming state already exists.
+     *
+     * @param semantics     The statement that has been executed on previousState to get to state.
+     * @param previousState The predecessor of the given state.
+     * @param state         The state that should be added.
+     */
+    private void addingPhase(Semantics semantics, ProgramState previousState, ProgramState state) {
 
-	/**
-	 * Adds a state as a successor of the given previous state to the state space
-	 * provided to no subsuming state already exists.
-	 * @param semantics The statement that has been executed on previousState to get to state.
-	 * @param previousState The predecessor of the given state.
-	 * @param state The state that should be added.
-	 *
-	 */
-	private void addingPhase(Semantics semantics, ProgramState previousState, ProgramState state) {
+        // performance optimization that prevents isomorphism checks against states in the state space.
+        if (!semantics.permitsCanonicalization()) {
+            stateSpace.addState(state);
+            addUnexploredState(state);
+        } else if (stateSpace.addStateIfAbsent(state)) {
+            addUnexploredState(state);
+        }
 
-		// performance optimization that prevents isomorphism checks against states in the state space.
-		if(! semantics.permitsCanonicalization()) {
-			stateSpace.addState(state);
-			addUnexploredState(state);
-		} else if(stateSpace.addStateIfAbsent(state)) {
-			addUnexploredState(state);
-		}
+        stateSpace.addControlFlowTransition(previousState, state);
+    }
 
-		stateSpace.addControlFlowTransition(previousState, state);
-	}
+    @FunctionalInterface
+    public interface TotalStatesCounter {
+
+        void addStates(int states);
+    }
 
 }

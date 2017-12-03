@@ -23,63 +23,63 @@ import static org.junit.Assert.assertTrue;
 
 public class GeneralMaterializationStrategyTest_Materialize_Default {
 
-	private SceneObject sceneObject;
-	private ExampleHcImplFactory hcFactory;
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
-	private GeneralMaterializationStrategy materializer;
-	
-	@Before
-	public void setUp() throws Exception {
+    private GeneralMaterializationStrategy materializer;
 
-		sceneObject = new MockupSceneObject();
-		hcFactory = new ExampleHcImplFactory(sceneObject);
+    @Before
+    public void setUp() throws Exception {
 
-		Nonterminal listLabel = sceneObject.scene().createNonterminal("List", 2, new boolean[] { false, true } );
-		
-		Grammar grammar = Grammar.builder()
-								.addRule( listLabel , hcFactory.getListRule1() )
-								.addRule( listLabel , hcFactory.getListRule2() )
-								.build();
-		
-		ViolationPointResolver violationPointResolver = new ViolationPointResolver(grammar);
-		MaterializationRuleManager ruleManager = 
-				new DefaultMaterializationRuleManager(violationPointResolver);
-		GraphMaterializer graphMaterializer = new GraphMaterializer();
-		GrammarResponseApplier ruleApplier = new DefaultGrammarResponseApplier(graphMaterializer);
-		
-		materializer = new GeneralMaterializationStrategy( ruleManager, ruleApplier );
-		
-	}
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
 
-	@Test
-	public void testMaterialize_Default() {
-		
-		HeapConfiguration testInput = hcFactory.getMaterializationTest();
-		DefaultProgramState inputConf = new DefaultProgramState(testInput);
-		
-		ViolationPoints vio = new ViolationPoints("x", "next");
-		
-		List<ProgramState> res = materializer.materialize(inputConf, vio);
-		
-		assertEquals("input graph should not change", hcFactory.getMaterializationTest(), testInput );
-		assertEquals( 2, res.size() );
-		
-		for(int i=0; i < 2; i++) {
-			
-			HeapConfiguration hc = res.get(i).getHeap();
-			int x = hc.variableWith("x");
-			int t = hc.targetOf(x);
-			
-			
-			assertTrue(hc.selectorLabelsOf(t).contains(sceneObject.scene().getSelectorLabel("next")));
-		}
-		
-		List<HeapConfiguration> resHCs = new ArrayList<>();
-		resHCs.add( res.get(0).getHeap() );
-		resHCs.add( res.get(1).getHeap() );
-		
-		assertTrue("first expected materialization", resHCs.contains( hcFactory.getMaterializationRes1() ) );
-		assertTrue("second expected materialization", resHCs.contains( hcFactory.getMaterializationRes2() ) );
-	}
+        Nonterminal listLabel = sceneObject.scene().createNonterminal("List", 2, new boolean[]{false, true});
+
+        Grammar grammar = Grammar.builder()
+                .addRule(listLabel, hcFactory.getListRule1())
+                .addRule(listLabel, hcFactory.getListRule2())
+                .build();
+
+        ViolationPointResolver violationPointResolver = new ViolationPointResolver(grammar);
+        MaterializationRuleManager ruleManager =
+                new DefaultMaterializationRuleManager(violationPointResolver);
+        GraphMaterializer graphMaterializer = new GraphMaterializer();
+        GrammarResponseApplier ruleApplier = new DefaultGrammarResponseApplier(graphMaterializer);
+
+        materializer = new GeneralMaterializationStrategy(ruleManager, ruleApplier);
+
+    }
+
+    @Test
+    public void testMaterialize_Default() {
+
+        HeapConfiguration testInput = hcFactory.getMaterializationTest();
+        DefaultProgramState inputConf = new DefaultProgramState(testInput);
+
+        ViolationPoints vio = new ViolationPoints("x", "next");
+
+        List<ProgramState> res = materializer.materialize(inputConf, vio);
+
+        assertEquals("input graph should not change", hcFactory.getMaterializationTest(), testInput);
+        assertEquals(2, res.size());
+
+        for (int i = 0; i < 2; i++) {
+
+            HeapConfiguration hc = res.get(i).getHeap();
+            int x = hc.variableWith("x");
+            int t = hc.targetOf(x);
+
+
+            assertTrue(hc.selectorLabelsOf(t).contains(sceneObject.scene().getSelectorLabel("next")));
+        }
+
+        List<HeapConfiguration> resHCs = new ArrayList<>();
+        resHCs.add(res.get(0).getHeap());
+        resHCs.add(res.get(1).getHeap());
+
+        assertTrue("first expected materialization", resHCs.contains(hcFactory.getMaterializationRes1()));
+        assertTrue("second expected materialization", resHCs.contains(hcFactory.getMaterializationRes2()));
+    }
 
 }

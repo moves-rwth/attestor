@@ -16,16 +16,16 @@ import java.util.Set;
  * during LTL model checking.
  * The resulting abstract heap configuration describes a set of concrete states that can be fed into the program
  * as an input to reproduce the detected violation of an LTL formula.
- *
+ * <p>
  * The main idea to generate suitable input states is to perform another symbolic execution of the program
  * with respect to the trace's initial state. In contrast to the usual state space generation, however,
  * no abstraction is performed. Moreover, each state now containsSubsumingState two heap configurations:
  * <ol>
- *     <li>One heap configuration is used by the state space generation to perform the symbolic execution.</li>
- *     <li>A second heap configuration is materialized together with the first heap configuration. However, no
- *         execution steps are performed. Thus, when reaching a final state, the second heap configuration
- *         corresponds to an initial state in which exactly those materialized states that are required to reach
- *         the final state in question have already been performed.</li>
+ * <li>One heap configuration is used by the state space generation to perform the symbolic execution.</li>
+ * <li>A second heap configuration is materialized together with the first heap configuration. However, no
+ * execution steps are performed. Thus, when reaching a final state, the second heap configuration
+ * corresponds to an initial state in which exactly those materialized states that are required to reach
+ * the final state in question have already been performed.</li>
  * </ol>
  * Furthermore, the counterexample generator performs its symbolic computation in a breadth-first manner to ensure
  * that all states required to cover a trace are eventually encountered.
@@ -42,16 +42,20 @@ public final class CounterexampleGenerator extends SceneObject {
     private boolean deadVariableEliminationEnabled;
 
     /**
-     * @return A builder object to construct a new CounterexampleGenerator.
+     * Prevent construction of CounterexampleGenerator without using CounterexampleGeneratorBuilder.builder().
      */
-    public static CounterexampleGeneratorBuilder builder(SceneObject sceneObject) {
-        return new CounterexampleGeneratorBuilder(sceneObject);
+    private CounterexampleGenerator(SceneObject sceneObject) {
+
+        super(sceneObject);
     }
 
     /**
-     * Prevent construction of CounterexampleGenerator without using CounterexampleGeneratorBuilder.builder().
+     * @return A builder object to construct a new CounterexampleGenerator.
      */
-    private CounterexampleGenerator(SceneObject sceneObject) { super(sceneObject);}
+    public static CounterexampleGeneratorBuilder builder(SceneObject sceneObject) {
+
+        return new CounterexampleGeneratorBuilder(sceneObject);
+    }
 
     /**
      * Start generation of an abstract heap configuration that represents input states to trigger the violation
@@ -66,7 +70,7 @@ public final class CounterexampleGenerator extends SceneObject {
             StateSpaceGenerator generator = setupStateSpaceGenerator();
             StateSpace stateSpace = generator.generate();
 
-            Iterator<ProgramState>  iterator = stateSpace.getFinalStates().iterator();
+            Iterator<ProgramState> iterator = stateSpace.getFinalStates().iterator();
             assert iterator.hasNext();
             HeapConfiguration finalHeap = iterator.next().getHeap();
             return ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
@@ -81,29 +85,32 @@ public final class CounterexampleGenerator extends SceneObject {
         ProgramState initialState = getInitialState();
         return StateSpaceGenerator
                 .builder(this)
-                .setStateLabelingStrategy(s -> {})
+                .setStateLabelingStrategy(s -> {
+                })
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setDeadVariableElimination(deadVariableEliminationEnabled)
                 .setBreadthFirstSearchEnabled(true)
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
-                .setExplorationStrategy((s,sp) -> {
+                .setExplorationStrategy((s, sp) -> {
                     Semantics semantics = program.getStatement(s.getProgramCounter());
-                    if(trace.containsSubsumingState(s)) { // check the simple case first
+                    if (trace.containsSubsumingState(s)) { // check the simple case first
                         return true;
                     }
-                    if(semantics.permitsCanonicalization()) {
+                    if (semantics.permitsCanonicalization()) {
                         ProgramState canon = canonicalizationStrategy.canonicalize(s);
                         return trace.containsSubsumingState(canon);
                     }
                     return false;
                 })
                 .setStateSpaceSupplier(getStateSpaceSupplier())
-                .setAbortStrategy(s -> {})
+                .setAbortStrategy(s -> {
+                })
                 .setProgram(program)
                 .addInitialState(initialState)
-                .setStateCounter(states -> {})
+                .setStateCounter(states -> {
+                })
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build();
     }
@@ -131,14 +138,17 @@ public final class CounterexampleGenerator extends SceneObject {
         private CounterexampleGenerator generator;
 
         CounterexampleGeneratorBuilder(SceneObject sceneObject) {
+
             generator = new CounterexampleGenerator(sceneObject);
         }
 
         /**
          * Finish construction of a CounterexampleGenerator.
+         *
          * @return CounterexampleGenerator.
          */
         public CounterexampleGenerator build() {
+
             assert generator.trace != null && !generator.trace.isEmpty();
             assert generator.program != null;
             assert generator.materializationStrategy != null;
@@ -150,31 +160,37 @@ public final class CounterexampleGenerator extends SceneObject {
         }
 
         public CounterexampleGeneratorBuilder setTrace(Trace trace) {
+
             generator.trace = trace;
             return this;
         }
 
         public CounterexampleGeneratorBuilder setProgram(Program program) {
+
             generator.program = program;
             return this;
         }
 
         public CounterexampleGeneratorBuilder setMaterializationStrategy(MaterializationStrategy strategy) {
+
             generator.materializationStrategy = strategy;
             return this;
         }
 
         public CounterexampleGeneratorBuilder setCanonicalizationStrategy(CanonicalizationStrategy strategy) {
+
             generator.canonicalizationStrategy = strategy;
             return this;
         }
 
         public CounterexampleGeneratorBuilder setStateRefinementStrategy(StateRefinementStrategy strategy) {
+
             generator.stateRefinementStrategy = strategy;
             return this;
         }
 
         public CounterexampleGeneratorBuilder setDeadVariableEliminationEnabled(boolean enabled) {
+
             generator.deadVariableEliminationEnabled = enabled;
             return this;
         }

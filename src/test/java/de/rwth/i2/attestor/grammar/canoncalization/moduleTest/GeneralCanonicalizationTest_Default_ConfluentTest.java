@@ -25,97 +25,104 @@ import static org.junit.Assert.assertEquals;
 
 public class GeneralCanonicalizationTest_Default_ConfluentTest {
 
-	private static int RANK = 2;
-	private final SceneObject sceneObject = new MockupSceneObject();
-	private final Type TYPE = sceneObject.scene().getType("type");
-	private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
-	CanonicalizationHelper canonicalizationHelper;
-	
-	@Before
-	public void setUp() throws Exception {
-		final int minDereferenceDepth = 1;
-		final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-		EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
-		canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
-	}
-	
-	@Test
-	public void test() {
-		Nonterminal lhs = getNonterminal();
-		HeapConfiguration rhs1 = getPattern1();
-		HeapConfiguration rhs2 = getPattern2();
-		Grammar grammar = Grammar.builder().addRule( lhs, rhs1 )
-										   .addRule(lhs, rhs2)
-										   .build();
-		
-		GeneralCanonicalizationStrategy canonizer 
-				= new GeneralCanonicalizationStrategy( grammar, canonicalizationHelper );
-		
-		ProgramState inputState = new DefaultProgramState( getInputGraph() );
-		ProgramState res = canonizer.canonicalize(inputState);
-		assertEquals( expectedFullAbstraction(lhs), res );
-	}
+    private static int RANK = 2;
+    private final SceneObject sceneObject = new MockupSceneObject();
+    private final Type TYPE = sceneObject.scene().getType("type");
+    private final SelectorLabel SEL = sceneObject.scene().getSelectorLabel("sel");
+    CanonicalizationHelper canonicalizationHelper;
+
+    @Before
+    public void setUp() throws Exception {
+
+        final int minDereferenceDepth = 1;
+        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
+        canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
+    }
+
+    @Test
+    public void test() {
+
+        Nonterminal lhs = getNonterminal();
+        HeapConfiguration rhs1 = getPattern1();
+        HeapConfiguration rhs2 = getPattern2();
+        Grammar grammar = Grammar.builder().addRule(lhs, rhs1)
+                .addRule(lhs, rhs2)
+                .build();
+
+        GeneralCanonicalizationStrategy canonizer
+                = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
+
+        ProgramState inputState = new DefaultProgramState(getInputGraph());
+        ProgramState res = canonizer.canonicalize(inputState);
+        assertEquals(expectedFullAbstraction(lhs), res);
+    }
 
 
-	private Nonterminal getNonterminal() {
-		boolean[] isReductionTentacle = new boolean[RANK];
-		return sceneObject.scene().createNonterminal("some label", RANK, isReductionTentacle );
-	}
-	
-	private HeapConfiguration getPattern1() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		HeapConfigurationBuilder builder =  hc.builder().addNodes(TYPE, RANK, nodes)
-				.addSelector(nodes.get(0), SEL , nodes.get(1) );
-		for( int i = 0; i < RANK; i++ ){
-			builder.setExternal( nodes.get(i) );
-		}
-		return builder.build();
-	}
-	
-	private HeapConfiguration getPattern2() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		HeapConfigurationBuilder builder =  hc.builder().addNodes(TYPE, RANK + 1, nodes)
-				.addNonterminalEdge(getNonterminal())
-					.addTentacle( nodes.get(0))
-					.addTentacle( nodes.get(1) )
-					.build()
-					.addNonterminalEdge(getNonterminal())
-					.addTentacle( nodes.get(1))
-					.addTentacle( nodes.get(2) )
-					.build()
-				.setExternal(nodes.get(0))
-				.setExternal( nodes.get(2));
-		return builder.build();
-	}
-	
-	private HeapConfiguration getInputGraph() {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		int sizeOfChain = 10;
-		
-		TIntArrayList nodes = new TIntArrayList();
-		HeapConfigurationBuilder builder =  hc.builder().addNodes(TYPE, sizeOfChain + 1, nodes);
-		for( int i = 0; i < sizeOfChain; i++ ){
-			builder.addSelector( nodes.get(i), SEL, nodes.get(i+1) );
-		}
-		return builder.build();
-	}
-	
-	private ProgramState expectedFullAbstraction(Nonterminal lhs) {
-		HeapConfiguration hc = new InternalHeapConfiguration();
-		
-		TIntArrayList nodes = new TIntArrayList();
-		NonterminalEdgeBuilder builder =  hc.builder().addNodes(TYPE, RANK, nodes)
-				.addNonterminalEdge(lhs);
-		for( int i = 0; i < RANK; i++ ){
-			builder.addTentacle( nodes.get(i) );
-		}
-		hc =  builder.build().build();
-		return new DefaultProgramState( hc );
-	}
-	
+    private Nonterminal getNonterminal() {
+
+        boolean[] isReductionTentacle = new boolean[RANK];
+        return sceneObject.scene().createNonterminal("some label", RANK, isReductionTentacle);
+    }
+
+    private HeapConfiguration getPattern1() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        HeapConfigurationBuilder builder = hc.builder().addNodes(TYPE, RANK, nodes)
+                .addSelector(nodes.get(0), SEL, nodes.get(1));
+        for (int i = 0; i < RANK; i++) {
+            builder.setExternal(nodes.get(i));
+        }
+        return builder.build();
+    }
+
+    private HeapConfiguration getPattern2() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        HeapConfigurationBuilder builder = hc.builder().addNodes(TYPE, RANK + 1, nodes)
+                .addNonterminalEdge(getNonterminal())
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addNonterminalEdge(getNonterminal())
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(2))
+                .build()
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(2));
+        return builder.build();
+    }
+
+    private HeapConfiguration getInputGraph() {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        int sizeOfChain = 10;
+
+        TIntArrayList nodes = new TIntArrayList();
+        HeapConfigurationBuilder builder = hc.builder().addNodes(TYPE, sizeOfChain + 1, nodes);
+        for (int i = 0; i < sizeOfChain; i++) {
+            builder.addSelector(nodes.get(i), SEL, nodes.get(i + 1));
+        }
+        return builder.build();
+    }
+
+    private ProgramState expectedFullAbstraction(Nonterminal lhs) {
+
+        HeapConfiguration hc = new InternalHeapConfiguration();
+
+        TIntArrayList nodes = new TIntArrayList();
+        NonterminalEdgeBuilder builder = hc.builder().addNodes(TYPE, RANK, nodes)
+                .addNonterminalEdge(lhs);
+        for (int i = 0; i < RANK; i++) {
+            builder.addTentacle(nodes.get(i));
+        }
+        hc = builder.build().build();
+        return new DefaultProgramState(hc);
+    }
+
 }

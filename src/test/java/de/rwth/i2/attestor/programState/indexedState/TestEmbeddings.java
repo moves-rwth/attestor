@@ -13,100 +13,104 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class TestEmbeddings {
-	
-	private HeapConfiguration rhs1;
-	private HeapConfiguration rhs2;
 
-	private SceneObject sceneObject;
-	private ExampleIndexedGraphFactory graphFactory;
-	private boolean aggressiveNullAbstraction;
+    private HeapConfiguration rhs1;
+    private HeapConfiguration rhs2;
 
-	@Before
-	public void init(){
+    private SceneObject sceneObject;
+    private ExampleIndexedGraphFactory graphFactory;
+    private boolean aggressiveNullAbstraction;
 
-		sceneObject = new MockupSceneObject();
-		graphFactory = new ExampleIndexedGraphFactory(sceneObject);
-		aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+    @Before
+    public void init() {
 
-		AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
-		AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");
-		
-		rhs1 = new InternalHeapConfiguration();
-		TIntArrayList nodes = new TIntArrayList();
-		rhs1 = rhs1.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
-						.setExternal( nodes.get(0))
-						.setExternal(nodes.get(1))
-						.addSelector(nodes.get(0), leftLabel, nodes.get(1))
-						.addSelector(nodes.get(0), rightLabel, nodes.get(1))
-						.build();
-		
-		Type zType = sceneObject.scene().getType("int_0");
-		AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("balancing"), "");
-		
-		rhs2 = new InternalHeapConfiguration();
-		TIntArrayList nodes2 = new TIntArrayList();
-		rhs2 = rhs2.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes2)
-						.addNodes(zType, 1, nodes2 )
-						.setExternal( nodes2.get(0))
-						.setExternal(nodes2.get(1))
-						.setExternal( nodes2.get(2) )
-						.addSelector(nodes2.get(0), leftLabel, nodes.get(1))
-						.addSelector(nodes2.get(0), rightLabel, nodes.get(1))
-						.addSelector( nodes2.get(0), balance, nodes2.get(2))
-						.build();
-	}
+        sceneObject = new MockupSceneObject();
+        graphFactory = new ExampleIndexedGraphFactory(sceneObject);
+        aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
-	@Test
-	public void testCanonizePractical() {
-		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize() );
-		input.prepareHeap();
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
-		assertTrue( checker.hasMatching() );
-	}
-	
-	@Test
-	public void testCanonizePractical2() {
-		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize2() );
-		input.prepareHeap();
-				
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
-		assertTrue( checker.hasMatching() );
-	}
-	
-	@Test
-	public void testCanonizePractical3() {
-		IndexedState input = new IndexedState( graphFactory.getInput_practicalCanonize3() );
-		input.prepareHeap();
-				
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-		        graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction
-		);
+        AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
+        AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");
 
-		assertTrue( checker.hasMatching() );
-	}
-	
-	@Test
-	public void testCanonizeWithInst() {
-		IndexedState input = new IndexedState( graphFactory.getInput_Cononize_withInstNecessary() );
-		input.prepareHeap();
-				
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
+        rhs1 = new InternalHeapConfiguration();
+        TIntArrayList nodes = new TIntArrayList();
+        rhs1 = rhs1.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .addSelector(nodes.get(0), leftLabel, nodes.get(1))
+                .addSelector(nodes.get(0), rightLabel, nodes.get(1))
+                .build();
+
+        Type zType = sceneObject.scene().getType("int_0");
+        AnnotatedSelectorLabel balance = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("balancing"), "");
+
+        rhs2 = new InternalHeapConfiguration();
+        TIntArrayList nodes2 = new TIntArrayList();
+        rhs2 = rhs2.builder().addNodes(sceneObject.scene().getType("AVLTree"), 2, nodes2)
+                .addNodes(zType, 1, nodes2)
+                .setExternal(nodes2.get(0))
+                .setExternal(nodes2.get(1))
+                .setExternal(nodes2.get(2))
+                .addSelector(nodes2.get(0), leftLabel, nodes.get(1))
+                .addSelector(nodes2.get(0), rightLabel, nodes.get(1))
+                .addSelector(nodes2.get(0), balance, nodes2.get(2))
+                .build();
+    }
+
+    @Test
+    public void testCanonizePractical() {
+
+        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize());
+        input.prepareHeap();
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
+        assertTrue(checker.hasMatching());
+    }
+
+    @Test
+    public void testCanonizePractical2() {
+
+        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize2());
+        input.prepareHeap();
+
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
+        assertTrue(checker.hasMatching());
+    }
+
+    @Test
+    public void testCanonizePractical3() {
+
+        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize3());
+        input.prepareHeap();
+
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
+                graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction
+        );
+
+        assertTrue(checker.hasMatching());
+    }
+
+    @Test
+    public void testCanonizeWithInst() {
+
+        IndexedState input = new IndexedState(graphFactory.getInput_Cononize_withInstNecessary());
+        input.prepareHeap();
+
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
                 graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
         );
 
-		assertTrue( checker.hasMatching() );
-	}
-	
-	@Test
-	public void testEmbedding5() {
-		//smaller version of testCanonizeWithInst()
-		IndexedState input = new IndexedState( graphFactory.getInput_Embedding5() );
-		input.prepareHeap();
-				
-		AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
+        assertTrue(checker.hasMatching());
+    }
+
+    @Test
+    public void testEmbedding5() {
+        //smaller version of testCanonizeWithInst()
+        IndexedState input = new IndexedState(graphFactory.getInput_Embedding5());
+        input.prepareHeap();
+
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
                 graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
         );
 
-		assertTrue( checker.hasMatching() );
-	}
+        assertTrue(checker.hasMatching());
+    }
 }

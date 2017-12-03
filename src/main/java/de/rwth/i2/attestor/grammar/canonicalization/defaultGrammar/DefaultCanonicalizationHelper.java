@@ -11,56 +11,58 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 /**
  * This class provides the methods to canonicalisation which are specific for
  * default (non-indexed) grammars.
- * 
- * @author Hannah
  *
+ * @author Hannah
  */
 public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
 
-	public final EmbeddingCheckerProvider provider;
-	
-	/**
-	 * @param provider generates a EmbeddingChecker for given graph and pattern. Responsible
-	 * to generate the correct one for given communication and semantics.
-	 */
-	public DefaultCanonicalizationHelper( EmbeddingCheckerProvider provider ) {
-		super();
-		this.provider = provider;
-	}
+    public final EmbeddingCheckerProvider provider;
 
-	@Override
-	public ProgramState tryReplaceMatching( ProgramState toAbstract, 
-			HeapConfiguration rhs, Nonterminal lhs) {
+    /**
+     * @param provider generates a EmbeddingChecker for given graph and pattern. Responsible
+     *                 to generate the correct one for given communication and semantics.
+     */
+    public DefaultCanonicalizationHelper(EmbeddingCheckerProvider provider) {
 
-		AbstractMatchingChecker checker = 
-				provider.getEmbeddingChecker(toAbstract.getHeap(), rhs);
+        super();
+        this.provider = provider;
+    }
 
-		if( checker.hasMatching() ) {
+    @Override
+    public ProgramState tryReplaceMatching(ProgramState toAbstract,
+                                           HeapConfiguration rhs, Nonterminal lhs) {
 
-			Matching embedding = checker.getMatching();
+        AbstractMatchingChecker checker =
+                provider.getEmbeddingChecker(toAbstract.getHeap(), rhs);
 
-			return replaceEmbeddingBy( toAbstract, embedding, lhs );
-		}
-		return null;
-	}
+        if (checker.hasMatching()) {
 
-	/**
-	 * replaces the embedding in  abstracted by the given nonterminal
-	 * 
-	 * @param stateToAbstract the outer graph.
-	 * @param embedding the embedding of the inner graph in the outer graph
-	 * @param nonterminal the nonterminal to replace the embedding
-	 */
-	private ProgramState replaceEmbeddingBy( ProgramState stateToAbstract, Matching embedding, Nonterminal nonterminal) {
-		HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
-		HeapConfiguration abstracted = toAbstract.clone().builder().replaceMatching( embedding, nonterminal ).build();
-		return stateToAbstract.shallowCopyWithUpdateHeap( abstracted );
-	}
+            Matching embedding = checker.getMatching();
 
-	@Override
-	public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
-		return toAbstract;
-	}
+            return replaceEmbeddingBy(toAbstract, embedding, lhs);
+        }
+        return null;
+    }
+
+    /**
+     * replaces the embedding in  abstracted by the given nonterminal
+     *
+     * @param stateToAbstract the outer graph.
+     * @param embedding       the embedding of the inner graph in the outer graph
+     * @param nonterminal     the nonterminal to replace the embedding
+     */
+    private ProgramState replaceEmbeddingBy(ProgramState stateToAbstract, Matching embedding, Nonterminal nonterminal) {
+
+        HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
+        HeapConfiguration abstracted = toAbstract.clone().builder().replaceMatching(embedding, nonterminal).build();
+        return stateToAbstract.shallowCopyWithUpdateHeap(abstracted);
+    }
+
+    @Override
+    public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
+
+        return toAbstract;
+    }
 
 
 }

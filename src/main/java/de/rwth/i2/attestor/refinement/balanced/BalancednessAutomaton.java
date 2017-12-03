@@ -34,6 +34,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
     private BalancednessHelper helper;
 
     public BalancednessAutomaton(SceneObject sceneObject, Grammar grammar) {
+
         super(sceneObject);
         this.grammar = grammar;
         SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
@@ -51,7 +52,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         IndexedState state = new IndexedState(heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
-        if(countSelectorEdges(heapConfiguration) > 1) {
+        if (countSelectorEdges(heapConfiguration) > 1) {
             return Collections.emptySet();
         }
 
@@ -59,20 +60,20 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
         int pFound = 0;
         int btFound = 0;
-        while(iter.hasNext()) {
-           int edge = iter.next();
-           String label = heapConfiguration.labelOf(edge).getLabel();
-           switch (label) {
-               case "P":
-                   ++pFound;
-                   break;
-               case "BT":
-                   ++btFound;
-                   break;
-           }
+        while (iter.hasNext()) {
+            int edge = iter.next();
+            String label = heapConfiguration.labelOf(edge).getLabel();
+            switch (label) {
+                case "P":
+                    ++pFound;
+                    break;
+                case "BT":
+                    ++btFound;
+                    break;
+            }
         }
 
-        if(btFound == 1 && pFound <= 1) {
+        if (btFound == 1 && pFound <= 1) {
             return Collections.singleton("{ btree }");
         } else {
             return Collections.emptySet();
@@ -88,16 +89,17 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+
         CanonicalizationHelper canonicalizationHelper;
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-        IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
         EmbeddingIndexChecker indexChecker =
-                new EmbeddingIndexChecker( indexMatcher,
-                        materializer );
+                new EmbeddingIndexChecker(indexMatcher,
+                        materializer);
 
-        canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
+        canonicalizationHelper = new IndexedCanonicalizationHelper(indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
     }
 
@@ -105,19 +107,19 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
 
         Set<String> nullPointerGuards = new HashSet<>();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            if(lhs instanceof IndexedNonterminal) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if (lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
-                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                if (iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
 
                         TIntIterator iter = rhs.nodes().iterator();
-                        while(iter.hasNext()) {
+                        while (iter.hasNext()) {
                             int node = iter.next();
-                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+                            for (SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == Types.NULL) {
+                                if (rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }
@@ -135,7 +137,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         heapConfiguration = heapConfiguration.clone();
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int varEdge = iter.next();
             builder.removeVariableEdge(varEdge);
         }
@@ -146,7 +148,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
 
         int count = 0;
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             count += heapConfiguration.selectorLabelsOf(node).size();
         }

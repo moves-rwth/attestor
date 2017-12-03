@@ -21,15 +21,17 @@ import java.util.Set;
 
 public class CounterexampleGenerationPhase extends AbstractPhase implements CounterexampleTransformer {
 
-    private ModelCheckingResultsTransformer modelCheckingResults;
     private final Map<LTLFormula, HeapConfiguration> counterexamples = new HashMap<>();
+    private ModelCheckingResultsTransformer modelCheckingResults;
 
     public CounterexampleGenerationPhase(Scene scene) {
+
         super(scene);
     }
 
     @Override
     public String getName() {
+
         return "Counterexample generation";
     }
 
@@ -37,17 +39,17 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     protected void executePhase() {
 
         modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
-        for(Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
-            if(!result.getValue()) {
+        for (Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
+            if (!result.getValue()) {
                 LTLFormula formula = result.getKey();
                 Trace trace = modelCheckingResults.getTraceOf(formula);
-                if(trace == null) {
+                if (trace == null) {
                     continue;
                 }
 
                 try {
                     checkCounterexample(formula, trace);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     logger.error("Could not construct a non-spurious counterexample for formula:");
                     logger.error(formula);
                 }
@@ -82,13 +84,13 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     @Override
     public void logSummary() {
 
-        if(counterexamples.isEmpty()) {
+        if (counterexamples.isEmpty()) {
             return;
         }
 
         logSum("Detected counterexamples for:");
         logSum("+-------------------------------------------------------------------+");
-        for(Map.Entry<LTLFormula, HeapConfiguration> result : counterexamples.entrySet()) {
+        for (Map.Entry<LTLFormula, HeapConfiguration> result : counterexamples.entrySet()) {
             logSum(String.format("|  %s", result.getKey().getFormulaString()));
             logSum("| Trace is " + modelCheckingResults.getTraceOf(result.getKey()).getStateIdTrace());
             logger.info(result.getValue());
@@ -99,17 +101,20 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
     @Override
     public boolean isVerificationPhase() {
+
         return false;
     }
 
     @Override
     public Set<LTLFormula> getFormulasWithCounterexamples() {
+
         return counterexamples.keySet();
     }
 
     @Override
     public HeapConfiguration getInputOf(LTLFormula formula) {
-        if(counterexamples.containsKey(formula)) {
+
+        if (counterexamples.containsKey(formula)) {
             return counterexamples.get(formula);
         }
         throw new IllegalArgumentException("No counterexample input for given formula exists.");

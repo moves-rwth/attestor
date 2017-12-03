@@ -31,65 +31,66 @@ import static org.junit.Assert.*;
 public class InvokeStmtTest_WithEffect {
 
 
-	private SceneObject sceneObject;
-	private ExampleHcImplFactory hcFactory;
+    private SceneObject sceneObject;
+    private ExampleHcImplFactory hcFactory;
 
-	private DefaultProgramState testInput;
-	private HeapConfiguration expectedHeap;
-	private InvokeStmt stmt;
+    private DefaultProgramState testInput;
+    private HeapConfiguration expectedHeap;
+    private InvokeStmt stmt;
 
-	@Before
-	public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
-		sceneObject = new MockupSceneObject();
-		hcFactory = new ExampleHcImplFactory(sceneObject);
+        sceneObject = new MockupSceneObject();
+        hcFactory = new ExampleHcImplFactory(sceneObject);
 
-		testInput = new DefaultProgramState( hcFactory.getInput_InvokeWithEffect() );
-		testInput.prepareHeap();
-		
-		DefaultProgramState expectedState = new DefaultProgramState( hcFactory.getExpectedResult_InvokeWithEffect() );
-		expectedState.prepareHeap();
-		expectedHeap = expectedState.getHeap();
-		
-		Type type = sceneObject.scene().getType("List");
-		SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
+        testInput = new DefaultProgramState(hcFactory.getInput_InvokeWithEffect());
+        testInput.prepareHeap();
 
-		type.addSelectorLabel(next, Constants.NULL);
-		Local varX = new Local(type, "x");
-		Local varY = new Local(type, "y");
-		Field nextOfX = new Field(type, varX, next);
-		Field nextOfY = new Field(type, varY, next);
-		
-		AbstractMethod method = new IpaAbstractMethod(sceneObject,"method");
-		List<Semantics> methodBody = new ArrayList<>();
-		methodBody.add( new IdentityStmt(sceneObject,1, varY, "@parameter0:"));
-		
-		HashSet<String> liveVariables = new HashSet<>();	
-		methodBody.add( new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
-		methodBody.add( new ReturnValueStmt(sceneObject, varY, type) );
-		method.setControlFlow( methodBody );
-		
-		StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
-		stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);
-		
-	}
+        DefaultProgramState expectedState = new DefaultProgramState(hcFactory.getExpectedResult_InvokeWithEffect());
+        expectedState.prepareHeap();
+        expectedHeap = expectedState.getHeap();
 
-	@Test
-	public void testComputeSuccessors() {
-		try {
-			Set<ProgramState> resStates = stmt.computeSuccessors( testInput, new MockupSymbolicExecutionObserver(sceneObject) );
-			assertEquals( 1, resStates.size() );
-			assertEquals( expectedHeap, resStates.iterator().next().getHeap() );
-		} catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-			e.printStackTrace();
-			fail( "unexpected exception");
-		}
-	}
+        Type type = sceneObject.scene().getType("List");
+        SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
 
-	@Test
-	public void testNeedsMaterialization() {
+        type.addSelectorLabel(next, Constants.NULL);
+        Local varX = new Local(type, "x");
+        Local varY = new Local(type, "y");
+        Field nextOfX = new Field(type, varX, next);
+        Field nextOfY = new Field(type, varY, next);
 
-		assertTrue( stmt.needsMaterialization(testInput) );
-	}
+        AbstractMethod method = new IpaAbstractMethod(sceneObject, "method");
+        List<Semantics> methodBody = new ArrayList<>();
+        methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));
+
+        HashSet<String> liveVariables = new HashSet<>();
+        methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
+        methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
+        method.setControlFlow(methodBody);
+
+        StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
+        stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);
+
+    }
+
+    @Test
+    public void testComputeSuccessors() {
+
+        try {
+            Set<ProgramState> resStates = stmt.computeSuccessors(testInput, new MockupSymbolicExecutionObserver(sceneObject));
+            assertEquals(1, resStates.size());
+            assertEquals(expectedHeap, resStates.iterator().next().getHeap());
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            e.printStackTrace();
+            fail("unexpected exception");
+        }
+    }
+
+    @Test
+    public void testNeedsMaterialization() {
+
+        assertTrue(stmt.needsMaterialization(testInput));
+    }
 
 }

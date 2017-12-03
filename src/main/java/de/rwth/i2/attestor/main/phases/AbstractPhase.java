@@ -9,18 +9,17 @@ import org.apache.logging.log4j.Logger;
 public abstract class AbstractPhase extends SceneObject {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
-
+    private int phaseId;
+    private PhaseRegistry registry;
+    private long startTime;
+    private long finishTime;
     public AbstractPhase(Scene scene) {
+
         super(scene);
     }
 
-    private int phaseId;
-    private PhaseRegistry registry;
-
-    private long startTime;
-    private long finishTime;
-
     protected void register(int phaseId, PhaseRegistry registry) {
+
         this.phaseId = phaseId;
         this.registry = registry;
     }
@@ -33,6 +32,7 @@ public abstract class AbstractPhase extends SceneObject {
     }
 
     protected <T> T getPhase(Class<T> phaseType) {
+
         return registry.getMostRecentPhase(phaseId, phaseType);
     }
 
@@ -50,21 +50,24 @@ public abstract class AbstractPhase extends SceneObject {
             executePhase();
             finishTime = System.nanoTime();
             logSuccess();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logFail(e);
         }
     }
 
     private void logStart() {
-        logger.debug(getName() +  " started.");
+
+        logger.debug(getName() + " started.");
     }
 
 
     private void logSuccess() {
+
         logger.debug(getName() + " finished.");
     }
 
     private void logFail(Exception e) {
+
         logger.fatal(getName() + " failed.");
         logger.fatal(e.getMessage());
         e.printStackTrace();

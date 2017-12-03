@@ -20,15 +20,17 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
     private final Set<SelectorLabel> trackedSelectorLabels;
 
     public ReachabilityHeapAutomaton(SceneObject sceneObject) {
+
         super(sceneObject);
         trackedSelectorLabels = Collections.emptySet();
     }
 
     public ReachabilityHeapAutomaton(SceneObject sceneObject, Set<String> allowedSelectorLabels) {
+
         super(sceneObject);
 
         trackedSelectorLabels = new HashSet<>(allowedSelectorLabels.size());
-        for(String label : allowedSelectorLabels) {
+        for (String label : allowedSelectorLabels) {
             trackedSelectorLabels.add(scene().getSelectorLabel(label));
         }
     }
@@ -48,7 +50,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
 
         heapConfiguration = heapConfiguration.clone();
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        for(int i=0; i < statesOfNonterminals.size(); i++) {
+        for (int i = 0; i < statesOfNonterminals.size(); i++) {
             ReachabilityAutomatonState state = (ReachabilityAutomatonState) statesOfNonterminals.get(i);
             int edge = ntEdges.get(i);
             heapConfiguration.builder().replaceNonterminalEdge(edge, state.kernel);
@@ -143,7 +145,7 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
 
         Set<String> result = new HashSet<>();
         TIntArrayList variables = kernel.variableEdges();
-        for(int i=0; i < variables.size(); i++) {
+        for (int i = 0; i < variables.size(); i++) {
             int var = variables.get(i);
             String varName = kernel.nameOf(var);
 
@@ -151,14 +153,14 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
 
             int varFrom = kernel.targetOf(var);
             TIntIterator iter = kernel.successorNodesOf(varFrom).iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 int to = iter.next();
                 TIntArrayList attVars = kernel.attachedVariablesOf(to);
-                for(int j=0; j < attVars.size(); j++) {
+                for (int j = 0; j < attVars.size(); j++) {
                     String toName = kernel.nameOf(attVars.get(j));
                     toName = VariableScopes.getName(toName);
 
-                    if(trackedSelectorLabels.isEmpty()) {
+                    if (trackedSelectorLabels.isEmpty()) {
                         result.add("{ isReachable(" + varName + "," + toName + ") }");
                     } else {
                         result.add("{ isReachable(" + varName + "," + toName
@@ -175,10 +177,10 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
 
         StringBuilder result = new StringBuilder();
         TIntArrayList nodes = kernel.nodes();
-        for(int i=0; i < nodes.size(); i++) {
+        for (int i = 0; i < nodes.size(); i++) {
             int u = nodes.get(i);
             TIntIterator iter = kernel.successorNodesOf(u).iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 int v = iter.next();
                 result.append("(");
                 result.append(u);
@@ -199,15 +201,15 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
     @Override
     public boolean equals(Object otherObject) {
 
-        if(otherObject == this) {
+        if (otherObject == this) {
             return true;
         }
 
-        if(otherObject == null) {
+        if (otherObject == null) {
             return false;
         }
 
-        if(otherObject.getClass() != ReachabilityAutomatonState.class) {
+        if (otherObject.getClass() != ReachabilityAutomatonState.class) {
             return false;
         }
 
@@ -229,21 +231,18 @@ class ReachabilityHelper {
      * nodes shall be computed.
      */
     private final HeapConfiguration heapConfiguration;
-
+    private final Set<SelectorLabel> trackedSelectorLabels;
     /**
      * Stores the set of reachable nodes for each node
      * in heapConfiguration.
      */
     private Map<Integer, TIntSet> reachableNodes;
-
     /**
      * True if and only if the reachableNodes have changed during
      * the last iteration of the fixpoint computation used to
      * determine all reachable nodes.
      */
     private boolean hasChanged;
-
-    private final Set<SelectorLabel> trackedSelectorLabels;
 
     /**
      * @param heapConfiguration The heap configuration whose reachable nodes
@@ -266,7 +265,7 @@ class ReachabilityHelper {
         int size = heapConfiguration.countNodes();
         reachableNodes = new HashMap<>(size);
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             TIntArrayList successors = getSuccessors(node);
             TIntSet reachable = new TIntHashSet(successors);
@@ -276,14 +275,14 @@ class ReachabilityHelper {
 
     private TIntArrayList getSuccessors(int node) {
 
-        if(trackedSelectorLabels.isEmpty()) {
+        if (trackedSelectorLabels.isEmpty()) {
             return heapConfiguration.successorNodesOf(node);
         }
 
         List<SelectorLabel> selectorLabels = heapConfiguration.selectorLabelsOf(node);
         TIntArrayList result = new TIntArrayList(selectorLabels.size());
-        for(SelectorLabel label : selectorLabels) {
-            if(trackedSelectorLabels.contains(label) || label.getLabel().startsWith("@")) {
+        for (SelectorLabel label : selectorLabels) {
+            if (trackedSelectorLabels.contains(label) || label.getLabel().startsWith("@")) {
                 int target = heapConfiguration.selectorTargetOf(node, label);
                 if (target != HeapConfiguration.INVALID_ELEMENT) {
                     result.add(target);
@@ -302,7 +301,7 @@ class ReachabilityHelper {
         do {
             hasChanged = false;
             updateReachableNodes();
-        } while(hasChanged);
+        } while (hasChanged);
     }
 
     /**
@@ -314,16 +313,16 @@ class ReachabilityHelper {
     private void updateReachableNodes() {
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             TIntSet successors = reachableNodes.get(node);
             TIntSet update = new TIntHashSet();
             TIntIterator succIter = successors.iterator();
-            while(succIter.hasNext()) {
+            while (succIter.hasNext()) {
                 int succ = succIter.next();
                 update.addAll(getSuccessors(succ));
             }
-            if(!successors.containsAll(update)) {
+            if (!successors.containsAll(update)) {
                 hasChanged = true;
                 successors.addAll(update);
             }
@@ -332,8 +331,9 @@ class ReachabilityHelper {
 
     /**
      * Checks whether the node 'to' is reachable from the node 'from'.
+     *
      * @param from The source node.
-     * @param to The node that should be reached.
+     * @param to   The node that should be reached.
      * @return True if and only if node 'to' is reachable from node 'from'.
      */
     boolean isReachable(int from, int to) {

@@ -11,14 +11,16 @@ public class MockupTrace implements Trace {
     private List<ProgramState> states = new ArrayList<>();
 
     MockupTrace addState(ProgramState state) {
+
         states.add(state);
         return this;
     }
 
     @Override
     public List<Integer> getStateIdTrace() {
+
         List<Integer> result = new ArrayList<>();
-        for(ProgramState s : states) {
+        for (ProgramState s : states) {
             result.add(s.getStateSpaceId());
         }
         return result;
@@ -26,41 +28,47 @@ public class MockupTrace implements Trace {
 
     @Override
     public ProgramState getInitialState() {
+
         return states.get(0);
     }
 
     @Override
     public ProgramState getFinalState() {
-        return states.get(states.size()-1);
+
+        return states.get(states.size() - 1);
     }
 
     @Override
     public int size() {
+
         return states.size();
     }
 
     @Override
     public ProgramState getSuccessor(ProgramState state) {
 
-       int index = states.indexOf(state);
-       if(index < size()) {
-           return states.get(index+1);
-       }
-       return null;
+        int index = states.indexOf(state);
+        if (index < size()) {
+            return states.get(index + 1);
+        }
+        return null;
     }
 
     @Override
     public boolean containsSubsumingState(ProgramState state) {
+
         return states.contains(state);
     }
 
     @Override
     public boolean isEmpty() {
+
         return states.isEmpty();
     }
 
     @Override
     public Iterator<ProgramState> iterator() {
+
         return states.iterator();
     }
 }

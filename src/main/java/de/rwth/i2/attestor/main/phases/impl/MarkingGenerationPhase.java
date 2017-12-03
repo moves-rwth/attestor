@@ -35,6 +35,7 @@ public class MarkingGenerationPhase extends AbstractPhase
     private AutomatonStateLabelingStrategy stateLabelingStrategy;
 
     public MarkingGenerationPhase(Scene scene) {
+
         super(scene);
     }
 
@@ -52,7 +53,7 @@ public class MarkingGenerationPhase extends AbstractPhase
         Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();
 
         StateLabelingStrategyBuilderTransformer prev = getPhase(StateLabelingStrategyBuilderTransformer.class);
-        if(prev == null) {
+        if (prev == null) {
             stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
         } else {
             stateLabelingStrategyBuilder = prev.getStrategy();
@@ -66,43 +67,43 @@ public class MarkingGenerationPhase extends AbstractPhase
         boolean requiresNeighbourhoodMarking = false;
 
 
-        for(String s : requiredAPs) {
+        for (String s : requiredAPs) {
 
-            if(requiresNeighbourhoodMarking && requiresVisitedMarking) {
+            if (requiresNeighbourhoodMarking && requiresVisitedMarking) {
                 break;
             }
 
-            if(!requiresVisitedMarking && s.equals("visited")) {
+            if (!requiresVisitedMarking && s.equals("visited")) {
                 requiresVisitedMarking = true;
             }
 
-            if(visitedByPattern.matcher(s).matches()) {
+            if (visitedByPattern.matcher(s).matches()) {
                 String varName = s.split("[\\(\\)]")[1];
                 scene().options().addKeptVariable(varName);
                 requiresVisitedByMarking = true;
             }
 
-            if(!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
+            if (!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
                 requiresNeighbourhoodMarking = true;
             }
         }
 
         Marking marking = null;
-        if(requiresVisitedMarking || requiresVisitedByMarking) {
+        if (requiresVisitedMarking || requiresVisitedByMarking) {
             logger.info("Computing marked inputs to track visited identities...");
             marking = new Marking("visited");
             markInputs(marking);
         }
 
-        if(requiresVisitedMarking) {
+        if (requiresVisitedMarking) {
             stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton(marking));
         }
 
-        if(requiresVisitedByMarking) {
+        if (requiresVisitedByMarking) {
             stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton(marking));
         }
 
-        if(requiresNeighbourhoodMarking) {
+        if (requiresNeighbourhoodMarking) {
             logger.info("Computing marked inputs to track neighbourhood identities...");
             marking = new Marking("neighbourhood", true);
             markInputs(marking);
@@ -115,11 +116,11 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
         List<HeapConfiguration> newInputs = new ArrayList<>();
-        for(HeapConfiguration input : inputs) {
+        for (HeapConfiguration input : inputs) {
             MarkedHcGenerator generator = new MarkedHcGenerator(this, input, grammar, marking);
             newInputs.addAll(generator.getMarkedHcs());
         }
-        if(newInputs.isEmpty()) {
+        if (newInputs.isEmpty()) {
             throw new IllegalStateException("No marked heap configurations could be computed.");
         }
         inputs = newInputs;

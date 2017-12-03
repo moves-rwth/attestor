@@ -37,148 +37,152 @@ import static org.hamcrest.Matchers.contains;
 
 public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
-	private static final boolean[] REDUCTION_TENTACLEs = new boolean[] {false,false};
-	private static final int RANK = 2;
-	private static final String LABEL = "TestDifferentSymbols";
-	private static final String VIOLATION_POINT_VARIABLE = "x";
-	MaterializationStrategy materializer;
-	AbstractIndexSymbol oneAbstractSymbol;
-	AbstractIndexSymbol otherAbstractSymbol;
-	private static final String VIOLATION_POINT_SELECTOR = "next";
-
-	SceneObject sceneObject;
-
+    private static final boolean[] REDUCTION_TENTACLEs = new boolean[]{false, false};
+    private static final int RANK = 2;
+    private static final String LABEL = "TestDifferentSymbols";
+    private static final String VIOLATION_POINT_VARIABLE = "x";
+    private static final String VIOLATION_POINT_SELECTOR = "next";
+    MaterializationStrategy materializer;
+    AbstractIndexSymbol oneAbstractSymbol;
+    AbstractIndexSymbol otherAbstractSymbol;
+    SceneObject sceneObject;
 
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
 
-		sceneObject = new MockupSceneObject();
+        sceneObject = new MockupSceneObject();
 
-		oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
-		otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
-		Grammar grammar = buildSimpleGrammarWithTwoIndicesGrammars();
-		ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
-		IndexMatcher indexMatcher = new IndexMatcher( new DefaultIndexMaterialization() );
-		IndexedMaterializationRuleManager grammarManager = 
-				new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
-		
-		IndexedGrammarResponseApplier ruleApplier = 
-				new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(), new GraphMaterializer() );
-		
-		materializer = new GeneralMaterializationStrategy( grammarManager, ruleApplier );
-	}
+        oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
+        otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
+        Grammar grammar = buildSimpleGrammarWithTwoIndicesGrammars();
+        ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
+        IndexMatcher indexMatcher = new IndexMatcher(new DefaultIndexMaterialization());
+        IndexedMaterializationRuleManager grammarManager =
+                new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
 
+        IndexedGrammarResponseApplier ruleApplier =
+                new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(), new GraphMaterializer());
 
-
-	@Test
-	public void test() {
-		ViolationPoints inputViolationPoint = new ViolationPoints();
-		inputViolationPoint.add(VIOLATION_POINT_VARIABLE, VIOLATION_POINT_SELECTOR );
-		
-
-		HeapConfiguration inputGraph = getInput();
-		ProgramState inputState = new IndexedState(inputGraph).prepareHeap();
-		
-		HeapConfiguration expectedGraph = getExpected();
-		ProgramState expectedState = new IndexedState(expectedGraph).prepareHeap();
-		
-		Collection<ProgramState> result = materializer.materialize(inputState, inputViolationPoint);
-		
-		assertThat( result, contains( expectedState) );
-		
-	}
+        materializer = new GeneralMaterializationStrategy(grammarManager, ruleApplier);
+    }
 
 
-	private HeapConfiguration getInput() {
-		Type someType = sceneObject.scene().getType("type");
+    @Test
+    public void test() {
 
-		List<IndexSymbol> indexWithOneIndexSymbol = SingleElementUtil.createList( oneAbstractSymbol );
-		Nonterminal toReplace = getNonterminalWithIndex(indexWithOneIndexSymbol);
-		Nonterminal controlWithSameIndex = getNonterminalWithIndex(indexWithOneIndexSymbol);
-		Nonterminal controlWithOtherIndex = getNonterminalWithIndex( SingleElementUtil.createList( otherAbstractSymbol) );
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return new InternalHeapConfiguration().builder()
-				.addNodes(someType, 4, nodes)
-				.addVariableEdge(VIOLATION_POINT_VARIABLE, nodes.get(0) )
-				.addNonterminalEdge(toReplace)
-					.addTentacle(nodes.get(0))
-					.addTentacle(nodes.get(1))
-					.build()
-				.addNonterminalEdge(controlWithSameIndex)
-					.addTentacle(nodes.get(2))
-					.addTentacle(nodes.get(3))
-					.build()
-				.addNonterminalEdge(controlWithOtherIndex)
-					.addTentacle(nodes.get(2))
-					.addTentacle(nodes.get(3))
-					.build()
-				.build();
-	}
-	
-	private HeapConfiguration getExpected() {
-		Type someType = sceneObject.scene().getType("type");
-		SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
-		
-		List<IndexSymbol> materializedIndex = indexForLhs();
-		materializedIndex.add(oneAbstractSymbol);
-		Nonterminal controlWithSameIndex = getNonterminalWithIndex( materializedIndex );
-		Nonterminal controlWithOtherIndex = getNonterminalWithIndex( SingleElementUtil.createList( otherAbstractSymbol) );
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return new InternalHeapConfiguration().builder()
-				.addNodes(someType, 4, nodes)
-				.addVariableEdge(VIOLATION_POINT_VARIABLE, nodes.get(0) )
-				.addSelector(nodes.get(0), selectorLabel, nodes.get(1))
-				.addNonterminalEdge(controlWithSameIndex)
-					.addTentacle(nodes.get(2))
-					.addTentacle(nodes.get(3))
-					.build()
-				.addNonterminalEdge(controlWithOtherIndex)
-					.addTentacle(nodes.get(2))
-					.addTentacle(nodes.get(3))
-					.build()
-				.build();
-	}
+        ViolationPoints inputViolationPoint = new ViolationPoints();
+        inputViolationPoint.add(VIOLATION_POINT_VARIABLE, VIOLATION_POINT_SELECTOR);
 
 
+        HeapConfiguration inputGraph = getInput();
+        ProgramState inputState = new IndexedState(inputGraph).prepareHeap();
 
-	private Grammar buildSimpleGrammarWithTwoIndicesGrammars() {
-		return Grammar.builder()
-				.addRule( getNonterminalWithIndexVariable(), someRhs() )
-				.build();
-	}
+        HeapConfiguration expectedGraph = getExpected();
+        ProgramState expectedState = new IndexedState(expectedGraph).prepareHeap();
+
+        Collection<ProgramState> result = materializer.materialize(inputState, inputViolationPoint);
+
+        assertThat(result, contains(expectedState));
+
+    }
 
 
-	private List<IndexSymbol> indexForLhs(){
-		List<IndexSymbol> index = new ArrayList<>();
-		index.add( ConcreteIndexSymbol.getIndexSymbol("s", true) );
-		return index;
-	}
-	
-	private Nonterminal getNonterminalWithIndexVariable() {
-		List<IndexSymbol> index = indexForLhs();
-		index.add( IndexVariable.getIndexVariable() );
-		return getNonterminalWithIndex( index );
-	}
-	
-	private Nonterminal getNonterminalWithIndex( List<IndexSymbol> index ) {
-		Nonterminal bnt = sceneObject.scene().createNonterminal(LABEL, RANK, REDUCTION_TENTACLEs);
-		return new IndexedNonterminalImpl(bnt, index);
-	}
-	
-	private HeapConfiguration someRhs() {
-		Type someType = sceneObject.scene().getType("type");
-		SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
-		
-		TIntArrayList nodes = new TIntArrayList();
-		return new InternalHeapConfiguration().builder()
-				.addNodes(someType, 2, nodes)
-				.setExternal(nodes.get(0))
-				.setExternal(nodes.get(1))
-				.addSelector(nodes.get(0), selectorLabel, nodes.get(1))
-				.build();		
-	}
-	
+    private HeapConfiguration getInput() {
+
+        Type someType = sceneObject.scene().getType("type");
+
+        List<IndexSymbol> indexWithOneIndexSymbol = SingleElementUtil.createList(oneAbstractSymbol);
+        Nonterminal toReplace = getNonterminalWithIndex(indexWithOneIndexSymbol);
+        Nonterminal controlWithSameIndex = getNonterminalWithIndex(indexWithOneIndexSymbol);
+        Nonterminal controlWithOtherIndex = getNonterminalWithIndex(SingleElementUtil.createList(otherAbstractSymbol));
+
+        TIntArrayList nodes = new TIntArrayList();
+        return new InternalHeapConfiguration().builder()
+                .addNodes(someType, 4, nodes)
+                .addVariableEdge(VIOLATION_POINT_VARIABLE, nodes.get(0))
+                .addNonterminalEdge(toReplace)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addNonterminalEdge(controlWithSameIndex)
+                .addTentacle(nodes.get(2))
+                .addTentacle(nodes.get(3))
+                .build()
+                .addNonterminalEdge(controlWithOtherIndex)
+                .addTentacle(nodes.get(2))
+                .addTentacle(nodes.get(3))
+                .build()
+                .build();
+    }
+
+    private HeapConfiguration getExpected() {
+
+        Type someType = sceneObject.scene().getType("type");
+        SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
+
+        List<IndexSymbol> materializedIndex = indexForLhs();
+        materializedIndex.add(oneAbstractSymbol);
+        Nonterminal controlWithSameIndex = getNonterminalWithIndex(materializedIndex);
+        Nonterminal controlWithOtherIndex = getNonterminalWithIndex(SingleElementUtil.createList(otherAbstractSymbol));
+
+        TIntArrayList nodes = new TIntArrayList();
+        return new InternalHeapConfiguration().builder()
+                .addNodes(someType, 4, nodes)
+                .addVariableEdge(VIOLATION_POINT_VARIABLE, nodes.get(0))
+                .addSelector(nodes.get(0), selectorLabel, nodes.get(1))
+                .addNonterminalEdge(controlWithSameIndex)
+                .addTentacle(nodes.get(2))
+                .addTentacle(nodes.get(3))
+                .build()
+                .addNonterminalEdge(controlWithOtherIndex)
+                .addTentacle(nodes.get(2))
+                .addTentacle(nodes.get(3))
+                .build()
+                .build();
+    }
+
+
+    private Grammar buildSimpleGrammarWithTwoIndicesGrammars() {
+
+        return Grammar.builder()
+                .addRule(getNonterminalWithIndexVariable(), someRhs())
+                .build();
+    }
+
+
+    private List<IndexSymbol> indexForLhs() {
+
+        List<IndexSymbol> index = new ArrayList<>();
+        index.add(ConcreteIndexSymbol.getIndexSymbol("s", true));
+        return index;
+    }
+
+    private Nonterminal getNonterminalWithIndexVariable() {
+
+        List<IndexSymbol> index = indexForLhs();
+        index.add(IndexVariable.getIndexVariable());
+        return getNonterminalWithIndex(index);
+    }
+
+    private Nonterminal getNonterminalWithIndex(List<IndexSymbol> index) {
+
+        Nonterminal bnt = sceneObject.scene().createNonterminal(LABEL, RANK, REDUCTION_TENTACLEs);
+        return new IndexedNonterminalImpl(bnt, index);
+    }
+
+    private HeapConfiguration someRhs() {
+
+        Type someType = sceneObject.scene().getType("type");
+        SelectorLabel selectorLabel = sceneObject.scene().getSelectorLabel(VIOLATION_POINT_SELECTOR);
+
+        TIntArrayList nodes = new TIntArrayList();
+        return new InternalHeapConfiguration().builder()
+                .addNodes(someType, 2, nodes)
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .addSelector(nodes.get(0), selectorLabel, nodes.get(1))
+                .build();
+    }
+
 }

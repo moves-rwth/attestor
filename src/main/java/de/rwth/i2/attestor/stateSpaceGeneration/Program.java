@@ -19,116 +19,129 @@ import java.util.Set;
  */
 public class Program {
 
-	/**
-	 * The internal representation of the program as a list of program statements.
-	 * The position in the lost corresponds to the value of the program counter.
-	 */
-	private final List<Semantics> program;
+    /**
+     * The internal representation of the program as a list of program statements.
+     * The position in the lost corresponds to the value of the program counter.
+     */
+    private final List<Semantics> program;
 
-	public static ProgramBuilder builder() {
-		return new ProgramBuilder();
-	}
+    /**
+     * Initialize this program.
+     *
+     * @param program The list of statements that make up this program.
+     */
+    public Program(List<Semantics> program) {
 
-	/**
-	 * @return The first statement upon execution of the program.
-	 */
-	public Semantics getEnterPoint(){
-		return program.get( 0 );
-	}
+        this.program = program;
+
+        updateCanonicalizationPermission();
+    }
+
+    private Program() {
+
+        program = new ArrayList<>();
+    }
+
+    public static ProgramBuilder builder() {
+
+        return new ProgramBuilder();
+    }
+
+    /**
+     * @return The first statement upon execution of the program.
+     */
+    public Semantics getEnterPoint() {
+
+        return program.get(0);
+    }
 
     /**
      * @return The initial value of the program counter upon execution of the program.
      */
-	public int getEnterPC(){
-		return 0;
-	}
+    public int getEnterPC() {
+
+        return 0;
+    }
 
     /**
      * @param programCounter A program counter.
      * @return The programs statement corresponding to the given program counter.
      */
-	public Semantics getStatement( int programCounter ){
-		if( isExit( programCounter ) ){
-			return new TerminalStatement();
-		}
-		return program.get( programCounter );
-	}
+    public Semantics getStatement(int programCounter) {
 
-    /**
-     * Initialize this program.
-     * @param program The list of statements that make up this program.
-     */
-	public Program( List<Semantics> program ){
-		this.program = program;
-		
-		updateCanonicalizationPermission();
-	}
-
-	private Program() {
-		program = new ArrayList<>();
-	}
+        if (isExit(programCounter)) {
+            return new TerminalStatement();
+        }
+        return program.get(programCounter);
+    }
 
     /**
      * Determines the program locations at which canonicalization should be performed.
      * These locations correspond to locations that have at least two ingoing edges
      * in the underlying control flow graph.
      */
-	private void updateCanonicalizationPermission() {
-		
-		TIntArrayList incoming = new TIntArrayList(program.size());
-		for(int i=0; i < program.size(); i++) {
-			incoming.add(0);
-		}
+    private void updateCanonicalizationPermission() {
 
-		for (Semantics aProgram : program) {
+        TIntArrayList incoming = new TIntArrayList(program.size());
+        for (int i = 0; i < program.size(); i++) {
+            incoming.add(0);
+        }
 
-			Set<Integer> out = aProgram.getSuccessorPCs();
-			for (Integer pc : out) {
+        for (Semantics aProgram : program) {
 
-				if (pc >= 0) {
-					int inc = incoming.get(pc) + 1;
-					incoming.set(pc, inc);
-				}
-			}
-		}
-		
-		for(int i=0; i < program.size(); i++) {
+            Set<Integer> out = aProgram.getSuccessorPCs();
+            for (Integer pc : out) {
 
-			Semantics s = program.get(i);
+                if (pc >= 0) {
+                    int inc = incoming.get(pc) + 1;
+                    incoming.set(pc, inc);
+                }
+            }
+        }
 
-			boolean isReturn = s instanceof ReturnValueStmt || s instanceof ReturnVoidStmt;
-			boolean isInvoke = s instanceof AssignInvoke || s instanceof InvokeStmt;
-			program.get(i).setPermitCanonicalization( (incoming.get(i) > 1) || isReturn || isInvoke );
-		}
-		
-	}
+        for (int i = 0; i < program.size(); i++) {
+
+            Semantics s = program.get(i);
+
+            boolean isReturn = s instanceof ReturnValueStmt || s instanceof ReturnVoidStmt;
+            boolean isInvoke = s instanceof AssignInvoke || s instanceof InvokeStmt;
+            program.get(i).setPermitCanonicalization((incoming.get(i) > 1) || isReturn || isInvoke);
+        }
+
+    }
 
     /**
      * Checks whether the given program location leads to termination of the program.
+     *
      * @param programCounter A value of the program counter.
      * @return True if and only of the program location corresponding to programCounter does not correspond to
-     *         another statement of the program, i.e. we terminate.
+     * another statement of the program, i.e. we terminate.
      */
-	private boolean isExit(int programCounter){
-		return programCounter >= program.size() || programCounter < 0;
-	}
+    private boolean isExit(int programCounter) {
 
-	public final static class ProgramBuilder {
-		private Program program = new Program();
+        return programCounter >= program.size() || programCounter < 0;
+    }
 
-		protected ProgramBuilder() {
-		}
+    public final static class ProgramBuilder {
 
-		public Program build() {
-			assert !program.program.isEmpty();
-			Program result = program;
-			program = null;
-			return result;
-		}
+        private Program program = new Program();
 
-		public ProgramBuilder addStatement(Semantics semantics) {
-			program.program.add(semantics);
-			return this;
-		}
-	}
+        protected ProgramBuilder() {
+
+        }
+
+        public Program build() {
+
+            assert !program.program.isEmpty();
+            Program result = program;
+            program = null;
+            return result;
+        }
+
+        public ProgramBuilder addStatement(Semantics semantics) {
+
+            program.program.add(semantics);
+            return this;
+        }
+    }
 }

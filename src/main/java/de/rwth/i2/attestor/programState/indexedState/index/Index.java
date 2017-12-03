@@ -6,49 +6,55 @@ import java.util.List;
 
 public class Index {
 
-   private final List<IndexSymbol> indexSymbols;
+    private final List<IndexSymbol> indexSymbols;
 
-   public Index(List<IndexSymbol> indexSymbols) {
-       this.indexSymbols = indexSymbols;
-   }
+    public Index(List<IndexSymbol> indexSymbols) {
 
-   public Index(Index index) {
-       this.indexSymbols = index.indexSymbols;
-   }
+        this.indexSymbols = indexSymbols;
+    }
 
-   public boolean startsWith(Iterable<IndexSymbol> prefix) {
+    public Index(Index index) {
 
-       Iterator<IndexSymbol> indexIterator = indexSymbols.iterator();
-       Iterator<IndexSymbol> prefixIterator = prefix.iterator();
+        this.indexSymbols = index.indexSymbols;
+    }
 
-       while( indexIterator.hasNext() && prefixIterator.hasNext() ){
-           if( ! indexIterator.next().equals( prefixIterator.next() ) ){
-               return false;
-           }
-       }
+    public boolean startsWith(Iterable<IndexSymbol> prefix) {
 
-       return !prefixIterator.hasNext();
-   }
+        Iterator<IndexSymbol> indexIterator = indexSymbols.iterator();
+        Iterator<IndexSymbol> prefixIterator = prefix.iterator();
 
+        while (indexIterator.hasNext() && prefixIterator.hasNext()) {
+            if (!indexIterator.next().equals(prefixIterator.next())) {
+                return false;
+            }
+        }
 
-    public boolean endsWith(IndexSymbol symbol ){
-        return (! indexSymbols.isEmpty() ) && indexSymbols.get( indexSymbols.size() -1 ).equals(symbol);
+        return !prefixIterator.hasNext();
     }
 
 
-    public IndexSymbol getLastIndexSymbol(){
-        assert( indexSymbols.size() > 0 );
-        return indexSymbols.get( indexSymbols.size() -1 );
+    public boolean endsWith(IndexSymbol symbol) {
+
+        return (!indexSymbols.isEmpty()) && indexSymbols.get(indexSymbols.size() - 1).equals(symbol);
     }
 
-    public Index getWithShortenedIndex(){
-        assert( indexSymbols.size() > 0 );
+
+    public IndexSymbol getLastIndexSymbol() {
+
+        assert (indexSymbols.size() > 0);
+        return indexSymbols.get(indexSymbols.size() - 1);
+    }
+
+    public Index getWithShortenedIndex() {
+
+        assert (indexSymbols.size() > 0);
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
-        indexCopy.remove(indexCopy.size() -1 );
+        indexCopy.remove(indexCopy.size() - 1);
         return new Index(indexCopy);
     }
 
-    public Index getWithProlongedIndex(IndexSymbol s ){
+    public Index getWithProlongedIndex(IndexSymbol s) {
+
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
         indexCopy.add(s);
         return new Index(indexCopy);
@@ -64,37 +70,42 @@ public class Index {
 //        return new Index(indexCopy);
 //    }
 
-    public Index getWithProlongedIndex(List<IndexSymbol> postfix ){
-        assert( this.size() > 0 );
+    public Index getWithProlongedIndex(List<IndexSymbol> postfix) {
+
+        assert (this.size() > 0);
         IndexSymbol lastSymbol = this.getLastIndexSymbol();
-        assert( !( lastSymbol instanceof ConcreteIndexSymbol) );
+        assert (!(lastSymbol instanceof ConcreteIndexSymbol));
 
         List<IndexSymbol> indexCopy = new ArrayList<>(indexSymbols);
-        indexCopy.remove( indexCopy.size() - 1 );
-        indexCopy.addAll(postfix) ;
+        indexCopy.remove(indexCopy.size() - 1);
+        indexCopy.addAll(postfix);
 
         return new Index(indexCopy);
     }
 
-    public boolean hasConcreteIndex(){
-        return (! indexSymbols.isEmpty() ) && this.indexSymbols.get( indexSymbols.size() -1 ).isBottom();
+    public boolean hasConcreteIndex() {
+
+        return (!indexSymbols.isEmpty()) && this.indexSymbols.get(indexSymbols.size() - 1).isBottom();
     }
 
-    public int size(){
+    public int size() {
+
         return indexSymbols.size();
     }
 
     public boolean isEmpty() {
+
         return indexSymbols.isEmpty();
     }
 
-    public boolean matchIndex( Index other ){
+    public boolean matchIndex(Index other) {
+
         List<IndexSymbol> otherIndex = other.indexSymbols;
-        for( int i = 0; i < this.size() && i < otherIndex.size(); i++ ){
-            IndexSymbol s1 = this.get( i );
-            IndexSymbol s2 = otherIndex.get( i );
-      
-            if( ! s1.equals( s2 )){
+        for (int i = 0; i < this.size() && i < otherIndex.size(); i++) {
+            IndexSymbol s1 = this.get(i);
+            IndexSymbol s2 = otherIndex.get(i);
+
+            if (!s1.equals(s2)) {
                 return false;
             }
         }
@@ -102,12 +113,14 @@ public class Index {
         return otherIndex.size() == this.size();
     }
 
-    public IndexSymbol get(int pos ){
-        return indexSymbols.get( pos );
+    public IndexSymbol get(int pos) {
+
+        return indexSymbols.get(pos);
     }
 
     public boolean equals(Object other) {
-        if(other instanceof Index) {
+
+        if (other instanceof Index) {
             Index index = (Index) other;
             return indexSymbols.equals(index.indexSymbols);
         }
@@ -115,10 +128,12 @@ public class Index {
     }
 
     public int hashCode() {
+
         return indexSymbols.hashCode();
     }
 
     public String toString() {
+
         return indexSymbols.toString();
     }
 

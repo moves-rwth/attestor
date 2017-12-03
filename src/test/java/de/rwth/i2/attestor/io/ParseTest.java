@@ -17,48 +17,50 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ParseTest {
-	private static final Logger logger = LogManager.getLogger( "ParseTest.java" );
 
-	@Test
-	public void test(){
+    private static final Logger logger = LogManager.getLogger("ParseTest.java");
 
-		SceneObject sceneObject = new MockupSceneObject();
+    @Test
+    public void test() {
 
-		try{
-			Scanner scan = new Scanner(new FileReader("src/test/resources/GraphEncodingTest.txt"));
-			StringBuilder str = new StringBuilder();
-			while (scan.hasNext())
-				str.append(scan.nextLine());
-			scan.close();
+        SceneObject sceneObject = new MockupSceneObject();
 
-			// build a JSON object
-			JSONObject obj = new JSONObject(str.toString());
+        try {
+            Scanner scan = new Scanner(new FileReader("src/test/resources/GraphEncodingTest.txt"));
+            StringBuilder str = new StringBuilder();
+            while (scan.hasNext())
+                str.append(scan.nextLine());
+            scan.close();
 
-			logger.trace( "length: " + obj.length() ); 
-			logger.trace( "node number: " + obj.getJSONArray( "nodes" ).getJSONObject( 0 ).getInt( "number" ));
+            // build a JSON object
+            JSONObject obj = new JSONObject(str.toString());
 
-			/*
-			 * store nonterminal for sake of testing. Normally the nonterminals should be created by reading a grammar
-			 */
-			sceneObject.scene().createNonterminal( "Hyperedge" , 3, new boolean[]{true,true,true} );
+            logger.trace("length: " + obj.length());
+            logger.trace("node number: " + obj.getJSONArray("nodes").getJSONObject(0).getInt("number"));
 
-			JsonToDefaultHC importer = new JsonToDefaultHC(sceneObject);
-			HeapConfiguration res = importer.jsonToHC( obj, s -> {} );
+            /*
+             * store nonterminal for sake of testing. Normally the nonterminals should be created by reading a grammar
+             */
+            sceneObject.scene().createNonterminal("Hyperedge", 3, new boolean[]{true, true, true});
 
-			logger.trace( "res:" + res );
-			
-			assertEquals("nr of nodes", 3, res.countNodes());
-			assertEquals( "nr of externals", 2, res.countExternalNodes() );
-			assertEquals( "nr of hyperedges", 1, res.countNonterminalEdges() );
-			assertEquals( "nr of variables",  2, res.countVariableEdges() );
-			assertEquals( "selector at 0", 1, res.selectorLabelsOf( res.externalNodeAt( 0 ) ).size() );
-			assertEquals( "selector at 0 is next", 
-					sceneObject.scene().getSelectorLabel("next"),
-					res.selectorLabelsOf( res.externalNodeAt(0) ).get(0) );
+            JsonToDefaultHC importer = new JsonToDefaultHC(sceneObject);
+            HeapConfiguration res = importer.jsonToHC(obj, s -> {
+            });
 
-		}catch( FileNotFoundException e ){
-			e.printStackTrace();
-			fail( "exception");
-		}
-	}
+            logger.trace("res:" + res);
+
+            assertEquals("nr of nodes", 3, res.countNodes());
+            assertEquals("nr of externals", 2, res.countExternalNodes());
+            assertEquals("nr of hyperedges", 1, res.countNonterminalEdges());
+            assertEquals("nr of variables", 2, res.countVariableEdges());
+            assertEquals("selector at 0", 1, res.selectorLabelsOf(res.externalNodeAt(0)).size());
+            assertEquals("selector at 0 is next",
+                    sceneObject.scene().getSelectorLabel("next"),
+                    res.selectorLabelsOf(res.externalNodeAt(0)).get(0));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail("exception");
+        }
+    }
 }

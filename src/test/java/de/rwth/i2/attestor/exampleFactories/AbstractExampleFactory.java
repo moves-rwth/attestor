@@ -22,32 +22,40 @@ import java.util.List;
 
 public abstract class AbstractExampleFactory extends SceneObject {
 
-    public abstract List<Nonterminal> getNonterminals();
-    public abstract List<SelectorLabel> getSelectorLabels();
-    public abstract Type getNodeType();
-    public abstract Grammar getGrammar();
-    public abstract HeapConfiguration getInput();
-
     public AbstractExampleFactory(SceneObject sceneObject) {
+
         super(sceneObject);
     }
 
+    public abstract List<Nonterminal> getNonterminals();
+
+    public abstract List<SelectorLabel> getSelectorLabels();
+
+    public abstract Type getNodeType();
+
+    public abstract Grammar getGrammar();
+
+    public abstract HeapConfiguration getInput();
+
     public MaterializationStrategy getMaterialization() {
-        ViolationPointResolver vioResolver = new ViolationPointResolver( getGrammar() );
+
+        ViolationPointResolver vioResolver = new ViolationPointResolver(getGrammar());
         MaterializationRuleManager grammarManager =
                 new DefaultMaterializationRuleManager(vioResolver);
         GrammarResponseApplier ruleApplier =
-                new DefaultGrammarResponseApplier( new GraphMaterializer() );
-        return new GeneralMaterializationStrategy( grammarManager, ruleApplier );
+                new DefaultGrammarResponseApplier(new GraphMaterializer());
+        return new GeneralMaterializationStrategy(grammarManager, ruleApplier);
     }
 
     public CanonicalizationStrategy getCanonicalization() {
+
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0, scene().options().getAggressiveNullAbstraction());
-        CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper( checkerProvider );
+        CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
         return new GeneralCanonicalizationStrategy(getGrammar(), canonicalizationHelper);
     }
 
     public ProgramState getInitialState() {
+
         return new DefaultProgramState(getInput());
     }
 

@@ -20,23 +20,27 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     private SelectorLabel sel;
 
     public ExampleFactorySLL(SceneObject sceneObject) {
+
         super(sceneObject);
-        nt = scene().createNonterminal("SLL", 2, new boolean[]{false,true});
+        nt = scene().createNonterminal("SLL", 2, new boolean[]{false, true});
         sel = scene().getSelectorLabel("next");
     }
 
     @Override
     public List<Nonterminal> getNonterminals() {
+
         return Collections.singletonList(nt);
     }
 
     @Override
     public List<SelectorLabel> getSelectorLabels() {
+
         return Collections.singletonList(sel);
     }
 
     @Override
     public Type getNodeType() {
+
         Type result = scene().getType("list");
         SelectorLabel next = scene().getSelectorLabel("next");
         result.addSelectorLabel(next, Constants.NULL);
@@ -45,6 +49,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public Grammar getGrammar() {
+
         return Grammar
                 .builder()
                 .addRule(nt, getSLLRule1())
@@ -55,6 +60,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
 
     @Override
     public HeapConfiguration getInput() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -67,10 +73,12 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     public SelectorLabel getNextSel() {
+
         return sel;
     }
 
     public HeapConfiguration getListofLengthAtLeastOne() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -84,6 +92,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule1() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -95,6 +104,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule2() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()
@@ -110,6 +120,7 @@ public class ExampleFactorySLL extends AbstractExampleFactory {
     }
 
     private HeapConfiguration getSLLRule3() {
+
         TIntArrayList nodes = new TIntArrayList();
         return new InternalHeapConfiguration()
                 .builder()

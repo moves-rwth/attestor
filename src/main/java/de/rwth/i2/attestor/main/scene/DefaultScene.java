@@ -31,13 +31,14 @@ public class DefaultScene implements Scene {
 
     @Override
     public Type getType(String name) {
+
         return typeFactory.get(name);
     }
 
     @Override
     public SelectorLabel getSelectorLabel(String name) {
 
-        if(options.isIndexedMode()) {
+        if (options.isIndexedMode()) {
             SelectorLabel sel = basicSelectorLabelFactory.get(name);
             return new AnnotatedSelectorLabel(sel, "");
         } else {
@@ -47,12 +48,13 @@ public class DefaultScene implements Scene {
 
     @Override
     public Nonterminal getNonterminal(String name) {
+
         Nonterminal basicNonterminal = basicNonterminalFactory.get(name);
-        if(options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
+        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if(options.isIndexedMode()) {
+        } else if (options.isIndexedMode()) {
             return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-        } else if(options.isGrammarRefinementEnabled()) {
+        } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(basicNonterminal, null);
         } else {
             return basicNonterminal;
@@ -61,14 +63,15 @@ public class DefaultScene implements Scene {
 
     @Override
     public Nonterminal createNonterminal(String label, int rank, boolean[] isReductionTentacle) {
+
         Nonterminal basicNonterminal = basicNonterminalFactory.create(label, rank, isReductionTentacle);
-        if(options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
+        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if(options.isIndexedMode()) {
+        } else if (options.isIndexedMode()) {
             return new IndexedNonterminalImpl(basicNonterminal, new ArrayList<>());
-        } else if(options.isGrammarRefinementEnabled()) {
+        } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(
-                    basicNonterminal,null
+                    basicNonterminal, null
             );
         } else {
             return basicNonterminal;
@@ -77,13 +80,15 @@ public class DefaultScene implements Scene {
 
     @Override
     public HeapConfiguration createHeapConfiguration() {
+
         return new InternalHeapConfiguration();
     }
 
     @Override
     public ProgramState createProgramState(HeapConfiguration heapConfiguration) {
+
         ProgramState result;
-        if(options.isIndexedMode()) {
+        if (options.isIndexedMode()) {
             result = new IndexedState(heapConfiguration);
         } else {
             result = new DefaultProgramState(heapConfiguration);
@@ -95,21 +100,25 @@ public class DefaultScene implements Scene {
 
     @Override
     public IpaAbstractMethod getMethod(String name) {
+
         return ipaFactory.get(name);
     }
 
     @Override
     public void addNumberOfGeneratedStates(int states) {
+
         totalNumberOfStates += states;
     }
 
     @Override
     public long getNumberOfGeneratedStates() {
+
         return totalNumberOfStates;
     }
 
     @Override
     public Options options() {
+
         return options;
     }
 }
