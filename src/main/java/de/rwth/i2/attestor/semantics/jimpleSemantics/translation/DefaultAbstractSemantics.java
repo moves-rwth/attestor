@@ -82,15 +82,15 @@ public class DefaultAbstractSemantics extends SceneObject implements JimpleToAbs
     }
 
 
-	/**
-	 * Translates every value to {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.UndefinedValue}.
-	 */
-	@Override
-	public Value translateValue(soot.Value input) {
-	
-		logger.info("Expression " + input + " is not supported. Replaced by undefined.");
-		return new UndefinedValue();
-	}
+    /**
+     * Translates every value to {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.UndefinedValue}.
+     */
+    @Override
+    public Value translateValue(soot.Value input) {
+
+        logger.info("Expression " + input + " is not supported. Replaced by undefined.");
+        return new UndefinedValue();
+    }
 
     /**
      * Translates every type to a new NodeTypeImpl instance with name "undefined Type".

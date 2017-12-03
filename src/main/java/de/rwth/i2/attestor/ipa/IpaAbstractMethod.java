@@ -20,6 +20,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     final IpaContractCollection contracts = new IpaContractCollection();
     private boolean isRecursive = false;
+
     public IpaAbstractMethod(SceneObject sceneObject, String displayName) {
 
         super(sceneObject);

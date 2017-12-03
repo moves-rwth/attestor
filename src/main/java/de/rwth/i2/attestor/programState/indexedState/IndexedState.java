@@ -89,13 +89,14 @@ public class IndexedState extends GeneralProgramState {
         return GeneralConcreteValue.getUndefined();
     }
 
-	@Override
-	public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
-		if(from.isUndefined() || to.isUndefined()) {
-			return;
-		}
-		
-		if(from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
+    @Override
+    public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
+
+        if (from.isUndefined() || to.isUndefined()) {
+            return;
+        }
+
+        if (from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
 
             GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
             GeneralConcreteValue dTo = (GeneralConcreteValue) to;

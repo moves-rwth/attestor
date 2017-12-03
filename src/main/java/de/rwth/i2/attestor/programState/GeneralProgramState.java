@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import soot.util.Cons;
 
 /**
  * A general implementation of program states that comprises most functionality when analyzing Jimple programs.
@@ -302,21 +301,21 @@ public abstract class GeneralProgramState implements ProgramState {
     @Override
     public GeneralConcreteValue getConstant(String constantName) {
 
-		try {
-			
-			int n = heap.targetOf(heap.variableWith(constantName));
-			Type t = heap.nodeTypeOf(n);
-			
-			return new GeneralConcreteValue( t, n );
-		} catch( NullPointerException | IllegalArgumentException e ) {
+        try {
 
-			if(!Constants.hasUnknownConstantOccurredBefore(constantName)) {
-				Constants.addUnknownConstant(constantName);
-				logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
-			}
-			return GeneralConcreteValue.getUndefined();
-		}
-	}
+            int n = heap.targetOf(heap.variableWith(constantName));
+            Type t = heap.nodeTypeOf(n);
+
+            return new GeneralConcreteValue(t, n);
+        } catch (NullPointerException | IllegalArgumentException e) {
+
+            if (!Constants.hasUnknownConstantOccurredBefore(constantName)) {
+                Constants.addUnknownConstant(constantName);
+                logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
+            }
+            return GeneralConcreteValue.getUndefined();
+        }
+    }
 
     /**
      * Intermediates are internally equal to variables. <br>

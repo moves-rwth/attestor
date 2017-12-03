@@ -73,7 +73,7 @@ public class CLIPhase extends AbstractPhase
         );
 
         String scenario = inputSettings.getScenario();
-        if(scenario != null && !scenario.isEmpty()) {
+        if (scenario != null && !scenario.isEmpty()) {
             logSum("Scenario: " + scenario);
         } else {
             logSum("Scenario: not specified");

@@ -148,6 +148,7 @@ public class IpaContractCollection {
 
         public HeapConfiguration precondition;
         public List<HeapConfiguration> postconditions;
+
         public IpaContract(HeapConfiguration precondition, List<HeapConfiguration> postconditions2) {
 
             this.precondition = precondition;

@@ -95,13 +95,13 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
         Set<String> usedSelectors = new HashSet<>(scene().options().getUsedSelectorLabels());
         usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
 
-        if(!usedSelectors.isEmpty()) {
+        if (!usedSelectors.isEmpty()) {
             logger.warn("+------------------------------------------------------------------+");
             logger.warn("| Some selector labels are not used within any grammar rule.       |");
             logger.warn("| These selector labels can never be abstracted!                   |");
             logger.warn("| This might be intended if they refer to numerical values         |");
             logger.warn("| The selectors in question are listed below:                      |");
-            for(String badSel : usedSelectors) {
+            for (String badSel : usedSelectors) {
                 logger.warn(String.format("| - %-63s|", badSel));
             }
             logger.warn("+------------------------------------------------------------------+");

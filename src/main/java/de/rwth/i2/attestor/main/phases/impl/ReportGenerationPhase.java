@@ -194,7 +194,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if(!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
+        if (!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
             String location = outputSettings.getLocationForStateSpace();
             logHighlight("State space has been exported to:");
             logSum(location);

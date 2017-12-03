@@ -55,28 +55,28 @@ public class PhaseRegistry {
 
     public void logExecutionTimes() {
 
-      Level REPORT = Level.getLevel("REPORT");
-      Level HIGHLIGHT = Level.getLevel("HIGHLIGHT");
+        Level REPORT = Level.getLevel("REPORT");
+        Level HIGHLIGHT = Level.getLevel("HIGHLIGHT");
 
-      double elapsedVerify = 0;
-      double elapsedTotal = 0;
-      logger.log(REPORT,"+-----------------------------+--------------+");
-      logger.log(HIGHLIGHT,"| Phase                       | Runtime      |");
-      logger.log(REPORT,"+-----------------------------+--------------+");
-      for(AbstractPhase p : phases) {
-         double elapsed = p.getElapsedTime();
-         elapsedTotal += elapsed;
-         logger.log(REPORT, String.format("| %-27s | %10.3f s |", p.getName(), elapsed));
+        double elapsedVerify = 0;
+        double elapsedTotal = 0;
+        logger.log(REPORT, "+-----------------------------+--------------+");
+        logger.log(HIGHLIGHT, "| Phase                       | Runtime      |");
+        logger.log(REPORT, "+-----------------------------+--------------+");
+        for (AbstractPhase p : phases) {
+            double elapsed = p.getElapsedTime();
+            elapsedTotal += elapsed;
+            logger.log(REPORT, String.format("| %-27s | %10.3f s |", p.getName(), elapsed));
 
-         if(p.isVerificationPhase()) {
-            elapsedVerify += elapsed;
-         }
-      }
-      logger.log(REPORT,"+-----------------------------+--------------+");
-      logger.log(REPORT, String.format("| Total verification time     | %10.3f s |", elapsedVerify));
-      logger.log(REPORT, String.format("| Total runtime               | %10.3f s |", elapsedTotal));
-      logger.log(REPORT,"+-----------------------------+--------------+");
-   }
+            if (p.isVerificationPhase()) {
+                elapsedVerify += elapsed;
+            }
+        }
+        logger.log(REPORT, "+-----------------------------+--------------+");
+        logger.log(REPORT, String.format("| Total verification time     | %10.3f s |", elapsedVerify));
+        logger.log(REPORT, String.format("| Total runtime               | %10.3f s |", elapsedTotal));
+        logger.log(REPORT, "+-----------------------------+--------------+");
+    }
 
     public void logExecutionSummary() {
 

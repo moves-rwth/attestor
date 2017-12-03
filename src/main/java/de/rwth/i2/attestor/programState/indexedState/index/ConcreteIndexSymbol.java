@@ -8,6 +8,7 @@ public class ConcreteIndexSymbol implements IndexSymbol {
     private static final Map<String, ConcreteIndexSymbol> existingIndexSymbols = new HashMap<>();
     private final String label;
     private final boolean isBottom;
+
     private ConcreteIndexSymbol(String label, boolean isBottom) {
 
         this.label = label;

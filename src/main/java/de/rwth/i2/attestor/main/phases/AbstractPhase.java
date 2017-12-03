@@ -13,6 +13,7 @@ public abstract class AbstractPhase extends SceneObject {
     private PhaseRegistry registry;
     private long startTime;
     private long finishTime;
+
     public AbstractPhase(Scene scene) {
 
         super(scene);
@@ -79,7 +80,7 @@ public abstract class AbstractPhase extends SceneObject {
         logger.log(Level.getLevel("REPORT"), message);
     }
 
-    protected  void logHighlight(String message) {
+    protected void logHighlight(String message) {
 
         logger.log(Level.getLevel("HIGHLIGHT"), message);
     }
