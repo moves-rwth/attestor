@@ -294,6 +294,14 @@ public class SettingsFileReader {
 				settings.output().addRequiredContract(signature, filename);
 			}
 		}
+
+		if( jsonOutput.has( "report" ) ){
+			output.setExportReportOutput( true );
+			JSONObject jsonReportOpt = jsonOutput.getJSONObject( "report" );
+			if( jsonReportOpt.has("path" ) ){
+				output.setFolderForReportOutput( jsonReportOpt.getString("path" ) );
+			}
+		}
 		
 		return output;
 	}

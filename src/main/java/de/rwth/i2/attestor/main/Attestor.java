@@ -75,6 +75,7 @@ public class Attestor {
 				.addPhase( new ModelCheckingPhase() )
 				.addPhase( new CounterexampleGenerationPhase() )
 				.addPhase( new ReportGenerationPhase() )
+				.addPhase( new ReportOutputPhase() )
 				.execute();
 
 		registry.logExecutionSummary();
