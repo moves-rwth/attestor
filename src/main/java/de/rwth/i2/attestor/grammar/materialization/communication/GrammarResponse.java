@@ -6,11 +6,10 @@ package de.rwth.i2.attestor.grammar.materialization.communication;
  * applier. Depending on the request, they may contain only rules graphs or
  * additionally materializations to apply to the graph before applying the rule
  * in order to match the index of the lhs.
- * 
- * @author Hannah
  *
+ * @author Hannah
  */
 public interface GrammarResponse {
-	
-	
+
+
 }

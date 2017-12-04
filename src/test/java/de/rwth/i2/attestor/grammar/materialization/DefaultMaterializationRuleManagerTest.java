@@ -1,14 +1,14 @@
 package de.rwth.i2.attestor.grammar.materialization;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import org.junit.BeforeClass;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -18,62 +18,63 @@ import static org.mockito.Mockito.verify;
 
 public class DefaultMaterializationRuleManagerTest {
 
+    private SceneObject sceneObject;
 
-	@BeforeClass
-	public static void init() {
+    @Before
+    public void init() {
 
-        UnitTestGlobalSettings.reset();
+        sceneObject = new MockupSceneObject();
     }
 
 
-	@Test
-	public void testDelegationOfRequest() {
-		
-		final int tentacle = 3;
-		final boolean[] isReductionTentacle = new boolean[]{true, false};
-		final String uniqueLabel = "testDelegationOfRequest";
-		final Nonterminal toReplace = BasicNonterminal.getNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
-		
-		final String requestedSelector = "someSelector";
-		
-		ViolationPointResolver vioResolverMock = mock(ViolationPointResolver.class);
-		DefaultMaterializationRuleManager ruleManager 
-			= new DefaultMaterializationRuleManager( vioResolverMock );
-		
-		
-		try {
-			ruleManager.getRulesFor(toReplace, tentacle, requestedSelector);
-		} catch (UnexpectedNonterminalTypeException e) {
-			fail("Unexpected exception");
-		}
-		verify( vioResolverMock ).getRulesCreatingSelectorFor(toReplace, tentacle, requestedSelector);
-	}
-	
-	@Test
-	public void testWhetherResponseComplete(){
-		
-		ViolationPointResolver grammarLogic = new FakeViolationPointResolverForDefault();
-		MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
-		
-		GrammarResponse actualResponse;
-		try {
-			Nonterminal nonterminal = FakeViolationPointResolverForDefault.DEFAULT_NONTERMINAL;
-			int tentacleForNext = 0;
-			String requestLabel = "some label";
-			actualResponse = ruleManager.getRulesFor(nonterminal, 
-													tentacleForNext, 
-													requestLabel);
-		
-			assertTrue( actualResponse instanceof DefaultGrammarResponse );
-			DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
-			assertTrue(defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT) );
-			assertTrue( defaultResponse.getApplicableRules()
-					.contains( FakeViolationPointResolverForDefault.RHS_CREATING_NEXT_PREV ));
-			
-		} catch (UnexpectedNonterminalTypeException e) {
-			fail("Unexpected exception");
-		}
-	}
-	
+    @Test
+    public void testDelegationOfRequest() {
+
+        final int tentacle = 3;
+        final boolean[] isReductionTentacle = new boolean[]{true, false};
+        final String uniqueLabel = "testDelegationOfRequest";
+        final Nonterminal toReplace = sceneObject.scene().createNonterminal(uniqueLabel, tentacle + 2, isReductionTentacle);
+
+        final String requestedSelector = "someSelector";
+
+        ViolationPointResolver vioResolverMock = mock(ViolationPointResolver.class);
+        DefaultMaterializationRuleManager ruleManager
+                = new DefaultMaterializationRuleManager(vioResolverMock);
+
+
+        try {
+            ruleManager.getRulesFor(toReplace, tentacle, requestedSelector);
+        } catch (UnexpectedNonterminalTypeException e) {
+            fail("Unexpected exception");
+        }
+        verify(vioResolverMock).getRulesCreatingSelectorFor(toReplace, tentacle, requestedSelector);
+    }
+
+    @Test
+    public void testWhetherResponseComplete() {
+
+        FakeViolationPointResolverForDefault grammarLogic = new FakeViolationPointResolverForDefault(sceneObject);
+        MaterializationRuleManager ruleManager = new DefaultMaterializationRuleManager(grammarLogic);
+
+        GrammarResponse actualResponse;
+        try {
+
+            int tentacleForNext = 0;
+            String requestLabel = "some label";
+            actualResponse = ruleManager.getRulesFor(grammarLogic.DEFAULT_NONTERMINAL,
+                    tentacleForNext,
+                    requestLabel);
+
+            assertTrue(actualResponse instanceof DefaultGrammarResponse);
+            DefaultGrammarResponse defaultResponse = (DefaultGrammarResponse) actualResponse;
+            assertTrue(defaultResponse.getApplicableRules()
+                    .contains(grammarLogic.RHS_CREATING_NEXT));
+            assertTrue(defaultResponse.getApplicableRules()
+                    .contains(grammarLogic.RHS_CREATING_NEXT_PREV));
+
+        } catch (UnexpectedNonterminalTypeException e) {
+            fail("Unexpected exception");
+        }
+    }
+
 }

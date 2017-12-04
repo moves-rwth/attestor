@@ -1,15 +1,16 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
-import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -21,117 +22,120 @@ import java.util.Set;
 
 /**
  * IfStmt models statements like if condition goto pc
- * 
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public class IfStmt extends Statement {
 
-	private static final Logger logger = LogManager.getLogger( "IfStmt" );
+    private static final Logger logger = LogManager.getLogger("IfStmt");
 
-	/**
-	 * the condition on which the successor state is determined
-	 */
-	private final Value conditionValue;
-	/**
-	 * the program counter of the successor state in case the condition
-	 * evaluates to true
-	 */
-	private final int truePC;
-	/**
-	 * the program counter of the successor state in case the condition
-	 * evaluates to false
-	 */
-	private final int falsePC;
-	
-	private final Set<String> liveVariableNames;
+    /**
+     * the condition on which the successor state is determined
+     */
+    private final Value conditionValue;
+    /**
+     * the program counter of the successor state in case the condition
+     * evaluates to true
+     */
+    private final int truePC;
+    /**
+     * the program counter of the successor state in case the condition
+     * evaluates to false
+     */
+    private final int falsePC;
 
-	private final NondeterminismMessage nondeterminismMessage;
+    private final Set<String> liveVariableNames;
 
-	public IfStmt( Value condition, int truePC, int falsePC, Set<String> liveVariableNames){
+    private final NondeterminismMessage nondeterminismMessage;
 
-		this.conditionValue = condition;
-		this.truePC = truePC;
-		this.falsePC = falsePC;
-		this.liveVariableNames = liveVariableNames;
-		this.nondeterminismMessage = new NondeterminismMessage(this);
-	}
+    public IfStmt(SceneObject sceneObject, Value condition, int truePC, int falsePC, Set<String> liveVariableNames) {
 
-	/**
-	 * evaluates the condition on the input heap. Returns the resulting heap
-	 * (side effects of the condition will last) together with the appropriate
-	 * program counter. <br>
-	 * In case the condition evaluates to undefined, the result will contain
-	 * both program counters.<br>
-	 * 
-	 * If any of the variables in the condition are not live after this statement,
-	 * it will be removed from the heap to enable abstraction.
-	 */
-	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
-			throws NotSufficientlyMaterializedException{
+        super(sceneObject);
+        this.conditionValue = condition;
+        this.truePC = truePC;
+        this.falsePC = falsePC;
+        this.liveVariableNames = liveVariableNames;
+        this.nondeterminismMessage = new NondeterminismMessage(this);
+    }
 
-		observer.update(this, programState);
+    /**
+     * evaluates the condition on the input heap. Returns the resulting heap
+     * (side effects of the condition will last) together with the appropriate
+     * program counter. <br>
+     * In case the condition evaluates to undefined, the result will contain
+     * both program counters.<br>
+     * <p>
+     * If any of the variables in the condition are not live after this statement,
+     * it will be removed from the heap to enable abstraction.
+     */
+    @Override
+    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+            throws NotSufficientlyMaterializedException {
 
-		Set<ProgramState> defaultRes = new HashSet<>();
-		defaultRes.add(programState.shallowCopyUpdatePC(truePC));
-		defaultRes.add(programState.shallowCopyUpdatePC(falsePC));
+        observer.update(this, programState);
 
-		programState = programState.clone();
-		ConcreteValue trueValue = programState.getConstant(Constants.TRUE);
-		ConcreteValue falseValue = programState.getConstant(Constants.FALSE);
+        Set<ProgramState> defaultRes = new HashSet<>();
+        defaultRes.add(programState.shallowCopyUpdatePC(truePC));
+        defaultRes.add(programState.shallowCopyUpdatePC(falsePC));
 
-		ConcreteValue concreteCondition;
-		try {
-			concreteCondition = conditionValue.evaluateOn( programState );
-		} catch (NullPointerDereferenceException e) {
-			logger.error(e.getErrorMessage(this));
-			concreteCondition = programState.getUndefined();
-		}
-		
-		if( concreteCondition.isUndefined() ){
-			observer.update(nondeterminismMessage, programState);
-			return defaultRes;
-		}
-		if( !concreteCondition.type().equals( Settings.getInstance().factory().getType( "int" ) ) ){
-			logger.debug( "concreteCondition is not of type int, but " + concreteCondition.type() );
-		}
+        programState = programState.clone();
+        ConcreteValue trueValue = programState.getConstant(Constants.TRUE);
+        ConcreteValue falseValue = programState.getConstant(Constants.FALSE);
 
-		if(observer.isDeadVariableEliminationEnabled()) {
-			DeadVariableEliminator.removeDeadVariables(conditionValue.toString(), programState, liveVariableNames);
-		}
+        ConcreteValue concreteCondition;
+        try {
+            concreteCondition = conditionValue.evaluateOn(programState);
+        } catch (NullPointerDereferenceException e) {
+            logger.error(e.getErrorMessage(this));
+            concreteCondition = programState.getUndefined();
+        }
 
-		if( concreteCondition.equals( trueValue ) ){
-			return Collections.singleton(programState.shallowCopyUpdatePC(truePC));
-		}else if( concreteCondition.equals( falseValue )){
-			return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
-		}else{
-			observer.update(nondeterminismMessage, programState);
-			return defaultRes;
-		}
-	}
+        if (concreteCondition.isUndefined()) {
+            observer.update(nondeterminismMessage, programState);
+            return defaultRes;
+        }
+        if (!concreteCondition.type().equals(Types.INT)) {
+            logger.debug("concreteCondition is not of type int, but " + concreteCondition.type());
+        }
 
-	@Override
-	public boolean needsMaterialization( ProgramState programState ){
-		return conditionValue.needsMaterialization( programState );
-	}
+        if (observer.isDeadVariableEliminationEnabled()) {
+            DeadVariableEliminator.removeDeadVariables(this, conditionValue.toString(),
+                    programState, liveVariableNames);
+        }
+
+        if (concreteCondition.equals(trueValue)) {
+            return Collections.singleton(programState.shallowCopyUpdatePC(truePC));
+        } else if (concreteCondition.equals(falseValue)) {
+            return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
+        } else {
+            observer.update(nondeterminismMessage, programState);
+            return defaultRes;
+        }
+    }
+
+    @Override
+    public boolean needsMaterialization(ProgramState programState) {
+
+        return conditionValue.needsMaterialization(programState);
+    }
 
 
-	public String toString(){
-		return "if( " + conditionValue + ") goto " + truePC + " else goto " + falsePC;
-	}
+    public String toString() {
 
-	@Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return conditionValue.getPotentialViolationPoints();
-	}
-	
-	@Override
-	public Set<Integer> getSuccessorPCs() {
-		
-		Set<Integer> res = SingleElementUtil.createSet(truePC);
-		res.add(falsePC);
-		return res;
-	}
+        return "if( " + conditionValue + ") goto " + truePC + " else goto " + falsePC;
+    }
+
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
+
+        return conditionValue.getPotentialViolationPoints();
+    }
+
+    @Override
+    public Set<Integer> getSuccessorPCs() {
+
+        Set<Integer> res = SingleElementUtil.createSet(truePC);
+        res.add(falsePC);
+        return res;
+    }
 }

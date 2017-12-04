@@ -11,8 +11,9 @@ public interface StateLabelingStrategy {
     /**
      * Determines the atomic propositions assigned to the given program state.
      * These propositions are directly attached to the given program state.
+     *
      * @param programState The program state whose atomic propositions should be determined.
      */
-	void computeAtomicPropositions(ProgramState programState);
-	
+    void computeAtomicPropositions(ProgramState programState);
+
 }

@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.markings;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.main.settings.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +21,17 @@ public class Marking {
 
     /**
      * Specifies a new Marking
-     * @param markingName The name of the universally quantified variable that should traverse every node.
+     *
+     * @param markingName       The name of the universally quantified variable that should traverse every node.
      * @param requiredSelectors The (sub)set of selectors that should additionally be marked.
      */
-    public Marking(String markingName, String... requiredSelectors) {
+    public Marking(String markingName, SelectorLabel... requiredSelectors) {
 
         this.markingName = markingName;
 
         requiredSelectorLabels = new ArrayList<>(requiredSelectors.length);
 
-        for(String s : requiredSelectors) {
-            SelectorLabel label = Settings.getInstance().factory().getSelectorLabel(s);
+        for (SelectorLabel label : requiredSelectors) {
             requiredSelectorLabels.add(label);
         }
 
@@ -40,7 +39,8 @@ public class Marking {
 
     /**
      * Specifies a new Marking
-     * @param markingName The name of the universally quantified variable that should traverse every node.
+     *
+     * @param markingName       The name of the universally quantified variable that should traverse every node.
      * @param markAllSuccessors True iff all successors should be marked without checking for the existence of
      *                          specific ones.
      */
@@ -70,6 +70,7 @@ public class Marking {
      * @return True iff all selectors should be marked without checking for the existence of specific ones.
      */
     public boolean isMarkAllSuccessors() {
+
         return markAllSuccessors;
     }
 
@@ -85,7 +86,7 @@ public class Marking {
     public String extractSelectorName(String selectorVariableName) {
 
         String[] split = selectorVariableName.split(".");
-        if(split.length == 2) {
+        if (split.length == 2) {
             return split[1];
         }
         return null;

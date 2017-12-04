@@ -14,6 +14,7 @@ public interface StatelessHeapAutomaton {
 
     /**
      * Perform a transition on the given graph and compute the corresponding atomic propositions
+     *
      * @param heapConfiguration The heap configuration to analyze.
      * @return The corresponding set of atomic propositions.
      */

@@ -4,13 +4,10 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.array.TIntArrayList;
-import org.jboss.util.Heap;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class NaiveConcretizer implements Concretizer {
 
@@ -27,17 +24,17 @@ public class NaiveConcretizer implements Concretizer {
         List<HeapConfiguration> result = new ArrayList<>(count);
         LinkedList<HeapConfiguration> queue = new LinkedList<>();
         queue.add(abstractHc);
-        while(result.size() < count && !queue.isEmpty()) {
+        while (result.size() < count && !queue.isEmpty()) {
             HeapConfiguration current = queue.removeFirst();
-            if(current.countNonterminalEdges() == 0)  {
+            if (current.countNonterminalEdges() == 0) {
                 result.add(current);
                 continue;
             }
             TIntIterator ntEdgeIterator = abstractHc.nonterminalEdges().iterator();
-            while(ntEdgeIterator.hasNext()) {
+            while (ntEdgeIterator.hasNext()) {
                 int ntEdge = ntEdgeIterator.next();
                 Nonterminal label = abstractHc.labelOf(ntEdge);
-                for(HeapConfiguration rhs : grammar.getRightHandSidesFor(label)) {
+                for (HeapConfiguration rhs : grammar.getRightHandSidesFor(label)) {
                     HeapConfiguration nextHc = abstractHc.clone()
                             .builder()
                             .replaceNonterminalEdge(ntEdge, rhs)

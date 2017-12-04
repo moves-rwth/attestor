@@ -4,6 +4,5 @@
  * in accordance to soot.
  *
  * @author Hannah Arndt
- *
  */
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr;

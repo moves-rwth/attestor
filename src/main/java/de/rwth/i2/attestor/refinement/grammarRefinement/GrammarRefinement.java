@@ -4,9 +4,9 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
-import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -35,14 +35,14 @@ public class GrammarRefinement {
         do {
             newRulesFound = false;
             refineAllRules();
-        } while(newRulesFound);
+        } while (newRulesFound);
     }
 
     private void determineRewrittenOriginalRightHandSides(Grammar grammar) {
 
-        for(Nonterminal lhs : oldLeftHandSides) {
+        for (Nonterminal lhs : oldLeftHandSides) {
             Set<HeapConfiguration> rewrittenRhs = new HashSet<>();
-            for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+            for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
                 List<HeapConfiguration> rewritings = heapAutomaton.getPossibleHeapRewritings(rhs);
                 rewrittenRhs.addAll(rewritings);
             }
@@ -51,11 +51,13 @@ public class GrammarRefinement {
     }
 
     public Grammar getRefinedGrammar() {
+
         return new Grammar(refinedRules);
     }
 
     private void refineBaseRules() {
-        for(Nonterminal lhs : oldLeftHandSides) {
+
+        for (Nonterminal lhs : oldLeftHandSides) {
             for (HeapConfiguration rhs : oldRightHandSides.get(lhs)) {
                 if (rhs.countNonterminalEdges() == 0) {
                     refineRuleAccordingToAssignment(lhs, rhs, Collections.emptyList());
@@ -65,9 +67,10 @@ public class GrammarRefinement {
     }
 
     private void refineAllRules() {
-        for(Nonterminal lhs : oldLeftHandSides) {
-            for(HeapConfiguration rhs : oldRightHandSides.get(lhs)) {
-                if(rhs.countNonterminalEdges() > 0) {
+
+        for (Nonterminal lhs : oldLeftHandSides) {
+            for (HeapConfiguration rhs : oldRightHandSides.get(lhs)) {
+                if (rhs.countNonterminalEdges() > 0) {
                     List<List<HeapAutomatonState>> possibleStates = possibleStateAssignments(rhs);
                     AssignmentIterator<HeapAutomatonState> iterator = new AssignmentIterator<>(possibleStates);
                     while (iterator.hasNext()) {
@@ -83,7 +86,7 @@ public class GrammarRefinement {
 
         List<List<HeapAutomatonState>> result = new ArrayList<>();
         TIntIterator iter = rhs.nonterminalEdges().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int edge = iter.next();
             Nonterminal nt = rhs.labelOf(edge);
             result.add(foundStates.getOrDefault(nt, Collections.emptyList()));
@@ -96,20 +99,20 @@ public class GrammarRefinement {
 
         HeapAutomatonState assignedState = heapAutomaton.transition(rhs, assignment);
 
-        if(assignedState.isError()) {
+        if (assignedState.isError()) {
             return;
         }
 
         foundStates.putIfAbsent(lhs, new ArrayList<>());
         List<HeapAutomatonState> states = foundStates.get(lhs);
-        if(!states.contains(assignedState)) {
-           states.add(assignedState);
+        if (!states.contains(assignedState)) {
+            states.add(assignedState);
         }
 
         Nonterminal refinedLhs = new RefinedDefaultNonterminal(lhs, assignedState);
         HeapConfiguration refinedRhs = refineRightSide(rhs, assignment);
 
-        if(!refinedRules.containsKey(refinedLhs)) {
+        if (!refinedRules.containsKey(refinedLhs)) {
             newRulesFound = true;
             refinedRules.put(refinedLhs, new HashSet<>());
         }
@@ -122,7 +125,7 @@ public class GrammarRefinement {
         rhs = rhs.clone();
         HeapConfigurationBuilder builder = rhs.builder();
         TIntArrayList ntEdges = rhs.nonterminalEdges();
-        for(int i=0; i < ntEdges.size(); i++) {
+        for (int i = 0; i < ntEdges.size(); i++) {
             int edge = ntEdges.get(i);
             HeapAutomatonState assignedState = assignment.get(i);
             Nonterminal nt = rhs.labelOf(edge);

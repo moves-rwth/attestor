@@ -41,6 +41,7 @@ class AssignmentIterator<E> {
 
     /**
      * Initializes the iterator.
+     *
      * @param availableAssignments All possible elements that can be assigned to each element of an assignment.
      */
     AssignmentIterator(List<List<E>> availableAssignments) {
@@ -49,14 +50,14 @@ class AssignmentIterator<E> {
         this.availableAssignments = availableAssignments;
         assignmentSizes = new TIntArrayList(size);
         currentAssignment = new TIntArrayList(size);
-        for(int i=0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             currentAssignment.add(0);
             assignmentSizes.add(availableAssignments.get(i).size());
         }
         position = 0;
 
-        for(List<E> list : availableAssignments) {
-            if(list.isEmpty()) {
+        for (List<E> list : availableAssignments) {
+            if (list.isEmpty()) {
                 position = size;
             }
         }
@@ -83,14 +84,14 @@ class AssignmentIterator<E> {
 
     private void update() {
 
-        if(!hasNext()) {
+        if (!hasNext()) {
             return;
         }
 
         int inc = currentAssignment.get(position) + 1;
         int max = assignmentSizes.get(position);
 
-        if(inc < max) {
+        if (inc < max) {
             currentAssignment.set(position, inc);
             resetUpToPosition();
         } else {
@@ -107,7 +108,7 @@ class AssignmentIterator<E> {
     private List<E> extractChoice() {
 
         List<E> result = new ArrayList<>(size);
-        for(int i=0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             result.add(availableAssignments.get(i).get(currentAssignment.get(i)));
         }
         return result;
@@ -117,7 +118,8 @@ class AssignmentIterator<E> {
      * Resets trailing elements of the current assignment and sets the position back to the first element.
      */
     private void resetUpToPosition() {
-        for(int i=0; i < position; i++) {
+
+        for (int i = 0; i < position; i++) {
             currentAssignment.set(i, 0);
         }
         position = 0;

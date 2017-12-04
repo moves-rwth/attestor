@@ -16,15 +16,14 @@ public class HcToJava {
 
     private final static String VAR_PREFIX = "x";
     private final static String SELECTOR_SETTER_PREFIX = "set";
-
+    private final String indentPrefix;
     private HeapConfiguration heapConfiguration;
     private TIntObjectMap<String> nodeToExpression;
     private OutputStreamWriter writer;
-    private final String indentPrefix;
 
     public HcToJava(HeapConfiguration heapConfiguration, OutputStreamWriter writer, String indentPrefix) {
 
-        assert(heapConfiguration.countNonterminalEdges() == 0);
+        assert (heapConfiguration.countNonterminalEdges() == 0);
 
         this.heapConfiguration = heapConfiguration;
         this.nodeToExpression = new TIntObjectHashMap<>();
@@ -37,7 +36,7 @@ public class HcToJava {
     public void declareVariables(String modifier) throws IOException {
 
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int var = iter.next();
             declareVariable(var, modifier);
         }
@@ -46,7 +45,7 @@ public class HcToJava {
     public void translateHc() throws IOException {
 
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             translateNode(node);
         }
@@ -55,14 +54,14 @@ public class HcToJava {
         while (iter.hasNext()) {
             int node = iter.next();
             List<SelectorLabel> selectorLabels = heapConfiguration.selectorLabelsOf(node);
-            for(SelectorLabel sel : selectorLabels) {
+            for (SelectorLabel sel : selectorLabels) {
                 int target = heapConfiguration.selectorTargetOf(node, sel);
                 translateSelector(node, sel, target);
             }
         }
 
         iter = heapConfiguration.variableEdges().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int var = iter.next();
             defineVariable(var);
         }
@@ -72,7 +71,7 @@ public class HcToJava {
 
         Type type = heapConfiguration.nodeTypeOf(node);
 
-        if(hasAttachedConstants(node)) {
+        if (hasAttachedConstants(node)) {
             return;
         }
 
@@ -93,10 +92,10 @@ public class HcToJava {
     private boolean hasAttachedConstants(int node) {
 
         TIntIterator attVarIter = heapConfiguration.attachedVariablesOf(node).iterator();
-        while(attVarIter.hasNext()) {
+        while (attVarIter.hasNext()) {
             int varEdge = attVarIter.next();
             String varName = heapConfiguration.nameOf(varEdge);
-            if(Constants.isConstant(varName)) {
+            if (Constants.isConstant(varName)) {
                 nodeToExpression.put(node, varName);
                 return true;
             }
@@ -126,7 +125,7 @@ public class HcToJava {
 
         String name = heapConfiguration.nameOf(var);
 
-        if(Constants.isConstant(name)) {
+        if (Constants.isConstant(name)) {
             return;
         }
 
@@ -149,7 +148,7 @@ public class HcToJava {
 
         String name = heapConfiguration.nameOf(var);
 
-        if(Constants.isConstant(name)) {
+        if (Constants.isConstant(name)) {
             return;
         }
 

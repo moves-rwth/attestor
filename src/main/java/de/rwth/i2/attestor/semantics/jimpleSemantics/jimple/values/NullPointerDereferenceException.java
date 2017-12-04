@@ -7,26 +7,26 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
  */
 public class NullPointerDereferenceException extends Throwable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The value whose evaluation caused a null pointer dereference.
-	 */
-	private final Value violation;
-	
-	public NullPointerDereferenceException(Value violation) {
-		
-		this.violation = violation;
-	}
+    /**
+     * The value whose evaluation caused a null pointer dereference.
+     */
+    private final Value violation;
 
-	public String getErrorMessage() {
-		
-		return "Null pointer dereference in " + violation;
-	}
-	
+    public NullPointerDereferenceException(Value violation) {
+
+        this.violation = violation;
+    }
+
+    public String getErrorMessage() {
+
+        return "Null pointer dereference in " + violation;
+    }
+
     public String getErrorMessage(Object append) {
-		
-		return "Null pointer dereference in " + violation + " - occurred in " + append;
-	}
-	
+
+        return "Null pointer dereference in " + violation + " - occurred in " + append;
+    }
+
 }

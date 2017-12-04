@@ -1,37 +1,34 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.refinement.balanced.BalancednessStateRefinementStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestAVLAnnotationMaintaining {
 
+    @Before
+    public void setUp() throws Exception {
 
-	@BeforeClass
-	public static void init() {
+    }
 
-		UnitTestGlobalSettings.reset();
-	}
+    @Test
+    public void test() {
 
+        SceneObject sceneObject = new MockupSceneObject();
+        ExampleIndexedGraphFactory graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
-	@Before
-	public void setUp() throws Exception {
-	}
+        IndexedState input = new IndexedState(graphFactory.getInput_AnnotationMaintaining());
+        IndexedState expected = new IndexedState(graphFactory.getExpected_AnnotationMaintaining());
 
-	@Test
-	public void test() {
-		IndexedState input = new IndexedState( ExampleIndexedGraphFactory.getInput_AnnotationMaintaining() );
-		IndexedState expected = new IndexedState(ExampleIndexedGraphFactory.getExpected_AnnotationMaintaining());
+        BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy(sceneObject);
+        strategy.refine(new Skip(sceneObject, 0), input);
 
-		BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy();
-		strategy.refine(new Skip(0), input);
-
-		assertEquals(expected, input);
-	}
+        assertEquals(expected, input);
+    }
 
 }

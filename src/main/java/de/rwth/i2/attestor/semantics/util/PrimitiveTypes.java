@@ -2,19 +2,19 @@ package de.rwth.i2.attestor.semantics.util;
 
 public final class PrimitiveTypes {
 
-    public static final String INT_TYPE = "int" ;
-    public static final String BOOL_TYPE = "bool" ;
-    public static final String CHAR_TYPE = "char" ;
-    public static final String BYTE_TYPE = "byte" ;
-    public static final String LONG_TYPE = "long" ;
-    public static final String DOUBLE_TYPE = "double" ;
-    public static final String SHORT_TYPE = "short" ;
-    public static final String STRING_TYPE = "String" ;
+    public static final String INT_TYPE = "int";
+    public static final String BOOL_TYPE = "bool";
+    public static final String CHAR_TYPE = "char";
+    public static final String BYTE_TYPE = "byte";
+    public static final String LONG_TYPE = "long";
+    public static final String DOUBLE_TYPE = "double";
+    public static final String SHORT_TYPE = "short";
+    public static final String STRING_TYPE = "String";
 
 
     public static boolean isPrimitiveType(String typeName) {
 
-        switch(typeName) {
+        switch (typeName) {
             case INT_TYPE:
             case CHAR_TYPE:
             case BYTE_TYPE:
@@ -30,7 +30,7 @@ public final class PrimitiveTypes {
 
     public static String getDefaultValue(String typeName) {
 
-        switch(typeName) {
+        switch (typeName) {
             case INT_TYPE:
             case CHAR_TYPE:
             case BYTE_TYPE:

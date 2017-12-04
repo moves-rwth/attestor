@@ -10,33 +10,38 @@ import java.util.List;
 
 public class IndexGrammarForTests implements IndexMaterializationStrategy {
 
-	public IndexGrammarForTests() {
-	}
+    public IndexGrammarForTests() {
 
-	@Override
-	public IndexedNonterminal materializeIndex(IndexedNonterminal nt, IndexSymbol s) {
-		return null;
-	}
+    }
 
-	@Override
-	public List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol originalIndexSymbol, 
-													  IndexSymbol desiredIndexSymbol ) {
-		List<IndexSymbol> result = new ArrayList<>();
-		result.add(desiredIndexSymbol);
-		if( ! desiredIndexSymbol.isBottom() ){
-			result.add( originalIndexSymbol );
-		}
-		return result;
-	}
+    @Override
+    public IndexedNonterminal materializeIndex(IndexedNonterminal nt, IndexSymbol s) {
 
-	@Override
-	public void materializeIndices(HeapConfiguration heapConfiguration, IndexSymbol originalIndexSymbol,
-			IndexSymbol desiredIndexSymbol) {
-	}
+        return null;
+    }
 
-	@Override
-	public boolean canCreateSymbolFor(IndexSymbol originalIndexSymbol, IndexSymbol desiredIndexSymbol) {
-		return true;
-	}
+    @Override
+    public List<IndexSymbol> getRuleCreatingSymbolFor(IndexSymbol originalIndexSymbol,
+                                                      IndexSymbol desiredIndexSymbol) {
+
+        List<IndexSymbol> result = new ArrayList<>();
+        result.add(desiredIndexSymbol);
+        if (!desiredIndexSymbol.isBottom()) {
+            result.add(originalIndexSymbol);
+        }
+        return result;
+    }
+
+    @Override
+    public void materializeIndices(HeapConfiguration heapConfiguration, IndexSymbol originalIndexSymbol,
+                                   IndexSymbol desiredIndexSymbol) {
+
+    }
+
+    @Override
+    public boolean canCreateSymbolFor(IndexSymbol originalIndexSymbol, IndexSymbol desiredIndexSymbol) {
+
+        return true;
+    }
 
 }

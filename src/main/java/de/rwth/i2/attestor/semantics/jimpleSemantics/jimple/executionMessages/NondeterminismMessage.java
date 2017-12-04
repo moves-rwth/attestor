@@ -7,10 +7,12 @@ public class NondeterminismMessage {
     private Statement statement;
 
     public NondeterminismMessage(Statement statement) {
+
         this.statement = statement;
     }
 
     public Statement getStatement() {
+
         return statement;
     }
 }

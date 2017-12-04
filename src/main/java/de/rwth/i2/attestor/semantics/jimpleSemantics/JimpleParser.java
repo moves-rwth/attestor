@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics;
 
 
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.PackManager;
@@ -19,77 +19,75 @@ import soot.options.Options;
  *
  * @author Hannah Arndt, Christoph
  */
-public class JimpleParser implements ProgramParser {
+public class JimpleParser extends SceneObject implements ProgramParser {
 
     /**
      * The logger of this parser.
      */
-	private static final Logger logger = LogManager.getLogger("BytecodeParser");
+    private static final Logger logger = LogManager.getLogger("BytecodeParser");
 
     /**
      * The underlying translation of Jimple objects to our own semantics objects.
      */
-	private final JimpleToAbstractSemantics translationDef;
+    private final JimpleToAbstractSemantics translationDef;
 
     /**
      * Creates a new parser.
+     *
      * @param translationDef The underlying translation of Jimple objects to our own semantics objects.
      */
-	public JimpleParser( JimpleToAbstractSemantics translationDef ) {
-		this.translationDef = translationDef;
-	}
+    public JimpleParser(SceneObject sceneObject, JimpleToAbstractSemantics translationDef) {
 
-	@Override
-	public Program parse( String classpath, String classname ) {
-		
-		return parse(classpath, classname, "main" );
-	}
+        super(sceneObject);
+        this.translationDef = translationDef;
+    }
 
-	@Override
-	public Program parse(String classpath, String classname, String entryPoint) {
-		
-		try {
-			logger.debug( "Initializing Soot with classpath: " + classpath );
-			new SootInitializer().initialize(classpath);
-		
+    @Override
+    public Program parse(String classpath, String classname) {
 
-			Options.v().parse( new String [] { "-p", "jb",  "use-original-names:true" });
+        return parse(classpath, classname, "main");
+    }
+
+    @Override
+    public Program parse(String classpath, String classname, String entryPoint) {
+
+        try {
+            logger.debug("Initializing Soot with classpath: " + classpath);
+            new SootInitializer().initialize(classpath);
+
+
+            Options.v().parse(new String[]{"-p", "jb", "use-original-names:true"});
 
             /*
              This enables jimple annotations to find dead variables.
              Since dead variables may prevent abstraction, we need this information
              in order to delete them manually.
              */
-			Options.v().parse( new String[]{"-p", "jap.lvtagger", "enabled:true"} );
-		
-			Options.v().parse( new String [] {"-pp", "-keep-line-number", "-f", "jimple", classname } );
-			Scene.v().loadNecessaryClasses();
+            Options.v().parse(new String[]{"-p", "jap.lvtagger", "enabled:true"});
 
-			logger.info( "Invoking Soot..." );
-			PackManager.v().runPacks();
+            Options.v().parse(new String[]{"-pp", "-keep-line-number", "-f", "jimple", classname});
+            Scene.v().loadNecessaryClasses();
+
+            logger.info("Invoking Soot...");
+            PackManager.v().runPacks();
 
 
-		} catch(Exception e) {
-			
-			logger.fatal( "Soot threw an exception." );
-			throw e;
-		}
+        } catch (Exception e) {
 
-		logger.trace( "start translating" );
+            logger.fatal("Soot threw an exception.");
+            throw e;
+        }
 
-		SootClass sootClass = Scene.v().getSootClass( classname );
-		Scene.v().setMainClass( sootClass );
-		
-		TopLevelTranslation translator = new TopLevelTranslation( translationDef );
-		translator.translate();
-		
-		String mainMethodName = sootClass.getMethodByName( entryPoint ).getSignature();
+        logger.trace("start translating");
 
-		try {
-			return translator.getMethod(mainMethodName).getControlFlow();
-		} catch(StateSpaceGenerationAbortedException e) {
-			logger.fatal("Unexpected exception");
-			throw new IllegalStateException(e.getMessage());
-		}
-	}
+        SootClass sootClass = Scene.v().getSootClass(classname);
+        Scene.v().setMainClass(sootClass);
+
+        TopLevelTranslation translator = new TopLevelTranslation(this, translationDef);
+        translator.translate();
+
+        String mainMethodName = sootClass.getMethodByName(entryPoint).getSignature();
+
+        return translator.getMethod(mainMethodName).getControlFlow();
+    }
 }

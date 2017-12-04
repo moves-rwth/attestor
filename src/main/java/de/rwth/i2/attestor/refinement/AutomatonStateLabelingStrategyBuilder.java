@@ -11,18 +11,20 @@ public class AutomatonStateLabelingStrategyBuilder {
     final List<StatelessHeapAutomaton> statelessHeapAutomata = new ArrayList<>();
 
     public AutomatonStateLabelingStrategyBuilder add(HeapAutomaton automaton) {
+
         automata.add(automaton);
         return this;
     }
 
     public AutomatonStateLabelingStrategyBuilder add(StatelessHeapAutomaton automaton) {
+
         statelessHeapAutomata.add(automaton);
         return this;
     }
 
     public AutomatonStateLabelingStrategy build() {
 
-        if(automata.isEmpty() && statelessHeapAutomata.isEmpty()) {
+        if (automata.isEmpty() && statelessHeapAutomata.isEmpty()) {
             return null;
         }
 

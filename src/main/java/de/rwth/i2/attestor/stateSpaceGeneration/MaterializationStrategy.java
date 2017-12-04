@@ -14,11 +14,12 @@ public interface MaterializationStrategy {
 
     /**
      * Attempts to materialize a given program states such that the provided
-     * @param state The program state that should be materialized.
+     *
+     * @param state                    The program state that should be materialized.
      * @param potentialViolationPoints A specification of points in the program state that prevent the
      *                                 concrete semantics from being executed.
      * @return A list of materialized program states in which all provided violation points have been resolved.
      */
-	List<ProgramState> materialize( ProgramState state, ViolationPoints potentialViolationPoints );
+    List<ProgramState> materialize(ProgramState state, ViolationPoints potentialViolationPoints);
 
 }

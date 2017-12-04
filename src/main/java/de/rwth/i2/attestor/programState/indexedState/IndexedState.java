@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
@@ -10,150 +7,146 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class IndexedState extends GeneralProgramState {
-	private static final Logger logger = LogManager.getLogger( "IndexedState" );
 
-	public IndexedState( HeapConfiguration heap ) {
-		super( heap);
-	}
-	
-	public IndexedState( HeapConfiguration heap, int scopeDepth ) {
-		this(heap);
-	}
+    private static final Logger logger = LogManager.getLogger("IndexedState");
 
-	
-	private IndexedState(IndexedState state) {
-		
-		super( state );
-	}
-	
+    public IndexedState(HeapConfiguration heap) {
 
-	@Override
-	public ProgramState shallowCopy() {
-		
-		return new IndexedState(this);
-	}
+        super(heap);
+    }
 
 
+    private IndexedState(IndexedState state) {
 
-	public int hashCode() {
+        super(state);
+    }
 
-		int hash = programCounter;
-		hash = (hash << 1) ^ heap.hashCode();
-		return hash;
-	}
 
-	@Override
-	protected SelectorLabel getSelectorLabel(String selectorLabelName) {
-		return new AnnotatedSelectorLabel(selectorLabelName, "");
-	}
+    @Override
+    public ProgramState shallowCopy() {
 
-	@Override
-	public boolean equals(Object other) {
+        return new IndexedState(this);
+    }
 
-		if(other == this) {
-			return true;
-		}
 
-		if(other == null) {
-			return false;
-		}
+    public int hashCode() {
 
-		if(other.getClass() != IndexedState.class) {
-			return false;
-		}
+        int hash = programCounter;
+        hash = (hash << 1) ^ heap.hashCode();
+        return hash;
+    }
 
-		IndexedState state = (IndexedState) other;
+    @Override
+    public boolean equals(Object other) {
 
-		return programCounter == state.programCounter
-			&& heap.equals(state.getHeap());
-	}
+        if (other == this) {
+            return true;
+        }
 
-	@Override
-	public GeneralConcreteValue getSelectorTarget(ConcreteValue from, String selectorName) {
-		if(from instanceof GeneralConcreteValue) {
-			
-			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
-			
-			if(dFrom.isUndefined()) {
-				logger.debug("getSelectorTarget: origin is undefined. Returning undefined.");
-				return dFrom;
-			}
+        if (other == null) {
+            return false;
+        }
 
-			int node = dFrom.getNode();
-			
-			for( SelectorLabel label : getHeap().selectorLabelsOf(node) ){
-				
-				AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
-				
-				if( sel.hasLabel(selectorName) ){
-					int target = getHeap().selectorTargetOf(node, sel);
-					Type type = getHeap().nodeTypeOf(target);
-					return new GeneralConcreteValue( type, target );
-					
-				}
-			}
-		} else {
-			throw new IllegalStateException("getSelectorTarget got invalid source");
-		}
-		
-		return GeneralConcreteValue.getUndefined();
-	}
+        if (other.getClass() != IndexedState.class) {
+            return false;
+        }
 
-	@Override
-	public void setSelector(ConcreteValue from, String selectorName, ConcreteValue to) {
-		if(from.isUndefined() || to.isUndefined()) {
-			return;
-		}
-		
-		if(from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
+        IndexedState state = (IndexedState) other;
 
-			GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
-			GeneralConcreteValue dTo = (GeneralConcreteValue) to;
-			
-			int fromNode = dFrom.getNode();
-			
-			for( SelectorLabel label : getHeap().selectorLabelsOf(fromNode)  ){
-				
-				AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
-				
-				if( sel.hasLabel(selectorName)){
-					this.getHeap()
-						.builder()
-						.removeSelector(fromNode, sel)
-						.build();
-				}
-			}
-			
-			AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorName, "");
+        return programCounter == state.programCounter
+                && heap.equals(state.getHeap());
+    }
 
-			this.getHeap()
-			.builder()
-			.addSelector(fromNode, newSel, dTo.getNode())
-			.build();
-		}
-		
-	}
+    @Override
+    public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
 
-	@Override
-	public ProgramState shallowCopyUpdatePC(int newPC) {
-		IndexedState result = new IndexedState(this);
-		result.setProgramCounter(newPC);
-		return result;
-	}
+        if (from instanceof GeneralConcreteValue) {
+            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
+            if (dFrom.isUndefined()) {
+                logger.debug("getSelectorTarget: origin is undefined. Returning undefined.");
+                return dFrom;
+            }
 
-	@Override
-	public IndexedState clone() {
-		HeapConfiguration newHeap = heap.clone();
-		IndexedState result = new IndexedState(newHeap);
-		result.setProgramCounter( programCounter );
-		return result;
-	}
+            int node = dFrom.getNode();
+            String selectorName = selectorLabel.getLabel();
 
-	@Override
-	public boolean isSubsumedBy(ProgramState otherState) {
-		return equals(otherState);
-	}
+            for (SelectorLabel label : getHeap().selectorLabelsOf(node)) {
+                AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
+                if (sel.hasLabel(selectorName)) {
+                    int target = getHeap().selectorTargetOf(node, sel);
+                    Type type = getHeap().nodeTypeOf(target);
+                    return new GeneralConcreteValue(type, target);
+                }
+            }
+        } else {
+            throw new IllegalStateException("getSelectorTarget got invalid source");
+        }
+
+        return GeneralConcreteValue.getUndefined();
+    }
+
+    @Override
+    public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
+
+        if (from.isUndefined() || to.isUndefined()) {
+            return;
+        }
+
+        if (from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
+
+            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
+            GeneralConcreteValue dTo = (GeneralConcreteValue) to;
+
+            int fromNode = dFrom.getNode();
+            String selectorName = selectorLabel.getLabel();
+
+            for (SelectorLabel label : getHeap().selectorLabelsOf(fromNode)) {
+
+                AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
+
+                if (sel.hasLabel(selectorName)) {
+                    this.getHeap()
+                            .builder()
+                            .removeSelector(fromNode, sel)
+                            .build();
+                }
+            }
+
+            AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorLabel);
+
+            this.getHeap()
+                    .builder()
+                    .addSelector(fromNode, newSel, dTo.getNode())
+                    .build();
+        }
+
+    }
+
+    @Override
+    public ProgramState shallowCopyUpdatePC(int newPC) {
+
+        IndexedState result = new IndexedState(this);
+        result.setProgramCounter(newPC);
+        return result;
+    }
+
+    @Override
+    public IndexedState clone() {
+
+        HeapConfiguration newHeap = heap.clone();
+        IndexedState result = new IndexedState(newHeap);
+        result.setProgramCounter(programCounter);
+        return result;
+    }
+
+    @Override
+    public boolean isSubsumedBy(ProgramState otherState) {
+
+        return equals(otherState);
+    }
 
 }

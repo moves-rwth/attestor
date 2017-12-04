@@ -35,21 +35,22 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
         updateNtRelation();
     }
 
-    void updateNtRelation() {
-        TIntArrayList actualEdges = actual.nonterminalEdges();
-        TIntArrayList partnerEdges = pairedHeapConfiguration.nonterminalEdges();
-        ntEdgeRelation.clear();
-
-        for(int i=0; i < actualEdges.size(); i++) {
-            ntEdgeRelation.put(actualEdges.get(i), partnerEdges.get(i));
-        }
-    }
-
     private HeapConfigurationPair(HeapConfigurationPair hc) {
 
         this.actual = hc.actual.clone();
         this.pairedHeapConfiguration = hc.pairedHeapConfiguration.clone();
         this.ntEdgeRelation = new TIntIntHashMap(hc.ntEdgeRelation);
+    }
+
+    void updateNtRelation() {
+
+        TIntArrayList actualEdges = actual.nonterminalEdges();
+        TIntArrayList partnerEdges = pairedHeapConfiguration.nonterminalEdges();
+        ntEdgeRelation.clear();
+
+        for (int i = 0; i < actualEdges.size(); i++) {
+            ntEdgeRelation.put(actualEdges.get(i), partnerEdges.get(i));
+        }
     }
 
     public HeapConfiguration getPairedHeapConfiguration() {
@@ -67,7 +68,7 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     @Override
     public HeapConfigurationBuilder builder() {
 
-        if(builder == null) {
+        if (builder == null) {
             builder = new HeapConfigurationPairBuilder(this);
         }
         return builder;
@@ -218,9 +219,11 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     }
 
     @Override
-    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance) {
+    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
+                                                   int minAbstractionDistance,
+                                                   boolean aggressiveNullAbstractionEnabled) {
 
-        return actual.getEmbeddingsOf(pattern, minAbstractionDistance);
+        return actual.getEmbeddingsOf(pattern, minAbstractionDistance, aggressiveNullAbstractionEnabled);
     }
 
     @Override

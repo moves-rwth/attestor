@@ -1,54 +1,55 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import de.rwth.i2.attestor.types.Types;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * IntConstants represent access to constants of type int
- * @author Hannah Arndt
  *
+ * @author Hannah Arndt
  */
 public class IntConstant implements Value {
-	private static final Logger logger = LogManager.getLogger( "IntConstant" );
 
-	private final int intValue;
-	private final Type type = Settings.getInstance().factory().getType( "int" );
+    private static final Logger logger = LogManager.getLogger("IntConstant");
 
-	public IntConstant( int value ){
-		this.intValue = value;
-	}
+    private final int intValue;
 
-	@Override
-	public ConcreteValue evaluateOn( ProgramState programState ) throws NotSufficientlyMaterializedException{
+    public IntConstant(int value) {
 
-		return programState.getConstant( "" + intValue );
-	}
+        this.intValue = value;
+    }
+
+    @Override
+    public ConcreteValue evaluateOn(ProgramState programState) {
+
+        return programState.getConstant("" + intValue);
+    }
 
 
+    @Override
+    public Type getType() {
 
-	@Override
-	public Type getType(){
-		return this.type;
-	}
+        return Types.INT;
+    }
 
-	public String toString(){
-		return "" + intValue;
-	}
+    public String toString() {
 
-	@Override
-	public boolean needsMaterialization(ProgramState programState) {
+        return "" + intValue;
+    }
 
-		return false;
-	}
+    @Override
+    public boolean needsMaterialization(ProgramState programState) {
 
-	@Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return ViolationPoints.getEmptyViolationPoints();
-	}
+        return false;
+    }
+
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
+
+        return ViolationPoints.getEmptyViolationPoints();
+    }
 }

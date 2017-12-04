@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
-import de.rwth.i2.attestor.main.settings.Settings;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.HashMap;
@@ -11,10 +10,13 @@ import java.util.Set;
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
     private CanonicalizationStrategy canonicalizationStrategy;
+    private int minAbstractionDistance;
 
-    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+                                                       int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.minAbstractionDistance = minAbstractionDistance;
     }
 
     @Override
@@ -22,13 +24,13 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         assert originalStateSpace.getClass() == InternalStateSpace.class;
 
-        if(Settings.getInstance().options().getAbstractionDistance() == 0) {
+        if (minAbstractionDistance == 0) {
             return;
         }
 
         InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 
-        if(stateSpace.getFinalStateIds().size() == 1) {
+        if (stateSpace.getFinalStateIds().size() == 1) {
             return;
         }
 
@@ -37,27 +39,27 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
         Set<ProgramState> fullyAbstractStates = new HashSet<>();
         Map<Integer, Integer> idMap = new HashMap<>();
 
-        for(ProgramState state : finalStates) {
+        for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 
-            if(oldState != null) {
+            if (oldState != null) {
                 idMap.put(state.getStateSpaceId(), oldState.getStateSpaceId());
             } else {
                 idMap.put(state.getStateSpaceId(), absState.getStateSpaceId());
             }
         }
 
-        if(fullyAbstractStates.size() < finalStates.size()) {
+        if (fullyAbstractStates.size() < finalStates.size()) {
             stateSpace.updateFinalStates(fullyAbstractStates, idMap);
         }
     }
 
     private ProgramState addIfAbsent(ProgramState absState, Set<ProgramState> abstractedStates) {
 
-        for(ProgramState state : abstractedStates) {
-            if(absState.isSubsumedBy(state)) {
+        for (ProgramState state : abstractedStates) {
+            if (absState.isSubsumedBy(state)) {
                 return state;
             }
         }

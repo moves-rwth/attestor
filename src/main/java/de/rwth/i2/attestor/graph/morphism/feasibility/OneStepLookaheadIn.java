@@ -15,84 +15,86 @@ import gnu.trove.list.array.TIntArrayList;
  */
 public class OneStepLookaheadIn implements FeasibilityFunction {
 
-	/**
-	 * Determines whether the ingoing lookahead sets of pattern and target
-	 * have to be equal or target sets are allowed to be larger.
- 	 */
-	private final boolean checkEqualityOnExternal;
+    /**
+     * Determines whether the ingoing lookahead sets of pattern and target
+     * have to be equal or target sets are allowed to be larger.
+     */
+    private final boolean checkEqualityOnExternal;
 
     /**
      * @param checkEqualityOnExternal Determines whether equal lookahead sets are required.
      */
-	public OneStepLookaheadIn(boolean checkEqualityOnExternal) {
-		
-		this.checkEqualityOnExternal = checkEqualityOnExternal;
-	}
-	
-	@Override
-	public boolean eval(VF2State state, int p, int t) {
-		
-		VF2PatternGraphData pattern = state.getPattern();
-		Graph patternGraph = pattern.getGraph();
-		VF2TargetGraphData target = state.getTarget();
-		Graph targetGraph = target.getGraph();
+    public OneStepLookaheadIn(boolean checkEqualityOnExternal) {
 
-		int patternSucc = computeLookahead(
-				patternGraph.getSuccessorsOf(p),
-				pattern
-				);
-		
-		int targetSucc = computeLookahead(
-				targetGraph.getSuccessorsOf(t),
-				target
-				);
-		
-		if(checkEqualityOnExternal) {
-			if(targetSucc != patternSucc) {
-				return false;
-			}
-		} else {
-			if(targetSucc < patternSucc) {
-				return false;
-			}	
-		}
-		
-		int patternPred = computeLookahead(
-				patternGraph.getPredecessorsOf(p),
-				pattern
-				);
-		
-		int targetPred = computeLookahead(
-				targetGraph.getPredecessorsOf(t),
-				target
-				);
-		
-		if(checkEqualityOnExternal) {
-			return (targetPred == patternPred);
-		} else {
-			return (targetPred >= patternPred);
-		}
-	}
+        this.checkEqualityOnExternal = checkEqualityOnExternal;
+    }
+
+    @Override
+    public boolean eval(VF2State state, int p, int t) {
+
+        VF2PatternGraphData pattern = state.getPattern();
+        Graph patternGraph = pattern.getGraph();
+        VF2TargetGraphData target = state.getTarget();
+        Graph targetGraph = target.getGraph();
+
+        int patternSucc = computeLookahead(
+                patternGraph.getSuccessorsOf(p),
+                pattern
+        );
+
+        int targetSucc = computeLookahead(
+                targetGraph.getSuccessorsOf(t),
+                target
+        );
+
+        if (checkEqualityOnExternal) {
+            if (targetSucc != patternSucc) {
+                return false;
+            }
+        } else {
+            if (targetSucc < patternSucc) {
+                return false;
+            }
+        }
+
+        int patternPred = computeLookahead(
+                patternGraph.getPredecessorsOf(p),
+                pattern
+        );
+
+        int targetPred = computeLookahead(
+                targetGraph.getPredecessorsOf(t),
+                target
+        );
+
+        if (checkEqualityOnExternal) {
+            return (targetPred == patternPred);
+        } else {
+            return (targetPred >= patternPred);
+        }
+    }
 
 
     /**
      * Computes the ingoing lookahead set for the given set of nodes connected to the considered candidate node.
+     *
      * @param neighbors The nodes connected to the considered node.
-     * @param data Matching data stored for the graph corresponding to the nodes in neighbors.
+     * @param data      Matching data stored for the graph corresponding to the nodes in neighbors.
      * @return The number of nodes in neighbors that have not been matched yet, but that are reachable via a single
-     *         ingoing edge from the candidate node.
+     * ingoing edge from the candidate node.
      */
-	private int computeLookahead(TIntArrayList neighbors, AbstractVF2GraphData data) {
-		int lookaheadIn = 0;
-		for(int i=0; i < neighbors.size(); i++) {
-			int next = neighbors.get(i);
-			
-			if(data.containsIngoingUnmatched(next)) {
-					++lookaheadIn;
-			}
-		}
-		
-		return lookaheadIn;
-	}
+    private int computeLookahead(TIntArrayList neighbors, AbstractVF2GraphData data) {
+
+        int lookaheadIn = 0;
+        for (int i = 0; i < neighbors.size(); i++) {
+            int next = neighbors.get(i);
+
+            if (data.containsIngoingUnmatched(next)) {
+                ++lookaheadIn;
+            }
+        }
+
+        return lookaheadIn;
+    }
 
 }

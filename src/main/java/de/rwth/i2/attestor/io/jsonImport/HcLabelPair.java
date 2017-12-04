@@ -10,16 +10,19 @@ public class HcLabelPair {
     final String label;
     final HeapConfiguration hc;
 
-    public HcLabelPair(String label, HeapConfiguration hc){
+    public HcLabelPair(String label, HeapConfiguration hc) {
+
         this.label = label;
         this.hc = hc;
     }
 
     public String getLabel() {
+
         return label;
     }
 
     public HeapConfiguration getHc() {
+
         return hc;
     }
 }

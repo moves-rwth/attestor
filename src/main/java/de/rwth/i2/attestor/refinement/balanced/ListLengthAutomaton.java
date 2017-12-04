@@ -12,16 +12,16 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
-import de.rwth.i2.attestor.types.GeneralType;
+import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
+import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
+import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -29,13 +29,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ListLengthAutomaton implements StatelessHeapAutomaton {
+public class ListLengthAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
     private final Grammar grammar;
     private CanonicalizationStrategy canonicalizationStrategy;
 
-    public ListLengthAutomaton(Grammar grammar) {
+    public ListLengthAutomaton(SceneObject sceneObject, Grammar grammar) {
 
+        super(sceneObject);
         this.grammar = grammar;
         setupCanonicalization();
     }
@@ -48,18 +49,18 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
         IndexedState state = new IndexedState(heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
-        if(countSelectorEdges(heapConfiguration) > 8) {
+        if (countSelectorEdges(heapConfiguration) > 8) {
             return Collections.emptySet();
         }
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
-        if(ntEdges.size() % 2 == 0) {
+        if (ntEdges.size() % 2 == 0) {
             Set<Index> indices = new HashSet<>();
-            for(int i=0; i < ntEdges.size(); i++) {
+            for (int i = 0; i < ntEdges.size(); i++) {
                 IndexedNonterminal nt = (IndexedNonterminal) heapConfiguration.labelOf(ntEdges.get(i));
                 indices.add(nt.getIndex());
             }
-            if(indices.size() == ntEdges.size() / 2) {
+            if (indices.size() == ntEdges.size() / 2) {
                 return Collections.singleton("{ bimap }");
             }
 
@@ -70,23 +71,25 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0);
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
+                scene().options().getAggressiveNullAbstraction());
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
+
         CanonicalizationHelper canonicalizationHelper;
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-        IndexMatcher indexMatcher = new IndexMatcher( indexGrammar);
+        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
         EmbeddingIndexChecker indexChecker =
-                new EmbeddingIndexChecker( indexMatcher,
-                        materializer );
+                new EmbeddingIndexChecker(indexMatcher,
+                        materializer);
 
-        canonicalizationHelper = new IndexedCanonicalizationHelper( indexStrategy, checkerProvider, indexChecker);
+        canonicalizationHelper = new IndexedCanonicalizationHelper(indexStrategy, checkerProvider, indexChecker);
         return canonicalizationHelper;
     }
 
@@ -94,19 +97,19 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
         Set<String> nullPointerGuards = new HashSet<>();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            if(lhs instanceof IndexedNonterminal) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            if (lhs instanceof IndexedNonterminal) {
                 IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-                if(iLhs.getIndex().getLastIndexSymbol().isBottom()) {
-                    for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                if (iLhs.getIndex().getLastIndexSymbol().isBottom()) {
+                    for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
 
                         TIntIterator iter = rhs.nodes().iterator();
-                        while(iter.hasNext()) {
+                        while (iter.hasNext()) {
                             int node = iter.next();
-                            for(SelectorLabel sel : rhs.selectorLabelsOf(node)) {
+                            for (SelectorLabel sel : rhs.selectorLabelsOf(node)) {
 
                                 int target = rhs.selectorTargetOf(node, sel);
-                                if(rhs.nodeTypeOf(target) == GeneralType.getType("NULL")) {
+                                if (rhs.nodeTypeOf(target) == Types.NULL) {
                                     nullPointerGuards.add(sel.getLabel());
                                 }
                             }
@@ -124,7 +127,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
         heapConfiguration = heapConfiguration.clone();
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         HeapConfigurationBuilder builder = heapConfiguration.builder();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int varEdge = iter.next();
             builder.removeVariableEdge(varEdge);
         }
@@ -135,7 +138,7 @@ public class ListLengthAutomaton implements StatelessHeapAutomaton {
 
         int count = 0;
         TIntIterator iter = heapConfiguration.nodes().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int node = iter.next();
             count += heapConfiguration.selectorLabelsOf(node).size();
         }

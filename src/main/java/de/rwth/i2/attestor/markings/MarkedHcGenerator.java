@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.iterator.TIntIterator;
@@ -20,7 +21,6 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
- *
  * Given a grammar and an initial HeapConfiguration, this class computes a set of partially unfolded HeapConfigurations
  * in which every node and ,if specified, some of its selectors are marked by special variables.
  * The computed sets covers all possible unfolded HeapConfigurations of the initial
@@ -28,7 +28,7 @@ import java.util.Stack;
  *
  * @author Christoph
  */
-public class MarkedHcGenerator {
+public class MarkedHcGenerator extends SceneObject {
 
     private final Grammar grammar;
     private final Marking marking;
@@ -44,13 +44,16 @@ public class MarkedHcGenerator {
 
     /**
      * Start generating all marked HeapConfigurations.
-     * @param initialHc The HeapConfigurations whose unfolded HeapConfigurations shall be marked.
-     * @param grammar The grammar specifying materialization and canonicalization.
-     * @param marking A specification of the variable that should traverse every node in the unfolded HeapConfigurations
-     *                and the selectors that should also be marked.
+     *
+     * @param sceneObject Parent scene object
+     * @param initialHc   The HeapConfigurations whose unfolded HeapConfigurations shall be marked.
+     * @param grammar     The grammar specifying materialization and canonicalization.
+     * @param marking     A specification of the variable that should traverse every node in the unfolded HeapConfigurations
+     *                    and the selectors that should also be marked.
      */
-    public MarkedHcGenerator(HeapConfiguration initialHc, Grammar grammar, Marking marking) {
+    public MarkedHcGenerator(SceneObject sceneObject, HeapConfiguration initialHc, Grammar grammar, Marking marking) {
 
+        super(sceneObject);
         this.grammar = grammar;
         this.marking = marking;
         this.universalVariableName = marking.getUniversalVariableName();
@@ -73,9 +76,9 @@ public class MarkedHcGenerator {
         TIntSet nodesWithConstants = getNodesWithConstants(initialHc);
 
         TIntIterator nodeIter = initialHc.nodes().iterator();
-        while(nodeIter.hasNext()) {
+        while (nodeIter.hasNext()) {
             int node = nodeIter.next();
-            if(!nodesWithConstants.contains(node)) {
+            if (!nodesWithConstants.contains(node)) {
                 HeapConfiguration hc = withUniversalMarking(initialHc, node);
                 unexploredHeapConfigurations.push(hc);
             }
@@ -87,10 +90,10 @@ public class MarkedHcGenerator {
         TIntSet result = new TIntHashSet();
 
         TIntIterator iter = hc.variableEdges().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int var = iter.next();
             String label = hc.nameOf(var);
-            if(Constants.isConstant(label)) {
+            if (Constants.isConstant(label)) {
                 result.add(hc.targetOf(var));
             }
         }
@@ -108,9 +111,9 @@ public class MarkedHcGenerator {
 
     private void computeFixpointOfMarkedHcs() {
 
-        while( !unexploredHeapConfigurations.isEmpty() ) {
+        while (!unexploredHeapConfigurations.isEmpty()) {
             nextCurrent();
-            if(isCurrentNodeFullyConcrete() && completeCurrentMarking()) {
+            if (isCurrentNodeFullyConcrete() && completeCurrentMarking()) {
                 HeapConfiguration canonicalHc = canonicalizeCurrent(currentHc);
                 if (markedHeapConfigurations.add(canonicalHc)) {
 
@@ -138,9 +141,9 @@ public class MarkedHcGenerator {
 
         List<SelectorLabel> availableSelectors = currentHc.selectorLabelsOf(currentNode);
 
-        if(marking.isMarkAllSuccessors()) {
+        if (marking.isMarkAllSuccessors()) {
             HeapConfigurationBuilder builder = currentHc.builder();
-            for(SelectorLabel sel : availableSelectors) {
+            for (SelectorLabel sel : availableSelectors) {
                 builder.addVariableEdge(
                         marking.getSelectorVariableName(sel.getLabel()),
                         currentHc.selectorTargetOf(currentNode, sel)
@@ -148,9 +151,9 @@ public class MarkedHcGenerator {
             }
             builder.build();
             return true;
-        } else if(availableSelectors.containsAll(requiredSelectors)) {
+        } else if (availableSelectors.containsAll(requiredSelectors)) {
             HeapConfigurationBuilder builder = currentHc.builder();
-            for(SelectorLabel sel : requiredSelectors) {
+            for (SelectorLabel sel : requiredSelectors) {
                 builder.addVariableEdge(
                         marking.getSelectorVariableName(sel.getLabel()),
                         currentHc.selectorTargetOf(currentNode, sel)
@@ -165,15 +168,16 @@ public class MarkedHcGenerator {
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
         int minAbstractionDistance = (marking.isMarkAllSuccessors() || !marking.getRequiredSelectors().isEmpty()) ? 1 : 0;
+        boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
 
-        for(Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            for(HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, minAbstractionDistance);
-                if(checker.hasMatching()) {
+        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
+            for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, minAbstractionDistance, aggressiveNullAbstraction);
+                if (checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()
                             .builder()
-                            .replaceMatching( embedding, lhs)
+                            .replaceMatching(embedding, lhs)
                             .build();
                     return canonicalizeCurrent(abstractedHc);
                 }
@@ -185,20 +189,20 @@ public class MarkedHcGenerator {
     private void moveCurrentNodeToEachSuccessor() {
 
         HeapConfiguration cleanHc = withoutMarkings(currentHc);
-        for(SelectorLabel sel : cleanHc.selectorLabelsOf(currentNode)) {
+        for (SelectorLabel sel : cleanHc.selectorLabelsOf(currentNode)) {
             int successorNode = cleanHc.selectorTargetOf(currentNode, sel);
             unexploredHeapConfigurations.push(withUniversalMarking(cleanHc, successorNode));
         }
     }
 
-    private HeapConfiguration withoutMarkings(HeapConfiguration hc)  {
+    private HeapConfiguration withoutMarkings(HeapConfiguration hc) {
 
         HeapConfigurationBuilder builder = hc.clone().builder();
         int var = hc.variableWith(universalVariableName);
         builder.removeVariableEdge(var);
-        for(SelectorLabel sel : hc.selectorLabelsOf(currentNode)) {
+        for (SelectorLabel sel : hc.selectorLabelsOf(currentNode)) {
             var = hc.variableWith(marking.getSelectorVariableName(sel.getLabel()));
-            if(var != HeapConfiguration.INVALID_ELEMENT) {
+            if (var != HeapConfiguration.INVALID_ELEMENT) {
                 builder.removeVariableEdge(var);
             }
         }
@@ -208,7 +212,7 @@ public class MarkedHcGenerator {
     private void materializeCurrentNode() {
 
         TIntIntIterator iter = nonReductionTentacles.iterator();
-        if(iter.hasNext()) {
+        if (iter.hasNext()) {
             iter.advance();
             int edge = iter.key();
             int tentacle = iter.value();
@@ -219,12 +223,12 @@ public class MarkedHcGenerator {
 
     private void materialize(int edge, Nonterminal edgeLabel, int tentacle) {
 
-        assert(edgeLabel.getRank() > tentacle);
+        assert (edgeLabel.getRank() > tentacle);
 
-        for(HeapConfiguration rhs : grammar.getRightHandSidesFor(edgeLabel)) {
+        for (HeapConfiguration rhs : grammar.getRightHandSidesFor(edgeLabel)) {
 
             int ext = rhs.externalNodeAt(tentacle);
-            if(!rhs.selectorLabelsOf(ext).isEmpty()) {
+            if (!rhs.selectorLabelsOf(ext).isEmpty()) {
 
                 HeapConfiguration materializedHc = currentHc
                         .clone()

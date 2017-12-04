@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-import de.rwth.i2.attestor.UnitTestGlobalSettings;
+import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2EmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
-import de.rwth.i2.attestor.main.settings.Settings;
-import org.junit.BeforeClass;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -14,181 +14,180 @@ import static org.junit.Assert.assertTrue;
 
 public class EmbeddingTest {
 
-	@BeforeClass
-	public static void init() {
+    ExampleHcImplFactory hcImplFactory;
+    private SceneObject sceneObject;
 
-		UnitTestGlobalSettings.reset();
-	}
+    @Before
+    public void setUp() {
 
-	@Test 
-	public void testIdenticalGraphs() {
-		
-		Graph g = (Graph) ExampleHcImplFactory.getListRule1();
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(g, g);
-		assertTrue("Identical graphs are embeddings of each other", checker.hasMorphism());
-	}
-	
-	@Test 
-	public void testSimpleDLLEmbedding() {
-		
-		Graph p = (Graph) ExampleHcImplFactory.getTwoElementDLL();
-		Graph t = (Graph) ExampleHcImplFactory.getThreeElementDLL();
-	
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue("Two element DLL is embedded in three element DLL", checker.hasMorphism());
-	}
-	
-	@Test 
-	public void testWithInternal() {
+        sceneObject = new MockupSceneObject();
+        hcImplFactory = new ExampleHcImplFactory(sceneObject);
+    }
 
-		Graph p = (Graph) ExampleHcImplFactory.getThreeElementDLL();
-		Graph t = (Graph) ExampleHcImplFactory.getFiveElementDLL();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue("Three element DLL is embedded in five element DLL, both with 2 external nodes", checker.hasMorphism());
-	}
-	
-	@Test 
-	public void testNegative() {
-		
+    @Test
+    public void testIdenticalGraphs() {
 
-		Graph p = (Graph) ExampleHcImplFactory.getBrokenFourElementDLL();
-		Graph t = (Graph) ExampleHcImplFactory.getFiveElementDLL();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertFalse("Three element DLL with one additional pointer not embedded in five element dll", checker.hasMorphism());
-	}
-	
-	@Test
-	public void testSLLRule2(){
-	
-		Graph p = (Graph) ExampleHcImplFactory.getListRule2();
-		Graph t = (Graph) ExampleHcImplFactory.getListRule2Test();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testSLLRule2Fail(){
-	
-		Graph p = (Graph) ExampleHcImplFactory.getListRule2();
-		Graph t = (Graph) ExampleHcImplFactory.getListRule2TestFail();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertFalse( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testSLLRule3(){
-	
-		Graph p = (Graph) ExampleHcImplFactory.getListRule3();
-		Graph t = (Graph) ExampleHcImplFactory.getTestForListRule3();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testSLLRule3Fail(){
-	
-		Graph p = (Graph) ExampleHcImplFactory.getListRule3();
-		Graph t = (Graph) ExampleHcImplFactory.getTestForListRule3Fail();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertFalse( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testAllExternal() {
-		
-		Graph p = (Graph) ExampleHcImplFactory.getTreeLeaf();
-		Graph t = (Graph) ExampleHcImplFactory.get2TreeLeaf();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue( checker.hasMorphism() );
-		
-	}
-	
-	@Test
-	public void testDLLWithThirdPointer() {
-		
-		Graph p = (Graph) ExampleHcImplFactory.getDLL2Rule();
-		Graph t = (Graph) ExampleHcImplFactory.getDLLTarget();
+        Graph g = (Graph) hcImplFactory.getListRule1();
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(g, g);
+        assertTrue("Identical graphs are embeddings of each other", checker.hasMorphism());
+    }
 
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run(p, t);
-		assertTrue( checker.hasMorphism() );
+    @Test
+    public void testSimpleDLLEmbedding() {
 
-	}
-	
-	@Test
-	public void testHeapsWithDifferentIndices(){
-		HeapConfiguration oneIndex = ExampleHcImplFactory.getInput_DifferentIndices_1();
-		HeapConfiguration otherIndex = ExampleHcImplFactory.getInput_DifferentIndices_2();
-		
-		VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
-		checker.run( (Graph) oneIndex, (Graph) otherIndex);
-		assertTrue(checker.hasMorphism());
-	}
-	
-	@Test
-	public void testAbstractionDistance_shouldFindEmbedding(){
-		Settings.getInstance().options().setAggressiveNullAbstraction(true);
-		
-		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_EnoughAbstractionDistance();
-		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
-		
-		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
-		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
-		assertTrue( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testAbstractionDistance_shouldNotFindEmbedding(){
-		Settings.getInstance().options().setAggressiveNullAbstraction( true );
-		
-		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_NotEnoughAbstractionDistance();
-		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_GraphAbstraction();
-		
-		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
-		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
-		assertFalse( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding(){
-		final Settings settings = Settings.getInstance();
-		settings.options().setAggressiveNullAbstraction(true);
-		
-		HeapConfiguration inputWithEnoughDistance = ExampleHcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
-		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_PathAbstraction();
-	   
-		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
-		checker.run( (Graph) matchingPattern, (Graph) inputWithEnoughDistance);
-		assertTrue( checker.hasMorphism() );
-	}
-	
-	@Test
-	public void testAbstractionDistance_variableContains0_shouldNotFindEmbedding(){
-		final Settings settings = Settings.getInstance();
-		settings.options().setAggressiveNullAbstraction(true);
-		
-		HeapConfiguration inputWithoutEnoughDistance = ExampleHcImplFactory.getInput_variableContains0();
-		HeapConfiguration matchingPattern = ExampleHcImplFactory.getPattern_variableContains0();
-		
-		VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker( 1 );
-		checker.run( (Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
-		assertFalse( checker.hasMorphism() );
-	}
+        Graph p = (Graph) hcImplFactory.getTwoElementDLL();
+        Graph t = (Graph) hcImplFactory.getThreeElementDLL();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue("Two element DLL is embedded in three element DLL", checker.hasMorphism());
+    }
+
+    @Test
+    public void testWithInternal() {
+
+        Graph p = (Graph) hcImplFactory.getThreeElementDLL();
+        Graph t = (Graph) hcImplFactory.getFiveElementDLL();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue("Three element DLL is embedded in five element DLL, both with 2 external nodes", checker.hasMorphism());
+    }
+
+    @Test
+    public void testNegative() {
+
+
+        Graph p = (Graph) hcImplFactory.getBrokenFourElementDLL();
+        Graph t = (Graph) hcImplFactory.getFiveElementDLL();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertFalse("Three element DLL with one additional pointer not embedded in five element dll", checker.hasMorphism());
+    }
+
+    @Test
+    public void testSLLRule2() {
+
+        Graph p = (Graph) hcImplFactory.getListRule2();
+        Graph t = (Graph) hcImplFactory.getListRule2Test();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue(checker.hasMorphism());
+    }
+
+    @Test
+    public void testSLLRule2Fail() {
+
+        Graph p = (Graph) hcImplFactory.getListRule2();
+        Graph t = (Graph) hcImplFactory.getListRule2TestFail();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertFalse(checker.hasMorphism());
+    }
+
+    @Test
+    public void testSLLRule3() {
+
+        Graph p = (Graph) hcImplFactory.getListRule3();
+        Graph t = (Graph) hcImplFactory.getTestForListRule3();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue(checker.hasMorphism());
+    }
+
+    @Test
+    public void testSLLRule3Fail() {
+
+        Graph p = (Graph) hcImplFactory.getListRule3();
+        Graph t = (Graph) hcImplFactory.getTestForListRule3Fail();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertFalse(checker.hasMorphism());
+    }
+
+    @Test
+    public void testAllExternal() {
+
+        Graph p = (Graph) hcImplFactory.getTreeLeaf();
+        Graph t = (Graph) hcImplFactory.get2TreeLeaf();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue(checker.hasMorphism());
+
+    }
+
+    @Test
+    public void testDLLWithThirdPointer() {
+
+        Graph p = (Graph) hcImplFactory.getDLL2Rule();
+        Graph t = (Graph) hcImplFactory.getDLLTarget();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run(p, t);
+        assertTrue(checker.hasMorphism());
+
+    }
+
+    @Test
+    public void testHeapsWithDifferentIndices() {
+
+        HeapConfiguration oneIndex = hcImplFactory.getInput_DifferentIndices_1();
+        HeapConfiguration otherIndex = hcImplFactory.getInput_DifferentIndices_2();
+
+        VF2EmbeddingChecker checker = new VF2EmbeddingChecker();
+        checker.run((Graph) oneIndex, (Graph) otherIndex);
+        assertTrue(checker.hasMorphism());
+    }
+
+    @Test
+    public void testAbstractionDistance_shouldFindEmbedding() {
+
+        HeapConfiguration inputWithEnoughDistance = hcImplFactory.getInput_EnoughAbstractionDistance();
+        HeapConfiguration matchingPattern = hcImplFactory.getPattern_PathAbstraction();
+
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        checker.run((Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+        assertTrue(checker.hasMorphism());
+    }
+
+    @Test
+    public void testAbstractionDistance_shouldNotFindEmbedding() {
+
+        HeapConfiguration inputWithoutEnoughDistance = hcImplFactory.getInput_NotEnoughAbstractionDistance();
+        HeapConfiguration matchingPattern = hcImplFactory.getPattern_GraphAbstraction();
+
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        checker.run((Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
+        assertFalse(checker.hasMorphism());
+    }
+
+    @Test
+    public void testAbstractionDistance_onlyNonterminalEdge_shouldFindEmbedding() {
+
+        HeapConfiguration inputWithEnoughDistance = hcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
+        HeapConfiguration matchingPattern = hcImplFactory.getPattern_PathAbstraction();
+
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        checker.run((Graph) matchingPattern, (Graph) inputWithEnoughDistance);
+        assertTrue(checker.hasMorphism());
+    }
+
+    @Test
+    public void testAbstractionDistance_variableContains0_shouldNotFindEmbedding() {
+
+        HeapConfiguration inputWithoutEnoughDistance = hcImplFactory.getInput_variableContains0();
+        HeapConfiguration matchingPattern = hcImplFactory.getPattern_variableContains0();
+
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        checker.run((Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
+        assertFalse(checker.hasMorphism());
+    }
 
 }

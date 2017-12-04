@@ -14,10 +14,6 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
 
     private List<StatelessHeapAutomaton> statelessHeapAutomata;
 
-    public static AutomatonStateLabelingStrategyBuilder builder() {
-        return new AutomatonStateLabelingStrategyBuilder();
-    }
-
     public AutomatonStateLabelingStrategy(HeapAutomaton heapAutomaton) {
 
         this.heapAutomaton = heapAutomaton;
@@ -25,8 +21,14 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
 
     public AutomatonStateLabelingStrategy(HeapAutomaton heapAutomaton,
                                           List<StatelessHeapAutomaton> statelessHeapAutomata) {
+
         this.heapAutomaton = heapAutomaton;
         this.statelessHeapAutomata = statelessHeapAutomata;
+    }
+
+    public static AutomatonStateLabelingStrategyBuilder builder() {
+
+        return new AutomatonStateLabelingStrategyBuilder();
     }
 
     private HeapAutomatonState transition(HeapConfiguration heapConfiguration) {
@@ -38,7 +40,7 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
 
         List<HeapAutomatonState> result = new ArrayList<>(heapConfiguration.countNonterminalEdges());
         TIntIterator iter = heapConfiguration.nonterminalEdges().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int edge = iter.next();
             // If this cast fails the whole configuration is broken and we cannot recover from this here
             RefinedNonterminal nt = (RefinedNonterminal) heapConfiguration.labelOf(edge);
@@ -52,13 +54,13 @@ public class AutomatonStateLabelingStrategy implements StateLabelingStrategy {
     public void computeAtomicPropositions(ProgramState programState) {
 
         HeapConfiguration heapConf = programState.getHeap();
-        if(heapAutomaton != null) {
+        if (heapAutomaton != null) {
             for (String ap : transition(heapConf).toAtomicPropositions()) {
                 programState.addAP(ap);
             }
         }
-        for(StatelessHeapAutomaton automaton : statelessHeapAutomata) {
-            for(String ap : automaton.transition(heapConf)) {
+        for (StatelessHeapAutomaton automaton : statelessHeapAutomata) {
+            for (String ap : automaton.transition(heapConf)) {
                 programState.addAP(ap);
             }
         }

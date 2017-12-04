@@ -1,11 +1,10 @@
 package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
-import java.io.Writer;
-
-import org.json.JSONWriter;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
+import org.json.JSONWriter;
+
+import java.io.Writer;
 
 /**
  * Created by christina on 22.08.17.
@@ -13,10 +12,11 @@ import gnu.trove.iterator.TIntIterator;
 public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfigurationExporter {
 
     public JsonExtendedHeapConfigurationExporter(Writer writer) {
+
         super(writer);
     }
 
-    public void export(HeapConfiguration heapConfiguration){
+    public void export(HeapConfiguration heapConfiguration) {
 
         JSONWriter jsonWriter = new JSONWriter(writer);
 
@@ -48,22 +48,22 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
     private void writeNodes(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
 
         TIntIterator iterator = heapConfiguration.nodes().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             int node = iterator.next();
             boolean isExternal = heapConfiguration.isExternalNode(node);
             jsonWriter.object().key("data").object();
             jsonWriter.key("id").value(node);
-            if(isExternal){
+            if (isExternal) {
                 jsonWriter.key("type").value("externalNode");
             } else {
                 jsonWriter.key("type").value("node");
             }
             String nodeInfo = Integer.toString(node);
-            if(isExternal){
+            if (isExternal) {
                 nodeInfo += ", ext " + heapConfiguration.externalIndexOf(node);
             }
             jsonWriter.key("label").value(nodeInfo);
-            jsonWriter.key("nodeType").value( heapConfiguration.nodeTypeOf(node).toString() );
+            jsonWriter.key("nodeType").value(heapConfiguration.nodeTypeOf(node).toString());
             jsonWriter.endObject().endObject();
         }
     }
