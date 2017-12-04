@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIntIterator;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntIntMap;
@@ -116,7 +117,6 @@ public class MarkedHcGenerator extends SceneObject {
             if (isCurrentNodeFullyConcrete() && completeCurrentMarking()) {
                 HeapConfiguration canonicalHc = canonicalizeCurrent(currentHc);
                 if (markedHeapConfigurations.add(canonicalHc)) {
-
                     moveCurrentNodeToEachSuccessor();
                 }
             } else {
@@ -191,7 +191,9 @@ public class MarkedHcGenerator extends SceneObject {
         HeapConfiguration cleanHc = withoutMarkings(currentHc);
         for (SelectorLabel sel : cleanHc.selectorLabelsOf(currentNode)) {
             int successorNode = cleanHc.selectorTargetOf(currentNode, sel);
-            unexploredHeapConfigurations.push(withUniversalMarking(cleanHc, successorNode));
+            if(cleanHc.nodeTypeOf(successorNode) != Types.NULL) {
+                unexploredHeapConfigurations.push(withUniversalMarking(cleanHc, successorNode));
+            }
         }
     }
 

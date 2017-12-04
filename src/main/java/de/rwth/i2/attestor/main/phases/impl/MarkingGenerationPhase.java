@@ -32,8 +32,6 @@ public class MarkingGenerationPhase extends AbstractPhase
 
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
 
-    private AutomatonStateLabelingStrategy stateLabelingStrategy;
-
     public MarkingGenerationPhase(Scene scene) {
 
         super(scene);
