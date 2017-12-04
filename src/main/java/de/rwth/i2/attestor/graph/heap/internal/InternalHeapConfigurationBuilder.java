@@ -344,7 +344,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 
         // variable edges are attached to exactly one node and have no
         // incoming edges in the underlying graph
-        heapConf.graph.addNode(Variable.get(name), 1, 0);
+        heapConf.graph.addNode(new Variable(name), 1, 0);
         heapConf.graph.addEdge(privateId, 1, tId);
         ++heapConf.countVariableEdges;
 

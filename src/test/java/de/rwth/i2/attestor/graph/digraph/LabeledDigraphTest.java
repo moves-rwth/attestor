@@ -12,7 +12,7 @@ public class LabeledDigraphTest {
 
     private void addNodeWithVariableLabel(LabeledDigraph graph, String label, int succCapacity, int predCapacity) {
 
-        graph.addNode(Variable.get(label), succCapacity, predCapacity);
+        graph.addNode(new Variable(label), succCapacity, predCapacity);
     }
 
 
@@ -47,7 +47,7 @@ public class LabeledDigraphTest {
 
         String label1 = "label";
         addNodeWithVariableLabel(digraph, label1, 1, 2);
-        assertEquals(Variable.get("label"), digraph.nodeLabelOf(0));
+        assertEquals(new Variable("label"), digraph.nodeLabelOf(0));
 
         assertNull(digraph.nodeLabelOf(17));
     }
@@ -392,7 +392,7 @@ public class LabeledDigraphTest {
 
         digraph.pack();
         assertEquals(2, digraph.size());
-        assertEquals(Variable.get("z"), digraph.nodeLabelOf(1));
+        assertEquals(new Variable("z"), digraph.nodeLabelOf(1));
         assertEquals(0, digraph.successorsOf(1).get(0));
         assertEquals(1, digraph.predecessorsOf(0).get(0));
 

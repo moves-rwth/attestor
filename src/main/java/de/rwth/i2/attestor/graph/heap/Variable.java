@@ -2,8 +2,6 @@ package de.rwth.i2.attestor.graph.heap;
 
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Wrapper for a String such that Strings can be used as {@link NodeLabel} in
@@ -14,10 +12,6 @@ import java.util.Map;
 public class Variable implements NodeLabel {
 
     /**
-     * Caches all already created Variables together with their wrapped strings.
-     */
-    private static final Map<String, Variable> existingLabels = new HashMap<>();
-    /**
      * The String that is wrapped by this Variable.
      */
     private final String name;
@@ -25,23 +19,9 @@ public class Variable implements NodeLabel {
     /**
      * @param name The string to be wrapped.
      */
-    private Variable(String name) {
+    public Variable(String name) {
 
         this.name = name;
-    }
-
-    /**
-     * Provides a Variable wrapping the provided name.
-     *
-     * @param name The String to be wrapped.
-     * @return The Variable object wrapping name.
-     */
-    public static synchronized Variable get(String name) {
-
-        if (!existingLabels.containsKey(name)) {
-            existingLabels.put(name, new Variable(name));
-        }
-        return existingLabels.get(name);
     }
 
     @Override
