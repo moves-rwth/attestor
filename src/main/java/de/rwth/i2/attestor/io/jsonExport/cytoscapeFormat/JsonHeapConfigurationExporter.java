@@ -29,6 +29,32 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
                 .key("nodes")
                 .array();
 
+        writeNodesAndEdges(jsonWriter, heapConfiguration);
+
+        jsonWriter.endArray()
+                .endObject()
+                .endObject();
+
+    }
+
+    @Override
+    public void exportForReport(HeapConfiguration heapConfiguration) {
+
+        JSONWriter jsonWriter = new JSONWriter(writer);
+
+        jsonWriter.object()
+                .key("nodes")
+                .array();
+
+        writeNodesAndEdges(jsonWriter, heapConfiguration);
+
+        jsonWriter.endArray()
+                .endObject();
+
+    }
+
+    private void writeNodesAndEdges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {
+
         writeNodes(jsonWriter, heapConfiguration);
         writeNonterminalHyperedges(jsonWriter, heapConfiguration);
         writeVariables(jsonWriter, heapConfiguration);
@@ -40,11 +66,6 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
         writeSelectors(jsonWriter, heapConfiguration);
         writeNonterminalTentacles(jsonWriter, heapConfiguration);
         writeVariableTentacles(jsonWriter, heapConfiguration);
-
-        jsonWriter.endArray()
-                .endObject()
-                .endObject();
-
     }
 
     private void writeNodes(JSONWriter jsonWriter, HeapConfiguration heapConfiguration) {

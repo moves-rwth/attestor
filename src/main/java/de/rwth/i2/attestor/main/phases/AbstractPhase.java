@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 public abstract class AbstractPhase extends SceneObject {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
@@ -37,7 +39,7 @@ public abstract class AbstractPhase extends SceneObject {
         return registry.getMostRecentPhase(phaseId, phaseType);
     }
 
-    protected abstract void executePhase();
+    protected abstract void executePhase() throws IOException;
 
     public abstract void logSummary();
 
