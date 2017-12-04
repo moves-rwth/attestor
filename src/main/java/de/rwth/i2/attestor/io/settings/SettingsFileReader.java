@@ -69,14 +69,15 @@ public class SettingsFileReader {
         JSONObject jsonInput = jsonSettings.getJSONObject("input");
         boolean hasDefaultPath = false;
 
+        if(jsonSettings.has("scenario")) {
+            input.setScenario(jsonSettings.getString("scenario"));
+        }
+
         for (String key : jsonInput.keySet()) {
 
             switch (key) {
                 case "defaultPath":
                     input.setDefaultPath(jsonInput.getString(key));
-                    break;
-                case "scenario":
-                    input.setScenario(jsonSettings.getString(key));
                     break;
                 case "program":
                     JSONObject programSettings = jsonInput.getJSONObject(key);
