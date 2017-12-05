@@ -92,8 +92,8 @@ public class DefaultProgramState extends GeneralProgramState {
                 if (baseNodeType.isPrimitiveType(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
                 } else {
-                    return GeneralConcreteValue.getUndefined();
-                    //throw new IllegalStateException("Required selector label " + from + "." + sel + " is missing.");
+                    throw new IllegalStateException("Required selector label " + from
+                            + "." + selectorLabel + " is missing.");
                 }
             }
 
@@ -118,6 +118,11 @@ public class DefaultProgramState extends GeneralProgramState {
             GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
             GeneralConcreteValue dTo = (GeneralConcreteValue) to;
             int fromNode = dFrom.getNode();
+            Type fromType = heap.nodeTypeOf(fromNode);
+            if(!fromType.hasSelectorLabel(selectorLabel)) {
+               throw new IllegalStateException("Illegal request to set selector '" + selectorLabel
+                       + "' for node of type '" + fromType + "'.");
+            }
             try {
                 if (heap.selectorTargetOf(fromNode, selectorLabel) != HeapConfiguration.INVALID_ELEMENT) {
                     heap.builder().removeSelector(fromNode, selectorLabel).build();
