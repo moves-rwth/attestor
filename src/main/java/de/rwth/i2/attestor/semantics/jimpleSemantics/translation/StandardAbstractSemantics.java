@@ -346,13 +346,15 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 
         InstanceFieldRef fieldRef = (InstanceFieldRef) input;
 
+        Type baseType = topLevel.translateType(fieldRef.getBase().getType()) ;
         Value base = topLevel.translateValue(fieldRef.getBase());
         String name = fieldRef.getField().getName();
         SelectorLabel fieldLabel = scene().getSelectorLabel(name);
         Type type = topLevel.translateType(fieldRef.getType());
 
         String fieldType = fieldRef.getType().toString();
-        type.addSelectorLabel(fieldLabel, PrimitiveTypes.getDefaultValue(fieldType));
+
+        baseType.addSelectorLabel(fieldLabel, PrimitiveTypes.getDefaultValue(fieldType));
 
         scene().options().addUsedSelectorLabel(name);
 

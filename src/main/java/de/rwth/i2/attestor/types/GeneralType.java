@@ -83,7 +83,8 @@ public final class GeneralType implements Type {
     @Override
     public boolean isPrimitiveType(SelectorLabel selectorLabel) {
 
-        return !selectorLabelNames.get(selectorLabel).equals(Constants.NULL);
+        String defaultValue = selectorLabelNames.get(selectorLabel);
+        return defaultValue != null && defaultValue.equals(Constants.ZERO);
     }
 
     public static final class Factory {

@@ -87,6 +87,9 @@ public class AnnotatedSelectorLabel implements SelectorLabel {
     @Override
     public String toString() {
 
+        if(annotation.isEmpty()) {
+            return selectorLabel.toString();
+        }
         return selectorLabel.toString() + "[" + this.annotation + "]";
     }
 

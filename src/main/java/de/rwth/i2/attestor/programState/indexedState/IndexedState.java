@@ -64,6 +64,7 @@ public class IndexedState extends GeneralProgramState {
     @Override
     public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
 
+        Type nodeType = from.type();
         if (from instanceof GeneralConcreteValue) {
             GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
             if (dFrom.isUndefined()) {
@@ -73,7 +74,6 @@ public class IndexedState extends GeneralProgramState {
 
             int node = dFrom.getNode();
             String selectorName = selectorLabel.getLabel();
-            Type nodeType = heap.nodeTypeOf(node);
 
             for (SelectorLabel label : getHeap().selectorLabelsOf(node)) {
                 AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
@@ -91,8 +91,9 @@ public class IndexedState extends GeneralProgramState {
             throw new IllegalStateException("getSelectorTarget got invalid source");
         }
 
-        throw new IllegalStateException("Required selector label " + from
-                    + "." + selectorLabel + " is missing.");
+        throw new IllegalStateException("Required selector label " + nodeType
+                    + "." + selectorLabel + " is missing. Supported selectors are: "
+                    + nodeType.getSelectorLabels().keySet());
     }
 
     @Override
