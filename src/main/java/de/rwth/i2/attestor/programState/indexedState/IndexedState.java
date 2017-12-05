@@ -73,6 +73,7 @@ public class IndexedState extends GeneralProgramState {
 
             int node = dFrom.getNode();
             String selectorName = selectorLabel.getLabel();
+            Type nodeType = heap.nodeTypeOf(node);
 
             for (SelectorLabel label : getHeap().selectorLabelsOf(node)) {
                 AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
@@ -82,11 +83,16 @@ public class IndexedState extends GeneralProgramState {
                     return new GeneralConcreteValue(type, target);
                 }
             }
+
+            if (nodeType.isPrimitiveType(selectorLabel)) {
+                return GeneralConcreteValue.getUndefined();
+            }
         } else {
             throw new IllegalStateException("getSelectorTarget got invalid source");
         }
 
-        return GeneralConcreteValue.getUndefined();
+        throw new IllegalStateException("Required selector label " + from
+                    + "." + selectorLabel + " is missing.");
     }
 
     @Override
@@ -102,7 +108,13 @@ public class IndexedState extends GeneralProgramState {
             GeneralConcreteValue dTo = (GeneralConcreteValue) to;
 
             int fromNode = dFrom.getNode();
+            Type fromType = heap.nodeTypeOf(fromNode);
             String selectorName = selectorLabel.getLabel();
+
+            if(!fromType.hasSelectorLabel(selectorLabel)) {
+                throw new IllegalStateException("Illegal request to set selector '" + selectorLabel
+                        + "' for node of type '" + fromType + "'.");
+            }
 
             for (SelectorLabel label : getHeap().selectorLabelsOf(fromNode)) {
 

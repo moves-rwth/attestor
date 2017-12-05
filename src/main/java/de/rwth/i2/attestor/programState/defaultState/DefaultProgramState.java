@@ -98,7 +98,6 @@ public class DefaultProgramState extends GeneralProgramState {
             }
 
             Type type = heap.nodeTypeOf(node);
-
             return new GeneralConcreteValue(type, node);
         } else {
             throw new IllegalStateException("getSelectorTarget did not get a GeneralConcreteValue.");

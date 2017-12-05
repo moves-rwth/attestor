@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSym
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -92,6 +93,7 @@ public class IndexedSemanticsTest {
 
         Type type = sceneObject.scene().getType("AVLTree");
         SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+        type.addSelectorLabel(left, Constants.NULL);
 
         Local varTmp = new Local(type, "tmp");
         Local varX = new Local(type, "x");
