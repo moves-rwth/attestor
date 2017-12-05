@@ -8,6 +8,8 @@ import java.io.Writer;
 
 /**
  * Created by christina on 22.08.17.
+ *
+ * Exports heap configurations with external nodes to json format, marking the external nodes.
  */
 public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfigurationExporter {
 
