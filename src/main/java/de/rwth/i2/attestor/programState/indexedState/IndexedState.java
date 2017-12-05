@@ -3,41 +3,24 @@ package de.rwth.i2.attestor.programState.indexedState;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.types.Type;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class IndexedState extends GeneralProgramState {
-
-    private static final Logger logger = LogManager.getLogger("IndexedState");
 
     public IndexedState(HeapConfiguration heap) {
 
         super(heap);
     }
 
-
     private IndexedState(IndexedState state) {
 
         super(state);
     }
 
-
     @Override
     public ProgramState shallowCopy() {
 
         return new IndexedState(this);
-    }
-
-
-    public int hashCode() {
-
-        int hash = programCounter;
-        hash = (hash << 1) ^ heap.hashCode();
-        return hash;
     }
 
     @Override
@@ -62,81 +45,37 @@ public class IndexedState extends GeneralProgramState {
     }
 
     @Override
-    public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
-
-        Type nodeType = from.type();
-        if (from instanceof GeneralConcreteValue) {
-            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
-            if (dFrom.isUndefined()) {
-                logger.debug("getSelectorTarget: origin is undefined. Returning undefined.");
-                return dFrom;
+    protected int getSelectorTargetOf(int sourceNode, SelectorLabel selectorLabel) {
+        String selectorName = selectorLabel.getLabel();
+        for (SelectorLabel label : getHeap().selectorLabelsOf(sourceNode)) {
+            AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
+            if (sel.hasLabel(selectorName)) {
+                return getHeap().selectorTargetOf(sourceNode, sel);
             }
-
-            int node = dFrom.getNode();
-            String selectorName = selectorLabel.getLabel();
-
-            for (SelectorLabel label : getHeap().selectorLabelsOf(node)) {
-                AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
-                if (sel.hasLabel(selectorName)) {
-                    int target = getHeap().selectorTargetOf(node, sel);
-                    Type type = getHeap().nodeTypeOf(target);
-                    return new GeneralConcreteValue(type, target);
-                }
-            }
-
-            if (nodeType.isPrimitiveType(selectorLabel)) {
-                return GeneralConcreteValue.getUndefined();
-            }
-        } else {
-            throw new IllegalStateException("getSelectorTarget got invalid source");
         }
-
-        throw new IllegalStateException("Required selector label " + nodeType
-                    + "." + selectorLabel + " is missing. Supported selectors are: "
-                    + nodeType.getSelectorLabels().keySet());
+        return HeapConfiguration.INVALID_ELEMENT;
     }
 
     @Override
-    public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
+    protected void removeSelector(int sourceNode, SelectorLabel selectorLabel) {
 
-        if (from.isUndefined() || to.isUndefined()) {
-            return;
+        String selectorName = selectorLabel.getLabel();
+        for (SelectorLabel label : getHeap().selectorLabelsOf(sourceNode)) {
+
+            AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
+            if (sel.hasLabel(selectorName)) {
+                this.getHeap()
+                        .builder()
+                        .removeSelector(sourceNode, sel)
+                        .build();
+            }
         }
 
-        if (from instanceof GeneralConcreteValue && to instanceof GeneralConcreteValue) {
+    }
 
-            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
-            GeneralConcreteValue dTo = (GeneralConcreteValue) to;
-
-            int fromNode = dFrom.getNode();
-            Type fromType = heap.nodeTypeOf(fromNode);
-            String selectorName = selectorLabel.getLabel();
-
-            if(!fromType.hasSelectorLabel(selectorLabel)) {
-                throw new IllegalStateException("Illegal request to set selector '" + selectorLabel
-                        + "' for node of type '" + fromType + "'.");
-            }
-
-            for (SelectorLabel label : getHeap().selectorLabelsOf(fromNode)) {
-
-                AnnotatedSelectorLabel sel = (AnnotatedSelectorLabel) label;
-
-                if (sel.hasLabel(selectorName)) {
-                    this.getHeap()
-                            .builder()
-                            .removeSelector(fromNode, sel)
-                            .build();
-                }
-            }
-
-            AnnotatedSelectorLabel newSel = new AnnotatedSelectorLabel(selectorLabel);
-
-            this.getHeap()
-                    .builder()
-                    .addSelector(fromNode, newSel, dTo.getNode())
-                    .build();
-        }
-
+    @Override
+    protected SelectorLabel getNewSelector(SelectorLabel oldSelectorLabel) {
+        return new AnnotatedSelectorLabel(oldSelectorLabel);
     }
 
     @Override

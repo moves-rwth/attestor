@@ -45,6 +45,7 @@ public class IndexedSemanticsTest {
 
         Type type = sceneObject.scene().getType("AVLTree");
         SelectorLabel left = sceneObject.scene().getSelectorLabel("left");
+        type.addSelectorLabel(left, Constants.NULL);
 
         Local varX = new Local(type, "x");
         Field xLeft = new Field(type, varX, left);

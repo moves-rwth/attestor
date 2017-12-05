@@ -100,9 +100,12 @@ public abstract class GeneralProgramState implements ProgramState {
     /**
      * @return A hash code corresponding to this state.
      */
+    @Override
     public int hashCode() {
 
-        return heap.hashCode();
+        int hash = programCounter;
+        hash = (hash << 1) ^ heap.hashCode();
+        return hash;
     }
 
     /**
@@ -380,6 +383,10 @@ public abstract class GeneralProgramState implements ProgramState {
             for (Map.Entry<SelectorLabel, String> selectorDefault : selectorToDefaults.entrySet()) {
 
                 SelectorLabel selectorLabel = selectorDefault.getKey();
+                if(type.isPrimitiveType(selectorLabel)) {
+                    // We do not initialize primitive data types, because we cannot deal with them at the moment
+                    continue;
+                }
                 int target = heap.variableTargetOf(selectorDefault.getValue());
                 if (target == HeapConfiguration.INVALID_ELEMENT) {
                     throw new IllegalStateException("default target '" + selectorDefault.getValue() + "' of selector '" + selectorDefault.getKey() + "' not found.");
@@ -398,6 +405,79 @@ public abstract class GeneralProgramState implements ProgramState {
             return null;
         }
     }
+
+    @Override
+    public GeneralConcreteValue getSelectorTarget(ConcreteValue from, SelectorLabel selectorLabel) {
+
+        if (from != null && from.getClass() == GeneralConcreteValue.class) {
+
+            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
+
+            if (dFrom.isUndefined()) {
+                logger.warn("getSelectorTarget: origin is undefined");
+                return dFrom;
+            }
+
+            int baseNode = dFrom.getNode();
+            Type baseNodeType = dFrom.type();
+            if (!baseNodeType.hasSelectorLabel(selectorLabel)) {
+                throw new IllegalStateException("Invalid selector '" + selectorLabel + "' for node of type '"
+                        + baseNodeType + "'");
+            }
+
+            int node = getSelectorTargetOf(baseNode, selectorLabel);
+
+            if (node == HeapConfiguration.INVALID_ELEMENT) {
+
+                if (baseNodeType.isPrimitiveType(selectorLabel)) {
+                    return GeneralConcreteValue.getUndefined();
+                } else {
+                    throw new IllegalStateException("Required selector label " + from
+                            + "." + selectorLabel + " is missing.");
+                }
+            }
+
+            Type type = heap.nodeTypeOf(node);
+            return new GeneralConcreteValue(type, node);
+        } else {
+            throw new IllegalStateException("getSelectorTarget did not get a GeneralConcreteValue.");
+        }
+    }
+
+    protected abstract int getSelectorTargetOf(int sourceNode, SelectorLabel selectorLabel);
+
+    @Override
+    public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
+
+        if (from.isUndefined() || to.isUndefined()) {
+            logger.warn("Specified edge has undefined source or target.");
+            return;
+        }
+
+        if (from.getClass() == GeneralConcreteValue.class && to.getClass() == GeneralConcreteValue.class) {
+            GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
+            GeneralConcreteValue dTo = (GeneralConcreteValue) to;
+            int fromNode = dFrom.getNode();
+            Type fromType = heap.nodeTypeOf(fromNode);
+            if(!fromType.hasSelectorLabel(selectorLabel)) {
+                throw new IllegalStateException("Illegal request to set selector '" + selectorLabel
+                        + "' for node of type '" + fromType + "'.");
+            }
+            try {
+                removeSelector(fromNode, selectorLabel);
+                heap
+                        .builder()
+                        .addSelector(fromNode, getNewSelector(selectorLabel), dTo.getNode())
+                        .build();
+            } catch (IllegalArgumentException e) {
+                getHeap().builder().build();
+                logger.warn("Specified edge has invalid source or target.");
+            }
+        }
+    }
+
+    protected abstract void removeSelector(int sourceNode, SelectorLabel selectorLabel);
+    protected abstract SelectorLabel getNewSelector(SelectorLabel oldSelectorLabel);
 
     @Override
     public GeneralConcreteValue getUndefined() {
