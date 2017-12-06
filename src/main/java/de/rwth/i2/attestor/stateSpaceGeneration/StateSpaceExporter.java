@@ -19,4 +19,6 @@ public interface StateSpaceExporter {
      */
     void export(StateSpace stateSpace, Program program) throws IOException;
 
+    void exportForReport(StateSpace stateSpace, Program program) throws IOException;
+
 }

@@ -85,5 +85,9 @@ public class PhaseRegistry {
         }
     }
 
+    public List<AbstractPhase> getPhases() {
+        return phases;
+    }
+
 }
 

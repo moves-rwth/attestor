@@ -69,6 +69,34 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         writer.close();
     }
 
+    @Override
+    public void exportForReport(StateSpace stateSpace, Program program) throws IOException {
+
+        jsonWriter = new JSONWriter(writer);
+        this.stateSpace = stateSpace;
+        this.program = program;
+
+        states = stateSpace.getStates();
+        initialStates = stateSpace.getInitialStates();
+        finalStates = stateSpace.getFinalStates();
+
+        incomingEdgesOfStates = new TIntIntHashMap(states.size());
+        isEssentialStateId = new TIntHashSet(states.size());
+
+        computeNumberOfIncomingEdges();
+
+        jsonWriter.object()
+                .key("nodes")
+                .array();
+        addNodes();
+        jsonWriter.endArray().key("edges").array();
+        addStateSpaceEdges();
+        addTransitiveEdges();
+        jsonWriter.endArray().endObject();
+        writer.close();
+
+    }
+
     private void computeNumberOfIncomingEdges() {
 
         for (ProgramState s : states) {

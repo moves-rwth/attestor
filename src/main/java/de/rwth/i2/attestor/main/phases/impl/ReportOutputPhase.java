@@ -7,20 +7,21 @@ import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.io.SummaryExporter;
+import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
-import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-import de.rwth.i2.attestor.util.ZipUtils;
+import org.json.JSONWriter;
 
 import java.io.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,15 +31,18 @@ import java.util.Set;
  */
 public class ReportOutputPhase extends AbstractPhase {
 
+    private List<AbstractPhase> phases;
+
     private OutputSettings outputSettings;
 
     private StateSpace stateSpace;
     private Program program;
 
 
-    public ReportOutputPhase(Scene scene) {
+    public ReportOutputPhase(Scene scene, List<AbstractPhase> phases) {
 
         super(scene);
+        this.phases = phases;
     }
 
     @Override
@@ -76,6 +80,7 @@ public class ReportOutputPhase extends AbstractPhase {
         String outputDirectory = outputSettings.getFolderForReportOutput();
 
         // Export analysis summary
+        exportSummary(outputDirectory);
 
         // Export grammar (without preceding elements!!)
         exportGrammar(outputDirectory);
@@ -126,13 +131,18 @@ public class ReportOutputPhase extends AbstractPhase {
         );
     }
 
-    private void exportSummary(String location){
+    private void exportSummary(String location) throws IOException{
 
         logger.info("Exporting analysis summary for report...");
 
         location = location + File.separator + "attestorOutput";
 
-        
+        FileUtils.createDirectories(location);
+        FileWriter writer = new FileWriter(location + File.separator + "analysisSummary.json");
+
+        SummaryExporter exporter = new JSONSummaryExporter(writer);
+        exporter.exportForReport(scene(), stateSpace, (ModelCheckingPhase) getPhase(ModelCheckingResultsTransformer.class), getPhase(MCSettingsTransformer.class).getMcSettings(),(CLIPhase) getPhase(CLIPhase.class), phases);
+        writer.close();
 
         logger.info("done. Analysis summary for report exported to '"
                 + location
@@ -148,7 +158,7 @@ public class ReportOutputPhase extends AbstractPhase {
                 new OutputStreamWriter(new FileOutputStream(directory + File.separator + "statespace.json"))
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
-        exporter.export(stateSpace, program);
+        exporter.exportForReport(stateSpace, program);
         writer.close();
     }
 
