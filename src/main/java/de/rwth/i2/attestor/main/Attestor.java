@@ -51,6 +51,7 @@ public class Attestor {
      *
      * @param args The command line arguments determining communication and analysis customizations.
      * @see <a href="https://github.com/moves-rwth/attestor/wiki/Command-Line-Options">
+
      * Explanation of all command line options
      * </a>
      */
@@ -74,6 +75,7 @@ public class Attestor {
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
                 .addPhase(new ReportGenerationPhase(scene))
+				.addPhase( new ReportOutputPhase(scene, registry.getPhases()) )
                 .execute();
 
         registry.logExecutionSummary();

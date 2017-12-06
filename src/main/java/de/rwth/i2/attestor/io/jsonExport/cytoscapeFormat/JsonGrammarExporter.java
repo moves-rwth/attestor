@@ -39,6 +39,34 @@ public class JsonGrammarExporter implements GrammarExporter {
 
     }
 
+    @Override
+    public void exportForReport(String directory, Grammar grammar) throws IOException {
+        FileUtils.createDirectories(directory);
+        FileWriter writer = new FileWriter(directory + File.separator + "grammarExport.json");
+        exportGrammar(writer, grammar);
+        writer.close();
+
+        for (Nonterminal nt : grammar.getAllLeftHandSides()) {
+            int count = 1;
+            for (HeapConfiguration hc : grammar.getRightHandSidesFor(nt)) {
+                writeHeapConfigurationForReport(directory + File.separator + nt.toString() + "Rule" + count + ".json",
+                        hc);
+                count++;
+            }
+
+        }
+
+    }
+
+    private void writeHeapConfigurationForReport(String filePath, HeapConfiguration hc) throws IOException {
+
+        FileWriter writer = new FileWriter(filePath);
+        HeapConfigurationExporter exporter = new JsonExtendedHeapConfigurationExporter(writer);
+        exporter.exportForReport(hc);
+        writer.close();
+    }
+
+
     private void exportGrammar(Writer writer, Grammar grammar) {
 
         JSONWriter jsonWriter = new JSONWriter(writer);

@@ -13,4 +13,6 @@ public interface HeapConfigurationExporter {
      * @param heapConfiguration The HeapConfiguration that should be exported.
      */
     void export(HeapConfiguration heapConfiguration);
+
+    void exportForReport(HeapConfiguration heapConfiguration);
 }
