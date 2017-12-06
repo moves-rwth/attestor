@@ -149,8 +149,6 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
             int var = variables.get(i);
             String varName = kernel.nameOf(var);
 
-            varName = VariableScopes.getName(varName);
-
             int varFrom = kernel.targetOf(var);
             TIntIterator iter = kernel.successorNodesOf(varFrom).iterator();
             while (iter.hasNext()) {
@@ -158,7 +156,6 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
                 TIntArrayList attVars = kernel.attachedVariablesOf(to);
                 for (int j = 0; j < attVars.size(); j++) {
                     String toName = kernel.nameOf(attVars.get(j));
-                    toName = VariableScopes.getName(toName);
 
                     if (trackedSelectorLabels.isEmpty()) {
                         result.add("{ isReachable(" + varName + "," + toName + ") }");

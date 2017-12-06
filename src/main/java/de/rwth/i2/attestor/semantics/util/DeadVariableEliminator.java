@@ -29,7 +29,7 @@ public class DeadVariableEliminator {
             if (!liveVariables.contains(varName)
                     && !Constants.isConstant(varName)
                     && !Markings.isMarking(varName)
-                    && !sceneObject.scene().options().isKeptVariableName(VariableScopes.getName(varName))
+                    && !sceneObject.scene().options().isKeptVariableName(varName)
                     ) {
                 programState.removeVariable(varName);
             }

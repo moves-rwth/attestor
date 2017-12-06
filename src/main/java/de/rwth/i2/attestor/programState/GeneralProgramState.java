@@ -141,23 +141,6 @@ public abstract class GeneralProgramState implements ProgramState {
 
         HeapConfiguration copy = heap.clone();
 
-        TIntIterator varIter = heap.variableEdges().iterator();
-        while (varIter.hasNext()) {
-            int var = varIter.next();
-
-            String name = heap.nameOf(var);
-
-            if (VariableScopes.isScoped(name) || !VariableScopes.isScopeable(name)) {
-                continue;
-            }
-
-            int target = heap.targetOf(var);
-            copy.builder()
-                    .removeVariableEdge(var)
-                    .addVariableEdge(getScopedName(name), target)
-                    .build();
-        }
-
         int trueNode;
 
         if (heap.variableWith(Constants.TRUE) == HeapConfiguration.INVALID_ELEMENT) {

@@ -65,7 +65,7 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
             int var = varIter.next();
 
             // remove scoping information first
-            String name = VariableScopes.getName(heapConfiguration.nameOf(var));
+            String name = heapConfiguration.nameOf(var);
 
             if (lhsNode == HeapConfiguration.INVALID_ELEMENT) {
                 lhsNode = getNode(heapConfiguration, var, name, lhs, lhsField);

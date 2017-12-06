@@ -37,7 +37,7 @@ public class StatelessVisitedAutomaton implements StatelessHeapAutomaton {
         TIntIterator iter = heapConfiguration.attachedVariablesOf(markedNode).iterator();
         while (iter.hasNext()) {
             int var = iter.next();
-            String name = VariableScopes.getName(heapConfiguration.nameOf(var));
+            String name = heapConfiguration.nameOf(var);
             if (!Constants.isConstant(name) && !Markings.isMarking(name)) {
                 return Collections.singleton("{ visited }");
             }
