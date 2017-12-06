@@ -136,10 +136,8 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
 
         for (String variableName : potentialViolationPoints.getVariables()) {
 
-            String scopedName = state.getVariableNameInHeap(variableName);
-
             try {
-                int variableTarget = state.getHeap().targetOf(state.getHeap().variableWith(scopedName));
+                int variableTarget = state.getHeap().targetOf(state.getHeap().variableWith(variableName));
 
 
                 List<SelectorLabel> selectors = state.getHeap().selectorLabelsOf(variableTarget);
@@ -152,7 +150,7 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
                 }
 
             } catch (IllegalArgumentException e) {
-                logger.debug("the variable " + scopedName + "of the violationPoint was not present");
+                logger.debug("the variable " + variableName + "of the violationPoint was not present");
             }
         }
 

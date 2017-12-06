@@ -6,11 +6,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
-import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -201,18 +199,8 @@ public abstract class GeneralProgramState implements ProgramState {
         return this;
     }
 
-
-    @Override
-    public String getVariableNameInHeap(String originalVariableName) {
-
-        return getScopedName(originalVariableName);
-    }
-
-
     @Override
     public GeneralConcreteValue getVariableTarget(String variableName) {
-
-        variableName = getScopedName(variableName);
 
         try {
 
@@ -233,7 +221,6 @@ public abstract class GeneralProgramState implements ProgramState {
             return;
         }
 
-        variableName = getScopedName(variableName);
         int varEdge = heap.variableWith(variableName);
 
         try {
@@ -252,8 +239,6 @@ public abstract class GeneralProgramState implements ProgramState {
         }
 
         if (value instanceof GeneralConcreteValue) {
-
-            variableName = getScopedName(variableName);
 
             GeneralConcreteValue v = (GeneralConcreteValue) value;
 

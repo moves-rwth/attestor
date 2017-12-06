@@ -34,16 +34,6 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     ProgramState prepareHeap();
 
     /**
-     * Converts the given variable name as it occurs in a program, such as "x",
-     * into a variable name that occurs in the heap configuration corresponding to this
-     * program state.
-     *
-     * @param originalVariableName The variable name as it occurs in the semantics.
-     * @return The corresponding variable name as stored in the heap configuration.
-     */
-    String getVariableNameInHeap(String originalVariableName);
-
-    /**
      * @return The heap configuration determining the heap and the evaluation of variables
      * for this program state.
      */

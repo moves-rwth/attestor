@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;

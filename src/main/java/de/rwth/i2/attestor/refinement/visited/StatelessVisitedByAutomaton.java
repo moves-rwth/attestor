@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.markings.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collections;
