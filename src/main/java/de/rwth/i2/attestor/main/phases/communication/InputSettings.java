@@ -29,7 +29,7 @@ public class InputSettings {
     /**
      * Description of the analyzed scenario.
      */
-    private String scenario;
+    private String scenario = "";
     /**
      * The classpath of source code files that are analyzed.
      */

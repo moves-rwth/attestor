@@ -23,6 +23,8 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     private final Map<LTLFormula, Trace> counterexampleTraces = new LinkedHashMap<>();
     private boolean allSatisfied = true;
 
+    private int numberSatFormulae = 0;
+
     public ModelCheckingPhase(Scene scene) {
 
         super(scene);
@@ -55,6 +57,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
             if (proofStructure.isSuccessful()) {
                 formulaResults.put(formula, true);
                 logger.info("done. Formula is satisfied.");
+                numberSatFormulae++;
             } else {
                 logger.warn("Formula is violated: " + formulaString);
                 allSatisfied = false;
@@ -117,5 +120,10 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     public boolean hasAllLTLSatisfied() {
 
         return allSatisfied;
+    }
+
+    @Override
+    public int getNumberSatFormulae() {
+        return numberSatFormulae;
     }
 }

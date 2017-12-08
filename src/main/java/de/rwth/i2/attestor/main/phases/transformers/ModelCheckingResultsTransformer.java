@@ -12,5 +12,7 @@ public interface ModelCheckingResultsTransformer {
     Trace getTraceOf(LTLFormula formula);
 
     boolean hasAllLTLSatisfied();
+
+    int getNumberSatFormulae();
 }
 
