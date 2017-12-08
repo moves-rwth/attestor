@@ -57,7 +57,7 @@ public class JSONSummaryExporter implements SummaryExporter {
                     .key("formula")
                     .value(result.getKey().getFormulaString())
                     .key("satisfied")
-                    .value(result.getValue())
+                    .value(result.getValue().toString())
                     .endObject();
         }
 
