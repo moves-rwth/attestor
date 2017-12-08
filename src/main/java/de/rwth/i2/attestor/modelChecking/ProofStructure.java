@@ -41,7 +41,7 @@ public class ProofStructure {
     public ProofStructure() {
 
         this.stateIdToVertices = new TIntObjectHashMap<>();
-        this.edges = new HashMap<>();
+        this.edges = new LinkedHashMap<>();
     }
 
     void setBuildFullStructure() {
@@ -54,7 +54,7 @@ public class ProofStructure {
         int stateId = assertion.getProgramState();
         Set<Assertion> assertionsOfId = stateIdToVertices.get(stateId);
         if (assertionsOfId == null) {
-            assertionsOfId = new HashSet<>();
+            assertionsOfId = new LinkedHashSet<>();
             assertionsOfId.add(assertion);
             stateIdToVertices.put(stateId, assertionsOfId);
         } else {
@@ -87,7 +87,7 @@ public class ProofStructure {
             //for(ProgramState initial : statespace.getInitialStates()){
             int stateId = initialStatesIterator.next();
             Assertion initialAssertion = new Assertion(stateId, null, formula);
-            this.stateIdToVertices.putIfAbsent(stateId, new HashSet<>());
+            this.stateIdToVertices.putIfAbsent(stateId, new LinkedHashSet<>());
 
             addAssertion(initialAssertion);
             vertexQueue.add(initialAssertion);
@@ -107,7 +107,7 @@ public class ProofStructure {
                     // Note that due to the insertion order we know that all contained formulae are next formulae
 
                     // First collect the successor formula of each contained next formula
-                    HashSet<Node> nextSuccessors = new HashSet<>();
+                    HashSet<Node> nextSuccessors = new LinkedHashSet<>();
                     for (Node nextFormula : currentVertex.getFormulae()) {
                         nextFormula.apply(rulesSwitch);
 
@@ -186,7 +186,7 @@ public class ProofStructure {
                             // Real cycle?
                             boolean isReal = false;
                             // First collect all successors
-                            HashSet<Assertion> seen = new HashSet<>();
+                            HashSet<Assertion> seen = new LinkedHashSet<>();
                             LinkedList<Assertion> queue = new LinkedList<>();
                             queue.add(newAssertion);
                             seen.add(newAssertion);
@@ -236,7 +236,7 @@ public class ProofStructure {
                     HashSet<Assertion> successors = (HashSet<Assertion>) rulesSwitch.getOut(currentSubformula);
                     // This means that the current vertex is not (yet) successful
                     if (successors != null) {
-                        HashSet<SuccState> successorStates = new HashSet<>();
+                        HashSet<SuccState> successorStates = new LinkedHashSet<>();
                         for (Assertion assertion : successors) {
                             successorStates.add(new SuccState(assertion, currentSubformula));
                         }
@@ -298,7 +298,7 @@ public class ProofStructure {
     private void addEdge(Assertion currentVertex, SuccState successorState) {
 
         if (!edges.containsKey(currentVertex)) {
-            HashSet<SuccState> newSuccStatesSet = new HashSet<>();
+            HashSet<SuccState> newSuccStatesSet = new LinkedHashSet<>();
             newSuccStatesSet.add(successorState);
             edges.put(currentVertex, newSuccStatesSet);
         } else {
@@ -333,7 +333,7 @@ public class ProofStructure {
 
     public HashSet<Assertion> getLeaves() {
 
-        HashSet<Assertion> leaves = new HashSet<>();
+        HashSet<Assertion> leaves = new LinkedHashSet<>();
 
         TIntObjectIterator<Set<Assertion>> iter = stateIdToVertices.iterator();
         while (iter.hasNext()) {
@@ -354,7 +354,7 @@ public class ProofStructure {
 
     public HashSet<Assertion> getVertices() {
 
-        HashSet<Assertion> vertices = new HashSet<>();
+        HashSet<Assertion> vertices = new LinkedHashSet<>();
 
         TIntObjectIterator<Set<Assertion>> iter = stateIdToVertices.iterator();
         while (iter.hasNext()) {
@@ -366,7 +366,7 @@ public class ProofStructure {
 
     public HashSet<Assertion> getSuccessors(Assertion current) {
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         if (this.edges.get(current) != null) {
             for (SuccState successor : this.edges.get(current)) {
                 successors.add(successor.assertion);

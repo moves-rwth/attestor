@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
@@ -32,7 +32,7 @@ public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
             return Collections.emptySet();
         }
 
-        Set<String> result = new HashSet<>();
+        Set<String> result = new LinkedHashSet<>();
         TIntIterator iter = heapConfiguration.attachedVariablesOf(markedNode).iterator();
         while (iter.hasNext()) {
             int var = iter.next();

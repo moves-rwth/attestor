@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * This class implements the tableau rules for the model checking.
@@ -137,7 +138,7 @@ public class TableauRulesSwitch extends AnalysisAdapter {
         firstAssertion.addFormula(node.getLeftform());
         secondAssertion.addFormula(node.getRightform());
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         successors.add(firstAssertion);
         successors.add(secondAssertion);
         this.setOut(node, successors);
@@ -151,7 +152,7 @@ public class TableauRulesSwitch extends AnalysisAdapter {
         newAssertion.addFormula(node.getLeftform());
         newAssertion.addFormula(node.getRightform());
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         successors.add(newAssertion);
         this.setOut(node, successors);
     }
@@ -188,7 +189,7 @@ public class TableauRulesSwitch extends AnalysisAdapter {
         newAssertion2.addFormula(node.getRightform());
         newAssertion2.addFormula(nextNode);
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         successors.add(newAssertion1);
         successors.add(newAssertion2);
         this.setOut(node, successors);
@@ -224,7 +225,7 @@ public class TableauRulesSwitch extends AnalysisAdapter {
         newAssertion2.addFormula(node.getLeftform());
         newAssertion2.addFormula(nextNode);
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         successors.add(newAssertion1);
         successors.add(newAssertion2);
         this.setOut(node, successors);
@@ -260,7 +261,7 @@ public class TableauRulesSwitch extends AnalysisAdapter {
 
         Assertion currentCopy = removeFormula(node);
 
-        HashSet<Assertion> successors = new HashSet<>();
+        HashSet<Assertion> successors = new LinkedHashSet<>();
         successors.add(currentCopy);
         this.setOut(node, successors);
     }

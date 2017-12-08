@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +21,8 @@ public class ViolationPointResolver {
 
     private final Grammar grammar;
 
-    private final Map<GrammarRequest, Map<Nonterminal, Collection<HeapConfiguration>>> ruleGraphsCreatingSelector = new HashMap<>();
+    private final Map<GrammarRequest, Map<Nonterminal, Collection<HeapConfiguration>>>
+            ruleGraphsCreatingSelector = new LinkedHashMap<>();
 
     public ViolationPointResolver(Grammar grammar) {
 
@@ -71,7 +72,7 @@ public class ViolationPointResolver {
     private Map<Nonterminal, Collection<HeapConfiguration>> computeRulesCreatingSelector(
             Nonterminal nonterminal, int tentacle, String requiredSelector) {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> res = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
 
         for (Nonterminal grammarNt : grammar.getAllLeftHandSides()) {
 

@@ -36,10 +36,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrat
 import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase implements StateSpaceGenerationTransformer {
 
@@ -186,7 +183,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     private Set<String> determineNullPointerGuards() {
 
-        Set<String> nullPointerGuards = new HashSet<>();
+        Set<String> nullPointerGuards = new LinkedHashSet<>();
 
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             if (lhs instanceof IndexedNonterminal) {

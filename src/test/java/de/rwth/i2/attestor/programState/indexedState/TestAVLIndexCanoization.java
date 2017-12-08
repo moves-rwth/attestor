@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStra
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ public class TestAVLIndexCanoization {
         sceneObject = new MockupSceneObject();
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
-        Set<String> nullPointerGuards = new HashSet<>();
+        Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
         nullPointerGuards.add("right");
 

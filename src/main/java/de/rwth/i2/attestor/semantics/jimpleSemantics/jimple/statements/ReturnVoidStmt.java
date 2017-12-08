@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -64,7 +64,7 @@ public class ReturnVoidStmt extends Statement {
     @Override
     public Set<Integer> getSuccessorPCs() {
 
-        return new HashSet<>();
+        return new LinkedHashSet<>();
     }
 
     /**

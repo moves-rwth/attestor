@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * All global communication regarding input files.
@@ -16,7 +17,7 @@ public class InputSettings {
      * The paths to the file specifying the renaming used for the
      * predefined grammars
      */
-    private final HashMap<String, String> pathsToGrammar2RenameDefininition = new HashMap<>();
+    private final HashMap<String, String> pathsToGrammar2RenameDefinition = new LinkedHashMap<>();
     /**
      * The url to the default empty initial state.
      */
@@ -271,7 +272,7 @@ public class InputSettings {
         this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
         this.pathToInput = rootPath + File.separator + this.pathToInput;
         this.pathToContracts = rootPath + File.separator + this.pathToContracts;
-        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefininition.entrySet()) {
+        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
             entry.setValue(rootPath + File.separator + entry.getValue());
         }
     }
@@ -288,11 +289,11 @@ public class InputSettings {
 
         if (this.usedPredefinedGrammars == null) {
             this.usedPredefinedGrammars = new ArrayList<>();
-            this.grammar2RenameMap = new HashMap<>();
+            this.grammar2RenameMap = new LinkedHashMap<>();
         }
 
         this.usedPredefinedGrammars.add(name);
-        this.pathsToGrammar2RenameDefininition.put(name, renameFileLocation);
+        this.pathsToGrammar2RenameDefinition.put(name, renameFileLocation);
     }
 
     public ArrayList<String> getUsedPredefinedGrammars() {
@@ -302,6 +303,6 @@ public class InputSettings {
 
     public String getRenamingLocation(String predefinedGrammar) {
 
-        return this.pathsToGrammar2RenameDefininition.get(predefinedGrammar);
+        return this.pathsToGrammar2RenameDefinition.get(predefinedGrammar);
     }
 }

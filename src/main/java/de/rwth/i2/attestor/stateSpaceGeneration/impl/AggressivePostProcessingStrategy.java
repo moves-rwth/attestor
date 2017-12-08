@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,8 +35,8 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
             return;
         }
 
-        Map<ProgramState, ProgramState> abstractedStates = new HashMap<>();
-        Map<Integer, Integer> idMap = new HashMap<>();
+        Map<ProgramState, ProgramState> abstractedStates = new LinkedHashMap<>();
+        Map<Integer, Integer> idMap = new LinkedHashMap<>();
 
         for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);

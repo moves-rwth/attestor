@@ -10,7 +10,7 @@ import gnu.trove.list.array.TIntArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +56,7 @@ public class HCtoInputFormatExporter {
      */
     private static Map<Integer, Integer> addNodesOfTo(HeapConfiguration hc, JSONObject res) {
 
-        Map<Integer, Integer> idMapping = new HashMap<>();
+        Map<Integer, Integer> idMapping = new LinkedHashMap<>();
 
         TIntArrayList nodes = hc.nodes();
         for (int i = 0; i < nodes.size(); i++) {

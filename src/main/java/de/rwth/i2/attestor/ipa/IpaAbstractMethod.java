@@ -53,7 +53,7 @@ public class IpaAbstractMethod extends AbstractMethod {
     public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
-        Set<ProgramState> result = new HashSet<>();
+        Set<ProgramState> result = new LinkedHashSet<>();
 
         for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
             ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
@@ -166,7 +166,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     public static final class Factory extends SceneObject {
 
-        private Map<String, IpaAbstractMethod> knownMethods = new HashMap<>();
+        private Map<String, IpaAbstractMethod> knownMethods = new LinkedHashMap<>();
 
         public Factory(Scene scene) {
 

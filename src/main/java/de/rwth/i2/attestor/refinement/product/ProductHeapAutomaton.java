@@ -92,7 +92,7 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     @Override
     public Set<String> toAtomicPropositions() {
 
-        Set<String> result = new HashSet<>();
+        Set<String> result = new LinkedHashSet<>();
         for (HeapAutomatonState state : states) {
             result.addAll(state.toAtomicPropositions());
         }

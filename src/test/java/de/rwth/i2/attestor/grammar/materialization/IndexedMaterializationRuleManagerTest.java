@@ -238,7 +238,7 @@ public class IndexedMaterializationRuleManagerTest {
         index2.add(var);
         IndexedNonterminal nt2 = new IndexedNonterminalImpl(bnt, index2);
 
-        Set<Nonterminal> result = new HashSet<>();
+        Set<Nonterminal> result = new LinkedHashSet<>();
         result.add(nt1);
         result.add(nt2);
 

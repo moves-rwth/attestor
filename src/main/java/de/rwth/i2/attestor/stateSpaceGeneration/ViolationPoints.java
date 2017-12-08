@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ public class ViolationPoints {
      */
     public ViolationPoints() {
 
-        variablesWithFields = new HashMap<>();
+        variablesWithFields = new LinkedHashMap<>();
 
     }
 
@@ -43,7 +43,7 @@ public class ViolationPoints {
      */
     public ViolationPoints(String variable, String selector) {
 
-        variablesWithFields = new HashMap<>();
+        variablesWithFields = new LinkedHashMap<>();
         add(variable, selector);
     }
 
@@ -65,7 +65,7 @@ public class ViolationPoints {
 
         if (!variablesWithFields.containsKey(variable)) {
 
-            variablesWithFields.put(variable, new HashSet<>());
+            variablesWithFields.put(variable, new LinkedHashSet<>());
         }
 
         variablesWithFields.get(variable).add(selector);

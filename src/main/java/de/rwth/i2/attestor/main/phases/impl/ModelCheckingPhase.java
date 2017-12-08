@@ -13,14 +13,14 @@ import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingResultsTransformer {
 
-    private final Map<LTLFormula, Boolean> formulaResults = new HashMap<>();
-    private final Map<LTLFormula, Trace> counterexampleTraces = new HashMap<>();
+    private final Map<LTLFormula, Boolean> formulaResults = new LinkedHashMap<>();
+    private final Map<LTLFormula, Trace> counterexampleTraces = new LinkedHashMap<>();
     private boolean allSatisfied = true;
 
     public ModelCheckingPhase(Scene scene) {

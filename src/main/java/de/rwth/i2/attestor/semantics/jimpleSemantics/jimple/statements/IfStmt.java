@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -74,7 +74,7 @@ public class IfStmt extends Statement {
 
         observer.update(this, programState);
 
-        Set<ProgramState> defaultRes = new HashSet<>();
+        Set<ProgramState> defaultRes = new LinkedHashSet<>();
         defaultRes.add(programState.shallowCopyUpdatePC(truePC));
         defaultRes.add(programState.shallowCopyUpdatePC(falsePC));
 

@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import soot.tagkit.Tag;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -25,7 +25,7 @@ class LiveVariableHelper {
      */
     static Set<String> extractLiveVariables(soot.jimple.Stmt input) {
 
-        Set<String> liveVariables = new HashSet<>();
+        Set<String> liveVariables = new LinkedHashSet<>();
         for (Tag t : input.getTags()) {
 
             String tagString = t.toString();

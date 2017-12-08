@@ -143,7 +143,7 @@ class PointsToHeapAutomatonState extends HeapAutomatonState {
     @Override
     public Set<String> toAtomicPropositions() {
 
-        Set<String> result = new HashSet<>();
+        Set<String> result = new LinkedHashSet<>();
 
         TIntArrayList variables = kernel.variableEdges();
         for (int i = 0; i < variables.size(); i++) {

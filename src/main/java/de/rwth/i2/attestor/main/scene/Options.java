@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main.scene;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -20,9 +20,9 @@ public class Options {
     /**
      * The set of variables that will never ever be eliminated.
      */
-    private final Set<String> keptVariables = new HashSet<>();
-    private final Set<String> usedSelectorLabels = new HashSet<>();
-    private final Set<String> grammarSelectorLabels = new HashSet<>();
+    private final Set<String> keptVariables = new LinkedHashSet<>();
+    private final Set<String> usedSelectorLabels = new LinkedHashSet<>();
+    private final Set<String> grammarSelectorLabels = new LinkedHashSet<>();
     /**
      * The maximal number of states before state space generation is given up.
      */

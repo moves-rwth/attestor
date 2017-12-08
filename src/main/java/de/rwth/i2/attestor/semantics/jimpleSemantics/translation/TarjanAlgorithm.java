@@ -6,9 +6,9 @@ import java.util.*;
 
 public class TarjanAlgorithm {
 
-    Map<IpaAbstractMethod, Vertex> methodToVertex = new HashMap<>();
+    Map<IpaAbstractMethod, Vertex> methodToVertex = new LinkedHashMap<>();
     List<Vertex> vertices = new ArrayList<>();
-    Map<Vertex, List<Vertex>> edges = new HashMap<>();
+    Map<Vertex, List<Vertex>> edges = new LinkedHashMap<>();
     int index = 0;
     Deque<Vertex> stack = new ArrayDeque<>();
 

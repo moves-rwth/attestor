@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public abstract class InvokeHelper extends SceneObject {
     /**
      * The live variables for this statement.
      */
-    protected Set<String> liveVariableNames = new HashSet<>();
+    protected Set<String> liveVariableNames = new LinkedHashSet<>();
     /**
      * a list with the expressions for the arguments in the correct order
      */

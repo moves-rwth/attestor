@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -57,7 +57,7 @@ public class MatchingSelectorDistanceHelperTest {
         SelectorLabel basicB = sceneObject.scene().getSelectorLabel("b");
         SelectorLabel basicC = sceneObject.scene().getSelectorLabel("c");
 
-        Collection<SelectorLabel> selectorCollection = new HashSet<>();
+        Collection<SelectorLabel> selectorCollection = new LinkedHashSet<>();
         selectorCollection.add(basicA);
         selectorCollection.add(new AnnotatedSelectorLabel(basicB, "a"));
         selectorCollection.add(new AnnotatedSelectorLabel(basicC, "c"));

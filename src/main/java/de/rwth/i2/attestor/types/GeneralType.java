@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.types;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.Constants;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public final class GeneralType implements Type {
 
-    private final Map<SelectorLabel, String> selectorLabelNames = new HashMap<>();
+    private final Map<SelectorLabel, String> selectorLabelNames = new LinkedHashMap<>();
     /**
      * The name of the type.
      */
@@ -89,7 +89,7 @@ public final class GeneralType implements Type {
 
     public static final class Factory {
 
-        private final Map<String, Type> knownTypes = new HashMap<>();
+        private final Map<String, Type> knownTypes = new LinkedHashMap<>();
 
         public Factory() {
 

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +55,7 @@ public abstract class GeneralProgramState implements ProgramState {
     protected GeneralProgramState(HeapConfiguration heap) {
 
         this.heap = heap;
-        atomicPropositions = new HashSet<>();
+        atomicPropositions = new LinkedHashSet<>();
     }
 
     /**

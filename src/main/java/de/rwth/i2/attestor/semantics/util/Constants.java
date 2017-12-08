@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.util;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public final class Constants {
@@ -17,7 +17,7 @@ public final class Constants {
     public static final String INT_M1 = "int_-1";
     public static final String BOOLEAN = "boolean";
     public static final String NULL_TYPE = "NULL";
-    private static Set<String> unknownConstants = new HashSet<>();
+    private static Set<String> unknownConstants = new LinkedHashSet<>();
 
     public static boolean isConstant(String name) {
 

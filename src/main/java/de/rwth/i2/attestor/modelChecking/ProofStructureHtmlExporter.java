@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ProofStructureHtmlExporter implements ProofStructureExporter {
 
@@ -108,9 +109,9 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
         StringBuilder psJSON = new StringBuilder("elements: [\n ");
 
         // Generate a unique mapping from assertions to ints
-        HashMap<Assertion, Integer> nodeIds = new HashMap<>();
+        HashMap<Assertion, Integer> nodeIds = new LinkedHashMap<>();
 
-        // Initiate nodes secction
+        // Initiate nodes section
         psJSON.append("//nodes \n");
 
         int i = 0;

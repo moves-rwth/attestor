@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -98,7 +98,7 @@ public class ReturnValueStmt extends Statement {
     @Override
     public Set<Integer> getSuccessorPCs() {
 
-        return new HashSet<>();
+        return new LinkedHashSet<>();
     }
 
     /**

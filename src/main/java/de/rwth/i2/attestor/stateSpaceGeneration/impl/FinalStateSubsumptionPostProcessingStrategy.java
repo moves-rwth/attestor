@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,8 +36,8 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         Set<ProgramState> finalStates = stateSpace.getFinalStates();
 
-        Set<ProgramState> fullyAbstractStates = new HashSet<>();
-        Map<Integer, Integer> idMap = new HashMap<>();
+        Set<ProgramState> fullyAbstractStates = new LinkedHashSet<>();
+        Map<Integer, Integer> idMap = new LinkedHashMap<>();
 
         for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);

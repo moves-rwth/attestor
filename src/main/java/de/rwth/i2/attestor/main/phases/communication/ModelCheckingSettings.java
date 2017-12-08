@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.main.phases.communication;
 
 import de.rwth.i2.attestor.LTLFormula;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 
@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class ModelCheckingSettings {
 
-    private final Set<String> requiredAtomicPropositions = new HashSet<>();
+    private final Set<String> requiredAtomicPropositions = new LinkedHashSet<>();
     // Contains all LTL formulae model checking should be performed for.
     private final Set<LTLFormula> formulae;
     // Indicates whether model checking is conducted.
@@ -22,7 +22,7 @@ public class ModelCheckingSettings {
 
     public ModelCheckingSettings() {
 
-        this.formulae = new HashSet<>();
+        this.formulae = new LinkedHashSet<>();
     }
 
     public boolean isModelCheckingEnabled() {

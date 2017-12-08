@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,7 +53,7 @@ public class AssignInvokeTest_NonTrivial {
 
         AbstractMethod method = sceneObject.scene().getMethod("method");
         List<Semantics> defaultControlFlow = new ArrayList<>();
-        defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new HashSet<>()));
+        defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new LinkedHashSet<>()));
         defaultControlFlow.add(new ReturnValueStmt(sceneObject, var, type));
         method.setControlFlow(defaultControlFlow);
         InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());

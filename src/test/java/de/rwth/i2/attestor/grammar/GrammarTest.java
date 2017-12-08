@@ -113,7 +113,7 @@ public class GrammarTest {
     @Test
     public void testAddRulesAsMap() {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> rules = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> rules = new LinkedHashMap<>();
         rules.put(DEFAULT_NONTERMINAL, RHS_FOR_DEFAULT_NONTERMINAL);
         rules.put(CONCRETE_INDEXED_NONTERMINAL, RHS_FOR_CONCRETE_INDEXED_NONTERMINAL);
         rules.put(INSTANTIABLE_INDEXED_NONTERMINAL, RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL);
@@ -137,7 +137,7 @@ public class GrammarTest {
     @Test
     public void testBuildGrammarWithMapAndMultipleRule() {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> rules = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> rules = new LinkedHashMap<>();
         rules.put(DEFAULT_NONTERMINAL, RHS_FOR_DEFAULT_NONTERMINAL);
         rules.put(INSTANTIABLE_INDEXED_NONTERMINAL, RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL);
 
@@ -162,7 +162,7 @@ public class GrammarTest {
     @Test
     public void testBuildGrammarWithSingleRuleAndMap() {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> rules = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> rules = new LinkedHashMap<>();
         rules.put(DEFAULT_NONTERMINAL, RHS_FOR_DEFAULT_NONTERMINAL);
         rules.put(INSTANTIABLE_INDEXED_NONTERMINAL, RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL);
 
@@ -227,7 +227,7 @@ public class GrammarTest {
 
     private Set<HeapConfiguration> constructRhsForDefaultNonterminal() {
 
-        Set<HeapConfiguration> rhs = new HashSet<>();
+        Set<HeapConfiguration> rhs = new LinkedHashSet<>();
         rhs.add(RHS_FOR_DEFAULT_NONTERMINAL_1);
         rhs.add(RHS_FOR_DEFAULT_NONTERMINAL_2);
         return rhs;
@@ -244,7 +244,7 @@ public class GrammarTest {
 
     private Set<HeapConfiguration> constructRhsForConcreteIndexedNonterminal() {
 
-        Set<HeapConfiguration> rhs = new HashSet<>();
+        Set<HeapConfiguration> rhs = new LinkedHashSet<>();
         rhs.add(RHS_FOR_CONCRETE_INDEXED_NONTERMINAL_1);
         return rhs;
     }
@@ -262,7 +262,7 @@ public class GrammarTest {
 
     private Set<HeapConfiguration> constructRhsForInstantiableIndexedNonterminal() {
 
-        Set<HeapConfiguration> rhs = new HashSet<>();
+        Set<HeapConfiguration> rhs = new LinkedHashSet<>();
         rhs.add(RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_1);
         rhs.add(RHS_FOR_INSTANTIABLE_INDEXED_NONTERMINAL_2);
         return rhs;

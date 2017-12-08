@@ -54,7 +54,7 @@ public class IndexedGrammarResponseApplierTest {
 
         HeapConfiguration inputGraph = createInputGraph();
 
-        Map<List<IndexSymbol>, Collection<HeapConfiguration>> rules = new HashMap<>();
+        Map<List<IndexSymbol>, Collection<HeapConfiguration>> rules = new LinkedHashMap<>();
         List<IndexSymbol> materialization1 = createEmptyMaterialization();
         rules.put(materialization1, new ArrayList<>());
         HeapConfiguration mat1_rule1 = createSimpleRule();

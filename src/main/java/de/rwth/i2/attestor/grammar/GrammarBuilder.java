@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class GrammarBuilder {
 
-    final Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
+    final Map<Nonterminal, Set<HeapConfiguration>> rules = new LinkedHashMap<>();
 
     public Grammar build() {
 
@@ -24,7 +24,7 @@ public class GrammarBuilder {
     public GrammarBuilder addRule(Nonterminal lhs, HeapConfiguration rhs) {
 
         if (!rules.containsKey(lhs)) {
-            rules.put(lhs, new HashSet<>());
+            rules.put(lhs, new LinkedHashSet<>());
         }
 
         rules.get(lhs).add(rhs);
@@ -35,7 +35,7 @@ public class GrammarBuilder {
     public GrammarBuilder addRules(Nonterminal lhs, Collection<HeapConfiguration> rightHandSides) {
 
         if (!rules.containsKey(lhs)) {
-            rules.put(lhs, new HashSet<>());
+            rules.put(lhs, new LinkedHashSet<>());
         }
         rules.get(lhs).addAll(rightHandSides);
         return this;

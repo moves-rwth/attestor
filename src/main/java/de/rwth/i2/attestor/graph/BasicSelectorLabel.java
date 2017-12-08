@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.graph;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -51,7 +51,7 @@ public class BasicSelectorLabel implements SelectorLabel {
 
     public static class Factory {
 
-        private final Map<String, SelectorLabel> knownSelectorLabels = new HashMap<>();
+        private final Map<String, SelectorLabel> knownSelectorLabels = new LinkedHashMap<>();
 
         public SelectorLabel get(String name) {
 

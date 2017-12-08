@@ -6,8 +6,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class FakeViolationPointResolverForDefault extends ViolationPointResolver {
@@ -32,8 +32,8 @@ public class FakeViolationPointResolverForDefault extends ViolationPointResolver
                                                                                        int tentacle,
                                                                                        String requestedSelector) {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> res = new HashMap<>();
-        res.put(DEFAULT_NONTERMINAL, new HashSet<>());
+        Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
+        res.put(DEFAULT_NONTERMINAL, new LinkedHashSet<>());
         res.get(DEFAULT_NONTERMINAL).add(RHS_CREATING_NEXT);
         res.get(DEFAULT_NONTERMINAL).add(RHS_CREATING_NEXT_PREV);
 

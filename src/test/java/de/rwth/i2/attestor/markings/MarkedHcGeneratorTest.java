@@ -12,8 +12,8 @@ import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,8 +36,8 @@ public class MarkedHcGeneratorTest {
 
         nt = sceneObject.scene().createNonterminal("List", 2, new boolean[]{false, true});
         type = sceneObject.scene().getType("List");
-        Map<Nonterminal, Set<HeapConfiguration>> rules = new HashMap<>();
-        rules.put(nt, new HashSet<>());
+        Map<Nonterminal, Set<HeapConfiguration>> rules = new LinkedHashMap<>();
+        rules.put(nt, new LinkedHashSet<>());
         rules.get(nt).add(hcFactory.getListRule1());
         rules.get(nt).add(hcFactory.getListRule2());
         rules.get(nt).add(hcFactory.getListRule3());
@@ -51,7 +51,7 @@ public class MarkedHcGeneratorTest {
         HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
         Marking marking = new Marking("x");
 
-        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        Set<HeapConfiguration> expectedMarkedHcs = new LinkedHashSet<>();
 
         MarkedHcGenerator generator = new MarkedHcGenerator(sceneObject, hc, grammar, marking);
         assertEquals(expectedMarkedHcs, generator.getMarkedHcs());
@@ -66,7 +66,7 @@ public class MarkedHcGeneratorTest {
 
         Marking marking = new Marking("y", left, right);
 
-        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        Set<HeapConfiguration> expectedMarkedHcs = new LinkedHashSet<>();
         expectedMarkedHcs.add(hc.clone().builder()
                 .addVariableEdge(marking.getUniversalVariableName(), 0)
                 .addVariableEdge(marking.getSelectorVariableName("left"), 1)
@@ -93,7 +93,7 @@ public class MarkedHcGeneratorTest {
                 .build();
 
         Marking marking = new Marking("z");
-        Set<HeapConfiguration> expectedMarkedHcs = new HashSet<>();
+        Set<HeapConfiguration> expectedMarkedHcs = new LinkedHashSet<>();
 
         expectedMarkedHcs.add(hc.clone().builder()
                 .addVariableEdge(marking.getUniversalVariableName(), nodes.get(0))

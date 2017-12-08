@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -94,7 +94,7 @@ public class StateSpaceGeneratorTest {
         Statement skipStmt = new Skip(sceneObject, 1);
         programInstructions.add(skipStmt);
         Statement assignStmt = new AssignStmt(sceneObject, new Local(type, "x"), new NewExpr(type),
-                2, new HashSet<>());
+                2, new LinkedHashSet<>());
         programInstructions.add(assignStmt);
         Statement returnStmt = new ReturnVoidStmt(sceneObject);
         programInstructions.add(returnStmt);
@@ -155,7 +155,7 @@ public class StateSpaceGeneratorTest {
         HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 
         List<Semantics> programInstructions = new ArrayList<>();
-        Statement ifStmt = new IfStmt(sceneObject, new IntConstant(1), 1, 2, new HashSet<>());
+        Statement ifStmt = new IfStmt(sceneObject, new IntConstant(1), 1, 2, new LinkedHashSet<>());
         programInstructions.add(ifStmt);
         Statement firstReturn = new ReturnVoidStmt(sceneObject);
         programInstructions.add(firstReturn);

@@ -16,7 +16,7 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -82,7 +82,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
                 observer
         );
 
-        Set<ProgramState> assignResult = new HashSet<>();
+        Set<ProgramState> assignResult = new LinkedHashSet<>();
         for (ProgramState resState : methodResult) {
 
             resState = getCleanedResultState(resState, observer);

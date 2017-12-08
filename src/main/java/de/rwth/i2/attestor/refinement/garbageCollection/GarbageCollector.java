@@ -14,14 +14,14 @@ import gnu.trove.set.hash.TIntHashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GarbageCollector implements StateRefinementStrategy {
 
     private final static Logger logger = LogManager.getLogger("GarbageCollector");
 
-    private final static Set<Class<?>> semanticsTriggeringGarbageCollector = new HashSet<>();
+    private final static Set<Class<?>> semanticsTriggeringGarbageCollector = new LinkedHashSet<>();
 
     static {
         semanticsTriggeringGarbageCollector.add(InvokeStmt.class);

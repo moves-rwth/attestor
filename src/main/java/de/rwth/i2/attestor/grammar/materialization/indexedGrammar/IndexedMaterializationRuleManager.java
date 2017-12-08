@@ -30,7 +30,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 
     private final IndexMatcher indexMatcher;
 
-    private final Map<GrammarRequest, GrammarResponse> instantiatedRuleGraphsCreatingSelector = new HashMap<>();
+    private final Map<GrammarRequest, GrammarResponse> instantiatedRuleGraphsCreatingSelector = new LinkedHashMap<>();
 
     public IndexedMaterializationRuleManager(ViolationPointResolver vioResolver, IndexMatcher indexMatcher) {
 
@@ -106,7 +106,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 
 
         Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules =
-                new HashMap<>();
+                new LinkedHashMap<>();
 
         for (Nonterminal lhs : rulesResolvingViolationPoint.keySet()) {
             final IndexedNonterminal indexedLhs = (IndexedNonterminal) lhs;

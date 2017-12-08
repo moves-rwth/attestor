@@ -12,14 +12,14 @@ public class SingleElementUtil {
 
     public static <E> Set<E> createSet(E initialElement) {
 
-        Set<E> res = new HashSet<>();
+        Set<E> res = new LinkedHashSet<>();
         res.add(initialElement);
         return res;
     }
 
     public static <K, V> Map<K, V> createMap(K initialKey, V initialValue) {
 
-        Map<K, V> res = new HashMap<>();
+        Map<K, V> res = new LinkedHashMap<>();
         res.put(initialKey, initialValue);
         return res;
     }

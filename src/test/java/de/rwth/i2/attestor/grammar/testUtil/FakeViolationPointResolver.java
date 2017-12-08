@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FakeViolationPointResolver extends ViolationPointResolver {
@@ -23,7 +23,7 @@ public class FakeViolationPointResolver extends ViolationPointResolver {
                                                                                        int tentacle,
                                                                                        String selectorName) {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> res = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
 
         for (Nonterminal nt : nonterminalsInResultingKeySet) {
 

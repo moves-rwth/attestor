@@ -20,10 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParseGrammarPhase extends AbstractPhase implements GrammarTransformer {
 
@@ -85,7 +82,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
 
     private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
 
-        HashMap<String, String> rename = new HashMap<>();
+        HashMap<String, String> rename = new LinkedHashMap<>();
         // Read in the type and field name mapping
         try {
             BufferedReader br = new BufferedReader(new java.io.FileReader(locationOfRenamingMap));

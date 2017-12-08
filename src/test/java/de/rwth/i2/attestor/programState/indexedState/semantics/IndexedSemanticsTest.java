@@ -17,7 +17,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -49,7 +49,7 @@ public class IndexedSemanticsTest {
 
         Local varX = new Local(type, "x");
         Field xLeft = new Field(type, varX, left);
-        AssignStmt stmt = new AssignStmt(sceneObject, varX, xLeft, 0, new HashSet<>());
+        AssignStmt stmt = new AssignStmt(sceneObject, varX, xLeft, 0, new LinkedHashSet<>());
         try {
             Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
             assertEquals(1, result.size());
@@ -73,7 +73,7 @@ public class IndexedSemanticsTest {
 
         Local varTmp = new Local(type, "tmp");
         NewExpr expr = new NewExpr(type);
-        AssignStmt stmt = new AssignStmt(sceneObject, varTmp, expr, 0, new HashSet<>());
+        AssignStmt stmt = new AssignStmt(sceneObject, varTmp, expr, 0, new LinkedHashSet<>());
         try {
             Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
             assertEquals(1, result.size());
@@ -99,7 +99,7 @@ public class IndexedSemanticsTest {
         Local varTmp = new Local(type, "tmp");
         Local varX = new Local(type, "x");
         Field xLeft = new Field(type, varX, left);
-        AssignStmt stmt = new AssignStmt(sceneObject, xLeft, varTmp, 0, new HashSet<>());
+        AssignStmt stmt = new AssignStmt(sceneObject, xLeft, varTmp, 0, new LinkedHashSet<>());
 
         try {
             Set<ProgramState> result = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));

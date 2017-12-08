@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -88,7 +88,8 @@ public final class BasicNonterminal implements Nonterminal {
 
     public static final class Factory {
 
-        private final Map<String, BasicNonterminal> knownNonterminals = new HashMap<>();
+        private final Map<String, BasicNonterminal>
+                knownNonterminals = new LinkedHashMap<>();
 
         public BasicNonterminal get(String name) {
 

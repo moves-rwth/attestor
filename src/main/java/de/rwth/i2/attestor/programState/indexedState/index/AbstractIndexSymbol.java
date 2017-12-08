@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.programState.indexedState.index;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AbstractIndexSymbol implements IndexSymbol {
 
-    private static final Map<String, AbstractIndexSymbol> existingSymbols = new HashMap<>();
+    private static final Map<String, AbstractIndexSymbol> existingSymbols = new LinkedHashMap<>();
     private final String label;
 
     private AbstractIndexSymbol(String label) {

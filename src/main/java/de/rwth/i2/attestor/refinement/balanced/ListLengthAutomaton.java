@@ -26,7 +26,7 @@ import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ListLengthAutomaton extends SceneObject implements StatelessHeapAutomaton {
@@ -55,7 +55,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
         TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
         if (ntEdges.size() % 2 == 0) {
-            Set<Index> indices = new HashSet<>();
+            Set<Index> indices = new LinkedHashSet<>();
             for (int i = 0; i < ntEdges.size(); i++) {
                 IndexedNonterminal nt = (IndexedNonterminal) heapConfiguration.labelOf(ntEdges.get(i));
                 indices.add(nt.getIndex());
@@ -95,7 +95,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
     private Set<String> determineNullPointerGuards() {
 
-        Set<String> nullPointerGuards = new HashSet<>();
+        Set<String> nullPointerGuards = new LinkedHashSet<>();
 
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             if (lhs instanceof IndexedNonterminal) {

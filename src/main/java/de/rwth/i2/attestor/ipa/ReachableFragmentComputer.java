@@ -49,7 +49,7 @@ public class ReachableFragmentComputer extends SceneObject {
         this.reachableFragmentBuilder = new InternalHeapConfiguration().builder();
         this.remainingFragmentBuilder = input.clone().builder();
 
-        idMapping = new HashMap<>();
+        idMapping = new LinkedHashMap<>();
 
         Queue<Integer> queue = findAccessibleNodes();
         computeReachableFragment(queue);
@@ -104,7 +104,7 @@ public class ReachableFragmentComputer extends SceneObject {
      */
     private void computeReachableFragment(Queue<Integer> queue) {
 
-        Set<Integer> visitedNonterminalEdges = new HashSet<>();
+        Set<Integer> visitedNonterminalEdges = new LinkedHashSet<>();
 
         while (!queue.isEmpty()) {
 
@@ -130,7 +130,7 @@ public class ReachableFragmentComputer extends SceneObject {
         TIntArrayList tentacles = new TIntArrayList();
 
         Deque<Integer> nodesReachableFromVariables = new ArrayDeque<>();
-        Set<Integer> visited = new HashSet<>();
+        Set<Integer> visited = new LinkedHashSet<>();
 
         addNodesReferencedByVariablesTo(nodesReachableFromVariables);
         addExternalNodesTo(nodesReachableFromVariables);

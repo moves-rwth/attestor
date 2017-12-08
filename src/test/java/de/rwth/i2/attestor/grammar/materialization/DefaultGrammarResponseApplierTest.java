@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -71,7 +71,7 @@ public class DefaultGrammarResponseApplierTest {
         HeapConfiguration rule1 = createSimpleRule();
         HeapConfiguration rule2 = createBigRule();
         HeapConfiguration rule3 = createOtherBigRule();
-        Set<HeapConfiguration> rulesInResponse = new HashSet<>();
+        Set<HeapConfiguration> rulesInResponse = new LinkedHashSet<>();
         rulesInResponse.add(rule1);
         rulesInResponse.add(rule2);
         rulesInResponse.add(rule3);
@@ -118,7 +118,7 @@ public class DefaultGrammarResponseApplierTest {
         HeapConfiguration simpleRule = createSimpleRule();
         HeapConfiguration bigRule = createBigRule();
         HeapConfiguration otherBigRule = createOtherBigRule();
-        Set<HeapConfiguration> rulesInResponse = new HashSet<>();
+        Set<HeapConfiguration> rulesInResponse = new LinkedHashSet<>();
         rulesInResponse.add(simpleRule);
         rulesInResponse.add(bigRule);
         rulesInResponse.add(otherBigRule);

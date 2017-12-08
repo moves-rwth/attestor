@@ -18,7 +18,7 @@ import soot.jimple.Stmt;
 import soot.util.Chain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -168,7 +168,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
     private void translateMethod(SootMethod method) {
 
         currentMethod = scene().getMethod(method.getSignature());
-        currentUnitToPC = new HashMap<>();
+        currentUnitToPC = new LinkedHashMap<>();
 
         Chain<Unit> units = method.getActiveBody().getUnits();
         Unit curr = units.getFirst();

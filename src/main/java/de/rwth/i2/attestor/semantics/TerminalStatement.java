@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -25,7 +25,7 @@ public class TerminalStatement implements Semantics {
     @Override
     public Set<ProgramState> computeSuccessors(ProgramState executable, SymbolicExecutionObserver options) {
 
-        return new HashSet<>();
+        return new LinkedHashSet<>();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class TerminalStatement implements Semantics {
     @Override
     public Set<Integer> getSuccessorPCs() {
 
-        return new HashSet<>();
+        return new LinkedHashSet<>();
     }
 
     @Override

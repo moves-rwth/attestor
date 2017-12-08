@@ -95,9 +95,9 @@ public class GrammarRefinementPhase extends AbstractPhase
         boolean hasBtreeAutomaton = false;
         boolean hasBimapAutomaton = false;
 
-        Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
+        Set<Set<String>> reachabilityAutomataBySelList = new LinkedHashSet<>();
 
-        Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
+        Set<Pair<String, String>> trackedVariableRelations = new LinkedHashSet<>();
 
         ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
         Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();

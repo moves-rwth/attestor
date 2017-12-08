@@ -9,8 +9,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
     /**
      * stores all previously seen inputs with their fixpoints for reuse
      */
-    private final Map<HeapConfiguration, Set<ProgramState>> knownInputs = new HashMap<>();
+    private final Map<HeapConfiguration, Set<ProgramState>> knownInputs = new LinkedHashMap<>();
 
     public SimpleAbstractMethod(SceneObject sceneObject, String signature) {
 
@@ -67,7 +67,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
             return knownInputs.get(heap);
         } else {
 
-            Set<ProgramState> resultHeaps = new HashSet<>();
+            Set<ProgramState> resultHeaps = new LinkedHashSet<>();
 
             StateSpace stateSpace = observer.generateStateSpace(method, input);
             resultHeaps.addAll(stateSpace.getFinalStates());

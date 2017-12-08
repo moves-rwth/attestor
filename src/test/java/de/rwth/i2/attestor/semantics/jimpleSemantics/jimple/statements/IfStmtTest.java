@@ -18,7 +18,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -59,7 +59,7 @@ public class IfStmtTest {
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
 
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = testState.clone();
@@ -102,7 +102,7 @@ public class IfStmtTest {
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
 
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = testState.clone();
@@ -144,7 +144,7 @@ public class IfStmtTest {
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
 
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = testState.clone();

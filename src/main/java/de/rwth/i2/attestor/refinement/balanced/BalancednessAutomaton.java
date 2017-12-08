@@ -24,7 +24,7 @@ import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class BalancednessAutomaton extends SceneObject implements StatelessHeapAutomaton {
@@ -105,7 +105,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
 
     private Set<String> determineNullPointerGuards() {
 
-        Set<String> nullPointerGuards = new HashSet<>();
+        Set<String> nullPointerGuards = new LinkedHashSet<>();
 
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             if (lhs instanceof IndexedNonterminal) {

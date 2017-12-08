@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.programState.indexedState.index;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConcreteIndexSymbol implements IndexSymbol {
 
-    private static final Map<String, ConcreteIndexSymbol> existingIndexSymbols = new HashMap<>();
+    private static final Map<String, ConcreteIndexSymbol> existingIndexSymbols = new LinkedHashMap<>();
     private final String label;
     private final boolean isBottom;
 

@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
     @Before
     public void init() {
 
-        Set<String> nullPointerGuards = new HashSet<>();
+        Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
         nullPointerGuards.add("right");
 

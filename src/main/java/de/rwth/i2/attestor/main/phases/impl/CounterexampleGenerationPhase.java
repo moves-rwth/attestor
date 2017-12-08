@@ -12,14 +12,14 @@ import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class CounterexampleGenerationPhase extends AbstractPhase implements CounterexampleTransformer {
 
-    private final Map<LTLFormula, ProgramState> counterexamples = new HashMap<>();
+    private final Map<LTLFormula, ProgramState> counterexamples = new LinkedHashMap<>();
     private ModelCheckingResultsTransformer modelCheckingResults;
     private Grammar grammar;
     private boolean allCounterexamplesDetected = true;

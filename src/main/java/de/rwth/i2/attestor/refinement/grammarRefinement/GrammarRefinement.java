@@ -15,13 +15,13 @@ import java.util.*;
 public class GrammarRefinement {
 
     private final Set<Nonterminal> oldLeftHandSides;
-    private final Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides = new HashMap<>();
+    private final Map<Nonterminal, Set<HeapConfiguration>> oldRightHandSides = new LinkedHashMap<>();
 
     private final HeapAutomaton heapAutomaton;
 
-    private final Map<Nonterminal, List<HeapAutomatonState>> foundStates = new HashMap<>();
+    private final Map<Nonterminal, List<HeapAutomatonState>> foundStates = new LinkedHashMap<>();
 
-    private final Map<Nonterminal, Set<HeapConfiguration>> refinedRules = new HashMap<>();
+    private final Map<Nonterminal, Set<HeapConfiguration>> refinedRules = new LinkedHashMap<>();
 
     private boolean newRulesFound;
 
@@ -41,7 +41,7 @@ public class GrammarRefinement {
     private void determineRewrittenOriginalRightHandSides(Grammar grammar) {
 
         for (Nonterminal lhs : oldLeftHandSides) {
-            Set<HeapConfiguration> rewrittenRhs = new HashSet<>();
+            Set<HeapConfiguration> rewrittenRhs = new LinkedHashSet<>();
             for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
                 List<HeapConfiguration> rewritings = heapAutomaton.getPossibleHeapRewritings(rhs);
                 rewrittenRhs.addAll(rewritings);
@@ -114,7 +114,7 @@ public class GrammarRefinement {
 
         if (!refinedRules.containsKey(refinedLhs)) {
             newRulesFound = true;
-            refinedRules.put(refinedLhs, new HashSet<>());
+            refinedRules.put(refinedLhs, new LinkedHashSet<>());
         }
         Set<HeapConfiguration> allRefinedRhsOfLhs = refinedRules.get(refinedLhs);
         allRefinedRhsOfLhs.add(refinedRhs);

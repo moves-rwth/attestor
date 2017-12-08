@@ -16,7 +16,7 @@ import gnu.trove.map.TIntIntMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -36,7 +36,7 @@ public class MarkedHcGenerator extends SceneObject {
     private final String universalVariableName;
     private final List<SelectorLabel> requiredSelectors;
 
-    private final Set<HeapConfiguration> markedHeapConfigurations = new HashSet<>();
+    private final Set<HeapConfiguration> markedHeapConfigurations = new LinkedHashSet<>();
     private final Stack<HeapConfiguration> unexploredHeapConfigurations = new Stack<>();
 
     private int currentNode;

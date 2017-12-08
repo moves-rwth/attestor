@@ -21,10 +21,7 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -64,7 +61,7 @@ public class InvokeStmtTest_WithEffect {
         List<Semantics> methodBody = new ArrayList<>();
         methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));
 
-        HashSet<String> liveVariables = new HashSet<>();
+        HashSet<String> liveVariables = new LinkedHashSet<>();
         methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
         methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
         method.setControlFlow(methodBody);

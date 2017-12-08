@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class Grammar {
         if (rules.containsKey(nonterminal)) {
             return Collections.unmodifiableSet(rules.get(nonterminal));
         } else {
-            return new HashSet<>();
+            return new LinkedHashSet<>();
         }
     }
 

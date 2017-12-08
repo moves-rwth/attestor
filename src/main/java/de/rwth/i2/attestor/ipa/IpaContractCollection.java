@@ -7,7 +7,7 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 public class IpaContractCollection {
 
     PreconditionChecker lastUsedChecker; //to avoid double computations
-    private Map<Integer, List<IpaContract>> map = new HashMap<>();
+    private Map<Integer, List<IpaContract>> map = new LinkedHashMap<>();
 
     public List<HeapConfiguration> getPostconditions(HeapConfiguration reachableFragment) {
 

@@ -27,7 +27,7 @@ public class JsonToGrammar extends SceneObject {
     public Map<Nonterminal, Collection<HeapConfiguration>>
     parseForwardGrammar(JSONArray input) {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> res = new HashMap<>();
+        Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
         List<Nonterminal> ntsWithoutReductionTentacles = new ArrayList<>();
 
         for (int i = 0; i < input.length(); i++) {
@@ -90,7 +90,7 @@ public class JsonToGrammar extends SceneObject {
 
     private Set<HeapConfiguration> getGraphs(Nonterminal nt, JSONObject grammarFragment) {
 
-        Set<HeapConfiguration> res = new HashSet<>();
+        Set<HeapConfiguration> res = new LinkedHashSet<>();
         JSONArray graphs = grammarFragment.getJSONArray("rules");
 
         Consumer<String> addGrammarSelectorLabel = scene().options()::addGrammarSelectorLabel;
@@ -108,7 +108,9 @@ public class JsonToGrammar extends SceneObject {
                                           Map<Nonterminal, Collection<HeapConfiguration>> res) {
 
         Deque<Pair<Nonterminal, Integer>> changedTentacles = new ArrayDeque<>();
-        Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals = new HashMap<>();//captures the nonterminals which have to be revisited on a change of the key nonterminal
+
+        //captures the nonterminals which have to be revisited on a change of the key nonterminal
+        Map<Pair<Nonterminal, Integer>, Set<Pair<Nonterminal, Integer>>> adjacentNonterminals = new LinkedHashMap<>();
 
         //init - set all tentacles to redactionTentacles
         initializeToReductionTentacles(ntsWithoutReductionTentacles);
@@ -225,7 +227,7 @@ public class JsonToGrammar extends SceneObject {
                     if (att.get(t) == externalNode) {
                         Pair<Nonterminal, Integer> pair = new Pair<>(adjacentNonterminal, t);
                         if (!adjacentNonterminals.containsKey(pair)) {
-                            adjacentNonterminals.put(pair, new HashSet<>());
+                            adjacentNonterminals.put(pair, new LinkedHashSet<>());
                         }
                         adjacentNonterminals.get(pair).add(new Pair<>(nt, i));
                     }

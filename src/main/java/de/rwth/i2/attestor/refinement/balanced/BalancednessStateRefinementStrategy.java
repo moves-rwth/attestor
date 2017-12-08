@@ -51,8 +51,8 @@ class BalancednessHelper extends SceneObject {
 
     void updateSelectorAnnotations(HeapConfiguration heapConfiguration) {
 
-        Map<Integer, Integer> heights = new HashMap<>();
-        Set<Integer> visited = new HashSet<>();
+        Map<Integer, Integer> heights = new LinkedHashMap<>();
+        Set<Integer> visited = new LinkedHashSet<>();
         Queue<Integer> queue = new ArrayDeque<>();
 
         int nullVariable = heapConfiguration.variableWith(Constants.NULL);

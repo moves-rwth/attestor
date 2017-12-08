@@ -21,7 +21,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -53,7 +53,7 @@ public class PrepareHeapTest {
         Value leftExpr = new Local(listType, "x");
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = new DefaultProgramState(testGraph);
@@ -84,7 +84,7 @@ public class PrepareHeapTest {
         Value leftExpr = new Field(listType, origin, next);
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = new DefaultProgramState(testGraph);
@@ -115,7 +115,7 @@ public class PrepareHeapTest {
         Value leftExpr = new Field(listType, origin3, next);
         Value rightExpr = new NullConstant();
         Value condition = new EqualExpr(leftExpr, rightExpr);
-        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new HashSet<>());
+        Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
             DefaultProgramState input = new DefaultProgramState(testGraph);

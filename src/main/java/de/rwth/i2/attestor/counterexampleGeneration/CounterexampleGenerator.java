@@ -7,8 +7,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -121,7 +121,7 @@ public final class CounterexampleGenerator extends SceneObject {
 
         CounterexampleStateSpaceSupplier stateSpaceSupplier
                 = new CounterexampleStateSpaceSupplier(program, canonicalizationStrategy);
-        Set<ProgramState> finalStates = new HashSet<>(1);
+        Set<ProgramState> finalStates = new LinkedHashSet<>(1);
         finalStates.add(trace.getFinalState());
         stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
         return stateSpaceSupplier;
