@@ -20,15 +20,15 @@ public class InterproceduralAnalysisManager {
 	Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new HashMap<>(); 
 	
 	
-	public computeFixpoints( SymbolicExecutionObserver observer ) {
+	public void computeFixpoints( SymbolicExecutionObserver observer ) throws StateSpaceGenerationAbortedException {
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
 				methodAndInput.method.getIPAResult(methodAndInput.input, observer);
 			}else {
 				ProgramState state = statesToContinue.pop();
-				StateSpace stateSpace = state.getStateSpace();
-				stateSpace.a
+				//StateSpace stateSpace = state.getStateSpace();
+				//stateSpace.a
 			}
 		}
 	}
