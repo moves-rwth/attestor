@@ -1,22 +1,17 @@
 package de.rwth.i2.attestor.main.scene;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
-import java.util.ArrayList;
 
 public class DefaultScene implements Scene {
 
