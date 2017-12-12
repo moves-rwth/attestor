@@ -15,6 +15,51 @@ public class InterproceduralAnalysisManager {
 	class MethodAndInput{
 		IpaAbstractMethod method;
 		ProgramState input;
+		
+		MethodAndInput(IpaAbstractMethod method, ProgramState input){
+			this.method = method;
+			this.input = input;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((input == null) ? 0 : input.hashCode());
+			result = prime * result + ((method == null) ? 0 : method.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			MethodAndInput other = (MethodAndInput) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (input == null) {
+				if (other.input != null)
+					return false;
+			} else if (!input.equals(other.input))
+				return false;
+			if (method == null) {
+				if (other.method != null)
+					return false;
+			} else if (!method.equals(other.method))
+				return false;
+			return true;
+		}
+
+		private InterproceduralAnalysisManager getOuterType() {
+			return InterproceduralAnalysisManager.this;
+		}
+		
+		
 	}
 	
 	private SceneObject scene;
@@ -24,7 +69,27 @@ public class InterproceduralAnalysisManager {
 	private Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new HashMap<>(); 
 	private Map< StateSpace, MethodAndInput > contractComputedByStateSpace = new HashMap<>();
 	
-	public void computeFixpoints( SymbolicExecutionObserver observer ) throws StateSpaceGenerationAbortedException {
+	public void registerToCompute( IpaAbstractMethod method, ProgramState input ) {
+		MethodAndInput precondition = new MethodAndInput(method, input);
+		
+		if( !methodsToAnalyse.contains(precondition) ) {
+			methodsToAnalyse.push(precondition);
+		}
+	}
+	
+	public void registerAsDependentOf( ProgramState dependent, IpaAbstractMethod method, ProgramState input	) {
+		MethodAndInput precondition = new MethodAndInput(method, input);
+		
+		if( !statesCallingInput.containsKey(precondition) ) {
+			statesCallingInput.put(precondition, new HashSet<>() );
+		}
+		
+		statesCallingInput.get(precondition).add(dependent);
+	}
+	
+	public void computeFixpoints( SymbolicExecutionObserver observer ) 
+											throws StateSpaceGenerationAbortedException {
+		
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
@@ -50,8 +115,6 @@ public class InterproceduralAnalysisManager {
 				
 				//alert states, that the result for the method-input pair changed
 				statesToContinue.addAll( statesCallingInput.get(contractAltered));
-				
-				
 			}
 		}
 	}
