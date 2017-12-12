@@ -1,42 +1,46 @@
 package de.rwth.i2.attestor.programState.indexedState.index;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AbstractIndexSymbol implements IndexSymbol {
 
-	private static final Map<String, AbstractIndexSymbol> existingSymbols = new HashMap<>();
+    private static final Map<String, AbstractIndexSymbol> existingSymbols = new LinkedHashMap<>();
+    private final String label;
 
-	public static synchronized AbstractIndexSymbol get(String label ){
-		if( ! existingSymbols.containsKey(label) ){
-			existingSymbols.put(label, new AbstractIndexSymbol(label));
-		}
-		return existingSymbols.get(label);
-	}
+    private AbstractIndexSymbol(String label) {
 
-	private final String label;
+        super();
+        this.label = label;
+    }
 
-	private AbstractIndexSymbol(String label) {
-		super();
-		this.label = label;
-	}
+    public static synchronized AbstractIndexSymbol get(String label) {
 
-	@Override
-	public boolean isBottom() {
-		return false;
-	}
+        if (!existingSymbols.containsKey(label)) {
+            existingSymbols.put(label, new AbstractIndexSymbol(label));
+        }
+        return existingSymbols.get(label);
+    }
 
-	public boolean equals( Object other ){
+    @Override
+    public boolean isBottom() {
 
-		return this == other;
+        return false;
+    }
 
-	}
+    public boolean equals(Object other) {
 
-	public int hashCode(){
-		return label.hashCode();
-	}
+        return this == other;
 
-	public String toString(){
-		return this.label;
-	}
+    }
+
+    public int hashCode() {
+
+        return label.hashCode();
+    }
+
+    public String toString() {
+
+        return this.label;
+    }
 }

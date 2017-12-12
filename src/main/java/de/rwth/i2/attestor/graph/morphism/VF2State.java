@@ -12,210 +12,220 @@ import org.apache.logging.log4j.Logger;
  */
 public class VF2State {
 
-	/**
-	 * Used for debug output and error reporting.
-	 */
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger( "VF2State" );
+    /**
+     * Used for debug output and error reporting.
+     */
+    @SuppressWarnings("unused")
+    private static final Logger logger = LogManager.getLogger("VF2State");
 
-	/**
-	 * The currently found partial mapping from pattern to target together
-	 * with additional data to prune the search space.
-	 */
-	private final VF2PatternGraphData pattern;
+    /**
+     * The currently found partial mapping from pattern to target together
+     * with additional data to prune the search space.
+     */
+    private final VF2PatternGraphData pattern;
 
-	/**
-	 * The currently found partial mapping from target to pattern together
-	 * with additional data to prune the search space.
-	 */
-	private final VF2TargetGraphData target;
+    /**
+     * The currently found partial mapping from target to pattern together
+     * with additional data to prune the search space.
+     */
+    private final VF2TargetGraphData target;
+    private final int countPatternNodes;
+    private final int countTargetNodes;
+    private int patternCandidate;
+    private int targetCandidate;
+    private int patternMin;
 
-	private int patternCandidate;
-	private int targetCandidate;
+    /**
+     * Computes a new initial state from two graphs
+     *
+     * @param patternGraph The pattern graph that should be mapped into the target graph.
+     * @param targetGraph  The target graph.
+     */
+    public VF2State(Graph patternGraph, Graph targetGraph) {
 
-	private final int countPatternNodes;
-	private final int countTargetNodes;
+        pattern = new VF2PatternGraphData(patternGraph);
+        target = new VF2TargetGraphData(targetGraph);
+        countPatternNodes = pattern.getGraph().size();
+        countTargetNodes = target.getGraph().size();
+        patternCandidate = 0;
+        targetCandidate = -1;
+        patternMin = AbstractVF2GraphData.NULL_NODE;
+    }
 
-	private int patternMin;
-
-	/**
-	 * Computes a new initial state from two graphs
-	 * @param patternGraph The pattern graph that should be mapped into the target graph.
-	 * @param targetGraph The target graph.
-	 */
-	public VF2State(Graph patternGraph, Graph targetGraph) {
-		pattern = new VF2PatternGraphData(patternGraph);
-		target = new VF2TargetGraphData(targetGraph);
-		countPatternNodes = pattern.getGraph().size();
-		countTargetNodes = target.getGraph().size();
-		patternCandidate = 0;
-		targetCandidate = -1;
-		patternMin = AbstractVF2GraphData.NULL_NODE;
-	}
-
-	/**
-	 * Creates a copy of a given state.
-	 * Note that apart from a few constants, a shallow copy is created.
-	 * In particular, the underlying partial matching is shared between the state and its copy.
-	 * @param state The state to be copied.
-	 */
+    /**
+     * Creates a copy of a given state.
+     * Note that apart from a few constants, a shallow copy is created.
+     * In particular, the underlying partial matching is shared between the state and its copy.
+     *
+     * @param state The state to be copied.
+     */
     private VF2State(VF2State state) {
-		pattern = new VF2PatternGraphData(state.pattern);
-		target = new VF2TargetGraphData(state.target);
-		countPatternNodes = state.countPatternNodes;
-		countTargetNodes = state.countTargetNodes;
-		patternCandidate = 0;
-		targetCandidate = -1;
-		patternMin = AbstractVF2GraphData.NULL_NODE;
-	}
 
-	/**
-	 * @return A shallow copy of this state.
-	 */
-	public VF2State shallowCopy() {
-		return new VF2State(this);
-	}
+        pattern = new VF2PatternGraphData(state.pattern);
+        target = new VF2TargetGraphData(state.target);
+        countPatternNodes = state.countPatternNodes;
+        countTargetNodes = state.countTargetNodes;
+        patternCandidate = 0;
+        targetCandidate = -1;
+        patternMin = AbstractVF2GraphData.NULL_NODE;
+    }
 
-	/**
-	 * @return The data stored for the pattern graph within this state.
-	 */
-	public VF2PatternGraphData getPattern() {
-		return pattern;
-	}
+    /**
+     * @return A shallow copy of this state.
+     */
+    public VF2State shallowCopy() {
 
-	/**
-	 * @return The data stored for the target graph within this state.
-	 */
-	public VF2TargetGraphData getTarget() {
-		return target;
-	}
+        return new VF2State(this);
+    }
 
-	/**
-	 * Undoes the last change to the state.
-	 */
-	public void backtrack() {		
-		pattern.backtrack();
-		target.backtrack();
-	}
+    /**
+     * @return The data stored for the pattern graph within this state.
+     */
+    public VF2PatternGraphData getPattern() {
 
-	/**
-	 * Adds a new candidate to the underlying partial matching.
-	 * @param p The pattern candidate to add to the matching described by this state.
-	 * @param t The target candidate to add to the matching described by this state.
-	 */
-	public void addCandidate(int p, int t) {
-		pattern.setMatch(p, t);
-		target.setMatch(t, p);
-	}
+        return pattern;
+    }
 
-	/**
-	 * Computes the next candidate pair to be considered.
-	 * This pair is accessible through the methods {@link #getPatternCandidate()} and {@link #getTargetCandidate()}.
-	 * @return True if and only if another candidate pair has been found.
-	 */
-	public boolean nextCandidate(boolean multipleExternalMatches) {
+    /**
+     * @return The data stored for the target graph within this state.
+     */
+    public VF2TargetGraphData getTarget() {
 
-		if(!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
-			return computeOutgoingCandidates(multipleExternalMatches);
-		} else if(!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
-			return computeIngoingCandidates(multipleExternalMatches);
-		} else {
-			return computeAllCandidates(multipleExternalMatches);
-		}
-	}
+        return target;
+    }
 
-	/**
-	 * Computes possible candidate pairs based on nodes reachable via outgoing edges from nodes that already have
-	 * been matched.
-	 */
-	private boolean computeOutgoingCandidates(boolean multipleExternalMatches) {
-		
-		int start = targetCandidate+1;
+    /**
+     * Undoes the last change to the state.
+     */
+    public void backtrack() {
 
-		for(int p=patternCandidate; p < countPatternNodes; p++) {
-			
-			if(pattern.containsOutgoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
+        pattern.backtrack();
+        target.backtrack();
+    }
 
-				boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
+    /**
+     * Adds a new candidate to the underlying partial matching.
+     *
+     * @param p The pattern candidate to add to the matching described by this state.
+     * @param t The target candidate to add to the matching described by this state.
+     */
+    public void addCandidate(int p, int t) {
 
-				for(int t = start; t < countTargetNodes; t++) {
+        pattern.setMatch(p, t);
+        target.setMatch(t, p);
+    }
 
-					if(target.containsOutgoing(t) && (isExternal || !target.containsMatch(t))) {
-						patternCandidate = p;
-						targetCandidate = t;
-						patternMin = p;
-						return true;
-					}
-				}
-				start = 0;
-			}
-		}
-		return false;
-	}
+    /**
+     * Computes the next candidate pair to be considered.
+     * This pair is accessible through the methods {@link #getPatternCandidate()} and {@link #getTargetCandidate()}.
+     *
+     * @return True if and only if another candidate pair has been found.
+     */
+    public boolean nextCandidate(boolean multipleExternalMatches) {
 
+        if (!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
+            return computeOutgoingCandidates(multipleExternalMatches);
+        } else if (!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
+            return computeIngoingCandidates(multipleExternalMatches);
+        } else {
+            return computeAllCandidates(multipleExternalMatches);
+        }
+    }
 
-	/**
-	 * Computes possible candidate pairs based on nodes reachable via ingoing edges from nodes that already have
-	 * been matched.
-	 */
-	private boolean computeIngoingCandidates(boolean multipleExternalMatches) {
+    /**
+     * Computes possible candidate pairs based on nodes reachable via outgoing edges from nodes that already have
+     * been matched.
+     */
+    private boolean computeOutgoingCandidates(boolean multipleExternalMatches) {
 
-		int start = targetCandidate+1;
-		for(int p = patternCandidate; p < countPatternNodes; p++) {
+        int start = targetCandidate + 1;
+
+        for (int p = patternCandidate; p < countPatternNodes; p++) {
+
+            if (pattern.containsOutgoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
+
+                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
+
+                for (int t = start; t < countTargetNodes; t++) {
+
+                    if (target.containsOutgoing(t) && (isExternal || !target.containsMatch(t))) {
+                        patternCandidate = p;
+                        targetCandidate = t;
+                        patternMin = p;
+                        return true;
+                    }
+                }
+                start = 0;
+            }
+        }
+        return false;
+    }
 
 
-			if(pattern.containsIngoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
+    /**
+     * Computes possible candidate pairs based on nodes reachable via ingoing edges from nodes that already have
+     * been matched.
+     */
+    private boolean computeIngoingCandidates(boolean multipleExternalMatches) {
 
-				boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
+        int start = targetCandidate + 1;
+        for (int p = patternCandidate; p < countPatternNodes; p++) {
 
-				for(int t = start; t < countTargetNodes; t++) {
-				
-					if(target.containsIngoing(t) && (isExternal || !target.containsMatch(t))) {
-						patternCandidate = p;
-						targetCandidate = t;
-						patternMin = p;
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
 
-	/**
-	 * Computes all possible candidate pairs based on nodes that have not been matched yet.
-	 */
-	private boolean computeAllCandidates(boolean multipleExternalMatches) {
+            if (pattern.containsIngoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
 
-		int start = targetCandidate+1;
+                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
 
-		for(int p = patternCandidate; p < countPatternNodes; p++) {
-			
-			if(!pattern.containsMatch(p) && !pattern.isLessThan(patternMin, p)) {
+                for (int t = start; t < countTargetNodes; t++) {
 
-				boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
+                    if (target.containsIngoing(t) && (isExternal || !target.containsMatch(t))) {
+                        patternCandidate = p;
+                        targetCandidate = t;
+                        patternMin = p;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
-				for(int t = start; t < countTargetNodes; t++) {
-				
-					if(isExternal || !target.containsMatch(t)) {
-						patternCandidate = p;
-						targetCandidate = t;
-						patternMin = p;
-						return true;
-					}
-				}
-				start = 0;
-			}
-		}
-		return false;
-	}
+    /**
+     * Computes all possible candidate pairs based on nodes that have not been matched yet.
+     */
+    private boolean computeAllCandidates(boolean multipleExternalMatches) {
 
-	public int getPatternCandidate() {
-		return patternCandidate;
-	}
+        int start = targetCandidate + 1;
 
-	public int getTargetCandidate() {
-		return targetCandidate;
-	}
+        for (int p = patternCandidate; p < countPatternNodes; p++) {
+
+            if (!pattern.containsMatch(p) && !pattern.isLessThan(patternMin, p)) {
+
+                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
+
+                for (int t = start; t < countTargetNodes; t++) {
+
+                    if (isExternal || !target.containsMatch(t)) {
+                        patternCandidate = p;
+                        targetCandidate = t;
+                        patternMin = p;
+                        return true;
+                    }
+                }
+                start = 0;
+            }
+        }
+        return false;
+    }
+
+    public int getPatternCandidate() {
+
+        return patternCandidate;
+    }
+
+    public int getTargetCandidate() {
+
+        return targetCandidate;
+    }
 
 }

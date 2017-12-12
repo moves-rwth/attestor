@@ -11,13 +11,13 @@ import de.rwth.i2.attestor.graph.morphism.VF2State;
  */
 public class EmbeddingExternalNodes implements FeasibilityFunction {
 
-	@Override
-	public boolean eval(VF2State state, int p, int t) {
-		
-		return state.getPattern().getGraph().isExternal(p)
-				|| !state.getTarget().getGraph().isExternal(t);
-		
-	}
+    @Override
+    public boolean eval(VF2State state, int p, int t) {
 
-	
+        return state.getPattern().getGraph().isExternal(p)
+                || !state.getTarget().getGraph().isExternal(t);
+
+    }
+
+
 }

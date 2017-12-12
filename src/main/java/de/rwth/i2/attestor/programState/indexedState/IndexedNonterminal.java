@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
+
+import java.util.List;
 
 public interface IndexedNonterminal extends Nonterminal {
 
@@ -19,6 +19,7 @@ public interface IndexedNonterminal extends Nonterminal {
     /**
      * removes the last symbol (indexVariable () or abstractIndexSymbol) and
      * adds all elements in postfix
+     *
      * @param postfix The postfix to prolong the index
      * @return The nonterminal with prolonged index
      */

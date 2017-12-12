@@ -1,10 +1,8 @@
 /**
- * 
  * This package implements the model checking tableau method from
- * 
- *    Another Look at Model Checking, Clarke, Grumberg, Hamaguchi (1994)
- * 
- * @author christina
+ * <p>
+ * Another Look at Model Checking, Clarke, Grumberg, Hamaguchi (1994)
  *
+ * @author christina
  */
 package de.rwth.i2.attestor.modelChecking;

@@ -7,10 +7,7 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A custom state space implementation for counterexample generation that stores only final states that are required
@@ -21,14 +18,13 @@ import java.util.Set;
  */
 final class CounterexampleStateSpace implements StateSpace {
 
-    private ProgramState initialState;
     private final Program program;
     private final CanonicalizationStrategy canonicalizationStrategy;
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
     private final SymbolicExecutionObserver invokeObserver;
-
-    private final Set<ProgramState> finalStates = new HashSet<>();
+    private final Set<ProgramState> finalStates = new LinkedHashSet<>();
+    private ProgramState initialState;
 
     CounterexampleStateSpace(Program program,
                              CanonicalizationStrategy canonicalizationStrategy,
@@ -48,7 +44,7 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getStates() {
 
-        Set<ProgramState> result = new HashSet<>();
+        Set<ProgramState> result = new LinkedHashSet<>();
         result.add(initialState);
         result.addAll(finalStates);
         return result;
@@ -78,7 +74,7 @@ final class CounterexampleStateSpace implements StateSpace {
     public TIntSet getFinalStateIds() {
 
         TIntSet result = new TIntHashSet();
-        for(ProgramState s : finalStates) {
+        for (ProgramState s : finalStates) {
             result.add(s.getStateSpaceId());
         }
         return result;
@@ -93,7 +89,7 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getControlFlowSuccessorsOf(ProgramState state) {
 
-        if(state.equals(initialState)) {
+        if (state.equals(initialState)) {
             return getFinalStates();
         } else {
             return Collections.emptySet();
@@ -109,7 +105,7 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getArtificialInfPathsSuccessorsOf(ProgramState state) {
 
-        if(!state.equals(initialState) && finalStates.contains(state)) {
+        if (!state.equals(initialState) && finalStates.contains(state)) {
             return Collections.singleton(state);
         }
         return Collections.emptySet();
@@ -118,7 +114,7 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public TIntArrayList getControlFlowSuccessorsIdsOf(int stateSpaceId) {
 
-        if(initialState.getStateSpaceId() == stateSpaceId) {
+        if (initialState.getStateSpaceId() == stateSpaceId) {
             return new TIntArrayList(getFinalStateIds());
         }
         return new TIntArrayList();
@@ -133,8 +129,8 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public TIntArrayList getArtificialInfPathsSuccessorsIdsOf(int stateSpaceId) {
 
-        for(ProgramState s : finalStates) {
-            if(s.getStateSpaceId() == stateSpaceId) {
+        for (ProgramState s : finalStates) {
+            if (s.getStateSpaceId() == stateSpaceId) {
                 TIntArrayList result = new TIntArrayList();
                 result.add(stateSpaceId);
                 return result;
@@ -145,20 +141,24 @@ final class CounterexampleStateSpace implements StateSpace {
 
     @Override
     public boolean addState(ProgramState state) {
+
         return true;
     }
 
     @Override
     public boolean addStateIfAbsent(ProgramState state) {
+
         return true;
     }
 
     @Override
     public void addInitialState(ProgramState state) {
+
         this.initialState = state;
     }
 
-    /** We first reconstruct a fully abstract state from the currently generated
+    /**
+     * We first reconstruct a fully abstract state from the currently generated
      * final state. If this state is actually required and no (more concrete)
      * representative of this state has been stored yet, we add this state as
      * a final state.
@@ -167,23 +167,24 @@ final class CounterexampleStateSpace implements StateSpace {
     public void setFinal(ProgramState state) {
 
         ProgramState abstractState = getAbstractStateInOriginalStateSpace(state);
-       if(requiredFinalStates.contains(abstractState)) {
-           requiredFinalStates.remove(abstractState);
-           finalStates.add(state);
-       }
+        if (requiredFinalStates.contains(abstractState)) {
+            requiredFinalStates.remove(abstractState);
+            finalStates.add(state);
+        }
     }
 
     @Override
     public void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping) {
+
         assert false;
     }
 
-    private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state)  {
+    private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state) {
 
         ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
         abstractState.setProgramCounter(-1);
 
-        if(invokeCleanup != null) {
+        if (invokeCleanup != null) {
             try {
                 invokeCleanup.getCleanedResultState(abstractState, invokeObserver);
             } catch (NotSufficientlyMaterializedException e) {
@@ -195,25 +196,28 @@ final class CounterexampleStateSpace implements StateSpace {
 
     @Override
     public void addMaterializationTransition(ProgramState from, ProgramState to) {
+
     }
 
     @Override
     public void addControlFlowTransition(ProgramState from, ProgramState to) {
+
     }
 
     @Override
     public void addArtificialInfPathsTransition(ProgramState cur) {
+
     }
 
     @Override
     public ProgramState getState(int id) {
 
-        if(initialState.getStateSpaceId() == id) {
+        if (initialState.getStateSpaceId() == id) {
             return initialState;
         }
 
-        for(ProgramState s : finalStates) {
-            if(s.getStateSpaceId() == id) {
+        for (ProgramState s : finalStates) {
+            if (s.getStateSpaceId() == id) {
                 return s;
             }
         }

@@ -17,7 +17,7 @@ public interface Semantics {
      * be evaluated), this results in a set of successor program states in general.
      *
      * @param programState The state on which the abstract program semantics shall be executed.
-     * @param options A collection of configuration parameters to influence to symbolic execution.
+     * @param options      A collection of configuration parameters to influence to symbolic execution.
      * @return The set of all states resulting from executing the program semantics on programState.
      * @throws NotSufficientlyMaterializedException This exception is thrown if the semantics cannot be executed on
      *                                              programState due to missing fields.
@@ -28,6 +28,7 @@ public interface Semantics {
     /**
      * Checks whether execution of a single step of the abstract program semantics on the given program state
      * requires materialization first.
+     *
      * @param programState The program state on which the semantics should be
      * @return true, if the semantics statement requires materialization
      */
@@ -40,7 +41,7 @@ public interface Semantics {
 
     /**
      * @return The set of all program locations that are direct successors of this program statement in
-     *         the underlying control flow graph.
+     * the underlying control flow graph.
      */
     Set<Integer> getSuccessorPCs();
 
@@ -51,13 +52,15 @@ public interface Semantics {
 
     /**
      * Determines whether canonicalization may be performed after execution of this program statement.
+     *
      * @param permitted True if and only if canonicalization may be performed after execution of this program statement.
      */
     void setPermitCanonicalization(boolean permitted);
-    
+
     /**
      * A string representing the semantics statement both for display and
      * for identification.
+     *
      * @return the string representation of the semantics
      */
     @Override

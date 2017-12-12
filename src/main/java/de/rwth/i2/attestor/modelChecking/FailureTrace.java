@@ -27,48 +27,54 @@ public class FailureTrace implements Trace {
             ProgramState state = stateSpace.getState(stateId);
             stateTrace.addFirst(state);
             current = current.getParent();
-        } while(current != null);
+        } while (current != null);
     }
 
     @Override
     public List<Integer> getStateIdTrace() {
+
         return new LinkedList<>(stateIdTrace);
     }
 
     @Override
     public ProgramState getInitialState() {
+
         return stateTrace.getFirst();
     }
 
     @Override
     public ProgramState getFinalState() {
+
         return stateTrace.getLast();
     }
 
     @Override
     public int size() {
+
         return stateTrace.size();
     }
 
     @Override
     public ProgramState getSuccessor(ProgramState state) {
+
         Iterator<ProgramState> iterator = stateTrace.iterator();
-        while(iterator.hasNext()) {
-           ProgramState s = iterator.next();
-           if(s.getStateSpaceId() == state.getStateSpaceId()) {
-               if(iterator.hasNext()) {
-                   return iterator.next();
-               }
-               return null;
-           }
+        while (iterator.hasNext()) {
+            ProgramState s = iterator.next();
+            if (s.getStateSpaceId() == state.getStateSpaceId()) {
+                if (iterator.hasNext()) {
+                    return iterator.next();
+                }
+                return null;
+            }
         }
         return null;
     }
 
     @Override
     public boolean containsSubsumingState(ProgramState state) {
-        for(ProgramState s : stateTrace) {
-            if(state.isSubsumedBy(s)) {
+
+        for (ProgramState s : stateTrace) {
+            if (state.isSubsumedBy(s)) {
                 return true;
             }
         }
@@ -76,11 +82,13 @@ public class FailureTrace implements Trace {
     }
 
     public boolean isEmpty() {
+
         return stateIdTrace.isEmpty();
     }
 
     @Override
     public Iterator<ProgramState> iterator() {
+
         return stateTrace.iterator();
     }
 

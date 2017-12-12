@@ -8,28 +8,33 @@ package de.rwth.i2.attestor.util;
  */
 public class NotSufficientlyMaterializedException extends Exception {
 
-	private static final long serialVersionUID = -1056090328610939401L;
+    private static final long serialVersionUID = -1056090328610939401L;
 
-	public NotSufficientlyMaterializedException() {
-		super();
-	}
+    public NotSufficientlyMaterializedException() {
 
-	public NotSufficientlyMaterializedException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+        super();
+    }
 
-	public NotSufficientlyMaterializedException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public NotSufficientlyMaterializedException(String message, Throwable cause, boolean enableSuppression,
+                                                boolean writableStackTrace) {
 
-	public NotSufficientlyMaterializedException(String message) {
-		super(message);
-	}
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 
-	public NotSufficientlyMaterializedException(Throwable cause) {
-		super(cause);
-	}
+    public NotSufficientlyMaterializedException(String message, Throwable cause) {
 
-	
+        super(message, cause);
+    }
+
+    public NotSufficientlyMaterializedException(String message) {
+
+        super(message);
+    }
+
+    public NotSufficientlyMaterializedException(Throwable cause) {
+
+        super(cause);
+    }
+
+
 }

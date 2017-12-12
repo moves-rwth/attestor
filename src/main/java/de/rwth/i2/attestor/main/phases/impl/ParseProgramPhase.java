@@ -1,8 +1,10 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
-import de.rwth.i2.attestor.main.settings.InputSettings;
+import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -10,6 +12,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 public class ParseProgramPhase extends AbstractPhase implements ProgramTransformer {
 
     private Program program;
+
+    public ParseProgramPhase(Scene scene) {
+
+        super(scene);
+    }
 
     @Override
     public String getName() {
@@ -20,8 +27,8 @@ public class ParseProgramPhase extends AbstractPhase implements ProgramTransform
     @Override
     protected void executePhase() {
 
-        InputSettings inputSettings = settings.input();
-        JimpleParser programParser = new JimpleParser(new StandardAbstractSemantics());
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        JimpleParser programParser = new JimpleParser(this, new StandardAbstractSemantics(this));
         program = programParser.parse(
                 inputSettings.getClasspath(),
                 inputSettings.getClassName(),

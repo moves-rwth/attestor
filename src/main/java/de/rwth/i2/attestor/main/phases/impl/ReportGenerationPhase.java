@@ -1,27 +1,42 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
-import java.io.*;
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
 import de.rwth.i2.attestor.io.FileUtils;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonCustomHcListExporter;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.ipa.IpaContractCollection;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import de.rwth.i2.attestor.util.ZipUtils;
+
+import java.io.*;
+import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
 
     private StateSpace stateSpace;
     private Program program;
+    private OutputSettings outputSettings;
+
+    public ReportGenerationPhase(Scene scene) {
+
+        super(scene);
+    }
 
     @Override
     public String getName() {
@@ -32,7 +47,9 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     protected void executePhase() {
 
-        if(settings.options().isNoExport()) {
+        outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
+
+        if (outputSettings.isNoExport()) {
             return;
         }
 
@@ -40,47 +57,48 @@ public class ReportGenerationPhase extends AbstractPhase {
         program = getPhase(ProgramTransformer.class).getProgram();
 
         try {
-            if (settings.output().isExportGrammar()) {
+            if (outputSettings.isExportGrammar()) {
                 exportGrammar();
             }
 
-            if (settings.output().isExportStateSpace()) {
+            if (outputSettings.isExportStateSpace()) {
                 exportStateSpace();
             }
 
-            if (settings.output().isExportCustomHcs()) {
+            if (outputSettings.isExportCustomHcs()) {
                 exportCustomHcs();
             }
-            
-            if( settings.output().isExportContracts() ) {
-            	exportContracts();
+
+            if (outputSettings.isExportContracts()) {
+                exportContracts();
             }
-            
-        } catch(IOException e) {
+
+        } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
 
     }
-    
+
     private void exportContracts() throws IOException {
-    	String directory = settings.output().getDirectoryForContracts();
-    	FileUtils.createDirectories( directory );
-    	for( String signature : settings.output().getContractRequests().keySet() ) {
-    		
-    		 String filename = settings.output().getContractRequests().get( signature );
-    		 FileWriter writer = new FileWriter( directory + File.separator + filename);
-    		 
-    		 IpaContractCollection contracts = IpaAbstractMethod.getMethod(signature).getContracts();
-    		 
-    		 ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
-    	     exporter.export( signature, contracts );
-    	     writer.close();
-    	}
+
+        String directory = outputSettings.getDirectoryForContracts();
+        FileUtils.createDirectories(directory);
+        for (String signature : outputSettings.getContractRequests().keySet()) {
+
+            String filename = outputSettings.getContractRequests().get(signature);
+            FileWriter writer = new FileWriter(directory + File.separator + filename);
+
+            IpaContractCollection contracts = scene().getMethod(signature).getContracts();
+
+            ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
+            exporter.export(signature, contracts);
+            writer.close();
+        }
     }
-    
+
     private void exportCustomHcs() throws IOException {
 
-        String location = settings.output().getLocationForCustomHcs();
+        String location = outputSettings.getLocationForCustomHcs();
 
         // Copy necessary libraries
         InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
@@ -91,7 +109,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         // Generate JSON files for prebooked HCs and their summary
         CustomHcListExporter exporter = new JsonCustomHcListExporter();
-        exporter.export(location + File.separator + "customHcsData", settings.output().getCustomHcSet());
+        exporter.export(location + File.separator + "customHcsData", outputSettings.getCustomHcSet());
 
         logger.info("Custom HCs exported to '"
                 + location
@@ -101,7 +119,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     private void exportStateSpace() throws IOException {
 
         logger.info("Exporting state space...");
-        String location = settings.output().getLocationForStateSpace();
+        String location = outputSettings.getLocationForStateSpace();
 
         exportStateSpace(
                 location + File.separator + "data",
@@ -110,7 +128,7 @@ public class ReportGenerationPhase extends AbstractPhase {
         );
 
         Set<ProgramState> states = stateSpace.getStates();
-        for(ProgramState state : states) {
+        for (ProgramState state : states) {
             int i = state.getStateSpaceId();
             exportHeapConfiguration(
                     location + File.separator + "data",
@@ -134,7 +152,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         logger.info("Exporting grammar...");
 
-        String location = settings.output().getLocationForGrammar();
+        String location = outputSettings.getLocationForGrammar();
 
         // Copy necessary libraries
         InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
@@ -145,7 +163,8 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         // Generate JSON files
         GrammarExporter exporter = new JsonGrammarExporter();
-        exporter.export(location + File.separator + "grammarData", settings.grammar().getGrammar());
+        exporter.export(location + File.separator + "grammarData",
+                getPhase(GrammarTransformer.class).getGrammar());
 
         logger.info("done. Grammar exported to '" + location + "'");
     }
@@ -165,7 +184,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         FileUtils.createDirectories(directory);
         Writer writer = new BufferedWriter(
-                new OutputStreamWriter( new FileOutputStream(directory + File.separator + "statespace.json") )
+                new OutputStreamWriter(new FileOutputStream(directory + File.separator + "statespace.json"))
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
         exporter.export(stateSpace, program);
@@ -175,12 +194,10 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if(!settings.options().isNoExport() && settings.output().isExportStateSpace()) {
-            String location = settings.output().getLocationForStateSpace();
-            logSum("State space exported to '"
-                    + location
-                    + "'"
-            );
+        if (!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
+            String location = outputSettings.getLocationForStateSpace();
+            logHighlight("State space has been exported to:");
+            logSum(location);
         }
     }
 

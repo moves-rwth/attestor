@@ -9,7 +9,10 @@ public interface HeapConfigurationExporter {
 
     /**
      * Exports a given HeapConfiguration.
+     *
      * @param heapConfiguration The HeapConfiguration that should be exported.
      */
-	void export(HeapConfiguration heapConfiguration);
+    void export(HeapConfiguration heapConfiguration);
+
+    void exportForReport(HeapConfiguration heapConfiguration);
 }

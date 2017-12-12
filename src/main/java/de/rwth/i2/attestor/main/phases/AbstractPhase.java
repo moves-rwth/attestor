@@ -1,27 +1,30 @@
 package de.rwth.i2.attestor.main.phases;
 
-import de.rwth.i2.attestor.main.settings.Settings;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractPhase {
+import java.io.IOException;
+
+public abstract class AbstractPhase extends SceneObject {
 
     protected static final Logger logger = LogManager.getLogger("AbstractPhase");
-
-
     private int phaseId;
     private PhaseRegistry registry;
-
     private long startTime;
     private long finishTime;
 
-    protected Settings settings;
+    public AbstractPhase(Scene scene) {
 
-    protected void register(int phaseId, PhaseRegistry registry, Settings settings) {
+        super(scene);
+    }
+
+    protected void register(int phaseId, PhaseRegistry registry) {
+
         this.phaseId = phaseId;
         this.registry = registry;
-        this.settings = settings;
     }
 
     public abstract String getName();
@@ -32,10 +35,11 @@ public abstract class AbstractPhase {
     }
 
     protected <T> T getPhase(Class<T> phaseType) {
+
         return registry.getMostRecentPhase(phaseId, phaseType);
     }
 
-    protected abstract void executePhase();
+    protected abstract void executePhase() throws IOException;
 
     public abstract void logSummary();
 
@@ -49,21 +53,24 @@ public abstract class AbstractPhase {
             executePhase();
             finishTime = System.nanoTime();
             logSuccess();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logFail(e);
         }
     }
 
     private void logStart() {
-        logger.debug(getName() +  " started.");
+
+        logger.debug(getName() + " started.");
     }
 
 
     private void logSuccess() {
+
         logger.debug(getName() + " finished.");
     }
 
     private void logFail(Exception e) {
+
         logger.fatal(getName() + " failed.");
         logger.fatal(e.getMessage());
         e.printStackTrace();
@@ -73,5 +80,10 @@ public abstract class AbstractPhase {
     protected void logSum(String message) {
 
         logger.log(Level.getLevel("REPORT"), message);
+    }
+
+    protected void logHighlight(String message) {
+
+        logger.log(Level.getLevel("HIGHLIGHT"), message);
     }
 }

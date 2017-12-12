@@ -5,9 +5,9 @@ import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStra
 
 public class FakeIndexCanonicalizationStrategy implements IndexCanonizationStrategy {
 
-	@Override
-	public void canonizeIndex(HeapConfiguration hc) {
-		// do nothing
-	}
+    @Override
+    public void canonizeIndex(HeapConfiguration hc) {
+        // do nothing
+    }
 
 }

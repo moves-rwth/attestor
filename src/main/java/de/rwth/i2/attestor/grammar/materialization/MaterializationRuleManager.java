@@ -6,11 +6,10 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 
 /**
  * Responsible for computing and caching the rules to resolve any given violation point.
- * 
- * @author Hannah
  *
+ * @author Hannah
  */
 public interface MaterializationRuleManager {
 
-	GrammarResponse getRulesFor( Nonterminal toReplace, int tentacle, String requestedSelector ) throws UnexpectedNonterminalTypeException;
+    GrammarResponse getRulesFor(Nonterminal toReplace, int tentacle, String requestedSelector) throws UnexpectedNonterminalTypeException;
 }

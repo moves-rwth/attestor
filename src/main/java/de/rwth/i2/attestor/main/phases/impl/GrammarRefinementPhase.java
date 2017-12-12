@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
@@ -17,16 +17,15 @@ import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfiguration
 import de.rwth.i2.attestor.refinement.languageInclusion.LanguageInclusionAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomaton;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class GrammarRefinementPhase extends AbstractPhase
-        implements InputTransformer, StateLabelingStrategyBuilderTransformer {
+        implements InputTransformer, StateLabelingStrategyBuilderTransformer,
+        StateSpaceGenerationTransformer, GrammarTransformer {
 
     private static final Pattern btree = Pattern.compile("^btree$");
     private static final Pattern bimap = Pattern.compile("^bimap$");
@@ -39,6 +38,14 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private List<HeapConfiguration> inputs;
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
+    private StateRefinementStrategy stateRefinementStrategy;
+
+    private Grammar grammar;
+
+    public GrammarRefinementPhase(Scene scene) {
+
+        super(scene);
+    }
 
     @Override
     public String getName() {
@@ -49,105 +56,104 @@ public class GrammarRefinementPhase extends AbstractPhase
     @Override
     protected void executePhase() {
 
-
+        grammar = getPhase(GrammarTransformer.class).getGrammar();
         inputs = getPhase(InputTransformer.class).getInputs();
 
         stateLabelingStrategyBuilder = getPhase(StateLabelingStrategyBuilderTransformer.class).getStrategy();
-        if(stateLabelingStrategyBuilder == null) {
+        if (stateLabelingStrategyBuilder == null) {
             stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
         }
 
 
         updateHeapAutomata();
 
-        if(settings.options().isIndexedMode()) {
+        if (scene().options().isIndexedMode()) {
 
-            // in the long run, we should make this an option in the settings
-            if(BasicNonterminal.hasNonterminal("BT"))  {
-                settings.stateSpaceGeneration().setStateRefinementStrategy(new BalancednessStateRefinementStrategy());
+            try {
+                if (scene().getNonterminal("BT") != null) {
+                    stateRefinementStrategy = new BalancednessStateRefinementStrategy(this);
+                }
+            } catch (IllegalArgumentException e) {
+                // fine
             }
         }
 
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
-        Grammar grammar =  settings.grammar().getGrammar();
 
-        if(automaton != null && grammar != null && !settings.options().isIndexedMode()) {
-            settings.options().setGrammarRefinementEnabled(true);
+        if (automaton != null && grammar != null && !scene().options().isIndexedMode()) {
+            scene().options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
-            settings.grammar().setGrammar(grammar);
         }
     }
 
     private void updateHeapAutomata() {
 
-        boolean isIndexedMode = settings.options().isIndexedMode();
+        boolean isIndexedMode = scene().options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
         boolean hasBtreeAutomaton = false;
         boolean hasBimapAutomaton = false;
 
-        Set<Set<String>> reachabilityAutomataBySelList = new HashSet<>();
+        Set<Set<String>> reachabilityAutomataBySelList = new LinkedHashSet<>();
 
-        Set<Pair<String, String>> trackedVariableRelations = new HashSet<>();
+        Set<Pair<String, String>> trackedVariableRelations = new LinkedHashSet<>();
 
-        Set<String> requiredAPs = settings.modelChecking().getRequiredAtomicPropositions();
+        ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
+        Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();
 
-        for(String ap : requiredAPs) {
+        for (String ap : requiredAPs) {
 
-            if(!hasBimapAutomaton && bimap.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(grammar));
+            if (!hasBimapAutomaton && bimap.matcher(ap).matches()) {
+                stateLabelingStrategyBuilder.add(new ListLengthAutomaton(this, grammar));
                 hasBimapAutomaton = true;
                 logger.debug("Enable checking for lists of equal length.");
-            } else if(!hasBtreeAutomaton && btree.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(grammar));
+            } else if (!hasBtreeAutomaton && btree.matcher(ap).matches()) {
+                stateLabelingStrategyBuilder.add(new BalancednessAutomaton(this, grammar));
                 hasBtreeAutomaton = true;
                 logger.debug("Enable checking for balanced trees.");
-            } else if(!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
-                Grammar grammar = settings.grammar().getGrammar();
-                stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(grammar));
+            } else if (!hasLanguageInclusionAutomaton && languageInclusion.matcher(ap).matches()) {
+                stateLabelingStrategyBuilder.add(new LanguageInclusionAutomaton(this, grammar));
                 hasLanguageInclusionAutomaton = true;
                 logger.debug("Enable language inclusion checks to determine heap shapes.");
-            } else if(reachableBySelPattern.matcher(ap).matches()) {
+            } else if (reachableBySelPattern.matcher(ap).matches()) {
 
-                if(isIndexedMode) {
+                if (isIndexedMode) {
                     logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
                     continue;
                 }
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
-                settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
-                settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 String[] selectors = parameters[1].split("\\]")[0].split(",");
                 Set<String> allowedSelectors = new HashSet<>(selectors.length);
-                for(String sel : selectors) {
+                for (String sel : selectors) {
                     allowedSelectors.add(sel.trim());
                 }
 
-                if(reachabilityAutomataBySelList.add(allowedSelectors)) {
-                    stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(allowedSelectors));
+                if (reachabilityAutomataBySelList.add(allowedSelectors)) {
+                    stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this, allowedSelectors));
                     logger.debug("Enable heap automaton to track reachable variables according to selectors "
                             + allowedSelectors);
                 }
 
-            } else if(!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches() ) {
+            } else if (!hasReachabilityAutomaton && reachablePattern.matcher(ap).matches()) {
 
 
-                if(isIndexedMode) {
+                if (isIndexedMode) {
                     logger.info("Advanced grammar refinement for indexed grammars is not supported yet.");
                     continue;
                 }
 
-                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton());
+                stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this));
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
-                settings.stateSpaceGeneration().addKeptVariable(variables[0].trim());
-                settings.stateSpaceGeneration().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
                 logger.debug("Enable heap automaton to track reachable variables");
-            } else if(equalityPattern.matcher(ap).matches()) {
+            } else if (equalityPattern.matcher(ap).matches()) {
                 String[] split = ap.split("\\=\\=");
                 enableVariableRelationTracking(trackedVariableRelations, split);
             } else if (inequalityPattern.matcher(ap).matches()) {
@@ -162,11 +168,11 @@ public class GrammarRefinementPhase extends AbstractPhase
         String lhs = split[0].trim();
         String rhs = split[1].trim();
         Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
-        if(trackedVariableRelations.add(trackedPair)) {
-           stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-           settings.stateSpaceGeneration().addKeptVariable(lhs);
-           settings.stateSpaceGeneration().addKeptVariable(rhs);
-           logger.info("Enable heap automaton to track relationships between '"
+        if (trackedVariableRelations.add(trackedPair)) {
+            stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
+            scene().options().addKeptVariable(lhs);
+            scene().options().addKeptVariable(rhs);
+            logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }
     }
@@ -190,7 +196,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         logger.info("Refining input heap configurations...");
         List<HeapConfiguration> newInputs = new ArrayList<>();
-        for(HeapConfiguration input : inputs) {
+        for (HeapConfiguration input : inputs) {
             InitialHeapConfigurationRefinement inputRefinement = new InitialHeapConfigurationRefinement(
                     input,
                     grammar,
@@ -199,7 +205,7 @@ public class GrammarRefinementPhase extends AbstractPhase
             newInputs.addAll(inputRefinement.getRefinements());
         }
         inputs = newInputs;
-        if(inputs.isEmpty())	{
+        if (inputs.isEmpty()) {
             logger.fatal("No refined initial state exists.");
             throw new IllegalStateException();
         }
@@ -227,5 +233,53 @@ public class GrammarRefinementPhase extends AbstractPhase
     public AutomatonStateLabelingStrategyBuilder getStrategy() {
 
         return stateLabelingStrategyBuilder;
+    }
+
+    @Override
+    public AbortStrategy getAbortStrategy() {
+
+        return null;
+    }
+
+    @Override
+    public CanonicalizationStrategy getCanonicalizationStrategy() {
+
+        return null;
+    }
+
+    @Override
+    public CanonicalizationStrategy getAggressiveCanonicalizationStrategy() {
+
+        return null;
+    }
+
+    @Override
+    public MaterializationStrategy getMaterializationStrategy() {
+
+        return null;
+    }
+
+    @Override
+    public StateLabelingStrategy getStateLabelingStrategy() {
+
+        return null;
+    }
+
+    @Override
+    public StateRefinementStrategy getStateRefinementStrategy() {
+
+        return stateRefinementStrategy;
+    }
+
+    @Override
+    public Grammar getGrammar() {
+
+        return grammar;
+    }
+
+    @Override
+    public Map<String, String> getRenamingMap() {
+
+        return getPhase(GrammarTransformer.class).getRenamingMap();
     }
 }

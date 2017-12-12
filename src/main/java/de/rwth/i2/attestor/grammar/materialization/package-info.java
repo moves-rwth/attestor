@@ -1,6 +1,6 @@
 /**
  * This package containsSubsumingState all the classes necessary for materialization.
- * 
+ * <p>
  * The main-class is {@link de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategy}
  * which is the only class which should be called from outside.
  * <br>
@@ -11,14 +11,14 @@
  * this component is responsible for choosing the correct rules to apply for a given
  * violation point.
  * Choose {@link de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager}
- * if you have only basic grammars and 
+ * if you have only basic grammars and
  * {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager} for
  * indexed or mixed grammars.
- * <br> 
+ * <br>
  * The MaterializationRuleManager itself gets a {@link de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver}
  * which is responsible to get and cache the rules resolving a specific violation point.
  * An {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}
-
+ * <p>
  * additionally gets a {@link de.rwth.i2.attestor.grammar.IndexMatcher} which ensures that
  * indexed rules are instantiated appropriately and that also provides the necessary materialization
  * whichh has to be applied before applying the rule graph.
@@ -35,8 +35,7 @@
  * Note that you may get an error if you combine an {@link de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager}
  * with a {@link de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier} since
  * the latter is not able to handle the response of the first.
- * 
- * 
+ *
  * @author Hannah
  */
 package de.rwth.i2.attestor.grammar.materialization;

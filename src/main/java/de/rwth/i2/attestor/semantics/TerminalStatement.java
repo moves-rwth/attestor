@@ -5,64 +5,63 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * Terminal Statements are used to model the exit point of a method. They return
  * an empty result set.
- * 
- * @author Hannah Arndt, Christoph
  *
+ * @author Hannah Arndt, Christoph
  */
 public class TerminalStatement implements Semantics {
 
-	/**
-	 * Stores whether canonicalization may be performed
+    /**
+     * Stores whether canonicalization may be performed
      * after executing this statement.
-	 */
-	private boolean isCanonicalizationPermitted = true;
-	
-	@Override
-	public Set<ProgramState> computeSuccessors(ProgramState executable, SymbolicExecutionObserver options) {
-		
-		return new HashSet<>();
-	}
-
-	@Override
-	public boolean needsMaterialization(ProgramState executable) {
-		
-		return false;
-	}
+     */
+    private boolean isCanonicalizationPermitted = true;
 
     @Override
-	public ViolationPoints getPotentialViolationPoints() {
-		
-		return ViolationPoints.getEmptyViolationPoints();
-	}
+    public Set<ProgramState> computeSuccessors(ProgramState executable, SymbolicExecutionObserver options) {
 
-	@Override
-	public Set<Integer> getSuccessorPCs() {
-		
-		return new HashSet<>();
-	}
+        return new LinkedHashSet<>();
+    }
 
-	@Override
-	public boolean permitsCanonicalization() {
-		
-		return isCanonicalizationPermitted;
-	}
+    @Override
+    public boolean needsMaterialization(ProgramState executable) {
 
-	@Override
-	public void setPermitCanonicalization(boolean permitted) {
-	
-		isCanonicalizationPermitted = permitted;
-	}
+        return false;
+    }
 
-	@Override
-	public String toString() {
+    @Override
+    public ViolationPoints getPotentialViolationPoints() {
 
-		return "program terminated";
-	}
+        return ViolationPoints.getEmptyViolationPoints();
+    }
+
+    @Override
+    public Set<Integer> getSuccessorPCs() {
+
+        return new LinkedHashSet<>();
+    }
+
+    @Override
+    public boolean permitsCanonicalization() {
+
+        return isCanonicalizationPermitted;
+    }
+
+    @Override
+    public void setPermitCanonicalization(boolean permitted) {
+
+        isCanonicalizationPermitted = permitted;
+    }
+
+    @Override
+    public String toString() {
+
+        return "program terminated";
+    }
 
 }

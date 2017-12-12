@@ -12,19 +12,17 @@ import de.rwth.i2.attestor.graph.morphism.VF2State;
  */
 public class CompatibleExternalNodes implements FeasibilityFunction {
 
-	@Override
-	public boolean eval(VF2State state, int p, int t) {
-		
-		Graph patternGraph = state.getPattern().getGraph();
-		Graph targetGraph = state.getTarget().getGraph();
+    @Override
+    public boolean eval(VF2State state, int p, int t) {
 
-		if(patternGraph.isExternal(p) || targetGraph.isExternal(t)) {
-			if(patternGraph.getExternalIndex(p) != targetGraph.getExternalIndex(t)) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
+        Graph patternGraph = state.getPattern().getGraph();
+        Graph targetGraph = state.getTarget().getGraph();
+
+        if (patternGraph.isExternal(p) || targetGraph.isExternal(t)) {
+            return patternGraph.getExternalIndex(p) == targetGraph.getExternalIndex(t);
+        }
+
+        return true;
+    }
 
 }

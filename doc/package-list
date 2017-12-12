@@ -4,6 +4,7 @@ de.rwth.i2.attestor.grammar
 de.rwth.i2.attestor.grammar.canonicalization
 de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar
 de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar
+de.rwth.i2.attestor.grammar.concretization
 de.rwth.i2.attestor.grammar.inclusion
 de.rwth.i2.attestor.grammar.materialization
 de.rwth.i2.attestor.grammar.materialization.communication
@@ -25,12 +26,14 @@ de.rwth.i2.attestor.io.hcToJava
 de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat
 de.rwth.i2.attestor.io.jsonExport.inputFormat
 de.rwth.i2.attestor.io.jsonImport
+de.rwth.i2.attestor.io.settings
 de.rwth.i2.attestor.ipa
 de.rwth.i2.attestor.main
 de.rwth.i2.attestor.main.phases
+de.rwth.i2.attestor.main.phases.communication
 de.rwth.i2.attestor.main.phases.impl
 de.rwth.i2.attestor.main.phases.transformers
-de.rwth.i2.attestor.main.settings
+de.rwth.i2.attestor.main.scene
 de.rwth.i2.attestor.markings
 de.rwth.i2.attestor.modelChecking
 de.rwth.i2.attestor.programState

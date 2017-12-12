@@ -1,56 +1,20 @@
 package de.rwth.i2.attestor.types;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.util.SingleElementUtil;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A simple implementation of types.
  * For every name of types exactly one object is stored.
- * These are accessed through {@link GeneralType#getType(String)}.
  *
  * @author Christoph
  */
 public final class GeneralType implements Type {
 
-    /**
-     * The type object corresponding to the type 'null'.
-     */
-	private static final GeneralType nullType;
-
-    /**
-     * Stores the unique type object for every name.
-     */
-	private static final Map<String, GeneralType> existingTypes;
-	
-	static{
-		nullType = new GeneralType( "NULL" );
-		existingTypes = SingleElementUtil.createMap( "NULL", nullType );
-	}
-
-	private final Map<String,String> selectorLabelNames = new HashMap<>();
-
-    /**
-     * Provides the type object with the requested name.
-     * If no type object with the requested name exists, a new object will be created.
-     *
-     * @param name The name of the requested type.
-     * @return The type with the requested name.
-     */
-	public static synchronized GeneralType getType(String name ){
-		if( !existingTypes.containsKey( name ) ){
-			
-			GeneralType res = new GeneralType( name );
-			existingTypes.put( name, res );
-		}
-		
-		return existingTypes.get( name );
-	}
-
+    private final Map<SelectorLabel, String> selectorLabelNames = new LinkedHashMap<>();
     /**
      * The name of the type.
      */
@@ -59,57 +23,89 @@ public final class GeneralType implements Type {
     /**
      * @param name The name of the type to be created.
      */
-	private GeneralType(String name) {
-		
-		this.name = name;
-	}
-	
-	/*
-	 * Shows only the last component of the type name for readability.
-	 * e.g. if the type is "de.rwth.i2.attestor.package.subpackage.List"
-	 * then the result will be "List"
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		String[] components = this.name.split( "\\." );
-		
-		if(components.length > 0) {
-			return components[ components.length -1 ];	
-		} else {
-			return this.name;
-			//return "";
-		}
-		
-	}
+    protected GeneralType(String name) {
+
+        this.name = name;
+    }
+
+    /*
+     * Shows only the last component of the type name for readability.
+     * e.g. if the type is "de.rwth.i2.attestor.package.subpackage.List"
+     * then the result will be "List"
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+
+        String[] components = this.name.split("\\.");
+
+        if (components.length > 0) {
+            return components[components.length - 1];
+        } else {
+            return this.name;
+            //return "";
+        }
+
+    }
 
     /**
      * Checks whether two types are equal.
+     *
      * @param other Another type.
      * @return True if and only if two objects refer to the same type.
      */
-	public boolean typeEquals( Object other ){
+    public boolean typeEquals(Object other) {
 
-		return this == other;
-	}
+        return this == other;
+    }
 
-	@Override
-	public boolean hasSelectorLabel(String name) {
-		return selectorLabelNames.containsKey(name);
-	}
+    @Override
+    public boolean hasSelectorLabel(SelectorLabel selectorLabel) {
 
-	@Override
-	public void addSelectorLabel(String name, String defaultValue) {
-		selectorLabelNames.put(name, defaultValue);
-	}
+        return selectorLabelNames.containsKey(selectorLabel);
+    }
 
-	@Override
-	public Map<String, String> getSelectorLabels() {
-		return selectorLabelNames;
-	}
+    @Override
+    public void addSelectorLabel(SelectorLabel selectorLabel, String defaultValue) {
 
-	@Override
-	public boolean isPrimitiveType(String name) {
-		return !selectorLabelNames.get(name).equals(Constants.NULL);
-	}
+        if (Types.isConstantType(this)) {
+            throw new IllegalStateException("Cannot assign selector labels to node of constant type.");
+        }
+        selectorLabelNames.put(selectorLabel, defaultValue);
+    }
+
+    @Override
+    public Map<SelectorLabel, String> getSelectorLabels() {
+
+        return selectorLabelNames;
+    }
+
+    @Override
+    public boolean isPrimitiveType(SelectorLabel selectorLabel) {
+
+        String defaultValue = selectorLabelNames.get(selectorLabel);
+        return defaultValue != null && defaultValue.equals(Constants.ZERO);
+    }
+
+    public static final class Factory {
+
+        private final Map<String, Type> knownTypes = new LinkedHashMap<>();
+
+        public Factory() {
+
+            knownTypes.put(TypeNames.NULL, Types.NULL);
+            knownTypes.put(TypeNames.UNDEFINED, Types.UNDEFINED);
+            knownTypes.put(TypeNames.INT, Types.INT);
+        }
+
+        public Type get(String name) {
+
+            Type result = knownTypes.get(name);
+            if (result == null) {
+                result = new GeneralType(name);
+                knownTypes.put(name, result);
+            }
+            return result;
+        }
+    }
 }

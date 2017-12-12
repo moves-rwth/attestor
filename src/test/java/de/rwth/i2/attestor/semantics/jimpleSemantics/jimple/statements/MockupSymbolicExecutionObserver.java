@@ -1,16 +1,21 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 
 import java.util.ArrayList;
 
-public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserver {
+public class MockupSymbolicExecutionObserver extends SceneObject implements SymbolicExecutionObserver {
 
+    public MockupSymbolicExecutionObserver(SceneObject sceneObject) {
+
+        super(sceneObject);
+    }
 
     @Override
     public void update(Object handler, ProgramState input) {
@@ -22,7 +27,7 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
 
         ProgramState initialState = new DefaultProgramState(input.getHeap());
         initialState.setProgramCounter(0);
-        return StateSpaceGenerator.builder()
+        return StateSpaceGenerator.builder(this)
                 .addInitialState(initialState)
                 .setProgram(program)
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
@@ -32,10 +37,11 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
                         (state, potentialViolationPoints) -> new ArrayList<>()
                 )
                 .setCanonizationStrategy(state -> state.clone())
-                .setStateCounter( s -> {} )
-                .setExplorationStrategy((s,sp) -> true)
+                .setStateCounter(s -> {
+                })
+                .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver())
+                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver(this))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build()
                 .generate();
@@ -44,6 +50,7 @@ public class MockupSymbolicExecutionObserver implements SymbolicExecutionObserve
 
     @Override
     public boolean isDeadVariableEliminationEnabled() {
+
         return false;
     }
 }

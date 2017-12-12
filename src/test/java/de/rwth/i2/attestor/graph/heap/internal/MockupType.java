@@ -1,28 +1,33 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.types.Type;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 class MockupType implements Type {
+
     @Override
-    public boolean hasSelectorLabel(String name) {
+    public boolean hasSelectorLabel(SelectorLabel selectorLabel) {
+
         return false;
     }
 
     @Override
-    public void addSelectorLabel(String name, String defaultValue) {
+    public void addSelectorLabel(SelectorLabel selectorLabel, String defaultValue) {
 
     }
 
     @Override
-    public Map<String, String> getSelectorLabels() {
-        return new HashMap<>();
+    public Map<SelectorLabel, String> getSelectorLabels() {
+
+        return new LinkedHashMap<>();
     }
 
     @Override
-    public boolean isPrimitiveType(String name) {
+    public boolean isPrimitiveType(SelectorLabel selectorLabel) {
+
         return false;
     }
 }

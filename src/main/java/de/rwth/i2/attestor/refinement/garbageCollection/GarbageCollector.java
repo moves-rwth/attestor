@@ -14,14 +14,14 @@ import gnu.trove.set.hash.TIntHashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GarbageCollector implements StateRefinementStrategy {
 
     private final static Logger logger = LogManager.getLogger("GarbageCollector");
 
-    private final static Set<Class<?>> semanticsTriggeringGarbageCollector = new HashSet<>();
+    private final static Set<Class<?>> semanticsTriggeringGarbageCollector = new LinkedHashSet<>();
 
     static {
         semanticsTriggeringGarbageCollector.add(InvokeStmt.class);
@@ -37,8 +37,8 @@ public class GarbageCollector implements StateRefinementStrategy {
 
         // If the previously executed program statement cannot alter the heap
         // there is no reason to invoke the garbage collection
-        if(!semanticsTriggeringGarbageCollector.contains(semantics.getClass())) {
-           return state;
+        if (!semanticsTriggeringGarbageCollector.contains(semantics.getClass())) {
+            return state;
         }
 
         HeapConfiguration heap = state.getHeap();
@@ -49,13 +49,13 @@ public class GarbageCollector implements StateRefinementStrategy {
 
         TIntSet unreachableNodes = checker.getUnreachableNodes();
 
-        if(unreachableNodes.isEmpty()) {
+        if (unreachableNodes.isEmpty()) {
             return state;
         }
 
         TIntIterator unreachableIterator = unreachableNodes.iterator();
         HeapConfigurationBuilder builder = heap.builder();
-        while(unreachableIterator.hasNext()) {
+        while (unreachableIterator.hasNext()) {
             int node = unreachableIterator.next();
             builder.removeNode(node);
         }
@@ -73,13 +73,13 @@ public class GarbageCollector implements StateRefinementStrategy {
 
         TIntSet variableTargets = new TIntHashSet(heap.countVariableEdges());
         TIntIterator variableIterator = heap.variableEdges().iterator();
-        while(variableIterator.hasNext()) {
+        while (variableIterator.hasNext()) {
             int varEdge = variableIterator.next();
             variableTargets.add(heap.targetOf(varEdge));
         }
 
         TIntIterator extIterator = heap.externalNodes().iterator();
-        while(extIterator.hasNext()) {
+        while (extIterator.hasNext()) {
             int extNode = extIterator.next();
             variableTargets.add(extNode);
         }

@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.programState.defaultState;
 
-import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
+import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 
 import java.util.Objects;
 
@@ -24,8 +24,9 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
     private final HeapAutomatonState state;
 
     public RefinedDefaultNonterminal(Nonterminal nonterminal, HeapAutomatonState state) {
-       this.nonterminal = nonterminal;
-       this.state = state;
+
+        this.nonterminal = nonterminal;
+        this.state = state;
     }
 
     @Override
@@ -72,21 +73,22 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
 
     @Override
     public String toString() {
-       return "<" + nonterminal  + "," + state + ">";
+
+        return "<" + nonterminal + "," + state + ">";
     }
 
     @Override
     public boolean equals(Object otherObject) {
 
-        if(otherObject == this) {
+        if (otherObject == this) {
             return true;
         }
 
-        if(otherObject == null) {
+        if (otherObject == null) {
             return false;
         }
 
-        if(otherObject.getClass() != RefinedDefaultNonterminal.class) {
+        if (otherObject.getClass() != RefinedDefaultNonterminal.class) {
             return false;
         }
 

@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.*;
+import de.rwth.i2.attestor.graph.morphism.Graph;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -13,18 +13,19 @@ import gnu.trove.list.array.TIntArrayList;
  */
 public class CompatibleSuccessors extends AbstractCompatibleNeighbours {
 
-	/**
-	 * @param checkEqualityOnExternal True if and only if exactly the same successors are required.
-	 */
-	public CompatibleSuccessors(boolean checkEqualityOnExternal) {
-		super(checkEqualityOnExternal);
-	}
+    /**
+     * @param checkEqualityOnExternal True if and only if exactly the same successors are required.
+     */
+    public CompatibleSuccessors(boolean checkEqualityOnExternal) {
 
-	@Override
-	protected TIntArrayList getAdjacent(Graph graph, int node) {
+        super(checkEqualityOnExternal);
+    }
 
-		return graph.getSuccessorsOf(node);
-	}
+    @Override
+    protected TIntArrayList getAdjacent(Graph graph, int node) {
+
+        return graph.getSuccessorsOf(node);
+    }
 
 
 }

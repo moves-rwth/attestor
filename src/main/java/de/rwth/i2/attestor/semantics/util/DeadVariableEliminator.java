@@ -1,12 +1,9 @@
 package de.rwth.i2.attestor.semantics.util;
 
 
-import de.rwth.i2.attestor.main.settings.Settings;
-import de.rwth.i2.attestor.main.settings.StateSpaceGenerationSettings;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.markings.Markings;
-import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.semantics.util.VariableScopes;
 
 import java.util.Set;
 
@@ -17,24 +14,25 @@ public class DeadVariableEliminator {
 
     /**
      * Removes all dead variables from a given expression.
-     * @param name A string encoding of the expression whose dead variables should be removed.
-     * @param programState The programState in which dead variables should be removed.
+     *
+     * @param sceneObject   Object in the current scene.
+     * @param name          A string encoding of the expression whose dead variables should be removed.
+     * @param programState  The programState in which dead variables should be removed.
      * @param liveVariables A list of live variables for the expression encoded by name.
      */
-	public static void removeDeadVariables(String name, ProgramState programState, Set<String> liveVariables) {
+    public static void removeDeadVariables(SceneObject sceneObject, String name,
+                                           ProgramState programState, Set<String> liveVariables) {
 
-        StateSpaceGenerationSettings settings = Settings.getInstance().stateSpaceGeneration();
-
-        String [] vars = name.split( "(==)|(!=)|(=)" );
-		for (String var : vars) {
+        String[] vars = name.split("(==)|(!=)|(=)");
+        for (String var : vars) {
             String varName = var.split("\\.")[0].trim();
             if (!liveVariables.contains(varName)
                     && !Constants.isConstant(varName)
                     && !Markings.isMarking(varName)
-                    && !settings.isKeptVariableName(VariableScopes.getName(varName))
+                    && !sceneObject.scene().options().isKeptVariableName(varName)
                     ) {
                 programState.removeVariable(varName);
             }
         }
-	}
+    }
 }

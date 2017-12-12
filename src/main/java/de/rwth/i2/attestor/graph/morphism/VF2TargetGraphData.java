@@ -5,6 +5,7 @@ public class VF2TargetGraphData extends AbstractVF2GraphData {
     private final int[] matchCounter;
 
     VF2TargetGraphData(Graph graph) {
+
         super(graph);
 
         int noNodes = graph.size();
@@ -12,6 +13,7 @@ public class VF2TargetGraphData extends AbstractVF2GraphData {
     }
 
     VF2TargetGraphData(VF2TargetGraphData data) {
+
         super(data);
         matchCounter = data.matchCounter;
     }

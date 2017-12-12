@@ -19,12 +19,12 @@ public class ProductHeapAutomaton implements HeapAutomaton {
     public HeapAutomatonState transition(HeapConfiguration heapConfiguration, List<HeapAutomatonState> statesOfNonterminals) {
 
         List<ProductHeapAutomatonState> productStates = new ArrayList<>(statesOfNonterminals.size());
-        statesOfNonterminals.forEach( s -> productStates.add((ProductHeapAutomatonState) s));
+        statesOfNonterminals.forEach(s -> productStates.add((ProductHeapAutomatonState) s));
 
         HeapAutomatonState[] nextStates = new HeapAutomatonState[automata.length];
-        for(int i=0; i < automata.length; i++) {
+        for (int i = 0; i < automata.length; i++) {
             List<HeapAutomatonState> statesOfAutomaton = new ArrayList<>(statesOfNonterminals.size());
-            for(ProductHeapAutomatonState s : productStates) {
+            for (ProductHeapAutomatonState s : productStates) {
                 statesOfAutomaton.add(s.get(i));
             }
             nextStates[i] = automata[i].transition(heapConfiguration, statesOfAutomaton);
@@ -35,13 +35,13 @@ public class ProductHeapAutomaton implements HeapAutomaton {
     @Override
     public boolean isInitialState(HeapAutomatonState heapAutomatonState) {
 
-        if(heapAutomatonState.getClass() != ProductHeapAutomatonState.class) {
+        if (heapAutomatonState.getClass() != ProductHeapAutomatonState.class) {
             return false;
         }
 
         ProductHeapAutomatonState state = (ProductHeapAutomatonState) heapAutomatonState;
-        for(int i=0; i < state.size(); i++) {
-            if(!automata[i].isInitialState(state.get(i))) {
+        for (int i = 0; i < state.size(); i++) {
+            if (!automata[i].isInitialState(state.get(i))) {
                 return false;
             }
         }
@@ -57,16 +57,16 @@ public class ProductHeapAutomaton implements HeapAutomaton {
 
     private List<HeapConfiguration> getPossibleHeapRewritingsOf(List<HeapConfiguration> heapConfigurations, int i) {
 
-        if(i == automata.length)  {
+        if (i == automata.length) {
             return heapConfigurations;
         }
 
         List<HeapConfiguration> result = new ArrayList<>();
-        for(HeapConfiguration hc : heapConfigurations) {
+        for (HeapConfiguration hc : heapConfigurations) {
             result.addAll(automata[i].getPossibleHeapRewritings(hc));
         }
 
-        return getPossibleHeapRewritingsOf(result, i+1);
+        return getPossibleHeapRewritingsOf(result, i + 1);
     }
 }
 
@@ -75,6 +75,7 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     private final HeapAutomatonState[] states;
 
     ProductHeapAutomatonState(HeapAutomatonState... states) {
+
         this.states = states;
     }
 
@@ -91,7 +92,7 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     @Override
     public Set<String> toAtomicPropositions() {
 
-        Set<String> result = new HashSet<>();
+        Set<String> result = new LinkedHashSet<>();
         for (HeapAutomatonState state : states) {
             result.addAll(state.toAtomicPropositions());
         }
@@ -101,8 +102,8 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     @Override
     public boolean isError() {
 
-        for(HeapAutomatonState state : states) {
-            if(state.isError()) {
+        for (HeapAutomatonState state : states) {
+            if (state.isError()) {
                 return true;
             }
         }
@@ -112,15 +113,15 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
     @Override
     public boolean equals(Object otherObject) {
 
-        if(otherObject == this) {
+        if (otherObject == this) {
             return true;
         }
 
-        if(otherObject == null) {
+        if (otherObject == null) {
             return false;
         }
 
-        if(otherObject.getClass() != ProductHeapAutomatonState.class) {
+        if (otherObject.getClass() != ProductHeapAutomatonState.class) {
             return false;
         }
 
@@ -136,6 +137,7 @@ class ProductHeapAutomatonState extends HeapAutomatonState {
 
     @Override
     public String toString() {
+
         return Arrays.toString(states);
     }
 }

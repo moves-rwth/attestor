@@ -9,10 +9,20 @@ public interface GrammarExporter {
 
     /**
      * Exports the given grammar in an implementation specific format.
+     *
      * @param directory The path to where the grammar data should be exported
-     * @param grammar The grammar that should be exported.
+     * @param grammar   The grammar that should be exported.
      * @throws IOException if writing of exported files fails.
      */
     void export(String directory, Grammar grammar) throws IOException;
+
+    /**
+     * Exports the given grammar in a json format, that is readable for the report app.
+     *
+     * @param directory The path to where the grammar data should be exported
+     * @param grammar   The grammar that should be exported.
+     * @throws IOException if writing of exported files fails.
+     */
+    void exportForReport(String directory, Grammar grammar) throws IOException;
 
 }

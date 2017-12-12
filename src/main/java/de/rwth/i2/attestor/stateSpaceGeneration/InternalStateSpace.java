@@ -8,32 +8,23 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class InternalStateSpace implements StateSpace {
 
-    private final static Logger logger = LogManager.getLogger("InternalStateSpace");
-
     private final Map<ProgramState, ProgramState> potentialMergeStates;
     private final List<ProgramState> otherStates; // states that are never checked for isomorphism
-
-    // will only initialized once state space generation is done
-    private TIntObjectMap<ProgramState> stateIdLookupTable = null;
-
     private final TIntSet initialStateIds;
     private final TIntSet finalStateIds;
-
     private final TIntObjectMap<TIntArrayList> materializationSuccessors;
     private final TIntObjectMap<TIntArrayList> controlFlowSuccessors;
     // TODO: Self-loops are managed here! Use map to int instead of list?!?
     private final TIntObjectMap<TIntArrayList> artificialInfPathsSuccessors;
+    private final TIntObjectMap<Set<String>> atomicPropMap;
+    private TIntObjectMap<ProgramState> stateIdLookupTable = null;
     private int nextStateId = 0;
     private int maximalStateSize = 0;
-
-    private final TIntObjectMap<Set<String>> atomicPropMap;
 
     public InternalStateSpace(int capacity) {
 
@@ -48,6 +39,15 @@ public class InternalStateSpace implements StateSpace {
         atomicPropMap = new TIntObjectHashMap<>(capacity, 0.8f);
     }
 
+    private static void replaceIds(TIntObjectMap<TIntArrayList> map, Map<Integer, Integer> idMapping) {
+
+        TIntObjectIterator<TIntArrayList> iterator = map.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            iterator.value().transformValues(id -> idMapping.getOrDefault(id, id));
+        }
+    }
+
     public Set<ProgramState> getInitialStates() {
 
         return getStatesOf(initialStateIds);
@@ -58,7 +58,7 @@ public class InternalStateSpace implements StateSpace {
         initLookupTable();
         Set<ProgramState> result = new HashSet<>(collection.size());
         TIntIterator iter = collection.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             int id = iter.next();
             result.add(stateIdLookupTable.get(id));
         }
@@ -67,15 +67,17 @@ public class InternalStateSpace implements StateSpace {
     }
 
     private void initLookupTable() {
-        if(stateIdLookupTable == null) {
+
+        if (stateIdLookupTable == null) {
             stateIdLookupTable = new TIntObjectHashMap<>(getStates().size());
-            for(ProgramState state : getStates()) {
+            for (ProgramState state : getStates()) {
                 stateIdLookupTable.put(state.getStateSpaceId(), state);
             }
         }
     }
 
     public TIntSet getInitialStateIds() {
+
         return initialStateIds;
     }
 
@@ -86,6 +88,7 @@ public class InternalStateSpace implements StateSpace {
     }
 
     public TIntSet getFinalStateIds() {
+
         return finalStateIds;
     }
 
@@ -102,7 +105,7 @@ public class InternalStateSpace implements StateSpace {
 
         TIntArrayList successors = controlFlowSuccessors.get(stateSpaceId);
 
-        if(successors.isEmpty()) {
+        if (successors.isEmpty()) {
             return Collections.emptySet();
         }
 
@@ -115,7 +118,7 @@ public class InternalStateSpace implements StateSpace {
         int stateSpaceId = state.getStateSpaceId();
         TIntArrayList successors = materializationSuccessors.get(stateSpaceId);
 
-        if(successors.isEmpty()) {
+        if (successors.isEmpty()) {
             return Collections.emptySet();
         }
 
@@ -129,7 +132,7 @@ public class InternalStateSpace implements StateSpace {
         TIntArrayList successors = artificialInfPathsSuccessors.get(stateSpaceId);
 
 
-        if(successors.isEmpty()) {
+        if (successors.isEmpty()) {
             return Collections.emptySet();
         }
 
@@ -166,16 +169,17 @@ public class InternalStateSpace implements StateSpace {
     public boolean addStateIfAbsent(ProgramState state) {
 
         ProgramState old = potentialMergeStates.putIfAbsent(state, state);
-        if(old == null) {
+        if (old == null) {
             updateAddedState(state);
             return true;
         } else {
-            state.setStateSpaceId( old.getStateSpaceId() );
+            state.setStateSpaceId(old.getStateSpaceId());
         }
         return false;
     }
 
     private void updateAddedState(ProgramState state) {
+
         state.setStateSpaceId(nextStateId);
         materializationSuccessors.put(nextStateId, new TIntArrayList());
         controlFlowSuccessors.put(nextStateId, new TIntArrayList());
@@ -188,12 +192,14 @@ public class InternalStateSpace implements StateSpace {
 
     @Override
     public void addInitialState(ProgramState state) {
+
         addStateIfAbsent(state);
         initialStateIds.add(state.getStateSpaceId());
     }
 
     @Override
     public void setFinal(ProgramState state) {
+
         finalStateIds.add(state.getStateSpaceId());
         state.addAP("{ terminated }");
     }
@@ -204,7 +210,7 @@ public class InternalStateSpace implements StateSpace {
         initLookupTable();
 
         TIntIterator idIterator = finalStateIds.iterator();
-        while(idIterator.hasNext()) {
+        while (idIterator.hasNext()) {
             int id = idIterator.next();
             ProgramState state = stateIdLookupTable.get(id);
             potentialMergeStates.remove(state);
@@ -214,7 +220,7 @@ public class InternalStateSpace implements StateSpace {
         }
 
         finalStateIds.clear();
-        for(ProgramState s : newFinalStates) {
+        for (ProgramState s : newFinalStates) {
             finalStateIds.add(s.getStateSpaceId());
             potentialMergeStates.put(s, s);
             stateIdLookupTable.put(s.getStateSpaceId(), s);
@@ -226,15 +232,6 @@ public class InternalStateSpace implements StateSpace {
 
         // redirect
         replaceIds(controlFlowSuccessors, idMapping);
-    }
-
-    private static void replaceIds(TIntObjectMap<TIntArrayList> map, Map<Integer,Integer> idMapping) {
-
-        TIntObjectIterator<TIntArrayList> iterator = map.iterator();
-        while(iterator.hasNext()) {
-            iterator.advance();
-            iterator.value().transformValues(id -> idMapping.getOrDefault(id,id) );
-        }
     }
 
     @Override
@@ -249,7 +246,8 @@ public class InternalStateSpace implements StateSpace {
         addTransition(from, to, controlFlowSuccessors);
     }
 
-    public void addArtificialInfPathsTransition(ProgramState cur){
+    public void addArtificialInfPathsTransition(ProgramState cur) {
+
         addTransition(cur, cur, artificialInfPathsSuccessors);
 
     }
@@ -267,8 +265,8 @@ public class InternalStateSpace implements StateSpace {
         int tId = to.getStateSpaceId();
 
         TIntArrayList succ = successors.get(fId);
-        if(!succ.contains(tId)) {
-           succ.add(tId);
+        if (!succ.contains(tId)) {
+            succ.add(tId);
         }
     }
 
@@ -280,6 +278,7 @@ public class InternalStateSpace implements StateSpace {
 
     @Override
     public boolean satisfiesAP(int stateId, String expectedAP) {
+
         Set<String> satisfiedAPs = atomicPropMap.get(stateId);
         return satisfiedAPs.contains(expectedAP);
     }
@@ -329,7 +328,7 @@ public class InternalStateSpace implements StateSpace {
                     @Override
                     public ProgramState next() {
 
-                        if(mergerIter.hasNext()) {
+                        if (mergerIter.hasNext()) {
                             return mergerIter.next();
                         }
                         return otherIter.next();
