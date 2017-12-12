@@ -1,5 +1,14 @@
 package de.rwth.i2.attestor.ipa;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.junit.Test;
+
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -7,14 +16,6 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.junit.Assert.*;
 
 public class IpaContractCollectionTest {
 
@@ -39,7 +40,7 @@ public class IpaContractCollectionTest {
         assertNull("h1 should not get a reordering", contracts.getReordering(h1));
         assertNull("h2 should not get a reordering", contracts.getReordering(h2));
 
-        contracts.addContract(h1, new ArrayList<>());
+        contracts.addContract(h1, new HashSet<>());
 
         assertTrue("should have p1", contracts.hasMatchingPrecondition(h1));
         assertFalse("should not have p2", contracts.hasMatchingPrecondition(h2));

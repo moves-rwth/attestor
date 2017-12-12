@@ -1,15 +1,12 @@
 package de.rwth.i2.attestor.ipa;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This is essentially a hashMap from IpaPrecondtion to List&#60;HeapConfiguration&#62;
@@ -23,7 +20,7 @@ public class IpaContractCollection {
     PreconditionChecker lastUsedChecker; //to avoid double computations
     private Map<Integer, List<IpaContract>> map = new LinkedHashMap<>();
 
-    public List<HeapConfiguration> getPostconditions(HeapConfiguration reachableFragment) {
+    public Set<HeapConfiguration> getPostconditions(HeapConfiguration reachableFragment) {
 
         int hashCode = reachableFragment.hashCode();
         if (!map.containsKey(hashCode)) {
@@ -87,7 +84,7 @@ public class IpaContractCollection {
         return result;
     }
 
-    public void addContract(HeapConfiguration precondition, List<HeapConfiguration> postconditions) {
+    public void addContract(HeapConfiguration precondition, Set<HeapConfiguration> postconditions) {
 
         int hashCode = precondition.hashCode();
         if (!map.containsKey(hashCode)) {
@@ -97,13 +94,13 @@ public class IpaContractCollection {
         map.get(hashCode).add(new IpaContract(precondition, postconditions));
     }
 
-    public void addPostconditionsTp(HeapConfiguration precondition, List<HeapConfiguration> postconditions) {
+    public void addPostconditionsTo(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions) {
 
         if (!this.hasMatchingPrecondition(precondition)) {
 
-            this.addContract(precondition, new ArrayList<>());
+            this.addContract(precondition, new HashSet<>());
         }
-        List<HeapConfiguration> currentPostconditions = this.getPostconditions(precondition);
+        Set<HeapConfiguration> currentPostconditions = this.getPostconditions(precondition);
         currentPostconditions.addAll(postconditions);
     }
 
@@ -132,9 +129,9 @@ public class IpaContractCollection {
         return false;
     }
 
-    public List<Pair<HeapConfiguration, List<HeapConfiguration>>> getContractList() {
+    public List<Pair<HeapConfiguration, Set<HeapConfiguration>>> getContractList() {
 
-        List<Pair<HeapConfiguration, List<HeapConfiguration>>> res = new ArrayList<>();
+        List<Pair<HeapConfiguration, Set<HeapConfiguration>>> res = new ArrayList<>();
 
         for (List<IpaContract> contractsWithSameHash : map.values()) {
             for (IpaContract contract : contractsWithSameHash) {
@@ -147,12 +144,12 @@ public class IpaContractCollection {
     private class IpaContract {
 
         public HeapConfiguration precondition;
-        public List<HeapConfiguration> postconditions;
+        public Set<HeapConfiguration> postconditions;
 
-        public IpaContract(HeapConfiguration precondition, List<HeapConfiguration> postconditions2) {
+        public IpaContract(HeapConfiguration precondition, Set<HeapConfiguration> postconditions) {
 
             this.precondition = precondition;
-            this.postconditions = postconditions2;
+            this.postconditions = postconditions;
         }
     }
 }

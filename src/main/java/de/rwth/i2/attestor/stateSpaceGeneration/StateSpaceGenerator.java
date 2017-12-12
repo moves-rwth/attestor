@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 
 /**
@@ -230,6 +228,7 @@ public class StateSpaceGenerator extends SceneObject {
         while (hasUnexploredStates()) {
 
             ProgramState state = nextUnexploredState();
+            state.setContainingStateSpace( this.stateSpace );
 
             try {
                 abortStrategy.checkAbort(stateSpace);

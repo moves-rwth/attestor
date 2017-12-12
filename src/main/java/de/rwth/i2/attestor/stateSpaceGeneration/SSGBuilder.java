@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import de.rwth.i2.attestor.main.scene.SceneObject;
 
 /**
  * This class provides methods to safely initialize a StateSpaceGenerator.
@@ -15,13 +15,17 @@ public class SSGBuilder extends SceneObject {
     /**
      * The initial state passed to the state space generation
      */
-    private final List<ProgramState> initialStates;
+    protected final List<ProgramState> initialStates;
+    
+
 
     /**
      * Internal instance of the StateSpaceGenerator under
      * construction by this builder
      */
-    private final StateSpaceGenerator generator;
+    protected final StateSpaceGenerator generator;
+
+	
 
     /**
      * Creates a new builder representing an everywhere
@@ -100,7 +104,7 @@ public class SSGBuilder extends SceneObject {
             generator.stateSpace.addInitialState(state);
             generator.addUnexploredState(state);
         }
-
+       
         generator.symbolicExecutionObserver = generator.semanticsObserverSupplier.get(generator);
         return generator;
     }

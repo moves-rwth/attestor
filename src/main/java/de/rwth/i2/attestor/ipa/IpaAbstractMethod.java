@@ -1,20 +1,17 @@
 package de.rwth.i2.attestor.ipa;
 
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
@@ -39,7 +36,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     public void addContracts(HeapConfiguration precondition, List<HeapConfiguration> postconditions) {
 
-        contracts.addPostconditionsTp(precondition, postconditions);
+        contracts.addPostconditionsTo(precondition, postconditions);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class IpaAbstractMethod extends AbstractMethod {
         HeapConfiguration remainingFragment = splittedConfig.second().first();
         int placeholderPos = splittedConfig.second().second();
 
-        List<HeapConfiguration> postconditions;
+        Set<HeapConfiguration> postconditions;
         if (!contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled()) {
 
             postconditions = computeContract(input, reachableFragment, observer);
@@ -88,10 +85,10 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     }
 
-    private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
+    private Set<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
-        List<HeapConfiguration> postconditions = new ArrayList<>();
+        Set<HeapConfiguration> postconditions = new HashSet<>();
         ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
         StateSpace stateSpace = observer.generateStateSpace(method, initialState);
 
@@ -118,7 +115,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     private List<HeapConfiguration> applyContract(HeapConfiguration remainingFragment,
                                                   int contractPlaceholderEdge,
-                                                  List<HeapConfiguration> contracts) {
+                                                  Set<HeapConfiguration> contracts) {
 
         List<HeapConfiguration> result = new ArrayList<>();
         for (HeapConfiguration contract : contracts) {
