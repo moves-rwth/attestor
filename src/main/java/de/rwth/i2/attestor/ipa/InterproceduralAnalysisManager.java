@@ -79,6 +79,7 @@ public class InterproceduralAnalysisManager {
 		
 		if( !methodsToAnalyse.contains(precondition) ) {
 			methodsToAnalyse.push(precondition);
+			statesCallingInput.put(precondition, new HashSet<>() );
 		}
 	}
 	
