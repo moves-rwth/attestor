@@ -98,26 +98,37 @@ public class InterproceduralAnalysisManager {
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
-				Program method = methodAndInput.method.getControlFlow();
-				ProgramState initialState = methodAndInput.input;
-				StateSpace stateSpace = observer.generateStateSpace(method, initialState);
+				IpaAbstractMethod method = methodAndInput.method;
 				
-				//methodAndInput.method.getIPAResult( methodAndInput.input, observer ); <- overkill.
+				Program program = method.getControlFlow();
+				ProgramState initialState = methodAndInput.input;
+				
+				StateSpace stateSpace = observer.generateStateSpace( program, initialState );
+				
+				//extract and store the generated contract
+				List<HeapConfiguration> finalConfigs = new ArrayList<>();
+				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
+				method.contracts.addPostconditionsTo( initialState.getHeap(), finalConfigs );
+				
+				//store the mapping from stateSpace to input for later reference
+				contractComputedByStateSpace.put(stateSpace, methodAndInput);
 				//alert states, that there is a result for the method-input pair
 				statesToContinue.addAll( statesCallingInput.get(methodAndInput) );
 			}else {
 				ProgramState state = statesToContinue.pop();
 				StateSpace stateSpace = state.getContainingStateSpace();
+				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
+				IpaAbstractMethod method = contractAltered.method;
 				//update stateSpace
 				new StateSpaceContinuationGeneratorBuilder(scene)
-					.addInitialState(state)
+					.addEntryState(state)
 					.setStateSpaceToContinue(stateSpace)
+					.setProgram( method.getControlFlow() )
 					.build()
 					.generate();
 				
 				//adapt the corresponding contract
-				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
-				IpaAbstractMethod method = contractAltered.method;
+		
 				List<HeapConfiguration> finalConfigs = new ArrayList<>();
 				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
 				method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );

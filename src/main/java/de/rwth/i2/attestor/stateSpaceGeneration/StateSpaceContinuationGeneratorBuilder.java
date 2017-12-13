@@ -24,18 +24,19 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
      *                     the state space generation.
      * @return The builder.
      */
-    public StateSpaceContinuationGeneratorBuilder addInitialState( ProgramState stateToContinue ) {
+    public StateSpaceContinuationGeneratorBuilder addEntryState( ProgramState stateToContinue ) {
 
         statesToContinue.add(stateToContinue);
         return this;
     }
 
-    /**
+
+	/**
      * @param statesToContinue The initial states from which all reachable states are computed by
      *                      the state space generation.
      * @return The builder.
      */
-    public StateSpaceContinuationGeneratorBuilder addInitialStates(List<ProgramState> statesToContinue) {
+    public StateSpaceContinuationGeneratorBuilder addEntryStates(List<ProgramState> statesToContinue) {
 
         this.statesToContinue.addAll(statesToContinue);
         return this;
