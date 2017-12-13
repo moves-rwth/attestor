@@ -14,7 +14,7 @@ public class InterproceduralAnalysisManager {
 	
 	class MethodAndInput{
 		IpaAbstractMethod method;
-		ProgramState input;
+		ProgramState input; 
 		
 		MethodAndInput(IpaAbstractMethod method, ProgramState input){
 			this.method = method;
@@ -69,6 +69,11 @@ public class InterproceduralAnalysisManager {
 	private Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new HashMap<>(); 
 	private Map< StateSpace, MethodAndInput > contractComputedByStateSpace = new HashMap<>();
 	
+	/**
+	 * 
+	 * @param method
+	 * @param input the reachable fragment serving as precondition wrapped in a ProgramState
+	 */
 	public void registerToCompute( IpaAbstractMethod method, ProgramState input ) {
 		MethodAndInput precondition = new MethodAndInput(method, input);
 		
@@ -93,7 +98,11 @@ public class InterproceduralAnalysisManager {
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
-				methodAndInput.method.getIPAResult( methodAndInput.input, observer );
+				Program method = methodAndInput.method.getControlFlow();
+				ProgramState initialState = methodAndInput.input;
+				StateSpace stateSpace = observer.generateStateSpace(method, initialState);
+				
+				//methodAndInput.method.getIPAResult( methodAndInput.input, observer ); <- overkill.
 				//alert states, that there is a result for the method-input pair
 				statesToContinue.addAll( statesCallingInput.get(methodAndInput) );
 			}else {
@@ -109,12 +118,12 @@ public class InterproceduralAnalysisManager {
 				//adapt the corresponding contract
 				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
 				IpaAbstractMethod method = contractAltered.method;
-				List<HeapConfiguration> finalConfigs = new ArrayList();
+				List<HeapConfiguration> finalConfigs = new ArrayList<>();
 				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
 				method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );
 				
 				//alert states, that the result for the method-input pair changed
-				statesToContinue.addAll( statesCallingInput.get(contractAltered));
+				statesToContinue.addAll( statesCallingInput.get(contractAltered) );
 			}
 		}
 	}
