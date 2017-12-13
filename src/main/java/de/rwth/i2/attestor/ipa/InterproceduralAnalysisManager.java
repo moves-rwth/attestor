@@ -66,8 +66,8 @@ public class InterproceduralAnalysisManager {
 
 	private Deque<MethodAndInput> methodsToAnalyse = new ArrayDeque<>();
 	private Deque< ProgramState > statesToContinue = new ArrayDeque<>();
-	private Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new HashMap<>(); 
-	private Map< StateSpace, MethodAndInput > contractComputedByStateSpace = new HashMap<>();
+	private Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new LinkedHashMap<>(); 
+	private Map< StateSpace, MethodAndInput > contractComputedByStateSpace = new LinkedHashMap<>();
 	
 	/**
 	 * 
@@ -128,7 +128,6 @@ public class InterproceduralAnalysisManager {
 					.generate();
 				
 				//adapt the corresponding contract
-		
 				List<HeapConfiguration> finalConfigs = new ArrayList<>();
 				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
 				method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );

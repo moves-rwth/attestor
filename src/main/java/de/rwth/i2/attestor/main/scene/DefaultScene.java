@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
@@ -22,6 +23,8 @@ public class DefaultScene implements Scene {
     private final Options options = new Options();
 
     private long totalNumberOfStates = 0;
+    
+    private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager();
 
 
     @Override
@@ -116,4 +119,9 @@ public class DefaultScene implements Scene {
 
         return options;
     }
+
+	@Override
+	public InterproceduralAnalysisManager recursionManager() {
+		return this.recursionManager;
+	}
 }

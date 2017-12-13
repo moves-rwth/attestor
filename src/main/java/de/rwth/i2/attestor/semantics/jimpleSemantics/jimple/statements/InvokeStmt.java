@@ -1,17 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+import java.util.Set;
+
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
-
-import java.util.Set;
 
 /**
  * InvokeStmt models statements like foo(); or bar(1,2);
@@ -57,11 +52,12 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
 
         observer.update(this, programState);
 
-        programState = programState.clone();
+        ProgramState preparedState = programState.clone();
 
-        invokePrepare.prepareHeap(programState, observer);
+        invokePrepare.prepareHeap(preparedState, observer);
 
         Set<ProgramState> methodResult = method.getResult(
+                preparedState,
                 programState,
                 observer
         );

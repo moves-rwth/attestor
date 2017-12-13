@@ -60,3 +60,4 @@ attestor.iml
 log4j2.xml
 
 attestor/doc/
+logfiles/log.json

@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-
 import java.util.List;
 import java.util.Set;
+
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 public abstract class AbstractMethod extends SceneObject {
 
@@ -43,15 +43,17 @@ public abstract class AbstractMethod extends SceneObject {
      * given input.
      * @throws StateSpaceGenerationAbortedException
      */
-    public abstract Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver options)
-            throws StateSpaceGenerationAbortedException;
+    public abstract Set<ProgramState> getResult( ProgramState input, ProgramState callingState, 
+    											 SymbolicExecutionObserver options)
+    											throws StateSpaceGenerationAbortedException;
 
     public void setDisplayName(String displayName) {
 
         this.displayName = displayName;
     }
 
-    public abstract Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer);
+    public abstract Set<ProgramState> getFinalStates( ProgramState input, ProgramState callingState,
+    												  SymbolicExecutionObserver observer);
 
     /**
      * @return the method body / abstract semantics
