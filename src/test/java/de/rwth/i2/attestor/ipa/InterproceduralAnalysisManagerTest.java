@@ -157,6 +157,7 @@ public class InterproceduralAnalysisManagerTest {
 		   
 		List<Semantics> program = new ArrayList<>();
 		
+		//0
 		program.add(
         				new IdentityStmt(
         						sceneObject, 1, 
@@ -171,6 +172,7 @@ public class InterproceduralAnalysisManagerTest {
 																	new Local(type,"x"), 
 																	Collections.emptyList()
 																);
+		//1
 		program.add(
 				new AssignInvoke(
 						sceneObject, 
@@ -180,6 +182,7 @@ public class InterproceduralAnalysisManagerTest {
 						2)
 				);
 		Value isNull = new EqualExpr(new Local(type, "y"), new NullConstant());
+		//2
 		program.add(
 				new IfStmt(
 						sceneObject, 
@@ -188,6 +191,7 @@ public class InterproceduralAnalysisManagerTest {
 						Collections.emptySet()
 					)
 				);
+		//3
 		program.add(
                 		new ReturnValueStmt(
                 				sceneObject, 
@@ -199,6 +203,7 @@ public class InterproceduralAnalysisManagerTest {
 				new Local(type,"y"), 
 				Collections.emptyList()
 			);
+		//4
 		program.add(
 				new AssignInvoke(
 						sceneObject, 
@@ -207,6 +212,7 @@ public class InterproceduralAnalysisManagerTest {
 						5
 						)
 				);
+		//5
 		program.add(
         		new ReturnValueStmt(
         				sceneObject, 
