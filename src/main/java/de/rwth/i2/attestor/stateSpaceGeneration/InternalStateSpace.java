@@ -29,7 +29,7 @@ public class InternalStateSpace implements StateSpace {
     public InternalStateSpace(int capacity) {
 
         capacity = 2 * capacity;
-        potentialMergeStates = new HashMap<>(capacity, 0.8f);
+        potentialMergeStates = new LinkedHashMap<>(capacity, 0.8f);
         otherStates = new ArrayList<>(capacity);
         initialStateIds = new TIntHashSet(100);
         finalStateIds = new TIntHashSet(100);
