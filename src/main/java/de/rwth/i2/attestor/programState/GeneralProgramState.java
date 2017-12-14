@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.programState;
 
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
@@ -45,6 +46,8 @@ public abstract class GeneralProgramState implements ProgramState {
      * Id of this state in a state space
      */
     private int stateSpaceId = -1;
+
+    private LanguageInclusionStrategy languageInclusionStrategy;
 
     /**
      * Initializes a state with the initial program location 0.

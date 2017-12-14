@@ -29,4 +29,6 @@ public interface Scene {
 
     Options options();
 
+    Strategies strategies();
+
 }

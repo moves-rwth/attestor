@@ -21,7 +21,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceGenerationTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
@@ -30,7 +29,8 @@ import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStra
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.types.Types;
@@ -41,15 +41,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AbstractionPreprocessingPhase extends AbstractPhase implements StateSpaceGenerationTransformer {
+public class AbstractionPreprocessingPhase extends AbstractPhase {
 
-
-    private AbortStrategy abortStrategy;
-    private CanonicalizationStrategy canonicalizationStrategy;
-    private CanonicalizationStrategy aggressiveCanonicalizationStrategy;
-    private MaterializationStrategy materializationStrategy;
-    private StateLabelingStrategy stateLabelingStrategy;
-    private StateRefinementStrategy stateRefinementStrategy;
 
     private Grammar grammar;
 
@@ -122,7 +115,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
                     new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(),
                             new GraphMaterializer());
 
-            materializationStrategy = new GeneralMaterializationStrategy(grammarManager, ruleApplier);
+            scene().strategies().setMaterializationStrategy(
+                    new GeneralMaterializationStrategy(grammarManager, ruleApplier)
+            );
             logger.debug("Setup materialization using indexed grammars.");
         } else {
             ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
@@ -130,7 +125,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
                     new DefaultMaterializationRuleManager(vioResolver);
             GrammarResponseApplier ruleApplier =
                     new DefaultGrammarResponseApplier(new GraphMaterializer());
-            materializationStrategy = new GeneralMaterializationStrategy(grammarManager, ruleApplier);
+            scene().strategies().setMaterializationStrategy(
+                    new GeneralMaterializationStrategy(grammarManager, ruleApplier)
+            );
             logger.debug("Setup materialization using standard hyperedge replacement grammars.");
         }
     }
@@ -154,8 +151,13 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
             aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper(aggressiveCheckerProvider);
             logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
         }
-        canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
-        aggressiveCanonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, aggressiveCanonicalizationHelper);
+
+        scene().strategies().setLenientCanonicalizationStrategy(
+                new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper)
+        );
+        scene().strategies().setAggressiveCanonicalizationStrategy(
+                new GeneralCanonicalizationStrategy(grammar, aggressiveCanonicalizationHelper)
+        );
     }
 
     private void setupInclusionCheck() {
@@ -217,7 +219,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
         int stateSpaceBound = scene().options().getMaxStateSpaceSize();
         int stateBound = scene().options().getMaxStateSize();
-        abortStrategy = new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound);
+        scene().strategies().setAbortStrategy(
+                new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
+        );
         logger.debug("Setup abort criterion: #states > "
                 + stateSpaceBound
                 + " or one state is larger than "
@@ -227,21 +231,18 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     private void setupStateLabeling() {
 
-        stateLabelingStrategy = getPhase(StateLabelingStrategyBuilderTransformer.class)
+        StateLabelingStrategy stateLabelingStrategy = getPhase(StateLabelingStrategyBuilderTransformer.class)
                 .getStrategy()
                 .build();
         if (stateLabelingStrategy == null) {
-            stateLabelingStrategy = s -> {
-            };
+            stateLabelingStrategy = s -> {};
         }
+        scene().strategies().setStateLabelingStrategy(stateLabelingStrategy);
     }
 
     private void setupStateRefinement() {
 
-        StateSpaceGenerationTransformer oldTransformer = getPhase(StateSpaceGenerationTransformer.class);
-        if (oldTransformer != null) {
-            stateRefinementStrategy = oldTransformer.getStateRefinementStrategy();
-        }
+        StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
 
         boolean isGarbageCollectionEnabled = scene().options().isGarbageCollectionEnabled();
 
@@ -258,43 +259,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
             strategies.add(new GarbageCollector());
             stateRefinementStrategy = new BundledStateRefinementStrategy(strategies);
         }
-
-    }
-
-
-    @Override
-    public AbortStrategy getAbortStrategy() {
-
-        return abortStrategy;
-    }
-
-    @Override
-    public CanonicalizationStrategy getCanonicalizationStrategy() {
-
-        return canonicalizationStrategy;
-    }
-
-    @Override
-    public CanonicalizationStrategy getAggressiveCanonicalizationStrategy() {
-
-        return aggressiveCanonicalizationStrategy;
-    }
-
-    @Override
-    public MaterializationStrategy getMaterializationStrategy() {
-
-        return materializationStrategy;
-    }
-
-    @Override
-    public StateLabelingStrategy getStateLabelingStrategy() {
-
-        return stateLabelingStrategy;
-    }
-
-    @Override
-    public StateRefinementStrategy getStateRefinementStrategy() {
-
-        return stateRefinementStrategy;
+        scene().strategies().setStateRefinementStrategy(stateRefinementStrategy);
     }
 }

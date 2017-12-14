@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.LinkedHashMap;
@@ -10,12 +11,15 @@ import java.util.Set;
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
     private CanonicalizationStrategy canonicalizationStrategy;
+    private LanguageInclusionStrategy languageInclusionStrategy;
     private int minAbstractionDistance;
 
     public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+                                                       LanguageInclusionStrategy languageInclusionStrategy,
                                                        int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.languageInclusionStrategy = languageInclusionStrategy;
         this.minAbstractionDistance = minAbstractionDistance;
     }
 

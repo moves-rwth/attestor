@@ -4,7 +4,10 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
@@ -17,15 +20,13 @@ import de.rwth.i2.attestor.refinement.grammarRefinement.InitialHeapConfiguration
 import de.rwth.i2.attestor.refinement.languageInclusion.LanguageInclusionAutomaton;
 import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomaton;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class GrammarRefinementPhase extends AbstractPhase
-        implements InputTransformer, StateLabelingStrategyBuilderTransformer,
-        StateSpaceGenerationTransformer, GrammarTransformer {
+        implements InputTransformer, StateLabelingStrategyBuilderTransformer, GrammarTransformer {
 
     private static final Pattern btree = Pattern.compile("^btree$");
     private static final Pattern bimap = Pattern.compile("^bimap$");
@@ -38,7 +39,6 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private List<HeapConfiguration> inputs;
     private AutomatonStateLabelingStrategyBuilder stateLabelingStrategyBuilder;
-    private StateRefinementStrategy stateRefinementStrategy;
 
     private Grammar grammar;
 
@@ -71,7 +71,9 @@ public class GrammarRefinementPhase extends AbstractPhase
 
             try {
                 if (scene().getNonterminal("BT") != null) {
-                    stateRefinementStrategy = new BalancednessStateRefinementStrategy(this);
+                    scene().strategies().setStateRefinementStrategy(
+                            new BalancednessStateRefinementStrategy(this)
+                    );
                 }
             } catch (IllegalArgumentException e) {
                 // fine
@@ -235,41 +237,6 @@ public class GrammarRefinementPhase extends AbstractPhase
         return stateLabelingStrategyBuilder;
     }
 
-    @Override
-    public AbortStrategy getAbortStrategy() {
-
-        return null;
-    }
-
-    @Override
-    public CanonicalizationStrategy getCanonicalizationStrategy() {
-
-        return null;
-    }
-
-    @Override
-    public CanonicalizationStrategy getAggressiveCanonicalizationStrategy() {
-
-        return null;
-    }
-
-    @Override
-    public MaterializationStrategy getMaterializationStrategy() {
-
-        return null;
-    }
-
-    @Override
-    public StateLabelingStrategy getStateLabelingStrategy() {
-
-        return null;
-    }
-
-    @Override
-    public StateRefinementStrategy getStateRefinementStrategy() {
-
-        return stateRefinementStrategy;
-    }
 
     @Override
     public Grammar getGrammar() {

@@ -3,8 +3,12 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
-import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.Strategies;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
@@ -64,24 +68,24 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
     private SSGBuilder getStateSpaceGeneratorBuilder() {
 
-        StateSpaceGenerationTransformer settings = getPhase(StateSpaceGenerationTransformer.class);
+        Strategies strategies = scene().strategies();
 
         return StateSpaceGenerator
                 .builder(this)
                 .setStateLabelingStrategy(
-                        settings.getStateLabelingStrategy()
+                        strategies.getStateLabelingStrategy()
                 )
                 .setMaterializationStrategy(
-                        settings.getMaterializationStrategy()
+                        strategies.getMaterializationStrategy()
                 )
                 .setCanonizationStrategy(
-                        settings.getCanonicalizationStrategy()
+                        strategies.getLenientCanonicalizationStrategy()
                 )
                 .setAbortStrategy(
-                        settings.getAbortStrategy()
+                        strategies.getAbortStrategy()
                 )
                 .setStateRefinementStrategy(
-                        settings.getStateRefinementStrategy()
+                        strategies.getStateRefinementStrategy()
                 )
                 .setStateCounter(
                         scene()::addNumberOfGeneratedStates
@@ -99,8 +103,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
 
     private PostProcessingStrategy getPostProcessingStrategy() {
 
-        StateSpaceGenerationTransformer settings = getPhase(StateSpaceGenerationTransformer.class);
-        CanonicalizationStrategy aggressiveStrategy = settings.getAggressiveCanonicalizationStrategy();
+        CanonicalizationStrategy aggressiveStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
 
         if (!scene().options().isPostprocessingEnabled() || scene().options().getAbstractionDistance() == 0) {
             return new NoPostProcessingStrategy();
@@ -110,7 +113,11 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
             return new AggressivePostProcessingStrategy(aggressiveStrategy, scene().options().getAbstractionDistance());
         }
 
-        return new FinalStateSubsumptionPostProcessingStrategy(aggressiveStrategy, scene().options().getAbstractionDistance());
+        return new FinalStateSubsumptionPostProcessingStrategy(
+                aggressiveStrategy,
+                scene().strategies().getLanguageInclusionStrategy(),
+                scene().options().getAbstractionDistance()
+        );
     }
 
     private void printAnalyzedMethod() {
