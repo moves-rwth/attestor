@@ -66,7 +66,7 @@ public class InterproceduralAnalysisManagerTest {
 		Type type = sceneObject.scene().getType("List");
 		
 		IpaAbstractMethod traverseMethod = new IpaAbstractMethod( sceneObject, "main");
-		final String paramName = "@this";
+		final String paramName = "@this:";
 		traverseMethod.setControlFlow( getRecursiveProgram(type, paramName, traverseMethod) );
 		traverseMethod.markAsRecursive();
 		
