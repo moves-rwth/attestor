@@ -1,15 +1,10 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
-import gnu.trove.list.array.TIntArrayList;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * Abstraction of a program that is symbolically executed to generate a state space.
@@ -143,5 +138,13 @@ public class Program {
             program.program.add(semantics);
             return this;
         }
+    }
+    
+    public String toString(){
+    	StringBuilder res = new StringBuilder();
+    	for( int i = 0; i < program.size(); i++ ){
+    		res.append(i).append(" ").append(program.get(i)).append("\n");
+    	}
+    	return res.toString();
     }
 }
