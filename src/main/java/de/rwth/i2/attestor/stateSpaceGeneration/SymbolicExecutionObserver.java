@@ -34,4 +34,7 @@ public interface SymbolicExecutionObserver {
      * @return True if and only if dead variables are allowed to be eliminated.
      */
     boolean isDeadVariableEliminationEnabled();
+
+	StateSpace continueStateSpace(StateSpace stateSpace, Program program, ProgramState continuationPoint)
+			throws StateSpaceGenerationAbortedException;
 }

@@ -38,6 +38,19 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
                 .build()
                 .generate();
     }
+    
+    @Override
+    public StateSpace continueStateSpace( StateSpace stateSpace, Program program, ProgramState continuationPoint ) 
+    		throws StateSpaceGenerationAbortedException{
+       
+        return new StateSpaceContinuationGeneratorBuilder(stateSpaceGenerator)
+                .copySettings(stateSpaceGenerator)
+                .setStateSpaceToContinue(stateSpace)
+                .addEntryState(continuationPoint)
+                .setProgram(program)
+                .build()
+                .generate();
+    }
 
     @Override
     public boolean isDeadVariableEliminationEnabled() {

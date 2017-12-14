@@ -12,6 +12,24 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
 		statesToContinue = new ArrayList<>();
 	}
 	
+
+    public StateSpaceContinuationGeneratorBuilder copySettings(StateSpaceGenerator stateSpaceGenerator) {
+
+        return (StateSpaceContinuationGeneratorBuilder) super
+                .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
+                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
+                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
+                .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
+                .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
+                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
+                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
+                .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+                .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
+                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
+                .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+                .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
+    }
+	
     /**
      * The initial state passed to the state space generation
      */

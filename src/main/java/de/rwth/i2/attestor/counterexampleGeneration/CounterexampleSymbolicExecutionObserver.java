@@ -98,4 +98,11 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
             return stateSpace.getFinalStates().size() < requiredNoOfFinalStates;
         }
     }
+
+	@Override
+	public StateSpace continueStateSpace(StateSpace stateSpace, Program program, ProgramState continuationPoint)
+			throws StateSpaceGenerationAbortedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

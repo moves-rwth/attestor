@@ -126,12 +126,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
 				IpaAbstractMethod method = contractAltered.method;
 				//update stateSpace
-				new StateSpaceContinuationGeneratorBuilder(this)
-					.addEntryState(state)
-					.setStateSpaceToContinue(stateSpace)
-					.setProgram( method.getControlFlow() )
-					.build()
-					.generate();
+				observer.continueStateSpace(stateSpace, method.getControlFlow(), state);
 				
 				//adapt the corresponding contract
 				List<HeapConfiguration> finalConfigs = new ArrayList<>();
