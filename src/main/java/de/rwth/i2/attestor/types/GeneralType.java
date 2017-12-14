@@ -120,6 +120,10 @@ public final class GeneralType implements Type {
             knownTypes.put(TypeNames.DOUBLE, Types.DOUBLE);
             knownTypes.put(TypeNames.SHORT, Types.SHORT);
             knownTypes.put(TypeNames.STRING, Types.STRING);
+
+            knownTypes.put(TypeNames.INT_0, Types.INT_0);
+            knownTypes.put(TypeNames.INT_MINUS_1, Types.INT_MINUS_1);
+            knownTypes.put(TypeNames.INT_PLUS_1, Types.INT_PLUS_1);
         }
 
         public Type get(String name) {
