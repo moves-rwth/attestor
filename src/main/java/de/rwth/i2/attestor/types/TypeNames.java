@@ -15,6 +15,10 @@ public final class TypeNames {
     public static final String SHORT = "short";
     public static final String STRING = "String";
 
+    public static final String INT_0 = "int_0";
+    public static final String INT_PLUS_1 = "int_1";
+    public static final String INT_MINUS_1 = "int_-1";
+
     public static String getDefaultValue(String typeName) {
 
         switch (typeName) {

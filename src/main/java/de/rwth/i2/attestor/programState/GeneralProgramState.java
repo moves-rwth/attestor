@@ -281,10 +281,7 @@ public abstract class GeneralProgramState implements ProgramState {
             return new GeneralConcreteValue(t, n);
         } catch (NullPointerException | IllegalArgumentException e) {
 
-            if (!Constants.hasUnknownConstantOccurredBefore(constantName)) {
-                Constants.addUnknownConstant(constantName);
-                logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
-            }
+            logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
             return GeneralConcreteValue.getUndefined();
         }
     }

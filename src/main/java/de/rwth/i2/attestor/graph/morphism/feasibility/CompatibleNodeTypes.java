@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
-import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
 
@@ -30,7 +29,7 @@ public class CompatibleNodeTypes implements FeasibilityFunction {
             Type patternType = (Type) patternLabel;
             Type targetType = (Type) targetLabel;
             return patternType.equals(targetType)
-                    || (targetType.equals(nullType) && !Constants.isConstantType(patternType.toString()));
+                    || (targetType.equals(nullType) && !Types.isConstantType(patternType));
         } else {
             return patternLabel.matches(targetLabel);
         }

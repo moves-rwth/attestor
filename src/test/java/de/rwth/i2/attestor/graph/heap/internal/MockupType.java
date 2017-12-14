@@ -30,4 +30,10 @@ class MockupType implements Type {
 
         return false;
     }
+
+    @Override
+    public boolean isPrimitiveType() {
+
+        return false;
+    }
 }

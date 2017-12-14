@@ -13,4 +13,16 @@ public final class Types {
     public static final Type DOUBLE = new GeneralType(TypeNames.DOUBLE, true);
     public static final Type SHORT = new GeneralType(TypeNames.SHORT, true);
     public static final Type STRING = new GeneralType(TypeNames.STRING, true);
+
+    public final static Type INT_0 = new GeneralType(TypeNames.INT_0, true);
+    public final static Type INT_PLUS_1 = new GeneralType(TypeNames.INT_MINUS_1, true);
+    public final static Type INT_MINUS_1 = new GeneralType(TypeNames.INT_PLUS_1, true);
+
+    public static boolean isConstantType(Type type) {
+        return type == BOOL
+                || type == NULL
+                || type == INT_0
+                || type == INT_PLUS_1
+                || type == INT_MINUS_1;
+    }
 }
