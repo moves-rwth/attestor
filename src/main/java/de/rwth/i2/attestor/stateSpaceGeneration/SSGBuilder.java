@@ -37,6 +37,7 @@ public class SSGBuilder extends SceneObject {
         initialStates = new ArrayList<>();
         generator = new StateSpaceGenerator(sceneObject);
     }
+    
 
     /**
      * Attempts to construct a new StateSpaceGenerator.

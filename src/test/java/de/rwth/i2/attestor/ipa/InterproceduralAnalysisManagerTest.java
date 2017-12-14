@@ -57,7 +57,7 @@ public class InterproceduralAnalysisManagerTest {
 		
 		Set<ProgramState> result = mainMethod.getFinalStates(inputState, inputState, observer);
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
-		final DefaultProgramState expectedState = new DefaultProgramState(expectedHeap);
+		final ProgramState expectedState = new DefaultProgramState(expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
 	}
 	
@@ -82,7 +82,7 @@ public class InterproceduralAnalysisManagerTest {
 		
 		Set<ProgramState> result = traverseMethod.getFinalStates(inputState, inputState, observer);
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
-		final DefaultProgramState expectedState = new DefaultProgramState(expectedHeap);
+		final ProgramState expectedState = new DefaultProgramState(expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
 	}
 	

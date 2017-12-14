@@ -6,9 +6,7 @@ import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
