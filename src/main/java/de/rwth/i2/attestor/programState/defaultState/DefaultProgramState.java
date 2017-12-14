@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.programState.defaultState;
 
 
-import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -15,8 +14,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
  * @author Christoph
  */
 public class DefaultProgramState extends GeneralProgramState {
-
-    private static HeapInclusionStrategy heapInclusionStrategy = new NormalFormInclusionStrategy();
 
     /**
      * Initializes a program state.
@@ -44,11 +41,6 @@ public class DefaultProgramState extends GeneralProgramState {
     protected DefaultProgramState(DefaultProgramState state) {
 
         super(state);
-    }
-
-    public static void setHeapInclusionStrategy(HeapInclusionStrategy strategy) {
-
-        heapInclusionStrategy = strategy;
     }
 
     @Override
@@ -118,11 +110,9 @@ public class DefaultProgramState extends GeneralProgramState {
 
     public boolean isSubsumedBy(ProgramState otherState) {
 
-        return otherState == this
-                || (otherState != null
-                && programCounter == otherState.getProgramCounter()
-                && heapInclusionStrategy.subsumes(heap, otherState.getHeap())
-        );
-
+        return scene()
+                .strategies()
+                .getLanguageInclusionStrategy()
+                .includes(this, otherState);
     }
 }

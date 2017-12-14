@@ -19,11 +19,11 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
     private final CanonicalizationStrategy canonicalizationStrategy;
     private final SingleStepConcretizationStrategy singleStepConcretizationStrategy;
 
-    public LanguageInclusionImpl(SceneObject sceneObject, CanonicalizationStrategy canonicalizationStrategy,
-                                 SingleStepConcretizationStrategy singleStepConcretizationStrategy) {
+    public LanguageInclusionImpl(SceneObject sceneObject) {
         super(sceneObject);
-        this.canonicalizationStrategy = canonicalizationStrategy;
-        this.singleStepConcretizationStrategy = singleStepConcretizationStrategy;
+
+        this.canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
+        this.singleStepConcretizationStrategy = scene().strategies().getSingleStepConcretizationStrategy();
     }
 
     @Override

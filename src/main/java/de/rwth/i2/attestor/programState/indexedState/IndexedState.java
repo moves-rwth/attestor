@@ -102,7 +102,6 @@ public class IndexedState extends GeneralProgramState {
 
     @Override
     public boolean isSubsumedBy(ProgramState otherState) {
-
         return equals(otherState);
     }
 
