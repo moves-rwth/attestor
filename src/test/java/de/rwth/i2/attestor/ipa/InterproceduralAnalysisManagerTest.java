@@ -48,7 +48,7 @@ public class InterproceduralAnalysisManagerTest {
 		final int startPos = 0;
 		
 		HeapConfiguration input = exampleList(type, paramName, startPos);
-		ProgramState inputState = new DefaultProgramState(input);
+		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(mainMethod, inputState);
@@ -73,7 +73,7 @@ public class InterproceduralAnalysisManagerTest {
 		final int startPos = 0;
 		
 		HeapConfiguration input = exampleList(type, paramName, startPos);
-		ProgramState inputState = new DefaultProgramState(input);
+		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(traverseMethod, inputState);
