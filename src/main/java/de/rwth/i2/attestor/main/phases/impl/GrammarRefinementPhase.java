@@ -128,7 +128,7 @@ public class GrammarRefinementPhase extends AbstractPhase
                 scene().options().addKeptVariable(variables[0].trim());
                 scene().options().addKeptVariable(variables[1].trim());
                 String[] selectors = parameters[1].split("\\]")[0].split(",");
-                Set<String> allowedSelectors = new HashSet<>(selectors.length);
+                Set<String> allowedSelectors = new LinkedHashSet<>(selectors.length);
                 for (String sel : selectors) {
                     allowedSelectors.add(sel.trim());
                 }

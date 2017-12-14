@@ -36,7 +36,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrat
 import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase implements StateSpaceGenerationTransformer {
 
@@ -89,7 +92,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase implements Stat
 
     private void checkSelectors() {
 
-        Set<String> usedSelectors = new HashSet<>(scene().options().getUsedSelectorLabels());
+        Set<String> usedSelectors = new LinkedHashSet<>(scene().options().getUsedSelectorLabels());
         usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
 
         if (!usedSelectors.isEmpty()) {

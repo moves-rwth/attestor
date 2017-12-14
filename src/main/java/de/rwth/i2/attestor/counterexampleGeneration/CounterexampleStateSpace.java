@@ -7,7 +7,10 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A custom state space implementation for counterexample generation that stores only final states that are required
@@ -67,7 +70,7 @@ final class CounterexampleStateSpace implements StateSpace {
     @Override
     public Set<ProgramState> getFinalStates() {
 
-        return new HashSet<>(finalStates);
+        return new LinkedHashSet<>(finalStates);
     }
 
     @Override

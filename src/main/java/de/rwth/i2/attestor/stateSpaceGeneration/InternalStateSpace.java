@@ -56,7 +56,7 @@ public class InternalStateSpace implements StateSpace {
     private Set<ProgramState> getStatesOf(TIntCollection collection) {
 
         initLookupTable();
-        Set<ProgramState> result = new HashSet<>(collection.size());
+        Set<ProgramState> result = new LinkedHashSet<>(collection.size());
         TIntIterator iter = collection.iterator();
         while (iter.hasNext()) {
             int id = iter.next();

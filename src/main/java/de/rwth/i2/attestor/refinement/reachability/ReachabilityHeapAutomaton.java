@@ -28,7 +28,7 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
 
         super(sceneObject);
 
-        trackedSelectorLabels = new HashSet<>(allowedSelectorLabels.size());
+        trackedSelectorLabels = new LinkedHashSet<>(allowedSelectorLabels.size());
         for (String label : allowedSelectorLabels) {
             trackedSelectorLabels.add(scene().getSelectorLabel(label));
         }

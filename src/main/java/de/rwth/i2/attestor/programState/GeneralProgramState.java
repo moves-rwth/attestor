@@ -13,7 +13,6 @@ import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +66,7 @@ public abstract class GeneralProgramState implements ProgramState {
 
         this.heap = state.heap;
         this.programCounter = state.programCounter;
-        atomicPropositions = new HashSet<>(state.getAPs());
+        atomicPropositions = new LinkedHashSet<>(state.getAPs());
     }
 
     /**
