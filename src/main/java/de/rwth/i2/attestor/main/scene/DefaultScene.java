@@ -15,6 +15,7 @@ import de.rwth.i2.attestor.types.Type;
 
 
 public class DefaultScene implements Scene {
+	
 
     private final GeneralType.Factory typeFactory = new GeneralType.Factory();
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
@@ -24,7 +25,7 @@ public class DefaultScene implements Scene {
 
     private long totalNumberOfStates = 0;
     
-    private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager();
+    private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager(this);
 
 
     @Override

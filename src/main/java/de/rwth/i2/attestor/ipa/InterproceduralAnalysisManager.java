@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.ipa;
 import java.util.*;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
@@ -10,7 +11,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 * i.e. which methods/preconditions have to be analysed,
 * for which states exists updated information.
 */
-public class InterproceduralAnalysisManager {
+public class InterproceduralAnalysisManager extends SceneObject{
 	
 	class MethodAndInput{
 		IpaAbstractMethod method;
@@ -62,13 +63,17 @@ public class InterproceduralAnalysisManager {
 		
 	}
 	
-	private SceneObject scene;
-
+	public InterproceduralAnalysisManager(Scene scene) {
+		super(scene);
+	}
+	
 	private Deque<MethodAndInput> methodsToAnalyse = new ArrayDeque<>();
 	private Deque< ProgramState > statesToContinue = new ArrayDeque<>();
 	private Map< MethodAndInput, Set<ProgramState> > statesCallingInput = new LinkedHashMap<>(); 
 	private Map< StateSpace, MethodAndInput > contractComputedByStateSpace = new LinkedHashMap<>();
 	
+
+
 	/**
 	 * 
 	 * @param method
@@ -121,7 +126,7 @@ public class InterproceduralAnalysisManager {
 				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
 				IpaAbstractMethod method = contractAltered.method;
 				//update stateSpace
-				new StateSpaceContinuationGeneratorBuilder(scene)
+				new StateSpaceContinuationGeneratorBuilder(this)
 					.addEntryState(state)
 					.setStateSpaceToContinue(stateSpace)
 					.setProgram( method.getControlFlow() )
