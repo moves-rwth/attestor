@@ -96,6 +96,13 @@ public final class GeneralType implements Type {
             knownTypes.put(TypeNames.NULL, Types.NULL);
             knownTypes.put(TypeNames.UNDEFINED, Types.UNDEFINED);
             knownTypes.put(TypeNames.INT, Types.INT);
+            knownTypes.put(TypeNames.BOOL, Types.BOOL);
+            knownTypes.put(TypeNames.CHAR, Types.CHAR);
+            knownTypes.put(TypeNames.BYTE, Types.BYTE);
+            knownTypes.put(TypeNames.LONG, Types.LONG);
+            knownTypes.put(TypeNames.DOUBLE, Types.DOUBLE);
+            knownTypes.put(TypeNames.SHORT, Types.SHORT);
+            knownTypes.put(TypeNames.STRING, Types.STRING);
         }
 
         public Type get(String name) {
