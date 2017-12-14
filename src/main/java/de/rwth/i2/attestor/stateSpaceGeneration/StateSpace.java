@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.TIntSet;
-
 import java.util.Map;
 import java.util.Set;
+
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.TIntSet;
 
 public interface StateSpace {
 
@@ -15,6 +15,8 @@ public interface StateSpace {
     TIntSet getInitialStateIds();
 
     Set<ProgramState> getFinalStates();
+    
+    void resetLookupTable();
 
     TIntSet getFinalStateIds();
 

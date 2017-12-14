@@ -1,13 +1,13 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import java.util.*;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-
-import java.util.*;
 
 /**
  * A custom state space implementation for counterexample generation that stores only final states that are required
@@ -235,4 +235,10 @@ final class CounterexampleStateSpace implements StateSpace {
 
         return false;
     }
+
+	@Override
+	public void resetLookupTable() {
+		// TODO Auto-generated method stub
+		
+	}
 }
