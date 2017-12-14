@@ -8,6 +8,10 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
+import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
+import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
+import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionImpl;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
@@ -63,12 +67,13 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         checkSelectors();
 
+        setupConcretization();
         setupMaterialization();
         setupCanonicalization();
-        setupInclusionCheck();
         setupAbortTest();
         setupStateLabeling();
         setupStateRefinement();
+        setupInclusionCheck();
     }
 
     @Override
@@ -98,7 +103,14 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
             }
             logger.warn("+------------------------------------------------------------------+");
         }
+    }
 
+    private void setupConcretization() {
+
+        SingleStepConcretizationStrategy singleStrategy = new DefaultSingleStepConcretizationStrategy(grammar);
+        FullConcretizationStrategy fullStrategy = new FullConcretizationStrategyImpl(singleStrategy);
+        scene().strategies().setSingleStepConcretizationStrategy(singleStrategy);
+        scene().strategies().setFullConcretizationStrategy(fullStrategy);
     }
 
     private void setupMaterialization() {
