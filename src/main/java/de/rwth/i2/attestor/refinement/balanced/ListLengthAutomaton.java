@@ -46,7 +46,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
 
-        IndexedState state = new IndexedState(heapConfiguration);
+        IndexedState state = new IndexedState(this, heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
         if (countSelectorEdges(heapConfiguration) > 8) {

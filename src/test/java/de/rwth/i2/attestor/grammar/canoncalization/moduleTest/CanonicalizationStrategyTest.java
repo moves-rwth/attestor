@@ -58,7 +58,7 @@ public class CanonicalizationStrategyTest {
 
         HeapConfiguration test = hcFactory.getCanonizationTest1();
 
-        DefaultProgramState testExec = new DefaultProgramState(test);
+        DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
         ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest1(), test);
@@ -70,7 +70,7 @@ public class CanonicalizationStrategyTest {
     public void testBig() {
 
         HeapConfiguration test = hcFactory.getCanonizationTest2();
-        DefaultProgramState testExec = new DefaultProgramState(test);
+        DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
         ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest2(), test);
@@ -83,7 +83,7 @@ public class CanonicalizationStrategyTest {
 
         HeapConfiguration test = hcFactory.getCanonizationTest3();
 
-        DefaultProgramState testExec = new DefaultProgramState(test);
+        DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
         ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest3(), test);
@@ -94,7 +94,7 @@ public class CanonicalizationStrategyTest {
     public void testLongSllFullAbstraction() {
 
         HeapConfiguration test = hcFactory.getLongConcreteSLL();
-        DefaultProgramState testExec = new DefaultProgramState(test);
+        DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
         ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 
         HeapConfiguration expected = hcFactory.getSLLHandle();
@@ -115,7 +115,7 @@ public class CanonicalizationStrategyTest {
                 .build();
 
 
-        DefaultProgramState testExec = new DefaultProgramState(test);
+        DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
         ProgramState state = canonicalizationStrategy.canonicalize(testExec);
 
         HeapConfiguration expected = hcFactory.getSLLHandle();

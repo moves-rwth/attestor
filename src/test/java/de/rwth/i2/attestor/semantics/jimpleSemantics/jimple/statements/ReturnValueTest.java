@@ -33,7 +33,7 @@ public class ReturnValueTest {
 
         Type type = sceneObject.scene().getType("node");
         stmt = new ReturnValueStmt(sceneObject, new Local(type, "x"), type);
-        inputState = new DefaultProgramState(hcFactory.getListAndConstants());
+        inputState = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
         inputState.prepareHeap();
         inputGraph = inputState.getHeap();
     }
@@ -48,7 +48,7 @@ public class ReturnValueTest {
             assertNotSame("ensure clone on state level", resState, inputState);
             assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap());
             assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap());
-            DefaultProgramState tmp = new DefaultProgramState(hcFactory.getListAndConstants());
+            DefaultProgramState tmp = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
             tmp.prepareHeap();
             HeapConfiguration expectedGraph = tmp.getHeap();
             assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph);

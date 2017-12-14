@@ -2,14 +2,19 @@ package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public class IndexedState extends GeneralProgramState {
 
-    public IndexedState(HeapConfiguration heap) {
+    public IndexedState(SceneObject sceneObject, HeapConfiguration heap) {
+        super(sceneObject, heap);
+    }
 
-        super(heap);
+    public IndexedState(Scene scene, HeapConfiguration heap) {
+        super(scene, heap);
     }
 
     private IndexedState(IndexedState state) {
@@ -90,7 +95,7 @@ public class IndexedState extends GeneralProgramState {
     public IndexedState clone() {
 
         HeapConfiguration newHeap = heap.clone();
-        IndexedState result = new IndexedState(newHeap);
+        IndexedState result = new IndexedState(this, newHeap);
         result.setProgramCounter(programCounter);
         return result;
     }

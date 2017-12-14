@@ -40,10 +40,10 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ tree }");
         state1.setProgramCounter(1);
 
@@ -81,10 +81,10 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ tree }");
         state1.setProgramCounter(1);
 
@@ -119,9 +119,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ dll }");
         state1.setProgramCounter(1);
 
@@ -150,10 +150,10 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ tree }");
         state1.setProgramCounter(1);
 
@@ -189,10 +189,10 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ tree }");
         state1.setProgramCounter(1);
 
@@ -227,9 +227,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.setProgramCounter(1);
 
         this.addStateIfAbsent(initialState);
@@ -257,9 +257,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.setProgramCounter(1);
         initialState.addAP("{ dll }");
         state1.addAP("{ tree }");
@@ -289,9 +289,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.setProgramCounter(1);
         initialState.addAP("{ dll }");
         state1.addAP("{ tree }");
@@ -322,9 +322,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.setProgramCounter(1);
         initialState.addAP("{ dll }");
         state1.addAP("{ tree }");
@@ -354,9 +354,9 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.setProgramCounter(1);
         initialState.addAP("{ dll }");
         state1.addAP("{ tree }");
@@ -386,7 +386,7 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
 
         this.addStateIfAbsent(initialState);
@@ -419,7 +419,7 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ sll }");
 
         this.addStateIfAbsent(initialState);
@@ -451,7 +451,7 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ sll }");
 
         this.addStateIfAbsent(initialState);
@@ -483,13 +483,13 @@ public class ProofStructureTest extends InternalStateSpace {
             fail("Formula should parse correctly. No Parser and Lexer exception expected!");
         }
 
-        DefaultProgramState initialState = new DefaultProgramState(hc);
+        DefaultProgramState initialState = new DefaultProgramState(sceneObject, hc);
         initialState.addAP("{ dll }");
         initialState.setProgramCounter(0);
-        DefaultProgramState state1 = new DefaultProgramState(hc);
+        DefaultProgramState state1 = new DefaultProgramState(sceneObject, hc);
         state1.addAP("{ sll }");
         state1.setProgramCounter(1);
-        DefaultProgramState state2 = new DefaultProgramState(hc);
+        DefaultProgramState state2 = new DefaultProgramState(sceneObject, hc);
         state2.addAP("{ tree }");
         state2.setProgramCounter(2);
 

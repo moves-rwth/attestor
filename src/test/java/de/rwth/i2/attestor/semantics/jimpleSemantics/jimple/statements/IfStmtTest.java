@@ -52,7 +52,7 @@ public class IfStmtTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
         testState.prepareHeap();
 
         Value leftExpr = new Local(listType, "y");
@@ -92,7 +92,7 @@ public class IfStmtTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
         testState.prepareHeap();
 
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
@@ -134,7 +134,7 @@ public class IfStmtTest {
         int hash = testGraph.hashCode();
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
 
-        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
         testState.prepareHeap();
 
         Value origin1 = new Local(listType, "y");

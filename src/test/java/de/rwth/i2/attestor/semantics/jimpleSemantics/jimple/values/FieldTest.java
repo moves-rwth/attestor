@@ -45,7 +45,7 @@ public class FieldTest {
 
         try {
 
-            DefaultProgramState executable = new DefaultProgramState(testGraph.clone());
+            DefaultProgramState executable = new DefaultProgramState(sceneObject, testGraph.clone());
             executable.prepareHeap();
 
             GeneralConcreteValue res = null;
@@ -72,7 +72,7 @@ public class FieldTest {
 
             HeapConfiguration resHeapConfig = executable.getHeap();
 
-            DefaultProgramState original = new DefaultProgramState(testGraph.clone());
+            DefaultProgramState original = new DefaultProgramState(sceneObject, testGraph.clone());
             original.prepareHeap();
 
             assertTrue("heap should not change", original.getHeap().equals(resHeapConfig));
@@ -87,7 +87,7 @@ public class FieldTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(testGraph);
+        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
         testState.prepareHeap();
 
         try {
@@ -123,7 +123,7 @@ public class FieldTest {
             assertFalse("heap should have changed", testState.getHeap().equals(resultHeap));
 
             HeapConfiguration expectedGraph = hcFactory.getListAndConstantsWithChange();
-            DefaultProgramState expectedState = new DefaultProgramState(expectedGraph);
+            DefaultProgramState expectedState = new DefaultProgramState(sceneObject, expectedGraph);
             expectedState.prepareHeap();
 
             assertTrue("heap not as expected", expectedState.getHeap().equals(resultHeap));

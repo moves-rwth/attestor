@@ -77,7 +77,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
-        ProgramState inputState = new DefaultProgramState(getInputGraph());
+        ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
         ProgramState res = canonizer.canonicalize(inputState);
 
         assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
@@ -184,7 +184,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
                 .build()
                 .build();
 
-        return new IndexedState(hc);
+        return new IndexedState(sceneObject, hc);
     }
 
     private List<IndexSymbol> getExpectedIndex() {

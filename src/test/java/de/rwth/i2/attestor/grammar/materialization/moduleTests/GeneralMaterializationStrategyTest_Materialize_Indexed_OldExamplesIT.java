@@ -33,7 +33,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
     @Before
     public void setUp() throws Exception {
 
-        SceneObject sceneObject = new MockupSceneObject();
+        sceneObject = new MockupSceneObject();
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
         BalancedTreeGrammar treeGrammar = new BalancedTreeGrammar(sceneObject);
@@ -54,11 +54,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
     public void testMaterialize_small_Z() {
 
         HeapConfiguration inputGraph = graphFactory.getInput_MaterializeSmall_Z();
-        IndexedState inputState = new IndexedState(inputGraph);
+        IndexedState inputState = new IndexedState(sceneObject, inputGraph);
         inputState.prepareHeap();
 
         HeapConfiguration expectedGraph = graphFactory.getExpected_MaterializeSmall_Z();
-        IndexedState expectedState = new IndexedState(expectedGraph);
+        IndexedState expectedState = new IndexedState(sceneObject, expectedGraph);
         expectedState.prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
@@ -75,7 +75,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
     public void testMaterialize_small_sZ() {
 
         HeapConfiguration inputGraph = graphFactory.getInput_MaterializeSmall_sZ();
-        IndexedState inputState = new IndexedState(inputGraph);
+        IndexedState inputState = new IndexedState(sceneObject, inputGraph);
         inputState.prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
@@ -86,11 +86,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
         //assertEquals( 3, materializedStates.size() );
 
 
-        IndexedState res1 = new IndexedState(graphFactory.getExpected_MaterializeSmall2_Res1());
+        IndexedState res1 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res1());
         res1.prepareHeap();
-        IndexedState res2 = new IndexedState(graphFactory.getExpected_MaterializeSmall2_Res2());
+        IndexedState res2 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res2());
         res2.prepareHeap();
-        IndexedState res3 = new IndexedState(graphFactory.getExpected_MaterializeSmall2_Res3());
+        IndexedState res3 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res3());
         res3.prepareHeap();
 
         assertTrue("should contain res1", materializedStates.contains(res1));

@@ -59,7 +59,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical() {
 
-        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize());
         input.prepareHeap();
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
         assertTrue(checker.hasMatching());
@@ -68,7 +68,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical2() {
 
-        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize2());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize2());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
@@ -78,7 +78,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical3() {
 
-        IndexedState input = new IndexedState(graphFactory.getInput_practicalCanonize3());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize3());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
@@ -91,7 +91,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizeWithInst() {
 
-        IndexedState input = new IndexedState(graphFactory.getInput_Cononize_withInstNecessary());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_Cononize_withInstNecessary());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
@@ -104,7 +104,7 @@ public class TestEmbeddings {
     @Test
     public void testEmbedding5() {
         //smaller version of testCanonizeWithInst()
-        IndexedState input = new IndexedState(graphFactory.getInput_Embedding5());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_Embedding5());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(

@@ -41,10 +41,10 @@ public class InvokeStmtTest_WithEffect {
         sceneObject = new MockupSceneObject();
         hcFactory = new ExampleHcImplFactory(sceneObject);
 
-        testInput = new DefaultProgramState(hcFactory.getInput_InvokeWithEffect());
+        testInput = new DefaultProgramState(sceneObject, hcFactory.getInput_InvokeWithEffect());
         testInput.prepareHeap();
 
-        DefaultProgramState expectedState = new DefaultProgramState(hcFactory.getExpectedResult_InvokeWithEffect());
+        DefaultProgramState expectedState = new DefaultProgramState(sceneObject, hcFactory.getExpectedResult_InvokeWithEffect());
         expectedState.prepareHeap();
         expectedHeap = expectedState.getHeap();
 

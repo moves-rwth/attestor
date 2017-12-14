@@ -40,7 +40,7 @@ public class AssignStmtTest {
 
         HeapConfiguration testGraph = hcFactory.getTLLRule();
 
-        DefaultProgramState tmp = new DefaultProgramState(testGraph);
+        DefaultProgramState tmp = new DefaultProgramState(sceneObject, testGraph);
 
         tmp.prepareHeap();
         testGraph = tmp.getHeap();
@@ -56,7 +56,7 @@ public class AssignStmtTest {
         AssignStmt stmt = new AssignStmt(sceneObject, lhs, rhs, 2, new LinkedHashSet<>());
         try {
 
-            DefaultProgramState input = new DefaultProgramState(testGraph);
+            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
 
             Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
@@ -86,7 +86,7 @@ public class AssignStmtTest {
                 assertFalse(resState.getHeap().equals(input.getHeap()));
 
                 HeapConfiguration expectedHeap = hcFactory.getExpectedResult_AssignStmt();
-                DefaultProgramState tmpState = new DefaultProgramState(expectedHeap);
+                DefaultProgramState tmpState = new DefaultProgramState(sceneObject, expectedHeap);
                 tmpState.prepareHeap();
                 expectedHeap = tmpState.getHeap();
                 assertEquals(expectedHeap, resState.getHeap());

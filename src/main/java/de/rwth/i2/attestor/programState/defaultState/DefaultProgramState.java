@@ -4,6 +4,8 @@ package de.rwth.i2.attestor.programState.defaultState;
 import de.rwth.i2.attestor.grammar.inclusion.NormalFormInclusionStrategy;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
@@ -21,9 +23,17 @@ public class DefaultProgramState extends GeneralProgramState {
      *
      * @param heap The underlying heap configuration.
      */
-    public DefaultProgramState(HeapConfiguration heap) {
+    public DefaultProgramState(Scene scene, HeapConfiguration heap) {
+        super(scene, heap);
+    }
 
-        super(heap);
+    /**
+     * Initializes a program state.
+     *
+     * @param heap The underlying heap configuration.
+     */
+    public DefaultProgramState(SceneObject sceneObject, HeapConfiguration heap) {
+        super(sceneObject, heap);
     }
 
     /**
@@ -77,7 +87,7 @@ public class DefaultProgramState extends GeneralProgramState {
     public DefaultProgramState clone() {
 
         HeapConfiguration newHeap = heap.clone();
-        DefaultProgramState result = new DefaultProgramState(newHeap);
+        DefaultProgramState result = new DefaultProgramState(this, newHeap);
         result.setProgramCounter(programCounter);
         return result;
     }

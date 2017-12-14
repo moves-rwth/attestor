@@ -53,7 +53,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
     public void testMaterialize_Default() {
 
         HeapConfiguration testInput = hcFactory.getMaterializationTest();
-        DefaultProgramState inputConf = new DefaultProgramState(testInput);
+        DefaultProgramState inputConf = new DefaultProgramState(sceneObject, testInput);
 
         ViolationPoints vio = new ViolationPoints("x", "next");
 

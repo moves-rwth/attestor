@@ -54,7 +54,7 @@ public class IpaAbstractMethod_getResult {
                 .addVariableEdge("y", nodes.get(1))
                 .addSelector(nodes.get(1), sel, nodes.get(2))
                 .build();
-        return new DefaultProgramState(hc);
+        return new DefaultProgramState(sceneObject, hc);
 
     }
 

@@ -53,7 +53,7 @@ public class AssignInvokeTest_trivial {
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
 
         inputGraph = hcFactory.getListAndConstants();
-        inputState = new DefaultProgramState(inputGraph);
+        inputState = new DefaultProgramState(sceneObject, inputGraph);
     }
 
     @Test

@@ -39,7 +39,7 @@ public class NewExprTest {
         int hash = testGraph.hashCode();
         int oldNodeNumber = testGraph.countNodes();
 
-        DefaultProgramState executable = new DefaultProgramState(testGraph.clone());
+        DefaultProgramState executable = new DefaultProgramState(sceneObject, testGraph.clone());
 
         expr.evaluateOn(executable);
 

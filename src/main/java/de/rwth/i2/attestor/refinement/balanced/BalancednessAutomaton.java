@@ -49,7 +49,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
         helper.updateSelectorAnnotations(heapConfiguration);
 
-        IndexedState state = new IndexedState(heapConfiguration);
+        IndexedState state = new IndexedState(this, heapConfiguration);
         heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
 
         if (countSelectorEdges(heapConfiguration) > 1) {

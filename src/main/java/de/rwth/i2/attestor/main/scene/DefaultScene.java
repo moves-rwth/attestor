@@ -88,9 +88,9 @@ public class DefaultScene implements Scene {
 
         ProgramState result;
         if (options.isIndexedMode()) {
-            result = new IndexedState(heapConfiguration);
+            result = new IndexedState(this, heapConfiguration);
         } else {
-            result = new DefaultProgramState(heapConfiguration);
+            result = new DefaultProgramState(this, heapConfiguration);
         }
         result.setProgramCounter(0);
         result.prepareHeap();

@@ -56,7 +56,7 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(testGraph);
+            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
             Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
@@ -87,7 +87,7 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(testGraph);
+            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
             Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
@@ -118,7 +118,7 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(testGraph);
+            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
 
             Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));

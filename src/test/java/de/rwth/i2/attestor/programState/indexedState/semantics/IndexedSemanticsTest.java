@@ -38,9 +38,9 @@ public class IndexedSemanticsTest {
     @Test
     public void testFieldAssign() {
 
-        IndexedState input = new IndexedState(graphFactory.getInput_FieldAccess());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_FieldAccess());
         input.prepareHeap();
-        IndexedState expected = new IndexedState(graphFactory.getExpected_FieldAccess());
+        IndexedState expected = new IndexedState(sceneObject, graphFactory.getExpected_FieldAccess());
         expected.prepareHeap();
 
         Type type = sceneObject.scene().getType("AVLTree");
@@ -64,9 +64,9 @@ public class IndexedSemanticsTest {
     @Test
     public void testNew() {
 
-        IndexedState input = new IndexedState(graphFactory.getExpected_FieldAccess());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getExpected_FieldAccess());
         input.prepareHeap();
-        IndexedState expected = new IndexedState(graphFactory.getExpected_newNode());
+        IndexedState expected = new IndexedState(sceneObject, graphFactory.getExpected_newNode());
         expected.prepareHeap();
 
         Type type = sceneObject.scene().getType("AVLTree");
@@ -87,9 +87,9 @@ public class IndexedSemanticsTest {
     @Test
     public void testAssignField() {
 
-        IndexedState input = new IndexedState(graphFactory.getExpected_newNode());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getExpected_newNode());
         input.prepareHeap();
-        IndexedState expected = new IndexedState(graphFactory.getExpected_fieldAssign());
+        IndexedState expected = new IndexedState(sceneObject, graphFactory.getExpected_fieldAssign());
         expected.prepareHeap();
 
         Type type = sceneObject.scene().getType("AVLTree");
