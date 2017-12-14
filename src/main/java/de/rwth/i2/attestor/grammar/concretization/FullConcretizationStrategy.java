@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.List;
 
-public interface Concretizer {
+public interface FullConcretizationStrategy {
 
     /**
      * Determines a list of up to 'count' concrete heap configurations derived from the given one
