@@ -76,15 +76,6 @@ public abstract class GeneralProgramState implements ProgramState {
     public abstract GeneralProgramState clone();
 
     /**
-     * @param name The name of a variable or constant.
-     * @return The corresponding name in the current scope of this state.
-     */
-    private String getScopedName(String name) {
-
-        return name;
-    }
-
-    /**
      * Creates a human readable string representation for debugging purposes.
      *
      * @return A string representation of this program state.
