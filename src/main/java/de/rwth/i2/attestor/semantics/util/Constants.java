@@ -11,6 +11,7 @@ public final class Constants {
     public static final String MINUS_ONE = "-1";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
+
     public static final String INT = "int";
     public static final String INT_0 = "int_0";
     public static final String INT_1 = "int_1";

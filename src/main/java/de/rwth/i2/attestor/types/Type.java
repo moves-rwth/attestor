@@ -33,5 +33,7 @@ public interface Type extends NodeLabel {
 
     Map<SelectorLabel, String> getSelectorLabels();
 
-    boolean isPrimitiveType(SelectorLabel selectorLabel);
+    boolean isOptional(SelectorLabel selectorLabel);
+
+    boolean isPrimitiveType();
 }

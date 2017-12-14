@@ -21,11 +21,22 @@ public final class GeneralType implements Type {
     private String name;
 
     /**
+     * True if and only if this type corresponds to a node of constant value.
+     */
+    private final boolean primitiveType;
+
+    /**
      * @param name The name of the type to be created.
      */
     protected GeneralType(String name) {
 
+        this(name, false);
+    }
+
+    protected GeneralType(String name, boolean primitiveType) {
+
         this.name = name;
+        this.primitiveType = primitiveType;
     }
 
     /*
@@ -68,7 +79,7 @@ public final class GeneralType implements Type {
     @Override
     public void addSelectorLabel(SelectorLabel selectorLabel, String defaultValue) {
 
-        if (Types.isConstantType(this)) {
+        if (isPrimitiveType()) {
             throw new IllegalStateException("Cannot assign selector labels to node of constant type.");
         }
         selectorLabelNames.put(selectorLabel, defaultValue);
@@ -81,10 +92,16 @@ public final class GeneralType implements Type {
     }
 
     @Override
-    public boolean isPrimitiveType(SelectorLabel selectorLabel) {
+    public boolean isOptional(SelectorLabel selectorLabel) {
 
         String defaultValue = selectorLabelNames.get(selectorLabel);
         return defaultValue != null && defaultValue.equals(Constants.ZERO);
+    }
+
+    @Override
+    public boolean isPrimitiveType() {
+
+        return primitiveType;
     }
 
     public static final class Factory {

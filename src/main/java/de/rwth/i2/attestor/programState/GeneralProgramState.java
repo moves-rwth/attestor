@@ -352,8 +352,7 @@ public abstract class GeneralProgramState implements ProgramState {
             for (Map.Entry<SelectorLabel, String> selectorDefault : selectorToDefaults.entrySet()) {
 
                 SelectorLabel selectorLabel = selectorDefault.getKey();
-                if(type.isPrimitiveType(selectorLabel)) {
-                    // We do not initialize primitive data types, because we cannot deal with them at the moment
+                if(type.isOptional(selectorLabel)) {
                     continue;
                 }
                 int target = heap.variableTargetOf(selectorDefault.getValue());
@@ -398,7 +397,7 @@ public abstract class GeneralProgramState implements ProgramState {
 
             if (node == HeapConfiguration.INVALID_ELEMENT) {
 
-                if (baseNodeType.isPrimitiveType(selectorLabel)) {
+                if (baseNodeType.isOptional(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
                 } else {
                     throw new IllegalStateException("Required selector label " + from

@@ -26,7 +26,7 @@ class MockupType implements Type {
     }
 
     @Override
-    public boolean isPrimitiveType(SelectorLabel selectorLabel) {
+    public boolean isOptional(SelectorLabel selectorLabel) {
 
         return false;
     }
