@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 
@@ -244,7 +245,7 @@ public class StateSpaceGenerator extends SceneObject {
 
             if (isSufficientlyMaterialized) {
                 Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
-                if (successorStates.isEmpty()) {
+                if (successorStates.isEmpty() && isTerminalStatement(stateSemantics) ) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
                     stateSpace.addArtificialInfPathsTransition(state);
@@ -266,6 +267,10 @@ public class StateSpaceGenerator extends SceneObject {
         totalStatesCounter.addStates(stateSpace.size());
         return stateSpace;
     }
+
+	private boolean isTerminalStatement(Semantics stateSemantics) {
+		return stateSemantics.getClass() == TerminalStatement.class;
+	}
 
     /**
      * @return true iff further states can and should be generated.
