@@ -41,21 +41,23 @@ public class JsonGrammarExporter implements GrammarExporter {
 
     @Override
     public void exportForReport(String directory, Grammar grammar) throws IOException {
+
         FileUtils.createDirectories(directory);
         FileWriter writer = new FileWriter(directory + File.separator + "grammarExport.json");
         exportGrammar(writer, grammar);
         writer.close();
 
+        int ntCount = 1;
         for (Nonterminal nt : grammar.getAllLeftHandSides()) {
             int count = 1;
             for (HeapConfiguration hc : grammar.getRightHandSidesFor(nt)) {
-                writeHeapConfigurationForReport(directory + File.separator + nt.toString() + "Rule" + count + ".json",
+                writeHeapConfigurationForReport(
+                        directory + File.separator + nt.getLabel() + ntCount + "Rule" + count + ".json",
                         hc);
                 count++;
             }
-
+            ntCount++;
         }
-
     }
 
     private void writeHeapConfigurationForReport(String filePath, HeapConfiguration hc) throws IOException {
