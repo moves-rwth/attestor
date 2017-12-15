@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 
@@ -308,12 +309,13 @@ public class StateSpaceGenerator extends SceneObject {
      */
     private boolean materializationPhase(Semantics semantics, ProgramState state) {
 
-        List<ProgramState> materialized = materializationStrategy.materialize(
-                state,
+        Collection<HeapConfiguration> materialized = materializationStrategy.materialize(
+                state.getHeap(),
                 semantics.getPotentialViolationPoints()
         );
 
-        for (ProgramState m : materialized) {
+        for (HeapConfiguration hc : materialized) {
+            ProgramState m = state.shallowCopyWithUpdateHeap(hc);
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
             addUnexploredState(m);

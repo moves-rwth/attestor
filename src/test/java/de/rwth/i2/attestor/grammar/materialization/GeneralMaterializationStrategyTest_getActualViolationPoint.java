@@ -43,7 +43,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoint);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoint);
         assertNull(result);
     }
 
@@ -57,7 +57,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoint);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoint);
         assertNotNull(result);
         assertEquals(MISSING_SELECTOR, result.second());
         assertEquals(new Integer(0), result.first());
@@ -72,7 +72,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoint);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoint);
         assertNull(result);
     }
 
@@ -86,7 +86,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoint);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoint);
         assertNotNull(result);
         assertEquals(MISSING_SELECTOR, result.second());
         assertEquals(new Integer(0), result.first());
@@ -104,7 +104,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoints);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoints);
         assertNotNull(result);
         assertEquals(DEFAULT_SELECTOR, result.second());
         assertEquals(new Integer(NODE_FOR_ANNOTATED_VARIABLE), result.first());
@@ -123,7 +123,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoints);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoints);
         assertNotNull(result);
         assertEquals(ANNOTATED_SELECTOR, result.second());
         assertEquals(new Integer(NODE_FOR_DEFAULT_VARIABLE), result.first());
@@ -141,7 +141,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoints);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoints);
         assertNull(result);
     }
 
@@ -157,7 +157,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testState.prepareHeap();
 
         Pair<Integer, String> result
-                = materializer.getActualViolationPoint(testState, testPoints);
+                = materializer.getActualViolationPoint(testState.getHeap(), testPoints);
         assertNull(result);
     }
 

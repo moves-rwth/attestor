@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -65,9 +65,9 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
                 new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall_Z())
                         .prepareHeap();
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, inputVioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(1, materializedStates.size());
-        assertTrue(materializedStates.contains(expected));
+        assertTrue(materializedStates.contains(expected.getHeap()));
     }
 
 
@@ -77,7 +77,7 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
         HeapConfiguration inputGraph
                 = graphFactory.getInput_MaterializeSmall_sZ();
         ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
-        List<ProgramState> materializedStates = materializer.materialize(inputState, inputVioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(3, materializedStates.size());
 
 
@@ -91,19 +91,18 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
                 new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res3())
                         .prepareHeap();
 
-        assertTrue("should contain res1", materializedStates.contains(res1));
-        assertTrue("should contain res2", materializedStates.contains(res2));
-        assertTrue("should contain res3", materializedStates.contains(res3));
+        assertTrue("should contain res1", materializedStates.contains(res1.getHeap()));
+        assertTrue("should contain res2", materializedStates.contains(res2.getHeap()));
+        assertTrue("should contain res3", materializedStates.contains(res3.getHeap()));
     }
 
 
     @Ignore
     public void testMaterialize_big() {
 
-        HeapConfiguration inputGraph
-                = graphFactory.getInput_MaterializeBig();
+        HeapConfiguration inputGraph = graphFactory.getInput_MaterializeBig();
         ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
-        List<ProgramState> materializedStates = materializer.materialize(inputState, inputVioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(5, materializedStates.size());
 
 

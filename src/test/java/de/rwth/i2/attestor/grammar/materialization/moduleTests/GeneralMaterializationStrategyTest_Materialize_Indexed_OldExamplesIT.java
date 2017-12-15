@@ -13,12 +13,11 @@ import de.rwth.i2.attestor.programState.indexedState.BalancedTreeGrammar;
 import de.rwth.i2.attestor.programState.indexedState.ExampleIndexedGraphFactory;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -65,10 +64,10 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
         vioPoints.add("x", "left");
         vioPoints.add("x", "right");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), vioPoints);
 
         assertEquals(1, materializedStates.size());
-        assertEquals(expectedState, materializedStates.get(0));
+        assertEquals(expectedState.getHeap(), materializedStates.iterator().next());
     }
 
     @Test
@@ -82,8 +81,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
         vioPoints.add("x", "left");
         vioPoints.add("x", "right");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
-        //assertEquals( 3, materializedStates.size() );
+        Collection<HeapConfiguration> materializedHeaps = materializer.materialize(inputState.getHeap(), vioPoints);
 
 
         IndexedState res1 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res1());
@@ -93,9 +91,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamplesI
         IndexedState res3 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res3());
         res3.prepareHeap();
 
-        assertTrue("should contain res1", materializedStates.contains(res1));
-        assertTrue("should contain res2", materializedStates.contains(res2));
+        assertTrue("should contain res1", materializedHeaps.contains(res1.getHeap()));
+        assertTrue("should contain res2", materializedHeaps.contains(res2.getHeap()));
         //res3.equals( materializedStates.get(2) );
-        assertTrue("should contain res3", materializedStates.contains(res3));
+        assertTrue("should contain res3", materializedHeaps.contains(res3.getHeap()));
     }
 }

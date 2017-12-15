@@ -10,12 +10,12 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -59,24 +59,19 @@ public class GeneralMaterializationStrategyTest_Materialize_Default {
 
         ViolationPoints vio = new ViolationPoints("x", "next");
 
-        List<ProgramState> res = materializer.materialize(inputConf, vio);
+        Collection<HeapConfiguration> res = materializer.materialize(inputConf.getHeap(), vio);
 
         assertEquals("input graph should not change", hcFactory.getMaterializationTest(), testInput);
         assertEquals(2, res.size());
 
-        for (int i = 0; i < 2; i++) {
+        List<HeapConfiguration> resHCs = new ArrayList<>();
+        for(HeapConfiguration hc: res) {
 
-            HeapConfiguration hc = res.get(i).getHeap();
             int x = hc.variableWith("x");
             int t = hc.targetOf(x);
-
-
+            resHCs.add(hc);
             assertTrue(hc.selectorLabelsOf(t).contains(sceneObject.scene().getSelectorLabel("next")));
         }
-
-        List<HeapConfiguration> resHCs = new ArrayList<>();
-        resHCs.add(res.get(0).getHeap());
-        resHCs.add(res.get(1).getHeap());
 
         assertTrue("first expected materialization", resHCs.contains(hcFactory.getMaterializationRes1()));
         assertTrue("second expected materialization", resHCs.contains(hcFactory.getMaterializationRes2()));
