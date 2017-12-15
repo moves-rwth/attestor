@@ -1,7 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.PostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

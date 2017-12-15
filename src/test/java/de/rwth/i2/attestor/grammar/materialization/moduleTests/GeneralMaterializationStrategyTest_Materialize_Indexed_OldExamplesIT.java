@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.programState.indexedState.BalancedTreeGrammar;
 import de.rwth.i2.attestor.programState.indexedState.ExampleIndexedGraphFactory;
 import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import org.junit.Before;
 import org.junit.Test;
 

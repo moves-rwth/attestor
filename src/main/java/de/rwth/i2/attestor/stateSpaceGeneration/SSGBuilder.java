@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 
 import java.util.ArrayList;
@@ -143,7 +145,7 @@ public class SSGBuilder extends SceneObject {
      */
     public SSGBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
 
-        generator.materializationStrategy = materializationStrategy;
+        generator.materializationStrategy = new StateMaterializationStrategy(materializationStrategy);
         return this;
     }
 
@@ -153,7 +155,7 @@ public class SSGBuilder extends SceneObject {
      */
     public SSGBuilder setCanonizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
 
-        generator.canonicalizationStrategy = canonicalizationStrategy;
+        generator.canonicalizationStrategy = new StateCanonicalizationStrategy(canonicalizationStrategy);
         return this;
     }
 

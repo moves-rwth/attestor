@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.refinement.balanced;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
@@ -18,7 +19,6 @@ import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMateriali
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 

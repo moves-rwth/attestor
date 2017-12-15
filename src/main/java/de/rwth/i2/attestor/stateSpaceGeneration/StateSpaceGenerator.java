@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
@@ -47,13 +46,13 @@ public class StateSpaceGenerator extends SceneObject {
      * This strategy is invoked whenever an abstract transfer
      * function cannot be executed.
      */
-    MaterializationStrategy materializationStrategy;
+    StateMaterializationStrategy materializationStrategy;
     /**
      * Strategy guiding the canonicalization of states.
      * This strategy is invoked after execution of abstract transfer
      * functions in order to generalize.
      */
-    CanonicalizationStrategy canonicalizationStrategy;
+    StateCanonicalizationStrategy canonicalizationStrategy;
     /**
      * Strategy determining when to give up on further state space
      * exploration.
@@ -124,8 +123,8 @@ public class StateSpaceGenerator extends SceneObject {
 
         return new SSGBuilder(stateSpaceGenerator)
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
-                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
+                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
+                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
                 .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
@@ -148,7 +147,7 @@ public class StateSpaceGenerator extends SceneObject {
     /**
      * @return The strategy determining how materialization is performed.
      */
-    public MaterializationStrategy getMaterializationStrategy() {
+    public StateMaterializationStrategy getMaterializationStrategy() {
 
         return materializationStrategy;
     }
@@ -156,7 +155,7 @@ public class StateSpaceGenerator extends SceneObject {
     /**
      * @return The strategy determining how canonicalization is performed.
      */
-    public CanonicalizationStrategy getCanonizationStrategy() {
+    public StateCanonicalizationStrategy getCanonizationStrategy() {
 
         return canonicalizationStrategy;
     }
@@ -309,13 +308,12 @@ public class StateSpaceGenerator extends SceneObject {
      */
     private boolean materializationPhase(Semantics semantics, ProgramState state) {
 
-        Collection<HeapConfiguration> materialized = materializationStrategy.materialize(
-                state.getHeap(),
+        Collection<ProgramState> materialized = materializationStrategy.materialize(
+                state,
                 semantics.getPotentialViolationPoints()
         );
 
-        for (HeapConfiguration hc : materialized) {
-            ProgramState m = state.shallowCopyWithUpdateHeap(hc);
+        for (ProgramState m : materialized) {
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
             addUnexploredState(m);
@@ -344,7 +342,7 @@ public class StateSpaceGenerator extends SceneObject {
     private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
         if (semantics.permitsCanonicalization()) {
-            state = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
+            state = canonicalizationStrategy.canonicalize(state);
         }
         return state;
     }
