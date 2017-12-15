@@ -10,8 +10,8 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.St
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.UnequalExpr;
-import de.rwth.i2.attestor.semantics.util.PrimitiveTypes;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.TypeNames;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
@@ -354,7 +354,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 
         String fieldType = fieldRef.getType().toString();
 
-        baseType.addSelectorLabel(fieldLabel, PrimitiveTypes.getDefaultValue(fieldType));
+        baseType.addSelectorLabel(fieldLabel, TypeNames.getDefaultValue(fieldType));
 
         scene().options().addUsedSelectorLabel(name);
 
