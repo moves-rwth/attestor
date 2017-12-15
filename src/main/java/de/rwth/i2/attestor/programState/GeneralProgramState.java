@@ -282,10 +282,7 @@ public abstract class GeneralProgramState implements ProgramState {
             return new GeneralConcreteValue(t, n);
         } catch (NullPointerException | IllegalArgumentException e) {
 
-            if (!Constants.hasUnknownConstantOccurredBefore(constantName)) {
-                Constants.addUnknownConstant(constantName);
-                logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
-            }
+            logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
             return GeneralConcreteValue.getUndefined();
         }
     }
@@ -353,8 +350,7 @@ public abstract class GeneralProgramState implements ProgramState {
             for (Map.Entry<SelectorLabel, String> selectorDefault : selectorToDefaults.entrySet()) {
 
                 SelectorLabel selectorLabel = selectorDefault.getKey();
-                if(type.isPrimitiveType(selectorLabel)) {
-                    // We do not initialize primitive data types, because we cannot deal with them at the moment
+                if(type.isOptional(selectorLabel)) {
                     continue;
                 }
                 int target = heap.variableTargetOf(selectorDefault.getValue());
@@ -399,7 +395,7 @@ public abstract class GeneralProgramState implements ProgramState {
 
             if (node == HeapConfiguration.INVALID_ELEMENT) {
 
-                if (baseNodeType.isPrimitiveType(selectorLabel)) {
+                if (baseNodeType.isOptional(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
                 } else {
                     throw new IllegalStateException("Required selector label " + from
