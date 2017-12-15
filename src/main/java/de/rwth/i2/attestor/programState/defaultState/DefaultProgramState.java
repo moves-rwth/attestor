@@ -110,6 +110,18 @@ public class DefaultProgramState extends GeneralProgramState {
 
     public boolean isSubsumedBy(ProgramState otherState) {
 
+        if(this == otherState) {
+            return true;
+        }
+
+        if(otherState == null) {
+            return false;
+        }
+
+        if(programCounter != otherState.getProgramCounter()) {
+            return false;
+        }
+
         return scene()
                 .strategies()
                 .getLanguageInclusionStrategy()
