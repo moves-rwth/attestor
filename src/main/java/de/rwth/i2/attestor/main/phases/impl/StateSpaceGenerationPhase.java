@@ -110,12 +110,14 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
             return new NoPostProcessingStrategy();
         }
 
+        StateCanonicalizationStrategy strategy = new StateCanonicalizationStrategy(aggressiveStrategy);
+
         if (scene().options().isIndexedMode()) {
-            return new AggressivePostProcessingStrategy(aggressiveStrategy, scene().options().getAbstractionDistance());
+            return new AggressivePostProcessingStrategy(strategy, scene().options().getAbstractionDistance());
         }
 
         return new FinalStateSubsumptionPostProcessingStrategy(
-                aggressiveStrategy,
+                strategy,
                 scene().strategies().getLanguageInclusionStrategy(),
                 scene().options().getAbstractionDistance()
         );

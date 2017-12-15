@@ -38,7 +38,7 @@ public final class CounterexampleGenerator extends SceneObject {
 
     private Program program;
     private Trace trace;
-    private CanonicalizationStrategy canonicalizationStrategy;
+    private StateCanonicalizationStrategy canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private boolean deadVariableEliminationEnabled;
@@ -87,6 +87,7 @@ public final class CounterexampleGenerator extends SceneObject {
     private StateSpaceGenerator setupStateSpaceGenerator() {
 
         ProgramState initialState = getInitialState();
+
         return StateSpaceGenerator
                 .builder(this)
                 .setStateLabelingStrategy(s -> {
@@ -103,7 +104,7 @@ public final class CounterexampleGenerator extends SceneObject {
                         return true;
                     }
                     if (semantics.permitsCanonicalization()) {
-                        ProgramState canon = s.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(s.getHeap()));
+                        ProgramState canon = canonicalizationStrategy.canonicalize(s);
                         return trace.containsSubsumingState(canon);
                     }
                     return false;
@@ -122,7 +123,7 @@ public final class CounterexampleGenerator extends SceneObject {
     private StateSpaceSupplier getStateSpaceSupplier() {
 
         CounterexampleStateSpaceSupplier stateSpaceSupplier
-                = new CounterexampleStateSpaceSupplier(program, canonicalizationStrategy);
+                = new CounterexampleStateSpaceSupplier(canonicalizationStrategy);
         Set<ProgramState> finalStates = new LinkedHashSet<>(1);
         finalStates.add(trace.getFinalState());
         stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
@@ -183,7 +184,7 @@ public final class CounterexampleGenerator extends SceneObject {
 
         public CounterexampleGeneratorBuilder setCanonicalizationStrategy(CanonicalizationStrategy strategy) {
 
-            generator.canonicalizationStrategy = strategy;
+            generator.canonicalizationStrategy = new StateCanonicalizationStrategy(strategy);
             return this;
         }
 

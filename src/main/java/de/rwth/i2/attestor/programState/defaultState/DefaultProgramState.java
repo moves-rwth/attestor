@@ -113,6 +113,6 @@ public class DefaultProgramState extends GeneralProgramState {
         return scene()
                 .strategies()
                 .getLanguageInclusionStrategy()
-                .includes(this, otherState);
+                .includes(heap, otherState.getHeap());
     }
 }

@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
@@ -27,7 +26,7 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
     }
 
     @Override
-    public boolean includes(ProgramState left, ProgramState right) {
+    public boolean includes(HeapConfiguration left, HeapConfiguration right) {
 
         if(left == right) {
             return true;
@@ -41,14 +40,14 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
             return true;
         }
 
-        ProgramState canonicalLeft = left.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(left.getHeap()));
+        HeapConfiguration canonicalLeft = canonicalizationStrategy.canonicalize(left);
 
         if(scene().options().getAbstractionDistance() == 0 || scene().options().isIndexedMode()) {
             return canonicalLeft.equals(right);
         }
 
-        TIntArrayList criticalEdges = computeCriticalEdges(right.getHeap());
-        return subsumes(canonicalLeft.getHeap(), right.getHeap(), criticalEdges);
+        TIntArrayList criticalEdges = computeCriticalEdges(right);
+        return subsumes(canonicalLeft, right, criticalEdges);
     }
 
     private boolean subsumes(HeapConfiguration left, HeapConfiguration right, TIntArrayList criticalEdges) {
