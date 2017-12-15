@@ -1,18 +1,20 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+
 /**
- * The strategy performed to canonicalize (abstract) a ProgramState, which results in one or more
- * abstract program states.
+ * The strategy performed to canonicalize (abstract) heap configurations which results in one or more
+ * abstract heap configurations.
  *
  * @author Christoph
  */
 public interface CanonicalizationStrategy {
 
     /**
-     * Performs the canonicalization of a single program state.
+     * Performs the canonicalization of a single heap configuration.
      *
-     * @param state The ProgramState that should be abstracted.
-     * @return An abstract program states that covers the original program state conf.
+     * @param heapConfiguration The heap configuration that should be fully abstracted
+     * @return An abstract heap configuration that covers the original one.
      */
-    ProgramState canonicalize(ProgramState state);
+    HeapConfiguration canonicalize(HeapConfiguration heapConfiguration);
 }

@@ -41,7 +41,7 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
             return true;
         }
 
-        ProgramState canonicalLeft = canonicalizationStrategy.canonicalize(left);
+        ProgramState canonicalLeft = left.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(left.getHeap()));
 
         if(scene().options().getAbstractionDistance() == 0 || scene().options().isIndexedMode()) {
             return canonicalLeft.equals(right);

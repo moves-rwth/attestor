@@ -344,7 +344,7 @@ public class StateSpaceGenerator extends SceneObject {
     private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
         if (semantics.permitsCanonicalization()) {
-            state = canonicalizationStrategy.canonicalize(state);
+            state = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
         }
         return state;
     }

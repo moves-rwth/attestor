@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 /**
  * This class provides the methods to canonicalisation which are specific for
@@ -29,11 +28,10 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
     }
 
     @Override
-    public ProgramState tryReplaceMatching(ProgramState toAbstract,
+    public HeapConfiguration tryReplaceMatching(HeapConfiguration toAbstract,
                                            HeapConfiguration rhs, Nonterminal lhs) {
 
-        AbstractMatchingChecker checker =
-                provider.getEmbeddingChecker(toAbstract.getHeap(), rhs);
+        AbstractMatchingChecker checker = provider.getEmbeddingChecker(toAbstract, rhs);
 
         if (checker.hasMatching()) {
 
@@ -47,19 +45,18 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
     /**
      * replaces the embedding in  abstracted by the given nonterminal
      *
-     * @param stateToAbstract the outer graph.
+     * @param toAbstract the outer graph.
      * @param embedding       the embedding of the inner graph in the outer graph
      * @param nonterminal     the nonterminal to replace the embedding
      */
-    private ProgramState replaceEmbeddingBy(ProgramState stateToAbstract, Matching embedding, Nonterminal nonterminal) {
+    private HeapConfiguration replaceEmbeddingBy(HeapConfiguration toAbstract, Matching embedding,
+                                                 Nonterminal nonterminal) {
 
-        HeapConfiguration toAbstract = stateToAbstract.clone().getHeap();
-        HeapConfiguration abstracted = toAbstract.clone().builder().replaceMatching(embedding, nonterminal).build();
-        return stateToAbstract.shallowCopyWithUpdateHeap(abstracted);
+        return toAbstract.clone().builder().replaceMatching(embedding, nonterminal).build();
     }
 
     @Override
-    public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
+    public HeapConfiguration prepareHeapForCanonicalization(HeapConfiguration toAbstract) {
 
         return toAbstract;
     }
