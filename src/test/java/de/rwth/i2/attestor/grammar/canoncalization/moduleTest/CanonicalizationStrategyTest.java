@@ -59,7 +59,7 @@ public class CanonicalizationStrategyTest {
         HeapConfiguration test = hcFactory.getCanonizationTest1();
 
         DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
-        ProgramState state = canonicalizationStrategy.canonicalize(testExec);
+        ProgramState state = testExec.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(testExec.getHeap()));
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest1(), test);
 
@@ -71,7 +71,7 @@ public class CanonicalizationStrategyTest {
 
         HeapConfiguration test = hcFactory.getCanonizationTest2();
         DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
-        ProgramState state = canonicalizationStrategy.canonicalize(testExec);
+        ProgramState state = testExec.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(testExec.getHeap()));
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest2(), test);
 
@@ -84,7 +84,7 @@ public class CanonicalizationStrategyTest {
         HeapConfiguration test = hcFactory.getCanonizationTest3();
 
         DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
-        ProgramState state = canonicalizationStrategy.canonicalize(testExec);
+        ProgramState state = testExec.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(testExec.getHeap()));
 
         assertEquals("Input heap should not change", hcFactory.getCanonizationTest3(), test);
         assertEquals("result not as expected", hcFactory.getCanonizationRes3(), state.getHeap());
@@ -95,7 +95,7 @@ public class CanonicalizationStrategyTest {
 
         HeapConfiguration test = hcFactory.getLongConcreteSLL();
         DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
-        ProgramState state = canonicalizationStrategy.canonicalize(testExec);
+        ProgramState state = testExec.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(testExec.getHeap()));
 
         HeapConfiguration expected = hcFactory.getSLLHandle();
 
@@ -116,7 +116,7 @@ public class CanonicalizationStrategyTest {
 
 
         DefaultProgramState testExec = new DefaultProgramState(sceneObject, test);
-        ProgramState state = canonicalizationStrategy.canonicalize(testExec);
+        ProgramState state = testExec.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(testExec.getHeap()));
 
         HeapConfiguration expected = hcFactory.getSLLHandle();
         TIntArrayList expectedNodes = expected.nodes();

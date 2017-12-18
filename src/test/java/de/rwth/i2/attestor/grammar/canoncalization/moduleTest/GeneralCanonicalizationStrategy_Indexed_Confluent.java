@@ -78,7 +78,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
         ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
-        ProgramState res = canonizer.canonicalize(inputState);
+        ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 
         assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
     }

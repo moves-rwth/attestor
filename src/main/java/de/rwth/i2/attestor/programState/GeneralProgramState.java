@@ -1,5 +1,10 @@
 package de.rwth.i2.attestor.programState;
 
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;

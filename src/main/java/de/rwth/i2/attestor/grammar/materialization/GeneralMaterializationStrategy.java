@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.MatchingUtil;
 import de.rwth.i2.attestor.util.Pair;
@@ -15,10 +14,7 @@ import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Determines concrete violation points and resolves them.
@@ -61,19 +57,19 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
     }
 
     @Override
-    public List<ProgramState> materialize(ProgramState state,
-                                          ViolationPoints potentialViolationPoints) {
+    public Collection<HeapConfiguration> materialize(HeapConfiguration heapConfiguration,
+                                                ViolationPoints potentialViolationPoints) {
 
-        List<ProgramState> res = new ArrayList<>();
+        List<HeapConfiguration> res = new ArrayList<>();
 
-        Stack<ProgramState> worklist = new Stack<>();
-        worklist.add(state);
+        Stack<HeapConfiguration> worklist = new Stack<>();
+        worklist.add(heapConfiguration);
 
         boolean appliedMaterialization = false;
 
         while (!worklist.isEmpty()) {
 
-            ProgramState current = worklist.pop();
+            HeapConfiguration current = worklist.pop();
 
             Pair<Integer, String> actualViolationPoint = getActualViolationPoint(current, potentialViolationPoints);
 
@@ -93,31 +89,28 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
         return res;
     }
 
-    private Collection<? extends ProgramState> resolveViolationPoint(ProgramState current,
+    private Collection<? extends HeapConfiguration> resolveViolationPoint(HeapConfiguration current,
                                                                      Pair<Integer, String> actualViolationPoint) {
-
-        List<ProgramState> res = new ArrayList<>();
 
         int vioNode = actualViolationPoint.first();
         String requiredSelectorLabel = actualViolationPoint.second();
 
-        HeapConfiguration hc = current.getHeap();
-        TIntIterator attachedNtIter = hc.attachedNonterminalEdgesOf(vioNode).iterator();
+        TIntIterator attachedNtIter = current.attachedNonterminalEdgesOf(vioNode).iterator();
         while (attachedNtIter.hasNext()) {
 
             int ntEdge = attachedNtIter.next();
-            Nonterminal nt = hc.labelOf(ntEdge);
-            int tentacle = hc.attachedNodesOf(ntEdge).indexOf(vioNode);
+            Nonterminal nt = current.labelOf(ntEdge);
+            int tentacle = current.attachedNodesOf(ntEdge).indexOf(vioNode);
 
 
             GrammarResponse rulesToApply;
             try {
                 rulesToApply = ruleManager.getRulesFor(nt, tentacle, requiredSelectorLabel);
                 Collection<HeapConfiguration> materializationResults =
-                        ruleApplier.applyGrammarResponseTo(hc, ntEdge, rulesToApply);
+                        ruleApplier.applyGrammarResponseTo(current, ntEdge, rulesToApply);
 
-                materializationResults.forEach(materilizedGraph ->
-                        res.add(current.shallowCopyWithUpdateHeap(materilizedGraph)));
+
+                return materializationResults;
 
             } catch (UnexpectedNonterminalTypeException e) {
                 logger.error("rule Manager cannot deal with this nonterminal type: " + nt.getClass());
@@ -128,22 +121,18 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
 
         }
 
-        return res;
+        return Collections.emptyList();
     }
 
-    Pair<Integer, String> getActualViolationPoint(ProgramState state,
+    Pair<Integer, String> getActualViolationPoint(HeapConfiguration heapConfiguration,
                                                   ViolationPoints potentialViolationPoints) {
 
         for (String variableName : potentialViolationPoints.getVariables()) {
 
             try {
-                int variableTarget = state.getHeap().targetOf(state.getHeap().variableWith(variableName));
-
-
-                List<SelectorLabel> selectors = state.getHeap().selectorLabelsOf(variableTarget);
-
+                int variableTarget = heapConfiguration.targetOf(heapConfiguration.variableWith(variableName));
+                List<SelectorLabel> selectors = heapConfiguration.selectorLabelsOf(variableTarget);
                 for (String label : potentialViolationPoints.getSelectorsOf(variableName)) {
-
                     if (!MatchingUtil.containsMatch(selectors, s -> s.hasLabel(label))) {
                         return new Pair<>(variableTarget, label);
                     }

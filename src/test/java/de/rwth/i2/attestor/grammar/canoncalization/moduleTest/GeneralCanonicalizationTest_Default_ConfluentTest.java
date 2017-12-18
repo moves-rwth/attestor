@@ -54,7 +54,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
                 = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
 
         ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
-        ProgramState res = canonizer.canonicalize(inputState);
+        ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
         assertEquals(expectedFullAbstraction(lhs), res);
     }
 

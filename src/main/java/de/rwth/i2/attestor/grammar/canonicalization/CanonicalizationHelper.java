@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public interface CanonicalizationHelper {
 
@@ -15,7 +14,7 @@ public interface CanonicalizationHelper {
      * @param lhs        the label of the replacing nonterminal edge
      * @return the abstracted graph if an embedding of rhs can be found, null otherwise.
      */
-    ProgramState tryReplaceMatching(ProgramState toAbstract,
+    HeapConfiguration tryReplaceMatching(HeapConfiguration toAbstract,
                                     HeapConfiguration rhs, Nonterminal lhs);
 
     /**
@@ -25,6 +24,6 @@ public interface CanonicalizationHelper {
      * @param toAbstract the graph which shall be abstracted
      * @return the modified graph (or the graph itself if no modification is necessary)
      */
-    ProgramState prepareHeapForCanonicalization(ProgramState toAbstract);
+    HeapConfiguration prepareHeapForCanonicalization(HeapConfiguration toAbstract);
 
 }

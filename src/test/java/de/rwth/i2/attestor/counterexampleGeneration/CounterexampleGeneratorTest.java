@@ -26,6 +26,7 @@ import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+
 public class CounterexampleGeneratorTest {
 
     private SceneObject sceneObject;
@@ -97,12 +98,12 @@ public class CounterexampleGeneratorTest {
         Semantics stmt = program.getStatement(0);
         ProgramState initialState = getInitialState();
 
-        List<ProgramState> mat = factorySLL
+        Collection<HeapConfiguration> mat = factorySLL
                 .getMaterialization()
-                .materialize(initialState.clone(), stmt.getPotentialViolationPoints());
-        ProgramState materialized = null;
-        for (ProgramState s : mat) {
-            if (!s.getHeap().nonterminalEdges().isEmpty()) {
+                .materialize(initialState.clone().getHeap(), stmt.getPotentialViolationPoints());
+        HeapConfiguration materialized = null;
+        for (HeapConfiguration s : mat) {
+            if (!s.nonterminalEdges().isEmpty()) {
                 materialized = s;
                 break;
             }
@@ -112,9 +113,11 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             finalState = stmt.computeSuccessors(
-                    materialized.clone(), factoryEmpty.getSemanticsOptionsSupplier(sceneObject).get(null)
+                    initialState.shallowCopyWithUpdateHeap(materialized.clone()), factoryEmpty.getSemanticsOptionsSupplier(sceneObject).get(null)
             ).iterator().next();
-            finalState = factorySLL.getCanonicalization().canonicalize(finalState);
+            finalState = finalState.shallowCopyWithUpdateHeap(
+                    factorySLL.getCanonicalization().canonicalize(finalState.getHeap())
+            );
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }

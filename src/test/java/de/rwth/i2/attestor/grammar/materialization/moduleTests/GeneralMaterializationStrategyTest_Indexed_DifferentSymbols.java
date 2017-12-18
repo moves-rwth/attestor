@@ -81,9 +81,9 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
         HeapConfiguration expectedGraph = getExpected();
         ProgramState expectedState = new IndexedState(sceneObject, expectedGraph).prepareHeap();
 
-        Collection<ProgramState> result = materializer.materialize(inputState, inputViolationPoint);
+        Collection<HeapConfiguration> result = materializer.materialize(inputState.getHeap(), inputViolationPoint);
 
-        assertThat(result, contains(expectedState));
+        assertThat(result, contains(expectedState.getHeap()));
 
     }
 

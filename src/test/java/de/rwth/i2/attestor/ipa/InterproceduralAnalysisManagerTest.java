@@ -48,7 +48,7 @@ public class InterproceduralAnalysisManagerTest {
 		final int startPos = 0;
 		
 		HeapConfiguration input = exampleList(type, paramName, startPos);
-		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
+		ProgramState inputState = new DefaultProgramState(sceneObject, input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(mainMethod, inputState);
@@ -57,7 +57,7 @@ public class InterproceduralAnalysisManagerTest {
 		
 		Set<ProgramState> result = mainMethod.getFinalStates(inputState, inputState, observer);
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
-		final ProgramState expectedState = new DefaultProgramState(expectedHeap).prepareHeap();
+		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
 	}
 	
@@ -73,7 +73,7 @@ public class InterproceduralAnalysisManagerTest {
 		final int startPos = 0;
 		
 		HeapConfiguration input = exampleList(type, paramName, startPos);
-		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
+		ProgramState inputState = new DefaultProgramState(sceneObject, input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(traverseMethod, inputState);
@@ -82,7 +82,7 @@ public class InterproceduralAnalysisManagerTest {
 		
 		Set<ProgramState> result = traverseMethod.getFinalStates(inputState, inputState, observer);
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
-		final ProgramState expectedState = new DefaultProgramState(expectedHeap).prepareHeap();
+		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
 	}
 	

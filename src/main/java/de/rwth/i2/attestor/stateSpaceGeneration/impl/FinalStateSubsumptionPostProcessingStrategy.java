@@ -44,7 +44,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
         Map<Integer, Integer> idMap = new LinkedHashMap<>();
 
         for (ProgramState state : finalStates) {
-            ProgramState absState = canonicalizationStrategy.canonicalize(state);
+            ProgramState absState = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 

@@ -101,7 +101,7 @@ public final class CounterexampleGenerator extends SceneObject {
                         return true;
                     }
                     if (semantics.permitsCanonicalization()) {
-                        ProgramState canon = canonicalizationStrategy.canonicalize(s);
+                        ProgramState canon = s.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(s.getHeap()));
                         return trace.containsSubsumingState(canon);
                     }
                     return false;

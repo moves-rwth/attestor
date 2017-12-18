@@ -14,7 +14,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
@@ -49,8 +48,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
         helper.updateSelectorAnnotations(heapConfiguration);
 
-        IndexedState state = new IndexedState(this, heapConfiguration);
-        heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
+        heapConfiguration = canonicalizationStrategy.canonicalize(heapConfiguration);
 
         if (countSelectorEdges(heapConfiguration) > 1) {
             return Collections.emptySet();

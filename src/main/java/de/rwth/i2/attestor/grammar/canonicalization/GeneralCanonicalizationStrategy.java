@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {
@@ -20,27 +19,23 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
     }
 
     @Override
-    public ProgramState canonicalize(ProgramState state) {
+    public HeapConfiguration canonicalize(HeapConfiguration heapConfiguration) {
 
-        ProgramState result = performCanonicalization(state);
-        return result;
+        return performCanonicalization(heapConfiguration);
     }
 
-    private ProgramState performCanonicalization(ProgramState state) {
+    private HeapConfiguration performCanonicalization(HeapConfiguration heapConfiguration) {
 
-        state = canonicalizationHelper.prepareHeapForCanonicalization(state);
-
+        heapConfiguration = canonicalizationHelper.prepareHeapForCanonicalization(heapConfiguration);
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                ProgramState abstractedState =
-                        canonicalizationHelper.tryReplaceMatching(state, rhs, lhs);
-                if (abstractedState != null) {
-                    return performCanonicalization(abstractedState);
+                HeapConfiguration abstractedHeap =
+                        canonicalizationHelper.tryReplaceMatching(heapConfiguration, rhs, lhs);
+                if (abstractedHeap != null) {
+                    return performCanonicalization(abstractedHeap);
                 }
             }
         }
-        return state;
+        return heapConfiguration;
     }
-
-
 }

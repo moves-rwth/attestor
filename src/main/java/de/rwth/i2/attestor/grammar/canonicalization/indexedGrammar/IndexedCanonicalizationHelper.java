@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 /**
  * This class provides the methods to canonicalisation which are specific for
@@ -39,24 +38,22 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
     }
 
     @Override
-    public ProgramState tryReplaceMatching(ProgramState state,
+    public HeapConfiguration tryReplaceMatching(HeapConfiguration heapConfiguration,
                                            HeapConfiguration rhs, Nonterminal lhs) {
 
-        ProgramState result = null;
+        HeapConfiguration result = null;
 
         AbstractMatchingChecker checker =
-                checkerProvider.getEmbeddingChecker(state.getHeap(), rhs);
+                checkerProvider.getEmbeddingChecker(heapConfiguration, rhs);
 
         if (checker.hasMatching()) {
             Matching embedding = checker.getMatching();
             try {
                 IndexEmbeddingResult res =
-                        indexChecker.getIndexEmbeddingResult(state.getHeap(), embedding, lhs);
+                        indexChecker.getIndexEmbeddingResult(heapConfiguration, embedding, lhs);
 
-                HeapConfiguration abstracted = replaceEmbeddingBy(res.getMaterializedToAbstract(),
+                result = replaceEmbeddingBy(res.getMaterializedToAbstract(),
                         embedding, res.getInstantiatedLhs());
-                result = state.shallowCopyWithUpdateHeap(abstracted);
-
             } catch (CannotMatchException e) {
                 //this may happen. continue as if no matching has been found.
             }
@@ -83,11 +80,11 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
      * For indexed HeapConfigurations this performs index canonicalization.
      */
     @Override
-    public ProgramState prepareHeapForCanonicalization(ProgramState toAbstract) {
+    public HeapConfiguration prepareHeapForCanonicalization(HeapConfiguration toAbstract) {
 
-        HeapConfiguration heap = toAbstract.getHeap().clone();
+        HeapConfiguration heap = toAbstract.clone();
         indexCanonizationStrategy.canonizeIndex(heap);
-        return toAbstract.shallowCopyWithUpdateHeap(heap);
+        return heap;
     }
 
 

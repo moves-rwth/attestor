@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -83,9 +84,9 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), vioPoints);
 
-        assertThat(materializedStates, containsInAnyOrder(expectedState));
+        assertThat(materializedStates, containsInAnyOrder(expectedState.getHeap()));
     }
 
     /**
@@ -116,11 +117,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), vioPoints);
 
-        assertThat(materializedStates, containsInAnyOrder(expectedState1,
-                expectedState2,
-                expectedState3));
+        assertThat(materializedStates, containsInAnyOrder(expectedState1.getHeap(),
+                expectedState2.getHeap(),
+                expectedState3.getHeap()));
     }
 
     /**
@@ -151,11 +152,11 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), vioPoints);
 
-        assertThat(materializedStates, containsInAnyOrder(expectedState1,
-                expectedState2,
-                expectedState3));
+        assertThat(materializedStates, containsInAnyOrder(expectedState1.getHeap(),
+                expectedState2.getHeap(),
+                expectedState3.getHeap()));
     }
 
     /**
@@ -192,13 +193,13 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
 
-        List<ProgramState> materializedStates = materializer.materialize(inputState, vioPoints);
+        Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), vioPoints);
 
-        assertThat(materializedStates, containsInAnyOrder(expectedState1,
-                expectedState2,
-                expectedState3,
-                expectedState4,
-                expectedState5));
+        assertThat(materializedStates, containsInAnyOrder(expectedState1.getHeap(),
+                expectedState2.getHeap(),
+                expectedState3.getHeap(),
+                expectedState4.getHeap(),
+                expectedState5.getHeap()));
     }
 
 

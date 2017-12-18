@@ -14,7 +14,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
@@ -45,9 +44,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
     public Set<String> transition(HeapConfiguration heapConfiguration) {
 
         heapConfiguration = getCopyWithoutVariables(heapConfiguration);
-
-        IndexedState state = new IndexedState(this, heapConfiguration);
-        heapConfiguration = canonicalizationStrategy.canonicalize(state).getHeap();
+        heapConfiguration = canonicalizationStrategy.canonicalize(heapConfiguration);
 
         if (countSelectorEdges(heapConfiguration) > 8) {
             return Collections.emptySet();
