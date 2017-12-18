@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -21,8 +22,13 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import org.json.JSONWriter;
 
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Created by christina on 01.12.17.
@@ -33,6 +39,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
     private List<AbstractPhase> phases;
 
+    private InputSettings inputSettings;
     private OutputSettings outputSettings;
 
     private StateSpace stateSpace;
@@ -68,6 +75,7 @@ public class ReportOutputPhase extends AbstractPhase {
     @Override
     protected void executePhase() throws IOException {
 
+        inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 
         if (outputSettings.isNoExport()) {
@@ -79,14 +87,60 @@ public class ReportOutputPhase extends AbstractPhase {
 
         String outputDirectory = outputSettings.getFolderForReportOutput();
 
-        // Export analysis summary
-        exportSummary(outputDirectory);
+        /* Export the attestor input relevant for the report */
+
+        // Export the initial heap configurations (consequtively numbered)
+        exportInitialHCs(outputDirectory);
+        // Copy the settingsfile
+        copySettingsFile();
+
+        // Copy input class definition
+        copyInputProgram();
 
         // Export grammar (without preceding elements!!)
         exportGrammar(outputDirectory);
 
+        /* Export the analysis output relevant for the report */
+
+        // Export analysis summary
+        exportSummary(outputDirectory);
+
         // Export state space (without preceding elements!!)
         exportStateSpace(outputDirectory);
+    }
+
+    private void copySettingsFile() throws IOException {
+        Path sourcePath = FileSystems.getDefault().getPath(inputSettings.getPathToSettingsFile(), "");
+        Path targetPath = FileSystems.getDefault().getPath(outputSettings.getFolderForReportOutput() +File.separator + "attestorInput", "settings.json");
+
+        Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
+
+    }
+
+    private void copyInputProgram() throws IOException {
+        Path sourcePath = FileSystems.getDefault().getPath(inputSettings.getClasspath(), inputSettings.getClassName() + ".java");
+        Path targetPath = FileSystems.getDefault().getPath(outputSettings.getFolderForReportOutput() +File.separator + "attestorInput", "analysedClass.java");
+
+        Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
+    }
+
+    private void exportInitialHCs(String location) {
+        logger.info("Exporting initial HCs for report...");
+
+        List<HeapConfiguration> initialHCs = getPhase(InputTransformer.class).getInputs();
+
+        int i = 0;
+        for (HeapConfiguration initialHC : initialHCs) {
+
+            location = location + File.separator + "attestorInput";
+            String filename = "initialHC" + i + ".json";
+            try {
+                exportHeapConfiguration(location, filename , initialHC);
+                i++;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void exportGrammar(String location) throws IOException {

@@ -30,6 +30,11 @@ public class InputSettings {
      * Description of the analyzed scenario.
      */
     private String scenario = "";
+
+    /**
+     * The path to the settings file
+     */
+    private String pathToSettingsFile = "";
     /**
      * The classpath of source code files that are analyzed.
      */
@@ -304,5 +309,13 @@ public class InputSettings {
     public String getRenamingLocation(String predefinedGrammar) {
 
         return this.pathsToGrammar2RenameDefinition.get(predefinedGrammar);
+    }
+
+    public String getPathToSettingsFile() {
+        return pathToSettingsFile;
+    }
+
+    public void setPathToSettingsFile(String pathToSettingsFile) {
+        this.pathToSettingsFile = pathToSettingsFile;
     }
 }
