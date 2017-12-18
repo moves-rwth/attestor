@@ -8,10 +8,10 @@ import java.util.Set;
 
 public class AggressivePostProcessingStrategy implements PostProcessingStrategy {
 
-    private CanonicalizationStrategy canonicalizationStrategy;
+    private StateCanonicalizationStrategy canonicalizationStrategy;
     private int minAbstractionDistance;
 
-    public AggressivePostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+    public AggressivePostProcessingStrategy(StateCanonicalizationStrategy canonicalizationStrategy,
                                             int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
@@ -39,7 +39,7 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
         Map<Integer, Integer> idMap = new LinkedHashMap<>();
 
         for (ProgramState state : finalStates) {
-            ProgramState absState = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
+            ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = abstractedStates.put(absState, absState);
             if (oldState != null) {

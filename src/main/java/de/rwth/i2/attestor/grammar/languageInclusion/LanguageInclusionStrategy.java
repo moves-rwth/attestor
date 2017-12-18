@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.grammar.languageInclusion;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 public interface LanguageInclusionStrategy {
 
-    boolean includes(ProgramState left, ProgramState right);
+    boolean includes(HeapConfiguration left, HeapConfiguration right);
 }

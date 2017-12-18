@@ -3,7 +3,10 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 import java.util.*;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
@@ -19,21 +22,18 @@ import gnu.trove.set.hash.TIntHashSet;
  */
 final class CounterexampleStateSpace implements StateSpace {
 
-    private final Program program;
-    private final CanonicalizationStrategy canonicalizationStrategy;
+    private final StateCanonicalizationStrategy canonicalizationStrategy;
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
     private final SymbolicExecutionObserver invokeObserver;
     private final Set<ProgramState> finalStates = new LinkedHashSet<>();
     private ProgramState initialState;
 
-    CounterexampleStateSpace(Program program,
-                             CanonicalizationStrategy canonicalizationStrategy,
+    CounterexampleStateSpace(StateCanonicalizationStrategy canonicalizationStrategy,
                              Set<ProgramState> requiredFinalStates,
                              InvokeCleanup invokeCleanup,
                              SymbolicExecutionObserver invokeObserver) {
 
-        this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.requiredFinalStates = requiredFinalStates;
         this.invokeCleanup = invokeCleanup;
@@ -182,7 +182,7 @@ final class CounterexampleStateSpace implements StateSpace {
 
     private ProgramState getAbstractStateInOriginalStateSpace(ProgramState state) {
 
-        ProgramState abstractState = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
+        ProgramState abstractState = canonicalizationStrategy.canonicalize(state);
         abstractState.setProgramCounter(-1);
 
         if (invokeCleanup != null) {

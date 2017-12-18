@@ -1,9 +1,14 @@
 package de.rwth.i2.attestor.main.scene;
 
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ExplorationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 public class Strategies {
 

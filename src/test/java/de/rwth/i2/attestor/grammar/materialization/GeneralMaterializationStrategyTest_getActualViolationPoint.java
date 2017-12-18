@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.util.Pair;
 import org.junit.Before;
 import org.junit.Test;

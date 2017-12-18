@@ -11,11 +11,11 @@
  * determines when to give up.
  * </li>
  * <li>
- * {@link de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy}
+ * {@link de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy}
  * determines how states are abstracted
  * </li>
  * <li>
- * {@link de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy}
+ * {@link de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy}
  * determines how to materialize states to make concrete semantics applicable.
  * </li>
  * <li>

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
@@ -107,12 +108,14 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
             return new NoPostProcessingStrategy();
         }
 
+        StateCanonicalizationStrategy strategy = new StateCanonicalizationStrategy(aggressiveStrategy);
+
         if (scene().options().isIndexedMode()) {
-            return new AggressivePostProcessingStrategy(aggressiveStrategy, scene().options().getAbstractionDistance());
+            return new AggressivePostProcessingStrategy(strategy, scene().options().getAbstractionDistance());
         }
 
         return new FinalStateSubsumptionPostProcessingStrategy(
-                aggressiveStrategy,
+                strategy,
                 scene().strategies().getLanguageInclusionStrategy(),
                 scene().options().getAbstractionDistance()
         );

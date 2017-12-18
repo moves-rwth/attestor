@@ -13,16 +13,14 @@ import java.util.Set;
  */
 final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
-    private final Program program;
-    private final CanonicalizationStrategy canonicalizationStrategy;
+    private final StateCanonicalizationStrategy canonicalizationStrategy;
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
     private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
 
-    CounterexampleStateSpaceSupplier(Program program, CanonicalizationStrategy canonicalizationStrategy) {
+    CounterexampleStateSpaceSupplier(StateCanonicalizationStrategy canonicalizationStrategy) {
 
-        this.program = program;
         this.canonicalizationStrategy = canonicalizationStrategy;
     }
 
@@ -48,7 +46,6 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         }
 
         CounterexampleStateSpace result = new CounterexampleStateSpace(
-                program,
                 canonicalizationStrategy,
                 requiredFinalStates,
                 invokeCleanupOfPreviousProcedure,

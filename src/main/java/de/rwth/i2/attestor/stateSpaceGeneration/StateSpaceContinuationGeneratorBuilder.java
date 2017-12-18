@@ -17,8 +17,8 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
 
         return (StateSpaceContinuationGeneratorBuilder) super
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
-                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy())
+                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
+                .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
                 .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())

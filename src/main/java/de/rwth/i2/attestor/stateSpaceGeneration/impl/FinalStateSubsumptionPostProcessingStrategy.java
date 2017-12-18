@@ -10,11 +10,11 @@ import java.util.Set;
 
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
-    private CanonicalizationStrategy canonicalizationStrategy;
+    private StateCanonicalizationStrategy canonicalizationStrategy;
     private LanguageInclusionStrategy languageInclusionStrategy;
     private int minAbstractionDistance;
 
-    public FinalStateSubsumptionPostProcessingStrategy(CanonicalizationStrategy canonicalizationStrategy,
+    public FinalStateSubsumptionPostProcessingStrategy(StateCanonicalizationStrategy canonicalizationStrategy,
                                                        LanguageInclusionStrategy languageInclusionStrategy,
                                                        int minAbstractionDistance) {
 
@@ -44,7 +44,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
         Map<Integer, Integer> idMap = new LinkedHashMap<>();
 
         for (ProgramState state : finalStates) {
-            ProgramState absState = state.shallowCopyWithUpdateHeap(canonicalizationStrategy.canonicalize(state.getHeap()));
+            ProgramState absState = canonicalizationStrategy.canonicalize(state);
             absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 

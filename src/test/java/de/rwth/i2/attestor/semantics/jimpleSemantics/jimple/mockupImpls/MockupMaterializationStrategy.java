@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 
 import java.util.ArrayList;
 import java.util.Collection;

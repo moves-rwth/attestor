@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.exampleFactories;
 
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;

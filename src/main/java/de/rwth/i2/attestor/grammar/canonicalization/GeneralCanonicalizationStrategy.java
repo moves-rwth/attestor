@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.CanonicalizationStrategy;
 
 
 public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy {

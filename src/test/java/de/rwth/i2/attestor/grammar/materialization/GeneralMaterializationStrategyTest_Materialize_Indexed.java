@@ -20,7 +20,6 @@ import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;

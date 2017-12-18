@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package de.rwth.i2.attestor.grammar.materialization;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

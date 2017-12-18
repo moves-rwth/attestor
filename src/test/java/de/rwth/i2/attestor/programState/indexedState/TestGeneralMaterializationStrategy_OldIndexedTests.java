@@ -10,9 +10,7 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMateria
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.stateSpaceGeneration.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.ViolationPoints;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
