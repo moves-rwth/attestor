@@ -52,8 +52,6 @@ public abstract class InvokeHelper extends SceneObject {
     }
 
     /**
-     * Increases the scope
-     * <p>
      * Attaches method parameters and if need be this to the programState for use
      * in the method.
      * <p>
@@ -69,8 +67,6 @@ public abstract class InvokeHelper extends SceneObject {
             throws NotSufficientlyMaterializedException;
 
     /**
-     * Decreases the scope
-     * <p>
      * Removes unused intermediates (this, params, return) and local variables
      * from the programState.
      *

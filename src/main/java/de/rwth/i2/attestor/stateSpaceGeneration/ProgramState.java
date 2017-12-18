@@ -47,7 +47,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     /**
      * Gets the target of the variable in the current scope.
      *
-     * @param variableName The name of the requested variable (without scope).
+     * @param variableName The name of the requested variable
      * @return The referenced element on the heap.
      */
     ConcreteValue getVariableTarget(String variableName);
@@ -55,21 +55,21 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     /**
      * Removes the variable (in the current scope) from the executable.
      *
-     * @param variableName The name of the variable to remove (without scope).
+     * @param variableName The name of the variable to remove.
      */
     void removeVariable(String variableName);
 
     /**
-     * Sets the variable of the given name in the current scope to the given value.
+     * Sets the variable of the given name to the given value.
      * Resets the variable if it has been there previously.
      *
-     * @param variableName the name of the variable (without scope)
+     * @param variableName the name of the variable
      * @param value        the value (i.e. node) to which the variable should be set
      */
     void setVariable(String variableName, ConcreteValue value);
 
     /**
-     * Gets the requested constant - constants are global, i.e. they don't have a scope.
+     * Gets the requested constant
      *
      * @param constantName The name of the requested constant.
      * @return The element in the heap that is referenced by the constant.
@@ -81,17 +81,17 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
      * Intermediates are internal variables for communication between methods, such that this, return,
      * param_n, etc.
      *
-     * @param name The name of the intermediate (without scope).
+     * @param name The name of the intermediate
      * @return The ConcreteValue that is referenced by the intermediate.
      */
     ConcreteValue removeIntermediate(String name);
 
     /**
-     * Sets an intermediate (in the current scope) to the given value.
+     * Sets an intermediate to the given value.
      * Intermediates are internal variables for communication between methods, such that this, return,
      * param_n, etc.
      *
-     * @param name  The name of the intermediate (without scope).
+     * @param name  The name of the intermediate .
      * @param value The ConcreteValue that will should be referenced by the intermediate.
      */
     void setIntermediate(String name, ConcreteValue value);

@@ -26,8 +26,7 @@ public class ReturnVoidStmt extends Statement {
     }
 
     /**
-     * removes all locals of the current scope from the heap,
-     * and returns the resulting heap with exit location (-1)
+     * Returns the resulting heap with exit location (-1)
      */
     @Override
     public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer) {

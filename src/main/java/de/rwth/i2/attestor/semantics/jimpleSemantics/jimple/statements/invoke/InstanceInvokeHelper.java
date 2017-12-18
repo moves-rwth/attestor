@@ -21,8 +21,7 @@ import java.util.List;
  * <br>
  * Handles the evaluation of parameter and this expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
- * Also manages the variable scope of the method and cleans the heap after the execution
- * of the method.
+ * Cleans the heap after the execution of the method.
  *
  * @author Hannah Arndt
  */

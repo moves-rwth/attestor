@@ -32,7 +32,6 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     private final AbstractMethod method;
     /**
      * handles arguments, and if applicable the this-reference.
-     * Also manages the variable scope.
      */
     private final InvokeHelper invokePrepare;
     /**

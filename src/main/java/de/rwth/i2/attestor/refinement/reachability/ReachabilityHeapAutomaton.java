@@ -259,7 +259,7 @@ class ReachabilityHelper {
     private void initReachableNodes() {
 
         int size = heapConfiguration.countNodes();
-        reachableNodes = new HashMap<>(size);
+        reachableNodes = new LinkedHashMap<>(size);
         TIntIterator iter = heapConfiguration.nodes().iterator();
         while (iter.hasNext()) {
             int node = iter.next();

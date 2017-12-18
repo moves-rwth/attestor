@@ -62,14 +62,14 @@ public class Options {
      */
     private boolean postProcessingEnabled = true;
 
-    public void addKeptVariable(String unscopedVariableName) {
+    public void addKeptVariable(String variableName) {
 
-        keptVariables.add(unscopedVariableName);
+        keptVariables.add(variableName);
     }
 
-    public boolean isKeptVariableName(String unscopedVariableName) {
+    public boolean isKeptVariableName(String variableName) {
 
-        return keptVariables.contains(unscopedVariableName);
+        return keptVariables.contains(variableName);
     }
 
     /**
