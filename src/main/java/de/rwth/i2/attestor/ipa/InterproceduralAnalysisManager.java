@@ -98,8 +98,10 @@ public class InterproceduralAnalysisManager extends SceneObject{
 		statesCallingInput.get(precondition).add(dependent);
 	}
 	
-	public void computeFixpoints( SymbolicExecutionObserver observer ) 
+	public StateSpace computeFixpoint( Program mainProgram, ProgramState initialState, SymbolicExecutionObserver observer ) 
 											throws StateSpaceGenerationAbortedException {
+		
+		StateSpace mainStateSpace = observer.generateStateSpace( mainProgram, initialState );
 		
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
@@ -107,14 +109,14 @@ public class InterproceduralAnalysisManager extends SceneObject{
 				IpaAbstractMethod method = methodAndInput.method;
 				
 				Program program = method.getControlFlow();
-				ProgramState initialState = methodAndInput.input;
+				ProgramState inputState = methodAndInput.input;
 				
-				StateSpace stateSpace = observer.generateStateSpace( program, initialState );
+				StateSpace stateSpace = observer.generateStateSpace( program, inputState );
 				
 				//extract and store the generated contract
 				List<HeapConfiguration> finalConfigs = new ArrayList<>();
 				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
-				method.contracts.addPostconditionsTo( initialState.getHeap(), finalConfigs );
+				method.contracts.addPostconditionsTo( inputState.getHeap(), finalConfigs );
 				
 				//store the mapping from stateSpace to input for later reference
 				contractComputedByStateSpace.put(stateSpace, methodAndInput);
@@ -137,5 +139,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 				statesToContinue.addAll( statesCallingInput.get(contractAltered) );
 			}
 		}
+		
+		return mainStateSpace;
 	}
 }

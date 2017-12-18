@@ -53,9 +53,9 @@ public class InterproceduralAnalysisManagerTest {
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(mainMethod, inputState);
 		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
-		manager.computeFixpoints( observer );
+		StateSpace stateSpace = manager.computeFixpoint( mainMethod.getControlFlow(), inputState, observer );
 		
-		Set<ProgramState> result = mainMethod.getFinalStates(inputState, inputState, observer);
+		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
 		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
@@ -65,10 +65,13 @@ public class InterproceduralAnalysisManagerTest {
 	public void testRecursive() throws StateSpaceGenerationAbortedException {
 		Type type = sceneObject.scene().getType("List");
 		
-		IpaAbstractMethod traverseMethod = new IpaAbstractMethod( sceneObject, "main");
 		final String paramName = "@this:";
-		traverseMethod.setControlFlow( getRecursiveProgram(type, paramName, traverseMethod) );
+		IpaAbstractMethod traverseMethod = sceneObject.scene().getMethod("traverse");
 		traverseMethod.markAsRecursive();
+		traverseMethod.setControlFlow(getRecursiveProgram(type, paramName, traverseMethod) );
+		
+		
+		
 		
 		final int startPos = 0;
 		
@@ -76,11 +79,10 @@ public class InterproceduralAnalysisManagerTest {
 		ProgramState inputState = new DefaultProgramState(sceneObject, input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
-		manager.registerToCompute(traverseMethod, inputState);
 		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
-		manager.computeFixpoints( observer );
+		StateSpace stateSpace = manager.computeFixpoint( traverseMethod.getControlFlow(), inputState, observer );
 		
-		Set<ProgramState> result = traverseMethod.getFinalStates(inputState, inputState, observer);
+		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
 		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
 		assertThat( result, contains(expectedState));
