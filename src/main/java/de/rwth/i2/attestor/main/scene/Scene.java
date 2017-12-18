@@ -32,4 +32,6 @@ public interface Scene {
     
     InterproceduralAnalysisManager recursionManager();
 
+    Strategies strategies();
+
 }

@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
-
 public class DefaultScene implements Scene {
 	
 
@@ -21,7 +20,9 @@ public class DefaultScene implements Scene {
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
     private final IpaAbstractMethod.Factory ipaFactory = new IpaAbstractMethod.Factory(this);
+
     private final Options options = new Options();
+    private final Strategies strategies = new Strategies();
 
     private long totalNumberOfStates = 0;
     
@@ -125,4 +126,9 @@ public class DefaultScene implements Scene {
 	public InterproceduralAnalysisManager recursionManager() {
 		return this.recursionManager;
 	}
+    @Override
+    public Strategies strategies() {
+
+        return strategies;
+    }
 }

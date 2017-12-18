@@ -1,21 +1,20 @@
 package de.rwth.i2.attestor.grammar.concretization;
 
-import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NaiveConcretizer implements Concretizer {
+public class FullConcretizationStrategyImpl implements FullConcretizationStrategy {
 
-    private Grammar grammar;
+    private final SingleStepConcretizationStrategy singleStepConcretizationStrategy;
 
-    public NaiveConcretizer(Grammar grammar) {
+    public FullConcretizationStrategyImpl(SingleStepConcretizationStrategy singleStepConcretizationStrategy) {
 
-        this.grammar = grammar;
+        this.singleStepConcretizationStrategy = singleStepConcretizationStrategy;
     }
 
     @Override
@@ -33,12 +32,9 @@ public class NaiveConcretizer implements Concretizer {
             TIntIterator ntEdgeIterator = abstractHc.nonterminalEdges().iterator();
             while (ntEdgeIterator.hasNext()) {
                 int ntEdge = ntEdgeIterator.next();
-                Nonterminal label = abstractHc.labelOf(ntEdge);
-                for (HeapConfiguration rhs : grammar.getRightHandSidesFor(label)) {
-                    HeapConfiguration nextHc = abstractHc.clone()
-                            .builder()
-                            .replaceNonterminalEdge(ntEdge, rhs)
-                            .build();
+                Iterator<HeapConfiguration> nextHcIterator = singleStepConcretizationStrategy.concretize(abstractHc, ntEdge);
+                while(nextHcIterator.hasNext()) {
+                   HeapConfiguration nextHc = nextHcIterator.next();
                     queue.addLast(nextHc);
                 }
             }

@@ -4,11 +4,16 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator;
 import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.concretization.Concretizer;
-import de.rwth.i2.attestor.grammar.concretization.NaiveConcretizer;
+import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
+import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
+import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
+import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.transformers.*;
+import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
@@ -63,11 +68,9 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
         Program program = getPhase(ProgramTransformer.class).getProgram();
 
-        StateSpaceGenerationTransformer transformer = getPhase(StateSpaceGenerationTransformer.class);
-
-        StateRefinementStrategy stateRefinementStrategy = transformer.getStateRefinementStrategy();
-        MaterializationStrategy materializationStrategy = transformer.getMaterializationStrategy();
-        CanonicalizationStrategy canonicalizationStrategy = transformer.getAggressiveCanonicalizationStrategy();
+        StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
+        MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder(this)
                 .setProgram(program)
@@ -86,8 +89,9 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
     private ProgramState determineConcreteInput(ProgramState badInput) {
 
-        Concretizer concretizer = new NaiveConcretizer(grammar);
-        List<HeapConfiguration> concreteBadInput = concretizer.concretize(badInput.getHeap(), 1);
+        SingleStepConcretizationStrategy singleStepConcretizationStrategy = new DefaultSingleStepConcretizationStrategy(grammar);
+        FullConcretizationStrategy fullConcretizationStrategy = new FullConcretizationStrategyImpl(singleStepConcretizationStrategy);
+        List<HeapConfiguration> concreteBadInput = fullConcretizationStrategy.concretize(badInput.getHeap(), 1);
 
         if (concreteBadInput.isEmpty()) {
             throw new IllegalStateException("Could not generate a concrete program state corresponding to abstract counterexample input state.");
