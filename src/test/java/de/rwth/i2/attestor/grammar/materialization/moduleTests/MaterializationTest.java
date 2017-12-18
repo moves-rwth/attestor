@@ -67,7 +67,7 @@ public class MaterializationTest {
     public void testMaterialization() {
 
         HeapConfiguration testInput = hcImplFactory.getMaterializationTest();
-        DefaultProgramState inputConf = new DefaultProgramState(testInput);
+        DefaultProgramState inputConf = new DefaultProgramState(sceneObject, testInput);
 
         ViolationPoints vio = new ViolationPoints("x", "next");
 

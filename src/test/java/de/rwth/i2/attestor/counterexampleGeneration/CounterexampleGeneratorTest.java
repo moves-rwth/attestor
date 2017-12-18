@@ -42,7 +42,7 @@ public class CounterexampleGeneratorTest {
     public void testTrivial() {
 
         HeapConfiguration input = hcFactory.getList();
-        ProgramState initialState = new DefaultProgramState(input.clone());
+        ProgramState initialState = new DefaultProgramState(sceneObject, input.clone());
         Type type = sceneObject.scene().getType("List");
         Program program = getSetNextProgram(type);
 
@@ -179,7 +179,7 @@ public class CounterexampleGeneratorTest {
                         @Override
                         public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
 
-                            ProgramState initialState = new DefaultProgramState(input.getHeap());
+                            ProgramState initialState = new DefaultProgramState(sceneObject, input.getHeap());
                             initialState.setProgramCounter(0);
                             return StateSpaceGenerator.builder(sceneObject)
                                     .addInitialState(initialState)

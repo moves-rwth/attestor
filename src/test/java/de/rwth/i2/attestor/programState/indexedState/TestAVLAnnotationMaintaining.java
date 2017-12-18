@@ -22,8 +22,8 @@ public class TestAVLAnnotationMaintaining {
         SceneObject sceneObject = new MockupSceneObject();
         ExampleIndexedGraphFactory graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
-        IndexedState input = new IndexedState(graphFactory.getInput_AnnotationMaintaining());
-        IndexedState expected = new IndexedState(graphFactory.getExpected_AnnotationMaintaining());
+        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_AnnotationMaintaining());
+        IndexedState expected = new IndexedState(sceneObject, graphFactory.getExpected_AnnotationMaintaining());
 
         BalancednessStateRefinementStrategy strategy = new BalancednessStateRefinementStrategy(sceneObject);
         strategy.refine(new Skip(sceneObject, 0), input);

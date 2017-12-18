@@ -53,7 +53,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
 
-        ProgramState inputState = new DefaultProgramState(getInputGraph());
+        ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
         ProgramState res = canonizer.canonicalize(inputState);
         assertEquals(expectedFullAbstraction(lhs), res);
     }
@@ -122,7 +122,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
             builder.addTentacle(nodes.get(i));
         }
         hc = builder.build().build();
-        return new DefaultProgramState(hc);
+        return new DefaultProgramState(sceneObject, hc);
     }
 
 }

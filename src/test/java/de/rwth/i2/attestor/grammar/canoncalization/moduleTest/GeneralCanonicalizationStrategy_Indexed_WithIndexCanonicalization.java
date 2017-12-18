@@ -80,7 +80,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
-        ProgramState inputState = new DefaultProgramState(getInputGraph());
+        ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
         ProgramState res = canonizer.canonicalize(inputState);
 
         assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
@@ -187,7 +187,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
                 .build()
                 .build();
 
-        return new IndexedState(hc);
+        return new IndexedState(sceneObject, hc);
     }
 
     private List<IndexSymbol> getExpectedIndex() {

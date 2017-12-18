@@ -73,7 +73,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
-        ProgramState inputState = new DefaultProgramState(getSimpleGraph());
+        ProgramState inputState = new DefaultProgramState(sceneObject, getSimpleGraph());
         ProgramState res = canonizer.canonicalize(inputState);
 
         assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
@@ -158,7 +158,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
                 .build()
                 .build();
 
-        return new IndexedState(hc);
+        return new IndexedState(sceneObject, hc);
     }
 
 

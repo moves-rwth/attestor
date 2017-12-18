@@ -50,7 +50,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
 
-        ProgramState inputState = new DefaultProgramState(getSimpleGraph());
+        ProgramState inputState = new DefaultProgramState(sceneObject, getSimpleGraph());
         ProgramState res = canonizer.canonicalize(inputState);
 
         assertEquals(expectedSimpleAbstraction(lhs), res);
@@ -98,6 +98,6 @@ public class GeneralCanonicalizationTest_Default_Simple {
                 .addTentacle(nodes.get(1))
                 .addTentacle(nodes.get(0));
         hc = builder.build().build();
-        return new DefaultProgramState(hc);
+        return new DefaultProgramState(sceneObject, hc);
     }
 }

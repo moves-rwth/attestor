@@ -49,7 +49,7 @@ public class InvokeStmtTest {
                 = new InstanceInvokeHelper(sceneObject, var, new ArrayList<>());
 
         stmt = new InvokeStmt(sceneObject, method, invokePrepare, 1);
-        inputState = new DefaultProgramState(hcFactory.getListAndConstants());
+        inputState = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
         inputState.prepareHeap();
         inputGraph = inputState.getHeap();
     }
@@ -64,7 +64,7 @@ public class InvokeStmtTest {
             assertNotSame("ensure clone on state level", resState, inputState);
             assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap());
             assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap());
-            DefaultProgramState tmp = new DefaultProgramState(hcFactory.getListAndConstants());
+            DefaultProgramState tmp = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
             tmp.prepareHeap();
             HeapConfiguration expectedGraph = tmp.getHeap();
             assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph);

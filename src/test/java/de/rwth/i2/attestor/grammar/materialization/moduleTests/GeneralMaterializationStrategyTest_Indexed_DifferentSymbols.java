@@ -76,10 +76,10 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 
         HeapConfiguration inputGraph = getInput();
-        ProgramState inputState = new IndexedState(inputGraph).prepareHeap();
+        ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
 
         HeapConfiguration expectedGraph = getExpected();
-        ProgramState expectedState = new IndexedState(expectedGraph).prepareHeap();
+        ProgramState expectedState = new IndexedState(sceneObject, expectedGraph).prepareHeap();
 
         Collection<ProgramState> result = materializer.materialize(inputState, inputViolationPoint);
 

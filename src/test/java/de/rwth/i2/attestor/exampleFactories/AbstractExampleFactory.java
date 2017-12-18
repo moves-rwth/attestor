@@ -56,7 +56,7 @@ public abstract class AbstractExampleFactory extends SceneObject {
 
     public ProgramState getInitialState() {
 
-        return new DefaultProgramState(getInput());
+        return new DefaultProgramState(this, getInput());
     }
 
 }

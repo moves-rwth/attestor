@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrat
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
 import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.inclusion.MinDistanceInclusionStrategy;
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionImpl;
 import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
@@ -22,7 +22,6 @@ import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
@@ -161,14 +160,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     }
 
     private void setupInclusionCheck() {
-
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        if (abstractionDistance > 0 && !scene().options().isIndexedMode()) {
-            DefaultProgramState.setHeapInclusionStrategy(new MinDistanceInclusionStrategy(grammar));
-            logger.debug("Setup inclusion strategy to isomorphism checking with materialization.");
-        } else {
-            logger.debug("Setup inclusion strategy to isomorphism checking.");
-        }
+        scene().strategies().setLanguageInclusionStrategy(new LanguageInclusionImpl(this));
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
