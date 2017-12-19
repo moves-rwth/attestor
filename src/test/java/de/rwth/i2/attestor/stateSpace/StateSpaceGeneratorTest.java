@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.DefaultSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.types.Type;

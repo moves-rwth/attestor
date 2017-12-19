@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.Strategies;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.DefaultSymbolicExecutionObserver;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 

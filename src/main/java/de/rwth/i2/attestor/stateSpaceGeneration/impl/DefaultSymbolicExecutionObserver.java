@@ -1,6 +1,7 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * The options passed to every Semantics object by a state space generator to configure the symbolic execution.

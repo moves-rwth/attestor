@@ -220,8 +220,8 @@ public class StateSpaceGenerator extends SceneObject {
     }
 
     /**
-     * Attempts to generate a StateSpace according to the
-     * underlying analysis.
+     * Attempts to generate a StateSpace using the underlying strategies.
+     * The result will be stored in a state space whose type is determined by the builder.
      *
      * @return The generated StateSpace.
      */
@@ -268,9 +268,6 @@ public class StateSpaceGenerator extends SceneObject {
         return stateSpace;
     }
 
-    /**
-     * @return true iff further states can and should be generated.
-     */
     private boolean hasUnexploredStates() {
 
         return !unexploredConfigurations.isEmpty();
@@ -323,7 +320,8 @@ public class StateSpaceGenerator extends SceneObject {
     }
 
     /**
-     * Computes canonical successors of the given program state.
+     * Computes successors of the given program state by executing a single step of the
+     * abstract program semantics.
      *
      * @param semantics The statement that should be executed.
      * @param state     The program state whose successor states shall be computed.
@@ -339,6 +337,14 @@ public class StateSpaceGenerator extends SceneObject {
         }
     }
 
+    /**
+     * Computes the unique abstract program state of a given state.
+     * As an optimization, no abstraction may be performed for certain program statements.
+     *
+     * @param semantics The statement may influence the abstraction.
+     * @param state     The program state that should be abstracted.
+     * @return The fully abstract state (if the semantics did not prevent abstraction).
+     */
     private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
 
         if (semantics.permitsCanonicalization()) {
