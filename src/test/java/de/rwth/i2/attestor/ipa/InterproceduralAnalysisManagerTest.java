@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.ipa;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
 
 import java.util.*;
 
@@ -58,7 +57,9 @@ public class InterproceduralAnalysisManagerTest {
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
 		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
-		assertThat( result, contains(expectedState));
+
+		assertEquals( 1, result.size() );
+		assertEquals(expectedState.getHeap(), result.iterator().next().getHeap());
 	}
 	
 	@Test
@@ -85,7 +86,9 @@ public class InterproceduralAnalysisManagerTest {
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
 		final ProgramState expectedState = new DefaultProgramState(sceneObject, expectedHeap).prepareHeap();
-		assertThat( result, contains(expectedState));
+		
+		assertEquals( 1, result.size() );
+		assertEquals(expectedState.getHeap(), result.iterator().next().getHeap());
 	}
 	
 	private List<Semantics> getNextProgram( Type type ){
