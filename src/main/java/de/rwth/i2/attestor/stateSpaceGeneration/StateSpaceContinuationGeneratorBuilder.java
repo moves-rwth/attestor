@@ -123,7 +123,6 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No post-processing strategy.");
         }
 
-        stateSpaceToContinue.resetLookupTable();
         generator.stateSpace = stateSpaceToContinue;
 
         for (ProgramState state : statesToContinue ) {

@@ -3,10 +3,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 import java.util.*;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
@@ -237,9 +234,4 @@ final class CounterexampleStateSpace implements StateSpace {
         return false;
     }
 
-	@Override
-	public void resetLookupTable() {
-		// TODO Auto-generated method stub
-		
-	}
 }

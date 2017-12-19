@@ -89,6 +89,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 	}
 	
 	public void registerAsDependentOf( ProgramState dependent, IpaAbstractMethod method, ProgramState input	) {
+		
 		MethodAndInput precondition = new MethodAndInput(method, input);
 		
 		if( !statesCallingInput.containsKey(precondition) ) {
@@ -102,24 +103,12 @@ public class InterproceduralAnalysisManager extends SceneObject{
 											throws StateSpaceGenerationAbortedException {
 		
 		StateSpace mainStateSpace = observer.generateStateSpace( mainProgram.getControlFlow(), initialState );
-		MethodAndInput mainInput = new MethodAndInput(mainProgram, initialState);
-		contractComputedByStateSpace.put(mainStateSpace, mainInput );
-		statesCallingInput.put(mainInput, new LinkedHashSet<>());
+		registerStateSpace(mainProgram, initialState, mainStateSpace);
 		
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
-				IpaAbstractMethod method = methodAndInput.method;
-				
-				Program program = method.getControlFlow();
-				ProgramState inputState = methodAndInput.input;
-				
-				StateSpace stateSpace = observer.generateStateSpace( program, inputState );
-				
-				//extract and store the generated contract
-				List<HeapConfiguration> finalConfigs = new ArrayList<>();
-				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
-				method.contracts.addPostconditionsTo( inputState.getHeap(), finalConfigs );
+				StateSpace stateSpace = computeStateSpace(observer, methodAndInput);
 				
 				//store the mapping from stateSpace to input for later reference
 				contractComputedByStateSpace.put(stateSpace, methodAndInput);
@@ -127,16 +116,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 				statesToContinue.addAll( statesCallingInput.get(methodAndInput) );
 			}else {
 				ProgramState state = statesToContinue.pop();
-				StateSpace stateSpace = state.getContainingStateSpace();
-				MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
-				IpaAbstractMethod method = contractAltered.method;
-				//update stateSpace
-				observer.continueStateSpace(stateSpace, method.getControlFlow(), state);
-				
-				//adapt the corresponding contract
-				List<HeapConfiguration> finalConfigs = new ArrayList<>();
-				stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
-				method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );
+				MethodAndInput contractAltered = continueStateSpace(observer, state);
 				
 				//alert states, that the result for the method-input pair changed
 				statesToContinue.addAll( statesCallingInput.get(contractAltered) );
@@ -144,5 +124,43 @@ public class InterproceduralAnalysisManager extends SceneObject{
 		}
 		
 		return mainStateSpace;
+	}
+
+	private MethodAndInput continueStateSpace(SymbolicExecutionObserver observer, ProgramState state)
+			throws StateSpaceGenerationAbortedException {
+		StateSpace stateSpace = state.getContainingStateSpace();
+		MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
+		IpaAbstractMethod method = contractAltered.method;
+		//update stateSpace
+		observer.continueStateSpace(stateSpace, method.getControlFlow(), state);
+		
+		//adapt the corresponding contract
+		List<HeapConfiguration> finalConfigs = new ArrayList<>();
+		stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
+		method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );
+		return contractAltered;
+	}
+
+	private StateSpace computeStateSpace(SymbolicExecutionObserver observer, MethodAndInput methodAndInput)
+			throws StateSpaceGenerationAbortedException {
+		IpaAbstractMethod method = methodAndInput.method;
+		
+		Program program = method.getControlFlow();
+		ProgramState inputState = methodAndInput.input;
+		
+		StateSpace stateSpace = observer.generateStateSpace( program, inputState );
+		
+		//extract and store the generated contract
+		List<HeapConfiguration> finalConfigs = new ArrayList<>();
+		stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
+		method.contracts.addPostconditionsTo( inputState.getHeap(), finalConfigs );
+		return stateSpace;
+	}
+
+	private void registerStateSpace(IpaAbstractMethod mainProgram, ProgramState initialState,
+			StateSpace mainStateSpace) {
+		MethodAndInput mainInput = new MethodAndInput(mainProgram, initialState);
+		contractComputedByStateSpace.put(mainStateSpace, mainInput );
+		statesCallingInput.put( mainInput, new LinkedHashSet<>() );
 	}
 }

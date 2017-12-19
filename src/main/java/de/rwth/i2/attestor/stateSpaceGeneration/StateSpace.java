@@ -15,8 +15,6 @@ public interface StateSpace {
     TIntSet getInitialStateIds();
 
     Set<ProgramState> getFinalStates();
-    
-    void resetLookupTable();
 
     TIntSet getFinalStateIds();
 

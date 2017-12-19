@@ -68,7 +68,7 @@ public class InternalStateSpace implements StateSpace {
 
     private void initLookupTable() {
 
-        if (stateIdLookupTable == null) {
+        if (stateIdLookupTable == null || stateIdLookupTable.size() < getStates().size() ) {
             stateIdLookupTable = new TIntObjectHashMap<>(getStates().size());
             for (ProgramState state : getStates()) {
                 stateIdLookupTable.put(state.getStateSpaceId(), state);
@@ -76,9 +76,7 @@ public class InternalStateSpace implements StateSpace {
         }
     }
     
-    public void resetLookupTable(){
-    	stateIdLookupTable = null;
-    }
+
 
     public TIntSet getInitialStateIds() {
 

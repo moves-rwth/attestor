@@ -60,7 +60,24 @@ public class IpaAbstractMethod extends AbstractMethod {
 
         return result;
     }
-
+    
+    /**
+     * Splits the input heap into the reachable fragment, which is the part of the heap visible for the method,
+     * and the remaining fragment, where the reachable fragment is replaced by a special nonterminal.
+     * The reachable fragment serves as precondition to the method call. 
+     * This method then looks up or computes the corresponding postconditions and applies them to the remaining fragment.
+     * 
+     * In case this method is recursive, an empty result may be returned and the calling state is registered for continuation
+     * once the postconditions for this contract changes.
+     * 
+     * With the setting isReuseResultsEnabled() contracts are always recomputed
+     * 
+     * @param input the program state serving as input to the method, i.e. with parameters and base value in place
+     * @param callingState the program state on which the call statement is executed. 
+     * @param observer the current semantics observer used to generate the sub-stateSpaces
+     * @return the list of resulting states
+     * @throws StateSpaceGenerationAbortedException
+     */
     public List<HeapConfiguration> getIPAResult(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
@@ -96,7 +113,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 		
 		InterproceduralAnalysisManager recursionManager = scene().recursionManager();
 		
-		final ProgramState precoditionState = input.shallowCopyWithUpdateHeap(reachableFragment);
+		final ProgramState precoditionState = scene().createProgramState(reachableFragment);
 		
 		recursionManager.registerToCompute(this, precoditionState);
 		recursionManager.registerAsDependentOf(callingState, this, precoditionState);
