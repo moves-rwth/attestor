@@ -98,10 +98,13 @@ public class InterproceduralAnalysisManager extends SceneObject{
 		statesCallingInput.get(precondition).add(dependent);
 	}
 	
-	public StateSpace computeFixpoint( Program mainProgram, ProgramState initialState, SymbolicExecutionObserver observer ) 
+	public StateSpace computeFixpoint( IpaAbstractMethod mainProgram, ProgramState initialState, SymbolicExecutionObserver observer ) 
 											throws StateSpaceGenerationAbortedException {
 		
-		StateSpace mainStateSpace = observer.generateStateSpace( mainProgram, initialState );
+		StateSpace mainStateSpace = observer.generateStateSpace( mainProgram.getControlFlow(), initialState );
+		MethodAndInput mainInput = new MethodAndInput(mainProgram, initialState);
+		contractComputedByStateSpace.put(mainStateSpace, mainInput );
+		statesCallingInput.put(mainInput, new LinkedHashSet<>());
 		
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {

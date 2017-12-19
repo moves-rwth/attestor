@@ -53,7 +53,7 @@ public class InterproceduralAnalysisManagerTest {
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(mainMethod, inputState);
 		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
-		StateSpace stateSpace = manager.computeFixpoint( mainMethod.getControlFlow(), inputState, observer );
+		StateSpace stateSpace = manager.computeFixpoint( mainMethod, inputState, observer );
 		
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
@@ -80,7 +80,7 @@ public class InterproceduralAnalysisManagerTest {
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
-		StateSpace stateSpace = manager.computeFixpoint( traverseMethod.getControlFlow(), inputState, observer );
+		StateSpace stateSpace = manager.computeFixpoint( traverseMethod, inputState, observer );
 		
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
