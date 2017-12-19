@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.SummaryExporter;
+import de.rwth.i2.attestor.io.jsonExport.report.JSONOptionExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
@@ -92,10 +93,13 @@ public class ReportOutputPhase extends AbstractPhase {
         // Export the initial heap configurations (consequtively numbered)
         exportInitialHCs(outputDirectory);
         // Copy the settingsfile
-        copySettingsFile();
+        copySettingsFile(outputDirectory);
+        // Export _all_ options
+        exportOptions(outputDirectory);
+
 
         // Copy input class definition
-        copyInputProgram();
+        copyInputProgram(outputDirectory);
 
         // Export grammar (without preceding elements!!)
         exportGrammar(outputDirectory);
@@ -109,17 +113,25 @@ public class ReportOutputPhase extends AbstractPhase {
         exportStateSpace(outputDirectory);
     }
 
-    private void copySettingsFile() throws IOException {
+    private void exportOptions(String outputDirectory) throws IOException {
+        FileUtils.createDirectories(outputDirectory);
+        FileWriter writer = new FileWriter(outputDirectory + File.separator + "options.json");
+        JSONOptionExporter exporter = new JSONOptionExporter(writer);
+        exporter.exportForReport(scene());
+        writer.close();
+    }
+
+    private void copySettingsFile(String location) throws IOException {
         Path sourcePath = FileSystems.getDefault().getPath(inputSettings.getPathToSettingsFile(), "");
-        Path targetPath = FileSystems.getDefault().getPath(outputSettings.getFolderForReportOutput() +File.separator + "attestorInput", "settings.json");
+        Path targetPath = FileSystems.getDefault().getPath(location + File.separator + "attestorInput", "settings.json");
 
         Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
 
     }
 
-    private void copyInputProgram() throws IOException {
+    private void copyInputProgram(String location) throws IOException {
         Path sourcePath = FileSystems.getDefault().getPath(inputSettings.getClasspath(), inputSettings.getClassName() + ".java");
-        Path targetPath = FileSystems.getDefault().getPath(outputSettings.getFolderForReportOutput() +File.separator + "attestorInput", "analysedClass.java");
+        Path targetPath = FileSystems.getDefault().getPath(location + File.separator + "attestorInput", "analysedClass.java");
 
         Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
     }
