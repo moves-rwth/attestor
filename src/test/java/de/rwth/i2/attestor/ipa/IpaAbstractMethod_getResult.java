@@ -37,7 +37,14 @@ public class IpaAbstractMethod_getResult {
         ProgramState input = createInput();
         HeapConfiguration expected = createExpected();
 
-        assertThat(ipa.getIPAResult(input, new MockupSymbolicExecutionObserver(sceneObject)), contains(expected));
+        FragmentedHeapConfiguration fragmentedHeapConfiguration = new FragmentedHeapConfiguration(
+                sceneObject, input.getHeap(), "testMethod"
+        );
+
+        assertThat(
+                ipa.getIPAResult(input, new MockupSymbolicExecutionObserver(sceneObject), fragmentedHeapConfiguration),
+                contains(expected)
+        );
     }
 
 

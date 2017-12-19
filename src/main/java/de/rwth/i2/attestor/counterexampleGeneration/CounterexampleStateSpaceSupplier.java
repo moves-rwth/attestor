@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import de.rwth.i2.attestor.ipa.FragmentedHeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
@@ -17,7 +18,9 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
+
     private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
+    private FragmentedHeapConfiguration fragmentedHcOfPreviousPrecdure = null;
 
     CounterexampleStateSpaceSupplier(StateCanonicalizationStrategy canonicalizationStrategy) {
 
@@ -35,6 +38,11 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         this.invokeObserverOfPreviousProcedure = observer;
     }
 
+    void setFragmentedHcOfPreviousPrecdure(FragmentedHeapConfiguration fragmentedHc) {
+
+        this.fragmentedHcOfPreviousPrecdure = fragmentedHc;
+    }
+
     @Override
     public StateSpace get() {
 
@@ -49,7 +57,8 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
                 canonicalizationStrategy,
                 requiredFinalStates,
                 invokeCleanupOfPreviousProcedure,
-                invokeObserverOfPreviousProcedure
+                invokeObserverOfPreviousProcedure,
+                fragmentedHcOfPreviousPrecdure
         );
 
         finalStatesOfPreviousProcedure = null;

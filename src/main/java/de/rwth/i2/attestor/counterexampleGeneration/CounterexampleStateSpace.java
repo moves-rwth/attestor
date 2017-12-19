@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import de.rwth.i2.attestor.ipa.FragmentedHeapConfiguration;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
@@ -28,18 +29,21 @@ final class CounterexampleStateSpace implements StateSpace {
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
     private final SymbolicExecutionObserver invokeObserver;
+    private final FragmentedHeapConfiguration fragmentedHeapConfiguration;
     private final Set<ProgramState> finalStates = new LinkedHashSet<>();
     private ProgramState initialState;
 
     CounterexampleStateSpace(StateCanonicalizationStrategy canonicalizationStrategy,
                              Set<ProgramState> requiredFinalStates,
                              InvokeCleanup invokeCleanup,
-                             SymbolicExecutionObserver invokeObserver) {
+                             SymbolicExecutionObserver invokeObserver,
+                             FragmentedHeapConfiguration fragmentedHeapConfiguration) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.requiredFinalStates = requiredFinalStates;
         this.invokeCleanup = invokeCleanup;
         this.invokeObserver = invokeObserver;
+        this.fragmentedHeapConfiguration = fragmentedHeapConfiguration;
 
         assert !requiredFinalStates.isEmpty();
     }
@@ -194,7 +198,14 @@ final class CounterexampleStateSpace implements StateSpace {
                 throw new IllegalStateException("Not sufficiently materialized state found.");
             }
         }
-        return abstractState;
+
+        if(fragmentedHeapConfiguration != null) {
+            return abstractState.shallowCopyWithUpdateHeap(
+                    fragmentedHeapConfiguration.restore(abstractState.getHeap())
+            );
+        } else {
+            return abstractState;
+        }
     }
 
     @Override
