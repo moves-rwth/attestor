@@ -402,4 +402,14 @@ public class InternalStateSpace implements StateSpace {
         };
     }
 
+	@Override
+	public void transformTerminalStates() {
+		for( ProgramState state : getStates() ){
+			if( getControlFlowSuccessorsOf(state).isEmpty() && getMaterializationSuccessorsOf(state).isEmpty() ){
+				addArtificialInfPathsTransition(state);
+			}
+		}
+		
+	}
+
 }
