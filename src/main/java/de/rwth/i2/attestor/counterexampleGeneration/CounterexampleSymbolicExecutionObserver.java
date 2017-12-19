@@ -76,7 +76,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
 
     private void updateFragmentedHc(FragmentedHeapConfiguration fragmentedHc) {
 
-        stateSpaceSupplier.setFragmentedHcOfPreviousPrecdure(fragmentedHc);
+        stateSpaceSupplier.setFragmentedHcOfPreviousProcedure(fragmentedHc);
     }
 
     @Override

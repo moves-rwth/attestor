@@ -20,7 +20,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
 
     private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
-    private FragmentedHeapConfiguration fragmentedHcOfPreviousPrecdure = null;
+    private FragmentedHeapConfiguration fragmentedHcOfPreviousProcedure = null;
 
     CounterexampleStateSpaceSupplier(StateCanonicalizationStrategy canonicalizationStrategy) {
 
@@ -38,9 +38,9 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         this.invokeObserverOfPreviousProcedure = observer;
     }
 
-    void setFragmentedHcOfPreviousPrecdure(FragmentedHeapConfiguration fragmentedHc) {
+    void setFragmentedHcOfPreviousProcedure(FragmentedHeapConfiguration fragmentedHc) {
 
-        this.fragmentedHcOfPreviousPrecdure = fragmentedHc;
+        this.fragmentedHcOfPreviousProcedure = fragmentedHc;
     }
 
     @Override
@@ -58,7 +58,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
                 requiredFinalStates,
                 invokeCleanupOfPreviousProcedure,
                 invokeObserverOfPreviousProcedure,
-                fragmentedHcOfPreviousPrecdure
+                fragmentedHcOfPreviousProcedure
         );
 
         finalStatesOfPreviousProcedure = null;
