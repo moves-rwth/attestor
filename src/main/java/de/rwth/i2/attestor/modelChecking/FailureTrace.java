@@ -60,7 +60,7 @@ public class FailureTrace implements Trace {
         Iterator<ProgramState> iterator = stateTrace.iterator();
         while (iterator.hasNext()) {
             ProgramState s = iterator.next();
-            if (s.getStateSpaceId() == state.getStateSpaceId()) {
+            if(state.isSubsumedBy(s)) {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 }

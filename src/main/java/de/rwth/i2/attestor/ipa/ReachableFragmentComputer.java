@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.Type;
@@ -46,7 +45,7 @@ public class ReachableFragmentComputer extends SceneObject {
      */
     protected Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> prepareInput() {
 
-        this.reachableFragmentBuilder = new InternalHeapConfiguration().builder();
+        this.reachableFragmentBuilder = input.getEmpty().builder();
         this.remainingFragmentBuilder = input.clone().builder();
 
         idMapping = new LinkedHashMap<>();

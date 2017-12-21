@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.types.Type;
@@ -63,6 +64,11 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     public HeapConfiguration clone() {
 
         return new HeapConfigurationPair(this);
+    }
+
+    @Override
+    public HeapConfiguration getEmpty() {
+        return new InternalHeapConfiguration();
     }
 
     @Override

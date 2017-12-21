@@ -161,6 +161,11 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
     }
 
     @Override
+    public HeapConfiguration getEmpty() {
+        return new InternalHeapConfiguration();
+    }
+
+    @Override
     public HeapConfigurationBuilder builder() {
 
         if (builder == null) {

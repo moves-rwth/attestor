@@ -140,11 +140,12 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
     @Override
     public HeapConfigurationBuilder replaceNonterminalEdge(int ntEdge, HeapConfiguration replacement) {
 
-        int partnerEdge = ntEdgeRelation.get(ntEdge);
         this.actualBuilder.replaceNonterminalEdge(ntEdge, replacement);
-        this.partnerBuilder.replaceNonterminalEdge(partnerEdge, replacement);
-
-        this.hc.updateNtRelation();
+        if(ntEdgeRelation.containsKey(ntEdge)) {
+            int partnerEdge = ntEdgeRelation.get(ntEdge);
+            this.partnerBuilder.replaceNonterminalEdge(partnerEdge, replacement);
+            this.hc.updateNtRelation();
+        }
 
         return this;
     }
