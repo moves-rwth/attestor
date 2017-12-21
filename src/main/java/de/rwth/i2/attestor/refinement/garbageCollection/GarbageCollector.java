@@ -41,6 +41,9 @@ public class GarbageCollector implements StateRefinementStrategy {
             return state;
         }
 
+        // ensure that this state is not a shallow copy of a state already in the state space
+        state = state.clone();
+
         HeapConfiguration heap = state.getHeap();
         ReachabilityChecker checker = new ReachabilityChecker(
                 state.getHeap(),

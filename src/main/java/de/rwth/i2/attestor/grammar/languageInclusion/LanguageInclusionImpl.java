@@ -94,7 +94,7 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
             Nonterminal label = hc.labelOf(ntEdge);
             TIntArrayList att = hc.attachedNodesOf(ntEdge);
             for (int i = 0; i < label.getRank(); i++) {
-                if (label.isReductionTentacle(i)) {
+                if (!label.isReductionTentacle(i)) {
                     int node = att.get(i);
                     TIntArrayList attVars = hc.attachedVariablesOf(node);
                     for (int j = 0; j < attVars.size(); j++) {

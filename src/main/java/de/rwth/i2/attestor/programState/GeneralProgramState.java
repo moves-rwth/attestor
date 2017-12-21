@@ -46,7 +46,7 @@ public abstract class GeneralProgramState extends SceneObject implements Program
     /**
      * Id of this state in a state space
      */
-    private int stateSpaceId = -1;
+    private int stateSpaceId = INVALID_STATE_SPACE_ID;
 
     /**
      * Initializes a state with the initial program location 0.
