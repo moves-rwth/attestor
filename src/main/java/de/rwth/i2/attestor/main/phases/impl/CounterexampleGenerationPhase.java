@@ -60,6 +60,8 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                 try {
                     checkCounterexample(formula, trace);
                 } catch (Exception e) {
+                    System.out.println("REMOVE!!!");
+                    e.printStackTrace();
                     allCounterexamplesDetected = false;
                     logger.error("Could not construct a non-spurious counterexample for formula:");
                     logger.error(formula);
@@ -83,6 +85,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonicalizationStrategy(canonicalizationStrategy)
+                .setStateRefinementStrategy(scene().strategies().getStateRefinementStrategy())
                 .build();
 
         ProgramState badInput = generator.generate();

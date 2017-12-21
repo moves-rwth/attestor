@@ -61,7 +61,6 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
 
     private void updateMethod(AbstractMethod method, ProgramState input) {
 
-        method.setReuseResults(false);
         if (requiredFinalState != null) {
             requiredNoOfFinalStates = 1;
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(
@@ -72,6 +71,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
             requiredNoOfFinalStates = finalStates.size();
         }
+        method.setReuseResults(false);
     }
 
     private void updateFragmentedHc(FragmentedHeapConfiguration fragmentedHc) {
