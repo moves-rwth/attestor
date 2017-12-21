@@ -21,6 +21,7 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
     public LanguageInclusionImpl(SceneObject sceneObject) {
         super(sceneObject);
 
+        //this.canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
         this.canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
         this.singleStepConcretizationStrategy = scene().strategies().getSingleStepConcretizationStrategy();
     }
@@ -42,10 +43,16 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
 
         HeapConfiguration canonicalLeft = canonicalizationStrategy.canonicalize(left);
 
-        if(scene().options().getAbstractionDistance() == 0 || scene().options().isIndexedMode()) {
-            return canonicalLeft.equals(right);
+        if(canonicalLeft.equals(right)) {
+            return true;
         }
 
+        if(scene().options().getAbstractionDistance() == 0 || scene().options().isIndexedMode()) {
+            return false;
+        }
+
+        // if abstraction distance is 1, we might have missed some abstraction. Hence, we have to concretize
+        // some edges of the heap configuration on the right-hand side to check language inclusion.
         TIntArrayList criticalEdges = computeCriticalEdges(right);
         return subsumes(canonicalLeft, right, criticalEdges);
     }

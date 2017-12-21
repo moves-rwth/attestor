@@ -99,13 +99,8 @@ public final class CounterexampleGenerator extends SceneObject {
                 .setBreadthFirstSearchEnabled(true)
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
                 .setExplorationStrategy((s, sp) -> {
-                    Semantics semantics = program.getStatement(s.getProgramCounter());
                     if (trace.containsSubsumingState(s)) { // check the simple case first
                         return true;
-                    }
-                    if (semantics.permitsCanonicalization()) {
-                        ProgramState canon = canonicalizationStrategy.canonicalize(s);
-                        return trace.containsSubsumingState(canon);
                     }
                     return false;
                 })
