@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.scene.Options;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -325,7 +324,7 @@ public class SettingsFileReader {
                     ltlFormula.toPNF();
                     mc.addFormula(ltlFormula);
                 } catch (Exception e) {
-                    logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
+                    logger.error("The input " + formula + " is not a valid LTL formula. Skipping it.");
 
                 }
             }

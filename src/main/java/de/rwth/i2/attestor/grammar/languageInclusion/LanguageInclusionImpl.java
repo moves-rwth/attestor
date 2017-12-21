@@ -21,7 +21,6 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
     public LanguageInclusionImpl(SceneObject sceneObject) {
         super(sceneObject);
 
-        //this.canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
         this.canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
         this.singleStepConcretizationStrategy = scene().strategies().getSingleStepConcretizationStrategy();
     }
