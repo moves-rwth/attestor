@@ -31,7 +31,20 @@ public class IpaAbstractMethod extends AbstractMethod {
     public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
 
         try {
-            return getResultStates(input, observer);
+            HeapConfiguration currentConfig = input.getHeap();
+            FragmentedHeapConfiguration fragmentedHc = new FragmentedHeapConfiguration(
+                    this, currentConfig, this.toString()
+            );
+            observer.update(fragmentedHc, input); // this is a hack until the IPA is complete.
+
+            Set<ProgramState> result = new LinkedHashSet<>();
+            for (HeapConfiguration postConfig : getContractResult(input, observer, fragmentedHc)) {
+                ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
+                state.setProgramCounter(0);
+                result.add(state);
+            }
+
+            return result;
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("No contract found");
         }
@@ -67,6 +80,28 @@ public class IpaAbstractMethod extends AbstractMethod {
         }
 
         return result;
+    }
+
+    List<HeapConfiguration> getContractResult(ProgramState input, SymbolicExecutionObserver observer,
+                                         FragmentedHeapConfiguration fragmentedHc)
+            throws StateSpaceGenerationAbortedException {
+
+        HeapConfiguration reachableFragment = fragmentedHc.getReachablePart().clone();
+        HeapConfiguration remainingFragment = fragmentedHc.getRemainingPart().clone();
+        int placeholderPos = fragmentedHc.getEdgeForReachablePart();
+
+        List<HeapConfiguration> postconditions;
+
+        if(!contracts.hasMatchingPrecondition(reachableFragment)) {
+            throw new IllegalStateException("Could not find matching contract.");
+        }
+
+        int[] reordering = contracts.getReordering(reachableFragment);
+        remainingFragment = adaptExternalOrdering(reachableFragment, remainingFragment,
+                placeholderPos, reordering);
+        postconditions = contracts.getPostconditions(reachableFragment);
+
+        return applyContract(remainingFragment, placeholderPos, postconditions);
     }
 
     List<HeapConfiguration> getIPAResult(ProgramState input, SymbolicExecutionObserver observer,

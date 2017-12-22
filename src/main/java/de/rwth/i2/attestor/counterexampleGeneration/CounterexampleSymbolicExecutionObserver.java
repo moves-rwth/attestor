@@ -67,7 +67,9 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
                     Collections.singleton(requiredFinalState)
             );
         } else {
+            method.setReuseResults(true);
             Set<ProgramState> finalStates = method.getFinalStates(input, this);
+
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
             requiredNoOfFinalStates = finalStates.size();
         }

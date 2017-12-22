@@ -60,11 +60,10 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                 try {
                     checkCounterexample(formula, trace);
                 } catch (Exception e) {
-                    System.out.println("REMOVE!!!");
-                    e.printStackTrace();
                     allCounterexamplesDetected = false;
                     logger.error("Could not construct a non-spurious counterexample for formula:");
                     logger.error(formula);
+                    logger.error("Cause: " + e.getMessage());
                 }
             }
         }
