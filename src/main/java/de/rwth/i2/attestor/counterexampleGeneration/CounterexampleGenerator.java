@@ -104,7 +104,7 @@ public final class CounterexampleGenerator extends SceneObject {
                 .setBreadthFirstSearchEnabled(true)
                 .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
                 .setExplorationStrategy((s, sp) -> {
-                    if (trace.containsSubsumingState(s)) { // check the simple case first
+                    if (trace.containsSubsumingState(s)) {
                         return true;
                     }
                     return false;
