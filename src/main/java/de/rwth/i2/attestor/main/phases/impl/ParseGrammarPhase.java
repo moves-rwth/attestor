@@ -164,17 +164,6 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
     /**
      * Creates the rules of a graph grammar from a given JSONArray.
      *
-     * @return A mapping explicitly containing the rules by mapping rule's left-hand sides (nonterminals)
-     * to right-hand sides (heap configurations).
-     */
-    private Map<Nonterminal, Collection<HeapConfiguration>> parseRules() {
-
-        return parseRules();
-    }
-
-    /**
-     * Creates the rules of a graph grammar from a given JSONArray.
-     *
      * @param array A JSONArray that stores the grammar rules.
      * @return A mapping explicitly containing the rules by mapping rule's left-hand sides (nonterminals)
      * to right-hand sides (heap configurations).
