@@ -1,14 +1,20 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.impl.*;
+import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
+import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.DefaultScene;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -101,6 +107,19 @@ public class Attestor {
                 .getStateSpace()
                 .getFinalStates()
                 .size();
+    }
+
+    public Map<LTLFormula, ProgramState> getCounterexamples() {
+        CounterexampleTransformer transformer = registry.getMostRecentPhase(CounterexampleTransformer.class);
+        HashMap<LTLFormula, ProgramState> result = new HashMap<>();
+        for(LTLFormula formula : transformer.getFormulasWithCounterexamples()) {
+            result.put(formula, transformer.getInputOf(formula));
+        }
+        return result;
+    }
+
+    public boolean hasAllLTLSatisfied() {
+        return registry.getMostRecentPhase(ModelCheckingResultsTransformer.class).hasAllLTLSatisfied();
     }
 
     private void printVersion() {
