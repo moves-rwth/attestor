@@ -72,8 +72,13 @@ public final class CounterexampleGenerator extends SceneObject {
             StateSpaceGenerator generator = setupStateSpaceGenerator();
             StateSpace stateSpace = generator.generate();
 
+            Set<ProgramState> finalStates = stateSpace.getFinalStates();
+
+            if(finalStates.isEmpty()) {
+                throw new IllegalStateException("The abstract counterexample trace is spurious. There is no corresponding concrete execution.");
+            }
+
             Iterator<ProgramState> iterator = stateSpace.getFinalStates().iterator();
-            assert iterator.hasNext();
             ProgramState resultState = iterator.next();
             HeapConfiguration finalHeap = resultState.getHeap();
             finalHeap = ((HeapConfigurationPair) finalHeap).getPairedHeapConfiguration();
