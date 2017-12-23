@@ -37,8 +37,24 @@ public class IpaAbstractMethod extends AbstractMethod {
             );
             observer.update(fragmentedHc, input); // this is a hack until the IPA is complete.
 
+            // This is a hack to deal with counterexample generation
+            HeapConfiguration precondition = fragmentedHc.getReachablePart();
+            if(scene().options().getAbstractionDistance() == 1) {
+                precondition = scene()
+                        .strategies()
+                        .getLenientCanonicalizationStrategy()
+                        .canonicalize(precondition);
+            } else {
+                precondition = scene()
+                        .strategies()
+                        .getAggressiveCanonicalizationStrategy()
+                        .canonicalize(precondition);
+            }
+
+
+
             Set<ProgramState> result = new LinkedHashSet<>();
-            for (HeapConfiguration postConfig : getContractResult(input, observer, fragmentedHc)) {
+            for (HeapConfiguration postConfig : getContractResult(precondition, fragmentedHc)) {
                 ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
                 state.setProgramCounter(0);
                 result.add(state);
@@ -82,24 +98,24 @@ public class IpaAbstractMethod extends AbstractMethod {
         return result;
     }
 
-    List<HeapConfiguration> getContractResult(ProgramState input, SymbolicExecutionObserver observer,
+    List<HeapConfiguration> getContractResult(HeapConfiguration precondition,
                                          FragmentedHeapConfiguration fragmentedHc)
             throws StateSpaceGenerationAbortedException {
 
-        HeapConfiguration reachableFragment = fragmentedHc.getReachablePart().clone();
         HeapConfiguration remainingFragment = fragmentedHc.getRemainingPart().clone();
         int placeholderPos = fragmentedHc.getEdgeForReachablePart();
 
         List<HeapConfiguration> postconditions;
 
-        if(!contracts.hasMatchingPrecondition(reachableFragment)) {
+
+        if(!contracts.hasMatchingPrecondition(precondition)) {
             throw new IllegalStateException("Could not find matching contract.");
         }
 
-        int[] reordering = contracts.getReordering(reachableFragment);
-        remainingFragment = adaptExternalOrdering(reachableFragment, remainingFragment,
+        int[] reordering = contracts.getReordering(precondition);
+        remainingFragment = adaptExternalOrdering(precondition, remainingFragment,
                 placeholderPos, reordering);
-        postconditions = contracts.getPostconditions(reachableFragment);
+        postconditions = contracts.getPostconditions(precondition);
 
         return applyContract(remainingFragment, placeholderPos, postconditions);
     }
