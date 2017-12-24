@@ -38,6 +38,7 @@ public class IpaAbstractMethod extends AbstractMethod {
             observer.update(fragmentedHc, input); // this is a hack until the IPA is complete.
 
             // This is a hack to deal with counterexample generation
+            // TODO ultimately, we should match preconditions using language inclusion without external ordering.
             HeapConfiguration precondition = fragmentedHc.getReachablePart();
             if(scene().options().getAbstractionDistance() == 1) {
                 precondition = scene()
@@ -50,8 +51,6 @@ public class IpaAbstractMethod extends AbstractMethod {
                         .getAggressiveCanonicalizationStrategy()
                         .canonicalize(precondition);
             }
-
-
 
             Set<ProgramState> result = new LinkedHashSet<>();
             for (HeapConfiguration postConfig : getContractResult(precondition, fragmentedHc)) {
