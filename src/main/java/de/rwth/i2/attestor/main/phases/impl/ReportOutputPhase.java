@@ -4,21 +4,19 @@ import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.FileUtils;
+import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
-import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
-import org.json.JSONWriter;
 
 import java.io.*;
 import java.util.List;
@@ -36,7 +34,7 @@ public class ReportOutputPhase extends AbstractPhase {
     private OutputSettings outputSettings;
 
     private StateSpace stateSpace;
-    private Program program;
+    private ProgramImpl program;
 
 
     public ReportOutputPhase(Scene scene, List<AbstractPhase> phases) {
@@ -150,7 +148,7 @@ public class ReportOutputPhase extends AbstractPhase {
         );
     }
 
-    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
+    private void exportStateSpace(String directory, StateSpace stateSpace, ProgramImpl program)
             throws IOException {
 
         FileUtils.createDirectories(directory);

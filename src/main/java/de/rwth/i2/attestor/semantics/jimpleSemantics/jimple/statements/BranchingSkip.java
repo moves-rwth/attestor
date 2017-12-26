@@ -32,12 +32,6 @@ public class BranchingSkip extends Statement {
         this.rightSuccessor = rightSuccessor;
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState heap) {
-
-        return false;
-    }
-
 
     public String toString() {
 
@@ -75,5 +69,10 @@ public class BranchingSkip extends Statement {
         Set<Integer> res = SingleElementUtil.createSet(leftSuccessor);
         res.add(rightSuccessor);
         return res;
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 }

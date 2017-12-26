@@ -17,8 +17,8 @@ public interface StateSpaceExporter {
      * @param program    The program used to generate the state space.
      * @throws IOException if writing of exported files fails.
      */
-    void export(StateSpace stateSpace, Program program) throws IOException;
+    void export(StateSpace stateSpace, ProgramImpl program) throws IOException;
 
-    void exportForReport(StateSpace stateSpace, Program program) throws IOException;
+    void exportForReport(StateSpace stateSpace, ProgramImpl program) throws IOException;
 
 }

@@ -27,12 +27,6 @@ public class GotoStmt extends Statement {
         this.nextPC = nextPC;
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState heap) {
-
-        return false;
-    }
-
 
     public String toString() {
 
@@ -57,6 +51,11 @@ public class GotoStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

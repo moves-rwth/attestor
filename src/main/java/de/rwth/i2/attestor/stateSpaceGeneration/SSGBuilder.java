@@ -133,7 +133,7 @@ public class SSGBuilder extends SceneObject {
      * @param program The program that is executed to generate the state space.
      * @return The builder.
      */
-    public SSGBuilder setProgram(Program program) {
+    public SSGBuilder setProgram(ProgramImpl program) {
 
         generator.program = program;
         return this;

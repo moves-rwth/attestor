@@ -28,12 +28,6 @@ public class Skip extends Statement {
         this.nextPC = nextPC;
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
-    }
-
 
     public String toString() {
 
@@ -58,6 +52,11 @@ public class Skip extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

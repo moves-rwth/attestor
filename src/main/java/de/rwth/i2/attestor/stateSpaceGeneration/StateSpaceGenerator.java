@@ -40,7 +40,7 @@ public class StateSpaceGenerator extends SceneObject {
      * The control flow of the program together with the
      * abstract semantics of each statement
      */
-    Program program;
+    ProgramImpl program;
     /**
      * Strategy guiding the materialization of states.
      * This strategy is invoked whenever an abstract transfer
@@ -341,7 +341,7 @@ public class StateSpaceGenerator extends SceneObject {
 
     private ProgramState canonicalizationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
 
-        if (semanticsCommand.permitsCanonicalization()) {
+        if (needsCanonicalization(semanticsCommand, state)) {
             state = canonicalizationStrategy.canonicalize(state);
         }
         return state;
@@ -358,7 +358,7 @@ public class StateSpaceGenerator extends SceneObject {
     private void addingPhase(SemanticsCommand semanticsCommand, ProgramState previousState, ProgramState state) {
 
         // performance optimization that prevents isomorphism checks against states in the state space.
-        if (!semanticsCommand.permitsCanonicalization()) {
+        if (!needsCanonicalization(semanticsCommand, state)) {
             stateSpace.addState(state);
             addUnexploredState(state);
         } else if (stateSpace.addStateIfAbsent(state)) {
@@ -366,6 +366,10 @@ public class StateSpaceGenerator extends SceneObject {
         }
 
         stateSpace.addControlFlowTransition(previousState, state);
+    }
+
+    private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
+        return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
     }
 
     @FunctionalInterface

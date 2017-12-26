@@ -78,7 +78,6 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
         return state;
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return invokePrepare.needsMaterialization(programState);
@@ -100,6 +99,11 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
 }

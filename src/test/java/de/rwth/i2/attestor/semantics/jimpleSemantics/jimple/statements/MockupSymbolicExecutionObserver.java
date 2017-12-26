@@ -23,7 +23,7 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
     }
 
     @Override
-    public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
+    public StateSpace generateStateSpace(ProgramImpl program, ProgramState input) throws StateSpaceGenerationAbortedException {
 
         ProgramState initialState = new DefaultProgramState(this, input.getHeap());
         initialState.setProgramCounter(0);

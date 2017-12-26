@@ -43,12 +43,6 @@ public class ReturnVoidStmt extends Statement {
         return Collections.singleton(programState);
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
-    }
-
     public String toString() {
 
         return "return;";
@@ -64,6 +58,11 @@ public class ReturnVoidStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return new LinkedHashSet<>();
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
     /**

@@ -7,11 +7,11 @@ import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.JimpleParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.StandardAbstractSemantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 
 public class ParseProgramPhase extends AbstractPhase implements ProgramTransformer {
 
-    private Program program;
+    private ProgramImpl program;
 
     public ParseProgramPhase(Scene scene) {
 
@@ -49,7 +49,7 @@ public class ParseProgramPhase extends AbstractPhase implements ProgramTransform
     }
 
     @Override
-    public Program getProgram() {
+    public ProgramImpl getProgram() {
 
         return program;
     }

@@ -29,12 +29,6 @@ public class TerminalStatement implements SemanticsCommand {
     }
 
     @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
-    }
-
-    @Override
     public ViolationPoints getPotentialViolationPoints() {
 
         return ViolationPoints.getEmptyViolationPoints();
@@ -47,15 +41,8 @@ public class TerminalStatement implements SemanticsCommand {
     }
 
     @Override
-    public boolean permitsCanonicalization() {
-
-        return isCanonicalizationPermitted;
-    }
-
-    @Override
-    public void setPermitCanonicalization(boolean permitted) {
-
-        isCanonicalizationPermitted = permitted;
+    public boolean needsCanonicalization() {
+        return false;
     }
 
     @Override

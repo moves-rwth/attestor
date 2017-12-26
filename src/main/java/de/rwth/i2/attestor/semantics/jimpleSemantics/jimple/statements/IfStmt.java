@@ -113,12 +113,6 @@ public class IfStmt extends Statement {
         }
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState programState) {
-
-        return conditionValue.needsMaterialization(programState);
-    }
-
 
     public String toString() {
 
@@ -137,5 +131,10 @@ public class IfStmt extends Statement {
         Set<Integer> res = SingleElementUtil.createSet(truePC);
         res.add(falsePC);
         return res;
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 }

@@ -13,32 +13,9 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
  */
 public abstract class Statement extends SceneObject implements SemanticsCommand {
 
-    /**
-     * True if and only if canonicalization should be performed
-     * immediately after executing this statement.
-     */
-    private boolean isCanonicalizationPermitted = true;
-
     protected Statement(SceneObject otherObject) {
 
         super(otherObject);
     }
 
-    /**
-     * @return True if and only if canonicalization should be performed
-     * immediately after executing this statement.
-     */
-    public boolean permitsCanonicalization() {
-
-        return isCanonicalizationPermitted;
-    }
-
-    /**
-     * @param permitted True if and only if canonicalization should be performed
-     *                  immediately after executing this statement.
-     */
-    public void setPermitCanonicalization(boolean permitted) {
-
-        this.isCanonicalizationPermitted = permitted;
-    }
 }

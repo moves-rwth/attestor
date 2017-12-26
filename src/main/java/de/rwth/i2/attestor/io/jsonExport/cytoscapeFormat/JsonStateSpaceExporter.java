@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
@@ -26,7 +26,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     private final Writer writer;
     private JSONWriter jsonWriter;
     private StateSpace stateSpace;
-    private Program program;
+    private ProgramImpl program;
 
     private Set<ProgramState> states;
     private Set<ProgramState> initialStates;
@@ -41,7 +41,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     }
 
     @Override
-    public void export(StateSpace stateSpace, Program program) throws IOException {
+    public void export(StateSpace stateSpace, ProgramImpl program) throws IOException {
 
         jsonWriter = new JSONWriter(writer);
         this.stateSpace = stateSpace;
@@ -70,7 +70,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     }
 
     @Override
-    public void exportForReport(StateSpace stateSpace, Program program) throws IOException {
+    public void exportForReport(StateSpace stateSpace, ProgramImpl program) throws IOException {
 
         jsonWriter = new JSONWriter(writer);
         this.stateSpace = stateSpace;

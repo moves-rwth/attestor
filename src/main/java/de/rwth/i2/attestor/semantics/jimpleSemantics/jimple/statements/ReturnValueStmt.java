@@ -78,7 +78,6 @@ public class ReturnValueStmt extends Statement {
         return Collections.singleton(programState);
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return returnValue.needsMaterialization(programState);
@@ -99,6 +98,11 @@ public class ReturnValueStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return new LinkedHashSet<>();
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
     /**

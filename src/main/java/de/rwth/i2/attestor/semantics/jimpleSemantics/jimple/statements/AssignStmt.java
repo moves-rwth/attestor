@@ -106,12 +106,6 @@ public class AssignStmt extends Statement {
         return SingleElementUtil.createSet(result);
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState programState) {
-
-        return rhs.needsMaterialization(programState) || lhs.needsMaterialization(programState);
-    }
-
 
     public String toString() {
 
@@ -128,6 +122,11 @@ public class AssignStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

@@ -36,7 +36,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
     @Override
     protected void executePhase() {
 
-        Program program = getPhase(ProgramTransformer.class).getProgram();
+        ProgramImpl program = getPhase(ProgramTransformer.class).getProgram();
         List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
 
         StateSpaceGenerator stateSpaceGenerator = createStateSpaceGenerator(program, inputs);
@@ -53,7 +53,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         }
     }
 
-    private StateSpaceGenerator createStateSpaceGenerator(Program program,
+    private StateSpaceGenerator createStateSpaceGenerator(ProgramImpl program,
                                                           List<HeapConfiguration> inputs) {
 
         List<ProgramState> inputStates = new ArrayList<>(inputs.size());

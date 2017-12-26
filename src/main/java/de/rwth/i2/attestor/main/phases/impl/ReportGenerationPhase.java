@@ -18,7 +18,7 @@ import de.rwth.i2.attestor.main.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
@@ -30,7 +30,7 @@ import java.util.Set;
 public class ReportGenerationPhase extends AbstractPhase {
 
     private StateSpace stateSpace;
-    private Program program;
+    private ProgramImpl program;
     private OutputSettings outputSettings;
 
     public ReportGenerationPhase(Scene scene) {
@@ -179,7 +179,7 @@ public class ReportGenerationPhase extends AbstractPhase {
         writer.close();
     }
 
-    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
+    private void exportStateSpace(String directory, StateSpace stateSpace, ProgramImpl program)
             throws IOException {
 
         FileUtils.createDirectories(directory);

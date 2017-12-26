@@ -17,7 +17,7 @@ import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
@@ -71,7 +71,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
     private void checkCounterexample(LTLFormula formula, Trace trace) {
 
-        Program program = getPhase(ProgramTransformer.class).getProgram();
+        ProgramImpl program = getPhase(ProgramTransformer.class).getProgram();
 
         StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
         MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();

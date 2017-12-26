@@ -11,7 +11,7 @@ public abstract class AbstractMethod extends SceneObject {
     /**
      * the abstract semantic of the method.
      */
-    protected Program method;
+    protected ProgramImpl method;
     /**
      * the methods signature
      */
@@ -56,7 +56,7 @@ public abstract class AbstractMethod extends SceneObject {
     /**
      * @return the method body / abstract semantics
      */
-    public Program getControlFlow() {
+    public ProgramImpl getControlFlow() {
 
         return this.method;
     }
@@ -70,7 +70,7 @@ public abstract class AbstractMethod extends SceneObject {
      */
     public void setControlFlow(List<SemanticsCommand> program) {
 
-        this.method = new Program(program);
+        this.method = new ProgramImpl(program);
     }
 
     public String toString() {

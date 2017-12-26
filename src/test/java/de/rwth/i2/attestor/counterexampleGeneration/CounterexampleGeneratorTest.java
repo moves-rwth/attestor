@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStm
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
@@ -48,7 +48,7 @@ public class CounterexampleGeneratorTest {
         HeapConfiguration input = hcFactory.getList();
         ProgramState initialState = new DefaultProgramState(sceneObject, input.clone());
         Type type = sceneObject.scene().getType("List");
-        Program program = getSetNextProgram(type);
+        ProgramImpl program = getSetNextProgram(type);
 
         ProgramState finalState = null;
         try {
@@ -76,10 +76,10 @@ public class CounterexampleGeneratorTest {
         assertEquals(input, counterexampleInput.getHeap());
     }
 
-    private Program getSetNextProgram(Type type) {
+    private ProgramImpl getSetNextProgram(Type type) {
 
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
-        return Program.builder()
+        return ProgramImpl.builder()
                 .addStatement(
                         new AssignStmt(
                                 sceneObject,
@@ -97,7 +97,7 @@ public class CounterexampleGeneratorTest {
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
-        Program program = getSetNextProgram(factorySLL.getNodeType());
+        ProgramImpl program = getSetNextProgram(factorySLL.getNodeType());
         SemanticsCommand stmt = program.getStatement(0);
         ProgramState initialState = getInitialState();
 

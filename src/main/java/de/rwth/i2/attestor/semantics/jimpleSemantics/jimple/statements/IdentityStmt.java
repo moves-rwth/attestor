@@ -69,7 +69,6 @@ public class IdentityStmt extends Statement {
         return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return lhs.needsMaterialization(programState);
@@ -90,6 +89,11 @@ public class IdentityStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

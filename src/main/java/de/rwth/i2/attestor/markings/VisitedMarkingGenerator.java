@@ -24,7 +24,7 @@ public class VisitedMarkingGenerator extends SceneObject {
 
         this.requiredSelectors = requiredSelectors;
 
-        Program program = setupProgram();
+        ProgramImpl program = setupProgram();
         List<ProgramState> initialStates = setupInitialStates(input);
 
 
@@ -54,14 +54,14 @@ public class VisitedMarkingGenerator extends SceneObject {
         return markedHeapConfigurations;
     }
 
-    private Program setupProgram() {
+    private ProgramImpl setupProgram() {
 
         ViolationPoints violationPoints = new ViolationPoints();
         for(String selectorName : requiredSelectors) {
             violationPoints.add(markingVariableName, selectorName);
         }
 
-        return Program.builder().addStatement(
+        return ProgramImpl.builder().addStatement(
                new VisitedMarkingStatement(markingVariableName, violationPoints)
         ).build();
     }
@@ -103,14 +103,6 @@ class VisitedMarkingStatement implements SemanticsCommand {
     }
 
     @Override
-    public boolean needsMaterialization(ProgramState programState) {
-
-        HeapConfiguration heap = programState.getHeap();
-        int varTarget = heap.variableTargetOf(markingVariableName);
-        return !heap.attachedNonterminalEdgesWithNonReductionTentacle(varTarget).isEmpty();
-    }
-
-    @Override
     public ViolationPoints getPotentialViolationPoints() {
 
         return violationPoints;
@@ -123,13 +115,8 @@ class VisitedMarkingStatement implements SemanticsCommand {
     }
 
     @Override
-    public boolean permitsCanonicalization() {
-
+    public boolean needsCanonicalization() {
         return true;
-    }
-
-    @Override
-    public void setPermitCanonicalization(boolean permitted) {
     }
 
     @Override
