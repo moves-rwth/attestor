@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -178,7 +178,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             curr = units.getSuccOf(curr);
         }
 
-        List<Semantics> programStatements = new ArrayList<>();
+        List<SemanticsCommand> programStatements = new ArrayList<>();
 
         curr = units.getFirst();
         for (int i = 0; i < units.size(); i++) {
@@ -239,7 +239,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             String displayName = shortMethodSignature(Scene.v().getMethod(signature));
             res.setDisplayName(displayName);
 
-            List<Semantics> defaultControlFlow = new ArrayList<>();
+            List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
             defaultControlFlow.add(new Skip(this, -1));
             res.setControlFlow(defaultControlFlow);
 

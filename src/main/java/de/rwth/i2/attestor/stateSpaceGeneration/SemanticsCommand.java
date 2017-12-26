@@ -10,7 +10,7 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public interface Semantics {
+public interface SemanticsCommand {
 
     /**
      * Executes a single step of the abstract program semantics on the given program state.

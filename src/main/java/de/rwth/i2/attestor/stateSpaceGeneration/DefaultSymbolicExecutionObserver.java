@@ -3,14 +3,14 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 /**
- * The options passed to every Semantics object by a state space generator to configure the symbolic execution.
+ * The options passed to every SemanticsCommand object by a state space generator to configure the symbolic execution.
  *
  * @author Christoph
  */
 public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserver {
 
     /**
-     * The state space generator that calls Semantics objects during the symbolic execution.
+     * The state space generator that calls SemanticsCommand objects during the symbolic execution.
      */
     private final StateSpaceGenerator stateSpaceGenerator;
 

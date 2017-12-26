@@ -23,14 +23,14 @@ public class Program {
      * The internal representation of the program as a list of program statements.
      * The position in the lost corresponds to the value of the program counter.
      */
-    private final List<Semantics> program;
+    private final List<SemanticsCommand> program;
 
     /**
      * Initialize this program.
      *
      * @param program The list of statements that make up this program.
      */
-    public Program(List<Semantics> program) {
+    public Program(List<SemanticsCommand> program) {
 
         this.program = program;
 
@@ -50,7 +50,7 @@ public class Program {
     /**
      * @return The first statement upon execution of the program.
      */
-    public Semantics getEnterPoint() {
+    public SemanticsCommand getEnterPoint() {
 
         return program.get(0);
     }
@@ -67,7 +67,7 @@ public class Program {
      * @param programCounter A program counter.
      * @return The programs statement corresponding to the given program counter.
      */
-    public Semantics getStatement(int programCounter) {
+    public SemanticsCommand getStatement(int programCounter) {
 
         if (isExit(programCounter)) {
             return new TerminalStatement();
@@ -87,7 +87,7 @@ public class Program {
             incoming.add(0);
         }
 
-        for (Semantics aProgram : program) {
+        for (SemanticsCommand aProgram : program) {
 
             Set<Integer> out = aProgram.getSuccessorPCs();
             for (Integer pc : out) {
@@ -101,7 +101,7 @@ public class Program {
 
         for (int i = 0; i < program.size(); i++) {
 
-            Semantics s = program.get(i);
+            SemanticsCommand s = program.get(i);
 
             boolean isReturn = s instanceof ReturnValueStmt || s instanceof ReturnVoidStmt;
             boolean isInvoke = s instanceof AssignInvoke || s instanceof InvokeStmt;
@@ -138,9 +138,9 @@ public class Program {
             return result;
         }
 
-        public ProgramBuilder addStatement(Semantics semantics) {
+        public ProgramBuilder addStatement(SemanticsCommand semanticsCommand) {
 
-            program.program.add(semantics);
+            program.program.add(semanticsCommand);
             return this;
         }
     }

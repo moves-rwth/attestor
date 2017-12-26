@@ -67,7 +67,7 @@ public class VisitedMarkingGenerator extends SceneObject {
     }
 }
 
-class VisitedMarkingStatement implements  Semantics {
+class VisitedMarkingStatement implements SemanticsCommand {
 
     private String markingVariableName;
     private ViolationPoints violationPoints;

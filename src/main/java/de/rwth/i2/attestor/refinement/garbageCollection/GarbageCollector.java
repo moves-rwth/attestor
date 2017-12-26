@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.util.ReachabilityChecker;
 import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.set.TIntSet;
@@ -33,11 +33,11 @@ public class GarbageCollector implements StateRefinementStrategy {
     }
 
     @Override
-    public ProgramState refine(Semantics semantics, ProgramState state) {
+    public ProgramState refine(SemanticsCommand semanticsCommand, ProgramState state) {
 
         // If the previously executed program statement cannot alter the heap
         // there is no reason to invoke the garbage collection
-        if (!semanticsTriggeringGarbageCollector.contains(semantics.getClass())) {
+        if (!semanticsTriggeringGarbageCollector.contains(semanticsCommand.getClass())) {
             return state;
         }
 

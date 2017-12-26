@@ -24,7 +24,7 @@
  * </li>
  * <li>
  * {@link de.rwth.i2.attestor.semantics} containsSubsumingState all implementations of the abstract program semantics
- * (implementation of {@link de.rwth.i2.attestor.stateSpaceGeneration.Semantics}).
+ * (implementation of {@link de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand}).
  * </li>
  * <li>
  * {@link de.rwth.i2.attestor.grammar} containsSubsumingState an implementation of hyperedge replacement grammars and

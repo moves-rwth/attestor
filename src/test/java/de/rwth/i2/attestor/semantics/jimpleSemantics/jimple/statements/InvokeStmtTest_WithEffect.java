@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -58,7 +58,7 @@ public class InvokeStmtTest_WithEffect {
         Field nextOfY = new Field(type, varY, next);
 
         AbstractMethod method = new IpaAbstractMethod(sceneObject, "method");
-        List<Semantics> methodBody = new ArrayList<>();
+        List<SemanticsCommand> methodBody = new ArrayList<>();
         methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));
 
         HashSet<String> liveVariables = new LinkedHashSet<>();

@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.semantics;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 
 import java.util.LinkedHashSet;
@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class TerminalStatement implements Semantics {
+public class TerminalStatement implements SemanticsCommand {
 
     /**
      * Stores whether canonicalization may be performed

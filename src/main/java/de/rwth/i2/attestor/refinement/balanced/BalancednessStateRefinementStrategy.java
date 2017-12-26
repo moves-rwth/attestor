@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -29,7 +29,7 @@ public class BalancednessStateRefinementStrategy extends SceneObject implements 
 
 
     @Override
-    public ProgramState refine(Semantics semantics, ProgramState state) {
+    public ProgramState refine(SemanticsCommand semanticsCommand, ProgramState state) {
 
         helper.updateSelectorAnnotations(state.getHeap());
         return state;

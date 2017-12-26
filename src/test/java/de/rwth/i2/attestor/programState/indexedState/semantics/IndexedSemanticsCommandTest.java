@@ -23,7 +23,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class IndexedSemanticsTest {
+public class IndexedSemanticsCommandTest {
 
     private SceneObject sceneObject;
     private ExampleIndexedGraphFactory graphFactory;

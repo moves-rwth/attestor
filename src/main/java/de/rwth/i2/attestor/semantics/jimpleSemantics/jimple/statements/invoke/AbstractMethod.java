@@ -68,7 +68,7 @@ public abstract class AbstractMethod extends SceneObject {
      * @param program a list of abstract semantics which are the translation of the
      *                method body
      */
-    public void setControlFlow(List<Semantics> program) {
+    public void setControlFlow(List<SemanticsCommand> program) {
 
         this.method = new Program(program);
     }

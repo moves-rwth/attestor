@@ -15,7 +15,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
@@ -98,7 +98,7 @@ public class CounterexampleGeneratorTest {
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
 
         Program program = getSetNextProgram(factorySLL.getNodeType());
-        Semantics stmt = program.getStatement(0);
+        SemanticsCommand stmt = program.getStatement(0);
         ProgramState initialState = getInitialState();
 
         Collection<HeapConfiguration> mat = factorySLL
