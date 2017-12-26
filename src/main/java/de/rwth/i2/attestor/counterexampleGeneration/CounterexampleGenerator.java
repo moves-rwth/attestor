@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public final class CounterexampleGenerator extends SceneObject {
 
-    private ProgramImpl program;
+    private Program program;
     private Trace trace;
     private StateCanonicalizationStrategy canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
@@ -170,7 +170,7 @@ public final class CounterexampleGenerator extends SceneObject {
             return this;
         }
 
-        public CounterexampleGeneratorBuilder setProgram(ProgramImpl program) {
+        public CounterexampleGeneratorBuilder setProgram(Program program) {
 
             generator.program = program;
             return this;

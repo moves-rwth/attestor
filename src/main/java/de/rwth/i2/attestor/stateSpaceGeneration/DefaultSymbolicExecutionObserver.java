@@ -25,7 +25,7 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
     }
 
     @Override
-    public StateSpace generateStateSpace(ProgramImpl program, ProgramState input)
+    public StateSpace generateStateSpace(Program program, ProgramState input)
             throws StateSpaceGenerationAbortedException {
 
         HeapConfiguration heap = input.getHeap();

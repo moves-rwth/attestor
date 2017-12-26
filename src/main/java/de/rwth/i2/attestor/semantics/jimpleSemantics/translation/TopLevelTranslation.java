@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
@@ -188,7 +189,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         logger.trace("method Name: " + method.getSignature());
 
-        currentMethod.setControlFlow(programStatements);
+        currentMethod.setControlFlow(new ProgramImpl(programStatements));
 
     }
 
@@ -241,7 +242,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
             List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
             defaultControlFlow.add(new Skip(this, -1));
-            res.setControlFlow(defaultControlFlow);
+            res.setControlFlow(new ProgramImpl(defaultControlFlow));
 
             logger.warn("Method " + signature + " replaced by empty default method.");
 

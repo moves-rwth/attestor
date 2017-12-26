@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.main.phases.transformers;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 public interface ProgramTransformer {
 
-    ProgramImpl getProgram();
+    Program getProgram();
 }

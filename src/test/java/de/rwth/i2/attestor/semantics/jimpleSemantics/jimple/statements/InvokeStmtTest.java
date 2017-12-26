@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
@@ -44,7 +45,7 @@ public class InvokeStmtTest {
         AbstractMethod method = new SimpleAbstractMethod(sceneObject, "method");
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new Skip(sceneObject, -1));
-        method.setControlFlow(defaultControlFlow);
+        method.setControlFlow(new ProgramImpl(defaultControlFlow));
         InvokeHelper invokePrepare
                 = new InstanceInvokeHelper(sceneObject, var, new ArrayList<>());
 

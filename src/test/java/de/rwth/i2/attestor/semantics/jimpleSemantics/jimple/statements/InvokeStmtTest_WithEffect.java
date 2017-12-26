@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.St
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
@@ -64,7 +65,7 @@ public class InvokeStmtTest_WithEffect {
         HashSet<String> liveVariables = new LinkedHashSet<>();
         methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
         methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
-        method.setControlFlow(methodBody);
+        method.setControlFlow(new ProgramImpl(methodBody));
 
         StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
         stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);

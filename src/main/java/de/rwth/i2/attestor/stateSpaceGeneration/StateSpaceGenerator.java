@@ -40,7 +40,7 @@ public class StateSpaceGenerator extends SceneObject {
      * The control flow of the program together with the
      * abstract semantics of each statement
      */
-    ProgramImpl program;
+    Program program;
     /**
      * Strategy guiding the materialization of states.
      * This strategy is invoked whenever an abstract transfer

@@ -13,7 +13,7 @@ import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
@@ -34,7 +34,7 @@ public class ReportOutputPhase extends AbstractPhase {
     private OutputSettings outputSettings;
 
     private StateSpace stateSpace;
-    private ProgramImpl program;
+    private Program program;
 
 
     public ReportOutputPhase(Scene scene, List<AbstractPhase> phases) {
@@ -148,7 +148,7 @@ public class ReportOutputPhase extends AbstractPhase {
         );
     }
 
-    private void exportStateSpace(String directory, StateSpace stateSpace, ProgramImpl program)
+    private void exportStateSpace(String directory, StateSpace stateSpace, Program program)
             throws IOException {
 
         FileUtils.createDirectories(directory);

@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramImpl;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.PackManager;
@@ -15,7 +15,7 @@ import soot.options.Options;
 
 /**
  * A parser that takes a source code file and transforms it first into the Jimple intermediate language
- * and then into our own semantics; that is it constructs a {@link ProgramImpl}.
+ * and then into our own semantics; that is it constructs a {@link Program}.
  *
  * @author Hannah Arndt, Christoph
  */
@@ -43,13 +43,7 @@ public class JimpleParser extends SceneObject implements ProgramParser {
     }
 
     @Override
-    public ProgramImpl parse(String classpath, String classname) {
-
-        return parse(classpath, classname, "main");
-    }
-
-    @Override
-    public ProgramImpl parse(String classpath, String classname, String entryPoint) {
+    public Program parse(String classpath, String classname, String entryPoint) {
 
         try {
             logger.debug("Initializing Soot with classpath: " + classpath);

@@ -25,7 +25,7 @@ public interface SymbolicExecutionObserver {
      * @param input   The program state determining the input for the symbolic execution.
      * @return The state space generated for the given input.
      */
-    StateSpace generateStateSpace(ProgramImpl program, ProgramState input)
+    StateSpace generateStateSpace(Program program, ProgramState input)
             throws StateSpaceGenerationAbortedException;
 
     /**

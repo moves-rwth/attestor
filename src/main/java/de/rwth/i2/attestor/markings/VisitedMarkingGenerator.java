@@ -24,7 +24,7 @@ public class VisitedMarkingGenerator extends SceneObject {
 
         this.requiredSelectors = requiredSelectors;
 
-        ProgramImpl program = setupProgram();
+        Program program = setupProgram();
         List<ProgramState> initialStates = setupInitialStates(input);
 
 
@@ -54,7 +54,7 @@ public class VisitedMarkingGenerator extends SceneObject {
         return markedHeapConfigurations;
     }
 
-    private ProgramImpl setupProgram() {
+    private Program setupProgram() {
 
         ViolationPoints violationPoints = new ViolationPoints();
         for(String selectorName : requiredSelectors) {

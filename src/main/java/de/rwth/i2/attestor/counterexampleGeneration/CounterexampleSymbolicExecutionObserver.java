@@ -82,7 +82,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     }
 
     @Override
-    public StateSpace generateStateSpace(ProgramImpl program, ProgramState input)
+    public StateSpace generateStateSpace(Program program, ProgramState input)
             throws StateSpaceGenerationAbortedException {
 
         return StateSpaceGenerator
