@@ -45,7 +45,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     int size();
 
     /**
-     * Gets the target of the variable in the current scope.
+     * Gets the target of the variable in the current scopes.
      *
      * @param variableName The name of the requested variable
      * @return The referenced element on the heap.
@@ -53,7 +53,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     ConcreteValue getVariableTarget(String variableName);
 
     /**
-     * Removes the variable (in the current scope) from the executable.
+     * Removes the variable (in the current scopes) from the executable.
      *
      * @param variableName The name of the variable to remove.
      */
@@ -77,7 +77,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     ConcreteValue getConstant(String constantName);
 
     /**
-     * Removes an intermediate (in the current scope) from the executable.
+     * Removes an intermediate (in the current scopes) from the executable.
      * Intermediates are internal variables for communication between methods, such that this, return,
      * param_n, etc.
      *

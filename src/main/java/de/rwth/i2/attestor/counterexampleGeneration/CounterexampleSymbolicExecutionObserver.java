@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.ipa.FragmentedHeapConfiguration;
+import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
@@ -48,8 +48,8 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
              */
             throw new IllegalStateException("Counterexample might be spurious due to encountered nondeterminism" +
                     " caused by an unsupported program statement.");
-        } else if (handler.getClass() == FragmentedHeapConfiguration.class) {
-            updateFragmentedHc((FragmentedHeapConfiguration) handler);
+        } else if (handler.getClass() == ScopedHeapConfigurationPair.class) {
+            updateFragmentedHc((ScopedHeapConfigurationPair) handler);
         }
     }
 
@@ -76,7 +76,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
         method.setReuseResults(false);
     }
 
-    private void updateFragmentedHc(FragmentedHeapConfiguration fragmentedHc) {
+    private void updateFragmentedHc(ScopedHeapConfigurationPair fragmentedHc) {
 
         stateSpaceSupplier.setFragmentedHcOfPreviousProcedure(fragmentedHc);
     }

@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 import java.util.*;

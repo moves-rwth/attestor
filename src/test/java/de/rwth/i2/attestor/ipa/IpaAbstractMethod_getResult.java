@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
@@ -37,12 +38,12 @@ public class IpaAbstractMethod_getResult {
         ProgramState input = createInput();
         HeapConfiguration expected = createExpected();
 
-        FragmentedHeapConfiguration fragmentedHeapConfiguration = new FragmentedHeapConfiguration(
+        ScopedHeapConfigurationPair scopedHeapConfigurationPair = new ScopedHeapConfigurationPair(
                 sceneObject, input.getHeap(), "testMethod"
         );
 
         assertThat(
-                ipa.getIPAResult(input, new MockupSymbolicExecutionObserver(sceneObject), fragmentedHeapConfiguration),
+                ipa.getIPAResult(input, new MockupSymbolicExecutionObserver(sceneObject), scopedHeapConfigurationPair),
                 contains(expected)
         );
     }

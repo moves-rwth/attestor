@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.ipa;
+package de.rwth.i2.attestor.ipa.scopes;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -43,7 +43,7 @@ public class ReachableFragmentComputer extends SceneObject {
      *
      * @return <reachableFragment,<remainingFragment, nt position>>
      */
-    protected Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> prepareInput() {
+    public Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> prepareInput() {
 
         this.reachableFragmentBuilder = input.getEmpty().builder();
         this.remainingFragmentBuilder = input.clone().builder();

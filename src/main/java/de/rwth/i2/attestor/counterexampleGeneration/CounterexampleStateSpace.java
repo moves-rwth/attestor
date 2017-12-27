@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.ipa.FragmentedHeapConfiguration;
+import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
@@ -29,7 +29,7 @@ final class CounterexampleStateSpace implements StateSpace {
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
     private final SymbolicExecutionObserver invokeObserver;
-    private final FragmentedHeapConfiguration fragmentedHeapConfiguration;
+    private final ScopedHeapConfigurationPair scopedHeapConfigurationPair;
     private final Set<ProgramState> finalStates = new LinkedHashSet<>();
     private ProgramState initialState;
 
@@ -37,13 +37,13 @@ final class CounterexampleStateSpace implements StateSpace {
                              Set<ProgramState> requiredFinalStates,
                              InvokeCleanup invokeCleanup,
                              SymbolicExecutionObserver invokeObserver,
-                             FragmentedHeapConfiguration fragmentedHeapConfiguration) {
+                             ScopedHeapConfigurationPair scopedHeapConfigurationPair) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.requiredFinalStates = requiredFinalStates;
         this.invokeCleanup = invokeCleanup;
         this.invokeObserver = invokeObserver;
-        this.fragmentedHeapConfiguration = fragmentedHeapConfiguration;
+        this.scopedHeapConfigurationPair = scopedHeapConfigurationPair;
 
         assert !requiredFinalStates.isEmpty();
     }
@@ -199,9 +199,9 @@ final class CounterexampleStateSpace implements StateSpace {
             }
         }
 
-        if(fragmentedHeapConfiguration != null) {
+        if(scopedHeapConfigurationPair != null) {
             return abstractState.shallowCopyWithUpdateHeap(
-                    fragmentedHeapConfiguration.restore(abstractState.getHeap())
+                    scopedHeapConfigurationPair.merge(abstractState.getHeap())
             );
         } else {
             return abstractState;

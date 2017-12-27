@@ -4,6 +4,8 @@ package de.rwth.i2.attestor.ipa;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.ipa.scopes.ReachableFragmentComputer;
+import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
@@ -21,6 +23,7 @@ public class IpaAbstractMethod extends AbstractMethod {
     final IpaContractCollection contracts = new IpaContractCollection();
     private boolean isRecursive = false;
 
+
     public IpaAbstractMethod(SceneObject sceneObject, String displayName) {
 
         super(sceneObject);
@@ -32,14 +35,14 @@ public class IpaAbstractMethod extends AbstractMethod {
 
         try {
             HeapConfiguration currentConfig = input.getHeap();
-            FragmentedHeapConfiguration fragmentedHc = new FragmentedHeapConfiguration(
+            ScopedHeapConfigurationPair fragmentedHc = new ScopedHeapConfigurationPair(
                     this, currentConfig, this.toString()
             );
             observer.update(fragmentedHc, input); // this is a hack until the IPA is complete.
 
             // This is a hack to deal with counterexample generation
             // TODO ultimately, we should match preconditions using language inclusion without external ordering.
-            HeapConfiguration precondition = fragmentedHc.getReachablePart();
+            HeapConfiguration precondition = fragmentedHc.getHeapInScope();
             if(scene().options().getAbstractionDistance() == 1) {
                 precondition = scene()
                         .strategies()
@@ -82,13 +85,13 @@ public class IpaAbstractMethod extends AbstractMethod {
             throws StateSpaceGenerationAbortedException {
 
         HeapConfiguration currentConfig = input.getHeap();
-        FragmentedHeapConfiguration fragmentedHc = new FragmentedHeapConfiguration(
+        ScopedHeapConfigurationPair scopedPair = new ScopedHeapConfigurationPair(
                 this, currentConfig, this.toString()
         );
-        observer.update(fragmentedHc, input); // this is a hack until the IPA is complete.
+        observer.update(scopedPair, input); // this is a hack until the IPA is complete.
 
         Set<ProgramState> result = new LinkedHashSet<>();
-        for (HeapConfiguration postConfig : getIPAResult(input, observer, fragmentedHc)) {
+        for (HeapConfiguration postConfig : getIPAResult(input, observer, scopedPair)) {
             ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
             state.setProgramCounter(0);
             result.add(state);
@@ -98,11 +101,11 @@ public class IpaAbstractMethod extends AbstractMethod {
     }
 
     List<HeapConfiguration> getContractResult(HeapConfiguration precondition,
-                                         FragmentedHeapConfiguration fragmentedHc)
+                                         ScopedHeapConfigurationPair fragmentedHc)
             throws StateSpaceGenerationAbortedException {
 
-        HeapConfiguration remainingFragment = fragmentedHc.getRemainingPart().clone();
-        int placeholderPos = fragmentedHc.getEdgeForReachablePart();
+        HeapConfiguration remainingFragment = fragmentedHc.getHeapOutsideScope().clone();
+        int placeholderPos = fragmentedHc.getOutsideScopeEdge();
 
         List<HeapConfiguration> postconditions;
 
@@ -120,12 +123,12 @@ public class IpaAbstractMethod extends AbstractMethod {
     }
 
     List<HeapConfiguration> getIPAResult(ProgramState input, SymbolicExecutionObserver observer,
-                                         FragmentedHeapConfiguration fragmentedHc)
+                                         ScopedHeapConfigurationPair fragmentedHc)
             throws StateSpaceGenerationAbortedException {
 
-        HeapConfiguration reachableFragment = fragmentedHc.getReachablePart().clone();
-        HeapConfiguration remainingFragment = fragmentedHc.getRemainingPart().clone();
-        int placeholderPos = fragmentedHc.getEdgeForReachablePart();
+        HeapConfiguration reachableFragment = fragmentedHc.getHeapInScope().clone();
+        HeapConfiguration remainingFragment = fragmentedHc.getHeapOutsideScope().clone();
+        int placeholderPos = fragmentedHc.getOutsideScopeEdge();
 
         List<HeapConfiguration> postconditions;
         if (!contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled()) {

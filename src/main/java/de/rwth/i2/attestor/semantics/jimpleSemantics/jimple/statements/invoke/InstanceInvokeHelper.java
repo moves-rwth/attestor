@@ -54,7 +54,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
 
     /**
      * remove any intermediates that are still present in the heap. <br>
-     * leave the scope of the method.
+     * leave the scopes of the method.
      */
     @Override
     public void cleanHeap(ProgramState programState, SymbolicExecutionObserver options) {

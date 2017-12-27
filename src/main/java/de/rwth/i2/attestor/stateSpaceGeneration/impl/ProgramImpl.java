@@ -1,6 +1,8 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;

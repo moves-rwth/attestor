@@ -1,5 +1,7 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import gnu.trove.TIntCollection;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TIntObjectIterator;
