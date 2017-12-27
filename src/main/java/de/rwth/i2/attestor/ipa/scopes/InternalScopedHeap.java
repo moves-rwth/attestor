@@ -9,7 +9,8 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class InternalScopedHeap implements ScopedHeap {
+// TODO public for testing
+public class InternalScopedHeap implements ScopedHeap {
 
     private final HeapConfiguration heapInScope;
     private final HeapConfiguration heapOutsideScope;
@@ -49,7 +50,8 @@ class InternalScopedHeap implements ScopedHeap {
         return result;
     }
 
-    private HeapConfiguration reorder(int[] externalReordering) {
+    // TODO
+    public HeapConfiguration reorder(int[] externalReordering) {
 
         HeapConfiguration heap = heapOutsideScope.clone();
         TIntArrayList oldTentacles = heap.attachedNodesOf(edgeToMergeScopes);

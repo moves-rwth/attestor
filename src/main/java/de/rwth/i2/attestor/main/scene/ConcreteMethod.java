@@ -82,4 +82,9 @@ public class ConcreteMethod implements Method {
         assert executor != null;
         return executor;
     }
+
+    @Override
+    public String toString() {
+        return signature;
+    }
 }

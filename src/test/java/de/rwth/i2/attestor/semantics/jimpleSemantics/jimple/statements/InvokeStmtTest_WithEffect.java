@@ -4,15 +4,11 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.ipa.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractBasedMethod;
 import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
-import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupContractGenerator;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -74,14 +70,7 @@ public class InvokeStmtTest_WithEffect {
         methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
         methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
         method.setBody(new ProgramImpl(methodBody));
-
-        method.setMethodExecution(
-               new ContractBasedMethod(
-                       new DefaultScopeExtractor(sceneObject, method.getName()),
-                       new InternalContractCollection(new InternalPreconditionMatchingStrategy()),
-                       new MockupContractGenerator(method.getBody())
-               )
-        );
+        method.setMethodExecution(new MockupMethodExecutor(sceneObject, method));
 
         StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
         stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);
