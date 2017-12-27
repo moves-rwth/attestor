@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import obsolete.SymbolicExecutionObserver;
 
 /**
  * The options passed to every SemanticsCommand object by a state space generator to configure the symbolic execution.
@@ -42,6 +43,6 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
     @Override
     public boolean isDeadVariableEliminationEnabled() {
 
-        return stateSpaceGenerator.isDeadVariableEliminationEnabled();
+        return false;
     }
 }

@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.No
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import obsolete.SymbolicExecutionObserver;
 
 import java.util.Collections;
 import java.util.Set;
@@ -97,7 +98,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
     @Override
     public boolean isDeadVariableEliminationEnabled() {
 
-        return stateSpaceGenerator.isDeadVariableEliminationEnabled();
+        return false;
     }
 
     private final class CounterexampleExplorationStrategy implements ExplorationStrategy {

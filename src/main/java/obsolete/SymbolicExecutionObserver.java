@@ -1,4 +1,6 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package obsolete;
+
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * Observer that is called before each symbolic execution step.

@@ -5,7 +5,10 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.main.scene.Strategies;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.InternalStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.List;
 
@@ -55,13 +58,9 @@ class StateSpaceGeneratorFactory extends SceneObject{
                 .setStateCounter(
                         scene()::addNumberOfGeneratedStates
                 )
-                .setDeadVariableElimination(
-                        scene().options().isRemoveDeadVariables()
-                )
                 .setBreadthFirstSearchEnabled(false)
                 .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
-                .setSemanticsOptionsSupplier(DefaultSymbolicExecutionObserver::new)
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 ;
     }

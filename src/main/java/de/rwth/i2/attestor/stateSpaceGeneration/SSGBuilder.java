@@ -82,10 +82,6 @@ public class SSGBuilder extends SceneObject {
             throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
         }
 
-        if (generator.semanticsObserverSupplier == null) {
-            throw new IllegalStateException("StateSpaceGenerator: No supplier for semantics options.");
-        }
-
         if (generator.stateSpaceSupplier == null) {
             throw new IllegalStateException("StateSpaceGenerator: No supplier for state spaces.");
         }
@@ -103,7 +99,6 @@ public class SSGBuilder extends SceneObject {
             generator.addUnexploredState(state);
         }
 
-        generator.symbolicExecutionObserver = generator.semanticsObserverSupplier.get(generator);
         return generator;
     }
 
@@ -200,17 +195,6 @@ public class SSGBuilder extends SceneObject {
     }
 
     /**
-     * @param enabled True if and only if it is permitted to eliminate dead variables after a single
-     *                step of the symbolic execution.
-     * @return The builder.
-     */
-    public SSGBuilder setDeadVariableElimination(boolean enabled) {
-
-        generator.deadVariableEliminationEnabled = enabled;
-        return this;
-    }
-
-    /**
      * @param enabled True if and only if the state space should be explored in a breadth-first instead of
      *                a depth-first fashion.
      * @return The builder.
@@ -238,17 +222,6 @@ public class SSGBuilder extends SceneObject {
     public SSGBuilder setStateSpaceSupplier(StateSpaceSupplier stateSpaceSupplier) {
 
         generator.stateSpaceSupplier = stateSpaceSupplier;
-        return this;
-    }
-
-    /**
-     * @param semanticsObserverSupplier The function determining which semantics options are passed to individual
-     *                                  statements during symbolic execution.
-     * @return The builder.
-     */
-    public SSGBuilder setSemanticsOptionsSupplier(SemanticsObserverSupplier semanticsObserverSupplier) {
-
-        generator.semanticsObserverSupplier = semanticsObserverSupplier;
         return this;
     }
 

@@ -1,4 +1,6 @@
-package de.rwth.i2.attestor.stateSpaceGeneration;
+package obsolete;
+
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
 
 /**
  * Functional interface to create {@link SymbolicExecutionObserver} objects during state space generation.

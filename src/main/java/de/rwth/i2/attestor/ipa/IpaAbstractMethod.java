@@ -12,9 +12,9 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.Ab
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
+import obsolete.SymbolicExecutionObserver;
 
 import java.util.*;
 

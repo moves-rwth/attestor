@@ -78,31 +78,14 @@ public class StateSpaceGenerator extends SceneObject {
      */
     TotalStatesCounter totalStatesCounter;
     /**
-     * Flag that determines whether dead variables may be eliminated after
-     * a single step of the symbolic execution.
-     * Whether variables are actually eliminated depends on the executed
-     * statement.
-     */
-    boolean deadVariableEliminationEnabled;
-    /**
      * Flag that determines whether the state space is generated in a depth-first
      * or breadth-first fashion.
      */
     boolean breadthFirstSearchEnabled;
     /**
-     * The options for this state space generator that configure the individual
-     * steps of the symbolic execution.
-     */
-    SymbolicExecutionObserver symbolicExecutionObserver;
-    /**
      * Functional interface to obtain instances of state spaces.
      */
     StateSpaceSupplier stateSpaceSupplier;
-    /**
-     * Functional interface determining the semantics options passed to SemanticsCommand objects during
-     * symbolic execution
-     */
-    SemanticsObserverSupplier semanticsObserverSupplier;
 
     protected StateSpaceGenerator(SceneObject otherObject) {
 
@@ -126,11 +109,9 @@ public class StateSpaceGenerator extends SceneObject {
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
                 .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
                 .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
     }
@@ -180,11 +161,6 @@ public class StateSpaceGenerator extends SceneObject {
         return stateSpaceSupplier;
     }
 
-    public SemanticsObserverSupplier getSemanticsObserverSupplier() {
-
-        return semanticsObserverSupplier;
-    }
-
     /**
      * @return The strategy determining whether successors of a given state should be explored or not.
      */
@@ -196,11 +172,6 @@ public class StateSpaceGenerator extends SceneObject {
     public PostProcessingStrategy getPostProcessingStrategy() {
 
         return postProcessingStrategy;
-    }
-
-    public boolean isDeadVariableEliminationEnabled() {
-
-        return deadVariableEliminationEnabled;
     }
 
     public boolean isBreadthFirstSearchEnabled() {

@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import obsolete.SymbolicExecutionObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

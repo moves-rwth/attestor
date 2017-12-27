@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
+import obsolete.SymbolicExecutionObserver;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,6 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
                 })
                 .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver(this))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build()
                 .generate();

@@ -100,9 +100,9 @@ public final class CounterexampleGenerator extends SceneObject {
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
                 .setStateRefinementStrategy(stateRefinementStrategy)
-                .setDeadVariableElimination(deadVariableEliminationEnabled)
+                // TODO .setDeadVariableElimination(deadVariableEliminationEnabled)
                 .setBreadthFirstSearchEnabled(true)
-                .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
+                // TODO .setSemanticsOptionsSupplier(s -> new CounterexampleSymbolicExecutionObserver(s, trace))
                 .setExplorationStrategy((s, sp) -> {
                     if (trace.containsSubsumingState(s)) {
                         return true;

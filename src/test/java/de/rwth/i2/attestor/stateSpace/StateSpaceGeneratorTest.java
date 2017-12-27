@@ -14,7 +14,10 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.InternalStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.types.Type;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +52,6 @@ public class StateSpaceGeneratorTest {
                 .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
-                .setSemanticsOptionsSupplier(s -> new DefaultSymbolicExecutionObserver(s))
         ;
     }
 
@@ -106,7 +108,7 @@ public class StateSpaceGeneratorTest {
             res = ssgBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
-                    .setDeadVariableElimination(true)
+                    // TODO .setDeadVariableElimination(true)
                     .build()
                     .generate();
         } catch (StateSpaceGenerationAbortedException e) {
