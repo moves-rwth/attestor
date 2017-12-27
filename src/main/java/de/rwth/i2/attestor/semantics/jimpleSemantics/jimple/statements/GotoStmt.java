@@ -3,9 +3,9 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -34,9 +34,7 @@ public class GotoStmt extends Statement {
     }
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState state, SymbolicExecutionObserver observer) {
-
-        observer.update(this, state);
+    public Collection<ProgramState> computeSuccessors(ProgramState state) {
 
         return Collections.singleton(state.shallowCopyUpdatePC(nextPC));
     }

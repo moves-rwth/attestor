@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Set;
+import java.util.Collection;
 
 import static org.junit.Assert.*;
 
@@ -42,7 +42,7 @@ public class ReturnValueTest {
     public void testComputeSuccessors() {
 
         try {
-            Set<ProgramState> res = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(inputState);
             assertEquals(1, res.size());
             DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
             assertNotSame("ensure clone on state level", resState, inputState);

@@ -17,8 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -58,7 +58,7 @@ public class AssignStmtTest {
 
             DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
 
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertNotNull("test graph became null", testGraph);
             assertEquals("testGraph has changed", test, testGraph.toString());

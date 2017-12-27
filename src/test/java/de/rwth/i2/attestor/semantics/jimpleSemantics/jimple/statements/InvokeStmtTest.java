@@ -60,7 +60,7 @@ public class InvokeStmtTest {
     public void testComputeSuccessors() {
 
         try {
-            Collection<ProgramState> res = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(inputState);
             assertEquals(1, res.size());
             DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
             assertNotSame("ensure clone on state level", resState, inputState);

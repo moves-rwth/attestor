@@ -57,13 +57,13 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
                 canonicalizationStrategy,
                 requiredFinalStates,
                 invokeCleanupOfPreviousProcedure,
-                invokeObserverOfPreviousProcedure,
+                //invokeObserverOfPreviousProcedure,
                 fragmentedHcOfPreviousProcedure
         );
 
         finalStatesOfPreviousProcedure = null;
         invokeCleanupOfPreviousProcedure = null;
-        invokeObserverOfPreviousProcedure = null;
+        //invokeObserverOfPreviousProcedure = null;
 
         return result;
     }

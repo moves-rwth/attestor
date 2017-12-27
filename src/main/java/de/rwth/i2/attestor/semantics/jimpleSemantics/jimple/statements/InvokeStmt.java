@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.In
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
@@ -52,29 +51,27 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Collection<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
-
-        observer.update(this, programState);
 
         programState = programState.clone();
 
-        invokePrepare.prepareHeap(programState, observer);
+        invokePrepare.prepareHeap(programState);
 
         Collection<ProgramState> methodResult = method
                 .getMethodExecutor()
                 .getResultStates(programState);
 
-        methodResult.forEach(x -> invokePrepare.cleanHeap(x, observer));
+        methodResult.forEach(x -> invokePrepare.cleanHeap(x));
         methodResult.forEach(ProgramState::clone);
         methodResult.forEach(x -> x.setProgramCounter(nextPC));
 
         return methodResult;
     }
 
-    public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options) {
+    public ProgramState getCleanedResultState(ProgramState state) {
 
-        invokePrepare.cleanHeap(state, options);
+        invokePrepare.cleanHeap(state);
         return state;
     }
 

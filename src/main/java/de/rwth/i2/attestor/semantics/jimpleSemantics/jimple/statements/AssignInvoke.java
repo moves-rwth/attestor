@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -69,13 +68,11 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
      * as it is clearly not live at this point.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Set<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        observer.update(this, programState);
-
         programState = programState.clone();
-        invokePrepare.prepareHeap(programState, observer);
+        invokePrepare.prepareHeap(programState);
 
         Collection<ProgramState> methodResult = method
                 .getMethodExecutor()
@@ -84,7 +81,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
         Set<ProgramState> assignResult = new LinkedHashSet<>();
         for (ProgramState resState : methodResult) {
 
-            resState = getCleanedResultState(resState, observer);
+            resState = getCleanedResultState(resState);
             ProgramState freshState = resState.clone();
             freshState.setProgramCounter(nextPC);
             assignResult.add(freshState);
@@ -93,11 +90,11 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
         return assignResult;
     }
 
-    public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options)
+    public ProgramState getCleanedResultState(ProgramState state)
             throws NotSufficientlyMaterializedException {
 
         ConcreteValue concreteRHS = state.removeIntermediate("@return");
-        invokePrepare.cleanHeap(state, options);
+        invokePrepare.cleanHeap(state);
 
         try {
             lhs.setValue(state, concreteRHS);

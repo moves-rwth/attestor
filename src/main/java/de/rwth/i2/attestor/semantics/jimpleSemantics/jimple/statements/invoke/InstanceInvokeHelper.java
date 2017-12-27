@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +15,8 @@ import java.util.List;
 /**
  * Prepares the heap for the invoke of an instance method and cleans it afterwards.
  * <br><br>
- * Call {@link #prepareHeap(ProgramState, SymbolicExecutionObserver) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(ProgramState, SymbolicExecutionObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  * <br>
  * Handles the evaluation of parameter and this expressions
  * and stores them in the heap, by setting the corresponding intermediates.<br>
@@ -57,7 +56,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
      * leave the scopes of the method.
      */
     @Override
-    public void cleanHeap(ProgramState programState, SymbolicExecutionObserver options) {
+    public void cleanHeap(ProgramState programState) {
 
         programState.removeIntermediate("@this:");
         removeParameters(programState);
@@ -74,7 +73,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
      * JimpleProgramState)
      */
     @Override
-    public void prepareHeap(ProgramState programState, SymbolicExecutionObserver options) throws NotSufficientlyMaterializedException {
+    public void prepareHeap(ProgramState programState) throws NotSufficientlyMaterializedException {
 
         ConcreteValue concreteBase;
         try {
@@ -89,12 +88,12 @@ public class InstanceInvokeHelper extends InvokeHelper {
             // String type = " " + baseValue.getType().toString();
             String type = "";
             programState.setIntermediate("@this:" + type, concreteBase);
-            if (options.isDeadVariableEliminationEnabled()) {
+            if (scene().options().isRemoveDeadVariables()) {
                 DeadVariableEliminator.removeDeadVariables(this, baseValue.toString(), programState, liveVariableNames);
             }
         }
 
-        appendArguments(programState, options);
+        appendArguments(programState);
     }
 
     /*

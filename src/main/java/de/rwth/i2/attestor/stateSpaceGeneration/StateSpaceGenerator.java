@@ -331,7 +331,7 @@ public class StateSpaceGenerator extends SceneObject {
             throws StateSpaceGenerationAbortedException {
 
         try {
-            return semanticsCommand.computeSuccessors(state, symbolicExecutionObserver);
+            return semanticsCommand.computeSuccessors(state);
         } catch (NotSufficientlyMaterializedException e) {
             logger.error("A state could not be sufficiently materialized.");
             return Collections.emptySet();

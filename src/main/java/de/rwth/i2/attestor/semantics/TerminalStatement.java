@@ -3,8 +3,8 @@ package de.rwth.i2.attestor.semantics;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class TerminalStatement implements SemanticsCommand {
     private boolean isCanonicalizationPermitted = true;
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState executable, SymbolicExecutionObserver options) {
+    public Collection<ProgramState> computeSuccessors(ProgramState executable) {
 
         return new LinkedHashSet<>();
     }

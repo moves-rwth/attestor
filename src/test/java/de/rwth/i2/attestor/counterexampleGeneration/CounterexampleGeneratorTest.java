@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -52,8 +51,7 @@ public class CounterexampleGeneratorTest {
 
         ProgramState finalState = null;
         try {
-            finalState = program.getStatement(0)
-                    .computeSuccessors(initialState.clone(), new MockupSymbolicExecutionObserver(sceneObject)).iterator().next();
+            finalState = program.getStatement(0).computeSuccessors(initialState.clone()).iterator().next();
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
             fail();
         }
@@ -116,7 +114,7 @@ public class CounterexampleGeneratorTest {
         ProgramState finalState = null;
         try {
             finalState = stmt.computeSuccessors(
-                    initialState.shallowCopyWithUpdateHeap(materialized.clone()), factoryEmpty.getSemanticsOptionsSupplier(sceneObject).get(null)
+                    initialState.shallowCopyWithUpdateHeap(materialized.clone())
             ).iterator().next();
             finalState = finalState.shallowCopyWithUpdateHeap(
                     factorySLL.getCanonicalization().canonicalize(finalState.getHeap())

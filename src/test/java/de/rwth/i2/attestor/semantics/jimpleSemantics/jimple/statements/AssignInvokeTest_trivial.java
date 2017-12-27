@@ -20,8 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -61,7 +61,7 @@ public class AssignInvokeTest_trivial {
     public void testComputeSuccessors() {
 
         try {
-            Set<ProgramState> resStates = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> resStates = stmt.computeSuccessors(inputState);
             assertEquals(1, resStates.size());
             DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
             assertNotSame(resState, inputState);

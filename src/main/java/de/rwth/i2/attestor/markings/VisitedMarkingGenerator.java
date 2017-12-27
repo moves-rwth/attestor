@@ -80,7 +80,7 @@ class VisitedMarkingStatement implements SemanticsCommand {
     }
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver options)
+    public Set<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
         HeapConfiguration heap = programState.getHeap();
