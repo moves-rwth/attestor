@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.ipa.methodExecution.ContractBasedMethod;
 import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
 import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
-import de.rwth.i2.attestor.ipa.scopes.InternalScopeExtractor;
+import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
@@ -69,7 +69,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         for(Method method : scene ().getRegisteredMethods()) {
 
             MethodExecutor executor = new ContractBasedMethod(
-                    new InternalScopeExtractor(this, method.getName()),
+                    new DefaultScopeExtractor(this, method.getName()),
                     new InternalContractCollection(preconditionMatchingStrategy),
                     new InternalContractGenerator(factory, method.getBody())
             );

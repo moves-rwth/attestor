@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.ipa.methodExecution.Contract;
 import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -26,7 +25,6 @@ public class DefaultScene implements Scene {
     private final GeneralType.Factory typeFactory = new GeneralType.Factory();
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
-    private final IpaAbstractMethod.Factory ipaFactory = new IpaAbstractMethod.Factory(this);
 
     private final Options options = new Options();
     private final Strategies strategies = new Strategies();

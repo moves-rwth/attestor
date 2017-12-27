@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
@@ -49,9 +48,10 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
              */
             throw new IllegalStateException("Counterexample might be spurious due to encountered nondeterminism" +
                     " caused by an unsupported program statement.");
-        } else if (handler.getClass() == ScopedHeapConfigurationPair.class) {
-            updateFragmentedHc((ScopedHeapConfigurationPair) handler);
-        }
+        } /*else if (handler.getClass() == ScopedHeapConfigurationPair.class) {
+            // TODO updateFragmentedHc((ScopedHeapConfigurationPair) handler);
+        } */
+
     }
 
     private void updateInvoke(InvokeCleanup invokeCleanup, ProgramState input) {
@@ -77,10 +77,12 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
         method.setReuseResults(false);
     }
 
+    /* TODO
     private void updateFragmentedHc(ScopedHeapConfigurationPair fragmentedHc) {
 
         stateSpaceSupplier.setFragmentedHcOfPreviousProcedure(fragmentedHc);
     }
+    */
 
     @Override
     public StateSpace generateStateSpace(Program program, ProgramState input)

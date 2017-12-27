@@ -6,11 +6,11 @@ import de.rwth.i2.attestor.ipa.methodExecution.ScopedHeap;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.util.Pair;
 
-public class InternalScopeExtractor extends SceneObject implements ScopeExtractor {
+public class DefaultScopeExtractor extends SceneObject implements ScopeExtractor {
 
     private String scopeName;
 
-    public InternalScopeExtractor(SceneObject sceneObject, String scopeName) {
+    public DefaultScopeExtractor(SceneObject sceneObject, String scopeName) {
         super(sceneObject);
         this.scopeName = scopeName;
     }

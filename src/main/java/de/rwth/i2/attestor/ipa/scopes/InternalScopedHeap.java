@@ -9,7 +9,7 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class InternalScopedHeap implements ScopedHeap {
+class InternalScopedHeap implements ScopedHeap {
 
     private final HeapConfiguration heapInScope;
     private final HeapConfiguration heapOutsideScope;

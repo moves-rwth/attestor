@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
@@ -24,7 +23,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
 
     private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
-    private ScopedHeapConfigurationPair fragmentedHcOfPreviousProcedure = null;
+    //private ScopedHeapConfigurationPair fragmentedHcOfPreviousProcedure = null;
 
     CounterexampleStateSpaceSupplier(StateCanonicalizationStrategy canonicalizationStrategy) {
 
@@ -42,10 +41,12 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         this.invokeObserverOfPreviousProcedure = observer;
     }
 
+    /* TODO
     void setFragmentedHcOfPreviousProcedure(ScopedHeapConfigurationPair fragmentedHc) {
 
         this.fragmentedHcOfPreviousProcedure = fragmentedHc;
     }
+    */
 
     @Override
     public StateSpace get() {
@@ -60,9 +61,9 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
         CounterexampleStateSpace result = new CounterexampleStateSpace(
                 canonicalizationStrategy,
                 requiredFinalStates,
-                invokeCleanupOfPreviousProcedure,
+                invokeCleanupOfPreviousProcedure
                 //invokeObserverOfPreviousProcedure,
-                fragmentedHcOfPreviousProcedure
+                // TODO fragmentedHcOfPreviousProcedure
         );
 
         finalStatesOfPreviousProcedure = null;

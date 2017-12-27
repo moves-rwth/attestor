@@ -4,9 +4,7 @@ package de.rwth.i2.attestor.ipa;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.ipa.scopes.ReachableFragmentComputer;
 import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
-import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -16,7 +14,10 @@ import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 import obsolete.SymbolicExecutionObserver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
@@ -169,9 +170,11 @@ public class IpaAbstractMethod extends AbstractMethod {
      * @return <reachableFragment,remainingFragment>
      */
     protected Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> prepareInput(HeapConfiguration input) {
-
+/* TODO
         ReachableFragmentComputer helper = new ReachableFragmentComputer(this, this.toString(), input);
         return helper.prepareInput();
+*/
+return  null;
     }
 
     private List<HeapConfiguration> applyContract(HeapConfiguration remainingFragment,
@@ -221,24 +224,5 @@ public class IpaAbstractMethod extends AbstractMethod {
 
         return isRecursive;
     }
-
-    public static final class Factory extends SceneObject {
-
-        private Map<String, IpaAbstractMethod> knownMethods = new LinkedHashMap<>();
-
-        public Factory(Scene scene) {
-
-            super(scene);
-        }
-
-        public IpaAbstractMethod get(String signature) {
-
-            if (!knownMethods.containsKey(signature)) {
-                knownMethods.put(signature, new IpaAbstractMethod(this, signature));
-            }
-            return knownMethods.get(signature);
-        }
-    }
-
 
 }
