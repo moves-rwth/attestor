@@ -82,6 +82,6 @@ public class JimpleParser extends SceneObject implements ProgramParser {
 
         String mainMethodName = sootClass.getMethodByName(entryPoint).getSignature();
 
-        return translator.getMethod(mainMethodName).getControlFlow();
+        return translator.getMethod(mainMethodName).getBody();
     }
 }

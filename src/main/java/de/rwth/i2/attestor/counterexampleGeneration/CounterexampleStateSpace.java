@@ -200,9 +200,13 @@ final class CounterexampleStateSpace implements StateSpace {
         }
 
         if(scopedHeapConfigurationPair != null) {
+
+            return null; // TODO refactoring
+            /*
             return abstractState.shallowCopyWithUpdateHeap(
                     scopedHeapConfigurationPair.merge(abstractState.getHeap())
             );
+            */
         } else {
             return abstractState;
         }

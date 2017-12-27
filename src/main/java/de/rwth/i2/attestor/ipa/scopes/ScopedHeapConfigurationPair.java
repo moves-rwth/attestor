@@ -39,13 +39,14 @@ public class ScopedHeapConfigurationPair {
 
     public Collection<HeapConfiguration> merge(ContractMatch contractMatch) {
 
-        // TODO reorder outsideScopeEdge
-
+        /*
         return heapOutsideScope
                 .clone()
                 .builder()
                 .replaceNonterminalEdge(outsideScopeEdge, contractMatch.getPostcondition())
                 .build();
+        */
+        return null; // TODO remove class
     }
 
 }

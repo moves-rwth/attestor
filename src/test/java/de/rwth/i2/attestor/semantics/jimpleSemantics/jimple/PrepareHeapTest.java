@@ -21,8 +21,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -58,7 +58,7 @@ public class PrepareHeapTest {
         try {
             DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
             assertEquals("result should have size 1", 1, res.size());
 
@@ -89,7 +89,7 @@ public class PrepareHeapTest {
         try {
             DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
             assertEquals("result should have size 1", 1, res.size());
 
@@ -121,7 +121,7 @@ public class PrepareHeapTest {
             DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
             input.prepareHeap();
 
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
 
             assertEquals("result should have size 1", 1, res.size());
 

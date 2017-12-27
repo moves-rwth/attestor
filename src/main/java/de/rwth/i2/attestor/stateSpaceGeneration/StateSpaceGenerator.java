@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 /**
@@ -244,7 +243,7 @@ public class StateSpaceGenerator extends SceneObject {
             boolean isSufficientlyMaterialized = materializationPhase(stateSemanticsCommand, state);
 
             if (isSufficientlyMaterialized) {
-                Set<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
+                Collection<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
                 if (successorStates.isEmpty()) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
@@ -328,7 +327,7 @@ public class StateSpaceGenerator extends SceneObject {
      * @param semanticsCommand The statement that should be executed.
      * @param state     The program state whose successor states shall be computed.
      */
-    private Set<ProgramState> executionPhase(SemanticsCommand semanticsCommand, ProgramState state)
+    private Collection<ProgramState> executionPhase(SemanticsCommand semanticsCommand, ProgramState state)
             throws StateSpaceGenerationAbortedException {
 
         try {

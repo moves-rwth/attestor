@@ -4,9 +4,10 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.ipa.methods.Method;
+import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -52,11 +53,11 @@ public class AssignInvokeTest_NonTrivial {
 
         Local var = new Local(type, "x");
 
-        AbstractMethod method = sceneObject.scene().getMethod("method");
+        Method method = new ConcreteMethod("method");
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new LinkedHashSet<>()));
         defaultControlFlow.add(new ReturnValueStmt(sceneObject, var, type));
-        method.setControlFlow(new ProgramImpl(defaultControlFlow));
+        method.setBody(new ProgramImpl(defaultControlFlow));
         InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);

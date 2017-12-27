@@ -3,12 +3,12 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
+import de.rwth.i2.attestor.ipa.methods.Method;
+import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
@@ -20,8 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -42,10 +42,11 @@ public class InvokeStmtTest {
 
         Type type = sceneObject.scene().getType("node");
         Local var = new Local(type, "x");
-        AbstractMethod method = new SimpleAbstractMethod(sceneObject, "method");
+
+        Method method = new ConcreteMethod("method");
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new Skip(sceneObject, -1));
-        method.setControlFlow(new ProgramImpl(defaultControlFlow));
+        method.setBody(new ProgramImpl(defaultControlFlow));
         InvokeHelper invokePrepare
                 = new InstanceInvokeHelper(sceneObject, var, new ArrayList<>());
 
@@ -59,7 +60,7 @@ public class InvokeStmtTest {
     public void testComputeSuccessors() {
 
         try {
-            Set<ProgramState> res = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(inputState, new MockupSymbolicExecutionObserver(sceneObject));
             assertEquals(1, res.size());
             DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
             assertNotSame("ensure clone on state level", resState, inputState);
