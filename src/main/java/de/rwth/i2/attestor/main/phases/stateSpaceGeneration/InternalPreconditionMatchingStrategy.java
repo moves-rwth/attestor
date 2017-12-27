@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
 import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
 import gnu.trove.list.array.TIntArrayList;
 
-class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {
+public class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {
 
     @Override
     public ContractMatch match(Contract contract, HeapConfiguration heapInScope) {

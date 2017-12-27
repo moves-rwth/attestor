@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategyWrapper;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceSupplier;
 import obsolete.SymbolicExecutionObserver;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
 
-    private final StateCanonicalizationStrategy canonicalizationStrategy;
+    private final StateCanonicalizationStrategyWrapper canonicalizationStrategy;
 
     private Set<ProgramState> finalStatesOfPreviousProcedure;
     private InvokeCleanup invokeCleanupOfPreviousProcedure;
@@ -25,7 +25,7 @@ final class CounterexampleStateSpaceSupplier implements StateSpaceSupplier {
     private SymbolicExecutionObserver invokeObserverOfPreviousProcedure = null;
     //private ScopedHeapConfigurationPair fragmentedHcOfPreviousProcedure = null;
 
-    CounterexampleStateSpaceSupplier(StateCanonicalizationStrategy canonicalizationStrategy) {
+    CounterexampleStateSpaceSupplier(StateCanonicalizationStrategyWrapper canonicalizationStrategy) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
     }

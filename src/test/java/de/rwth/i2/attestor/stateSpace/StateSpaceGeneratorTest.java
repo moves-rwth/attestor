@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 
 public class StateSpaceGeneratorTest {
 
-    private SSGBuilder ssgBuilder;
+    private StateSpaceGeneratorBuilder stateSpaceGeneratorBuilder;
 
     private SceneObject sceneObject;
     private ExampleHcImplFactory hcFactory;
@@ -41,7 +41,7 @@ public class StateSpaceGeneratorTest {
         sceneObject = new MockupSceneObject();
         hcFactory = new ExampleHcImplFactory(sceneObject);
 
-        ssgBuilder = StateSpaceGenerator.builder()
+        stateSpaceGeneratorBuilder = StateSpaceGenerator.builder()
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
@@ -69,7 +69,7 @@ public class StateSpaceGeneratorTest {
         ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
                     .build()
@@ -105,7 +105,7 @@ public class StateSpaceGeneratorTest {
         ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
                     // TODO .setDeadVariableElimination(true)
@@ -167,7 +167,7 @@ public class StateSpaceGeneratorTest {
         ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
                     .build()

@@ -60,6 +60,7 @@ public class AssignInvokeTest_NonTrivial {
         method.setBody(new ProgramImpl(defaultControlFlow));
         InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 
+
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
 
         inputGraph = hcFactory.getListAndConstants();

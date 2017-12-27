@@ -2,11 +2,11 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 
-public class StateCanonicalizationStrategy {
+public class StateCanonicalizationStrategyWrapper {
 
     private CanonicalizationStrategy heapStrategy;
 
-    public StateCanonicalizationStrategy(CanonicalizationStrategy strategy) {
+    public StateCanonicalizationStrategyWrapper(CanonicalizationStrategy strategy) {
 
         this.heapStrategy = strategy;
     }

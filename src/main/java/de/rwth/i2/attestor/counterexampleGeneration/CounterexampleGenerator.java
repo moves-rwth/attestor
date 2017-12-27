@@ -38,7 +38,7 @@ public final class CounterexampleGenerator extends SceneObject {
 
     private Program program;
     private Trace trace;
-    private StateCanonicalizationStrategy canonicalizationStrategy;
+    private StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private boolean deadVariableEliminationEnabled;
@@ -184,7 +184,7 @@ public final class CounterexampleGenerator extends SceneObject {
 
         public CounterexampleGeneratorBuilder setCanonicalizationStrategy(CanonicalizationStrategy strategy) {
 
-            generator.canonicalizationStrategy = new StateCanonicalizationStrategy(strategy);
+            generator.canonicalizationStrategy = new StateCanonicalizationStrategyWrapper(strategy);
             return this;
         }
 

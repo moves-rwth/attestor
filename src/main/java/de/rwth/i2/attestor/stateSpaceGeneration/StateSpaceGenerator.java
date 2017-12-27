@@ -50,7 +50,7 @@ public class StateSpaceGenerator {
      * This strategy is invoked after execution of abstract transfer
      * functions in order to generalize.
      */
-    StateCanonicalizationStrategy canonicalizationStrategy;
+    StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     /**
      * Strategy determining when to give up on further state space
      * exploration.
@@ -90,17 +90,17 @@ public class StateSpaceGenerator {
     }
 
     /**
-     * @return An SSGBuilder which is the only means to create a new
+     * @return An StateSpaceGeneratorBuilder which is the only means to create a new
      * StateSpaceGenerator object.
      */
-    public static SSGBuilder builder() {
+    public static StateSpaceGeneratorBuilder builder() {
 
-        return new SSGBuilder();
+        return new StateSpaceGeneratorBuilder();
     }
 
-    public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
+    public static StateSpaceGeneratorBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
 
-        return new SSGBuilder()
+        return new StateSpaceGeneratorBuilder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
@@ -132,7 +132,7 @@ public class StateSpaceGenerator {
     /**
      * @return The strategy determining how canonicalization is performed.
      */
-    public StateCanonicalizationStrategy getCanonizationStrategy() {
+    public StateCanonicalizationStrategyWrapper getCanonizationStrategy() {
 
         return canonicalizationStrategy;
     }

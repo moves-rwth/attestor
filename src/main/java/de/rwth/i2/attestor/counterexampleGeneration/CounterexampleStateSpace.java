@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategyWrapper;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
@@ -23,14 +23,14 @@ import java.util.Set;
  */
 final class CounterexampleStateSpace implements StateSpace {
 
-    private final StateCanonicalizationStrategy canonicalizationStrategy;
+    private final StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     private final Set<ProgramState> requiredFinalStates;
     private final InvokeCleanup invokeCleanup;
     // TODO private final ScopedHeapConfigurationPair scopedHeapConfigurationPair;
     private final Set<ProgramState> finalStates = new LinkedHashSet<>();
     private ProgramState initialState;
 
-    CounterexampleStateSpace(StateCanonicalizationStrategy canonicalizationStrategy,
+    CounterexampleStateSpace(StateCanonicalizationStrategyWrapper canonicalizationStrategy,
                              Set<ProgramState> requiredFinalStates,
                              InvokeCleanup invokeCleanup
    // TODO                          ScopedHeapConfigurationPair scopedHeapConfigurationPair

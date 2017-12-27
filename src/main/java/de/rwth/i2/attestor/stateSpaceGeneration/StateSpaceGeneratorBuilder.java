@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public class SSGBuilder {
+public class StateSpaceGeneratorBuilder {
 
     /**
      * The initial state passed to the state space generation
@@ -28,7 +28,7 @@ public class SSGBuilder {
      * Creates a new builder representing an everywhere
      * uninitialized StateSpaceGenerator.
      */
-    SSGBuilder() {
+    StateSpaceGeneratorBuilder() {
 
         initialStates = new ArrayList<>();
         generator = new StateSpaceGenerator();
@@ -105,7 +105,7 @@ public class SSGBuilder {
      *                     the state space generation.
      * @return The builder.
      */
-    public SSGBuilder addInitialState(ProgramState initialState) {
+    public StateSpaceGeneratorBuilder addInitialState(ProgramState initialState) {
 
         initialStates.add(initialState);
         return this;
@@ -116,7 +116,7 @@ public class SSGBuilder {
      *                      the state space generation.
      * @return The builder.
      */
-    public SSGBuilder addInitialStates(List<ProgramState> initialStates) {
+    public StateSpaceGeneratorBuilder addInitialStates(List<ProgramState> initialStates) {
 
         this.initialStates.addAll(initialStates);
         return this;
@@ -126,7 +126,7 @@ public class SSGBuilder {
      * @param program The program that is executed to generate the state space.
      * @return The builder.
      */
-    public SSGBuilder setProgram(Program program) {
+    public StateSpaceGeneratorBuilder setProgram(Program program) {
 
         generator.program = program;
         return this;
@@ -136,7 +136,7 @@ public class SSGBuilder {
      * @param materializationStrategy The strategy used for materialization.
      * @return The builder.
      */
-    public SSGBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
+    public StateSpaceGeneratorBuilder setMaterializationStrategy(MaterializationStrategy materializationStrategy) {
 
         generator.materializationStrategy = new StateMaterializationStrategy(materializationStrategy);
         return this;
@@ -146,9 +146,9 @@ public class SSGBuilder {
      * @param canonicalizationStrategy The strategy used for canonicalization.
      * @return The builder.
      */
-    public SSGBuilder setCanonizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+    public StateSpaceGeneratorBuilder setCanonizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
 
-        generator.canonicalizationStrategy = new StateCanonicalizationStrategy(canonicalizationStrategy);
+        generator.canonicalizationStrategy = new StateCanonicalizationStrategyWrapper(canonicalizationStrategy);
         return this;
     }
 
@@ -156,7 +156,7 @@ public class SSGBuilder {
      * @param abortStrategy The strategy used for aborting the state space generation.
      * @return The builder.
      */
-    public SSGBuilder setAbortStrategy(AbortStrategy abortStrategy) {
+    public StateSpaceGeneratorBuilder setAbortStrategy(AbortStrategy abortStrategy) {
 
         generator.abortStrategy = abortStrategy;
         return this;
@@ -166,7 +166,7 @@ public class SSGBuilder {
      * @param stateLabelingStrategy The strategy used to label states with atomic propositions.
      * @return The builder.
      */
-    public SSGBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy) {
+    public StateSpaceGeneratorBuilder setStateLabelingStrategy(StateLabelingStrategy stateLabelingStrategy) {
 
         generator.stateLabelingStrategy = stateLabelingStrategy;
         return this;
@@ -176,7 +176,7 @@ public class SSGBuilder {
      * @param stateRefinementStrategy The strategy to refine states before continuing the symbolic execution.
      * @return The builder.
      */
-    public SSGBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
+    public StateSpaceGeneratorBuilder setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 
         generator.stateRefinementStrategy = stateRefinementStrategy;
         return this;
@@ -186,7 +186,7 @@ public class SSGBuilder {
      * @param stateCounter The global counter for the total number of states generated so far.
      * @return The builder.
      */
-    public SSGBuilder setStateCounter(StateSpaceGenerator.TotalStatesCounter stateCounter) {
+    public StateSpaceGeneratorBuilder setStateCounter(StateSpaceGenerator.TotalStatesCounter stateCounter) {
 
         generator.totalStatesCounter = stateCounter;
         return this;
@@ -197,7 +197,7 @@ public class SSGBuilder {
      *                a depth-first fashion.
      * @return The builder.
      */
-    public SSGBuilder setBreadthFirstSearchEnabled(boolean enabled) {
+    public StateSpaceGeneratorBuilder setBreadthFirstSearchEnabled(boolean enabled) {
 
         generator.breadthFirstSearchEnabled = enabled;
         return this;
@@ -207,7 +207,7 @@ public class SSGBuilder {
      * @param strategy A strategy that determines whether successors of a given state should be explored further.
      * @return The builder.
      */
-    public SSGBuilder setExplorationStrategy(ExplorationStrategy strategy) {
+    public StateSpaceGeneratorBuilder setExplorationStrategy(ExplorationStrategy strategy) {
 
         generator.explorationStrategy = strategy;
         return this;
@@ -217,7 +217,7 @@ public class SSGBuilder {
      * @param stateSpaceSupplier The function determining which instances of state spaces are generated
      * @return The builder.
      */
-    public SSGBuilder setStateSpaceSupplier(StateSpaceSupplier stateSpaceSupplier) {
+    public StateSpaceGeneratorBuilder setStateSpaceSupplier(StateSpaceSupplier stateSpaceSupplier) {
 
         generator.stateSpaceSupplier = stateSpaceSupplier;
         return this;
@@ -229,7 +229,7 @@ public class SSGBuilder {
      *                               calls.
      * @return The builder.
      */
-    public SSGBuilder setPostProcessingStrategy(PostProcessingStrategy postProcessingStrategy) {
+    public StateSpaceGeneratorBuilder setPostProcessingStrategy(PostProcessingStrategy postProcessingStrategy) {
 
         generator.postProcessingStrategy = postProcessingStrategy;
         return this;

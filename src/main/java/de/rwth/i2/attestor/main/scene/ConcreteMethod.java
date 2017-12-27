@@ -36,11 +36,12 @@ public class ConcreteMethod implements Method {
     @Override
     public void setName(String name) {
 
+        this.name = name;
     }
 
     @Override
     public void setBody(Program body) {
-
+        this.body = body;
     }
 
     @Override
