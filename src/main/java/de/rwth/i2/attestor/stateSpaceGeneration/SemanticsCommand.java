@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -19,11 +20,11 @@ public interface SemanticsCommand {
      *
      * @param programState The state on which the abstract program semantics shall be executed.
      * @param options      A collection of configuration parameters to influence to symbolic execution.
-     * @return The set of all states resulting from executing the program semantics on programState.
+     * @return All states resulting from executing the program semantics on programState.
      * @throws NotSufficientlyMaterializedException This exception is thrown if the semantics cannot be executed on
      *                                              programState due to missing fields.
      */
-    Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver options)
+    Collection<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver options)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException;
 
     /**

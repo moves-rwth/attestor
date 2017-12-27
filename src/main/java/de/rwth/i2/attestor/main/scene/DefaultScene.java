@@ -7,6 +7,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
@@ -14,6 +16,10 @@ import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefaultScene implements Scene {
 
@@ -25,6 +31,7 @@ public class DefaultScene implements Scene {
     private final Options options = new Options();
     private final Strategies strategies = new Strategies();
 
+    private final Map<String, Method> methods = new HashMap<>();
     private long totalNumberOfStates = 0;
 
 
@@ -98,9 +105,25 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public IpaAbstractMethod getMethod(String name) {
+    public Contract createContract(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions) {
+        return null;
+    }
 
-        return ipaFactory.get(name);
+    @Override
+    public Method getMethod(String signature) {
+
+        if(methods.containsKey(signature)) {
+            return methods.get(signature);
+        } else {
+            Method result = new ConcreteMethod(signature);
+            methods.put(signature, result);
+            return result;
+        }
+    }
+
+    @Override
+    public Collection<Method> getRegisteredMethods() {
+        return methods.values();
     }
 
     @Override

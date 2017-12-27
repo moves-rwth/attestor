@@ -15,7 +15,7 @@ public abstract class AbstractMethod extends SceneObject {
      */
     protected Program method;
     /**
-     * the methods signature
+     * the methodExecution signature
      */
     protected String displayName;
     private boolean reuseResultsEnabled = true;
@@ -64,7 +64,7 @@ public abstract class AbstractMethod extends SceneObject {
     }
 
     /**
-     * sets the methods semantic to the control flow of the given list of
+     * sets the methodExecution semantic to the control flow of the given list of
      * abstract semantics
      *
      * @param program a program corresponding to the method body

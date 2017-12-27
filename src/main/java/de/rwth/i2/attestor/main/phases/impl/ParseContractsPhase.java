@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonImporter;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
@@ -51,7 +51,7 @@ public class ParseContractsPhase extends AbstractPhase {
 
             JSONObject obj = new JSONObject(str);
             String signature = obj.getString("method");
-            IpaAbstractMethod abstractMethod = scene().getMethod(signature);
+            Method abstractMethod = scene().getMethod(signature);
 
             Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
@@ -69,7 +69,9 @@ public class ParseContractsPhase extends AbstractPhase {
                     final JSONObject jsonPostcondition = jsonPostConditions.getJSONObject(p);
                     postconditions.add(importer.parseHC(jsonPostcondition, addUsedSelectorLabel));
                 }
-                abstractMethod.addContracts(precondition, postconditions);
+                abstractMethod.addContract(
+                        scene().createContract(precondition, postconditions)
+                );
             }
 
 

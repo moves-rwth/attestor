@@ -180,7 +180,7 @@ public class ReachableFragmentComputer extends SceneObject {
         return idOfNonterminal;
     }
 
-    // methods to construct the reachable fragment
+    // methodExecution to construct the reachable fragment
 
     /**
      * * adds the target of the variable edge and its target to the reachable fragment,
@@ -317,7 +317,7 @@ public class ReachableFragmentComputer extends SceneObject {
         return translatedAttachedNodes;
     }
 
-    // methods for cutpoint computation
+    // methodExecution for cutpoint computation
 
     /**
      * add all nodes referenced by variables (not parameters but constants)

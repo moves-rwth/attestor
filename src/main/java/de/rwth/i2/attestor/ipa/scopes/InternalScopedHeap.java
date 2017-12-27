@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.ipa.scopes;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.ContractMatch;
-import de.rwth.i2.attestor.ipa.methods.ScopedHeap;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.ScopedHeap;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.ArrayList;

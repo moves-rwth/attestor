@@ -117,7 +117,7 @@ public class VF2State {
 
     /**
      * Computes the next candidate pair to be considered.
-     * This pair is accessible through the methods {@link #getPatternCandidate()} and {@link #getTargetCandidate()}.
+     * This pair is accessible through the methodExecution {@link #getPatternCandidate()} and {@link #getTargetCandidate()}.
      *
      * @return True if and only if another candidate pair has been found.
      */

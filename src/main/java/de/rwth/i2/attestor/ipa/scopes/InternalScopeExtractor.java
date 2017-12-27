@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.ipa.scopes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.ScopeExtractor;
-import de.rwth.i2.attestor.ipa.methods.ScopedHeap;
+import de.rwth.i2.attestor.ipa.methodExecution.ScopeExtractor;
+import de.rwth.i2.attestor.ipa.methodExecution.ScopedHeap;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.util.Pair;
 

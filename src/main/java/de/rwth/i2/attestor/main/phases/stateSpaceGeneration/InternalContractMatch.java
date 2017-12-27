@@ -1,11 +1,11 @@
-package de.rwth.i2.attestor.ipa.contractMatchings;
+package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
 
 import java.util.Collection;
 
-public class InternalContractMatch implements ContractMatch {
+class InternalContractMatch implements ContractMatch {
 
     private int[] externalReordering;
     private Collection<HeapConfiguration> postconditions;

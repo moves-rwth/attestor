@@ -1,19 +1,19 @@
-package de.rwth.i2.attestor.ipa.methods;
+package de.rwth.i2.attestor.ipa.methodExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-public class ContractBasedMethod {
+public class ContractBasedMethod implements MethodExecutor {
 
     private ScopeExtractor scopeExtractor;
     private ContractCollection contractCollection;
     private ContractGenerator contractGenerator;
 
-    protected ContractBasedMethod(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
+    public ContractBasedMethod(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
                                   ContractGenerator contractGenerator) {
 
         this.scopeExtractor = scopeExtractor;
@@ -33,7 +33,8 @@ public class ContractBasedMethod {
         return contractGenerator;
     }
 
-    public Collection<ProgramState> getResultStates(ProgramState input) throws StateSpaceGenerationAbortedException {
+    @Override
+    public Collection<ProgramState> getResultStates(ProgramState input) {
 
         HeapConfiguration inputHeap = input.getHeap();
         ScopedHeap scopedHeap = scopeExtractor.extractScope(inputHeap);

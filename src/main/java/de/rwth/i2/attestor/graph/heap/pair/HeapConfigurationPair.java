@@ -17,13 +17,13 @@ import java.util.List;
 
 /**
  * A HeapConfigurationPair actually consists of two heap configurations that are materialized together.
- * All methods except for hyperedge replacement are only applied to the actual HeapConfiguration and not to its pairedHeapConfiguration
+ * All methodExecution except for hyperedge replacement are only applied to the actual HeapConfiguration and not to its pairedHeapConfiguration
  *
  * @author Christoph
  */
 public final class HeapConfigurationPair implements HeapConfiguration, Graph {
 
-    final HeapConfiguration actual; // the actual HeapConfiguration visible through all methods
+    final HeapConfiguration actual; // the actual HeapConfiguration visible through all methodExecution
     final HeapConfiguration pairedHeapConfiguration;
     final TIntIntMap ntEdgeRelation;
     HeapConfigurationPairBuilder builder;

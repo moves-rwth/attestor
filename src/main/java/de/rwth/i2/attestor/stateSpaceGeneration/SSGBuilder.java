@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides methods to safely initialize a StateSpaceGenerator.
+ * This class provides methodExecution to safely initialize a StateSpaceGenerator.
  *
  * @author Christoph
  */
@@ -42,7 +42,7 @@ public class SSGBuilder extends SceneObject {
      * calling this method causes an IllegalStateException.
      *
      * @return StateSpaceGenerator initialized by the previously called
-     * methods of this builder
+     * methodExecution of this builder
      */
     public StateSpaceGenerator build() {
 

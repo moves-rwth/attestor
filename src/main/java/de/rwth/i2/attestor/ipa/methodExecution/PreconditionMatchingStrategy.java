@@ -1,8 +1,6 @@
-package de.rwth.i2.attestor.ipa.contracts;
+package de.rwth.i2.attestor.ipa.methodExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.Contract;
-import de.rwth.i2.attestor.ipa.methods.ContractMatch;
 
 public interface PreconditionMatchingStrategy {
 

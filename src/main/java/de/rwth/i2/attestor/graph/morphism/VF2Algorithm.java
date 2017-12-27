@@ -24,7 +24,7 @@ import java.util.Stack;
  * @author Christoph
  * @see <a href="http://dblp.uni-trier.de/rec/html/journals/pami/CordellaFSV04">Cordella et al.</a>
  * <p>
- * There are two main methods in this class for clients:
+ * There are two main methodExecution in this class for clients:
  * <p>
  * {@link VF2Algorithm#builder()} creates a builder to create a customized VF2Algorithm that, for example, includes
  * the desired FeasibilityFunctions.

@@ -1,9 +1,10 @@
 package de.rwth.i2.attestor.ipa.contracts;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.Contract;
-import de.rwth.i2.attestor.ipa.methods.ContractCollection;
-import de.rwth.i2.attestor.ipa.methods.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractCollection;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
 
 import java.util.ArrayList;
 import java.util.Collection;

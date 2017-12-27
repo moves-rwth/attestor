@@ -84,7 +84,7 @@ public class OutputSettings {
     private String folderForContracts;
 
     /**
-     * A mapping containing the signatures of those methods the user requests contracts for
+     * A mapping containing the signatures of those methodExecution the user requests contracts for
      * and as values the file names these contracts should be written to.
      */
     private Map<String, String> requiredContracts;

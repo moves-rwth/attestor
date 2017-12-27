@@ -78,7 +78,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
     /**
      * Removes an intermediate (in the current scopes) from the executable.
-     * Intermediates are internal variables for communication between methods, such that this, return,
+     * Intermediates are internal variables for communication between methodExecution, such that this, return,
      * param_n, etc.
      *
      * @param name The name of the intermediate
@@ -88,7 +88,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
     /**
      * Sets an intermediate to the given value.
-     * Intermediates are internal variables for communication between methods, such that this, return,
+     * Intermediates are internal variables for communication between methodExecution, such that this, return,
      * param_n, etc.
      *
      * @param name  The name of the intermediate .

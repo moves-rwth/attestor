@@ -1,14 +1,14 @@
-package de.rwth.i2.attestor.ipa.contractMatchings;
+package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
-import de.rwth.i2.attestor.ipa.contracts.PreconditionMatchingStrategy;
-import de.rwth.i2.attestor.ipa.methods.Contract;
-import de.rwth.i2.attestor.ipa.methods.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
 import gnu.trove.list.array.TIntArrayList;
 
-public class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {
+class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {
 
     @Override
     public ContractMatch match(Contract contract, HeapConfiguration heapInScope) {

@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -16,6 +16,7 @@ import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     /**
      * the abstract translation of the method that is called
      */
-    private final AbstractMethod method;
+    private final Method method;
     /**
      * handles arguments, and if applicable the this-reference.
      */
@@ -46,7 +47,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     private final int nextPC;
 
     public AssignInvoke(SceneObject sceneObject, SettableValue lhs,
-                        AbstractMethod method, InvokeHelper invokePrepare,
+                        Method method, InvokeHelper invokePrepare,
                         int nextPC) {
 
         super(sceneObject);
@@ -76,10 +77,9 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
         programState = programState.clone();
         invokePrepare.prepareHeap(programState, observer);
 
-        Set<ProgramState> methodResult = method.getResult(
-                programState,
-                observer
-        );
+        Collection<ProgramState> methodResult = method
+                .getMethodExecutor()
+                .getResultStates(programState);
 
         Set<ProgramState> assignResult = new LinkedHashSet<>();
         for (ProgramState resState : methodResult) {

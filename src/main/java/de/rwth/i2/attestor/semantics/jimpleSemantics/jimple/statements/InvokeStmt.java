@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -23,7 +24,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     /**
      * the abstract representation of the called method
      */
-    private final AbstractMethod method;
+    private final Method method;
     /**
      * handles arguments, and if applicable the this-reference.
      */
@@ -33,7 +34,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
      */
     private final int nextPC;
 
-    public InvokeStmt(SceneObject sceneObject, AbstractMethod method, InvokeHelper invokePrepare, int nextPC) {
+    public InvokeStmt(SceneObject sceneObject, Method method, InvokeHelper invokePrepare, int nextPC) {
 
         super(sceneObject);
         this.method = method;
@@ -51,7 +52,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
         observer.update(this, programState);
@@ -60,10 +61,9 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
 
         invokePrepare.prepareHeap(programState, observer);
 
-        Set<ProgramState> methodResult = method.getResult(
-                programState,
-                observer
-        );
+        Collection<ProgramState> methodResult = method
+                .getMethodExecutor()
+                .getResultStates(programState);
 
         methodResult.forEach(x -> invokePrepare.cleanHeap(x, observer));
         methodResult.forEach(ProgramState::clone);
