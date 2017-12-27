@@ -42,9 +42,8 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     }
 
     /**
-     * gets the fixpoint from the
-     * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod
-     * AbstractMethod} for the input heap and returns it for the successor
+     * gets the fixpoint from the method
+     * for the input heap and returns it for the successor
      * location.<br>
      * <p>
      * If any variable appearing in the arguments is not live at this point,

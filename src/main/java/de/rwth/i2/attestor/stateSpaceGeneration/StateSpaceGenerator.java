@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ import java.util.LinkedList;
  *
  * @author christoph
  */
-public class StateSpaceGenerator extends SceneObject {
+public class StateSpaceGenerator {
 
     private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
     /**
@@ -87,23 +86,21 @@ public class StateSpaceGenerator extends SceneObject {
      */
     StateSpaceSupplier stateSpaceSupplier;
 
-    protected StateSpaceGenerator(SceneObject otherObject) {
-
-        super(otherObject);
+    protected StateSpaceGenerator() {
     }
 
     /**
      * @return An SSGBuilder which is the only means to create a new
      * StateSpaceGenerator object.
      */
-    public static SSGBuilder builder(SceneObject sceneObject) {
+    public static SSGBuilder builder() {
 
-        return new SSGBuilder(sceneObject);
+        return new SSGBuilder();
     }
 
     public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
 
-        return new SSGBuilder(stateSpaceGenerator)
+        return new SSGBuilder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())

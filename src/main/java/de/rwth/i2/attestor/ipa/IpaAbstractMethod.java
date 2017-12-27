@@ -6,12 +6,12 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.ipa.scopes.ScopedHeapConfigurationPair;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
+import obsolete.AbstractMethod;
 import obsolete.SymbolicExecutionObserver;
 
 import java.util.ArrayList;

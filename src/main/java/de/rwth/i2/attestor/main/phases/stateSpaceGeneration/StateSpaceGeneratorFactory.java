@@ -39,7 +39,7 @@ class StateSpaceGeneratorFactory extends SceneObject{
         Strategies strategies = scene().strategies();
 
         return StateSpaceGenerator
-                .builder(this)
+                .builder()
                 .setStateLabelingStrategy(
                         strategies.getStateLabelingStrategy()
                 )

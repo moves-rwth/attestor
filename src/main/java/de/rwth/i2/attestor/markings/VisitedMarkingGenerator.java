@@ -29,7 +29,7 @@ public class VisitedMarkingGenerator extends SceneObject {
         List<ProgramState> initialStates = setupInitialStates(input);
 
 
-        StateSpaceGenerator generator = StateSpaceGenerator.builder(this)
+        StateSpaceGenerator generator = StateSpaceGenerator.builder()
                 .setProgram(program)
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .setCanonizationStrategy(scene().strategies().getAggressiveCanonicalizationStrategy())

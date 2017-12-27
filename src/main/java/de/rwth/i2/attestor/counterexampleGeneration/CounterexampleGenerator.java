@@ -94,7 +94,7 @@ public final class CounterexampleGenerator extends SceneObject {
         ProgramState initialState = getInitialState();
 
         return StateSpaceGenerator
-                .builder(this)
+                .builder()
                 .setStateLabelingStrategy(s -> {
                 })
                 .setMaterializationStrategy(materializationStrategy)

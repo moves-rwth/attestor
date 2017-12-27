@@ -1,10 +1,9 @@
-package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
+package obsolete;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import obsolete.SymbolicExecutionObserver;
 
 import java.util.Set;
 

@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
-import de.rwth.i2.attestor.main.scene.SceneObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  *
  * @author Christoph
  */
-public class SSGBuilder extends SceneObject {
+public class SSGBuilder {
 
     /**
      * The initial state passed to the state space generation
@@ -29,11 +28,10 @@ public class SSGBuilder extends SceneObject {
      * Creates a new builder representing an everywhere
      * uninitialized StateSpaceGenerator.
      */
-    SSGBuilder(SceneObject sceneObject) {
+    SSGBuilder() {
 
-        super(sceneObject);
         initialStates = new ArrayList<>();
-        generator = new StateSpaceGenerator(sceneObject);
+        generator = new StateSpaceGenerator();
     }
 
     /**

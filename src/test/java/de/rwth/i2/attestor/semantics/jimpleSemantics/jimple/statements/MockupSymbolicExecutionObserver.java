@@ -25,7 +25,7 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
 
         ProgramState initialState = new DefaultProgramState(this, input.getHeap());
         initialState.setProgramCounter(0);
-        return StateSpaceGenerator.builder(this)
+        return StateSpaceGenerator.builder()
                 .addInitialState(initialState)
                 .setProgram(program)
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())

@@ -1,13 +1,9 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import obsolete.SymbolicExecutionObserver;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * A tailored observer that determines the required successor states of
@@ -38,8 +34,8 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
 
         if (input.isFromTopLevelStateSpace() && handler instanceof InvokeCleanup) {
             updateInvoke((InvokeCleanup) handler, input);
-        } else if (handler instanceof AbstractMethod) {
-            updateMethod((AbstractMethod) handler, input);
+        // TODO } else if (handler instanceof AbstractMethod) {
+            // updateMethod((AbstractMethod) handler, input);
         } else if (handler.getClass() == NondeterminismMessage.class) {
             /* Since nondeterminism due to overapproximation cannot occur during counterexample generation
                (we never perform abstraction), we know at this point that nondeterminism was caused by
@@ -60,7 +56,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
         stateSpaceSupplier.setInvokeCleanupOfPreviousProcedure(invokeCleanup, this);
     }
 
-    private void updateMethod(AbstractMethod method, ProgramState input) {
+    /* TODO private void updateMethod(AbstractMethod method, ProgramState input) {
 
         if (requiredFinalState != null) {
             requiredNoOfFinalStates = 1;
@@ -76,6 +72,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
         }
         method.setReuseResults(false);
     }
+    */
 
     /* TODO
     private void updateFragmentedHc(ScopedHeapConfigurationPair fragmentedHc) {
