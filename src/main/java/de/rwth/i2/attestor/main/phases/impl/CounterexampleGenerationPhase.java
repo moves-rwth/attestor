@@ -80,7 +80,6 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         CounterexampleGenerator generator = CounterexampleGenerator.builder(this)
                 .setProgram(program)
                 .setTrace(trace)
-                .setDeadVariableEliminationEnabled(scene().options().isRemoveDeadVariables())
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setMaterializationStrategy(materializationStrategy)
                 .setCanonicalizationStrategy(canonicalizationStrategy)

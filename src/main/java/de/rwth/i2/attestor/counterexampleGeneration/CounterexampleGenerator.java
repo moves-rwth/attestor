@@ -41,7 +41,6 @@ public final class CounterexampleGenerator extends SceneObject {
     private StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     private MaterializationStrategy materializationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
-    private boolean deadVariableEliminationEnabled;
 
     /**
      * Prevent construction of CounterexampleGenerator without using CounterexampleGeneratorBuilder.builder().
@@ -194,10 +193,5 @@ public final class CounterexampleGenerator extends SceneObject {
             return this;
         }
 
-        public CounterexampleGeneratorBuilder setDeadVariableEliminationEnabled(boolean enabled) {
-
-            generator.deadVariableEliminationEnabled = enabled;
-            return this;
-        }
     }
 }

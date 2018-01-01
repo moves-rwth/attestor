@@ -68,7 +68,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
      * as it is clearly not live at this point.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
         programState = programState.clone();
@@ -78,16 +78,21 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
                 .getMethodExecutor()
                 .getResultStates(programState);
 
+        return getCleanedResultStates(methodResult);
+    }
+
+    protected Collection<ProgramState> getCleanedResultStates(Collection<ProgramState> resultStates)
+            throws NotSufficientlyMaterializedException {
+
         Set<ProgramState> assignResult = new LinkedHashSet<>();
-        for (ProgramState resState : methodResult) {
+        for (ProgramState resState : resultStates) {
 
             resState = getCleanedResultState(resState);
             ProgramState freshState = resState.clone();
             freshState.setProgramCounter(nextPC);
             assignResult.add(freshState);
         }
-
-        return assignResult;
+        return resultStates;
     }
 
     public ProgramState getCleanedResultState(ProgramState state)
