@@ -17,22 +17,36 @@ public class MockupHeaps extends SceneObject {
     private HeapConfiguration postcondition;
     private int placeholderEdge;
 
+    private SelectorLabel sel;
+    private SelectorLabel selB;
+    private Type type;
+    private HeapConfiguration emptyHeap;
+    private TIntArrayList constantExternals;
+
     protected MockupHeaps(SceneObject sceneObject) {
         super(sceneObject);
 
-        TIntArrayList nodes = new TIntArrayList();
-        SelectorLabel sel = sceneObject.scene().getSelectorLabel("mockupSel");
-        SelectorLabel selB = sceneObject.scene().getSelectorLabel("mockupB");
-        Type type = sceneObject.scene().getType("mockupType");
+        sel = sceneObject.scene().getSelectorLabel("mockupSel");
+        selB = sceneObject.scene().getSelectorLabel("mockupB");
+        type = sceneObject.scene().getType("mockupType");
         type.addSelectorLabel(sel, TypeNames.NULL);
         type.addSelectorLabel(selB, TypeNames.NULL);
 
-        HeapConfiguration emptyHeap = sceneObject.scene().createProgramState(
-                sceneObject.scene().createHeapConfiguration()
-        ).getHeap();
+        emptyHeap = sceneObject.scene()
+                .createProgramState(sceneObject.scene().createHeapConfiguration())
+                .getHeap();
 
-        TIntArrayList constantExternals = emptyHeap.nodes();
+        constantExternals = emptyHeap.nodes();
 
+        setupHeap();
+        setupHeapInScope();
+        setupHeapOutsideScope();
+        setupPostcondition();
+    }
+
+    private void setupHeap() {
+
+        TIntArrayList nodes = new TIntArrayList();
         heap = emptyHeap.clone()
                 .builder()
                 .addNodes(type, 5, nodes)
@@ -43,24 +57,31 @@ public class MockupHeaps extends SceneObject {
                 .addSelector(nodes.get(3), sel, nodes.get(4))
                 .addVariableEdge("mockupVar", nodes.get(2))
                 .build();
+    }
 
+    private void setupHeapInScope() {
+
+        TIntArrayList nodes = heap.nodes();
+        int node = nodes.get(constantExternals.size());
         HeapConfigurationBuilder builder = heap.clone()
                 .builder()
-                .removeSelector(nodes.get(0), sel)
-                .removeIsolatedNode(nodes.get(0));
+                .removeSelector(node, sel)
+                .removeIsolatedNode(node);
         for(int i=0; i < constantExternals.size(); i++) {
             builder.setExternal(constantExternals.get(i));
         }
         heapInScope = builder
-                .setExternal(nodes.get(1))
+                .setExternal(node+1)
                 .build();
+    }
 
+    private void setupHeapOutsideScope() {
 
         TIntArrayList outsideScopeNodes = new TIntArrayList();
-        Nonterminal placeholder = sceneObject.scene()
+        Nonterminal placeholder = scene()
                 .createNonterminal("MockupPlaceholder", 1+constantExternals.size(),
                         new boolean[1+constantExternals.size()]);
-        builder = emptyHeap.clone()
+        HeapConfigurationBuilder builder = emptyHeap.clone()
                 .builder()
                 .addNodes(type, 2, outsideScopeNodes)
                 .addSelector(outsideScopeNodes.get(0), sel, outsideScopeNodes.get(1));
@@ -72,10 +93,20 @@ public class MockupHeaps extends SceneObject {
         heapOutsideScope = builder
                 .addNonterminalEdge(placeholder, tentacles)
                 .build();
+
+        TIntArrayList variables = heapOutsideScope.variableEdges();
+        builder = heapOutsideScope.builder();
+        for(int i=0; i < variables.size(); i++) {
+            builder.removeVariableEdge(variables.get(i));
+        }
+        heapOutsideScope = builder.build();
         placeholderEdge = heapOutsideScope.nonterminalEdges().get(0);
+    }
+
+    private void setupPostcondition() {
 
         TIntArrayList postconditionNodes = new TIntArrayList();
-        builder = emptyHeap.clone()
+        HeapConfigurationBuilder builder = emptyHeap.clone()
                 .builder()
                 .addNodes(type, 3, postconditionNodes)
                 .addSelector(postconditionNodes.get(0), selB, postconditionNodes.get(1))
@@ -88,6 +119,7 @@ public class MockupHeaps extends SceneObject {
                 .setExternal(postconditionNodes.get(0))
                 .build();
     }
+
 
     public HeapConfiguration getHeap() {
         return heap.clone();
