@@ -252,9 +252,9 @@ public class StateSpaceGenerator {
         }
     }
 
-    protected void addUnexploredState(ProgramState state) {
+    protected void addUnexploredState(ProgramState state, boolean isMaterializedState) {
 
-        if (explorationStrategy.check(state, stateSpace)) {
+        if (explorationStrategy.check(state, isMaterializedState)) {
             unexploredConfigurations.addLast(state);
         }
     }
@@ -283,7 +283,7 @@ public class StateSpaceGenerator {
         for (ProgramState m : materialized) {
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
-            addUnexploredState(m);
+            addUnexploredState(m, true);
             stateSpace.addMaterializationTransition(state, m);
         }
         return materialized.isEmpty();
@@ -327,9 +327,9 @@ public class StateSpaceGenerator {
         // performance optimization that prevents isomorphism checks against states in the state space.
         if (!needsCanonicalization(semanticsCommand, state)) {
             stateSpace.addState(state);
-            addUnexploredState(state);
+            addUnexploredState(state, false);
         } else if (stateSpace.addStateIfAbsent(state)) {
-            addUnexploredState(state);
+            addUnexploredState(state, false);
         }
 
         stateSpace.addControlFlowTransition(previousState, state);

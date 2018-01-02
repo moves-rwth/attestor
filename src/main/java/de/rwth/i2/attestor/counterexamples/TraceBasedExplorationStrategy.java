@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ExplorationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class TraceBasedExplorationStrategy implements ExplorationStrategy {
 
@@ -17,7 +16,11 @@ public class TraceBasedExplorationStrategy implements ExplorationStrategy {
     }
 
     @Override
-    public boolean check(ProgramState state, StateSpace stateSpace) {
+    public boolean check(ProgramState state, boolean isMaterializedState) {
+
+        if(isMaterializedState) {
+            return true;
+        }
 
         if(current == null) {
             if(trace.hasNext()) {

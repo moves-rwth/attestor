@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ExplorationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.Collection;
 
@@ -19,7 +18,7 @@ public class TargetBasedExplorationStrategy implements ExplorationStrategy {
     }
 
     @Override
-    public boolean check(ProgramState state, StateSpace stateSpace) {
+    public boolean check(ProgramState state, boolean isMaterializedState) {
 
         ProgramState foundState = null;
         for(ProgramState tState : targetStates) {
@@ -31,8 +30,8 @@ public class TargetBasedExplorationStrategy implements ExplorationStrategy {
 
         if(foundState != null) {
            targetStates.remove(foundState);
-           return true;
         }
-        return false;
+
+        return !targetStates.isEmpty();
     }
 }

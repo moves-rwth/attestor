@@ -40,6 +40,12 @@ public class FailureTrace implements ModelCheckingTrace {
         return stateTrace.getFirst();
     }
 
+    @Override
+    public ProgramState getFinalState() {
+
+        return stateTrace.getLast();
+    }
+
     public boolean isEmpty() {
 
         return stateIdTrace.isEmpty();

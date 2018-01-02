@@ -41,10 +41,10 @@ public class TargetBasedExplorationStrategyTest {
 
         TargetBasedExplorationStrategy strategy = new TargetBasedExplorationStrategy(targetStates, subsumptionStrategy);
 
-        assertTrue(strategy.check(otherState, null));
-        assertTrue(strategy.check(trivialState, null));
-        assertFalse(strategy.check(trivialState, null));
-        assertFalse(strategy.check(otherState, null));
+        assertTrue(strategy.check(otherState, false));
+        assertFalse(strategy.check(trivialState, false));
+        assertFalse(strategy.check(trivialState, false));
+        assertFalse(strategy.check(otherState, false));
 
     }
 

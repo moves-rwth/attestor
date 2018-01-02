@@ -94,7 +94,7 @@ public class StateSpaceGeneratorBuilder {
             state.setProgramCounter(0);
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
             generator.stateSpace.addInitialState(state);
-            generator.addUnexploredState(state);
+            generator.addUnexploredState(state, false);
         }
 
         return generator;

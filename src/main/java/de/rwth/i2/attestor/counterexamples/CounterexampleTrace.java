@@ -7,4 +7,6 @@ import java.util.Iterator;
 public interface CounterexampleTrace extends Iterator<ProgramState> {
 
     ProgramState getInitialState();
+    ProgramState getFinalState();
+
 }

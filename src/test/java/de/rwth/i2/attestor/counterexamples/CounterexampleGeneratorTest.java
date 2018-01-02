@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.counterexampleGeneration;
+package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
@@ -62,10 +62,13 @@ public class CounterexampleGeneratorTest {
 
         ExampleFactoryEmpty factoryEmpty = new ExampleFactoryEmpty();
         CounterexampleGenerator generator = CounterexampleGenerator
-                .builder(sceneObject)
+                .builder()
                 .setProgram(program)
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factoryEmpty.getCanonicalization())
+                .setAvailableMethods(Collections.emptySet())
+                .setStateSubsumptionStrategy((subsumed, subsuming) -> subsuming.equals(subsumed))
+                .setScopeExtractorFactory(method -> null)
                 .setMaterializationStrategy(factoryEmpty.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .build();
@@ -127,13 +130,18 @@ public class CounterexampleGeneratorTest {
         trace.addState(initialState)
                 .addState(finalState);
 
+        LanguageInclusionImpl languageInclusionStrategy = new LanguageInclusionImpl(sceneObject);
+
         CounterexampleGenerator generator = CounterexampleGenerator
-                .builder(sceneObject)
+                .builder()
                 .setProgram(program)
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factorySLL.getCanonicalization())
                 .setMaterializationStrategy(factorySLL.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
+                .setAvailableMethods(Collections.emptySet())
+                .setStateSubsumptionStrategy((subsumed, subsuming) -> languageInclusionStrategy.includes(subsumed.getHeap(), subsuming.getHeap()))
+                .setScopeExtractorFactory(method -> null)
                 .build();
 
         ProgramState counterexampleInput = generator.generate();

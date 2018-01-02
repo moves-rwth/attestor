@@ -25,10 +25,9 @@ public class CounterexampleGenerator {
     private MaterializationStrategy materializationStrategy;
     private CanonicalizationStrategy canonicalizationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
-
     private Function<Method, ScopeExtractor> scopeExtractorFactory;
+    private TraceBasedExplorationStrategy topLevelExplorationStrategy;
 
-    private final TraceBasedExplorationStrategy topLevelExplorationStrategy;
     private final Stack<Predicate<ProgramState>> requiredFinalStatesStack = new Stack<>();
     private final Map<Method, MethodExecutor> originalExecutors = new LinkedHashMap<>();
 
@@ -36,24 +35,23 @@ public class CounterexampleGenerator {
         return new Builder();
     }
 
-    protected CounterexampleGenerator() {
+    public ProgramState generate() {
 
         topLevelExplorationStrategy = new TraceBasedExplorationStrategy(trace, stateSubsumptionStrategy);
 
         requiredFinalStatesStack.push(
-                state -> topLevelExplorationStrategy.check(state, null)
+                state -> stateSubsumptionStrategy.subsumes(state, trace.getFinalState())
         );
-
-    }
-
-    public ProgramState generate() {
 
         decorateMethodExecutioners();
 
         Collection<ProgramState> finalStates = determineFinalStates();
 
         if(finalStates.size() != 1) {
-            throw new IllegalStateException("Failed to determine a unique counterexample input");
+            throw new IllegalStateException("Failed to determine a unique counterexample input " +
+                    "(determined " +
+                    finalStates.size() +
+                    " final states)");
         }
 
         ProgramState result = extractCounterexampleInput(finalStates.iterator().next());

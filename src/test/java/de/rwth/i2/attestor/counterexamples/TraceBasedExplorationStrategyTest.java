@@ -38,6 +38,11 @@ public class TraceBasedExplorationStrategyTest {
             }
 
             @Override
+            public ProgramState getFinalState() {
+                return null;
+            }
+
+            @Override
             public boolean hasNext() {
                 return false;
             }
@@ -51,7 +56,7 @@ public class TraceBasedExplorationStrategyTest {
 
         StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
         TraceBasedExplorationStrategy strategy = new TraceBasedExplorationStrategy(trace, equalityStrategy);
-        assertFalse(strategy.check(trivialState, null));
+        assertFalse(strategy.check(trivialState, false));
     }
 
     @Test
@@ -68,9 +73,9 @@ public class TraceBasedExplorationStrategyTest {
         ProgramState finalState = trivialState.clone();
         finalState.setProgramCounter(23);
 
-        assertTrue(strategy.check(state, null));
-        assertFalse(strategy.check(state, null));
-        assertTrue(strategy.check(finalState, null));
+        assertTrue(strategy.check(state, false));
+        assertFalse(strategy.check(state, false));
+        assertTrue(strategy.check(finalState,false));
     }
 
     private CounterexampleTrace getTrace() {
@@ -79,6 +84,11 @@ public class TraceBasedExplorationStrategyTest {
             @Override
             public ProgramState getInitialState() {
                 return programStates.get(0);
+            }
+
+            @Override
+            public ProgramState getFinalState() {
+                return programStates.get(1);
             }
 
             List<ProgramState> programStates = new ArrayList<>();
@@ -129,8 +139,8 @@ public class TraceBasedExplorationStrategyTest {
         ProgramState finalState = trivialState.clone();
         finalState.setProgramCounter(19);
 
-        assertTrue(strategy.check(state, null));
-        assertFalse(strategy.check(state, null));
-        assertTrue(strategy.check(finalState, null));
+        assertTrue(strategy.check(state, false));
+        assertFalse(strategy.check(state, false));
+        assertTrue(strategy.check(finalState, false));
     }
 }
