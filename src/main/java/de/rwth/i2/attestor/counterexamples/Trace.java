@@ -5,4 +5,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import java.util.Iterator;
 
 public interface Trace extends Iterator<ProgramState> {
+
+    ProgramState getInitialState();
 }

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import org.junit.Before;
@@ -8,7 +9,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Predicate;
 
 import static junit.framework.TestCase.*;
 
@@ -34,8 +34,7 @@ public class CounterexampleMethodExecutorTest {
                     Collection<ProgramState> result = new ArrayList<>();
                     result.add(sceneObject.scene().createProgramState(mockupHeaps.getPostcondition()));
                     return result;
-                },
-                (left, right) -> right.equals(left)
+                }
         );
     }
 
@@ -53,9 +52,9 @@ public class CounterexampleMethodExecutorTest {
         Collection<ProgramState> resultStates = executor.getResultStates(input);
         ProgramState validFinalState = sceneObject.scene().createProgramState(mockupHeaps.getPostcondition());
 
-        Predicate<ProgramState> predicate = contractGenerator.getRequiredFinalStatesPredicate();
+        Collection<HeapConfiguration> predicate = contractGenerator.getRequiredFinalHeaps();
         assertNotNull(predicate);
-        assertTrue(predicate.test(validFinalState));
+        assertTrue(predicate.contains(validFinalState.getHeap()));
 
         assertEquals(1, resultStates.size());
 

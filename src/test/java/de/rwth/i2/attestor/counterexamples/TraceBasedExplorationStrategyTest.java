@@ -33,6 +33,11 @@ public class TraceBasedExplorationStrategyTest {
         Trace trace = new Trace() {
 
             @Override
+            public ProgramState getInitialState() {
+                return null;
+            }
+
+            @Override
             public boolean hasNext() {
                 return false;
             }
@@ -71,7 +76,12 @@ public class TraceBasedExplorationStrategyTest {
     private Trace getTrace() {
         return new Trace() {
 
-                List<ProgramState> programStates = new ArrayList<>();
+            @Override
+            public ProgramState getInitialState() {
+                return programStates.get(0);
+            }
+
+            List<ProgramState> programStates = new ArrayList<>();
                 int position = 0;
 
                 {

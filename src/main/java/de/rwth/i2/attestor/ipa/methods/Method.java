@@ -21,7 +21,6 @@ public interface Method {
     void addContract(Contract contract);
     Collection<Contract> getContracts();
 
-
     void setMethodExecution(MethodExecutor methodExecution);
     MethodExecutor getMethodExecutor();
 }
