@@ -94,6 +94,7 @@ public class MarkingGenerationPhase extends AbstractPhase
         }
 
         if (requiresVisitedMarking) {
+
             stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton(marking));
         }
 
