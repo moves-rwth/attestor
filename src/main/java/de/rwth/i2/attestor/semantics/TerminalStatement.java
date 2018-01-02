@@ -42,7 +42,7 @@ public class TerminalStatement implements SemanticsCommand {
 
     @Override
     public boolean needsCanonicalization() {
-        return false;
+        return true;
     }
 
     @Override

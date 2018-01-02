@@ -34,6 +34,12 @@ public class TraceBasedExplorationStrategy implements ExplorationStrategy {
             current = null; // force to move to next state next time
             return true;
         }
+
+        if(state.getProgramCounter() == -1) {
+
+            return stateSubsumptionStrategy.subsumes(state, current);
+        }
+
         return false;
     }
 }
