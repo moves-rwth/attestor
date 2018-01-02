@@ -30,7 +30,7 @@ public class TraceBasedExplorationStrategyTest {
     @Test
     public void testEmptyTrace() {
 
-        Trace trace = new Trace() {
+        CounterexampleTrace trace = new CounterexampleTrace() {
 
             @Override
             public ProgramState getInitialState() {
@@ -57,7 +57,7 @@ public class TraceBasedExplorationStrategyTest {
     @Test
     public void testSequence() {
 
-        Trace trace = getTrace();
+        CounterexampleTrace trace = getTrace();
 
         StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
         TraceBasedExplorationStrategy strategy = new TraceBasedExplorationStrategy(trace, equalityStrategy);
@@ -73,8 +73,8 @@ public class TraceBasedExplorationStrategyTest {
         assertTrue(strategy.check(finalState, null));
     }
 
-    private Trace getTrace() {
-        return new Trace() {
+    private CounterexampleTrace getTrace() {
+        return new CounterexampleTrace() {
 
             @Override
             public ProgramState getInitialState() {
@@ -111,7 +111,7 @@ public class TraceBasedExplorationStrategyTest {
     @Test
     public void testInclusion() {
 
-        Trace trace = getTrace();
+        CounterexampleTrace trace = getTrace();
 
         StateSubsumptionStrategy subsumptionStrategy =
                 (subsumed, subsuming) ->

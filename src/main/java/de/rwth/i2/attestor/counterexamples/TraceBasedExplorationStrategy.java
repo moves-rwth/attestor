@@ -6,11 +6,11 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class TraceBasedExplorationStrategy implements ExplorationStrategy {
 
-    private final Trace trace;
+    private final CounterexampleTrace trace;
     private final StateSubsumptionStrategy stateSubsumptionStrategy;
     private ProgramState current = null;
 
-    public TraceBasedExplorationStrategy(Trace trace, StateSubsumptionStrategy stateSubsumptionStrategy) {
+    public TraceBasedExplorationStrategy(CounterexampleTrace trace, StateSubsumptionStrategy stateSubsumptionStrategy) {
 
         this.trace = trace;
         this.stateSubsumptionStrategy = stateSubsumptionStrategy;

@@ -13,18 +13,20 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class CounterexampleGenerator {
 
-    private Trace trace;
+    private CounterexampleTrace trace;
     private Collection<Method> availableMethods;
     private Program topLevelProgram;
     private StateSubsumptionStrategy stateSubsumptionStrategy;
     private MaterializationStrategy materializationStrategy;
     private CanonicalizationStrategy canonicalizationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
-    private ScopeExtractor scopeExtractor;
+
+    private Function<Method, ScopeExtractor> scopeExtractorFactory;
 
     private final TraceBasedExplorationStrategy topLevelExplorationStrategy;
     private final Stack<Predicate<ProgramState>> requiredFinalStatesStack = new Stack<>();
@@ -44,7 +46,7 @@ public class CounterexampleGenerator {
 
     }
 
-    public HeapConfiguration generate() {
+    public ProgramState generate() {
 
         decorateMethodExecutioners();
 
@@ -54,7 +56,7 @@ public class CounterexampleGenerator {
             throw new IllegalStateException("Failed to determine a unique counterexample input");
         }
 
-        HeapConfiguration result = extractCounterexampleInput(finalStates.iterator().next());
+        ProgramState result = extractCounterexampleInput(finalStates.iterator().next());
 
         restoreOriginalMethodExecutioners();
 
@@ -77,7 +79,7 @@ public class CounterexampleGenerator {
         AbstractMethodExecutor abstractExecutor = (AbstractMethodExecutor) executor;
 
         CounterexampleMethodExecutor newExecutor = new CounterexampleMethodExecutor(
-                scopeExtractor,
+                scopeExtractorFactory.apply(method),
                 new CounterexampleContractCollection(abstractExecutor.getContractCollection()),
                 new CounterexampleContractGenerator(getFinalStatesComputer(method)),
                 canonicalizationStrategy
@@ -186,10 +188,12 @@ public class CounterexampleGenerator {
         );
     }
 
-    private HeapConfiguration extractCounterexampleInput(ProgramState counterexampleState) {
+    private ProgramState extractCounterexampleInput(ProgramState counterexampleState) {
 
         HeapConfigurationPair hcPair = (HeapConfigurationPair) counterexampleState.getHeap();
-        return hcPair.getPairedHeapConfiguration();
+        return counterexampleState.shallowCopyWithUpdateHeap(
+                hcPair.getPairedHeapConfiguration()
+        );
     }
 
     public static class Builder {
@@ -226,8 +230,8 @@ public class CounterexampleGenerator {
                 throw new IllegalArgumentException("No StateRefinementStrategy has been provided.");
             }
 
-            if(generator.scopeExtractor == null) {
-                throw new IllegalArgumentException("No ScopeExtractor has been provided.");
+            if(generator.scopeExtractorFactory == null) {
+                throw new IllegalArgumentException("No ScopeExtractorFactory has been provided.");
             }
 
             CounterexampleGenerator result = generator;
@@ -235,7 +239,7 @@ public class CounterexampleGenerator {
             return result;
         }
 
-        public Builder setTrace(Trace trace) {
+        public Builder setTrace(CounterexampleTrace trace) {
 
             generator.trace = trace;
             return this;
@@ -277,9 +281,9 @@ public class CounterexampleGenerator {
             return this;
         }
 
-        public Builder setScopeExtractor(ScopeExtractor scopeExtractor) {
+        public Builder setScopeExtractorFactory(Function<Method, ScopeExtractor> scopeExtractorFactory) {
 
-            generator.scopeExtractor = scopeExtractor;
+            generator.scopeExtractorFactory = scopeExtractorFactory;
             return this;
         }
     }

@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
@@ -9,6 +8,7 @@ import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransfor
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.modelChecking.FailureTrace;
+import de.rwth.i2.attestor.modelChecking.ModelCheckingTrace;
 import de.rwth.i2.attestor.modelChecking.ProofStructure;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingResultsTransformer {
 
     private final Map<LTLFormula, Boolean> formulaResults = new LinkedHashMap<>();
-    private final Map<LTLFormula, Trace> counterexampleTraces = new LinkedHashMap<>();
+    private final Map<LTLFormula, ModelCheckingTrace> traces = new LinkedHashMap<>();
     private boolean allSatisfied = true;
 
     private int numberSatFormulae = 0;
@@ -67,7 +67,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
                     logger.warn("Counterexample generation for indexed grammars is not supported yet.");
                 } else {
                     FailureTrace failureTrace = proofStructure.getFailureTrace();
-                    counterexampleTraces.put(formula, failureTrace);
+                    traces.put(formula, failureTrace);
                 }
             }
         }
@@ -108,10 +108,10 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     }
 
     @Override
-    public Trace getTraceOf(LTLFormula formula) {
+    public ModelCheckingTrace getTraceOf(LTLFormula formula) {
 
-        if (counterexampleTraces.containsKey(formula)) {
-            return counterexampleTraces.get(formula);
+        if (traces.containsKey(formula)) {
+            return traces.get(formula);
         }
         return null;
     }
