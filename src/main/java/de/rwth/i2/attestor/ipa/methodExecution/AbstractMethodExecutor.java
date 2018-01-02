@@ -48,7 +48,7 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
         Collection<ProgramState> result = new LinkedHashSet<>();
         for(HeapConfiguration outputHeap : postconditions) {
             ProgramState resultState = input.shallowCopyWithUpdateHeap(outputHeap);
-            resultState.setProgramCounter(0);
+            resultState.setProgramCounter(0); // TODO
             result.add(resultState);
         }
         return result;

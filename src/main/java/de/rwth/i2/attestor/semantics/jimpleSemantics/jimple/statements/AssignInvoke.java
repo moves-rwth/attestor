@@ -92,7 +92,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
             freshState.setProgramCounter(nextPC);
             assignResult.add(freshState);
         }
-        return resultStates;
+        return assignResult;
     }
 
     public ProgramState getCleanedResultState(ProgramState state)

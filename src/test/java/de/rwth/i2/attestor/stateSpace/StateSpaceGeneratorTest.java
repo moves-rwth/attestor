@@ -108,7 +108,6 @@ public class StateSpaceGeneratorTest {
             res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
-                    // TODO .setDeadVariableElimination(true)
                     .build()
                     .generate();
         } catch (StateSpaceGenerationAbortedException e) {
