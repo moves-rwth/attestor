@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.graph.heap.pair;
+package de.rwth.i2.attestor.counterexamples.heapConfigurationPair;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;

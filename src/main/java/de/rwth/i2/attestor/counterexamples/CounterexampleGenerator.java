@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.counterexamples;
 
+import de.rwth.i2.attestor.counterexamples.heapConfigurationPair.HeapConfigurationPair;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.pair.HeapConfigurationPair;
 import de.rwth.i2.attestor.ipa.methodExecution.AbstractMethodExecutor;
 import de.rwth.i2.attestor.ipa.methodExecution.ScopeExtractor;
 import de.rwth.i2.attestor.ipa.methods.Method;
