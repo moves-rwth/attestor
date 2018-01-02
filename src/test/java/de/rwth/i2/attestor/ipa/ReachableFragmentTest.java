@@ -31,8 +31,9 @@ public class ReachableFragmentTest {
     SceneObject sceneObject = new MockupSceneObject();
 
     ScopeExtractor scopeExtractor = new DefaultScopeExtractor(sceneObject, "testMethod");
+    String methodName = "testMethod";
 
-    IpaAbstractMethod ipa = new IpaAbstractMethod(sceneObject, "testMethod");
+
     Type type = sceneObject.scene().getType("someType");
     SelectorLabel nextLabel = sceneObject.scene().getSelectorLabel("next");
 
@@ -405,7 +406,7 @@ public class ReachableFragmentTest {
 
         final int rank = 1;
         final boolean[] isReductionTentacle = new boolean[]{false};
-        Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+        Nonterminal nt = sceneObject.scene().createNonterminal(methodName + rank, rank, isReductionTentacle);
 
 
         return hc.builder().addNodes(type, rank, nodes)
@@ -469,7 +470,7 @@ public class ReachableFragmentTest {
         Type nullType = getNullType();
         final int rank = 1;
         final boolean[] isReductionTentacle = new boolean[rank];
-        Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+        Nonterminal nt = sceneObject.scene().createNonterminal(methodName + rank, rank, isReductionTentacle);
 
         TIntArrayList nodes = new TIntArrayList();
         return hc.builder()
