@@ -34,7 +34,8 @@ public class CounterexampleMethodExecutorTest {
                     Collection<ProgramState> result = new ArrayList<>();
                     result.add(sceneObject.scene().createProgramState(mockupHeaps.getPostcondition()));
                     return result;
-                }
+                },
+                (left, right) -> right.equals(left)
         );
     }
 

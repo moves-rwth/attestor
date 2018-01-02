@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.counterexamples;
 
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.ipa.contracts.InternalContract;
 import de.rwth.i2.attestor.ipa.methodExecution.Contract;
@@ -16,21 +17,29 @@ public class CounterexampleContractGenerator implements ContractGenerator {
 
     private Predicate<ProgramState> requiredFinalStatesPredicate;
 
-    private BiFunction<Predicate<ProgramState>, ProgramState, Collection<ProgramState>> finalStatesComputer;
+    private final BiFunction<Predicate<ProgramState>, ProgramState, Collection<ProgramState>> finalStatesComputer;
+    private final LanguageInclusionStrategy inclusionStrategy;
 
     public CounterexampleContractGenerator(
-            BiFunction<Predicate<ProgramState>, ProgramState, Collection<ProgramState>> finalStatesComputer) {
+            BiFunction<Predicate<ProgramState>, ProgramState, Collection<ProgramState>> finalStatesComputer,
+            LanguageInclusionStrategy inclusionStrategy
+    ) {
 
         assert finalStatesComputer != null;
         this.finalStatesComputer = finalStatesComputer;
+        this.inclusionStrategy = inclusionStrategy;
     }
 
     void setRequiredFinalHeaps(Collection<HeapConfiguration> requiredFinalHeaps) {
 
         requiredFinalStatesPredicate = state -> {
-            // TODO abstract heap or check language inclusion
             HeapConfiguration hc = state.getHeap();
-            return requiredFinalHeaps.contains(hc);
+            for(HeapConfiguration requiredHc: requiredFinalHeaps) {
+                if(inclusionStrategy.includes(hc, requiredHc)) {
+                    return true;
+                }
+            }
+            return false;
         };
     }
 
