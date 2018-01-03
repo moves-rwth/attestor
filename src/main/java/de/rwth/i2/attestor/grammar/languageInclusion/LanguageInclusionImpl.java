@@ -12,7 +12,7 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Iterator;
 
-public class LanguageInclusionImpl implements LanguageInclusionStrategy {
+class LanguageInclusionImpl implements LanguageInclusionStrategy {
 
     private final int minAbstractionDistance;
     private final boolean indexedMode;
