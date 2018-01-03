@@ -3,7 +3,8 @@ package de.rwth.i2.attestor.counterexamples;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionImpl;
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -37,7 +38,14 @@ public class CounterexampleGeneratorTest {
         sceneObject = new MockupSceneObject();
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
         sceneObject.scene().strategies().setLenientCanonicalizationStrategy(factorySLL.getCanonicalization());
-        sceneObject.scene().strategies().setLanguageInclusionStrategy(new LanguageInclusionImpl(sceneObject));
+
+
+        LanguageInclusionStrategy languageInclusionStrategy = new LanguageInclusionStrategyBuilder()
+                .setCanonicalizationStrategy(sceneObject.scene().strategies().getLenientCanonicalizationStrategy())
+                .setSingleStepConcretizationStrategy(sceneObject.scene().strategies().getSingleStepConcretizationStrategy())
+                .build();
+
+        sceneObject.scene().strategies().setLanguageInclusionStrategy(languageInclusionStrategy);
         hcFactory = new ExampleHcImplFactory(sceneObject);
     }
 
@@ -130,7 +138,11 @@ public class CounterexampleGeneratorTest {
         trace.addState(initialState)
                 .addState(finalState);
 
-        LanguageInclusionImpl languageInclusionStrategy = new LanguageInclusionImpl(sceneObject);
+        LanguageInclusionStrategy languageInclusionStrategy = new LanguageInclusionStrategyBuilder()
+                .setCanonicalizationStrategy(sceneObject.scene().strategies().getLenientCanonicalizationStrategy())
+                .setSingleStepConcretizationStrategy(sceneObject.scene().strategies().getSingleStepConcretizationStrategy())
+                .build();
+
 
         CounterexampleGenerator generator = CounterexampleGenerator
                 .builder()

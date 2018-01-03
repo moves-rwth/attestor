@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizatio
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionImpl;
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
@@ -130,7 +130,14 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     }
 
     private void setupInclusionCheck() {
-        scene().strategies().setLanguageInclusionStrategy(new LanguageInclusionImpl(this));
+        scene().strategies().setLanguageInclusionStrategy(
+               new LanguageInclusionStrategyBuilder()
+                       .setMinAbstractionDistance(scene().options().getAbstractionDistance())
+                       .setIndexedMode(scene().options().isIndexedMode())
+                       .setCanonicalizationStrategy(scene().strategies().getLenientCanonicalizationStrategy())
+                       .setSingleStepConcretizationStrategy(scene().strategies().getSingleStepConcretizationStrategy())
+                        .build()
+        );
     }
 
     private void setupAbortTest() {

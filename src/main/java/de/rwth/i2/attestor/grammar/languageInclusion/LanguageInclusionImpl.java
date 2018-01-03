@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
@@ -13,16 +12,22 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Iterator;
 
-public class LanguageInclusionImpl extends SceneObject implements LanguageInclusionStrategy {
+public class LanguageInclusionImpl implements LanguageInclusionStrategy {
 
+    private final int minAbstractionDistance;
+    private final boolean indexedMode;
     private final CanonicalizationStrategy canonicalizationStrategy;
     private final SingleStepConcretizationStrategy singleStepConcretizationStrategy;
 
-    public LanguageInclusionImpl(SceneObject sceneObject) {
-        super(sceneObject);
+    public LanguageInclusionImpl(int minAbstractionDistance,
+                                 boolean indexedMode,
+                                 CanonicalizationStrategy canonicalizationStrategy,
+                                 SingleStepConcretizationStrategy singleStepConcretizationStrategy) {
 
-        this.canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
-        this.singleStepConcretizationStrategy = scene().strategies().getSingleStepConcretizationStrategy();
+        this.minAbstractionDistance = minAbstractionDistance;
+        this.indexedMode = indexedMode;
+        this.canonicalizationStrategy = canonicalizationStrategy;
+        this.singleStepConcretizationStrategy = singleStepConcretizationStrategy;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class LanguageInclusionImpl extends SceneObject implements LanguageInclus
             return true;
         }
 
-        if(scene().options().getAbstractionDistance() == 0 || scene().options().isIndexedMode()) {
+        if(minAbstractionDistance == 0 || indexedMode) {
             return false;
         }
 
