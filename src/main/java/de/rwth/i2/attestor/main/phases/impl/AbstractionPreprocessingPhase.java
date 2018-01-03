@@ -2,12 +2,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
-import de.rwth.i2.attestor.grammar.canonicalization.GeneralCanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.EmbeddingIndexChecker;
-import de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar.IndexedCanonicalizationHelper;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
@@ -19,17 +14,11 @@ import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMateria
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
-import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategyImpl;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
@@ -37,8 +26,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.types.Types;
-import gnu.trove.iterator.TIntIterator;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -146,78 +133,31 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupCanonicalization() {
 
-        final int abstractionDifference = scene().options().getAbstractionDistance();
+        final int abstractionDistance = scene().options().getAbstractionDistance();
         final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(abstractionDifference, aggressiveNullAbstraction);
-        EmbeddingCheckerProvider aggressiveCheckerProvider = new EmbeddingCheckerProvider(0, aggressiveNullAbstraction);
-
-        CanonicalizationHelper canonicalizationHelper;
-        CanonicalizationHelper aggressiveCanonicalizationHelper;
-
-        if (scene().options().isIndexedMode()) {
-            canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
-            aggressiveCanonicalizationHelper = getIndexedCanonicalizationHelper(aggressiveCheckerProvider);
-            logger.debug("Setup canonicalization using indexed grammar.");
-        } else {
-            canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
-            aggressiveCanonicalizationHelper = new DefaultCanonicalizationHelper(aggressiveCheckerProvider);
-            logger.debug("Setup canonicalization using standard hyperedge replacement grammar.");
-        }
+        final boolean indexedMode = scene().options().isIndexedMode();
 
         scene().strategies().setLenientCanonicalizationStrategy(
-                new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper)
+                new CanonicalizationStrategyBuilder()
+                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .setMinAbstractionDistance(abstractionDistance)
+                .setIndexedMode(indexedMode)
+                .setGrammar(grammar)
+                .build()
         );
+
         scene().strategies().setAggressiveCanonicalizationStrategy(
-                new GeneralCanonicalizationStrategy(grammar, aggressiveCanonicalizationHelper)
+                new CanonicalizationStrategyBuilder()
+                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                        .setMinAbstractionDistance(0)
+                        .setIndexedMode(indexedMode)
+                        .setGrammar(grammar)
+                        .build()
         );
     }
 
     private void setupInclusionCheck() {
         scene().strategies().setLanguageInclusionStrategy(new LanguageInclusionImpl(this));
-    }
-
-    private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
-
-        CanonicalizationHelper canonicalizationHelper;
-        IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(determineNullPointerGuards());
-        IndexMaterializationStrategy materializationStrategy = new IndexMaterializationStrategy();
-        DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
-        IndexMatcher indexMatcher = new IndexMatcher(indexGrammar);
-        EmbeddingIndexChecker indexChecker =
-                new EmbeddingIndexChecker(indexMatcher,
-                        materializationStrategy);
-
-        canonicalizationHelper = new IndexedCanonicalizationHelper(indexStrategy, checkerProvider, indexChecker);
-        return canonicalizationHelper;
-    }
-
-    private Set<String> determineNullPointerGuards() {
-
-        Set<String> nullPointerGuards = new LinkedHashSet<>();
-
-        for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
-            if (lhs instanceof IndexedNonterminal) {
-                IndexedNonterminal iLhs = (IndexedNonterminal) lhs;
-                if (iLhs.getIndex().getLastIndexSymbol().isBottom()) {
-                    for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-
-                        TIntIterator iterator = rhs.nodes().iterator();
-                        while (iterator.hasNext()) {
-                            int node = iterator.next();
-                            for (SelectorLabel sel : rhs.selectorLabelsOf(node)) {
-
-                                int target = rhs.selectorTargetOf(node, sel);
-                                if (rhs.nodeTypeOf(target) == Types.NULL) {
-                                    nullPointerGuards.add(sel.getLabel());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return nullPointerGuards;
     }
 
     private void setupAbortTest() {
