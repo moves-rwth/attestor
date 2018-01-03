@@ -1,24 +1,17 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionImpl;
-import de.rwth.i2.attestor.grammar.materialization.*;
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
@@ -103,32 +96,12 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        if (scene().options().isIndexedMode()) {
-            ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
-
-            IndexMatcher indexMatcher = new IndexMatcher(new DefaultIndexMaterialization());
-            MaterializationRuleManager grammarManager =
-                    new IndexedMaterializationRuleManager(vioResolver, indexMatcher);
-
-            GrammarResponseApplier ruleApplier =
-                    new IndexedGrammarResponseApplier(new IndexMaterializationStrategy(),
-                            new GraphMaterializer());
-
-            scene().strategies().setMaterializationStrategy(
-                    new GeneralMaterializationStrategy(grammarManager, ruleApplier)
-            );
-            logger.debug("Setup materialization using indexed grammars.");
-        } else {
-            ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
-            MaterializationRuleManager grammarManager =
-                    new DefaultMaterializationRuleManager(vioResolver);
-            GrammarResponseApplier ruleApplier =
-                    new DefaultGrammarResponseApplier(new GraphMaterializer());
-            scene().strategies().setMaterializationStrategy(
-                    new GeneralMaterializationStrategy(grammarManager, ruleApplier)
-            );
-            logger.debug("Setup materialization using standard hyperedge replacement grammars.");
-        }
+        scene().strategies().setMaterializationStrategy(
+                new MaterializationStrategyBuilder()
+                .setGrammar(grammar)
+                .setIndexedMode(scene().options().isIndexedMode())
+                .build()
+        );
     }
 
     private void setupCanonicalization() {
