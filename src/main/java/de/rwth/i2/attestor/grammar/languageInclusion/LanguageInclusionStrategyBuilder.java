@@ -28,8 +28,9 @@ public class LanguageInclusionStrategyBuilder {
 
     public LanguageInclusionStrategyBuilder setMinAbstractionDistance(int minAbstractionDistance) {
 
-        if(0 < minAbstractionDistance || minAbstractionDistance > 1) {
-            throw new IllegalArgumentException("minAbstraction distance must be either 0 or 1.");
+        if(minAbstractionDistance < 0 || minAbstractionDistance > 1) {
+            throw new IllegalArgumentException("minAbstraction distance must be either 0 or 1. Got: "
+                    + minAbstractionDistance);
         }
         this.minAbstractionDistance = minAbstractionDistance;
         return this;

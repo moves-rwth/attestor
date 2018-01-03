@@ -48,6 +48,7 @@ public abstract  class AbstractMarkingGenerator {
                 .setExplorationStrategy(new ExploreAllStrategy())
                 .setMaterializationStrategy(materializationStrategy)
                 .setStateCounter(new NoStateCounter())
+                .setStateSpaceSupplier(() -> new InternalStateSpace(100000))
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setBreadthFirstSearchEnabled(false)
