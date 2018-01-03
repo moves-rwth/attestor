@@ -1,18 +1,13 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -42,7 +37,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
     }
 
     @Override
-    public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
+    public Set<ProgramState> getFinalStates(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer) {
 
         return knownInputs.get(input.getHeap());
     }
@@ -57,7 +52,7 @@ public class SimpleAbstractMethod extends AbstractMethod {
     }
 
     @Override
-    public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
+    public Set<ProgramState> getResult(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
         observer.update(this, input);

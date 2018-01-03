@@ -1,20 +1,17 @@
 package de.rwth.i2.attestor.ipa;
 
 
+import java.util.*;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
-
-import java.util.*;
 
 public class IpaAbstractMethod extends AbstractMethod {
 
@@ -28,10 +25,10 @@ public class IpaAbstractMethod extends AbstractMethod {
     }
 
     @Override
-    public Set<ProgramState> getFinalStates(ProgramState input, SymbolicExecutionObserver observer) {
+    public Set<ProgramState> getFinalStates(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer) {
 
         try {
-            return getResultStates(input, observer);
+            return getResultStates(input, callingState, observer);
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("No contract found");
         }
@@ -39,23 +36,23 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     public void addContracts(HeapConfiguration precondition, List<HeapConfiguration> postconditions) {
 
-        contracts.addPostconditionsTp(precondition, postconditions);
+        contracts.addPostconditionsTo(precondition, postconditions);
     }
 
     @Override
-    public Set<ProgramState> getResult(ProgramState input, SymbolicExecutionObserver observer)
+    public Set<ProgramState> getResult(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
         observer.update(this, input);
-        return getResultStates(input, observer);
+        return getResultStates(input, callingState, observer);
     }
 
-    public Set<ProgramState> getResultStates(ProgramState input, SymbolicExecutionObserver observer)
+    public Set<ProgramState> getResultStates(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
         Set<ProgramState> result = new LinkedHashSet<>();
 
-        for (HeapConfiguration postConfig : getIPAResult(input, observer)) {
+        for (HeapConfiguration postConfig : getIPAResult(input, callingState, observer)) {
             ProgramState state = input.shallowCopyWithUpdateHeap(postConfig);
             state.setProgramCounter(0);
             result.add(state);
@@ -63,8 +60,25 @@ public class IpaAbstractMethod extends AbstractMethod {
 
         return result;
     }
-
-    public List<HeapConfiguration> getIPAResult(ProgramState input, SymbolicExecutionObserver observer)
+    
+    /**
+     * Splits the input heap into the reachable fragment, which is the part of the heap visible for the method,
+     * and the remaining fragment, where the reachable fragment is replaced by a special nonterminal.
+     * The reachable fragment serves as precondition to the method call. 
+     * This method then looks up or computes the corresponding postconditions and applies them to the remaining fragment.
+     * 
+     * In case this method is recursive, an empty result may be returned and the calling state is registered for continuation
+     * once the postconditions for this contract changes.
+     * 
+     * With the setting isReuseResultsEnabled() contracts are always recomputed
+     * 
+     * @param input the program state serving as input to the method, i.e. with parameters and base value in place
+     * @param callingState the program state on which the call statement is executed. 
+     * @param observer the current semantics observer used to generate the sub-stateSpaces
+     * @return the list of resulting states
+     * @throws StateSpaceGenerationAbortedException
+     */
+    public List<HeapConfiguration> getIPAResult(ProgramState input, ProgramState callingState, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
         HeapConfiguration currentConfig = input.getHeap();
@@ -73,25 +87,46 @@ public class IpaAbstractMethod extends AbstractMethod {
         HeapConfiguration remainingFragment = splittedConfig.second().first();
         int placeholderPos = splittedConfig.second().second();
 
-        List<HeapConfiguration> postconditions;
-        if (!contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled()) {
-
-            postconditions = computeContract(input, reachableFragment, observer);
+        Set<HeapConfiguration> postconditions;
+        if ( !contracts.hasMatchingPrecondition(reachableFragment) || !isReuseResultsEnabled()) {
+        	if( this.isRecursive() ){
+        		postconditions = handleRecursion(input, callingState, reachableFragment);
+        	}else{
+        		postconditions = computeContract(input, reachableFragment, observer);
+        	}
 
         } else {
             int[] reordering = contracts.getReordering(reachableFragment);
             remainingFragment = adaptExternalOrdering(reachableFragment, remainingFragment,
                     placeholderPos, reordering);
             postconditions = contracts.getPostconditions(reachableFragment);
+            if( this.isRecursive() ){
+            	scene().recursionManager().registerAsDependentOf(callingState, this, input.shallowCopyWithUpdateHeap(reachableFragment));
+            }
         }
         return applyContract(remainingFragment, placeholderPos, postconditions);
 
     }
 
-    private List<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
+	private Set<HeapConfiguration> handleRecursion(ProgramState input, ProgramState callingState,
+			HeapConfiguration reachableFragment) {
+		
+		InterproceduralAnalysisManager recursionManager = scene().recursionManager();
+		
+		final ProgramState precoditionState = scene().createProgramState(reachableFragment);
+		
+		recursionManager.registerToCompute(this, precoditionState);
+		recursionManager.registerAsDependentOf(callingState, this, precoditionState);
+		
+		Set<HeapConfiguration> postconditions = new LinkedHashSet<>();
+		contracts.addContract(reachableFragment, postconditions);
+		return postconditions;
+	}
+
+    private Set<HeapConfiguration> computeContract(ProgramState input, HeapConfiguration reachableFragment, SymbolicExecutionObserver observer)
             throws StateSpaceGenerationAbortedException {
 
-        List<HeapConfiguration> postconditions = new ArrayList<>();
+        Set<HeapConfiguration> postconditions = new HashSet<>();
         ProgramState initialState = input.shallowCopyWithUpdateHeap(reachableFragment);
         StateSpace stateSpace = observer.generateStateSpace(method, initialState);
 
@@ -118,7 +153,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     private List<HeapConfiguration> applyContract(HeapConfiguration remainingFragment,
                                                   int contractPlaceholderEdge,
-                                                  List<HeapConfiguration> contracts) {
+                                                  Set<HeapConfiguration> contracts) {
 
         List<HeapConfiguration> result = new ArrayList<>();
         for (HeapConfiguration contract : contracts) {

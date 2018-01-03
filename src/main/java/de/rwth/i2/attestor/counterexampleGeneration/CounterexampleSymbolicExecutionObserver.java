@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
+import java.util.Collections;
+import java.util.Set;
+
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * A tailored observer that determines the required successor states of
@@ -65,7 +65,7 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
                     Collections.singleton(requiredFinalState)
             );
         } else {
-            Set<ProgramState> finalStates = method.getFinalStates(input, this);
+            Set<ProgramState> finalStates = method.getFinalStates(input, null, this); //TODO
             stateSpaceSupplier.setFinalStatesOfPreviousProcedure(finalStates);
             requiredNoOfFinalStates = finalStates.size();
         }
@@ -98,4 +98,11 @@ final class CounterexampleSymbolicExecutionObserver implements SymbolicExecution
             return stateSpace.getFinalStates().size() < requiredNoOfFinalStates;
         }
     }
+
+	@Override
+	public StateSpace continueStateSpace(StateSpace stateSpace, Program program, ProgramState continuationPoint)
+			throws StateSpaceGenerationAbortedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

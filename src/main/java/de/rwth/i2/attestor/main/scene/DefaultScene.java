@@ -1,11 +1,9 @@
 package de.rwth.i2.attestor.main.scene;
 
-import de.rwth.i2.attestor.graph.BasicNonterminal;
-import de.rwth.i2.attestor.graph.BasicSelectorLabel;
-import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.graph.SelectorLabel;
+import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
 import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
@@ -16,6 +14,7 @@ import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
 public class DefaultScene implements Scene {
+	
 
     private final GeneralType.Factory typeFactory = new GeneralType.Factory();
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
@@ -26,6 +25,8 @@ public class DefaultScene implements Scene {
     private final Strategies strategies = new Strategies();
 
     private long totalNumberOfStates = 0;
+    
+    private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager(this);
 
 
     @Override
@@ -121,6 +122,10 @@ public class DefaultScene implements Scene {
         return options;
     }
 
+	@Override
+	public InterproceduralAnalysisManager recursionManager() {
+		return this.recursionManager;
+	}
     @Override
     public Strategies strategies() {
 

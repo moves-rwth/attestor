@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
+import java.util.*;
+
 import gnu.trove.TIntCollection;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TIntObjectIterator;
@@ -8,8 +10,6 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
-
-import java.util.*;
 
 public class InternalStateSpace implements StateSpace {
 
@@ -68,13 +68,15 @@ public class InternalStateSpace implements StateSpace {
 
     private void initLookupTable() {
 
-        if (stateIdLookupTable == null) {
+        if (stateIdLookupTable == null || stateIdLookupTable.size() < getStates().size() ) {
             stateIdLookupTable = new TIntObjectHashMap<>(getStates().size());
             for (ProgramState state : getStates()) {
                 stateIdLookupTable.put(state.getStateSpaceId(), state);
             }
         }
     }
+    
+
 
     public TIntSet getInitialStateIds() {
 
@@ -399,5 +401,15 @@ public class InternalStateSpace implements StateSpace {
             }
         };
     }
+
+	@Override
+	public void transformTerminalStates() {
+		for( ProgramState state : getStates() ){
+			if( getControlFlowSuccessorsOf(state).isEmpty() && getMaterializationSuccessorsOf(state).isEmpty() ){
+				addArtificialInfPathsTransition(state);
+			}
+		}
+		
+	}
 
 }

@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
+
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Set;
-
+import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -230,6 +229,7 @@ public class StateSpaceGenerator extends SceneObject {
         while (hasUnexploredStates()) {
 
             ProgramState state = nextUnexploredState();
+            state.setContainingStateSpace( this.stateSpace );
 
             try {
                 abortStrategy.checkAbort(stateSpace);
@@ -245,7 +245,7 @@ public class StateSpaceGenerator extends SceneObject {
 
             if (isSufficientlyMaterialized) {
                 Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
-                if (successorStates.isEmpty()) {
+                if (successorStates.isEmpty() && isTerminalStatement(stateSemantics) ) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
                     stateSpace.addArtificialInfPathsTransition(state);
@@ -268,6 +268,13 @@ public class StateSpaceGenerator extends SceneObject {
         return stateSpace;
     }
 
+	private boolean isTerminalStatement(Semantics stateSemantics) {
+		return stateSemantics.getClass() == TerminalStatement.class;
+	}
+
+    /**
+     * @return true iff further states can and should be generated.
+     */
     private boolean hasUnexploredStates() {
 
         return !unexploredConfigurations.isEmpty();

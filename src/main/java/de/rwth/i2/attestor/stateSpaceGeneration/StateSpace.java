@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.TIntSet;
-
 import java.util.Map;
 import java.util.Set;
+
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.TIntSet;
 
 public interface StateSpace {
 
@@ -53,4 +53,10 @@ public interface StateSpace {
     int getMaximalStateSize();
 
     boolean satisfiesAP(int stateId, String expectedAP);
+
+    /**
+     * adds artificial inf-paths to all states without successors,
+     * to formally avoid terminal states.
+     */
+	void transformTerminalStates();
 }

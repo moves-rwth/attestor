@@ -1,12 +1,13 @@
 package de.rwth.i2.attestor.io.jsonExport.inputFormat;
 
+import java.io.Writer;
+import java.util.Set;
+
+import org.json.JSONWriter;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.ipa.IpaContractCollection;
 import de.rwth.i2.attestor.util.Pair;
-import org.json.JSONWriter;
-
-import java.io.Writer;
-import java.util.List;
 
 public class ContractToInputFormatExporter {
 
@@ -28,7 +29,7 @@ public class ContractToInputFormatExporter {
                 .key("contracts")
                 .array(); // the list of contracts <Precondition,List<Postcondition>>
 
-        for (Pair<HeapConfiguration, List<HeapConfiguration>> contract : contracts.getContractList()) {
+        for (Pair<HeapConfiguration, Set<HeapConfiguration>> contract : contracts.getContractList()) {
             jsonWriter.object()
                     .key("precondition")
                     .value(HCtoInputFormatExporter.getInInputFormat(contract.first()))
