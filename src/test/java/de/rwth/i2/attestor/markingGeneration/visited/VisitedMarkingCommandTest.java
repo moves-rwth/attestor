@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.markingGeneration;
+package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
@@ -31,6 +31,7 @@ public class VisitedMarkingCommandTest {
     private SelectorLabel selB;
 
 
+    private String markingName;
     private Collection<String> availableSelectorNames;
     private VisitedMarkingCommand command;
 
@@ -46,7 +47,9 @@ public class VisitedMarkingCommandTest {
         availableSelectorNames.add("selA");
         availableSelectorNames.add("selB");
 
-        command = new VisitedMarkingCommand(availableSelectorNames, NEXT_PC);
+        markingName = "%visitedMarking";
+
+        command = new VisitedMarkingCommand(markingName, availableSelectorNames, NEXT_PC);
 
     }
 
@@ -57,7 +60,7 @@ public class VisitedMarkingCommandTest {
 
         assertEquals(1, violationPoints.getVariables().size());
         String variableName = violationPoints.getVariables().iterator().next();
-        assertEquals(VisitedMarkingCommand.MARKING_NAME, variableName);
+        assertEquals(markingName, variableName);
         assertEquals(availableSelectorNames, violationPoints.getSelectorsOf(variableName));
     }
 
@@ -83,23 +86,23 @@ public class VisitedMarkingCommandTest {
                 .addNodes(type, 3, nodes)
                 .addSelector(nodes.get(0), selA, nodes.get(1))
                 .addSelector(nodes.get(0), selB, nodes.get(2))
-                .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, nodes.get(0))
+                .addVariableEdge(markingName, nodes.get(0))
                 .build();
 
         ProgramState initialState = sceneObject.scene().createProgramState(hc);
 
         ProgramState expectedA = initialState.clone();
-        expectedA.removeVariable(VisitedMarkingCommand.MARKING_NAME);
+        expectedA.removeVariable(markingName);
         expectedA.getHeap()
                 .builder()
-                .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, nodes.get(1))
+                .addVariableEdge(markingName, nodes.get(1))
                 .build();
 
         ProgramState expectedB = initialState.clone();
-        expectedB.removeVariable(VisitedMarkingCommand.MARKING_NAME);
+        expectedB.removeVariable(markingName);
         expectedB.getHeap()
                 .builder()
-                .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, nodes.get(2))
+                .addVariableEdge(markingName, nodes.get(2))
                 .build();
 
         Collection<ProgramState> successorStates = command.computeSuccessors(initialState);
@@ -132,7 +135,7 @@ public class VisitedMarkingCommandTest {
                 .builder()
                 .addNodes(type, 2, nodes)
                 .addSelector(nodes.get(0), sceneObject.scene().getSelectorLabel("BADSELECTOR"), nodes.get(1))
-                .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, nodes.get(0))
+                .addVariableEdge(markingName, nodes.get(0))
                 .build();
 
         ProgramState initialState = sceneObject.scene().createProgramState(hc);
@@ -155,7 +158,7 @@ public class VisitedMarkingCommandTest {
                 .builder()
                 .addNodes(type, 1, nodes)
                 .addSelector(nodes.get(0), selA, initialState.getHeap().variableTargetOf(Constants.NULL))
-                .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, nodes.get(0))
+                .addVariableEdge(markingName, nodes.get(0))
                 .build();
 
         Collection<ProgramState> successorStates = command.computeSuccessors(initialState);

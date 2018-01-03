@@ -34,6 +34,7 @@ import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.types.Types;
@@ -239,7 +240,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 .getStrategy()
                 .build();
         if (stateLabelingStrategy == null) {
-            stateLabelingStrategy = s -> {};
+            stateLabelingStrategy = new NoStateLabelingStrategy();
         }
         scene().strategies().setStateLabelingStrategy(stateLabelingStrategy);
     }

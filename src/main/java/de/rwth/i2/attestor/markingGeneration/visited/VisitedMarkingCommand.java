@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.markingGeneration;
+package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
@@ -15,19 +15,19 @@ import java.util.Set;
 
 public class VisitedMarkingCommand implements SemanticsCommand {
 
-    protected static final String MARKING_NAME = "%visited";
-
+    private final String markingName;
     private final Collection<String> availableSelectorNames;
     private final ViolationPoints potentialViolationPoints;
     private final int nextPc;
 
-    public VisitedMarkingCommand(Collection<String> availableSelectorNames, int nextPc) {
+    public VisitedMarkingCommand(String markingName, Collection<String> availableSelectorNames, int nextPc) {
 
+        this.markingName = markingName;
         this.availableSelectorNames = availableSelectorNames;
 
         potentialViolationPoints = new ViolationPoints();
         for(String selName : availableSelectorNames) {
-            potentialViolationPoints.add(MARKING_NAME, selName);
+            potentialViolationPoints.add(markingName, selName);
         }
 
         this.nextPc = nextPc;
@@ -37,7 +37,7 @@ public class VisitedMarkingCommand implements SemanticsCommand {
     public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         HeapConfiguration hc = programState.getHeap();
-        int variable = hc.variableWith(MARKING_NAME);
+        int variable = hc.variableWith(markingName);
 
         if(variable == HeapConfiguration.INVALID_ELEMENT) {
             throw new IllegalArgumentException("Provided state is not marked.");
@@ -58,7 +58,7 @@ public class VisitedMarkingCommand implements SemanticsCommand {
                 ProgramState successorState = programState.clone();
                 successorState.getHeap().builder()
                         .removeVariableEdge(variable)
-                        .addVariableEdge(MARKING_NAME, target)
+                        .addVariableEdge(markingName, target)
                         .build();
                 result.add(successorState);
             }

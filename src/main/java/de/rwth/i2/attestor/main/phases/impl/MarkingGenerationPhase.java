@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
@@ -9,17 +11,18 @@ import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
+import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
-import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.identicalNeighbourhood.NeighbourhoodAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
+import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class MarkingGenerationPhase extends AbstractPhase
@@ -27,6 +30,14 @@ public class MarkingGenerationPhase extends AbstractPhase
 
 
     private static final Pattern visitedByPattern = Pattern.compile("^visited\\(\\p{Alnum}+\\)$");
+    private static final Pattern visitedPattern = Pattern.compile("^visited$");
+    private static final Pattern identicNeighboursPattern = Pattern.compile("^identicNeighbours$");
+
+    private static final String MARKING_NAME = "%marking";
+
+    private static final String VISITED = "visited";
+    private static final String VISITED_BY = "visitedBy";
+    private static final String IDENTIC_NEIGHBOURS = "identicNeighbours";
 
     private List<HeapConfiguration> inputs;
 
@@ -47,66 +58,93 @@ public class MarkingGenerationPhase extends AbstractPhase
     protected void executePhase() {
 
         inputs = getPhase(InputTransformer.class).getInputs();
+
+        Collection<String> requiredMarkings = determineMarkingsFromAPs();
+        for(String marking : requiredMarkings) {
+            addMarking(marking);
+            addStateLabeling(marking);
+        }
+    }
+
+    private Collection<String> determineMarkingsFromAPs() {
+
         ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
-        Set<String> requiredAPs = mcSettings.getRequiredAtomicPropositions();
-
-        StateLabelingStrategyBuilderTransformer prev = getPhase(StateLabelingStrategyBuilderTransformer.class);
-        if (prev == null) {
-            stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
-        } else {
-            stateLabelingStrategyBuilder = prev.getStrategy();
-            if (stateLabelingStrategyBuilder == null) {
-                stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
-            }
-        }
-
-        boolean requiresVisitedMarking = false;
-        boolean requiresVisitedByMarking = false;
-        boolean requiresNeighbourhoodMarking = false;
-
-
-        for (String s : requiredAPs) {
-
-            if (requiresNeighbourhoodMarking && requiresVisitedMarking) {
-                break;
-            }
-
-            if (!requiresVisitedMarking && s.equals("visited")) {
-                requiresVisitedMarking = true;
-            }
-
-            if (visitedByPattern.matcher(s).matches()) {
-                String varName = s.split("[\\(\\)]")[1];
+        Set<String> result = new LinkedHashSet<>();
+        for(String ap : mcSettings.getRequiredAtomicPropositions()) {
+            if(visitedPattern.matcher(ap).matches()) {
+                result.add(VISITED);
+            } else if(visitedByPattern.matcher(ap).matches()) {
+                String varName = ap.split("[\\(\\)]")[1];
                 scene().options().addKeptVariable(varName);
-                requiresVisitedByMarking = true;
-            }
-
-            if (!requiresNeighbourhoodMarking && s.equals("identicNeighbours")) {
-                requiresNeighbourhoodMarking = true;
+                result.add(VISITED_BY);
+            } else if(identicNeighboursPattern.matcher(ap).matches()) {
+                result.add(IDENTIC_NEIGHBOURS);
             }
         }
+        return result;
+    }
 
-        Marking marking = null;
-        if (requiresVisitedMarking || requiresVisitedByMarking) {
-            logger.info("Computing marked inputs to track visited identities...");
-            marking = new Marking("visited");
-            markInputs(marking);
+    private void addMarking(String marking) {
+
+        Collection<String> availableSelectorNames = scene().options().getUsedSelectorLabels();
+
+        // TODO this won't work, because AbstractionPreprocessingPhase is executed after this one.
+        // TODO I thus recommend to completely remove strategies from the Scene. It should contain
+        // TODO only factories, options, and method bookkeeping...
+        // TODO these options should all have usable default settings...
+        MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
+        AbortStrategy abortStrategy = scene().strategies().getAbortStrategy();
+
+        AbstractMarkingGenerator generator = null;
+
+        switch (marking) {
+            case VISITED:
+            case VISITED_BY:
+                generator = new VisitedMarkingGenerator(MARKING_NAME, availableSelectorNames,
+                        abortStrategy, materializationStrategy, canonicalizationStrategy);
+                break;
+            case IDENTIC_NEIGHBOURS:
+                // TODO
+                break;
+            default:
+                logger.error("Unknown marking.");
         }
 
-        if (requiresVisitedMarking) {
+        generateMarkedInputs(generator);
+    }
 
-            stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton(marking));
+    private void generateMarkedInputs(AbstractMarkingGenerator generator) {
+
+        if(generator == null) {
+            return;
         }
 
-        if (requiresVisitedByMarking) {
-            stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton(marking));
+        List<HeapConfiguration> markedInputs = new LinkedList<>();
+        for(HeapConfiguration in : inputs) {
+            ProgramState initialState = scene().createProgramState(in);
+            Collection<ProgramState> marked = generator.marked(initialState);
+            marked.forEach(programState -> markedInputs.add(programState.getHeap()));
         }
+        inputs = markedInputs;
+    }
 
-        if (requiresNeighbourhoodMarking) {
-            logger.info("Computing marked inputs to track neighbourhood identities...");
-            marking = new Marking("neighbourhood", true);
-            markInputs(marking);
-            stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(this, marking));
+    private void addStateLabeling(String markingIdentifier) {
+
+        switch (markingIdentifier) {
+            case VISITED:
+                stateLabelingStrategyBuilder.add(new StatelessVisitedAutomaton(new Marking("visited")));
+                break;
+            case VISITED_BY:
+                stateLabelingStrategyBuilder.add(new StatelessVisitedByAutomaton(new Marking("visited")));
+                break;
+            case IDENTIC_NEIGHBOURS:
+                Marking marking = new Marking("neighbourhood", true);
+                markInputs(marking);
+                stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(this, marking));
+                break;
+            default:
+                logger.error("Unknown marking.");
         }
 
     }
@@ -148,4 +186,5 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         return stateLabelingStrategyBuilder;
     }
+
 }

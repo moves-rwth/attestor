@@ -1,8 +1,9 @@
-package de.rwth.i2.attestor.markingGeneration;
+package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -19,13 +20,17 @@ import java.util.List;
 
 public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
+    private final String markingName;
 
-    public VisitedMarkingGenerator(Collection<String> availableSelectorLabelNames,
+    public VisitedMarkingGenerator(String markingName,
+                                   Collection<String> availableSelectorLabelNames,
                                    AbortStrategy abortStrategy,
                                    MaterializationStrategy materializationStrategy,
                                    CanonicalizationStrategy canonicalizationStrategy) {
 
         super(availableSelectorLabelNames, abortStrategy, materializationStrategy, canonicalizationStrategy);
+
+        this.markingName = markingName;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
             if(!Types.isConstantType(type)) {
                 HeapConfiguration markedHeap = initialHeap.clone()
                         .builder()
-                        .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, node)
+                        .addVariableEdge(markingName, node)
                         .build();
                 ProgramState markedState = initialState.shallowCopyWithUpdateHeap(markedHeap);
                 markedState.setProgramCounter(0);
@@ -53,7 +58,9 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
     @Override
     protected Program getProgram() {
 
-        SemanticsCommand command = new VisitedMarkingCommand(getAvailableSelectorLabelNames(), 0);
+        SemanticsCommand command = new VisitedMarkingCommand(markingName,
+                getAvailableSelectorLabelNames(), 0);
+
         return new ProgramImpl(Collections.singletonList(command));
     }
 }
