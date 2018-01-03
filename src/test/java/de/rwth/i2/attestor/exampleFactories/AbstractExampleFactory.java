@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
@@ -55,7 +54,7 @@ public abstract class AbstractExampleFactory extends SceneObject {
 
     public ProgramState getInitialState() {
 
-        return new DefaultProgramState(this, getInput());
+        return scene().createProgramState(getInput());
     }
 
 }

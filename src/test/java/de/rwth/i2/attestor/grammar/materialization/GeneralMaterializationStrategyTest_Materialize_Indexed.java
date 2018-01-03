@@ -14,7 +14,6 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.BalancedTreeGrammar;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.AbstractIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
@@ -47,6 +46,8 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
     public void setUp() throws Exception {
 
         sceneObject = new MockupSceneObject();
+        sceneObject.scene().options().setIndexedMode(true);
+
         treeGrammar = new BalancedTreeGrammar(sceneObject);
 
         Grammar balancedTreeGrammar = treeGrammar.getGrammar();
@@ -75,10 +76,10 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
         final HeapConfiguration inputHeap =
                 getInputWithIndexZ(indexForReferenceNt);
-        ProgramState inputState = new IndexedState(sceneObject, inputHeap).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputHeap).prepareHeap();
         final HeapConfiguration expectedHeap =
                 getAppliedBalancedLeafRule_WithReferenceIndex(indexForReferenceNt);
-        ProgramState expectedState = new IndexedState(sceneObject, expectedHeap).prepareHeap();
+        ProgramState expectedState = sceneObject.scene().createProgramState(expectedHeap).prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
@@ -101,17 +102,17 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
         final HeapConfiguration inputHeap =
                 getInputWithIndex_sZ(indexForReferenceNt);
-        ProgramState inputState = new IndexedState(sceneObject, inputHeap).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputHeap).prepareHeap();
 
         final HeapConfiguration expectedHeap1 =
                 getExpected_sZ_BalancedRule(indexForReferenceNt);
-        ProgramState expectedState1 = new IndexedState(sceneObject, expectedHeap1).prepareHeap();
+        ProgramState expectedState1 = sceneObject.scene().createProgramState(expectedHeap1).prepareHeap();
         final HeapConfiguration expectedHeap2 =
                 getAppliedLeftLeafRuleWithReferenceIndex(indexForReferenceNt);
-        ProgramState expectedState2 = new IndexedState(sceneObject, expectedHeap2).prepareHeap();
+        ProgramState expectedState2 = sceneObject.scene().createProgramState(expectedHeap2).prepareHeap();
         final HeapConfiguration expectedHeap3 =
                 getAppliedRightLeafRuleWithReferenceIndex(indexForReferenceNt);
-        ProgramState expectedState3 = new IndexedState(sceneObject, expectedHeap3).prepareHeap();
+        ProgramState expectedState3 = sceneObject.scene().createProgramState(expectedHeap3).prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
@@ -136,17 +137,17 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
         final HeapConfiguration inputHeap =
                 getInputWithIndex_ssX(indexForReferenceNt);
-        ProgramState inputState = new IndexedState(sceneObject, inputHeap).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputHeap).prepareHeap();
 
         final HeapConfiguration expectedHeap1 =
                 getExpectedOneNonterminal_ssX_BalancedRule(indexForReferenceNt);
-        ProgramState expectedState1 = new IndexedState(sceneObject, expectedHeap1).prepareHeap();
+        ProgramState expectedState1 = sceneObject.scene().createProgramState(expectedHeap1).prepareHeap();
         final HeapConfiguration expectedHeap2 =
                 getExpected_ssX_LeftRule(indexForReferenceNt);
-        ProgramState expectedState2 = new IndexedState(sceneObject, expectedHeap2).prepareHeap();
+        ProgramState expectedState2 = sceneObject.scene().createProgramState(expectedHeap2).prepareHeap();
         final HeapConfiguration expectedHeap3 =
                 getExpected_ssX_RightRule(indexForReferenceNt);
-        ProgramState expectedState3 = new IndexedState(sceneObject, expectedHeap3).prepareHeap();
+        ProgramState expectedState3 = sceneObject.scene().createProgramState(expectedHeap3).prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");
@@ -171,23 +172,23 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
 
         final HeapConfiguration inputHeap =
                 getInputWithIndex_sX(indexForReferenceNt);
-        ProgramState inputState = new IndexedState(sceneObject, inputHeap).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputHeap).prepareHeap();
 
         final HeapConfiguration expectedHeap1 =
                 getExpected_sX_BalancedRule(getIndex_X());//no materialization
-        ProgramState expectedState1 = new IndexedState(sceneObject, expectedHeap1).prepareHeap();
+        ProgramState expectedState1 = sceneObject.scene().createProgramState(expectedHeap1).prepareHeap();
         final HeapConfiguration expectedHeap2 =
                 getExpected_ssX_LeftRule(getIndex_sX());//materialization: X -> sX
-        ProgramState expectedState2 = new IndexedState(sceneObject, expectedHeap2).prepareHeap();
+        ProgramState expectedState2 = sceneObject.scene().createProgramState(expectedHeap2).prepareHeap();
         final HeapConfiguration expectedHeap3 =
                 getExpected_ssX_RightRule(getIndex_sX());//materialization X -> sX
-        ProgramState expectedState3 = new IndexedState(sceneObject, expectedHeap3).prepareHeap();
+        ProgramState expectedState3 = sceneObject.scene().createProgramState(expectedHeap3).prepareHeap();
         final HeapConfiguration expectedHeap4 =
                 getAppliedLeftLeafRuleWithReferenceIndex(getIndex_Z());//materialization X -> Z
-        ProgramState expectedState4 = new IndexedState(sceneObject, expectedHeap4).prepareHeap();
+        ProgramState expectedState4 = sceneObject.scene().createProgramState(expectedHeap4).prepareHeap();
         final HeapConfiguration expectedHeap5 =
                 getAppliedRightLeafRuleWithReferenceIndex(getIndex_Z());//materialization X->Z
-        ProgramState expectedState5 = new IndexedState(sceneObject, expectedHeap5).prepareHeap();
+        ProgramState expectedState5 = sceneObject.scene().createProgramState(expectedHeap5).prepareHeap();
 
         ViolationPoints vioPoints = new ViolationPoints();
         vioPoints.add(VIOLATIONPOINT_VARIABLE, "left");

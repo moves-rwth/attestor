@@ -66,7 +66,7 @@ public class StateSpaceGeneratorTest {
         ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
             res = stateSpaceGeneratorBuilder
@@ -102,7 +102,7 @@ public class StateSpaceGeneratorTest {
 
         ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
             res = stateSpaceGeneratorBuilder
@@ -163,7 +163,7 @@ public class StateSpaceGeneratorTest {
         programInstructions.add(secondReturn);
         ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
             res = stateSpaceGeneratorBuilder

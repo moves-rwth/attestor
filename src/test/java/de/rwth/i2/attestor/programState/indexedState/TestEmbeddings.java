@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
@@ -25,6 +26,8 @@ public class TestEmbeddings {
     public void init() {
 
         sceneObject = new MockupSceneObject();
+        sceneObject.scene().options().setIndexedMode(true);
+
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
         aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
@@ -59,7 +62,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical() {
 
-        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize());
+        ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize());
         input.prepareHeap();
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
         assertTrue(checker.hasMatching());
@@ -68,7 +71,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical2() {
 
-        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize2());
+        ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize2());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
@@ -78,7 +81,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizePractical3() {
 
-        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_practicalCanonize3());
+        ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize3());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
@@ -91,7 +94,7 @@ public class TestEmbeddings {
     @Test
     public void testCanonizeWithInst() {
 
-        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_Cononize_withInstNecessary());
+        ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_Cononize_withInstNecessary());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
@@ -104,7 +107,7 @@ public class TestEmbeddings {
     @Test
     public void testEmbedding5() {
         //smaller version of testCanonizeWithInst()
-        IndexedState input = new IndexedState(sceneObject, graphFactory.getInput_Embedding5());
+        ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_Embedding5());
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(

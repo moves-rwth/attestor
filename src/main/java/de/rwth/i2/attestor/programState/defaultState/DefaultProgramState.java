@@ -3,8 +3,6 @@ package de.rwth.i2.attestor.programState.defaultState;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.GeneralProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
@@ -20,17 +18,8 @@ public class DefaultProgramState extends GeneralProgramState {
      *
      * @param heap The underlying heap configuration.
      */
-    public DefaultProgramState(Scene scene, HeapConfiguration heap) {
-        super(scene, heap);
-    }
-
-    /**
-     * Initializes a program state.
-     *
-     * @param heap The underlying heap configuration.
-     */
-    public DefaultProgramState(SceneObject sceneObject, HeapConfiguration heap) {
-        super(sceneObject, heap);
+    public DefaultProgramState(HeapConfiguration heap) {
+        super(heap);
     }
 
     /**
@@ -79,7 +68,7 @@ public class DefaultProgramState extends GeneralProgramState {
     public DefaultProgramState clone() {
 
         HeapConfiguration newHeap = heap.clone();
-        DefaultProgramState result = new DefaultProgramState(this, newHeap);
+        DefaultProgramState result = new DefaultProgramState(newHeap);
         result.setProgramCounter(programCounter);
         return result;
     }
@@ -106,25 +95,5 @@ public class DefaultProgramState extends GeneralProgramState {
 
         return programCounter == state.programCounter
                 && heap.equals(otherHeap);
-    }
-
-    public boolean isSubsumedBy(ProgramState otherState) {
-
-        if(this == otherState) {
-            return true;
-        }
-
-        if(otherState == null) {
-            return false;
-        }
-
-        if(programCounter != otherState.getProgramCounter()) {
-            return false;
-        }
-
-        return scene()
-                .strategies()
-                .getLanguageInclusionStrategy()
-                .includes(heap, otherState.getHeap());
     }
 }

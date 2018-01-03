@@ -158,15 +158,6 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 
     /**
-     * Checks whether the set of all concrete program states of this state is subsumed by the set of all
-     * concrete program states of the given other state.
-     *
-     * @param otherState The other abstract program state.
-     * @return true if the concretizations of this state are subsumed by the concretizations of the other state.
-     */
-    boolean isSubsumedBy(ProgramState otherState);
-
-    /**
      * determines whether this state is part of the top level statespace
      * (and not of the state space of a method call)
      *

@@ -53,7 +53,7 @@ public class CounterexampleGeneratorTest {
     public void testTrivial() {
 
         HeapConfiguration input = hcFactory.getList();
-        ProgramState initialState = new DefaultProgramState(sceneObject, input.clone());
+        ProgramState initialState = new DefaultProgramState(input.clone());
         Type type = sceneObject.scene().getType("List");
         ProgramImpl program = getSetNextProgram(type);
 
@@ -161,7 +161,10 @@ public class CounterexampleGeneratorTest {
         expected.builder()
                 .addVariableEdge("x", expected.nodes().get(0))
                 .build();
-        assertEquals(expected, counterexampleInput.getHeap());
+
+        ProgramState expectedState = sceneObject.scene().createProgramState(expected);
+
+        assertEquals(expectedState.getHeap(), counterexampleInput.getHeap());
     }
 
     private ProgramState getInitialState() {

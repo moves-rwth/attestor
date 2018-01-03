@@ -66,7 +66,8 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
     private ProgramState addIfAbsent(ProgramState absState, Set<ProgramState> abstractedStates) {
 
         for (ProgramState state : abstractedStates) {
-            if (absState.isSubsumedBy(state)) {
+            if(absState.getProgramCounter() == state.getProgramCounter()
+                    && languageInclusionStrategy.includes(absState.getHeap(), state.getHeap())) {
                 return state;
             }
         }

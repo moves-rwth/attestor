@@ -30,7 +30,7 @@ public class AssignInvokeTest_trivial {
 
     private AssignInvoke stmt;
     private HeapConfiguration inputGraph;
-    private DefaultProgramState inputState;
+    private ProgramState inputState;
 
     private SceneObject sceneObject;
     private ExampleHcImplFactory hcFactory;
@@ -56,7 +56,7 @@ public class AssignInvokeTest_trivial {
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
 
         inputGraph = hcFactory.getListAndConstants();
-        inputState = new DefaultProgramState(sceneObject, inputGraph);
+        inputState = new DefaultProgramState(inputGraph);
     }
 
     @Test

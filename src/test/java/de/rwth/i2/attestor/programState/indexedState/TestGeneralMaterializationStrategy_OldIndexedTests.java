@@ -32,6 +32,7 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
     public void setup() {
 
         sceneObject = new MockupSceneObject();
+        sceneObject.scene().options().setIndexedMode(true);
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
         BalancedTreeGrammar balancedTreeGrammar = new BalancedTreeGrammar(sceneObject);
@@ -57,11 +58,11 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
 
         HeapConfiguration inputGraph
                 = graphFactory.getInput_MaterializeSmall_Z();
-        ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputGraph).prepareHeap();
 
-        ProgramState expected =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall_Z())
-                        .prepareHeap();
+        ProgramState expected = sceneObject.scene().createProgramState(
+               graphFactory.getExpected_MaterializeSmall_Z()
+        ).prepareHeap();
 
         Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(1, materializedStates.size());
@@ -74,20 +75,20 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
 
         HeapConfiguration inputGraph
                 = graphFactory.getInput_MaterializeSmall_sZ();
-        ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputGraph).prepareHeap();
         Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(3, materializedStates.size());
 
 
-        ProgramState res1 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res1())
-                        .prepareHeap();
-        ProgramState res2 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res2())
-                        .prepareHeap();
-        ProgramState res3 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeSmall2_Res3())
-                        .prepareHeap();
+        ProgramState res1 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeSmall2_Res1()
+        ).prepareHeap();
+        ProgramState res2 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeSmall2_Res2()
+        ).prepareHeap();
+        ProgramState res3 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeSmall2_Res3()
+        ).prepareHeap();
 
         assertTrue("should contain res1", materializedStates.contains(res1.getHeap()));
         assertTrue("should contain res2", materializedStates.contains(res2.getHeap()));
@@ -99,22 +100,25 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
     public void testMaterialize_big() {
 
         HeapConfiguration inputGraph = graphFactory.getInput_MaterializeBig();
-        ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputGraph).prepareHeap();
         Collection<HeapConfiguration> materializedStates = materializer.materialize(inputState.getHeap(), inputVioPoints);
         assertEquals(5, materializedStates.size());
 
 
-        ProgramState res1 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeBig_Res1())
-                        .prepareHeap();
-        ProgramState res2 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeBig_Res2())
-                        .prepareHeap();
-        ProgramState res3 =
-                new IndexedState(sceneObject, graphFactory.getExpected_MaterializeBig_Res3())
-                        .prepareHeap();
-        ProgramState res4 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeBig_Res4()).prepareHeap();
-        ProgramState res5 = new IndexedState(sceneObject, graphFactory.getExpected_MaterializeBig_Res5()).prepareHeap();
+        ProgramState res1 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeBig_Res1()
+        ).prepareHeap();
+        ProgramState res2 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeBig_Res2()
+        ).prepareHeap();
+        ProgramState res3 = sceneObject.scene().createProgramState(
+                graphFactory.getExpected_MaterializeBig_Res3()
+        ).prepareHeap();
+        ProgramState res4 = sceneObject.scene()
+                .createProgramState(graphFactory.getExpected_MaterializeBig_Res4())
+                .prepareHeap();
+        ProgramState res5 = sceneObject.scene()
+                .createProgramState(graphFactory.getExpected_MaterializeBig_Res5()).prepareHeap();
 
 
         assertTrue("should contain res1", materializedStates.contains(res1));

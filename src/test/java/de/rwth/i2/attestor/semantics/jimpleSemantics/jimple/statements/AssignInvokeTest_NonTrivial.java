@@ -37,7 +37,7 @@ public class AssignInvokeTest_NonTrivial {
 
     private AssignInvoke stmt;
     private HeapConfiguration inputGraph;
-    private DefaultProgramState inputState;
+    private ProgramState inputState;
 
     @Before
     public void setUp() throws Exception {
@@ -66,7 +66,7 @@ public class AssignInvokeTest_NonTrivial {
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
 
         inputGraph = hcFactory.getListAndConstants();
-        inputState = new DefaultProgramState(sceneObject, inputGraph);
+        inputState = new DefaultProgramState(inputGraph);
     }
 
     @Test

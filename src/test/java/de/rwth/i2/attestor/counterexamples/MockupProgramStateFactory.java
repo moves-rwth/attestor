@@ -14,8 +14,7 @@ public class MockupProgramStateFactory extends SceneObject {
     }
 
     public ProgramState getInitialState() {
-        return new DefaultProgramState(this, scene().createHeapConfiguration());
-
+        return new DefaultProgramState(scene().createHeapConfiguration());
     }
     public ProgramState getNormalState() {
 
@@ -24,7 +23,7 @@ public class MockupProgramStateFactory extends SceneObject {
                 .builder()
                 .addNodes(Types.NULL, 1, new TIntArrayList())
                 .build();
-        return new DefaultProgramState(this, hc);
+        return new DefaultProgramState(hc);
     }
 
     public ProgramState getRequiredFinalState() {
@@ -36,7 +35,7 @@ public class MockupProgramStateFactory extends SceneObject {
                 .addNodes(scene().getType("nodeType"), 2, nodes)
                 .addNonterminalEdge(scene().createNonterminal("X", 2, new boolean[]{false,false}), nodes)
                 .build();
-        return new DefaultProgramState(this, hc);
+        return new DefaultProgramState(hc);
     }
 
     public ProgramState getIrrelevantFinalState() {
@@ -48,6 +47,6 @@ public class MockupProgramStateFactory extends SceneObject {
                 .addNodes(scene().getType("nodeType"), 2, nodes)
                 .addNonterminalEdge(scene().createNonterminal("Y", 2, new boolean[]{false,false}), nodes)
                 .build();
-        return new DefaultProgramState(this, hc);
+        return new DefaultProgramState(hc);
     }
 }

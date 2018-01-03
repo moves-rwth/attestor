@@ -2,10 +2,6 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
-import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
-import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
-import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
-import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
@@ -88,10 +84,11 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupConcretization() {
 
-        SingleStepConcretizationStrategy singleStrategy = new DefaultSingleStepConcretizationStrategy(grammar);
-        FullConcretizationStrategy fullStrategy = new FullConcretizationStrategyImpl(singleStrategy);
-        scene().strategies().setSingleStepConcretizationStrategy(singleStrategy);
-        scene().strategies().setFullConcretizationStrategy(fullStrategy);
+        ConcretizationStrategyBuilder builder = new ConcretizationStrategyBuilder();
+        builder.setGrammar(grammar);
+
+        scene().strategies().setSingleStepConcretizationStrategy(builder.buildSingleStepStrategy());
+        scene().strategies().setFullConcretizationStrategy(builder.buildFullConcretizationStrategy());
     }
 
     private void setupMaterialization() {
@@ -130,6 +127,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     }
 
     private void setupInclusionCheck() {
+
         scene().strategies().setLanguageInclusionStrategy(
                new LanguageInclusionStrategyBuilder()
                        .setMinAbstractionDistance(scene().options().getAbstractionDistance())

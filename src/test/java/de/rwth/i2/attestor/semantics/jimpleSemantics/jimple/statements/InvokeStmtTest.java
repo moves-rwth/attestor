@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
@@ -30,7 +29,7 @@ public class InvokeStmtTest {
 
     private InvokeStmt stmt;
     private HeapConfiguration inputGraph;
-    private DefaultProgramState inputState;
+    private ProgramState inputState;
 
     private SceneObject sceneObject;
     private ExampleHcImplFactory hcFactory;
@@ -53,7 +52,7 @@ public class InvokeStmtTest {
                 = new InstanceInvokeHelper(sceneObject, var, new ArrayList<>());
 
         stmt = new InvokeStmt(sceneObject, method, invokePrepare, 1);
-        inputState = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
+        inputState = sceneObject.scene().createProgramState(hcFactory.getListAndConstants());
         inputState.prepareHeap();
         inputGraph = inputState.getHeap();
     }
@@ -64,11 +63,11 @@ public class InvokeStmtTest {
         try {
             Collection<ProgramState> res = stmt.computeSuccessors(inputState);
             assertEquals(1, res.size());
-            DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
+            ProgramState resState = res.iterator().next();
             assertNotSame("ensure clone on state level", resState, inputState);
             assertNotSame("ensure clone on graph level", inputGraph, resState.getHeap());
             assertSame("ensure inputGraph still in inputState", inputGraph, inputState.getHeap());
-            DefaultProgramState tmp = new DefaultProgramState(sceneObject, hcFactory.getListAndConstants());
+            ProgramState tmp = sceneObject.scene().createProgramState(hcFactory.getListAndConstants());
             tmp.prepareHeap();
             HeapConfiguration expectedGraph = tmp.getHeap();
             assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph);

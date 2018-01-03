@@ -52,7 +52,7 @@ public class IfStmtTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
+        ProgramState testState = sceneObject.scene().createProgramState(testGraph);
         testState.prepareHeap();
 
         Value leftExpr = new Local(listType, "y");
@@ -62,7 +62,7 @@ public class IfStmtTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = testState.clone();
+            ProgramState input = testState.clone();
 
             Collection<ProgramState> res = stmt.computeSuccessors(input);
 
@@ -92,7 +92,7 @@ public class IfStmtTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
+        ProgramState testState = sceneObject.scene().createProgramState(testGraph);
         testState.prepareHeap();
 
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
@@ -105,7 +105,7 @@ public class IfStmtTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = testState.clone();
+            ProgramState input = testState.clone();
             Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertEquals("test Graph changed", hash, testGraph.hashCode());
@@ -134,7 +134,7 @@ public class IfStmtTest {
         int hash = testGraph.hashCode();
         SelectorLabel next = sceneObject.scene().getSelectorLabel("next");
 
-        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
+        ProgramState testState = sceneObject.scene().createProgramState(testGraph);
         testState.prepareHeap();
 
         Value origin1 = new Local(listType, "y");
@@ -147,7 +147,7 @@ public class IfStmtTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = testState.clone();
+            ProgramState input = testState.clone();
 
             Collection<ProgramState> res = stmt.computeSuccessors(input);
 
@@ -156,7 +156,7 @@ public class IfStmtTest {
 
             for (ProgramState resProgramState : res) {
 
-                DefaultProgramState resState = (DefaultProgramState) resProgramState;
+                ProgramState resState = resProgramState;
 
                 assertFalse("condition should evaluate to true, but got false", resState.getProgramCounter() == falsePC);
                 assertTrue("condition should evaluate to true", resState.getProgramCounter() == truePC);
