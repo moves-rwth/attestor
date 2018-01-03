@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.counterexampleGeneration;
 
-import java.util.Collections;
-import java.util.Set;
-
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * A tailored observer that determines the required successor states of

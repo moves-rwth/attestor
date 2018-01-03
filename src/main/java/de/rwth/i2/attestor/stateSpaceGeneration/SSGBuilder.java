@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class provides methods to safely initialize a StateSpaceGenerator.

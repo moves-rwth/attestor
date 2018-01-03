@@ -1,14 +1,5 @@
 package de.rwth.i2.attestor.ipa;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.HashSet;
-
-import org.junit.Test;
-
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -16,6 +7,14 @@ import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.*;
 
 public class IpaContractCollectionTest {
 

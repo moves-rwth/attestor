@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.Map;
-import java.util.Set;
-
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.TIntSet;
+
+import java.util.Map;
+import java.util.Set;
 
 public interface StateSpace {
 

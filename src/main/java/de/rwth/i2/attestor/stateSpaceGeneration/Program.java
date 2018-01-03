@@ -1,10 +1,15 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.AssignInvoke;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.InvokeStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnValueStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Abstraction of a program that is symbolically executed to generate a state space.

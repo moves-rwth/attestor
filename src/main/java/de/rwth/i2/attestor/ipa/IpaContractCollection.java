@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
+
+import java.util.*;
 
 /**
  * This is essentially a hashMap from IpaPrecondtion to List&#60;HeapConfiguration&#62;
