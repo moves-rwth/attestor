@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.grammar.concretization;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 
-public class Conew DefaultProgramStatencretizationStrategyBuilder {
+public class ConcretizationStrategyBuilder {
 
     private Grammar grammar = null;
     private SingleStepConcretizationStrategy singleStepStrategy = null;

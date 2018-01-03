@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
+import de.rwth.i2.attestor.grammar.concretization.ConcretizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
