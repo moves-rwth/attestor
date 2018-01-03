@@ -3,10 +3,9 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
 import de.rwth.i2.attestor.ipa.methodExecution.Contract;
 import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 

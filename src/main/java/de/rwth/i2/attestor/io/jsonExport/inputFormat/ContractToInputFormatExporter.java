@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.ipa.methodExecution.Contract;
 import org.json.JSONWriter;
 
 import java.io.Writer;
-import java.util.Set;
 import java.util.Collection;
 
 public class ContractToInputFormatExporter {
