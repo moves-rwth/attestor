@@ -6,9 +6,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import gnu.trove.iterator.TIntIterator;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -29,9 +29,7 @@ public class ReturnVoidStmt extends Statement {
      * Returns the resulting heap with exit location (-1)
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer) {
-
-        observer.update(this, programState);
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         programState = programState.clone();
 
@@ -41,12 +39,6 @@ public class ReturnVoidStmt extends Statement {
 
         removeLocals(programState);
         return Collections.singleton(programState);
-    }
-
-    @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
     }
 
     public String toString() {
@@ -64,6 +56,11 @@ public class ReturnVoidStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return new LinkedHashSet<>();
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
     /**

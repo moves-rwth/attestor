@@ -6,12 +6,22 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.ipa.contracts.InternalContract;
+import de.rwth.i2.attestor.ipa.contracts.InternalContractCollection;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractCollection;
+import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.ipa.methodExecution.ScopeExtractor;
+import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
+import de.rwth.i2.attestor.ipa.scopes.InternalScopedHeap;
+import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
-import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +29,11 @@ import static org.junit.Assert.assertTrue;
 public class ReachableFragmentTest {
 
     SceneObject sceneObject = new MockupSceneObject();
-    IpaAbstractMethod ipa = new IpaAbstractMethod(sceneObject, "testMethod");
+
+    ScopeExtractor scopeExtractor = new DefaultScopeExtractor(sceneObject, "testMethod");
+    String methodName = "testMethod";
+
+
     Type type = sceneObject.scene().getType("someType");
     SelectorLabel nextLabel = sceneObject.scene().getSelectorLabel("next");
 
@@ -187,16 +201,20 @@ public class ReachableFragmentTest {
     private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
                              HeapConfiguration expectedReplace) {
 
-        Pair<HeapConfiguration, Pair<HeapConfiguration, Integer>> result = ipa.prepareInput(input);
+        InternalScopedHeap scopedHeap = (InternalScopedHeap) scopeExtractor.extractScope(input);
 
+        final HeapConfiguration reachableFragment = scopedHeap.getHeapInScope();
 
-        final HeapConfiguration reachableFragment = result.first();
-        assertTrue(ipa.contracts.match(expectedFragment, reachableFragment));
-        int[] reordering = ipa.contracts.getReordering(expectedFragment, reachableFragment);
-        final HeapConfiguration remainingFragment = result.second().first();
-        final Integer placeholderPos = result.second().second();
-        HeapConfiguration remainingFragmentWithReorderedTentacles = ipa.adaptExternalOrdering(reachableFragment,
-                remainingFragment, placeholderPos, reordering);
+        Contract dummyContract = new InternalContract(expectedFragment, Collections.emptySet());
+        ContractCollection dummyCollection = new InternalContractCollection(new InternalPreconditionMatchingStrategy());
+        dummyCollection.addContract(dummyContract);
+
+        ContractMatch match = dummyCollection.matchContract(reachableFragment);
+
+        assertTrue(match.hasMatch());
+        int[] reordering = match.getExternalReordering();
+
+        HeapConfiguration remainingFragmentWithReorderedTentacles = scopedHeap.reorder(reordering);
         assertEquals("replaced Fragment", expectedReplace, remainingFragmentWithReorderedTentacles);
     }
 
@@ -388,7 +406,7 @@ public class ReachableFragmentTest {
 
         final int rank = 1;
         final boolean[] isReductionTentacle = new boolean[]{false};
-        Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+        Nonterminal nt = sceneObject.scene().createNonterminal(methodName + rank, rank, isReductionTentacle);
 
 
         return hc.builder().addNodes(type, rank, nodes)
@@ -452,7 +470,7 @@ public class ReachableFragmentTest {
         Type nullType = getNullType();
         final int rank = 1;
         final boolean[] isReductionTentacle = new boolean[rank];
-        Nonterminal nt = sceneObject.scene().createNonterminal(ipa.toString() + rank, rank, isReductionTentacle);
+        Nonterminal nt = sceneObject.scene().createNonterminal(methodName + rank, rank, isReductionTentacle);
 
         TIntArrayList nodes = new TIntArrayList();
         return hc.builder()

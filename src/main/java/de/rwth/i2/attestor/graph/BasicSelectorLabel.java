@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.graph;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,6 +62,11 @@ public class BasicSelectorLabel implements SelectorLabel {
                 knownSelectorLabels.put(name, result);
             }
             return result;
+        }
+
+        public Collection<SelectorLabel> getAllAvailableSelectors() {
+
+            return knownSelectorLabels.values();
         }
     }
 

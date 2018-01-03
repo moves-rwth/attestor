@@ -3,9 +3,9 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -28,12 +28,6 @@ public class Skip extends Statement {
         this.nextPC = nextPC;
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
-    }
-
 
     public String toString() {
 
@@ -41,9 +35,7 @@ public class Skip extends Statement {
     }
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer) {
-
-        observer.update(this, programState);
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
     }
@@ -58,6 +50,11 @@ public class Skip extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

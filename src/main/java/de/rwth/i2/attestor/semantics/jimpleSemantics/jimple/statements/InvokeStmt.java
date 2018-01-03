@@ -1,16 +1,16 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -23,7 +23,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     /**
      * the abstract representation of the called method
      */
-    private final AbstractMethod method;
+    private final Method method;
     /**
      * handles arguments, and if applicable the this-reference.
      */
@@ -33,7 +33,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
      */
     private final int nextPC;
 
-    public InvokeStmt(SceneObject sceneObject, AbstractMethod method, InvokeHelper invokePrepare, int nextPC) {
+    public InvokeStmt(SceneObject sceneObject, Method method, InvokeHelper invokePrepare, int nextPC) {
 
         super(sceneObject);
         this.method = method;
@@ -42,44 +42,39 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     }
 
     /**
-     * gets the fixpoint from the
-     * {@link de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.SimpleAbstractMethod
-     * AbstractMethod} for the input heap and returns it for the successor
+     * gets the fixpoint from the method
+     * for the input heap and returns it for the successor
      * location.<br>
      * <p>
      * If any variable appearing in the arguments is not live at this point,
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        observer.update(this, programState);
+        programState = programState.clone();
 
         ProgramState preparedState = programState.clone();
+        invokePrepare.prepareHeap(preparedState);
 
-        invokePrepare.prepareHeap(preparedState, observer);
+        Collection<ProgramState> methodResult = method
+                .getMethodExecutor()
+                .getResultStates(preparedState, programState);
 
-        Set<ProgramState> methodResult = method.getResult(
-                preparedState,
-                programState,
-                observer
-        );
-
-        methodResult.forEach(x -> invokePrepare.cleanHeap(x, observer));
+        methodResult.forEach(x -> invokePrepare.cleanHeap(x));
         methodResult.forEach(ProgramState::clone);
         methodResult.forEach(x -> x.setProgramCounter(nextPC));
 
         return methodResult;
     }
 
-    public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options) {
+    public ProgramState getCleanedResultState(ProgramState state) {
 
-        invokePrepare.cleanHeap(state, options);
+        invokePrepare.cleanHeap(state);
         return state;
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return invokePrepare.needsMaterialization(programState);
@@ -101,6 +96,11 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
 }

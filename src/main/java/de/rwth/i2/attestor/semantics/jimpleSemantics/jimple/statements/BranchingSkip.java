@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
 import java.util.Set;
@@ -32,12 +31,6 @@ public class BranchingSkip extends Statement {
         this.rightSuccessor = rightSuccessor;
     }
 
-    @Override
-    public boolean needsMaterialization(ProgramState heap) {
-
-        return false;
-    }
-
 
     public String toString() {
 
@@ -48,9 +41,7 @@ public class BranchingSkip extends Statement {
      * copies the input heap to both successor states
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer) {
-
-        observer.update(this, programState);
+    public Set<ProgramState> computeSuccessors(ProgramState programState) {
 
         ProgramState leftResult = programState.shallowCopy();
         leftResult.setProgramCounter(leftSuccessor);
@@ -75,5 +66,10 @@ public class BranchingSkip extends Statement {
         Set<Integer> res = SingleElementUtil.createSet(leftSuccessor);
         res.add(rightSuccessor);
         return res;
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 }

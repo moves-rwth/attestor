@@ -4,8 +4,8 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.generated.node.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.InternalStateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.InternalStateSpace;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 
     private SceneObject sceneObject;
     private HeapConfiguration hc;
-    private DefaultProgramState state;
+    private ProgramState state;
 
     public TableauRulesSwitchTest() {
 
@@ -29,7 +29,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 
         sceneObject = new MockupSceneObject();
         hc = sceneObject.scene().createHeapConfiguration();
-        state = new DefaultProgramState(sceneObject, hc);
+        state = sceneObject.scene().createProgramState(hc);
         state.addAP("{ sll }");
         this.addStateIfAbsent(state);
     }
@@ -53,7 +53,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
         assertTrue(currentVertex.isTrue());
 
         // Reset state and rule switch with new AP
-        state = new DefaultProgramState(sceneObject, hc);
+        state = sceneObject.scene().createProgramState(hc);
         state.addAP("{ sll }");
         this.addStateIfAbsent(state);
 
@@ -104,7 +104,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
     public void caseAFalseTerm() {
 
         HeapConfiguration hc = sceneObject.scene().createHeapConfiguration();
-        DefaultProgramState state = new DefaultProgramState(sceneObject, hc);
+        ProgramState state = sceneObject.scene().createProgramState(hc);
         state.addAP("{ sll }");
 
         Assertion currentVertex = new Assertion(state.getStateSpaceId(), null);
@@ -163,7 +163,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
         // Generate assertion
 
         HeapConfiguration hc = sceneObject.scene().createHeapConfiguration();
-        DefaultProgramState state = new DefaultProgramState(sceneObject, hc);
+        ProgramState state = sceneObject.scene().createProgramState(hc);
         state.addAP("{ sll }");
         this.addStateIfAbsent(state);
 

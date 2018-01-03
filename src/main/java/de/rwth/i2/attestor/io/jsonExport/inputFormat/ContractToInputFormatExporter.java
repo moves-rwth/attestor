@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.io.jsonExport.inputFormat;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.IpaContractCollection;
-import de.rwth.i2.attestor.util.Pair;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
 import org.json.JSONWriter;
 
 import java.io.Writer;
 import java.util.Set;
+import java.util.Collection;
 
 public class ContractToInputFormatExporter {
 
@@ -18,7 +18,7 @@ public class ContractToInputFormatExporter {
     }
 
 
-    public void export(String signature, IpaContractCollection contracts) {
+    public void export(String signature, Collection<Contract> contracts) {
 
         JSONWriter jsonWriter = new JSONWriter(writer);
 
@@ -28,13 +28,13 @@ public class ContractToInputFormatExporter {
                 .key("contracts")
                 .array(); // the list of contracts <Precondition,List<Postcondition>>
 
-        for (Pair<HeapConfiguration, Set<HeapConfiguration>> contract : contracts.getContractList()) {
+        for (Contract contract : contracts) {
             jsonWriter.object()
                     .key("precondition")
-                    .value(HCtoInputFormatExporter.getInInputFormat(contract.first()))
+                    .value(HCtoInputFormatExporter.getInInputFormat(contract.getPrecondition()))
                     .key("postconditions")
                     .array();
-            for (HeapConfiguration postcondition : contract.second()) {
+            for (HeapConfiguration postcondition : contract.getPostconditions()) {
                 jsonWriter.value(HCtoInputFormatExporter.getInInputFormat(postcondition));
             }
             jsonWriter.endArray()

@@ -1,9 +1,8 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -11,12 +10,12 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -36,7 +35,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     /**
      * the abstract translation of the method that is called
      */
-    private final AbstractMethod method;
+    private final Method method;
     /**
      * handles arguments, and if applicable the this-reference.
      */
@@ -47,7 +46,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     private final int nextPC;
 
     public AssignInvoke(SceneObject sceneObject, SettableValue lhs,
-                        AbstractMethod method, InvokeHelper invokePrepare,
+                        Method method, InvokeHelper invokePrepare,
                         int nextPC) {
 
         super(sceneObject);
@@ -69,37 +68,40 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
      * as it is clearly not live at this point.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        observer.update(this, programState);
+        programState = programState.clone();
 
         ProgramState preparedState = programState.clone();
-        invokePrepare.prepareHeap(preparedState, observer);
+        invokePrepare.prepareHeap(preparedState);
 
-        Set<ProgramState> methodResult = method.getResult(
-                preparedState,
-                programState,
-                observer
-        );
+        Collection<ProgramState> methodResult = method
+                .getMethodExecutor()
+                .getResultStates(programState, preparedState);
+
+        return getCleanedResultStates(methodResult);
+    }
+
+    protected Collection<ProgramState> getCleanedResultStates(Collection<ProgramState> resultStates)
+            throws NotSufficientlyMaterializedException {
 
         Set<ProgramState> assignResult = new LinkedHashSet<>();
-        for (ProgramState resState : methodResult) {
+        for (ProgramState resState : resultStates) {
 
-            resState = getCleanedResultState(resState, observer);
+            resState = getCleanedResultState(resState);
             ProgramState freshState = resState.clone();
             freshState.setProgramCounter(nextPC);
             assignResult.add(freshState);
         }
-
         return assignResult;
     }
 
-    public ProgramState getCleanedResultState(ProgramState state, SymbolicExecutionObserver options)
+    public ProgramState getCleanedResultState(ProgramState state)
             throws NotSufficientlyMaterializedException {
 
         ConcreteValue concreteRHS = state.removeIntermediate("@return");
-        invokePrepare.cleanHeap(state, options);
+        invokePrepare.cleanHeap(state);
 
         try {
             lhs.setValue(state, concreteRHS);
@@ -111,7 +113,6 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
 
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return invokePrepare.needsMaterialization(programState);
@@ -136,6 +137,11 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
 }

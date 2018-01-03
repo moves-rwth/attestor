@@ -1,18 +1,18 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methods.Method;
 
 import java.util.*;
 
 public class TarjanAlgorithm {
 
-    Map<IpaAbstractMethod, Vertex> methodToVertex = new LinkedHashMap<>();
+    Map<Method, Vertex> methodToVertex = new LinkedHashMap<>();
     List<Vertex> vertices = new ArrayList<>();
     Map<Vertex, List<Vertex>> edges = new LinkedHashMap<>();
     int index = 0;
     Deque<Vertex> stack = new ArrayDeque<>();
 
-    public void addMethodAsVertex(IpaAbstractMethod method) {
+    public void addMethodAsVertex(Method method) {
 
         Vertex vertex = new Vertex(method);
         assert (!this.vertices.contains(vertex));
@@ -21,11 +21,11 @@ public class TarjanAlgorithm {
         edges.put(vertex, new ArrayList<>());
     }
 
-    public void addCallEdge(IpaAbstractMethod caller, IpaAbstractMethod callee) {
+    public void addCallEdge(Method caller, Method callee) {
 
         Vertex v = methodToVertex.get(caller);
         Vertex u = methodToVertex.get(callee);
-        if (u == null) {//necessary for untranslated library methods
+        if (u == null) {//necessary for untranslated library methodExecution
             addMethodAsVertex(callee);
             u = methodToVertex.get(callee);
         }
@@ -69,12 +69,12 @@ public class TarjanAlgorithm {
 
             if (scc.size() > 1) {
                 for (Vertex s : scc) {
-                    s.method.markAsRecursive();
+                    s.method.setRecursive(true);
                 }
             } else {
                 Vertex s = scc.get(0);
                 if (edges.get(s).contains(s)) { //self loop
-                    s.method.markAsRecursive();
+                    s.method.setRecursive(true);
                 }
             }
         }
@@ -84,12 +84,12 @@ public class TarjanAlgorithm {
 
     class Vertex {
 
-        public IpaAbstractMethod method;
+        public Method method;
         public int index = -1;
         public int lowlink = -1;
         public boolean onStack = false;
 
-        public Vertex(IpaAbstractMethod method) {
+        public Vertex(Method method) {
 
             this.method = method;
         }

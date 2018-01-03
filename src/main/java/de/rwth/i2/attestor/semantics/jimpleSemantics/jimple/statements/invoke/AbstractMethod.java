@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 
 import java.util.List;
 import java.util.Set;
@@ -38,13 +39,11 @@ public abstract class AbstractMethod extends SceneObject {
      * on the given input.
      *
      * @param input   The program state determining the input of the method.
-     * @param options The current state space generation options.
      * @return The state space obtained from symbolically executing this AbstractMethod on the
      * given input.
      * @throws StateSpaceGenerationAbortedException
      */
-    public abstract Set<ProgramState> getResult( ProgramState input, ProgramState callingState, 
-    											 SymbolicExecutionObserver options)
+    public abstract Set<ProgramState> getResult( ProgramState input, ProgramState callingState)
     											throws StateSpaceGenerationAbortedException;
 
     public void setDisplayName(String displayName) {
@@ -52,8 +51,7 @@ public abstract class AbstractMethod extends SceneObject {
         this.displayName = displayName;
     }
 
-    public abstract Set<ProgramState> getFinalStates( ProgramState input, ProgramState callingState,
-    												  SymbolicExecutionObserver observer);
+    public abstract Set<ProgramState> getFinalStates( ProgramState input, ProgramState callingState );
 
     /**
      * @return the method body / abstract semantics
@@ -70,9 +68,9 @@ public abstract class AbstractMethod extends SceneObject {
      * @param program a list of abstract semantics which are the translation of the
      *                method body
      */
-    public void setControlFlow(List<Semantics> program) {
+    public void setControlFlow(List<SemanticsCommand> program) {
 
-        this.method = new Program(program);
+        this.method = new ProgramImpl(program);
     }
 
     public String toString() {

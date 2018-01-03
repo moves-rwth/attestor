@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * This class organizes the actual translation process by splitting a Jimple program
- * into methods and methods into units. The lower translation layers can ask
+ * into methodExecution and methodExecution into units. The lower translation layers can ask
  * this element for the pc of a given unit and the method-translation for a
  * given method-signature.
  * <p>
@@ -48,8 +48,8 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
     private final JimpleToAbstractSemantics firstLevel;
     /**
      * Instance of Tarjan's Algorithm to find SCCs. Has to be filled with all call-edges
-     * and can then be used to mark all recursive methods as such. Necessary to later compute
-     * fixpoints for these methods instead of descending infinitely.
+     * and can then be used to mark all recursive methodExecution as such. Necessary to later compute
+     * fixpoints for these methodExecution instead of descending infinitely.
      */
     private final TarjanAlgorithm recursiveMethodDetection = new TarjanAlgorithm();
     /**
@@ -60,7 +60,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
     /**
      * necessary to fill the call graph during translation
      */
-    private IpaAbstractMethod currentMethod;
+    private Method currentMethod;
 
     /**
      * Default initialization for TopLevelTranslation.
@@ -87,7 +87,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
     /**
      * First fills the methodMapping with new abstractMethods for each method in
-     * the main class. Then fills these methods each with the corresponding
+     * the main class. Then fills these methodExecution each with the corresponding
      * translation of statements.<br>
      * Assumes that soot.Scene already containsSubsumingState the Jimple code that should be
      * translated.
@@ -100,7 +100,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         //SootClass mainClass = Scene.v().getMainClass();
 
-        // Determine all necessary (non-library) classes and its methods
+        // Determine all necessary (non-library) classes and its methodExecution
         Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();
         for (SootClass sootClass : sootClasses) {
             methods.addAll(sootClass.getMethods());
@@ -111,8 +111,8 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             String shortName = shortMethodSignature(method);
             String signature = method.getSignature();
 
-            final IpaAbstractMethod abstractMethod = scene().getMethod(signature);
-            abstractMethod.setDisplayName(shortName);
+            final Method abstractMethod = scene().getMethod(signature);
+            abstractMethod.setName(shortName);
             recursiveMethodDetection.addMethodAsVertex(abstractMethod);
         }
         for (SootMethod method : methods) {
@@ -178,7 +178,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             curr = units.getSuccOf(curr);
         }
 
-        List<Semantics> programStatements = new ArrayList<>();
+        List<SemanticsCommand> programStatements = new ArrayList<>();
 
         curr = units.getFirst();
         for (int i = 0; i < units.size(); i++) {
@@ -188,7 +188,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         logger.trace("method Name: " + method.getSignature());
 
-        currentMethod.setControlFlow(programStatements);
+        currentMethod.setBody(new ProgramImpl(programStatements));
 
     }
 
@@ -230,18 +230,18 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
      * @param signature The signature of the requested method.
      * @return The corresponding abstract method.
      */
-    public AbstractMethod getMethod(String signature) {
+    public Method getMethod(String signature) {
 
-        IpaAbstractMethod res = scene().getMethod(signature);
+        Method res = scene().getMethod(signature);
         recursiveMethodDetection.addCallEdge(currentMethod, res);
-        if (res.getControlFlow() == null) {
+        if (res.getBody() == null) {
 
             String displayName = shortMethodSignature(Scene.v().getMethod(signature));
-            res.setDisplayName(displayName);
+            res.setName(displayName);
 
-            List<Semantics> defaultControlFlow = new ArrayList<>();
+            List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
             defaultControlFlow.add(new Skip(this, -1));
-            res.setControlFlow(defaultControlFlow);
+            res.setBody(new ProgramImpl(defaultControlFlow));
 
             logger.warn("Method " + signature + " replaced by empty default method.");
 

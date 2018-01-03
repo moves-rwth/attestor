@@ -7,7 +7,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
+import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.AnnotatedSelectorLabel;
@@ -16,19 +17,23 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class DefaultScene implements Scene {
-	
+
 
     private final GeneralType.Factory typeFactory = new GeneralType.Factory();
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
-    private final IpaAbstractMethod.Factory ipaFactory = new IpaAbstractMethod.Factory(this);
 
     private final Options options = new Options();
     private final Strategies strategies = new Strategies();
 
+    private final Map<String, Method> methods = new HashMap<>();
     private long totalNumberOfStates = 0;
-    
+
     private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager(this);
 
 
@@ -92,9 +97,9 @@ public class DefaultScene implements Scene {
 
         ProgramState result;
         if (options.isIndexedMode()) {
-            result = new IndexedState(this, heapConfiguration);
+            result = new IndexedState(heapConfiguration);
         } else {
-            result = new DefaultProgramState(this, heapConfiguration);
+            result = new DefaultProgramState(heapConfiguration);
         }
         result.setProgramCounter(0);
         result.prepareHeap();
@@ -102,9 +107,25 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public IpaAbstractMethod getMethod(String name) {
+    public Contract createContract(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions) {
+        return null;
+    }
 
-        return ipaFactory.get(name);
+    @Override
+    public Method getMethod(String signature) {
+
+        if(methods.containsKey(signature)) {
+            return methods.get(signature);
+        } else {
+            Method result = new ConcreteMethod(signature);
+            methods.put(signature, result);
+            return result;
+        }
+    }
+
+    @Override
+    public Collection<Method> getRegisteredMethods() {
+        return methods.values();
     }
 
     @Override

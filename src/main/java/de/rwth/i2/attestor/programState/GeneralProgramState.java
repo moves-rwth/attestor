@@ -3,8 +3,6 @@ package de.rwth.i2.attestor.programState;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
-import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
@@ -25,7 +23,7 @@ import java.util.Set;
  *
  * @author Christoph
  */
-public abstract class GeneralProgramState extends SceneObject implements ProgramState {
+public abstract class GeneralProgramState implements ProgramState {
 
     /**
      * The logger of this class.
@@ -47,30 +45,18 @@ public abstract class GeneralProgramState extends SceneObject implements Program
     /**
      * Id of this state in a state space
      */
-    private int stateSpaceId = -1;
-    
+    private int stateSpaceId = INVALID_STATE_SPACE_ID;
+
     private StateSpace containingStateSpace = null;
 
-    /**
-     * Initializes a state with the initial program location 0.
-     *
-     * @param heap The initial heap configuration.
-     */
-    protected GeneralProgramState(Scene scene, HeapConfiguration heap) {
-
-        super(scene);
-        this.heap = heap;
-        atomicPropositions = new LinkedHashSet<>();
-    }
 
     /**
      * Initializes a state with the initial program location 0.
      *
      * @param heap The initial heap configuration.
      */
-    protected GeneralProgramState(SceneObject sceneObject, HeapConfiguration heap) {
+    protected GeneralProgramState(HeapConfiguration heap) {
 
-        super(sceneObject);
         this.heap = heap;
         atomicPropositions = new LinkedHashSet<>();
     }
@@ -82,7 +68,6 @@ public abstract class GeneralProgramState extends SceneObject implements Program
      */
     protected GeneralProgramState(GeneralProgramState state) {
 
-        super(state);
         this.heap = state.heap;
         this.programCounter = state.programCounter;
         atomicPropositions = new LinkedHashSet<>(state.getAPs());
@@ -508,12 +493,12 @@ public abstract class GeneralProgramState extends SceneObject implements Program
 
         return this.heap.externalNodes().isEmpty();
     }
-    
+
     @Override
     public StateSpace getContainingStateSpace() {
     	return this.containingStateSpace;
     }
-    
+
     @Override
 	public void setContainingStateSpace(StateSpace containingStateSpace) {
 		this.containingStateSpace = containingStateSpace;

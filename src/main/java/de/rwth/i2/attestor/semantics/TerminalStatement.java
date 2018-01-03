@@ -2,9 +2,9 @@ package de.rwth.i2.attestor.semantics;
 
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class TerminalStatement implements Semantics {
+public class TerminalStatement implements SemanticsCommand {
 
     /**
      * Stores whether canonicalization may be performed
@@ -23,15 +23,9 @@ public class TerminalStatement implements Semantics {
     private boolean isCanonicalizationPermitted = true;
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState executable, SymbolicExecutionObserver options) {
+    public Collection<ProgramState> computeSuccessors(ProgramState executable) {
 
         return new LinkedHashSet<>();
-    }
-
-    @Override
-    public boolean needsMaterialization(ProgramState executable) {
-
-        return false;
     }
 
     @Override
@@ -47,15 +41,8 @@ public class TerminalStatement implements Semantics {
     }
 
     @Override
-    public boolean permitsCanonicalization() {
-
-        return isCanonicalizationPermitted;
-    }
-
-    @Override
-    public void setPermitCanonicalization(boolean permitted) {
-
-        isCanonicalizationPermitted = permitted;
+    public boolean needsCanonicalization() {
+        return true;
     }
 
     @Override

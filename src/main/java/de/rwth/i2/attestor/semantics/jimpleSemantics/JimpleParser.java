@@ -43,12 +43,6 @@ public class JimpleParser extends SceneObject implements ProgramParser {
     }
 
     @Override
-    public Program parse(String classpath, String classname) {
-
-        return parse(classpath, classname, "main");
-    }
-
-    @Override
     public Program parse(String classpath, String classname, String entryPoint) {
 
         try {
@@ -88,6 +82,6 @@ public class JimpleParser extends SceneObject implements ProgramParser {
 
         String mainMethodName = sootClass.getMethodByName(entryPoint).getSignature();
 
-        return translator.getMethod(mainMethodName).getControlFlow();
+        return translator.getMethod(mainMethodName).getBody();
     }
 }

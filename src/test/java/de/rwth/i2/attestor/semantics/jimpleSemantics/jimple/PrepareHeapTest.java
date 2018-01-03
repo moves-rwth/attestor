@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -21,8 +20,8 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -56,9 +55,9 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
+            DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertEquals("result should have size 1", 1, res.size());
 
@@ -87,9 +86,9 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
+            DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertEquals("result should have size 1", 1, res.size());
 
@@ -118,10 +117,10 @@ public class PrepareHeapTest {
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
         try {
-            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
+            DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
 
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertEquals("result should have size 1", 1, res.size());
 

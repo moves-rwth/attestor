@@ -10,7 +10,7 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
-import de.rwth.i2.attestor.ipa.IpaContractCollection;
+import de.rwth.i2.attestor.ipa.methodExecution.Contract;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
@@ -25,6 +25,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import de.rwth.i2.attestor.util.ZipUtils;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
@@ -88,7 +89,7 @@ public class ReportGenerationPhase extends AbstractPhase {
             String filename = outputSettings.getContractRequests().get(signature);
             FileWriter writer = new FileWriter(directory + File.separator + filename);
 
-            IpaContractCollection contracts = scene().getMethod(signature).getContracts();
+            Collection<Contract> contracts = scene().getMethod(signature).getContracts();
 
             ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
             exporter.export(signature, contracts);

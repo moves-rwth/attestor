@@ -9,7 +9,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.types.Types;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -69,10 +68,8 @@ public class IfStmt extends Statement {
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Set<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException {
-
-        observer.update(this, programState);
 
         Set<ProgramState> defaultRes = new LinkedHashSet<>();
         defaultRes.add(programState.shallowCopyUpdatePC(truePC));
@@ -91,14 +88,13 @@ public class IfStmt extends Statement {
         }
 
         if (concreteCondition.isUndefined()) {
-            observer.update(nondeterminismMessage, programState);
             return defaultRes;
         }
         if (!concreteCondition.type().equals(Types.INT)) {
             logger.debug("concreteCondition is not of type int, but " + concreteCondition.type());
         }
 
-        if (observer.isDeadVariableEliminationEnabled()) {
+        if (scene().options().isRemoveDeadVariables()) {
             DeadVariableEliminator.removeDeadVariables(this, conditionValue.toString(),
                     programState, liveVariableNames);
         }
@@ -108,15 +104,8 @@ public class IfStmt extends Statement {
         } else if (concreteCondition.equals(falseValue)) {
             return Collections.singleton(programState.shallowCopyUpdatePC(falsePC));
         } else {
-            observer.update(nondeterminismMessage, programState);
             return defaultRes;
         }
-    }
-
-    @Override
-    public boolean needsMaterialization(ProgramState programState) {
-
-        return conditionValue.needsMaterialization(programState);
     }
 
 
@@ -137,5 +126,10 @@ public class IfStmt extends Statement {
         Set<Integer> res = SingleElementUtil.createSet(truePC);
         res.add(falsePC);
         return res;
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 }

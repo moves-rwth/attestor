@@ -1,22 +1,25 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.counterexampleGeneration.CounterexampleGenerator;
-import de.rwth.i2.attestor.counterexampleGeneration.Trace;
+import de.rwth.i2.attestor.counterexamples.CounterexampleGenerator;
+import de.rwth.i2.attestor.counterexamples.CounterexampleTrace;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
+import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.modelChecking.ModelCheckingTrace;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
@@ -52,7 +55,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         for (Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
             if (!result.getValue()) {
                 LTLFormula formula = result.getKey();
-                Trace trace = modelCheckingResults.getTraceOf(formula);
+                ModelCheckingTrace trace = modelCheckingResults.getTraceOf(formula);
                 if (trace == null) {
                     continue;
                 }
@@ -63,26 +66,33 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                     allCounterexamplesDetected = false;
                     logger.error("Could not construct a non-spurious counterexample for formula:");
                     logger.error(formula);
+                    logger.error("Cause: " + e.getMessage());
                 }
             }
         }
     }
 
-    private void checkCounterexample(LTLFormula formula, Trace trace) {
+    private void checkCounterexample(LTLFormula formula, CounterexampleTrace trace) {
 
         Program program = getPhase(ProgramTransformer.class).getProgram();
 
-        StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
-        MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
         CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
+        MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
+        StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
+        LanguageInclusionStrategy languageInclusionStrategy = scene().strategies().getLanguageInclusionStrategy();
 
-        CounterexampleGenerator generator = CounterexampleGenerator.builder(this)
+        CounterexampleGenerator generator = CounterexampleGenerator.builder()
+                .setAvailableMethods(scene().getRegisteredMethods())
+                .setCanonicalizationStrategy(canonicalizationStrategy)
+                .setMaterializationStrategy(materializationStrategy)
+                .setStateRefinementStrategy(stateRefinementStrategy)
                 .setProgram(program)
                 .setTrace(trace)
-                .setDeadVariableEliminationEnabled(scene().options().isRemoveDeadVariables())
-                .setStateRefinementStrategy(stateRefinementStrategy)
-                .setMaterializationStrategy(materializationStrategy)
-                .setCanonicalizationStrategy(canonicalizationStrategy)
+                .setScopeExtractorFactory(method -> new DefaultScopeExtractor(this, method.getName()))
+                .setStateSubsumptionStrategy((subsumed, subsuming) ->
+                        subsumed.getProgramCounter() == subsuming.getProgramCounter()
+                        && languageInclusionStrategy.includes(subsumed.getHeap(), subsuming.getHeap())
+                )
                 .build();
 
         ProgramState badInput = generator.generate();

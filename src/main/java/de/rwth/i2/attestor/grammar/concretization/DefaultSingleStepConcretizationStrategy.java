@@ -17,7 +17,6 @@ public class DefaultSingleStepConcretizationStrategy implements SingleStepConcre
     @Override
     public Iterator<HeapConfiguration> concretize(HeapConfiguration heapConfiguration, int edge) {
 
-
         Nonterminal label = heapConfiguration.labelOf(edge);
         Iterator<HeapConfiguration> rules = grammar.getRightHandSidesFor(label).iterator();
 

@@ -71,19 +71,19 @@ import java.util.function.IntPredicate;
  * <li>Private identifiers correspond to the actual identifiers used within the underlying LabeledDigraph.
  * The private identifier of a node in a LabeledDigraph may change, for example after another element has
  * been deleted.
- * Private identifiers are <b>not</b> accessible through the methods provided by {@link HeapConfiguration}.
- * In contrast, all methods provided by {@link Graph} directly use private identifiers to avoid translating
+ * Private identifiers are <b>not</b> accessible through the methodExecution provided by {@link HeapConfiguration}.
+ * In contrast, all methodExecution provided by {@link Graph} directly use private identifiers to avoid translating
  * between public and private identifiers
  * when computing graph morphisms.
  * </li>
  * <li>Public identifiers provide an additional indirection that remains unaffected by changes to the underlying
  * LabeledDigraph.
- * All methods provided by {@link HeapConfiguration} always take public identifiers as parameters and return
+ * All methodExecution provided by {@link HeapConfiguration} always take public identifiers as parameters and return
  * public identifiers.
  * </li>
  * </ul>
- * <p> Hence, as long as a client uses only methods provided by HeapConfiguration, all identifiers are public.</p>
- * <p>InternalHeapConfiguration provides the methods {@link InternalHeapConfiguration#getPrivateId(int)}
+ * <p> Hence, as long as a client uses only methodExecution provided by HeapConfiguration, all identifiers are public.</p>
+ * <p>InternalHeapConfiguration provides the methodExecution {@link InternalHeapConfiguration#getPrivateId(int)}
  * and {@link InternalHeapConfiguration#getPublicId(int)}
  * to translate a public identifier into a private identifier and a private identifier into a public identifier,
  * respectively.
@@ -158,6 +158,11 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
     public HeapConfiguration clone() {
 
         return new InternalHeapConfiguration(this);
+    }
+
+    @Override
+    public HeapConfiguration getEmpty() {
+        return new InternalHeapConfiguration();
     }
 
     @Override
@@ -371,7 +376,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
     /**
      * Translates a private ID of an element into the corresponding
-     * public ID that is allowed to be returned by methods of this class.
+     * public ID that is allowed to be returned by methodExecution of this class.
      *
      * @param privateId A private ID of an element of this HeapConfiguration.
      * @return The public ID corresponding to the given private ID.

@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.modelChecking;
 
-import de.rwth.i2.attestor.counterexampleGeneration.Trace;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
@@ -8,14 +7,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FailureTrace implements Trace {
+public class FailureTrace implements ModelCheckingTrace {
 
     private final LinkedList<Integer> stateIdTrace = new LinkedList<>();
     private final LinkedList<ProgramState> stateTrace = new LinkedList<>();
-
-    public FailureTrace() {
-
-    }
+    private Iterator<ProgramState> iterator;
 
     FailureTrace(Assertion failureAssertion, StateSpace stateSpace) {
 
@@ -28,6 +24,8 @@ public class FailureTrace implements Trace {
             stateTrace.addFirst(state);
             current = current.getParent();
         } while (current != null);
+
+        iterator = stateTrace.iterator();
     }
 
     @Override
@@ -48,48 +46,9 @@ public class FailureTrace implements Trace {
         return stateTrace.getLast();
     }
 
-    @Override
-    public int size() {
-
-        return stateTrace.size();
-    }
-
-    @Override
-    public ProgramState getSuccessor(ProgramState state) {
-
-        Iterator<ProgramState> iterator = stateTrace.iterator();
-        while (iterator.hasNext()) {
-            ProgramState s = iterator.next();
-            if (s.getStateSpaceId() == state.getStateSpaceId()) {
-                if (iterator.hasNext()) {
-                    return iterator.next();
-                }
-                return null;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean containsSubsumingState(ProgramState state) {
-
-        for (ProgramState s : stateTrace) {
-            if (state.isSubsumedBy(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean isEmpty() {
 
         return stateIdTrace.isEmpty();
-    }
-
-    @Override
-    public Iterator<ProgramState> iterator() {
-
-        return stateTrace.iterator();
     }
 
     public String toString() {
@@ -98,4 +57,13 @@ public class FailureTrace implements Trace {
     }
 
 
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public ProgramState next() {
+        return iterator.next();
+    }
 }

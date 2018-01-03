@@ -4,17 +4,19 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.ipa.IpaAbstractMethod;
+import de.rwth.i2.attestor.ipa.methods.Method;
+import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
@@ -39,12 +41,14 @@ public class InvokeStmtTest_WithEffect {
     public void setUp() throws Exception {
 
         sceneObject = new MockupSceneObject();
+
+
         hcFactory = new ExampleHcImplFactory(sceneObject);
 
-        testInput = new DefaultProgramState(sceneObject, hcFactory.getInput_InvokeWithEffect());
+        testInput = new DefaultProgramState(hcFactory.getInput_InvokeWithEffect());
         testInput.prepareHeap();
 
-        DefaultProgramState expectedState = new DefaultProgramState(sceneObject, hcFactory.getExpectedResult_InvokeWithEffect());
+        DefaultProgramState expectedState = new DefaultProgramState(hcFactory.getExpectedResult_InvokeWithEffect());
         expectedState.prepareHeap();
         expectedHeap = expectedState.getHeap();
 
@@ -57,14 +61,16 @@ public class InvokeStmtTest_WithEffect {
         Field nextOfX = new Field(type, varX, next);
         Field nextOfY = new Field(type, varY, next);
 
-        AbstractMethod method = new IpaAbstractMethod(sceneObject, "method");
-        List<Semantics> methodBody = new ArrayList<>();
+        Method method = new ConcreteMethod("method");
+
+        List<SemanticsCommand> methodBody = new ArrayList<>();
         methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));
 
         HashSet<String> liveVariables = new LinkedHashSet<>();
         methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
         methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
-        method.setControlFlow(methodBody);
+        method.setBody(new ProgramImpl(methodBody));
+        method.setMethodExecution(new MockupMethodExecutor(sceneObject, method));
 
         StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
         stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);
@@ -75,7 +81,7 @@ public class InvokeStmtTest_WithEffect {
     public void testComputeSuccessors() {
 
         try {
-            Set<ProgramState> resStates = stmt.computeSuccessors(testInput, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> resStates = stmt.computeSuccessors(testInput);
             assertEquals(1, resStates.size());
             assertEquals(expectedHeap, resStates.iterator().next().getHeap());
         } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {

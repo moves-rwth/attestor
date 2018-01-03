@@ -38,7 +38,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
 
         ViolationPoints testPoint = new ViolationPoints(DEFAULT_VARIABLE, DEFAULT_SELECTOR);
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Default());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Default());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -52,7 +52,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         ViolationPoints testPoint = new ViolationPoints(DEFAULT_VARIABLE, DEFAULT_SELECTOR);
         testPoint.add(DEFAULT_VARIABLE, MISSING_SELECTOR);
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Default());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Default());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -67,7 +67,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
 
         ViolationPoints testPoint = new ViolationPoints(ANNOTATED_VARIABLE, ANNOTATED_SELECTOR);
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Indexed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Indexed());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -81,7 +81,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         ViolationPoints testPoint = new ViolationPoints(ANNOTATED_VARIABLE, MISSING_SELECTOR);
         testPoint.add(ANNOTATED_VARIABLE, ANNOTATED_SELECTOR);
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Indexed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Indexed());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -99,7 +99,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testPoints.add(ANNOTATED_VARIABLE, DEFAULT_SELECTOR);
 
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Mixed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Mixed());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -118,7 +118,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testPoints.add(DEFAULT_VARIABLE, DEFAULT_SELECTOR);
 
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Mixed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Mixed());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -136,7 +136,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testPoints.add(DEFAULT_VARIABLE, DEFAULT_SELECTOR);
 
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Mixed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Mixed());
         testState.prepareHeap();
 
         Pair<Integer, String> result
@@ -152,7 +152,7 @@ public class GeneralMaterializationStrategyTest_getActualViolationPoint {
         testPoints.add(ANNOTATED_VARIABLE, ANNOTATED_SELECTOR);
 
         DefaultProgramState testState =
-                new DefaultProgramState(sceneObject, testGraphs.getInput_getActualViolationPoints_Mixed());
+                new DefaultProgramState(testGraphs.getInput_getActualViolationPoints_Mixed());
         testState.prepareHeap();
 
         Pair<Integer, String> result

@@ -14,9 +14,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
@@ -44,6 +42,8 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
     @Before
     public void init() {
+
+        sceneObject.scene().options().setIndexedMode(true);
 
         Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
@@ -80,7 +80,9 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
-        ProgramState inputState = new DefaultProgramState(sceneObject, getInputGraph());
+
+        sceneObject.scene().options().setIndexedMode(false);
+        ProgramState inputState = sceneObject.scene().createProgramState(getInputGraph());
         ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 
         assertEquals(expectedSimpleAbstraction().getHeap(), res.getHeap());
@@ -187,7 +189,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
                 .build()
                 .build();
 
-        return new IndexedState(sceneObject, hc);
+        return sceneObject.scene().createProgramState(hc);
     }
 
     private List<IndexSymbol> getExpectedIndex() {

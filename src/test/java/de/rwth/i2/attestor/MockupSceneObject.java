@@ -8,5 +8,7 @@ public class MockupSceneObject extends SceneObject {
     public MockupSceneObject() {
 
         super(new DefaultScene());
+
+        scene().options().setRemoveDeadVariables(false);
     }
 }

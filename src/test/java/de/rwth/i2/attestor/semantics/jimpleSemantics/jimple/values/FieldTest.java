@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class FieldTest {
 
         try {
 
-            DefaultProgramState executable = new DefaultProgramState(sceneObject, testGraph.clone());
+            ProgramState executable = sceneObject.scene().createProgramState(testGraph.clone());
             executable.prepareHeap();
 
             GeneralConcreteValue res = null;
@@ -60,7 +60,7 @@ public class FieldTest {
             assertNotNull(executable);
 
             GeneralConcreteValue
-                    expectedRes = executable.getVariableTarget("y");
+                    expectedRes = (GeneralConcreteValue) executable.getVariableTarget("y");
 
             assertFalse("Variable 'y' should exist.", expectedRes.isUndefined());
 
@@ -72,7 +72,7 @@ public class FieldTest {
 
             HeapConfiguration resHeapConfig = executable.getHeap();
 
-            DefaultProgramState original = new DefaultProgramState(sceneObject, testGraph.clone());
+            ProgramState original = sceneObject.scene().createProgramState(testGraph.clone());
             original.prepareHeap();
 
             assertTrue("heap should not change", original.getHeap().equals(resHeapConfig));
@@ -87,11 +87,11 @@ public class FieldTest {
 
         int hash = testGraph.hashCode();
 
-        DefaultProgramState testState = new DefaultProgramState(sceneObject, testGraph);
+        ProgramState testState = sceneObject.scene().createProgramState(testGraph);
         testState.prepareHeap();
 
         try {
-            DefaultProgramState executable = testState.clone();
+            ProgramState executable = testState.clone();
 
             ConcreteValue concreteLocal = local.evaluateOn(executable);
             try {
@@ -114,8 +114,7 @@ public class FieldTest {
             assertEquals("testGraph has changed", hash, testGraph.hashCode());
             assertNotNull("resultHeap null", executable);
 
-            int expectedRes = executable
-                    .getVariableTarget("y").getNode();
+            int expectedRes = ((GeneralConcreteValue) executable.getVariableTarget("y")).getNode();
 
             assertEquals("doesn't return correct node", expectedRes, res);
 
@@ -123,7 +122,7 @@ public class FieldTest {
             assertFalse("heap should have changed", testState.getHeap().equals(resultHeap));
 
             HeapConfiguration expectedGraph = hcFactory.getListAndConstantsWithChange();
-            DefaultProgramState expectedState = new DefaultProgramState(sceneObject, expectedGraph);
+            ProgramState expectedState = sceneObject.scene().createProgramState(expectedGraph);
             expectedState.prepareHeap();
 
             assertTrue("heap not as expected", expectedState.getHeap().equals(resultHeap));

@@ -5,10 +5,9 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
+public class StateSpaceContinuationGeneratorBuilder extends StateSpaceGeneratorBuilder {
 
-	public StateSpaceContinuationGeneratorBuilder(SceneObject sceneObject) {
-		super(sceneObject);
+	public StateSpaceContinuationGeneratorBuilder() {
 		statesToContinue = new ArrayList<>();
 	}
 	
@@ -21,11 +20,9 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
                 .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
                 .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
     }
@@ -111,10 +108,6 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
         }
 
-        if (generator.semanticsObserverSupplier == null) {
-            throw new IllegalStateException("StateSpaceGenerator: No supplier for semantics options.");
-        }
-
         if (generator.stateSpaceSupplier == null) {
             throw new IllegalStateException("StateSpaceGenerator: No supplier for state spaces.");
         }
@@ -127,17 +120,16 @@ public class StateSpaceContinuationGeneratorBuilder extends SSGBuilder {
 
         for (ProgramState state : statesToContinue ) {
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
-            generator.addUnexploredState(state);
+            generator.addUnexploredState(state, false);
         }
         
         for (ProgramState state : super.initialStates ) {
             state.setProgramCounter(0);
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
             generator.stateSpace.addInitialState(state);
-            generator.addUnexploredState(state);
+            generator.addUnexploredState(state, false);
         }
        
-        generator.symbolicExecutionObserver = generator.semanticsObserverSupplier.get(generator);
         return generator;
     }
 
