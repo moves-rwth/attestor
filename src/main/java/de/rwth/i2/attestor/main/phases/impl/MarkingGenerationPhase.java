@@ -2,7 +2,9 @@ package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
@@ -15,12 +17,14 @@ import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
+import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.identicalNeighbourhood.NeighbourhoodAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -59,6 +63,11 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         inputs = getPhase(InputTransformer.class).getInputs();
 
+        stateLabelingStrategyBuilder = getPhase(StateLabelingStrategyBuilderTransformer.class).getStrategy();
+        if (stateLabelingStrategyBuilder == null) {
+            stateLabelingStrategyBuilder = AutomatonStateLabelingStrategy.builder();
+        }
+
         Collection<String> requiredMarkings = determineMarkingsFromAPs();
         for(String marking : requiredMarkings) {
             addMarking(marking);
@@ -88,13 +97,25 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         Collection<String> availableSelectorNames = scene().options().getUsedSelectorLabels();
 
-        // TODO this won't work, because AbstractionPreprocessingPhase is executed after this one.
-        // TODO I thus recommend to completely remove strategies from the Scene. It should contain
-        // TODO only factories, options, and method bookkeeping...
-        // TODO these options should all have usable default settings...
-        MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
-        CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getLenientCanonicalizationStrategy();
-        AbortStrategy abortStrategy = scene().strategies().getAbortStrategy();
+        final Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
+        final boolean indexedMode = scene().options().isIndexedMode();
+        final int abstractionDistance = scene().options().getAbstractionDistance();
+        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
+        final int stateSpaceBound = scene().options().getMaxStateSpaceSize();
+        final int stateBound = scene().options().getMaxStateSize();
+
+        MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
+                .setIndexedMode(indexedMode)
+                .setGrammar(grammar)
+                .build();
+
+        CanonicalizationStrategy canonicalizationStrategy = new CanonicalizationStrategyBuilder()
+                .setGrammar(grammar)
+                .setMinAbstractionDistance(abstractionDistance)
+                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .build();
+
+        AbortStrategy abortStrategy = new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound);
 
         AbstractMarkingGenerator generator = null;
 
