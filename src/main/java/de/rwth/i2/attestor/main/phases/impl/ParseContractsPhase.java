@@ -3,11 +3,11 @@ package de.rwth.i2.attestor.main.phases.impl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonImporter;
-import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.procedures.Method;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

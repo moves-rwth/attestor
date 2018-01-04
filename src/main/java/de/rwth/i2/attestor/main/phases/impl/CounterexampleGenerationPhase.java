@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrate
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
@@ -20,6 +19,7 @@ import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransfor
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.modelChecking.ModelCheckingTrace;
+import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;

@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import de.rwth.i2.attestor.ipa.methods.Method;
+import de.rwth.i2.attestor.procedures.Method;
 
 import java.util.*;
 

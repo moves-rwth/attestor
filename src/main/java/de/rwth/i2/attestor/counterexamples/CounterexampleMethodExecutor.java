@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methodExecution.*;
+import de.rwth.i2.attestor.procedures.methodExecution.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Collection;
@@ -12,11 +12,11 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
     private final CounterexampleContractGenerator counterexampleContractGenerator;
     private final CanonicalizationStrategy canonicalizationStrategy;
 
-    public CounterexampleMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
+    CounterexampleMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
                                         CounterexampleContractGenerator contractGenerator,
                                         CanonicalizationStrategy canonicalizationStrategy) {
 
-        super(scopeExtractor, contractCollection, contractGenerator);
+        super(scopeExtractor, contractCollection);
         this.counterexampleContractGenerator = contractGenerator;
         this.canonicalizationStrategy = canonicalizationStrategy;
     }
@@ -33,5 +33,15 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
 
         ContractMatch contractMatch = computeNewContract(inputState, scopedHeap);
         return scopedHeap.merge(contractMatch);
+    }
+
+    private ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
+
+        HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
+        ProgramState initialState = input.shallowCopyWithUpdateHeap(heapInScope);
+        Contract generatedContract = counterexampleContractGenerator.generateContract(initialState);
+        ContractCollection contractCollection = getContractCollection();
+        contractCollection.addContract(generatedContract);
+        return contractCollection.matchContract(heapInScope);
     }
 }

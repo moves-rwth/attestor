@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
-import de.rwth.i2.attestor.ipa.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractBasedMethod;
-import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
+import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 
 public class MockupMethodExecutor extends ContractBasedMethod {
 

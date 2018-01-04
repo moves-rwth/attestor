@@ -1,9 +1,9 @@
-package de.rwth.i2.attestor.ipa.scopes;
+package de.rwth.i2.attestor.procedures.scopes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methodExecution.ScopeExtractor;
-import de.rwth.i2.attestor.ipa.methodExecution.ScopedHeap;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.methodExecution.ScopeExtractor;
+import de.rwth.i2.attestor.procedures.methodExecution.ScopedHeap;
 import de.rwth.i2.attestor.util.Pair;
 
 public class DefaultScopeExtractor extends SceneObject implements ScopeExtractor {

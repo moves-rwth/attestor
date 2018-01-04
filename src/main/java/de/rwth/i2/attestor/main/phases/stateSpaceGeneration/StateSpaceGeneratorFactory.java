@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.List;
 
-class StateSpaceGeneratorFactory extends SceneObject{
+public class StateSpaceGeneratorFactory extends SceneObject{
 
     public StateSpaceGeneratorFactory(Scene scene) {
         super(scene);

@@ -1,8 +1,8 @@
-package de.rwth.i2.attestor.ipa.scopes;
+package de.rwth.i2.attestor.procedures.scopes;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;
 import de.rwth.i2.attestor.util.Pair;
 
 import java.util.Collection;

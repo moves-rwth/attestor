@@ -1,12 +1,6 @@
 package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractBasedMethod;
-import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
-import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
-import de.rwth.i2.attestor.ipa.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
@@ -14,6 +8,12 @@ import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
+import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
+import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.ArrayList;

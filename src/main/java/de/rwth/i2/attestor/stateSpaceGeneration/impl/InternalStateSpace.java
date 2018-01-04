@@ -175,14 +175,14 @@ public class InternalStateSpace implements StateSpace {
             updateAddedState(state);
             return true;
         } else {
-            state.setStateSpaceId(old.getStateSpaceId());
+            state.setStateSpace(this, old.getStateSpaceId());
         }
         return false;
     }
 
     private void updateAddedState(ProgramState state) {
 
-        state.setStateSpaceId(nextStateId);
+        state.setStateSpace(this, nextStateId);
         materializationSuccessors.put(nextStateId, new TIntArrayList());
         controlFlowSuccessors.put(nextStateId, new TIntArrayList());
         artificialInfPathsSuccessors.put(nextStateId, new TIntArrayList());

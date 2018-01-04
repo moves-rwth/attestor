@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.ipa.methodExecution;
+package de.rwth.i2.attestor.procedures.methodExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -7,11 +7,13 @@ import java.util.Collection;
 
 public class ContractBasedMethod extends AbstractMethodExecutor {
 
+    private ContractGenerator contractGenerator;
 
     public ContractBasedMethod(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
                                   ContractGenerator contractGenerator) {
 
-        super(scopeExtractor, contractCollection, contractGenerator);
+        super(scopeExtractor, contractCollection);
+        this.contractGenerator = contractGenerator;
     }
 
     @Override
@@ -23,5 +25,15 @@ public class ContractBasedMethod extends AbstractMethodExecutor {
             contractMatch = computeNewContract(input, scopedHeap);
         }
         return scopedHeap.merge(contractMatch);
+    }
+
+    private ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
+
+        HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
+        ProgramState initialState = input.shallowCopyWithUpdateHeap(heapInScope);
+        Contract generatedContract = contractGenerator.generateContract(initialState);
+        ContractCollection contractCollection = getContractCollection();
+        contractCollection.addContract(generatedContract);
+        return contractCollection.matchContract(heapInScope);
     }
 }

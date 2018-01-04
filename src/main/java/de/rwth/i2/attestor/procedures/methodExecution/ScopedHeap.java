@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.ipa.methodExecution;
+package de.rwth.i2.attestor.procedures.methodExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 

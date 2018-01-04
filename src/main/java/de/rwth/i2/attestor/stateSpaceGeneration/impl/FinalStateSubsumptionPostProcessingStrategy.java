@@ -27,15 +27,11 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
     }
 
     @Override
-    public void process(StateSpace originalStateSpace) {
-
-        assert originalStateSpace.getClass() == InternalStateSpace.class;
+    public void process(StateSpace stateSpace) {
 
         if (minAbstractionDistance == 0) {
             return;
         }
-
-        InternalStateSpace stateSpace = (InternalStateSpace) originalStateSpace;
 
         if (stateSpace.getFinalStateIds().size() == 1) {
             return;
@@ -48,7 +44,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);
-            absState.setStateSpaceId(state.getStateSpaceId());
+            absState.setStateSpace(stateSpace, state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 
             if (oldState != null) {

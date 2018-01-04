@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.ipa.scopes;
+package de.rwth.i2.attestor.procedures.scopes;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;

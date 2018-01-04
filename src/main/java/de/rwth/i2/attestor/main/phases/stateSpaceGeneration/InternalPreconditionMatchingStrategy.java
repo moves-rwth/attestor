@@ -3,9 +3,9 @@ package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
-import de.rwth.i2.attestor.ipa.methodExecution.Contract;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
-import de.rwth.i2.attestor.ipa.methodExecution.PreconditionMatchingStrategy;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
 import gnu.trove.list.array.TIntArrayList;
 
 public class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {

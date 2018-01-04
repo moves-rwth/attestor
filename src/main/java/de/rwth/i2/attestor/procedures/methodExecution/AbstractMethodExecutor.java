@@ -1,7 +1,7 @@
-package de.rwth.i2.attestor.ipa.methodExecution;
+package de.rwth.i2.attestor.procedures.methodExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Collection;
@@ -11,14 +11,11 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
 
     private ScopeExtractor scopeExtractor;
     private ContractCollection contractCollection;
-    private ContractGenerator contractGenerator;
 
-    public AbstractMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
-                               ContractGenerator contractGenerator) {
+    public AbstractMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection) {
 
         this.scopeExtractor = scopeExtractor;
         this.contractCollection = contractCollection;
-        this.contractGenerator = contractGenerator;
     }
 
     public ScopeExtractor getScopeExtractor() {
@@ -27,10 +24,6 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
 
     public ContractCollection getContractCollection() {
         return contractCollection;
-    }
-
-    public ContractGenerator getContractGenerator() {
-        return contractGenerator;
     }
 
     @Override
@@ -48,7 +41,7 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
         Collection<ProgramState> result = new LinkedHashSet<>();
         for(HeapConfiguration outputHeap : postconditions) {
             ProgramState resultState = input.shallowCopyWithUpdateHeap(outputHeap);
-            resultState.setProgramCounter(0); // TODO
+            resultState.setProgramCounter(0);
             result.add(resultState);
         }
         return result;
@@ -56,14 +49,5 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
 
     protected abstract Collection<HeapConfiguration> getPostconditions(ProgramState inputState,
                                                                          ScopedHeap scopedHeap);
-
-    protected ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
-
-        HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
-        ProgramState initialState = input.shallowCopyWithUpdateHeap(heapInScope);
-        Contract generatedContract = contractGenerator.generateContract(initialState);
-        contractCollection.addContract(generatedContract);
-        return contractCollection.matchContract(heapInScope);
-    }
 
 }

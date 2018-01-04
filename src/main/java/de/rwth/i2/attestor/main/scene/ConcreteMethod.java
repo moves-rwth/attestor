@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.main.scene;
 
-import de.rwth.i2.attestor.ipa.methodExecution.Contract;
-import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.util.ArrayList;

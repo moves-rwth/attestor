@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methodExecution.Contract;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractCollection;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;
 import org.junit.Test;
 
 import java.util.Collection;

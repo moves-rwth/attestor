@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.GeneralConcreteValue;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
 import gnu.trove.list.array.TIntArrayList;
@@ -45,6 +46,11 @@ public abstract class GeneralProgramState implements ProgramState {
      * Id of this state in a state space
      */
     private int stateSpaceId = INVALID_STATE_SPACE_ID;
+
+    /**
+     * State space this state is contained in. Null if it has not been added to a state space yet.
+     */
+    private StateSpace stateSpace = null;
 
     /**
      * Initializes a state with the initial program location 0.
@@ -479,8 +485,15 @@ public abstract class GeneralProgramState implements ProgramState {
     }
 
     @Override
-    public void setStateSpaceId(int id) {
+    public StateSpace getStateSpace() {
 
+        return stateSpace;
+    }
+
+    @Override
+    public void setStateSpace(StateSpace stateSpace, int id) {
+
+        this.stateSpace = stateSpace;
         stateSpaceId = id;
     }
 
