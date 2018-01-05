@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.modelChecking;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;

@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.report;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

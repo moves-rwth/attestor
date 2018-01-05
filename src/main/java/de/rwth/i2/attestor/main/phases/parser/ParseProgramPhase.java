@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.parser;
 
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;

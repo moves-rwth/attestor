@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.preprocessing;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;

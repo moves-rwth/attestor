@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.report;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -11,6 +11,8 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.main.phases.parser.CLIPhase;
+import de.rwth.i2.attestor.main.phases.modelChecking.ModelCheckingPhase;
 import de.rwth.i2.attestor.main.phases.transformers.*;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;

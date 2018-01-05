@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.impl;
+package de.rwth.i2.attestor.main.phases.counterexamples;
 
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.counterexamples.CounterexampleGenerator;
