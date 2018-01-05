@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
+package de.rwth.i2.attestor.main.phases.symbolicExecution;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.procedures.contracts.InternalContract;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-class InternalContractGenerator implements ContractGenerator {
+public class InternalContractGenerator implements ContractGenerator {
 
     private final StateSpaceGeneratorFactory factory;
     private final Program program;

@@ -1,8 +1,11 @@
-package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.stateSpaceGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalContractGenerator;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;

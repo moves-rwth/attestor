@@ -1,10 +1,10 @@
-package de.rwth.i2.attestor.main.phases.interprocedural;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.interprocedural.InterproceduralAnalysis;
 import de.rwth.i2.attestor.interprocedural.PartialStateSpace;
 import de.rwth.i2.attestor.interprocedural.ProcedureCall;
 import de.rwth.i2.attestor.interprocedural.ProcedureRegistry;
-import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
@@ -31,7 +31,8 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
     public void registerDependency(ProgramState callingState, Method method, ProgramState preconditionState) {
 
         ProcedureCall call = new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
-        PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, method, preconditionState);
+        PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, method,
+                preconditionState, stateSpaceGeneratorFactory);
         analysis.registerDependency(call, partialStateSpace);
     }
 }

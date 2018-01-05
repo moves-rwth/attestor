@@ -1,12 +1,13 @@
-package de.rwth.i2.attestor.main.phases.interprocedural;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.interprocedural.InterproceduralAnalysis;
 import de.rwth.i2.attestor.interprocedural.ProcedureRegistry;
 import de.rwth.i2.attestor.interprocedural.RecursiveMethodExecutor;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.InternalPreconditionMatchingStrategy;
-import de.rwth.i2.attestor.main.phases.stateSpaceGeneration.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalContractGenerator;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
@@ -14,6 +15,7 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
 import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
 import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -76,15 +78,22 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
 
         PreconditionMatchingStrategy preconditionMatchingStrategy = new InternalPreconditionMatchingStrategy();
         for(Method method : scene ().getRegisteredMethods()) {
+            MethodExecutor executor;
             if(method.isRecursive()) {
-                MethodExecutor executor = new RecursiveMethodExecutor(
+                executor = new RecursiveMethodExecutor(
                         method,
                         new DefaultScopeExtractor(this, method.getName()),
                         new InternalContractCollection(preconditionMatchingStrategy),
                         procedureRegistry
                 );
-                method.setMethodExecution(executor);
+            } else {
+                executor = new ContractBasedMethod(
+                        new DefaultScopeExtractor(this, method.getName()),
+                        new InternalContractCollection(preconditionMatchingStrategy),
+                        new InternalContractGenerator(stateSpaceGeneratorFactory, method.getBody())
+                );
             }
+            method.setMethodExecution(executor);
         }
     }
 

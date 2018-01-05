@@ -54,9 +54,9 @@ public class InterproceduralAnalysis {
     }
 
     private void updateDependencies(ProcedureCall call) {
-        remainingPartialStateSpaces.addAll(
-                callingDependencies.get(call)
-        );
+
+        Set<PartialStateSpace> dependencies = callingDependencies.getOrDefault(call, Collections.emptySet());
+        remainingPartialStateSpaces.addAll(dependencies);
     }
 
 }

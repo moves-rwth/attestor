@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.stateSpaceGeneration;
+package de.rwth.i2.attestor.main.phases.symbolicExecution;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -34,7 +34,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                 .build();
     }
 
-    private StateSpaceGeneratorBuilder createBuilder() {
+    protected StateSpaceGeneratorBuilder createBuilder() {
 
         Strategies strategies = scene().strategies();
 
@@ -87,4 +87,12 @@ public class StateSpaceGeneratorFactory extends SceneObject{
     }
 
 
+    public StateSpaceGenerator create(Program program, ProgramState initialState, StateSpace stateSpace) {
+
+        return createBuilder()
+                .addInitialState(initialState)
+                .setProgram(program)
+                .setInitialStateSpace(stateSpace)
+                .build();
+    }
 }
