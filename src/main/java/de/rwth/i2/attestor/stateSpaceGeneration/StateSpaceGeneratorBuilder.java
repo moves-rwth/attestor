@@ -1,10 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 
 /**
  * This class provides methodExecution to safely initialize a StateSpaceGenerator.
@@ -16,13 +17,17 @@ public class StateSpaceGeneratorBuilder {
     /**
      * The initial state passed to the state space generation
      */
-    private final List<ProgramState> initialStates;
+    protected final List<ProgramState> initialStates;
+
+
 
     /**
      * Internal instance of the StateSpaceGenerator under
      * construction by this builder
      */
-    private final StateSpaceGenerator generator;
+    protected final StateSpaceGenerator generator;
+
+
 
     private StateSpace initialStateSpace = null;
 
@@ -35,6 +40,7 @@ public class StateSpaceGeneratorBuilder {
         initialStates = new ArrayList<>();
         generator = new StateSpaceGenerator();
     }
+
 
     /**
      * Attempts to construct a new StateSpaceGenerator.

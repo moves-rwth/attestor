@@ -164,4 +164,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
      * @return true if and only  if the state is from the top level
      */
     boolean isFromTopLevelStateSpace();
+
+	StateSpace getContainingStateSpace();
+	void setContainingStateSpace(StateSpace containingStateSpace);
 }

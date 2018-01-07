@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -35,6 +36,8 @@ public interface Scene {
     long getNumberOfGeneratedStates();
 
     Options options();
+
+    InterproceduralAnalysisManager recursionManager();
 
     Strategies strategies();
 

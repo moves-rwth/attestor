@@ -1,5 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
@@ -10,6 +17,9 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -71,13 +81,13 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        programState = programState.clone();
-        invokePrepare.prepareHeap(programState);
+        ProgramState preparedState = programState.clone();
+        invokePrepare.prepareHeap(preparedState);
 
         Collection<ProgramState> methodResult = method
                 .getMethodExecutor()
-                .getResultStates(programState);
-
+                .getResultStates(programState, preparedState);
+        // TODO programState is callingState, prepared state is new input
         return getCleanedResultStates(methodResult);
     }
 
