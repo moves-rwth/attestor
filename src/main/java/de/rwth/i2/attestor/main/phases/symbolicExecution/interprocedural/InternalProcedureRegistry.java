@@ -31,8 +31,7 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
     public void registerDependency(ProgramState callingState, Method method, ProgramState preconditionState) {
 
         ProcedureCall call = new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
-        PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, method,
-                preconditionState, stateSpaceGeneratorFactory);
+        PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, stateSpaceGeneratorFactory);
         analysis.registerDependency(call, partialStateSpace);
     }
 }

@@ -43,10 +43,14 @@ public class InterproceduralAnalysisTest {
 
         ExampleRecursiveProgram examplePrograms = new ExampleRecursiveProgram(sceneObject, type, paramName, next);
 
+
+        Method traverseMethod = sceneObject.scene().getMethod("callNext");
+        traverseMethod.setBody(examplePrograms.getCallNextProgram() );
+
         InterproceduralAnalysisPhase ipaPhase = new InterproceduralAnalysisPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
             .addPhase(
-                new MockupPhase(sceneObject, examplePrograms.getCallNextProgram(), Collections.singletonList(input))
+                new MockupPhase(sceneObject, Collections.singletonList(input), "callNext")
             ).addPhase(ipaPhase);
         registry.execute();
 
@@ -79,7 +83,7 @@ public class InterproceduralAnalysisTest {
         InterproceduralAnalysisPhase ipaPhase = new InterproceduralAnalysisPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
                 .addPhase(
-                        new MockupPhase(sceneObject, traverseMethod.getBody(), Collections.singletonList(input))
+                        new MockupPhase(sceneObject, Collections.singletonList(input), "traverse")
                 ).addPhase(ipaPhase);
         registry.execute();
 

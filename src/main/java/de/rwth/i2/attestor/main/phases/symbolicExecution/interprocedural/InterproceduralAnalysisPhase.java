@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.interprocedural.InterproceduralAnalysis;
-import de.rwth.i2.attestor.interprocedural.ProcedureRegistry;
-import de.rwth.i2.attestor.interprocedural.RecursiveMethodExecutor;
+import de.rwth.i2.attestor.interprocedural.*;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalContractGenerator;
 import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.procedures.Method;
@@ -22,6 +21,7 @@ import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,38 +46,49 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
     @Override
     protected void executePhase() {
 
+        List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
+        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        Method mainMethod = scene().getMethod(inputSettings.getMethodName());
+        mainMethod.setRecursive(false);
+
         InterproceduralAnalysis interproceduralAnalysis = new InterproceduralAnalysis();
         InternalProcedureRegistry procedureRegistry = new InternalProcedureRegistry(interproceduralAnalysis,
                 stateSpaceGeneratorFactory);
         initializeProcedures(procedureRegistry);
 
-        MainProcedureCall mainProcedure = createMainProcedure();
-        interproceduralAnalysis.setMainProcedure(mainProcedure);
+        createMainProcedure(mainMethod.getBody(), inputs, interproceduralAnalysis);
         interproceduralAnalysis.run();
-
-        mainStateSpace = mainProcedure.getStateSpace();
 
         if(mainStateSpace.getFinalStateIds().isEmpty()) {
             logger.error("Computed state space contains no final states.");
         }
     }
 
-    private MainProcedureCall createMainProcedure() {
+    private void createMainProcedure(Program program, List<HeapConfiguration> inputs, InterproceduralAnalysis interproceduralAnalysis) {
 
-        Program program = getPhase(ProgramTransformer.class).getProgram();
-        List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
 
         List<ProgramState> initialStates = new ArrayList<>(inputs.size());
         for(HeapConfiguration hc : inputs) {
             initialStates.add(scene().createProgramState(hc));
         }
-        return new MainProcedureCall(program, initialStates, stateSpaceGeneratorFactory);
 
+        // TODO
+        ProgramState initialState = initialStates.get(0);
+        try {
+            mainStateSpace = stateSpaceGeneratorFactory.create(program, initialState).generate();
+        } catch (StateSpaceGenerationAbortedException e) {
+            e.printStackTrace();
+        }
+
+        PartialStateSpace mainStateSpace = new InternalPartialStateSpace(initialState, stateSpaceGeneratorFactory);
+        ProcedureCall mainCall = new InternalProcedureCall(scene().getMethod("main"), initialState, stateSpaceGeneratorFactory);
+        interproceduralAnalysis.setMainProcedure(mainStateSpace, mainCall);
     }
 
     private void initializeProcedures(ProcedureRegistry procedureRegistry) {
 
         PreconditionMatchingStrategy preconditionMatchingStrategy = new InternalPreconditionMatchingStrategy();
+
         for(Method method : scene ().getRegisteredMethods()) {
             MethodExecutor executor;
             ContractCollection contractCollection = new InternalContractCollection(preconditionMatchingStrategy);

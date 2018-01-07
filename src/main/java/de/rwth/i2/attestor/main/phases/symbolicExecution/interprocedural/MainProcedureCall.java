@@ -1,8 +1,9 @@
 package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
+import de.rwth.i2.attestor.interprocedural.PartialStateSpace;
 import de.rwth.i2.attestor.interprocedural.ProcedureCall;
 import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
@@ -11,27 +12,40 @@ import java.util.List;
 
 public class MainProcedureCall implements ProcedureCall {
 
-    private Program body;
+    private Method method;
     private List<ProgramState> preconditionStates;
     private StateSpaceGeneratorFactory factory;
     private StateSpace stateSpace;
 
-    public MainProcedureCall(Program body, List<ProgramState> preconditionStates, StateSpaceGeneratorFactory factory) {
+    public MainProcedureCall(Method method, List<ProgramState> preconditionStates, StateSpaceGeneratorFactory factory) {
 
-        this.body = body;
+        this.method = method;
         this.preconditionStates = preconditionStates;
         this.factory = factory;
     }
 
 
     @Override
-    public void execute() {
+    public PartialStateSpace execute() {
 
         try {
-            stateSpace = factory.create(body, preconditionStates).generate();
+            stateSpace = factory.create(method.getBody(), preconditionStates).generate();
+            return new InternalPartialStateSpace(preconditionStates.get(0),factory);
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Procedure call execution failed.");
         }
+    }
+
+    @Override
+    public Method getMethod() {
+
+        return method;
+    }
+
+    @Override
+    public ProgramState getInput() {
+
+        return preconditionStates.get(0); // TODO
     }
 
     public StateSpace getStateSpace() {

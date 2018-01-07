@@ -17,26 +17,26 @@ import java.util.List;
 public class InternalPartialStateSpace implements PartialStateSpace {
 
     private ProgramState callingState;
-    private Method method;
-    private ProgramState preconditionState;
     private StateSpaceGeneratorFactory stateSpaceGeneratorFactory;
 
-    public InternalPartialStateSpace(ProgramState callingState, Method method, ProgramState preconditionState,
+    public InternalPartialStateSpace(ProgramState callingState,
                                      StateSpaceGeneratorFactory stateSpaceGeneratorFactory) {
 
         this.callingState = callingState;
-        this.method = method;
-        this.preconditionState = preconditionState;
         this.stateSpaceGeneratorFactory = stateSpaceGeneratorFactory;
     }
 
     @Override
-    public ProcedureCall continueExecution() {
+    public void continueExecution(ProcedureCall call) {
 
         try {
+
+            Method method = call.getMethod();
+            ProgramState preconditionState = call.getInput();
+
             StateSpace stateSpace = stateSpaceGeneratorFactory.create(
-                    method.getBody(),
-                    preconditionState,
+                    call.getMethod().getBody(),
+                    callingState,
                     callingState.getContainingStateSpace()
             ).generate();
 
@@ -48,8 +48,35 @@ public class InternalPartialStateSpace implements PartialStateSpace {
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Failed to continue state space execution.");
         }
+    }
 
-        return new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
+    @Override
+    public int hashCode() {
+
+        return (callingState == null) ? 0 : callingState.getContainingStateSpace().hashCode();
+    }
+
+    public boolean equals(Object otherObject) {
+
+        if(this == otherObject) {
+            return true;
+        }
+        if(otherObject == null) {
+            return false;
+        }
+        if(otherObject.getClass() != InternalPartialStateSpace.class) {
+            return false;
+        }
+        if(callingState == null) {
+            return false;
+        }
+        InternalPartialStateSpace other = (InternalPartialStateSpace) otherObject;
+        if(other.callingState == null) {
+            return false;
+        }
+
+        return callingState.getContainingStateSpace() == other.callingState.getContainingStateSpace();
+
     }
 
 }

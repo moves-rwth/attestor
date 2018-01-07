@@ -113,13 +113,15 @@ public class InterproceduralAnalysisManager extends SceneObject{
 				//store the mapping from stateSpace to input for later reference
 				contractComputedByStateSpace.put(stateSpace, methodAndInput);
 				//alert states, that there is a result for the method-input pair
-				statesToContinue.addAll( statesCallingInput.get(methodAndInput) );
+				Set<ProgramState> dependencies = statesCallingInput.get(methodAndInput);
+				statesToContinue.addAll( dependencies );
 			}else {
 				ProgramState state = statesToContinue.pop();
 				MethodAndInput contractAltered = continueStateSpace(observer, state);
 				
 				//alert states, that the result for the method-input pair changed
-				statesToContinue.addAll( statesCallingInput.get(contractAltered) );
+				Set<ProgramState> dependencies = statesCallingInput.get(contractAltered);
+				statesToContinue.addAll( dependencies );
 			}
 		}
 		

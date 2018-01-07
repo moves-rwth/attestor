@@ -2,24 +2,24 @@ package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.phases.communication.InputSettings;
+import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.io.IOException;
 import java.util.List;
 
-public class MockupPhase extends AbstractPhase implements ProgramTransformer, InputTransformer {
+public class MockupPhase extends AbstractPhase implements InputTransformer, InputSettingsTransformer {
 
-    private Program program;
     private List<HeapConfiguration> inputs;
+    private String mainMethodName;
 
-    public MockupPhase(SceneObject sceneObject, Program program, List<HeapConfiguration> inputs) {
+    public MockupPhase(SceneObject sceneObject, List<HeapConfiguration> inputs, String mainMethodName) {
         super(sceneObject.scene());
 
-        this.program = program;
         this.inputs = inputs;
+        this.mainMethodName = mainMethodName;
     }
 
     @Override
@@ -51,8 +51,10 @@ public class MockupPhase extends AbstractPhase implements ProgramTransformer, In
     }
 
     @Override
-    public Program getProgram() {
+    public InputSettings getInputSettings() {
 
-        return program;
+       InputSettings result = new InputSettings();
+       result.setMethodName(mainMethodName);
+       return result;
     }
 }

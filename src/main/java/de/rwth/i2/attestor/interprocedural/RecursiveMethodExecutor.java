@@ -30,6 +30,7 @@ public class RecursiveMethodExecutor extends AbstractMethodExecutor {
         ProgramState preconditionState = inputState.shallowCopyWithUpdateHeap(heapInScope);
         ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
         if(!contractMatch.hasMatch()) {
+            preconditionState.setProgramCounter(0);
             procedureRegistry.registerProcedure(method, preconditionState);
             Collection<HeapConfiguration> postconditions = new LinkedHashSet<>();
             ContractCollection contractCollection = getContractCollection();

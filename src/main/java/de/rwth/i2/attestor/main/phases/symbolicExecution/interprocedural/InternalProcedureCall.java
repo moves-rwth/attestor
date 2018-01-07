@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.interprocedural.PartialStateSpace;
 import de.rwth.i2.attestor.interprocedural.ProcedureCall;
 import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.procedures.Method;
@@ -31,7 +32,7 @@ public class InternalProcedureCall implements ProcedureCall {
 
 
     @Override
-    public void execute() {
+    public PartialStateSpace execute() {
 
         try {
             stateSpace = factory.create(method.getBody(), preconditionState).generate();
@@ -40,9 +41,23 @@ public class InternalProcedureCall implements ProcedureCall {
             stateSpace.getFinalStates().forEach( finalState -> finalHeaps.add(finalState.getHeap()) );
             Contract contract = new InternalContract(preconditionState.getHeap(), finalHeaps);
             method.addContract(contract);
+
+            return new InternalPartialStateSpace(preconditionState, factory);
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Procedure call execution failed.");
         }
+    }
+
+    @Override
+    public Method getMethod() {
+
+        return method;
+    }
+
+    @Override
+    public ProgramState getInput() {
+
+        return preconditionState;
     }
 
     public StateSpace getStateSpace() {

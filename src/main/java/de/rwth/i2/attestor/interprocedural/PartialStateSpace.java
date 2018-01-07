@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.interprocedural;
 
 public interface PartialStateSpace {
 
-    ProcedureCall continueExecution();
+    void continueExecution(ProcedureCall call);
     //StateSpace unfinishedStateSpace;
     //ProcedureCall procedureCall;
 }
