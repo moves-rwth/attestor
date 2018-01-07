@@ -6,12 +6,13 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.procedures.scopes.ReachableFragmentComputer;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 import de.rwth.i2.attestor.util.Pair;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -188,7 +189,7 @@ public class IpaAbstractMethod extends AbstractMethod {
 
     }
 
-    public IpaContractCollection getContracts() {
+    public IpaContractCollection getIPAContracts() {
 
         return contracts;
     }
@@ -198,9 +199,142 @@ public class IpaAbstractMethod extends AbstractMethod {
         isRecursive = true;
     }
 
+    @Override
+    public String getSignature() {
+
+        return null;
+    }
+
+    @Override
+    public String getName() {
+
+        return null;
+    }
+
+    @Override
+    public void setName(String name) {
+
+    }
+
+    @Override
+    public void setBody(Program body) {
+
+    }
+
+    @Override
+    public Program getBody() {
+
+        return null;
+    }
+
     public boolean isRecursive() {
 
         return isRecursive;
+    }
+
+    @Override
+    public void setRecursive(boolean isRecursive) {
+
+        markAsRecursive();
+    }
+
+    @Override
+    public void addContract(Contract contract) {
+
+    }
+
+    @Override
+    public Collection<Contract> getContracts() {
+
+        return null;
+    }
+
+    @Override
+    public void setMethodExecution(MethodExecutor methodExecution) {
+
+    }
+
+    @Override
+    public MethodExecutor getMethodExecutor() {
+
+        return new MethodExecutor() {
+            @Override
+            public void addContract(Contract contract) {
+
+            }
+
+            @Override
+            public Collection<ProgramState> getResultStates(ProgramState callingState, ProgramState input) {
+
+                try {
+
+                    return IpaAbstractMethod.this.getResultStates(input, callingState,
+                            new SymbolicExecutionObserver() {
+                                @Override
+                                public void update(Object handler, ProgramState input) {
+
+                                }
+
+                                @Override
+                                public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
+
+                                    ProgramState initialState = new DefaultProgramState(input.getHeap());
+                                    initialState.setProgramCounter(0);
+                                    return StateSpaceGenerator.builder()
+                                            .addInitialState(initialState)
+                                            .setProgram(program)
+                                            .setStateRefinementStrategy(new NoStateRefinementStrategy())
+                                            .setAbortStrategy(new StateSpaceBoundedAbortStrategy(500, 50))
+                                            .setStateLabelingStrategy(new NoStateLabelingStrategy())
+                                            .setMaterializationStrategy(
+                                                    (state, potentialViolationPoints) -> new ArrayList<>()
+                                            )
+                                            .setCanonizationStrategy(state -> state.clone())
+                                            .setStateCounter(s -> {
+                                            })
+                                            .setExplorationStrategy((s, sp) -> true)
+                                            .setStateSpaceSupplier(() -> new InternalStateSpace(100))
+                                            .setPostProcessingStrategy(new NoPostProcessingStrategy())
+                                            .build()
+                                            .generate();
+                                }
+
+                                @Override
+                                public boolean isDeadVariableEliminationEnabled() {
+
+                                    return false;
+                                }
+
+                                @Override
+                                public StateSpace continueStateSpace(StateSpace stateSpace, Program program, ProgramState continuationPoint) throws StateSpaceGenerationAbortedException {
+
+                                    return StateSpaceGenerator.builder()
+                                            .addInitialState(continuationPoint)
+                                            .setInitialStateSpace(stateSpace)
+                                            .setProgram(program)
+                                            .setStateRefinementStrategy(new NoStateRefinementStrategy())
+                                            .setAbortStrategy(new StateSpaceBoundedAbortStrategy(500, 50))
+                                            .setStateLabelingStrategy(new NoStateLabelingStrategy())
+                                            .setMaterializationStrategy(
+                                                    (state, potentialViolationPoints) -> new ArrayList<>()
+                                            )
+                                            .setCanonizationStrategy(state -> state.clone())
+                                            .setStateCounter(s -> {
+                                            })
+                                            .setExplorationStrategy((s, sp) -> true)
+                                            .setStateSpaceSupplier(() -> new InternalStateSpace(100))
+                                            .setPostProcessingStrategy(new NoPostProcessingStrategy())
+                                            .build()
+                                            .generate();
+                                }
+                            }
+                    );
+                } catch (StateSpaceGenerationAbortedException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
     }
 
     public static final class Factory extends SceneObject {

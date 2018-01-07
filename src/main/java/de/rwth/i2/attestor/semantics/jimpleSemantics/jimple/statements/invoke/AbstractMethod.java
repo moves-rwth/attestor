@@ -1,13 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractMethod extends SceneObject {
+public abstract class AbstractMethod extends SceneObject implements Method {
 
     /**
      * the abstract semantic of the method.

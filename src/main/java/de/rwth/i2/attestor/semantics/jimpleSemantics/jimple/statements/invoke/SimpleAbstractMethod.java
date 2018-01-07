@@ -2,17 +2,13 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class computes and stores the results of the abstract interpretation
@@ -88,4 +84,64 @@ public class SimpleAbstractMethod extends AbstractMethod {
         this.knownInputs.put(input, results);
     }
 
+    @Override
+    public String getSignature() {
+
+        return null;
+    }
+
+    @Override
+    public String getName() {
+
+        return null;
+    }
+
+    @Override
+    public void setName(String name) {
+
+    }
+
+    @Override
+    public void setBody(Program body) {
+
+    }
+
+    @Override
+    public Program getBody() {
+
+        return null;
+    }
+
+    @Override
+    public boolean isRecursive() {
+
+        return false;
+    }
+
+    @Override
+    public void setRecursive(boolean isRecursive) {
+
+    }
+
+    @Override
+    public void addContract(Contract contract) {
+
+    }
+
+    @Override
+    public Collection<Contract> getContracts() {
+
+        return null;
+    }
+
+    @Override
+    public void setMethodExecution(MethodExecutor methodExecution) {
+
+    }
+
+    @Override
+    public MethodExecutor getMethodExecutor() {
+
+        return null;
+    }
 }
