@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.util.Collection;
@@ -16,7 +15,6 @@ public class ConcreteMethod implements Method {
     private boolean isRecursive = false;
     private Program body = null;
     private MethodExecutor executor = null;
-    private ContractCollection contractCollection = null;
 
     public ConcreteMethod(String signature) {
 
@@ -65,11 +63,10 @@ public class ConcreteMethod implements Method {
     @Override
     public void addContract(Contract contract) {
 
-        if(contractCollection == null) {
-            throw new IllegalStateException("No contract collection");
+        if(executor == null) {
+            throw new IllegalStateException("No method executor.");
         }
-
-        contractCollection.addContract(contract);
+        executor.addContract(contract);
 
     }
 
@@ -89,18 +86,6 @@ public class ConcreteMethod implements Method {
 
         assert executor != null;
         return executor;
-    }
-
-    @Override
-    public void setContractCollection(ContractCollection contractCollection) {
-
-        this.contractCollection = contractCollection;
-    }
-
-    @Override
-    public ContractCollection getContractCollection() {
-
-        return contractCollection;
     }
 
     @Override

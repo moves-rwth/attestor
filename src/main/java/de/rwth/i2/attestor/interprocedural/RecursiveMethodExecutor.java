@@ -23,7 +23,8 @@ public class RecursiveMethodExecutor extends AbstractMethodExecutor {
     }
 
     @Override
-    protected Collection<HeapConfiguration> getPostconditions(ProgramState inputState, ScopedHeap scopedHeap) {
+    protected Collection<HeapConfiguration> getPostconditions(ProgramState callingState,
+                                                              ProgramState inputState, ScopedHeap scopedHeap) {
 
         HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
         ProgramState preconditionState = inputState.shallowCopyWithUpdateHeap(heapInScope);
@@ -35,7 +36,7 @@ public class RecursiveMethodExecutor extends AbstractMethodExecutor {
             contractCollection.addContract(new InternalContract(heapInScope, postconditions));
             contractMatch = contractCollection.matchContract(heapInScope);
         }
-        procedureRegistry.registerDependency(inputState, method, preconditionState);
+        procedureRegistry.registerDependency(callingState, method, preconditionState);
         return scopedHeap.merge(contractMatch);
     }
 

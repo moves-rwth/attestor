@@ -22,7 +22,8 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
     }
 
     @Override
-    protected Collection<HeapConfiguration> getPostconditions(ProgramState inputState, ScopedHeap scopedHeap) {
+    protected Collection<HeapConfiguration> getPostconditions(ProgramState callingState,
+                                                              ProgramState inputState, ScopedHeap scopedHeap) {
 
         HeapConfiguration abstractedHeapInScope = canonicalizationStrategy.canonicalize(scopedHeap.getHeapInScope());
         ContractMatch abstractMatch = getContractCollection().matchContract(abstractedHeapInScope);

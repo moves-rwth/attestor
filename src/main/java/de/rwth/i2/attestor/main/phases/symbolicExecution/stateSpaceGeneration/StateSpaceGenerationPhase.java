@@ -79,7 +79,6 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
                     new InternalContractGenerator(factory, method.getBody())
             );
             method.setMethodExecution(executor);
-            method.setContractCollection(contractCollection);
         }
     }
 

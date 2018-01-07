@@ -96,7 +96,6 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
                 );
             }
             method.setMethodExecution(executor);
-            method.setContractCollection(contractCollection);
         }
     }
 

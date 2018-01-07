@@ -17,7 +17,7 @@ public class ContractBasedMethod extends AbstractMethodExecutor {
     }
 
     @Override
-    protected Collection<HeapConfiguration> getPostconditions(ProgramState input,
+    protected Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ProgramState input,
                                                             ScopedHeap scopedHeap) {
 
         ContractMatch contractMatch = getContractCollection().matchContract(scopedHeap.getHeapInScope());
