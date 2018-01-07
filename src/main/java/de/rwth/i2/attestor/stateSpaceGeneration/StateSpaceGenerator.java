@@ -197,6 +197,7 @@ public class StateSpaceGenerator {
         while (hasUnexploredStates()) {
 
             ProgramState state = nextUnexploredState();
+            state.setStateSpace(stateSpace, state.getStateSpaceId()); // TODO :-(
 
             try {
                 abortStrategy.checkAbort(stateSpace);

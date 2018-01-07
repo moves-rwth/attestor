@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.procedures;
 
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.util.Collection;
@@ -23,4 +24,7 @@ public interface Method {
 
     void setMethodExecution(MethodExecutor methodExecution);
     MethodExecutor getMethodExecutor();
+
+    void setContractCollection(ContractCollection contractCollection);
+    ContractCollection getContractCollection();
 }

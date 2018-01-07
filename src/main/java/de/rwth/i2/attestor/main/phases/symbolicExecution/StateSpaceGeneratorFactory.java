@@ -89,6 +89,10 @@ public class StateSpaceGeneratorFactory extends SceneObject{
 
     public StateSpaceGenerator create(Program program, ProgramState initialState, StateSpace stateSpace) {
 
+        if(stateSpace == null) {
+            throw new IllegalArgumentException("Attempt to continue state space generation with empty state space.");
+        }
+
         return createBuilder()
                 .addInitialState(initialState)
                 .setProgram(program)

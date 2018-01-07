@@ -73,6 +73,7 @@ public abstract class GeneralProgramState implements ProgramState {
         this.heap = state.heap;
         this.programCounter = state.programCounter;
         atomicPropositions = new LinkedHashSet<>(state.getAPs());
+        this.stateSpace = state.stateSpace;
     }
 
     /**

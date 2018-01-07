@@ -16,6 +16,7 @@ import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
 import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
 import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
 import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -79,21 +80,23 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
         PreconditionMatchingStrategy preconditionMatchingStrategy = new InternalPreconditionMatchingStrategy();
         for(Method method : scene ().getRegisteredMethods()) {
             MethodExecutor executor;
+            ContractCollection contractCollection = new InternalContractCollection(preconditionMatchingStrategy);
             if(method.isRecursive()) {
                 executor = new RecursiveMethodExecutor(
                         method,
                         new DefaultScopeExtractor(this, method.getName()),
-                        new InternalContractCollection(preconditionMatchingStrategy),
+                        contractCollection,
                         procedureRegistry
                 );
             } else {
                 executor = new ContractBasedMethod(
                         new DefaultScopeExtractor(this, method.getName()),
-                        new InternalContractCollection(preconditionMatchingStrategy),
+                        contractCollection,
                         new InternalContractGenerator(stateSpaceGeneratorFactory, method.getBody())
                 );
             }
             method.setMethodExecution(executor);
+            method.setContractCollection(contractCollection);
         }
     }
 
