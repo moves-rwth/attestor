@@ -1,11 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.Set;
-
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;

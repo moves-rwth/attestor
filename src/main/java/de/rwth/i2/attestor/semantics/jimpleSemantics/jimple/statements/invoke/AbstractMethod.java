@@ -1,10 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import java.util.List;
-import java.util.Set;
-
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
+
+import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractMethod extends SceneObject {
 
@@ -70,9 +71,9 @@ public abstract class AbstractMethod extends SceneObject {
      * @param program a list of abstract semantics which are the translation of the
      *                method body
      */
-    public void setControlFlow(List<Semantics> program) {
+    public void setControlFlow(List<SemanticsCommand> program) {
 
-        this.method = new Program(program);
+        this.method = new ProgramImpl(program);
     }
 
     public String toString() {

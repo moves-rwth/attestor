@@ -1,10 +1,5 @@
 package de.rwth.i2.attestor.ipa;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-
-import org.junit.Test;
-
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -17,6 +12,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedExcep
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class IpaAbstractMethod_getResult {
 
@@ -55,7 +54,7 @@ public class IpaAbstractMethod_getResult {
                 .addVariableEdge("y", nodes.get(1))
                 .addSelector(nodes.get(1), sel, nodes.get(2))
                 .build();
-        return new DefaultProgramState(sceneObject, hc);
+        return new DefaultProgramState(hc);
 
     }
 

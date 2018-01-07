@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration.impl;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 /**
@@ -31,7 +32,7 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
 
         HeapConfiguration heap = input.getHeap();
 
-        ProgramState initialState = stateSpaceGenerator.scene().createProgramState(heap);
+        ProgramState initialState = new DefaultProgramState(heap); // TODO  stateSpaceGenerator.scene().createProgramState(heap);
         return StateSpaceGenerator.builder(stateSpaceGenerator)
                 .setProgram(program)
                 .addInitialState(initialState)
@@ -43,10 +44,9 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
     public StateSpace continueStateSpace( StateSpace stateSpace, Program program, ProgramState continuationPoint ) 
     		throws StateSpaceGenerationAbortedException{
        
-        return new StateSpaceContinuationGeneratorBuilder(stateSpaceGenerator)
-                .copySettings(stateSpaceGenerator)
-                .setStateSpaceToContinue(stateSpace)
-                .addEntryState(continuationPoint)
+        return StateSpaceGenerator.builder(stateSpaceGenerator)
+                .setInitialStateSpace(stateSpace)
+                .addInitialState(continuationPoint)
                 .setProgram(program)
                 .build()
                 .generate();
@@ -55,6 +55,6 @@ public class DefaultSymbolicExecutionObserver implements SymbolicExecutionObserv
     @Override
     public boolean isDeadVariableEliminationEnabled() {
 
-        return stateSpaceGenerator.isDeadVariableEliminationEnabled();
+        return true; // TODO stateSpaceGenerator.isDeadVariableEliminationEnabled();
     }
 }

@@ -108,4 +108,12 @@ public class ProgramImpl implements Program {
             return this;
         }
     }
+
+    public String toString(){
+    	StringBuilder res = new StringBuilder();
+    	for( int i = 0; i < program.size(); i++ ){
+    		res.append(i).append(" ").append(program.get(i)).append("\n");
+    	}
+    	return res.toString();
+    }
 }

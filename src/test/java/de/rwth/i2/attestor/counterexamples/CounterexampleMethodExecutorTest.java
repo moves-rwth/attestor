@@ -49,7 +49,7 @@ public class CounterexampleMethodExecutorTest {
         );
 
         ProgramState input = sceneObject.scene().createProgramState(mockupHeaps.getHeap());
-        Collection<ProgramState> resultStates = executor.getResultStates(input);
+        Collection<ProgramState> resultStates = executor.getResultStates(null, input);
         ProgramState validFinalState = sceneObject.scene().createProgramState(mockupHeaps.getPostcondition());
 
         Collection<HeapConfiguration> predicate = contractGenerator.getRequiredFinalHeaps();
@@ -83,7 +83,7 @@ public class CounterexampleMethodExecutorTest {
         ProgramState input = sceneObject.scene().createProgramState(mockupHeaps.getHeap());
 
         try {
-            executor.getResultStates(input);
+            executor.getResultStates(null, input);
             fail("Should not be able to match contract.");
         } catch(IllegalStateException e) {
             // expected

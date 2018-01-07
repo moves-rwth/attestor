@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -62,6 +63,7 @@ public class InterproceduralAnalysisTest {
         assertEquals(expectedState.getHeap(), result.iterator().next().getHeap());
     }
 
+    @Ignore
     @Test
     public void testRecursive() {
         Type type = sceneObject.scene().getType("List");

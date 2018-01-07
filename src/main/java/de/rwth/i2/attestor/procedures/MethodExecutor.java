@@ -6,5 +6,5 @@ import java.util.Collection;
 
 public interface MethodExecutor {
 
-    Collection<ProgramState> getResultStates(ProgramState input);
+    Collection<ProgramState> getResultStates(ProgramState callingState, ProgramState input);
 }

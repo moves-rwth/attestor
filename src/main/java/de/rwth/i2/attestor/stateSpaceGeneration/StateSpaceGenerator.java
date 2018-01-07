@@ -1,17 +1,14 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import java.util.*;
+import de.rwth.i2.attestor.semantics.TerminalStatement;
+import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.TerminalStatement;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -217,7 +214,7 @@ public class StateSpaceGenerator {
 
             if (isSufficientlyMaterialized) {
                 Collection<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
-                if (successorStates.isEmpty() && isTerminalStatement(stateSemantics) ) {
+                if (successorStates.isEmpty() && isTerminalStatement(stateSemanticsCommand) ) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
                     stateSpace.addArtificialInfPathsTransition(state);
@@ -240,7 +237,7 @@ public class StateSpaceGenerator {
         return stateSpace;
     }
 
-	private boolean isTerminalStatement(Semantics stateSemantics) {
+	private boolean isTerminalStatement(SemanticsCommand stateSemantics) {
 		return stateSemantics.getClass() == TerminalStatement.class;
 	}
 

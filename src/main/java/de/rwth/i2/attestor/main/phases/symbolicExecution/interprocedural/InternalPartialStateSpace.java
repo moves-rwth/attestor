@@ -37,7 +37,7 @@ public class InternalPartialStateSpace implements PartialStateSpace {
             StateSpace stateSpace = stateSpaceGeneratorFactory.create(
                     method.getBody(),
                     preconditionState,
-                    callingState.getStateSpace()
+                    callingState.getContainingStateSpace()
             ).generate();
 
             List<HeapConfiguration> finalHeaps = new ArrayList<>();

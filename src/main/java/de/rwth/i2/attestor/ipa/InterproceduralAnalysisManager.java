@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.ipa;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
+
+import java.util.*;
 
 /* will be used to manage communication between procedures,
 * i.e. which methods/preconditions have to be analysed,

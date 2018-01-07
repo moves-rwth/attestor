@@ -163,7 +163,7 @@ public class CounterexampleStateSpace implements StateSpace {
     }
 
     private ProgramState updateState(ProgramState state) {
-        state.setStateSpace(this, lastUsedId);
+        state.setStateSpaceId(lastUsedId);
         int nodes = state.getHeap().countNodes();
         maximalStateSize = Math.max(nodes, maximalStateSize);
         ++lastUsedId;
@@ -224,5 +224,10 @@ public class CounterexampleStateSpace implements StateSpace {
     public boolean satisfiesAP(int stateId, String expectedAP) {
 
         return getState(stateId).satisfiesAP(expectedAP);
+    }
+
+    @Override
+    public void transformTerminalStates() {
+
     }
 }

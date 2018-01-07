@@ -6,9 +6,7 @@ public interface State {
 
     int getStateSpaceId();
 
-    StateSpace getStateSpace();
-
-    void setStateSpace(StateSpace stateSpace, int id);
+    void setStateSpaceId(int id);
 
 
     int getSize();

@@ -70,7 +70,6 @@ public class DefaultProgramState extends GeneralProgramState {
         HeapConfiguration newHeap = heap.clone();
         DefaultProgramState result = new DefaultProgramState(newHeap);
         result.setProgramCounter(programCounter);
-        result.setStateSpace(getStateSpace(), INVALID_STATE_SPACE_ID);
         return result;
     }
 

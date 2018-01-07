@@ -1,18 +1,11 @@
 package de.rwth.i2.attestor.io.jsonExport.inputFormat;
 
-import java.io.Writer;
-import java.util.Set;
-
-import org.json.JSONWriter;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import org.json.JSONWriter;
 
 import java.io.Writer;
 import java.util.Collection;
-import de.rwth.i2.attestor.ipa.IpaContractCollection;
-import de.rwth.i2.attestor.util.Pair;
 
 public class ContractToInputFormatExporter {
 

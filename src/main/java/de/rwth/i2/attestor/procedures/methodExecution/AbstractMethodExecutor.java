@@ -27,7 +27,7 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
     }
 
     @Override
-    public Collection<ProgramState> getResultStates(ProgramState input) {
+    public Collection<ProgramState> getResultStates(ProgramState callingState, ProgramState input) {
 
         HeapConfiguration inputHeap = input.getHeap();
         ScopedHeap scopedHeap = scopeExtractor.extractScope(inputHeap);

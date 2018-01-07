@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @author hannah
  */
-class ReachableFragmentComputer extends SceneObject {
+public class ReachableFragmentComputer extends SceneObject {
 
     HeapConfiguration input;
     HeapConfigurationBuilder reachableFragmentBuilder;

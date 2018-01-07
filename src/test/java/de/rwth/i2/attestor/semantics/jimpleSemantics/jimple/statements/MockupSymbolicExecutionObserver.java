@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import java.util.ArrayList;
-
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
+
+import java.util.ArrayList;
 
 public class MockupSymbolicExecutionObserver extends SceneObject implements SymbolicExecutionObserver {
 
@@ -22,9 +22,9 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
     @Override
     public StateSpace generateStateSpace(Program program, ProgramState input) throws StateSpaceGenerationAbortedException {
 
-        ProgramState initialState = new DefaultProgramState(this, input.getHeap());
+        ProgramState initialState = new DefaultProgramState(input.getHeap());
         initialState.setProgramCounter(0);
-        return StateSpaceGenerator.builder(this)
+        return StateSpaceGenerator.builder()
                 .addInitialState(initialState)
                 .setProgram(program)
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
@@ -38,7 +38,6 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
                 })
                 .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver(this))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build()
                 .generate();
@@ -56,9 +55,9 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
 			throws StateSpaceGenerationAbortedException {
         
 		
-        return new StateSpaceContinuationGeneratorBuilder(this)
-                .addEntryState(continuationPoint)
-                .setStateSpaceToContinue(stateSpace)
+        return StateSpaceGenerator.builder()
+                .addInitialState(continuationPoint)
+                .setInitialStateSpace(stateSpace)
                 .setProgram(program)
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setAbortStrategy(new StateSpaceBoundedAbortStrategy(500, 50))
@@ -71,7 +70,6 @@ public class MockupSymbolicExecutionObserver extends SceneObject implements Symb
                 })
                 .setExplorationStrategy((s, sp) -> true)
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
-                .setSemanticsOptionsSupplier(s -> new MockupSymbolicExecutionObserver(this))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build()
                 .generate();

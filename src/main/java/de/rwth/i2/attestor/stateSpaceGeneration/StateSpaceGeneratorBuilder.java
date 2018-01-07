@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class provides methodExecution to safely initialize a StateSpaceGenerator.
@@ -103,9 +103,12 @@ public class StateSpaceGeneratorBuilder {
         }
 
         for (ProgramState state : initialStates) {
-            state.setProgramCounter(0);
+
+            if(initialStateSpace != null) {
+                state.setProgramCounter(0);
+                generator.stateSpace.addInitialState(state);
+            }
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
-            generator.stateSpace.addInitialState(state);
             generator.addUnexploredState(state, false);
         }
 

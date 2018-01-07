@@ -39,7 +39,7 @@ public class AggressivePostProcessingStrategy implements PostProcessingStrategy 
 
         for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);
-            absState.setStateSpace(stateSpace, state.getStateSpaceId());
+            absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = abstractedStates.put(absState, absState);
             if (oldState != null) {
                 idMap.put(state.getStateSpaceId(), oldState.getStateSpaceId());

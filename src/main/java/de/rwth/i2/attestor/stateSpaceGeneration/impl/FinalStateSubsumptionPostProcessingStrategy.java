@@ -44,7 +44,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
 
         for (ProgramState state : finalStates) {
             ProgramState absState = canonicalizationStrategy.canonicalize(state);
-            absState.setStateSpace(stateSpace, state.getStateSpaceId());
+            absState.setStateSpaceId(state.getStateSpaceId());
             ProgramState oldState = addIfAbsent(absState, fullyAbstractStates);
 
             if (oldState != null) {
