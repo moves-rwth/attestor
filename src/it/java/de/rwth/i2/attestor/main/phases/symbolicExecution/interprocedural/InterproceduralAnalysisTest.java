@@ -34,6 +34,7 @@ public class InterproceduralAnalysisTest {
     }
 
     @Test
+    @Ignore
     public void testNonRecursive() {
 
         Type type = sceneObject.scene().getType("List");

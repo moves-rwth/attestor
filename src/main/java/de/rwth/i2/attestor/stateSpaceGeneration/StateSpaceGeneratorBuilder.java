@@ -104,7 +104,7 @@ public class StateSpaceGeneratorBuilder {
 
         for (ProgramState state : initialStates) {
 
-            if(initialStateSpace != null) {
+            if(initialStateSpace == null) {
                 state.setProgramCounter(0);
                 generator.stateSpace.addInitialState(state);
             }
