@@ -84,6 +84,23 @@ public class ConcreteMethod implements Method {
     }
 
     @Override
+    public int hashCode() {
+        return signature.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object otherObject) {
+       if(otherObject == this) {
+           return true;
+       }
+       if(otherObject.getClass() != ConcreteMethod.class) {
+           return false;
+       }
+       ConcreteMethod method = (ConcreteMethod) otherObject;
+       return signature.equals(method.signature);
+    }
+
+    @Override
     public String toString() {
         return signature;
     }

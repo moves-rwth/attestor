@@ -32,6 +32,8 @@ public class InternalPartialStateSpace implements PartialStateSpace {
                     preconditionState,
                     callingState.getStateSpace()
             ).generate();
+
+
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Failed to continue state space execution.");
         }

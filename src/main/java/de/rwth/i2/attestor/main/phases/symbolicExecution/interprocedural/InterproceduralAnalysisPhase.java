@@ -100,6 +100,16 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
     @Override
     public void logSummary() {
 
+        logSum("+-------------------------+------------------+");
+        logHighlight("| Generated states        | Number of states |");
+        logSum("+-------------------------+------------------+");
+        logSum(String.format("| w/ procedure calls      | %16d |",
+                scene().getNumberOfGeneratedStates()));
+        logSum(String.format("| w/o procedure calls     | %16d |",
+                mainStateSpace.getStates().size()));
+        logSum(String.format("| final states            | %16d |",
+                mainStateSpace.getFinalStateIds().size()));
+        logSum("+-------------------------+------------------+");
     }
 
     @Override
