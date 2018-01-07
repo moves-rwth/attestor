@@ -30,7 +30,6 @@ public class RecursiveMethodExecutor extends AbstractMethodExecutor {
         ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
         if(!contractMatch.hasMatch()) {
             procedureRegistry.registerProcedure(method, preconditionState);
-        } else {
             Collection<HeapConfiguration> postconditions = new LinkedHashSet<>();
             ContractCollection contractCollection = getContractCollection();
             contractCollection.addContract(new InternalContract(heapInScope, postconditions));
