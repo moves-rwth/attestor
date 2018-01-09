@@ -14,7 +14,6 @@ import de.rwth.i2.attestor.procedures.ContractCollection;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.PreconditionMatchingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
@@ -45,14 +44,13 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
         List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         Method mainMethod = scene().getMethod(inputSettings.getMethodName());
-        mainMethod.setRecursive(false);
 
         InterproceduralAnalysis interproceduralAnalysis = new InterproceduralAnalysis();
         InternalProcedureRegistry procedureRegistry = new InternalProcedureRegistry(interproceduralAnalysis,
                 stateSpaceGeneratorFactory);
         initializeProcedures(procedureRegistry);
 
-        createMainProcedure(mainMethod.getBody(), inputs, interproceduralAnalysis);
+        createMainProcedure(mainMethod, inputs, interproceduralAnalysis);
         interproceduralAnalysis.run();
 
         if(mainStateSpace.getFinalStateIds().isEmpty()) {
@@ -60,7 +58,7 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
         }
     }
 
-    private void createMainProcedure(Program program, List<HeapConfiguration> inputs, InterproceduralAnalysis interproceduralAnalysis) {
+    private void createMainProcedure(Method method, List<HeapConfiguration> inputs, InterproceduralAnalysis interproceduralAnalysis) {
 
 
         List<ProgramState> initialStates = new ArrayList<>(inputs.size());
@@ -71,13 +69,13 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
         // TODO
         ProgramState initialState = initialStates.get(0);
         try {
-            mainStateSpace = stateSpaceGeneratorFactory.create(program, initialState).generate();
+            mainStateSpace = stateSpaceGeneratorFactory.create(method.getBody(), initialState).generate();
         } catch (StateSpaceGenerationAbortedException e) {
             e.printStackTrace();
         }
 
         PartialStateSpace mainStateSpace = new InternalPartialStateSpace(initialState, stateSpaceGeneratorFactory);
-        ProcedureCall mainCall = new InternalProcedureCall(scene().getMethod("main"), initialState, stateSpaceGeneratorFactory);
+        ProcedureCall mainCall = new InternalProcedureCall(method, initialState, stateSpaceGeneratorFactory);
         interproceduralAnalysis.setMainProcedure(mainStateSpace, mainCall);
     }
 
