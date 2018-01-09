@@ -24,12 +24,11 @@ public class IndexedRuleAdapter {
 	 * For each lhs in the suggested rules, determines whether it can match the nonterminal
 	 * and adds the necessary materialization and instantiated rules in this case.
 	 *
-	 * @param indexedMaterializationRuleManager TODO
 	 * @param toReplace
 	 * @param rulesResolvingViolationPoint
 	 * @return
 	 */
-	GrammarResponse computeMaterializationsAndRules(IndexedMaterializationRuleManager indexedMaterializationRuleManager, IndexedNonterminal toReplace, Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingViolationPoint) {
+	GrammarResponse computeMaterializationsAndRules(IndexedNonterminal toReplace, Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingViolationPoint) {
 	
 	
 	    Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules =
@@ -39,13 +38,13 @@ public class IndexedRuleAdapter {
 	        final IndexedNonterminal indexedLhs = (IndexedNonterminal) lhs;
 	
 	        if (indexMatcher.canMatch(toReplace, indexedLhs)) {
-	            indexedMaterializationRuleManager.indexRuleAdapter.addMaterializationAndRules(indexedMaterializationRuleManager, allMaterializationsAndRules,
+	            		addMaterializationAndRules(allMaterializationsAndRules,
 	                    toReplace, indexedLhs,
 	                    rulesResolvingViolationPoint.get(lhs));
 	        }
 	    }
 	
-	    AbstractIndexSymbol indexSymbolToMaterialize = indexedMaterializationRuleManager.indexRuleAdapter.getIndexSymbolToMaterialize(toReplace);
+	    AbstractIndexSymbol indexSymbolToMaterialize = getIndexSymbolToMaterialize(toReplace);
 	
 	    return new MaterializationAndRuleResponse(allMaterializationsAndRules,
 	            indexSymbolToMaterialize);
@@ -55,22 +54,20 @@ public class IndexedRuleAdapter {
 	 * Determines the necessary materialization
 	 * and instantiates all rules graphs such that the lhs matches the nonterminal
 	 *
-	 * @param indexedMaterializationRuleManager TODO
 	 * @param allMaterializationsAndRules   the resultMap to which the results from this rule will be added
 	 * @param toReplace                     the nonterminal to match
 	 * @param lhs                           the lhs of these rules
 	 * @param uninstantiatedRulesForThisLhs the rules belonging to this lhs
 	 */
-	private void addMaterializationAndRules(IndexedMaterializationRuleManager indexedMaterializationRuleManager, Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules, final IndexedNonterminal toReplace, IndexedNonterminal lhs, Collection<HeapConfiguration> uninstantiatedRulesForThisLhs) {
+	private void addMaterializationAndRules( Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules, final IndexedNonterminal toReplace, IndexedNonterminal lhs, Collection<HeapConfiguration> uninstantiatedRulesForThisLhs) {
 	
 	
 	    final List<IndexSymbol> necessaryMaterialization =
 	            indexMatcher.getMaterializationRule(toReplace, lhs).second();
-	    indexedMaterializationRuleManager.indexRuleAdapter.addMaterializationIfNeceessaryTo(allMaterializationsAndRules, necessaryMaterialization);
+	    		addMaterializationIfNeceessaryTo(allMaterializationsAndRules, necessaryMaterialization);
 	
 	    Collection<HeapConfiguration> instantiatedRulesForThisLhs =
-	            indexedMaterializationRuleManager.indexRuleAdapter.instantiateRulesIfNecessary(indexedMaterializationRuleManager, toReplace, lhs,
-	                    uninstantiatedRulesForThisLhs);
+	            		instantiateRulesIfNecessary(toReplace, lhs, uninstantiatedRulesForThisLhs);
 	
 	    allMaterializationsAndRules.get(necessaryMaterialization).addAll(instantiatedRulesForThisLhs);
 	
@@ -103,14 +100,12 @@ public class IndexedRuleAdapter {
 	 * Checks if the given lhs requires an instantiation and returns either the
 	 * already concrete right hand sides or instantiates them appropriately.
 	 *
-	 * @param indexedMaterializationRuleManager TODO
 	 * @param intexedToReplace              the nonterminal which has to be matched
 	 * @param indexedLhs                    the left hand side of the rules
 	 * @param uninstantiatedRulesForThisLhs the set of rules (may be concrete or uninstantiated)
 	 * @return
 	 */
-	private Collection<HeapConfiguration> instantiateRulesIfNecessary(
-	        IndexedMaterializationRuleManager indexedMaterializationRuleManager, final IndexedNonterminal intexedToReplace, final IndexedNonterminal indexedLhs, final Collection<HeapConfiguration> uninstantiatedRulesForThisLhs) {
+	private Collection<HeapConfiguration> instantiateRulesIfNecessary( final IndexedNonterminal intexedToReplace, final IndexedNonterminal indexedLhs, final Collection<HeapConfiguration> uninstantiatedRulesForThisLhs) {
 	
 	    Collection<HeapConfiguration> instantiatedRulesForThisLhs;
 	
@@ -119,7 +114,7 @@ public class IndexedRuleAdapter {
 	
 	        final List<IndexSymbol> necessaryInstantiation =
 	                indexMatcher.getNecessaryInstantiation(intexedToReplace, indexedLhs);
-	        instantiatedRulesForThisLhs = indexedMaterializationRuleManager.indexRuleAdapter.instantiateRhs(necessaryInstantiation, uninstantiatedRulesForThisLhs);
+	        instantiatedRulesForThisLhs = instantiateRhs(necessaryInstantiation, uninstantiatedRulesForThisLhs);
 	    } else {
 	        instantiatedRulesForThisLhs = uninstantiatedRulesForThisLhs;
 	    }

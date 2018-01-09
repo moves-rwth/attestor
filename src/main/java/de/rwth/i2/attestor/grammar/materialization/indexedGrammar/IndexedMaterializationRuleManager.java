@@ -78,7 +78,7 @@ public class IndexedMaterializationRuleManager extends DefaultMaterializationRul
 
         if (toReplace instanceof IndexedNonterminal) {
             IndexedNonterminal indexedToReplace = (IndexedNonterminal) toReplace;
-            return indexRuleAdapter.computeMaterializationsAndRules(this, indexedToReplace, rulesResolvingViolationPoint);
+            return indexRuleAdapter.computeMaterializationsAndRules( indexedToReplace, rulesResolvingViolationPoint);
 
         } else {
             return super.getRulesFor(toReplace, tentacle, requestedSelector);
