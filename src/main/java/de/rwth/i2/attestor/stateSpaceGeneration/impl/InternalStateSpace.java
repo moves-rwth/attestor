@@ -77,7 +77,7 @@ public class InternalStateSpace implements StateSpace {
             }
         }
     }
-    
+
 
 
     public TIntSet getInitialStateIds() {
@@ -411,7 +411,7 @@ public class InternalStateSpace implements StateSpace {
 				addArtificialInfPathsTransition(state);
 			}
 		}
-		
+
 	}
 
 }

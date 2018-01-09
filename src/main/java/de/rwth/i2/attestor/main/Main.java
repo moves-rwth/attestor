@@ -10,7 +10,7 @@ class Main {
 
     public static void main(String[] args) {
 
-        Attestor main = new Attestor();
+        AbstractAttestor main = new Attestor();
         main.run(args);
     }
 }

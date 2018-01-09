@@ -1,8 +1,9 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
+
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
-import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
@@ -71,15 +72,13 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        programState = programState.clone();
-
         ProgramState preparedState = programState.clone();
         invokePrepare.prepareHeap(preparedState);
 
         Collection<ProgramState> methodResult = method
                 .getMethodExecutor()
                 .getResultStates(programState, preparedState);
-
+        // TODO programState is callingState, prepared state is new input
         return getCleanedResultStates(methodResult);
     }
 

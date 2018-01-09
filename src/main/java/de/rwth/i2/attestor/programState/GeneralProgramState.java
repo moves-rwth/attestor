@@ -45,10 +45,9 @@ public abstract class GeneralProgramState implements ProgramState {
     /**
      * Id of this state in a state space
      */
-    private int stateSpaceId = INVALID_STATE_SPACE_ID;
+    private int stateSpaceId = -1;
 
     private StateSpace containingStateSpace = null;
-
 
     /**
      * Initializes a state with the initial program location 0.

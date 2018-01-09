@@ -4,10 +4,10 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
@@ -16,12 +16,13 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -31,11 +32,10 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-
 public class InterproceduralAnalysisManagerTest {
 
     private SceneObject sceneObject;
-    SelectorLabel next; 
+    SelectorLabel next;
     
 
     @Before
@@ -46,22 +46,22 @@ public class InterproceduralAnalysisManagerTest {
     }
 
 	@Test
-	@Ignore
 	public void testNonRecursive() throws StateSpaceGenerationAbortedException {
 		Type type = sceneObject.scene().getType("List");
 		
-		Method mainMethod = sceneObject.scene().getMethod("main");
+		IpaAbstractMethod mainMethod = new IpaAbstractMethod( sceneObject, "main");
 		final String paramName = "@this";
-		mainMethod.setBody( getCallNextProgram(type, paramName) );
+		mainMethod.setControlFlow( getCallNextProgram(type, paramName) );
 		
 		final int startPos = 0;
 		
 		HeapConfiguration input = exampleList(type, paramName, startPos);
-		ProgramState inputState = sceneObject.scene().createProgramState(input);
-
+		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
+		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
 		manager.registerToCompute(mainMethod, inputState);
-		StateSpace stateSpace = manager.computeFixpoint( mainMethod, inputState );
+		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
+		StateSpace stateSpace = manager.computeFixpoint( mainMethod, inputState, observer );
 		
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",startPos+1);
@@ -72,14 +72,13 @@ public class InterproceduralAnalysisManagerTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testRecursive() throws StateSpaceGenerationAbortedException {
 		Type type = sceneObject.scene().getType("List");
 		
 		final String paramName = "@this:";
-		Method traverseMethod = sceneObject.scene().getMethod("traverse");
-		traverseMethod.setRecursive(true);
-		traverseMethod.setBody(getRecursiveProgram(type, paramName, traverseMethod) );
+		IpaAbstractMethod traverseMethod = new IpaAbstractMethod(sceneObject, "traverse"); // TODO sceneObject.scene().getMethod("traverse");
+		traverseMethod.markAsRecursive();
+		traverseMethod.setControlFlow(getRecursiveProgram(type, paramName, traverseMethod) );
 		
 		
 		
@@ -90,7 +89,8 @@ public class InterproceduralAnalysisManagerTest {
 		ProgramState inputState = new DefaultProgramState(input).prepareHeap();
 		
 		InterproceduralAnalysisManager manager = sceneObject.scene().recursionManager();
-		StateSpace stateSpace = manager.computeFixpoint( traverseMethod, inputState);
+		final MockupSymbolicExecutionObserver observer = new MockupSymbolicExecutionObserver(sceneObject);
+		StateSpace stateSpace = manager.computeFixpoint( traverseMethod, inputState, observer );
 		
 		Set<ProgramState> result = stateSpace.getFinalStates();
 		final HeapConfiguration expectedHeap = exampleList(type,"@return",2);
@@ -100,7 +100,7 @@ public class InterproceduralAnalysisManagerTest {
 		assertEquals(expectedState.getHeap(), result.iterator().next().getHeap());
 	}
 	
-	private Program getNextProgram(Type type ){
+	private List<SemanticsCommand> getNextProgram(Type type ){
 	
        List<SemanticsCommand> program = new ArrayList<>();
         		program.add(
@@ -126,11 +126,11 @@ public class InterproceduralAnalysisManagerTest {
                 		)
                 );
         		
-        	return new ProgramImpl(program);
+        	return program;
 	}
 	
 
-	private Program getCallNextProgram( Type type, String paramName ){
+	private List<SemanticsCommand> getCallNextProgram( Type type, String paramName ){
    
 		List<SemanticsCommand> program = new ArrayList<>();
 		
@@ -141,10 +141,10 @@ public class InterproceduralAnalysisManagerTest {
         						paramName
         						)
         		);
-
-		 Method nextMethod = sceneObject.scene().getMethod("next");
-		 nextMethod.setBody(getNextProgram(type));
-		 InvokeHelper invokePrepare = new InstanceInvokeHelper( sceneObject,
+		
+	     AbstractMethod nextMethod = new IpaAbstractMethod(sceneObject, "next");
+	        nextMethod.setControlFlow( getNextProgram(type) );
+			InvokeHelper invokePrepare = new InstanceInvokeHelper( sceneObject,
 																	new Local(type,"y"), 
 																	Collections.emptyList()
 																);
@@ -164,10 +164,10 @@ public class InterproceduralAnalysisManagerTest {
                 		)
                 );
 		
-		return new ProgramImpl(program);
+		return program;
 	}
 	
-	private Program getRecursiveProgram(Type type, String paramName, Method call ){
+	private List<SemanticsCommand> getRecursiveProgram( Type type, String paramName, AbstractMethod call ){
 		   
 		List<SemanticsCommand> program = new ArrayList<>();
 		
@@ -180,9 +180,9 @@ public class InterproceduralAnalysisManagerTest {
         						)
         		);
 		
-	     Method nextMethod = sceneObject.scene().getMethod("next");
-	     nextMethod.setBody( getNextProgram(type) );
-		 InvokeHelper invokePrepare = new InstanceInvokeHelper( sceneObject,
+	     AbstractMethod nextMethod = new IpaAbstractMethod(sceneObject, "next");
+	        nextMethod.setControlFlow( getNextProgram(type) );
+			InvokeHelper invokePrepare = new InstanceInvokeHelper( sceneObject, 
 																	new Local(type,"x"), 
 																	Collections.emptyList()
 																);
@@ -236,7 +236,7 @@ public class InterproceduralAnalysisManagerTest {
         );
 		
 		
-		return new ProgramImpl(program);
+		return program;
 	}
 	
 	private HeapConfiguration exampleList(Type type, String varName, int varPos){

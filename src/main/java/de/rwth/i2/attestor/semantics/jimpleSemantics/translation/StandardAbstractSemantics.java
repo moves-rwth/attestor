@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
-import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;

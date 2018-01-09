@@ -1,13 +1,9 @@
 package de.rwth.i2.attestor.ipa;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methods.Method;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.*;
 
@@ -18,10 +14,10 @@ import java.util.*;
 public class InterproceduralAnalysisManager extends SceneObject{
 	
 	class MethodAndInput{
-		Method method;
+		IpaAbstractMethod method;
 		ProgramState input; 
 		
-		MethodAndInput(Method method, ProgramState input){
+		MethodAndInput(IpaAbstractMethod method, ProgramState input){
 			this.method = method;
 			this.input = input;
 		}
@@ -83,7 +79,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 	 * @param method
 	 * @param input the reachable fragment serving as precondition wrapped in a ProgramState
 	 */
-	public void registerToCompute( Method method, ProgramState input ) {
+	public void registerToCompute( IpaAbstractMethod method, ProgramState input ) {
 		MethodAndInput precondition = new MethodAndInput(method, input);
 		
 		if( !methodsToAnalyse.contains(precondition) ) {
@@ -92,7 +88,7 @@ public class InterproceduralAnalysisManager extends SceneObject{
 		}
 	}
 	
-	public void registerAsDependentOf( ProgramState dependent, Method method, ProgramState input	) {
+	public void registerAsDependentOf( ProgramState dependent, IpaAbstractMethod method, ProgramState input	) {
 		
 		MethodAndInput precondition = new MethodAndInput(method, input);
 		
@@ -103,67 +99,67 @@ public class InterproceduralAnalysisManager extends SceneObject{
 		statesCallingInput.get(precondition).add(dependent);
 	}
 	
-	public StateSpace computeFixpoint(Method mainProgram, ProgramState initialState)
+	public StateSpace computeFixpoint( IpaAbstractMethod mainProgram, ProgramState initialState, SymbolicExecutionObserver observer ) 
 											throws StateSpaceGenerationAbortedException {
 		
-		// TODO StateSpace mainStateSpace = observer.generateStateSpace( mainProgram.getControlFlow(), initialState );
-		StateSpace mainStateSpace = null; // TODO
+		StateSpace mainStateSpace = observer.generateStateSpace( mainProgram.getControlFlow(), initialState );
 		registerStateSpace(mainProgram, initialState, mainStateSpace);
 		
 		while( ! methodsToAnalyse.isEmpty() || ! statesToContinue.isEmpty() ) {
 			if( !methodsToAnalyse.isEmpty() ) {
 				MethodAndInput methodAndInput = methodsToAnalyse.pop();
-				StateSpace stateSpace = computeStateSpace(methodAndInput);
+				StateSpace stateSpace = computeStateSpace(observer, methodAndInput);
 				
 				//store the mapping from stateSpace to input for later reference
 				contractComputedByStateSpace.put(stateSpace, methodAndInput);
 				//alert states, that there is a result for the method-input pair
-				statesToContinue.addAll( statesCallingInput.get(methodAndInput) );
+				Set<ProgramState> dependencies = statesCallingInput.get(methodAndInput);
+				statesToContinue.addAll( dependencies );
 			}else {
 				ProgramState state = statesToContinue.pop();
-				MethodAndInput contractAltered = continueStateSpace(state);
+				MethodAndInput contractAltered = continueStateSpace(observer, state);
 				
 				//alert states, that the result for the method-input pair changed
-				statesToContinue.addAll( statesCallingInput.get(contractAltered) );
+				Set<ProgramState> dependencies = statesCallingInput.get(contractAltered);
+				statesToContinue.addAll( dependencies );
 			}
 		}
 		
 		return mainStateSpace;
 	}
 
-	private MethodAndInput continueStateSpace(ProgramState state)
+	private MethodAndInput continueStateSpace(SymbolicExecutionObserver observer, ProgramState state)
 			throws StateSpaceGenerationAbortedException {
 		StateSpace stateSpace = state.getContainingStateSpace();
 		MethodAndInput contractAltered = contractComputedByStateSpace.get( stateSpace );
-		Method method = contractAltered.method;
+		IpaAbstractMethod method = contractAltered.method;
 		//update stateSpace
-		// TODO observer.continueStateSpace(stateSpace, method.getControlFlow(), state);
+		observer.continueStateSpace(stateSpace, method.getControlFlow(), state);
 		
 		//adapt the corresponding contract
 		List<HeapConfiguration> finalConfigs = new ArrayList<>();
 		stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
-
-		// TODO method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );
+		method.contracts.addPostconditionsTo(contractAltered.input.getHeap(), finalConfigs );
 		return contractAltered;
 	}
 
-	private StateSpace computeStateSpace(MethodAndInput methodAndInput)
+	private StateSpace computeStateSpace(SymbolicExecutionObserver observer, MethodAndInput methodAndInput)
 			throws StateSpaceGenerationAbortedException {
-		Method method = methodAndInput.method;
+		IpaAbstractMethod method = methodAndInput.method;
 		
-		Program program = method.getBody();
+		Program program = method.getControlFlow();
 		ProgramState inputState = methodAndInput.input;
 		
-		StateSpace stateSpace = null; // TODO observer.generateStateSpace( program, inputState );
+		StateSpace stateSpace = observer.generateStateSpace( program, inputState );
 		
 		//extract and store the generated contract
 		List<HeapConfiguration> finalConfigs = new ArrayList<>();
 		stateSpace.getFinalStates().forEach( finalState -> finalConfigs.add( finalState.getHeap() ));
-		// TODO method.contracts.addPostconditionsTo( inputState.getHeap(), finalConfigs );
+		method.contracts.addPostconditionsTo( inputState.getHeap(), finalConfigs );
 		return stateSpace;
 	}
 
-	private void registerStateSpace(Method mainProgram, ProgramState initialState,
+	private void registerStateSpace(IpaAbstractMethod mainProgram, ProgramState initialState,
 			StateSpace mainStateSpace) {
 		MethodAndInput mainInput = new MethodAndInput(mainProgram, initialState);
 		contractComputedByStateSpace.put(mainStateSpace, mainInput );

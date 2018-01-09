@@ -4,10 +4,10 @@ import de.rwth.i2.attestor.counterexamples.heapConfigurationPair.HeapConfigurati
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.methodExecution.AbstractMethodExecutor;
-import de.rwth.i2.attestor.ipa.methodExecution.ScopeExtractor;
-import de.rwth.i2.attestor.ipa.methods.Method;
-import de.rwth.i2.attestor.ipa.methods.MethodExecutor;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.methodExecution.AbstractMethodExecutor;
+import de.rwth.i2.attestor.procedures.methodExecution.ScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;

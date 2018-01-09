@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.counterexamples;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.ipa.contracts.InternalContract;
-import de.rwth.i2.attestor.ipa.methodExecution.Contract;
-import de.rwth.i2.attestor.ipa.methodExecution.ContractGenerator;
+import de.rwth.i2.attestor.procedures.contracts.InternalContract;
+import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.methodExecution.ContractGenerator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.ArrayList;

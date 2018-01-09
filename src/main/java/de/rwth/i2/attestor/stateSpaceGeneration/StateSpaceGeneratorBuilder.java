@@ -29,6 +29,8 @@ public class StateSpaceGeneratorBuilder {
 
 
 
+    private StateSpace initialStateSpace = null;
+
     /**
      * Creates a new builder representing an everywhere
      * uninitialized StateSpaceGenerator.
@@ -94,12 +96,19 @@ public class StateSpaceGeneratorBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No post-processing strategy.");
         }
 
-        generator.stateSpace = generator.stateSpaceSupplier.get();
+        if(initialStateSpace == null) {
+            generator.stateSpace = generator.stateSpaceSupplier.get();
+        } else {
+            generator.stateSpace = initialStateSpace;
+        }
 
         for (ProgramState state : initialStates) {
-            state.setProgramCounter(0);
+
+            if(initialStateSpace == null) {
+                state.setProgramCounter(0);
+                generator.stateSpace.addInitialState(state);
+            }
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
-            generator.stateSpace.addInitialState(state);
             generator.addUnexploredState(state, false);
         }
 
@@ -238,6 +247,17 @@ public class StateSpaceGeneratorBuilder {
     public StateSpaceGeneratorBuilder setPostProcessingStrategy(PostProcessingStrategy postProcessingStrategy) {
 
         generator.postProcessingStrategy = postProcessingStrategy;
+        return this;
+    }
+
+    /**
+     * Optional method to determine a (possibly non-empty) initial state space used for state space generation.
+     * @param initialStateSpace The state space to use instead of a fresh one.
+     * @return The builder.
+     */
+    public StateSpaceGeneratorBuilder setInitialStateSpace(StateSpace initialStateSpace) {
+
+        this.initialStateSpace = initialStateSpace;
         return this;
     }
 

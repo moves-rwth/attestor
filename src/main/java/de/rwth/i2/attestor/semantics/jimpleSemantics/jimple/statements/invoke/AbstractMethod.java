@@ -1,16 +1,14 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractMethod extends SceneObject {
+public abstract class AbstractMethod extends SceneObject implements Method {
 
     /**
      * the abstract semantic of the method.
@@ -42,11 +40,13 @@ public abstract class AbstractMethod extends SceneObject {
      * on the given input.
      *
      * @param input   The program state determining the input of the method.
+     * @param options The current state space generation options.
      * @return The state space obtained from symbolically executing this AbstractMethod on the
      * given input.
      * @throws StateSpaceGenerationAbortedException
      */
-    public abstract Set<ProgramState> getResult( ProgramState input, ProgramState callingState)
+    public abstract Set<ProgramState> getResult( ProgramState input, ProgramState callingState, 
+    											 SymbolicExecutionObserver options)
     											throws StateSpaceGenerationAbortedException;
 
     public void setDisplayName(String displayName) {
@@ -54,7 +54,8 @@ public abstract class AbstractMethod extends SceneObject {
         this.displayName = displayName;
     }
 
-    public abstract Set<ProgramState> getFinalStates( ProgramState input, ProgramState callingState );
+    public abstract Set<ProgramState> getFinalStates( ProgramState input, ProgramState callingState,
+    												  SymbolicExecutionObserver observer);
 
     /**
      * @return the method body / abstract semantics
