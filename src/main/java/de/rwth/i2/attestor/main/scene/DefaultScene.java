@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.ipa.InterproceduralAnalysisManager;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -33,8 +32,6 @@ public class DefaultScene implements Scene {
 
     private final Map<String, Method> methods = new HashMap<>();
     private long totalNumberOfStates = 0;
-
-    private final InterproceduralAnalysisManager recursionManager = new InterproceduralAnalysisManager(this);
 
 
     @Override
@@ -146,10 +143,6 @@ public class DefaultScene implements Scene {
         return options;
     }
 
-	@Override
-	public InterproceduralAnalysisManager recursionManager() {
-		return this.recursionManager;
-	}
     @Override
     public Strategies strategies() {
 

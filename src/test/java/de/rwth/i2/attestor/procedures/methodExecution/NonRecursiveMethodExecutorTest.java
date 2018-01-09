@@ -50,8 +50,6 @@ public class NonRecursiveMethodExecutorTest {
         ProgramState expected = createExpected();
 
         assertThat(executor.getResultStates(null, input), contains(expected));
-
-       // assertThat(ipa.getIPAResult(input, null, new MockupSymbolicExecutionObserver(sceneObject)), contains(expected));
     }
 
     private ProgramState createInput() {
