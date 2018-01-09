@@ -18,16 +18,19 @@ public abstract  class AbstractMarkingGenerator {
     private final AbortStrategy abortStrategy;
     private final MaterializationStrategy materializationStrategy;
     private final CanonicalizationStrategy canonicalizationStrategy;
+    private final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                     AbortStrategy abortStrategy,
                                     MaterializationStrategy materializationStrategy,
-                                    CanonicalizationStrategy canonicalizationStrategy) {
+                                    CanonicalizationStrategy canonicalizationStrategy,
+                                    CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
 
         this.availableSelectorLabelNames = availableSelectorLabelNames;
         this.abortStrategy = abortStrategy;
         this.materializationStrategy = materializationStrategy;
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.aggressiveCanonicalizationStrategy = aggressiveCanonicalizationStrategy;
     }
 
     protected abstract List<ProgramState> placeInitialMarkings(ProgramState initialState);
@@ -69,7 +72,7 @@ public abstract  class AbstractMarkingGenerator {
 
             StateSpace stateSpace = generator.generate();
             stateSpace.getStates().forEach(
-                    state -> result.add(canonicalizationStrategy.canonicalize(state.getHeap()))
+                    state -> result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()))
             );
             return result;
         } catch (StateSpaceGenerationAbortedException e) {

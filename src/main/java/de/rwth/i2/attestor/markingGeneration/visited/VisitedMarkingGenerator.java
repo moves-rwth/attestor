@@ -26,9 +26,11 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
                                    Collection<String> availableSelectorLabelNames,
                                    AbortStrategy abortStrategy,
                                    MaterializationStrategy materializationStrategy,
-                                   CanonicalizationStrategy canonicalizationStrategy) {
+                                   CanonicalizationStrategy canonicalizationStrategy,
+                                   CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
 
-        super(availableSelectorLabelNames, abortStrategy, materializationStrategy, canonicalizationStrategy);
+        super(availableSelectorLabelNames, abortStrategy, materializationStrategy,
+                canonicalizationStrategy, aggressiveCanonicalizationStrategy);
 
         this.markingName = markingName;
     }

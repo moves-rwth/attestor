@@ -74,6 +74,7 @@ public class VisitedMarkingGeneratorTest {
                 availableSelectors,
                 new NoAbortStrategy(),
                 materializationStrategy,
+                canonicalizationStrategy,
                 canonicalizationStrategy
         );
 

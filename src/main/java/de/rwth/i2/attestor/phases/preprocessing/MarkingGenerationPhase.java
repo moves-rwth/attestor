@@ -37,7 +37,7 @@ public class MarkingGenerationPhase extends AbstractPhase
     private static final Pattern visitedPattern = Pattern.compile("^visited$");
     private static final Pattern identicNeighboursPattern = Pattern.compile("^identicNeighbours$");
 
-    private static final String MARKING_NAME = "%marking";
+    private static final String MARKING_NAME = "%visited";
 
     private static final String VISITED = "visited";
     private static final String VISITED_BY = "visitedBy";
@@ -115,6 +115,12 @@ public class MarkingGenerationPhase extends AbstractPhase
                 .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                 .build();
 
+        CanonicalizationStrategy aggressiveCanonicalizationStrategy = new CanonicalizationStrategyBuilder()
+                .setGrammar(grammar)
+                .setMinAbstractionDistance(0)
+                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .build();
+
         AbortStrategy abortStrategy = new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound);
 
         AbstractMarkingGenerator generator = null;
@@ -123,7 +129,8 @@ public class MarkingGenerationPhase extends AbstractPhase
             case VISITED:
             case VISITED_BY:
                 generator = new VisitedMarkingGenerator(MARKING_NAME, availableSelectorNames,
-                        abortStrategy, materializationStrategy, canonicalizationStrategy);
+                        abortStrategy, materializationStrategy,
+                        canonicalizationStrategy, aggressiveCanonicalizationStrategy);
                 break;
             case IDENTIC_NEIGHBOURS:
                 // TODO
