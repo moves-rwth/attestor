@@ -1,14 +1,14 @@
 package de.rwth.i2.attestor.main;
 
-import de.rwth.i2.attestor.main.phases.counterexamples.CounterexampleGenerationPhase;
-import de.rwth.i2.attestor.main.phases.modelChecking.ModelCheckingPhase;
-import de.rwth.i2.attestor.main.phases.parser.*;
-import de.rwth.i2.attestor.main.phases.preprocessing.AbstractionPreprocessingPhase;
-import de.rwth.i2.attestor.main.phases.preprocessing.GrammarRefinementPhase;
-import de.rwth.i2.attestor.main.phases.preprocessing.MarkingGenerationPhase;
-import de.rwth.i2.attestor.main.phases.report.ReportGenerationPhase;
-import de.rwth.i2.attestor.main.phases.report.ReportOutputPhase;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.intraprocedural.IntraproceduralStateSpaceGenerationPhase;
+import de.rwth.i2.attestor.phases.counterexamples.CounterexampleGenerationPhase;
+import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
+import de.rwth.i2.attestor.phases.parser.*;
+import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
+import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
+import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
+import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
+import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
+import de.rwth.i2.attestor.phases.symbolicExecution.intraprocedural.IntraproceduralStateSpaceGenerationPhase;
 
 
 /**

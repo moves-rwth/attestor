@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.io.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.phases.communication.InputSettings;
-import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.phases.communication.InputSettings;
+import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;

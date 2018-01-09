@@ -3,10 +3,10 @@ package de.rwth.i2.attestor.io.jsonExport.report;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
-import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.main.phases.modelChecking.ModelCheckingPhase;
-import de.rwth.i2.attestor.main.phases.parser.CLIPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
+import de.rwth.i2.attestor.phases.parser.CLIPhase;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.json.JSONWriter;
 

@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.main.scene.DefaultScene;
+import de.rwth.i2.attestor.phases.transformers.CounterexampleTransformer;
+import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
+import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

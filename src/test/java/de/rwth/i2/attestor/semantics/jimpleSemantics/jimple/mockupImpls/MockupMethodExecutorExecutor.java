@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
-import de.rwth.i2.attestor.main.phases.symbolicExecution.util.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.util.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
 import de.rwth.i2.attestor.procedures.methodExecution.NonRecursiveMethodExecutor;
