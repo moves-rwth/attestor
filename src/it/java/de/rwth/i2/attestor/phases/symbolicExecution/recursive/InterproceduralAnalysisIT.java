@@ -20,7 +20,7 @@ import java.util.Collections;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
-public class InterproceduralAnalysisTest {
+public class InterproceduralAnalysisIT {
 
     private SceneObject sceneObject;
     private SelectorLabel next;
