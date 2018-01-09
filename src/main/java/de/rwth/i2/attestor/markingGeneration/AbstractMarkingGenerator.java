@@ -2,10 +2,13 @@ package de.rwth.i2.attestor.markingGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public abstract  class AbstractMarkingGenerator {
@@ -34,9 +37,14 @@ public abstract  class AbstractMarkingGenerator {
         return availableSelectorLabelNames;
     }
 
-    public Collection<ProgramState> marked(ProgramState initialState) {
+    public Collection<HeapConfiguration> marked(ProgramState initialState) {
 
         List<ProgramState> initialStates = placeInitialMarkings(initialState);
+
+        if(initialStates.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         Program program = getProgram();
 
 
@@ -56,9 +64,16 @@ public abstract  class AbstractMarkingGenerator {
                 .build();
 
         try {
-            return generator.generate().getStates();
+
+            Collection<HeapConfiguration> result = new LinkedHashSet<>();
+
+            StateSpace stateSpace = generator.generate();
+            stateSpace.getStates().forEach(
+                    state -> result.add(canonicalizationStrategy.canonicalize(state.getHeap()))
+            );
+            return result;
         } catch (StateSpaceGenerationAbortedException e) {
-            throw new IllegalStateException("Marking generation aborted. This is most likely caused by nontermination.");
+            throw new IllegalStateException("Marking generation aborted. This is most likely caused by non-termination.");
         }
     }
 }

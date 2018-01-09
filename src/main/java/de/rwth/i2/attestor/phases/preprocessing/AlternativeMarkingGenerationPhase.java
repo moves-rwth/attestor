@@ -144,8 +144,7 @@ public class AlternativeMarkingGenerationPhase extends AbstractPhase
         List<HeapConfiguration> markedInputs = new LinkedList<>();
         for(HeapConfiguration in : inputs) {
             ProgramState initialState = scene().createProgramState(in);
-            Collection<ProgramState> marked = generator.marked(initialState);
-            marked.forEach(programState -> markedInputs.add(programState.getHeap()));
+            markedInputs.addAll(generator.marked(initialState));
         }
         inputs = markedInputs;
     }
