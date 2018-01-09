@@ -25,7 +25,7 @@ public class InternalContract implements Contract {
     @Override
     public void addPostconditions(Collection<HeapConfiguration> postconditions) {
 
-        postconditions.addAll(postconditions);
+        this.postconditions.addAll(postconditions);
     }
 
     @Override

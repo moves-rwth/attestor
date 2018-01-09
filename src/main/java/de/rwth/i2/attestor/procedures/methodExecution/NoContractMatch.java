@@ -17,7 +17,7 @@ public final class NoContractMatch implements ContractMatch {
 
     @Override
     public int[] getExternalReordering() {
-        return new int[0];
+        return null;
     }
 
     @Override
