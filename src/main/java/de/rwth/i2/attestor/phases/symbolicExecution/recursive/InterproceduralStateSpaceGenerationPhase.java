@@ -44,6 +44,7 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
         List<HeapConfiguration> inputs = getPhase(InputTransformer.class).getInputs();
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         Method mainMethod = scene().getMethod(inputSettings.getMethodName());
+        mainMethod.setRecursive(false); // TODO this should be removed.
 
         InterproceduralAnalysis interproceduralAnalysis = new InterproceduralAnalysis();
         InternalProcedureRegistry procedureRegistry = new InternalProcedureRegistry(interproceduralAnalysis,
