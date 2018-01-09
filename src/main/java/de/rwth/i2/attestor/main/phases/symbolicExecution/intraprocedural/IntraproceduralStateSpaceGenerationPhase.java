@@ -1,11 +1,11 @@
-package de.rwth.i2.attestor.main.phases.symbolicExecution.stateSpaceGeneration;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.intraprocedural;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalContractGenerator;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalPreconditionMatchingStrategy;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.util.InternalContractGenerator;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.util.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.util.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ProgramTransformer;
@@ -23,12 +23,12 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
+public class IntraproceduralStateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
 
     private StateSpace stateSpace;
     private StateSpaceGeneratorFactory factory;
 
-    public StateSpaceGenerationPhase(Scene scene) {
+    public IntraproceduralStateSpaceGenerationPhase(Scene scene) {
 
         super(scene);
         factory = new StateSpaceGeneratorFactory(scene);

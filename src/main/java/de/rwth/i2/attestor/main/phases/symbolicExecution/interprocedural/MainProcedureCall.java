@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 
 import de.rwth.i2.attestor.interprocedural.PartialStateSpace;
 import de.rwth.i2.attestor.interprocedural.ProcedureCall;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.util.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;

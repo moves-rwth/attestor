@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases;
+package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;

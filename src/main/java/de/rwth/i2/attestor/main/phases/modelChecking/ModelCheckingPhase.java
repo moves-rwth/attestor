@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.main.phases.modelChecking;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;

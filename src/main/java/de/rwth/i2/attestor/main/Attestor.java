@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.main.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.main.phases.preprocessing.MarkingGenerationPhase;
 import de.rwth.i2.attestor.main.phases.report.ReportGenerationPhase;
 import de.rwth.i2.attestor.main.phases.report.ReportOutputPhase;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.stateSpaceGeneration.StateSpaceGenerationPhase;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.intraprocedural.IntraproceduralStateSpaceGenerationPhase;
 
 
 /**
@@ -50,7 +50,7 @@ public class Attestor extends AbstractAttestor {
                 .addPhase(new MarkingGenerationPhase(scene))
                 .addPhase(new GrammarRefinementPhase(scene))
                 .addPhase(new AbstractionPreprocessingPhase(scene))
-                .addPhase(new StateSpaceGenerationPhase(scene))
+                .addPhase(new IntraproceduralStateSpaceGenerationPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
                 .addPhase(new ReportGenerationPhase(scene))

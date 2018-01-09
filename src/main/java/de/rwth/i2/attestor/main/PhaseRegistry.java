@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases;
+package de.rwth.i2.attestor.main;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.main.phases.symbolicExecution.interprocedural;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.phases.PhaseRegistry;
+import de.rwth.i2.attestor.main.PhaseRegistry;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.util.Constants;
@@ -47,7 +47,7 @@ public class InterproceduralAnalysisTest {
         Method traverseMethod = sceneObject.scene().getMethod("callNext");
         traverseMethod.setBody(examplePrograms.getCallNextProgram() );
 
-        InterproceduralAnalysisPhase ipaPhase = new InterproceduralAnalysisPhase(sceneObject.scene());
+        InterproceduralStateSpaceGenerationPhase ipaPhase = new InterproceduralStateSpaceGenerationPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
             .addPhase(
                 new MockupPhase(sceneObject, Collections.singletonList(input), "callNext")
@@ -80,7 +80,7 @@ public class InterproceduralAnalysisTest {
         traverseMethod.setBody(examplePrograms.getRecursiveProgram(traverseMethod) );
 
 
-        InterproceduralAnalysisPhase ipaPhase = new InterproceduralAnalysisPhase(sceneObject.scene());
+        InterproceduralStateSpaceGenerationPhase ipaPhase = new InterproceduralStateSpaceGenerationPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
                 .addPhase(
                         new MockupPhase(sceneObject, Collections.singletonList(input), "traverse")

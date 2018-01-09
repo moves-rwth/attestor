@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.main.phases.parser;
 
 import de.rwth.i2.attestor.io.settings.CommandLineReader;
 import de.rwth.i2.attestor.io.settings.SettingsFileReader;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;

@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuil
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputTransformer;

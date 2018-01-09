@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.main.phases.symbolicExecution.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.main.phases.symbolicExecution.util.InternalPreconditionMatchingStrategy;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;

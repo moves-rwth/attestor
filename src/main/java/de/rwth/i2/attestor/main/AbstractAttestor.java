@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.phases.PhaseRegistry;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;

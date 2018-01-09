@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.phases.modelChecking.ModelCheckingPhase;
 import de.rwth.i2.attestor.main.phases.parser.CLIPhase;

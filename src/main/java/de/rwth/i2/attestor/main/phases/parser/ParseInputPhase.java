@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
 import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.InputSettings;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.InputSettingsTransformer;

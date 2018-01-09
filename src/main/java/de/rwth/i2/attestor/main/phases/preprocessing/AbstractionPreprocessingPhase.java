@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuil
 import de.rwth.i2.attestor.grammar.concretization.ConcretizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.main.scene.Scene;

@@ -12,7 +12,7 @@ import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrate
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.transformers.CounterexampleTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.main.phases.transformers.ModelCheckingResultsTransformer;

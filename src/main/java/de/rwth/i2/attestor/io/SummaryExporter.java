@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.io;
 
-import de.rwth.i2.attestor.main.phases.AbstractPhase;
+import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.main.phases.modelChecking.ModelCheckingPhase;
 import de.rwth.i2.attestor.main.phases.parser.CLIPhase;

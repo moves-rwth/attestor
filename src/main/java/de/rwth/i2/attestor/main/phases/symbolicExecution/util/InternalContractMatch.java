@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.symbolicExecution;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.util;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;

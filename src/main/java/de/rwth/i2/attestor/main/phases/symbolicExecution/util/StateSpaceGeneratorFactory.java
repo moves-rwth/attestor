@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.main.phases.symbolicExecution;
+package de.rwth.i2.attestor.main.phases.symbolicExecution.util;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.main.scene.Scene;
