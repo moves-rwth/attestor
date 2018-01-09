@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.main.scene;
 
+import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
-import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.util.Collection;

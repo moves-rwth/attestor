@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.methodExecution.Contract;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;
+import de.rwth.i2.attestor.procedures.Contract;
+import de.rwth.i2.attestor.procedures.ContractCollection;
+import de.rwth.i2.attestor.procedures.ContractMatch;
 
 public class CounterexampleContractCollection implements ContractCollection {
 

@@ -1,9 +1,9 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractMatch;
-import de.rwth.i2.attestor.procedures.methodExecution.ScopeExtractor;
-import de.rwth.i2.attestor.procedures.methodExecution.ScopedHeap;
+import de.rwth.i2.attestor.procedures.ContractMatch;
+import de.rwth.i2.attestor.procedures.ScopeExtractor;
+import de.rwth.i2.attestor.procedures.ScopedHeap;
 
 import java.util.ArrayList;
 import java.util.Collection;

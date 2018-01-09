@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.phases.symbolicExecution.util.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContractCollection;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.NonRecursiveMethodExecutor;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.procedures.methodExecution.NonRecursiveMethodExecutor;
-import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 
 public class MockupMethodExecutorExecutor extends NonRecursiveMethodExecutor {
 

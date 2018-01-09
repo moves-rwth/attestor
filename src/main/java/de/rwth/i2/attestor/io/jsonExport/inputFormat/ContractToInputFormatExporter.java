@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.io.jsonExport.inputFormat;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.Contract;
 import org.json.JSONWriter;
 
 import java.io.Writer;

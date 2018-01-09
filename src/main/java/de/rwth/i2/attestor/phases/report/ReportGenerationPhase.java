@@ -17,7 +17,7 @@ import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.procedures.methodExecution.Contract;
+import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;

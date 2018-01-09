@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.procedures;
 
-import de.rwth.i2.attestor.procedures.methodExecution.Contract;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 
 import java.util.Collection;

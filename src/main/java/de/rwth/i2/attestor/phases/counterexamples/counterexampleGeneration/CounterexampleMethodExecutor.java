@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.methodExecution.*;
+import de.rwth.i2.attestor.procedures.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Collection;
