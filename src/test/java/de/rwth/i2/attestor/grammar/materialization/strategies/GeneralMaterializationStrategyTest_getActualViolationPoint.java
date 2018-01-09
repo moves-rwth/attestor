@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.strategies;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.materialization.strategies.GeneralMaterializationStrategy;

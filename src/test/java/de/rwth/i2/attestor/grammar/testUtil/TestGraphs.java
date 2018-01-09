@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.testUtil;
 
-import de.rwth.i2.attestor.grammar.materialization.GeneralMaterializationStrategyTest_getActualViolationPoint;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolverTest_Default;
+import de.rwth.i2.attestor.grammar.materialization.strategies.GeneralMaterializationStrategyTest_getActualViolationPoint;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
