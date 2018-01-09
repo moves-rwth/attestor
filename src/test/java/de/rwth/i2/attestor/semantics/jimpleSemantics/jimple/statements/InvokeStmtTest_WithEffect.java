@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutorExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -70,7 +70,7 @@ public class InvokeStmtTest_WithEffect {
         methodBody.add(new AssignStmt(sceneObject, nextOfY, varY, 2, liveVariables));
         methodBody.add(new ReturnValueStmt(sceneObject, varY, type));
         method.setBody(new ProgramImpl(methodBody));
-        method.setMethodExecution(new MockupMethodExecutor(sceneObject, method));
+        method.setMethodExecution(new MockupMethodExecutorExecutor(sceneObject, method));
 
         StaticInvokeHelper invokeHelper = new StaticInvokeHelper(sceneObject, SingleElementUtil.createList(nextOfX));
         stmt = new InvokeStmt(sceneObject, method, invokeHelper, 1);

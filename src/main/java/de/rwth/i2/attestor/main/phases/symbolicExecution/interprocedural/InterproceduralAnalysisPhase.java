@@ -14,8 +14,8 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
 import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.NonRecursiveMethodExecutor;
 import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
 import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -100,7 +100,7 @@ public class InterproceduralAnalysisPhase extends AbstractPhase implements State
                         procedureRegistry
                 );
             } else {
-                executor = new ContractBasedMethod(
+                executor = new NonRecursiveMethodExecutor(
                         new DefaultScopeExtractor(this, method.getName()),
                         contractCollection,
                         new InternalContractGenerator(stateSpaceGeneratorFactory, method.getBody())

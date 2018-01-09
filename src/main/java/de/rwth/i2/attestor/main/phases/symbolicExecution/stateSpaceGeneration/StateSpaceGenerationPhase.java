@@ -14,8 +14,8 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.contracts.InternalContractCollection;
-import de.rwth.i2.attestor.procedures.methodExecution.ContractBasedMethod;
 import de.rwth.i2.attestor.procedures.methodExecution.ContractCollection;
+import de.rwth.i2.attestor.procedures.methodExecution.NonRecursiveMethodExecutor;
 import de.rwth.i2.attestor.procedures.methodExecution.PreconditionMatchingStrategy;
 import de.rwth.i2.attestor.procedures.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -73,7 +73,7 @@ public class StateSpaceGenerationPhase extends AbstractPhase implements StateSpa
         for(Method method : scene ().getRegisteredMethods()) {
 
             ContractCollection contractCollection = new InternalContractCollection(preconditionMatchingStrategy);
-            MethodExecutor executor = new ContractBasedMethod(
+            MethodExecutor executor = new NonRecursiveMethodExecutor(
                     new DefaultScopeExtractor(this, method.getName()),
                     contractCollection,
                     new InternalContractGenerator(factory, method.getBody())

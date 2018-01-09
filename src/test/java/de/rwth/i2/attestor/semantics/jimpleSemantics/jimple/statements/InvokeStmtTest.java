@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutorExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -47,7 +47,7 @@ public class InvokeStmtTest {
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new Skip(sceneObject, -1));
         method.setBody(new ProgramImpl(defaultControlFlow));
-        method.setMethodExecution(new MockupMethodExecutor(sceneObject, method));
+        method.setMethodExecution(new MockupMethodExecutorExecutor(sceneObject, method));
         InvokeHelper invokePrepare
                 = new InstanceInvokeHelper(sceneObject, var, new ArrayList<>());
 

@@ -5,12 +5,12 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Collection;
 
-public class ContractBasedMethod extends AbstractMethodExecutor {
+public class NonRecursiveMethodExecutor extends AbstractMethodExecutor {
 
     private ContractGenerator contractGenerator;
 
-    public ContractBasedMethod(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
-                                  ContractGenerator contractGenerator) {
+    public NonRecursiveMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
+                                      ContractGenerator contractGenerator) {
 
         super(scopeExtractor, contractCollection);
         this.contractGenerator = contractGenerator;
