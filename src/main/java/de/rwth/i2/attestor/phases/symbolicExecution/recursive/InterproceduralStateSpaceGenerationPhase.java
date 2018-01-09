@@ -60,7 +60,6 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
 
     private void createMainProcedure(Method method, List<HeapConfiguration> inputs, InterproceduralAnalysis interproceduralAnalysis) {
 
-
         List<ProgramState> initialStates = new ArrayList<>(inputs.size());
         for(HeapConfiguration hc : inputs) {
             initialStates.add(scene().createProgramState(hc));

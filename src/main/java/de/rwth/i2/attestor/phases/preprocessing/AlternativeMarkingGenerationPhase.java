@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
@@ -24,7 +25,6 @@ import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 
 import java.util.*;
 import java.util.regex.Pattern;

@@ -4,11 +4,11 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.main.scene.Strategies;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.AggressivePostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.FinalStateSubsumptionPostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.AggressivePostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.FinalStateSubsumptionPostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.InternalStateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.List;
 

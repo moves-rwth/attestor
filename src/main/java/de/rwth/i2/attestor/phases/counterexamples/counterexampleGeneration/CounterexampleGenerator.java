@@ -4,13 +4,13 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.heapConfigurationPair.HeapConfigurationPair;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.ScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.*;
 import java.util.function.Function;

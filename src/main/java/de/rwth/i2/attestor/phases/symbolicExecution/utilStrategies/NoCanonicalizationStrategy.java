@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.stateSpaceGeneration.impl;
+package de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

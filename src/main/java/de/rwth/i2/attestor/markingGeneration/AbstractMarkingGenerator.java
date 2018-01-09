@@ -3,8 +3,9 @@ package de.rwth.i2.attestor.markingGeneration;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

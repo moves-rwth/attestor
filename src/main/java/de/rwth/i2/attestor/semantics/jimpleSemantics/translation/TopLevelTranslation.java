@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.types.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
