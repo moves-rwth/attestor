@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
 import org.junit.Before;
@@ -25,7 +24,7 @@ public class TarjanAlgorithmTest {
     public void testTrivial() {
 
         TarjanAlgorithm algorithm = new TarjanAlgorithm();
-        Method m1 = new ConcreteMethod("non-recursive 1");
+        Method m1 = sceneObject.scene().getMethod("non-recursive 1");
         algorithm.addMethodAsVertex(m1);
         algorithm.markRecursiveMethods();
         assertFalse(m1.isRecursive());
@@ -36,14 +35,14 @@ public class TarjanAlgorithmTest {
 
         TarjanAlgorithm algorithm = new TarjanAlgorithm();
 
-        Method m1 = new ConcreteMethod("non-recursive 1");
+        Method m1 = sceneObject.scene().getMethod("non-recursive 1");
         algorithm.addMethodAsVertex(m1);
 
-        Method m2 = new ConcreteMethod("non-recursive 2");
+        Method m2 = sceneObject.scene().getMethod("non-recursive 2");
         algorithm.addMethodAsVertex(m2);
         algorithm.addCallEdge(m1, m2);
 
-        Method m3 = new ConcreteMethod("non-recursive 3");
+        Method m3 = sceneObject.scene().getMethod("non-recursive 3");
         algorithm.addMethodAsVertex(m3);
         algorithm.addCallEdge(m2, m3);
 
@@ -59,7 +58,7 @@ public class TarjanAlgorithmTest {
 
         TarjanAlgorithm algorithm = new TarjanAlgorithm();
 
-        Method m1 = new ConcreteMethod("non-recursive 1");
+        Method m1 = sceneObject.scene().getMethod("non-recursive 1");
         algorithm.addMethodAsVertex(m1);
         algorithm.addCallEdge(m1, m1);
 
@@ -75,14 +74,14 @@ public class TarjanAlgorithmTest {
 
         TarjanAlgorithm algorithm = new TarjanAlgorithm();
 
-        Method m1 = new ConcreteMethod("non-recursive 1");
+        Method m1 = sceneObject.scene().getMethod("non-recursive 1");
         algorithm.addMethodAsVertex(m1);
 
-        Method m2 = new ConcreteMethod("non-recursive 2");
+        Method m2 = sceneObject.scene().getMethod("non-recursive 2");
         algorithm.addMethodAsVertex(m2);
         algorithm.addCallEdge(m1, m2);
 
-        Method m3 = new ConcreteMethod("non-recursive 3");
+        Method m3 = sceneObject.scene().getMethod("non-recursive 3");
         algorithm.addMethodAsVertex(m3);
         algorithm.addCallEdge(m2, m3);
         algorithm.addCallEdge(m3, m1);
@@ -99,19 +98,19 @@ public class TarjanAlgorithmTest {
 
         TarjanAlgorithm algorithm = new TarjanAlgorithm();
 
-        Method m1 = new ConcreteMethod("non-recursive 1");
+        Method m1 = sceneObject.scene().getMethod("non-recursive 1");
         algorithm.addMethodAsVertex(m1);
 
-        Method m2 = new ConcreteMethod("non-recursive 2");
+        Method m2 = sceneObject.scene().getMethod("non-recursive 2");
         algorithm.addMethodAsVertex(m2);
         algorithm.addCallEdge(m1, m2);
 
-        Method m3 = new ConcreteMethod("non-recursive 3");
+        Method m3 = sceneObject.scene().getMethod("non-recursive 3");
         algorithm.addMethodAsVertex(m3);
         algorithm.addCallEdge(m2, m3);
         algorithm.addCallEdge(m3, m3);
 
-        Method m4 = new ConcreteMethod("non-recursive 4");
+        Method m4 = sceneObject.scene().getMethod("non-recursive 4");
         algorithm.addMethodAsVertex(m4);
         algorithm.addCallEdge(m3, m4);
 

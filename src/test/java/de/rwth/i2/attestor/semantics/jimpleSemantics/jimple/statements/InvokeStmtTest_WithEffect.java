@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
-import de.rwth.i2.attestor.main.scene.ConcreteMethod;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -61,7 +60,7 @@ public class InvokeStmtTest_WithEffect {
         Field nextOfX = new Field(type, varX, next);
         Field nextOfY = new Field(type, varY, next);
 
-        Method method = new ConcreteMethod("method");
+        Method method = sceneObject.scene().getMethod("method");
 
         List<SemanticsCommand> methodBody = new ArrayList<>();
         methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));

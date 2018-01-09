@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ConcreteMethod implements Method {
+class ConcreteMethod implements Method {
 
     private String signature;
     private String name = null;

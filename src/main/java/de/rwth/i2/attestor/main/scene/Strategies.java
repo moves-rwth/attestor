@@ -23,6 +23,10 @@ public class Strategies {
     private StateRefinementStrategy stateRefinementStrategy;
     private LanguageInclusionStrategy languageInclusionStrategy;
 
+    protected Strategies() {
+
+    }
+
     public SingleStepConcretizationStrategy getSingleStepConcretizationStrategy() {
 
         return singleStepConcretizationStrategy;

@@ -62,6 +62,8 @@ public class Options {
      */
     private boolean postProcessingEnabled = true;
 
+    protected Options() {}
+
     public void addKeptVariable(String variableName) {
 
         keptVariables.add(variableName);
