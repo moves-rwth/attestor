@@ -1,10 +1,10 @@
-package de.rwth.i2.attestor.phases.symbolicExecution.interprocedural;
+package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.interproceduralAnalysis.InterproceduralAnalysis;
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.interproceduralAnalysis.PartialStateSpace;
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.interproceduralAnalysis.ProcedureCall;
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.interproceduralAnalysis.ProcedureRegistry;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.StateSpaceGeneratorFactory;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.InterproceduralAnalysis;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.PartialStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureRegistry;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 

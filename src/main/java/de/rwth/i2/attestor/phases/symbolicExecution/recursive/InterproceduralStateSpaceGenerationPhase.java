@@ -1,12 +1,12 @@
-package de.rwth.i2.attestor.phases.symbolicExecution.interprocedural;
+package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.interproceduralAnalysis.*;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.*;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.*;
 import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;

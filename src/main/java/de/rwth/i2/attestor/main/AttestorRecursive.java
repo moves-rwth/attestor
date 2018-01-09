@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
 import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
 import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
-import de.rwth.i2.attestor.phases.symbolicExecution.interprocedural.InterproceduralStateSpaceGenerationPhase;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.InterproceduralStateSpaceGenerationPhase;
 
 public class AttestorRecursive extends AbstractAttestor {
 

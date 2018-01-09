@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.phases.symbolicExecution.interprocedural;
+package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.scene.SceneObject;
