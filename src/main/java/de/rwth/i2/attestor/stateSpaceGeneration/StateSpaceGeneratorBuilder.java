@@ -84,8 +84,8 @@ public class StateSpaceGeneratorBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No state counter.");
         }
 
-        if (generator.explorationStrategy == null) {
-            throw new IllegalStateException("StateSpaceGenerator: No exploration strategy.");
+        if (generator.stateExplorationStrategy == null) {
+            throw new IllegalStateException("StateSpaceGenerator: No state exploration strategy.");
         }
 
         if (generator.stateSpaceSupplier == null) {
@@ -109,7 +109,7 @@ public class StateSpaceGeneratorBuilder {
                 generator.stateSpace.addInitialState(state);
             }
             generator.stateLabelingStrategy.computeAtomicPropositions(state);
-            generator.addUnexploredState(state, false);
+            generator.stateExplorationStrategy.addUnexploredState(state, false);
         }
 
         return generator;
@@ -208,23 +208,12 @@ public class StateSpaceGeneratorBuilder {
     }
 
     /**
-     * @param enabled True if and only if the state space should be explored in a breadth-first instead of
-     *                a depth-first fashion.
+     * @param strategy A strategy that determines how successors of a given state are explored.
      * @return The builder.
      */
-    public StateSpaceGeneratorBuilder setBreadthFirstSearchEnabled(boolean enabled) {
+    public StateSpaceGeneratorBuilder setStateExplorationStrategy(StateExplorationStrategy strategy) {
 
-        generator.breadthFirstSearchEnabled = enabled;
-        return this;
-    }
-
-    /**
-     * @param strategy A strategy that determines whether successors of a given state should be explored further.
-     * @return The builder.
-     */
-    public StateSpaceGeneratorBuilder setExplorationStrategy(ExplorationStrategy strategy) {
-
-        generator.explorationStrategy = strategy;
+        generator.stateExplorationStrategy = strategy;
         return this;
     }
 

@@ -26,7 +26,7 @@ public class CounterexampleGenerator {
     private CanonicalizationStrategy canonicalizationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private Function<Method, ScopeExtractor> scopeExtractorFactory;
-    private TraceBasedExplorationStrategy topLevelExplorationStrategy;
+    private TraceBasedStateExplorationStrategy topLevelExplorationStrategy;
 
     private final Stack<Predicate<ProgramState>> requiredFinalStatesStack = new Stack<>();
     private final Map<Method, MethodExecutor> originalExecutors = new LinkedHashMap<>();
@@ -37,7 +37,7 @@ public class CounterexampleGenerator {
 
     public ProgramState generate() {
 
-        topLevelExplorationStrategy = new TraceBasedExplorationStrategy(trace, stateSubsumptionStrategy);
+        topLevelExplorationStrategy = new TraceBasedStateExplorationStrategy(trace, stateSubsumptionStrategy);
 
         requiredFinalStatesStack.push(
                 state -> stateSubsumptionStrategy.subsumes(state, trace.getFinalState())
@@ -107,15 +107,14 @@ public class CounterexampleGenerator {
     }
 
     private StateSpaceGenerator setupStateSpaceGenerator(Program program, ProgramState initialState,
-                                                         ExplorationStrategy explorationStrategy) {
+                                                         StateExplorationStrategy stateExplorationStrategy) {
 
         return StateSpaceGenerator.builder()
                 .setProgram(program)
                 .addInitialState(initialState)
                 .setMaterializationStrategy(materializationStrategy)
-                .setExplorationStrategy(explorationStrategy)
+                .setStateExplorationStrategy(stateExplorationStrategy)
                 .setStateSpaceSupplier(getStateSpaceSupplier())
-                .setBreadthFirstSearchEnabled(true)
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setAbortStrategy(stateSpace -> {})
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
@@ -165,7 +164,7 @@ public class CounterexampleGenerator {
                 return setupStateSpaceGenerator(
                         method.getBody(),
                         programState,
-                        new TargetBasedExplorationStrategy(targetStates, stateSubsumptionStrategy)
+                        new TargetBasedStateExplorationStrategy(targetStates, stateSubsumptionStrategy)
                 ).generate().getFinalStates();
             } catch (StateSpaceGenerationAbortedException e) {
                 throw new IllegalStateException("Failed to execute method: " + method);

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TraceBasedExplorationStrategyTest {
+public class TraceBasedStateExplorationStrategyTest {
 
     private SceneObject sceneObject;
     private ProgramState trivialState;
@@ -55,8 +55,11 @@ public class TraceBasedExplorationStrategyTest {
 
 
         StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
-        TraceBasedExplorationStrategy strategy = new TraceBasedExplorationStrategy(trace, equalityStrategy);
-        assertFalse(strategy.check(trivialState, false));
+        TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, equalityStrategy);
+
+
+        strategy.addUnexploredState(trivialState, false);
+        assertFalse(strategy.hasUnexploredStates());
     }
 
     @Test
@@ -65,7 +68,7 @@ public class TraceBasedExplorationStrategyTest {
         CounterexampleTrace trace = getTrace();
 
         StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
-        TraceBasedExplorationStrategy strategy = new TraceBasedExplorationStrategy(trace, equalityStrategy);
+        TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, equalityStrategy);
 
         ProgramState state = trivialState.clone();
         state.setProgramCounter(0);
@@ -73,9 +76,15 @@ public class TraceBasedExplorationStrategyTest {
         ProgramState finalState = trivialState.clone();
         finalState.setProgramCounter(23);
 
-        assertTrue(strategy.check(state, false));
-        assertFalse(strategy.check(state, false));
-        assertTrue(strategy.check(finalState,false));
+        strategy.addUnexploredState(state, false);
+        assertTrue(strategy.hasUnexploredStates());
+        strategy.getNextUnexploredState();
+
+        strategy.addUnexploredState(state, false);
+        assertFalse(strategy.hasUnexploredStates());
+
+        strategy.addUnexploredState(finalState, false);
+        assertTrue(strategy.hasUnexploredStates());
     }
 
     private CounterexampleTrace getTrace() {
@@ -131,7 +140,7 @@ public class TraceBasedExplorationStrategyTest {
                         subsumed.getProgramCounter() <= subsuming.getProgramCounter()
                         );
 
-        TraceBasedExplorationStrategy strategy = new TraceBasedExplorationStrategy(trace, subsumptionStrategy);
+        TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, subsumptionStrategy);
 
         ProgramState state = trivialState.clone();
         state.setProgramCounter(0);
@@ -139,8 +148,14 @@ public class TraceBasedExplorationStrategyTest {
         ProgramState finalState = trivialState.clone();
         finalState.setProgramCounter(19);
 
-        assertTrue(strategy.check(state, false));
-        assertFalse(strategy.check(state, false));
-        assertTrue(strategy.check(finalState, false));
+        strategy.addUnexploredState(state, false);
+        assertTrue(strategy.hasUnexploredStates());
+        strategy.getNextUnexploredState();
+
+        strategy.addUnexploredState(state, false);
+        assertFalse(strategy.hasUnexploredStates());
+
+        strategy.addUnexploredState(finalState, false);
+        assertTrue(strategy.hasUnexploredStates());
     }
 }

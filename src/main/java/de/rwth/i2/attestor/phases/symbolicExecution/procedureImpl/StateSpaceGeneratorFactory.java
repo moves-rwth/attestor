@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.main.scene.Strategies;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.AggressivePostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.FinalStateSubsumptionPostProcessingStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -58,8 +59,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                 .setStateCounter(
                         scene()::addNumberOfGeneratedStates
                 )
-                .setBreadthFirstSearchEnabled(false)
-                .setExplorationStrategy((s, sp) -> true)
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 ;

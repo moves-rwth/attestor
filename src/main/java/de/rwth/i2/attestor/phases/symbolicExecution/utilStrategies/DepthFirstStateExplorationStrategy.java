@@ -12,7 +12,7 @@ public class DepthFirstStateExplorationStrategy implements StateExplorationStrat
     @Override
     public boolean hasUnexploredStates() {
 
-        return unexploredStates.isEmpty();
+        return !unexploredStates.isEmpty();
     }
 
     @Override
@@ -24,6 +24,6 @@ public class DepthFirstStateExplorationStrategy implements StateExplorationStrat
     @Override
     public void addUnexploredState(ProgramState state, boolean isMaterializedState) {
 
-        unexploredStates.add(state);
+        unexploredStates.addLast(state);
     }
 }

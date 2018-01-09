@@ -13,7 +13,7 @@ import java.util.Collection;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class TargetBasedExplorationStrategyTest {
+public class TargetBasedStateExplorationStrategyTest {
 
     private SceneObject sceneObject;
     private ProgramState trivialState;
@@ -39,12 +39,18 @@ public class TargetBasedExplorationStrategyTest {
 
         StateSubsumptionStrategy subsumptionStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
 
-        TargetBasedExplorationStrategy strategy = new TargetBasedExplorationStrategy(targetStates, subsumptionStrategy);
+        TargetBasedStateExplorationStrategy strategy = new TargetBasedStateExplorationStrategy(targetStates, subsumptionStrategy);
 
-        assertTrue(strategy.check(otherState, false));
-        assertFalse(strategy.check(trivialState, false));
-        assertFalse(strategy.check(trivialState, false));
-        assertFalse(strategy.check(otherState, false));
+        assertFalse(strategy.hasUnexploredStates());
+        strategy.addUnexploredState(otherState, false);
+        assertTrue(strategy.hasUnexploredStates());
+        strategy.getNextUnexploredState();
+        strategy.addUnexploredState(trivialState, false);
+        assertFalse(strategy.hasUnexploredStates());
+        strategy.addUnexploredState(trivialState, false);
+        assertFalse(strategy.hasUnexploredStates());
+        strategy.addUnexploredState(otherState, false);
+        assertFalse(strategy.hasUnexploredStates());
 
     }
 

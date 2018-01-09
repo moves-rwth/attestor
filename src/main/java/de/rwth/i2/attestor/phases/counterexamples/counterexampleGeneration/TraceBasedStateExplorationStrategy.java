@@ -1,22 +1,45 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
-import de.rwth.i2.attestor.stateSpaceGeneration.ExplorationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateExplorationStrategy;
 
-public class TraceBasedExplorationStrategy implements ExplorationStrategy {
+import java.util.LinkedList;
+
+public class TraceBasedStateExplorationStrategy implements StateExplorationStrategy {
+
+    private LinkedList<ProgramState> unexploredStates = new LinkedList<>();
 
     private final CounterexampleTrace trace;
     private final StateSubsumptionStrategy stateSubsumptionStrategy;
     private ProgramState current = null;
 
-    public TraceBasedExplorationStrategy(CounterexampleTrace trace, StateSubsumptionStrategy stateSubsumptionStrategy) {
+    public TraceBasedStateExplorationStrategy(CounterexampleTrace trace, StateSubsumptionStrategy stateSubsumptionStrategy) {
 
         this.trace = trace;
         this.stateSubsumptionStrategy = stateSubsumptionStrategy;
     }
 
     @Override
-    public boolean check(ProgramState state, boolean isMaterializedState) {
+    public boolean hasUnexploredStates() {
+
+        return !unexploredStates.isEmpty();
+    }
+
+    @Override
+    public ProgramState getNextUnexploredState() {
+
+        return unexploredStates.removeFirst();
+    }
+
+    @Override
+    public void addUnexploredState(ProgramState state, boolean isMaterializedState) {
+
+        if(checkTrace(state, isMaterializedState)) {
+            unexploredStates.addLast(state);
+        }
+    }
+
+    private boolean checkTrace(ProgramState state, boolean isMaterializedState) {
 
         if(isMaterializedState) {
             return true;

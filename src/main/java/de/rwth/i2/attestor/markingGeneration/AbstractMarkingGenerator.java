@@ -54,13 +54,12 @@ public abstract  class AbstractMarkingGenerator {
                 .addInitialStates(initialStates)
                 .setAbortStrategy(abortStrategy)
                 .setCanonizationStrategy(canonicalizationStrategy)
-                .setExplorationStrategy(new ExploreAllStrategy())
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setMaterializationStrategy(materializationStrategy)
                 .setStateCounter(new NoStateCounter())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100000))
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
-                .setBreadthFirstSearchEnabled(false)
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build();
 

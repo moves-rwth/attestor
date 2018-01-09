@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -49,7 +50,7 @@ public class StateSpaceGeneratorTest {
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setStateCounter(s -> {
                 })
-                .setExplorationStrategy((s, sp) -> true)
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
         ;
