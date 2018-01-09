@@ -66,17 +66,17 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
             initialStates.add(scene().createProgramState(hc));
         }
 
-        // TODO
-        ProgramState initialState = initialStates.get(0);
         try {
-            mainStateSpace = stateSpaceGeneratorFactory.create(method.getBody(), initialState).generate();
+            mainStateSpace = stateSpaceGeneratorFactory.create(method.getBody(), initialStates).generate();
         } catch (StateSpaceGenerationAbortedException e) {
             e.printStackTrace();
         }
 
-        PartialStateSpace mainStateSpace = new InternalPartialStateSpace(initialState, stateSpaceGeneratorFactory);
-        ProcedureCall mainCall = new InternalProcedureCall(method, initialState, stateSpaceGeneratorFactory);
-        interproceduralAnalysis.setMainProcedure(mainStateSpace, mainCall);
+        for(ProgramState iState : initialStates) {
+            PartialStateSpace mainStateSpace = new InternalPartialStateSpace(iState, stateSpaceGeneratorFactory);
+            ProcedureCall mainCall = new InternalProcedureCall(method, iState, stateSpaceGeneratorFactory);
+            interproceduralAnalysis.addMainProcedureCall(mainStateSpace, mainCall);
+        }
     }
 
     private void initializeProcedures(ProcedureRegistry procedureRegistry) {

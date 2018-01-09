@@ -10,11 +10,9 @@ public class InterproceduralAnalysis {
     Deque<PartialStateSpace> remainingPartialStateSpaces = new ArrayDeque<>();
     Map<PartialStateSpace, ProcedureCall> partialStateSpaceInput = new LinkedHashMap<>();
 
-    private PartialStateSpace mainProcedure;
 
-    public void setMainProcedure(PartialStateSpace mainProcedure, ProcedureCall mainCall) {
+    public void addMainProcedureCall(PartialStateSpace mainProcedure, ProcedureCall mainCall) {
 
-        this.mainProcedure = mainProcedure;
         partialStateSpaceInput.put(mainProcedure, mainCall);
         registerDependency(mainCall, mainProcedure);
     }
@@ -40,8 +38,6 @@ public class InterproceduralAnalysis {
 
     public void run() {
 
-        assert mainProcedure != null;
-
         while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
             ProcedureCall call;
             if(!remainingProcedureCalls.isEmpty()) {
@@ -55,7 +51,6 @@ public class InterproceduralAnalysis {
             }
             updateDependencies(call);
         }
-
     }
 
     private void updateDependencies(ProcedureCall call) {
