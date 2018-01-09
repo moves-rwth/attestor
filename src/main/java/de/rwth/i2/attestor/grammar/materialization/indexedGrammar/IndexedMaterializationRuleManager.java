@@ -3,9 +3,9 @@ package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 import java.util.*;
 
 import de.rwth.i2.attestor.grammar.IndexMatcher;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;

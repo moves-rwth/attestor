@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.heapConfigurationPair.HeapConfigurationPair;
 import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;

@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;

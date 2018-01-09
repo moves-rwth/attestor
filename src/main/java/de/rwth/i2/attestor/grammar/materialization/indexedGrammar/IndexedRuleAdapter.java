@@ -28,7 +28,7 @@ public class IndexedRuleAdapter {
 	 * @param rulesResolvingViolationPoint
 	 * @return
 	 */
-	GrammarResponse computeMaterializationsAndRules(IndexedNonterminal toReplace, Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingViolationPoint) {
+	public GrammarResponse computeMaterializationsAndRules(IndexedNonterminal toReplace, Map<Nonterminal, Collection<HeapConfiguration>> rulesResolvingViolationPoint) {
 	
 	
 	    Map<List<IndexSymbol>, Collection<HeapConfiguration>> allMaterializationsAndRules =

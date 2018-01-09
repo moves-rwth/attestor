@@ -5,6 +5,8 @@ import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarR
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.MaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.testUtil.FakeViolationPointResolverForDefault;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.main.scene.SceneObject;

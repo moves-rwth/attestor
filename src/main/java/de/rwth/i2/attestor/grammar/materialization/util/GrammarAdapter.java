@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.util;
 
 import java.util.*;
 

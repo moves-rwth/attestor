@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;

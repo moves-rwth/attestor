@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;

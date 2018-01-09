@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.util;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
@@ -7,6 +7,9 @@ import de.rwth.i2.attestor.grammar.materialization.defaultGrammar.DefaultMateria
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.strategies.GeneralMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.util.*;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 
 public class MaterializationStrategyBuilder {
