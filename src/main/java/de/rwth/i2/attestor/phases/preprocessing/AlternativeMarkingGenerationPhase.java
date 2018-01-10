@@ -4,7 +4,7 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.util.MaterializationStrategyBuilder;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;

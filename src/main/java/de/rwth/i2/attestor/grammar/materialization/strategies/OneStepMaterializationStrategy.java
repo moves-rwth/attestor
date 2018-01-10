@@ -2,21 +2,25 @@ package de.rwth.i2.attestor.grammar.materialization.strategies;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.grammar.materialization.util.ApplicableRulesFinder;
 import de.rwth.i2.attestor.grammar.materialization.util.GrammarResponseApplier;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.util.Pair;
 
-public class OneStepMaterilaizationStrategy {
+public class OneStepMaterializationStrategy {
+	
+    private static final Logger logger = LogManager.getLogger("OneStepMaterializationStrategy");
 	
 	private final ApplicableRulesFinder ruleFinder;
 	private final GrammarResponseApplier ruleApplier;
 	
 	
 
-    public OneStepMaterilaizationStrategy(ApplicableRulesFinder ruleFinder, GrammarResponseApplier ruleApplier) {
+    public OneStepMaterializationStrategy(ApplicableRulesFinder ruleFinder, GrammarResponseApplier ruleApplier) {
 		super();
 		this.ruleFinder = ruleFinder;
 		this.ruleApplier = ruleApplier;
@@ -32,10 +36,15 @@ public class OneStepMaterilaizationStrategy {
      * @param heapConfiguration The program state that should be materialized
      * @return A list of materialized program states each materilized by exactly one step
      */
-    Collection<HeapConfiguration> materialize( HeapConfiguration heapConfiguration ){
+    public Collection<HeapConfiguration> materialize( HeapConfiguration heapConfiguration ){
     	  List<HeapConfiguration> res = new ArrayList<>();
 
-          Deque<Pair<Integer, GrammarResponse>> applicableRules = ruleFinder.findApplicableRules( heapConfiguration ); 
+          Deque<Pair<Integer, GrammarResponse>> applicableRules = new ArrayDeque<>();
+		try {
+			applicableRules = ruleFinder.findApplicableRules( heapConfiguration );
+		} catch (UnexpectedNonterminalTypeException e1) {
+			logger.error(e1.getMessage());
+		} 
 
           while (!applicableRules.isEmpty()) {
 
@@ -43,8 +52,7 @@ public class OneStepMaterilaizationStrategy {
               try {
 				res.addAll( ruleApplier.applyGrammarResponseTo(heapConfiguration, grammarRule.first(), grammarRule.second()));
 			} catch (WrongResponseTypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("ruleApplier cannot handle the GrammarResponse created by ruleManager");
 			}
          
           }

@@ -2,8 +2,7 @@ package de.rwth.i2.attestor.grammar.materialization.util;
 
 import java.util.*;
 
-import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponse;
-import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
+import de.rwth.i2.attestor.grammar.materialization.communication.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedRuleAdapter;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -22,7 +21,8 @@ public class ApplicableRulesFinder {
 		this.indexRuleAdapter = indexRuleAdapter;
 	}
 
-	public Deque<Pair<Integer, GrammarResponse>> findApplicableRules(HeapConfiguration heapConfiguration) {
+	public Deque<Pair<Integer, GrammarResponse>> findApplicableRules(HeapConfiguration heapConfiguration) 
+																	throws UnexpectedNonterminalTypeException {
 		Deque<Pair<Integer,GrammarResponse>> applicableRules = new ArrayDeque<>();
 		
 		TIntArrayList ntEdges = heapConfiguration.nonterminalEdges();
@@ -36,11 +36,14 @@ public class ApplicableRulesFinder {
 		return applicableRules;
 	}
 
-	private GrammarResponse getMatchingRules(Nonterminal nonterminal) {
+	private GrammarResponse getMatchingRules(Nonterminal nonterminal) throws UnexpectedNonterminalTypeException {
 		
 		Map<Nonterminal, Collection<HeapConfiguration>> rules = grammar.getAllRulesFor(nonterminal);
 		
-		if( nonterminal.getClass() == IndexedNonterminal.class ){
+		if( nonterminal instanceof IndexedNonterminal ){
+			if( indexRuleAdapter == null ){
+				throw new UnexpectedNonterminalTypeException("cannot handle indexed nonterminals");
+			}
 			IndexedNonterminal toReplace = (IndexedNonterminal) nonterminal;
 			return indexRuleAdapter.computeMaterializationsAndRules(toReplace, rules);
 		}else{
