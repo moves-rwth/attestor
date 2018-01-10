@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -25,11 +24,7 @@ import java.util.LinkedList;
 public class StateSpaceGenerator {
 
     private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
-    /**
-     * Stores the program configurations that still have
-     * to be executed by the state space generation
-     */
-    final LinkedList<ProgramState> unexploredConfigurations = new LinkedList<>();
+
     /**
      * Stores the state space generated upon instantiation of
      * this generator.
@@ -66,9 +61,9 @@ public class StateSpaceGenerator {
      */
     StateRefinementStrategy stateRefinementStrategy;
     /**
-     * Strategy determining whether successors of a given state should also be explored.
+     * Strategy determining how states are explored before being added to the state space
      */
-    ExplorationStrategy explorationStrategy;
+    StateExplorationStrategy stateExplorationStrategy;
     /**
      * Strategy determining post-processing after termination of state space generation
      */
@@ -77,11 +72,6 @@ public class StateSpaceGenerator {
      * Counter for the total number of states generated so far.
      */
     TotalStatesCounter totalStatesCounter;
-    /**
-     * Flag that determines whether the state space is generated in a depth-first
-     * or breadth-first fashion.
-     */
-    boolean breadthFirstSearchEnabled;
     /**
      * Functional interface to obtain instances of state spaces.
      */
@@ -107,8 +97,7 @@ public class StateSpaceGenerator {
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
-                .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+                .setStateExplorationStrategy(stateSpaceGenerator.getStateExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
@@ -159,22 +148,14 @@ public class StateSpaceGenerator {
         return stateSpaceSupplier;
     }
 
-    /**
-     * @return The strategy determining whether successors of a given state should be explored or not.
-     */
-    public ExplorationStrategy getExplorationStrategy() {
+    public StateExplorationStrategy getStateExplorationStrategy() {
 
-        return explorationStrategy;
+        return stateExplorationStrategy;
     }
 
     public PostProcessingStrategy getPostProcessingStrategy() {
 
         return postProcessingStrategy;
-    }
-
-    public boolean isBreadthFirstSearchEnabled() {
-
-        return breadthFirstSearchEnabled;
     }
 
     public StateSpace getStateSpace() {
@@ -195,9 +176,9 @@ public class StateSpaceGenerator {
      */
     public StateSpace generate() throws StateSpaceGenerationAbortedException {
 
-        while (hasUnexploredStates()) {
+        while (stateExplorationStrategy.hasUnexploredStates()) {
 
-            ProgramState state = nextUnexploredState();
+            ProgramState state = stateExplorationStrategy.getNextUnexploredState();
             state.setContainingStateSpace( this.stateSpace );
 
             try {
@@ -241,30 +222,6 @@ public class StateSpaceGenerator {
 		return stateSemantics.getClass() == TerminalStatement.class;
 	}
 
-    /**
-     * @return true iff further states can and should be generated.
-     */
-    private boolean hasUnexploredStates() {
-
-        return !unexploredConfigurations.isEmpty();
-    }
-
-    private ProgramState nextUnexploredState() {
-
-        if (breadthFirstSearchEnabled) {
-            return unexploredConfigurations.removeFirst();
-        } else {
-            return unexploredConfigurations.removeLast();
-        }
-    }
-
-    protected void addUnexploredState(ProgramState state, boolean isMaterializedState) {
-
-        if (explorationStrategy.check(state, isMaterializedState)) {
-            unexploredConfigurations.addLast(state);
-        }
-    }
-
     private SemanticsCommand semanticsOf(ProgramState state) {
 
         return program.getStatement(state.getProgramCounter());
@@ -289,7 +246,7 @@ public class StateSpaceGenerator {
         for (ProgramState m : materialized) {
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
-            addUnexploredState(m, true);
+            stateExplorationStrategy.addUnexploredState(m, true);
             stateSpace.addMaterializationTransition(state, m);
         }
         return materialized.isEmpty();
@@ -334,9 +291,9 @@ public class StateSpaceGenerator {
         // performance optimization that prevents isomorphism checks against states in the state space.
         if (!needsCanonicalization(semanticsCommand, state)) {
             stateSpace.addState(state);
-            addUnexploredState(state, false);
+            stateExplorationStrategy.addUnexploredState(state, false);
         } else if (stateSpace.addStateIfAbsent(state)) {
-            addUnexploredState(state, false);
+            stateExplorationStrategy.addUnexploredState(state, false);
         }
 
         stateSpace.addControlFlowTransition(previousState, state);

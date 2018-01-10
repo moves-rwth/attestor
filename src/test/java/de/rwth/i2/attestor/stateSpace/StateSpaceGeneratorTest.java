@@ -4,6 +4,11 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
@@ -14,10 +19,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.InternalStateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.ProgramImpl;
 import de.rwth.i2.attestor.types.Type;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class StateSpaceGeneratorTest {
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setStateCounter(s -> {
                 })
-                .setExplorationStrategy((s, sp) -> true)
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
         ;

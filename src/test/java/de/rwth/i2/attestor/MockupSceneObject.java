@@ -2,10 +2,10 @@ package de.rwth.i2.attestor;
 
 import de.rwth.i2.attestor.main.scene.DefaultScene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 
 import java.util.Collections;
 

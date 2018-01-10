@@ -2,13 +2,15 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.ContractGenerator;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,11 +36,10 @@ public class MockupContractGenerator implements ContractGenerator {
                     .setAbortStrategy(new MockupAbortStrategy())
                     .setPostProcessingStrategy(originalStateSpace -> {
                     })
-                    .setExplorationStrategy((state, stateSpace) -> true)
+                    .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                     .setStateRefinementStrategy(new NoStateRefinementStrategy())
                     .setStateLabelingStrategy(new MockupStateLabellingStrategy())
-                    .setStateCounter(states -> {
-                    })
+                    .setStateCounter(new NoStateCounter())
                     .setStateSpaceSupplier(new MockupStateSpaceSupplier())
                     .build()
                     .generate()

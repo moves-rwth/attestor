@@ -38,6 +38,12 @@ import de.rwth.i2.attestor.phases.symbolicExecution.nonRecursive.StateSpaceGener
  */
 public class Attestor extends AbstractAttestor {
 
+    public static void main(String[] args) {
+
+        AbstractAttestor main = new Attestor();
+        main.run(args);
+    }
+
     @Override
     protected void registerPhases(String[] args) {
 

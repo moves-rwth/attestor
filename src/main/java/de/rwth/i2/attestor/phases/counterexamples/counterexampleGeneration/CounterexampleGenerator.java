@@ -4,13 +4,13 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.heapConfigurationPair.HeapConfigurationPair;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
 import de.rwth.i2.attestor.procedures.ScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
 
 import java.util.*;
 import java.util.function.Function;
@@ -26,7 +26,7 @@ public class CounterexampleGenerator {
     private CanonicalizationStrategy canonicalizationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private Function<Method, ScopeExtractor> scopeExtractorFactory;
-    private TraceBasedExplorationStrategy topLevelExplorationStrategy;
+    private TraceBasedStateExplorationStrategy topLevelExplorationStrategy;
 
     private final Stack<Predicate<ProgramState>> requiredFinalStatesStack = new Stack<>();
     private final Map<Method, MethodExecutor> originalExecutors = new LinkedHashMap<>();
@@ -37,7 +37,7 @@ public class CounterexampleGenerator {
 
     public ProgramState generate() {
 
-        topLevelExplorationStrategy = new TraceBasedExplorationStrategy(trace, stateSubsumptionStrategy);
+        topLevelExplorationStrategy = new TraceBasedStateExplorationStrategy(trace, stateSubsumptionStrategy);
 
         requiredFinalStatesStack.push(
                 state -> stateSubsumptionStrategy.subsumes(state, trace.getFinalState())
@@ -107,15 +107,14 @@ public class CounterexampleGenerator {
     }
 
     private StateSpaceGenerator setupStateSpaceGenerator(Program program, ProgramState initialState,
-                                                         ExplorationStrategy explorationStrategy) {
+                                                         StateExplorationStrategy stateExplorationStrategy) {
 
         return StateSpaceGenerator.builder()
                 .setProgram(program)
                 .addInitialState(initialState)
                 .setMaterializationStrategy(materializationStrategy)
-                .setExplorationStrategy(explorationStrategy)
+                .setStateExplorationStrategy(stateExplorationStrategy)
                 .setStateSpaceSupplier(getStateSpaceSupplier())
-                .setBreadthFirstSearchEnabled(true)
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setAbortStrategy(stateSpace -> {})
                 .setCanonizationStrategy(new NoCanonicalizationStrategy())
@@ -165,7 +164,7 @@ public class CounterexampleGenerator {
                 return setupStateSpaceGenerator(
                         method.getBody(),
                         programState,
-                        new TargetBasedExplorationStrategy(targetStates, stateSubsumptionStrategy)
+                        new TargetBasedStateExplorationStrategy(targetStates, stateSubsumptionStrategy)
                 ).generate().getFinalStates();
             } catch (StateSpaceGenerationAbortedException e) {
                 throw new IllegalStateException("Failed to execute method: " + method);

@@ -7,15 +7,15 @@ import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBu
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateLabelingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.StateSpaceBoundedAbortStrategy;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

@@ -8,15 +8,12 @@ public class InterproceduralAnalysis {
     Map<ProcedureCall, Set<PartialStateSpace>> callingDependencies = new LinkedHashMap<>();
     Deque<ProcedureCall> remainingProcedureCalls = new ArrayDeque<>();
     Deque<PartialStateSpace> remainingPartialStateSpaces = new ArrayDeque<>();
-    Map<PartialStateSpace, ProcedureCall> partialStateSpaceInput = new LinkedHashMap<>();
+    Map<PartialStateSpace, ProcedureCall> partialStateSpaceToAnalyzedCall = new LinkedHashMap<>();
 
-    private PartialStateSpace mainProcedure;
 
-    public void setMainProcedure(PartialStateSpace mainProcedure, ProcedureCall mainCall) {
+    public void addMainProcedureCall(PartialStateSpace mainStateSpace, ProcedureCall mainCall) {
 
-        this.mainProcedure = mainProcedure;
-        partialStateSpaceInput.put(mainProcedure, mainCall);
-        registerDependency(mainCall, mainProcedure);
+        partialStateSpaceToAnalyzedCall.put(mainStateSpace, mainCall);
     }
 
 
@@ -40,22 +37,19 @@ public class InterproceduralAnalysis {
 
     public void run() {
 
-        assert mainProcedure != null;
-
         while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
             ProcedureCall call;
             if(!remainingProcedureCalls.isEmpty()) {
                 call = remainingProcedureCalls.pop();
                 PartialStateSpace partialStateSpace = call.execute();
-                partialStateSpaceInput.put(partialStateSpace, call);
+                partialStateSpaceToAnalyzedCall.put(partialStateSpace, call);
             } else {
                 PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
-                call = partialStateSpaceInput.get(partialStateSpace);
+                call = partialStateSpaceToAnalyzedCall.get(partialStateSpace);
                 partialStateSpace.continueExecution(call);
             }
             updateDependencies(call);
         }
-
     }
 
     private void updateDependencies(ProcedureCall call) {

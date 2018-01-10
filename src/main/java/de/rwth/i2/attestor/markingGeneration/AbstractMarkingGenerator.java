@@ -2,10 +2,14 @@ package de.rwth.i2.attestor.markingGeneration;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public abstract  class AbstractMarkingGenerator {
@@ -14,16 +18,19 @@ public abstract  class AbstractMarkingGenerator {
     private final AbortStrategy abortStrategy;
     private final MaterializationStrategy materializationStrategy;
     private final CanonicalizationStrategy canonicalizationStrategy;
+    private final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                     AbortStrategy abortStrategy,
                                     MaterializationStrategy materializationStrategy,
-                                    CanonicalizationStrategy canonicalizationStrategy) {
+                                    CanonicalizationStrategy canonicalizationStrategy,
+                                    CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
 
         this.availableSelectorLabelNames = availableSelectorLabelNames;
         this.abortStrategy = abortStrategy;
         this.materializationStrategy = materializationStrategy;
         this.canonicalizationStrategy = canonicalizationStrategy;
+        this.aggressiveCanonicalizationStrategy = aggressiveCanonicalizationStrategy;
     }
 
     protected abstract List<ProgramState> placeInitialMarkings(ProgramState initialState);
@@ -34,9 +41,14 @@ public abstract  class AbstractMarkingGenerator {
         return availableSelectorLabelNames;
     }
 
-    public Collection<ProgramState> marked(ProgramState initialState) {
+    public Collection<HeapConfiguration> marked(ProgramState initialState) {
 
         List<ProgramState> initialStates = placeInitialMarkings(initialState);
+
+        if(initialStates.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         Program program = getProgram();
 
 
@@ -45,20 +57,26 @@ public abstract  class AbstractMarkingGenerator {
                 .addInitialStates(initialStates)
                 .setAbortStrategy(abortStrategy)
                 .setCanonizationStrategy(canonicalizationStrategy)
-                .setExplorationStrategy(new ExploreAllStrategy())
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setMaterializationStrategy(materializationStrategy)
                 .setStateCounter(new NoStateCounter())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100000))
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
-                .setBreadthFirstSearchEnabled(false)
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
                 .build();
 
         try {
-            return generator.generate().getStates();
+
+            Collection<HeapConfiguration> result = new LinkedHashSet<>();
+
+            StateSpace stateSpace = generator.generate();
+            stateSpace.getStates().forEach(
+                    state -> result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()))
+            );
+            return result;
         } catch (StateSpaceGenerationAbortedException e) {
-            throw new IllegalStateException("Marking generation aborted. This is most likely caused by nontermination.");
+            throw new IllegalStateException("Marking generation aborted. This is most likely caused by non-termination.");
         }
     }
 }
