@@ -267,6 +267,17 @@ public class SettingsFileReader {
             }
         }
 
+        if (jsonOutput.has("contractsForInspection")) {
+            output.setExportContractsForInspection(true);
+            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
+            if (jsonContracts.has("path")) {
+                output.setPathForContractsForInspection(jsonContracts.getString("path"));
+            }
+            if (jsonContracts.has("folder")) {
+                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
+            }
+        }
+        
         if (jsonOutput.has("customHCs")) {
             output.setExportCustomHcs(true);
             JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
@@ -279,7 +290,7 @@ public class SettingsFileReader {
         }
 
         if (jsonOutput.has("contractsForReuse")) {
-            output.setExportContracts(true);
+            output.setExportContractsForReuse(true);
             JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
             if (jsonC.has("path")) {
                 output.setDirectoryForReuseContracts(jsonC.getString("path"));

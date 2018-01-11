@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.phases.report;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -16,6 +15,7 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.phases.transformers.*;
 import de.rwth.i2.attestor.procedures.Contract;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.ZipUtils;
 
@@ -62,7 +62,11 @@ public class ReportGenerationPhase extends AbstractPhase {
             }
 
             if (outputSettings.isExportContractsForReuse()) {
-                exportContracts();
+                exportContractsForReuse();
+            }
+            
+            if( outputSettings.isExportContractsForInspection() ){
+            	exportContractsForInspection();
             }
 
         } catch (IOException e) {
@@ -70,8 +74,8 @@ public class ReportGenerationPhase extends AbstractPhase {
         }
 
     }
-
-    private void exportContracts() throws IOException {
+    
+	private void exportContractsForReuse() throws IOException {
 
         String directory = outputSettings.getDirectoryForReuseContracts();
         FileUtils.createDirectories(directory);
@@ -91,6 +95,32 @@ public class ReportGenerationPhase extends AbstractPhase {
                 + "'"
         );
     }
+	
+    private void exportContractsForInspection() throws IOException {
+
+        logger.info("Exporting contracts for inspection ...");
+
+        String location = outputSettings.getLocationForContractsForInspection();
+
+        // Copy necessary libraries
+        InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
+                ".zip");//TODO
+
+        File targetDirectory = new File(location + File.separator);
+        ZipUtils.unzip(zis, targetDirectory);
+        
+        Map<String,Collection<Contract>> contracts = new HashMap<>();
+        for( Method method : scene().getRegisteredMethods() ){
+        	contracts.put(method.getName(), method.getContractsForExport());
+        }
+
+        // Generate JSON files
+        JsonContractExporter exporter = new JsonContractExporter();
+        exporter.export(location + File.separator + "contractData", contracts);
+
+        logger.info("done. Grammar exported to '" + location + "'");
+    }
+
 
     private void exportCustomHcs() throws IOException {
 
