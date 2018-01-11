@@ -76,18 +76,18 @@ public class OutputSettings {
     /**
      * True if and only if the generated contracts should be exported.
      */
-    private boolean exportContracts = false;
+    private boolean exportContractsForReuse = false;
 
     /**
      * The directory that is created and contains the exported contracts.
      */
-    private String folderForContracts;
+    private String folderForReuseContracts;
 
     /**
      * A mapping containing the signatures of those methodExecution the user requests contracts for
      * and as values the file names these contracts should be written to.
      */
-    private Map<String, String> requiredContracts;
+    private Map<String, String> requiredContractsForReuse;
 
     /**
      * The directory that contains the case study's output for report generation
@@ -274,9 +274,9 @@ public class OutputSettings {
         return pathForCustomHcs + File.separator + folderForCustomHcs;
     }
 
-    public boolean isExportContracts() {
+    public boolean isExportContractsForReuse() {
 
-        return exportContracts;
+        return exportContractsForReuse;
     }
 
     /**
@@ -284,19 +284,19 @@ public class OutputSettings {
      */
     public void setExportContracts(boolean exportContracts) {
 
-        this.exportContracts = exportContracts;
+        this.exportContractsForReuse = exportContracts;
 
         if (exportContracts) {
-            this.requiredContracts = new LinkedHashMap<>();
+            this.requiredContractsForReuse = new LinkedHashMap<>();
         }
     }
 
     /**
      * @return The directory that is created and contains the exported contracts.
      */
-    public String getDirectoryForContracts() {
+    public String getDirectoryForReuseContracts() {
 
-        return this.folderForContracts;
+        return this.folderForReuseContracts;
     }
 
     /**
@@ -304,9 +304,9 @@ public class OutputSettings {
      *
      * @param directory
      */
-    public void setDirectoryForContracts(String directory) {
+    public void setDirectoryForReuseContracts(String directory) {
 
-        this.folderForContracts = directory;
+        this.folderForReuseContracts = directory;
     }
 
     /**
@@ -315,9 +315,9 @@ public class OutputSettings {
      *
      * @return
      */
-    public Map<String, String> getContractRequests() {
+    public Map<String, String> getContractForReuseRequests() {
 
-        return this.requiredContracts;
+        return this.requiredContractsForReuse;
     }
 
     /**
@@ -326,9 +326,9 @@ public class OutputSettings {
      * @param signature the signature of the method whose contract is requested
      * @param filename  the name of the file where the contract should be written to.
      */
-    public void addRequiredContract(String signature, String filename) {
+    public void addRequiredContractForReuse(String signature, String filename) {
 
-        this.requiredContracts.put(signature, filename + ".json");
+        this.requiredContractsForReuse.put(signature, filename + ".json");
     }
 
     /**
@@ -359,7 +359,7 @@ public class OutputSettings {
         this.pathForGrammar = rootPath + File.separator + this.pathForGrammar;
         this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
         this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
-        this.folderForContracts = rootPath + File.separator + this.folderForContracts;
+        this.folderForReuseContracts = rootPath + File.separator + this.folderForReuseContracts;
     }
 
     public List<HcLabelPair> getCustomHcSet() {

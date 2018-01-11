@@ -61,7 +61,7 @@ public class ReportGenerationPhase extends AbstractPhase {
                 exportCustomHcs();
             }
 
-            if (outputSettings.isExportContracts()) {
+            if (outputSettings.isExportContractsForReuse()) {
                 exportContracts();
             }
 
@@ -73,11 +73,11 @@ public class ReportGenerationPhase extends AbstractPhase {
 
     private void exportContracts() throws IOException {
 
-        String directory = outputSettings.getDirectoryForContracts();
+        String directory = outputSettings.getDirectoryForReuseContracts();
         FileUtils.createDirectories(directory);
-        for (String signature : outputSettings.getContractRequests().keySet()) {
+        for (String signature : outputSettings.getContractForReuseRequests().keySet()) {
 
-            String filename = outputSettings.getContractRequests().get(signature);
+            String filename = outputSettings.getContractForReuseRequests().get(signature);
             FileWriter writer = new FileWriter(directory + File.separator + filename);
 
             Collection<Contract> contracts = scene().getMethod(signature).getContractsForExport();
