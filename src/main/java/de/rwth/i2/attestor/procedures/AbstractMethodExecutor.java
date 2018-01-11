@@ -1,10 +1,10 @@
 package de.rwth.i2.attestor.procedures;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-
 import java.util.Collection;
 import java.util.LinkedHashSet;
+
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public abstract class AbstractMethodExecutor implements MethodExecutor {
 
@@ -54,6 +54,11 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
     public void addContract(Contract contract) {
 
         contractCollection.addContract(contract);
+    }
+    
+    @Override
+    public Collection<Contract> getContractsForExport() {
+    	return contractCollection.getContractsForExport();
     }
 
 }

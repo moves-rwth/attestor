@@ -1,9 +1,10 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.procedures.ContractCollection;
-import de.rwth.i2.attestor.procedures.ContractMatch;
+import de.rwth.i2.attestor.procedures.*;
 
 public class CounterexampleContractCollection implements ContractCollection {
 
@@ -23,4 +24,9 @@ public class CounterexampleContractCollection implements ContractCollection {
     public ContractMatch matchContract(HeapConfiguration precondition) {
         return delegate.matchContract(precondition);
     }
+
+	@Override
+	public Collection<Contract> getContractsForExport() {
+		return Collections.emptyList();
+	}
 }

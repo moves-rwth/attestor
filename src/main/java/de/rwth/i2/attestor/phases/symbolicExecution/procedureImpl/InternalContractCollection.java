@@ -1,15 +1,10 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.procedures.ContractCollection;
-import de.rwth.i2.attestor.procedures.ContractMatch;
-import de.rwth.i2.attestor.procedures.PreconditionMatchingStrategy;
+import java.util.*;
+import java.util.Map.Entry;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.procedures.*;
 
 public class InternalContractCollection implements ContractCollection {
 
@@ -59,6 +54,14 @@ public class InternalContractCollection implements ContractCollection {
         }
 
         return ContractMatch.NO_CONTRACT_MATCH;
-
     }
+
+	@Override
+	public Collection<Contract> getContractsForExport() {
+		Collection<Contract> contractsForExport = new ArrayList<>();
+		for( Entry<Integer, Collection<Contract>> entry : contracts.entrySet() ){
+			contractsForExport.addAll(entry.getValue());
+		}
+		return contractsForExport;
+	}
 }

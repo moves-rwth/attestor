@@ -18,7 +18,7 @@ public interface Method {
     void setRecursive(boolean isRecursive);
 
     void addContract(Contract contract);
-    Collection<Contract> getContracts();
+    Collection<Contract> getContractsForExport();
 
     void setMethodExecution(MethodExecutor methodExecution);
     MethodExecutor getMethodExecutor();
