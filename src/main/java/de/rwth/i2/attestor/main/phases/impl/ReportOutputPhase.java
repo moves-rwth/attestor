@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.main.phases.impl;
 
 import de.rwth.i2.attestor.grammar.GrammarExporter;
+import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.FileUtils;
@@ -91,6 +92,7 @@ public class ReportOutputPhase extends AbstractPhase {
         /* Export the attestor input relevant for the report */
 
         // Export the initial heap configurations (consequtively numbered)
+        exportSummaryInitialHCs(outputDirectory);
         exportInitialHCs(outputDirectory);
         // Copy the settingsfile
         copySettingsFile(outputDirectory);
@@ -113,9 +115,12 @@ public class ReportOutputPhase extends AbstractPhase {
         exportStateSpace(outputDirectory);
     }
 
+    private void exportSummaryInitialHCs(String outputDirectory) {
+    }
+
     private void exportOptions(String outputDirectory) throws IOException {
         FileUtils.createDirectories(outputDirectory);
-        FileWriter writer = new FileWriter(outputDirectory + File.separator + "options.json");
+        FileWriter writer = new FileWriter(outputDirectory + File.separator + "attestorInput" + File.separator + "options.json");
         JSONOptionExporter exporter = new JSONOptionExporter(writer);
         exporter.exportForReport(scene());
         writer.close();
@@ -136,10 +141,15 @@ public class ReportOutputPhase extends AbstractPhase {
         Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
     }
 
-    private void exportInitialHCs(String location) {
+    private void exportInitialHCs(String location) throws IOException {
         logger.info("Exporting initial HCs for report...");
 
         List<HeapConfiguration> initialHCs = getPhase(InputTransformer.class).getInputs();
+
+        FileUtils.createDirectories(location);
+        FileWriter writer = new FileWriter(location + File.separator + "attestorInput" + File.separator + "initialHCsSummary.json");
+        exportSummaryInitialHCs(writer, initialHCs);
+        writer.close();
 
         int i = 0;
         for (HeapConfiguration initialHC : initialHCs) {
@@ -153,6 +163,15 @@ public class ReportOutputPhase extends AbstractPhase {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void exportSummaryInitialHCs(FileWriter writer, List<HeapConfiguration> initialHCs) {
+
+        JSONWriter jsonWriter = new JSONWriter(writer);
+
+        jsonWriter.object()
+                    .key("number").value(initialHCs.size())
+                    .endObject();
     }
 
     private void exportGrammar(String location) throws IOException {

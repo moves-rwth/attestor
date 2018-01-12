@@ -116,16 +116,18 @@ public class JSONSummaryExporter implements SummaryExporter {
         // Generate JSON output and calculate total time
         for (AbstractPhase p : phases) {
             double elapsed = p.getElapsedTime();
-            elapsedTotal += elapsed;
+            if(p.getName() != "Report output generation") {
+                elapsedTotal += elapsed;
 
-            jsonWriter.object()
+                jsonWriter.object()
                     .key("name")
                     .value(p.getName())
                     .key("time")
                     .value(elapsed)
                     .endObject();
-            if (p.isVerificationPhase()) {
-                elapsedVerify += elapsed;
+                if (p.isVerificationPhase()) {
+                    elapsedVerify += elapsed;
+                }
             }
         }
 
@@ -136,13 +138,13 @@ public class JSONSummaryExporter implements SummaryExporter {
                 .array()
                 .object()
                 .key("name")
-                .value("sum")
+                .value("total")
                 .key("time")
                 .value(elapsedTotal)
                 .endObject()
                 .object()
                 .key("name")
-                .value("sumVerification")
+                .value("totalVerification")
                 .key("time")
                 .value(elapsedVerify)
                 .endObject()
@@ -156,10 +158,6 @@ public class JSONSummaryExporter implements SummaryExporter {
         jsonWriter.object()
                 .key("summary")
                 .array()
-                .object()
-                .key("name")
-                .value(cliPhase.getInputSettings().getScenario())
-                .endObject()
                 .object()
                 .key("numberStates")
                 .value(scene.getNumberOfGeneratedStates())
