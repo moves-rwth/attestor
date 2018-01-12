@@ -23,6 +23,7 @@ public interface Scene {
     HeapConfiguration createHeapConfiguration();
 
     ProgramState createProgramState(HeapConfiguration heapConfiguration);
+    ProgramState createProgramState();
 
     Contract createContract(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions);
 

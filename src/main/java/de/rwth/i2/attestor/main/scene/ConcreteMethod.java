@@ -73,7 +73,7 @@ class ConcreteMethod implements Method {
     @Override
     public Collection<Contract> getContracts() {
 
-        return Collections.EMPTY_LIST; // TODO
+        return Collections.EMPTY_LIST; //TODO
     }
 
     @Override

@@ -104,6 +104,12 @@ public class DefaultScene implements Scene {
     }
 
     @Override
+    public ProgramState createProgramState() {
+
+        return createProgramState(createHeapConfiguration());
+    }
+
+    @Override
     public Contract createContract(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions) {
         return null;
     }

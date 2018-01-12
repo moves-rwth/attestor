@@ -3,10 +3,10 @@ package de.rwth.i2.attestor.markingGeneration.visited;
 import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.types.Types;
+import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,8 +53,7 @@ public class VisitedMarkingCommand implements SemanticsCommand {
             }
             int target = hc.selectorTargetOf(baseNode, sel);
 
-            Type nodeType = hc.nodeTypeOf(target);
-            if(!Types.isConstantType(nodeType)) {
+            if(!isAttachedToConstant(hc, target)) {
                 ProgramState successorState = programState.clone();
                 successorState.getHeap().builder()
                         .removeVariableEdge(variable)
@@ -65,6 +64,19 @@ public class VisitedMarkingCommand implements SemanticsCommand {
         }
 
         return result;
+    }
+
+    private boolean isAttachedToConstant(HeapConfiguration heap, int node) {
+
+        TIntIterator variables =  heap.attachedVariablesOf(node).iterator();
+        while(variables.hasNext()) {
+            int varEdge = variables.next();
+            String name = heap.nameOf(varEdge);
+            if(Constants.isConstant(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -68,11 +68,9 @@ public class InternalProcedureCall implements ProcedureCall {
     @Override
     public int hashCode() {
 
-        /*int result = PRIME + ((preconditionState == null) ? 0 : preconditionState.hashCode());
+        int result = PRIME + ((preconditionState == null) ? 0 : preconditionState.hashCode());
         result = PRIME * result + ((method == null) ? 0 : method.hashCode());
         return result;
-        */
-        return PRIME;
     }
 
     @Override

@@ -9,7 +9,6 @@ import gnu.trove.list.array.TIntArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-// TODO public for testing
 public class InternalScopedHeap implements ScopedHeap {
 
     private final HeapConfiguration heapInScope;
@@ -50,7 +49,6 @@ public class InternalScopedHeap implements ScopedHeap {
         return result;
     }
 
-    // TODO
     public HeapConfiguration reorder(int[] externalReordering) {
 
         HeapConfiguration heap = heapOutsideScope.clone();
