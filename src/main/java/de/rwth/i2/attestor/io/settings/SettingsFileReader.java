@@ -1,18 +1,17 @@
 package de.rwth.i2.attestor.io.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
-import de.rwth.i2.attestor.phases.communication.InputSettings;
-import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.phases.communication.OutputSettings;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.phases.communication.*;
 
 /**
  * @author Hannah Arndt, Christoph, Christina
@@ -268,6 +267,17 @@ public class SettingsFileReader {
             }
         }
 
+        if (jsonOutput.has("contractsForInspection")) {
+            output.setExportContractsForInspection(true);
+            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
+            if (jsonContracts.has("path")) {
+                output.setPathForContractsForInspection(jsonContracts.getString("path"));
+            }
+            if (jsonContracts.has("folder")) {
+                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
+            }
+        }
+        
         if (jsonOutput.has("customHCs")) {
             output.setExportCustomHcs(true);
             JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
@@ -279,18 +289,18 @@ public class SettingsFileReader {
             }
         }
 
-        if (jsonOutput.has("contracts")) {
-            output.setExportContracts(true);
-            JSONObject jsonC = jsonOutput.getJSONObject("contracts");
+        if (jsonOutput.has("contractsForReuse")) {
+            output.setExportContractsForReuse(true);
+            JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
             if (jsonC.has("path")) {
-                output.setDirectoryForContracts(jsonC.getString("path"));
+                output.setDirectoryForReuseContracts(jsonC.getString("path"));
             }
             JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
             for (int i = 0; i < requestArray.length(); i++) {
                 JSONObject request = requestArray.getJSONObject(i);
                 String signature = request.getString("signature");
                 String filename = request.getString("filename");
-                output.addRequiredContract(signature, filename);
+                output.addRequiredContractForReuse(signature, filename);
             }
         }
 

@@ -1,8 +1,10 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.strategies;
 
+import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import de.rwth.i2.attestor.grammar.materialization.util.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

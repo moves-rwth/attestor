@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;

@@ -1,15 +1,13 @@
 package de.rwth.i2.attestor.phases.communication;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+import java.io.File;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
 
 /**
  * All communication related to exporting artifacts.
@@ -52,6 +50,21 @@ public class OutputSettings {
      * The directory that is created and containsSubsumingState exported grammars.
      */
     private String folderForGrammar = "grammar";
+    
+    /**
+     * True if and only if the generated contracts should be exported.
+     */
+    private boolean exportContractsForInspection = false;
+
+    /**
+     * The directory that is created and contains the exported contracts.
+     */
+    private String pathForContractsForInspection;
+    
+    /**
+     * The directory that is created and contains contracts.
+     */
+    private String folderForContractsForInspection = "contracts";
 
     /**
      * True if and only if custom hcs should be exported (for debugging purpose).
@@ -76,18 +89,18 @@ public class OutputSettings {
     /**
      * True if and only if the generated contracts should be exported.
      */
-    private boolean exportContracts = false;
+    private boolean exportContractsForReuse = false;
 
     /**
      * The directory that is created and contains the exported contracts.
      */
-    private String folderForContracts;
+    private String folderForReuseContracts;
 
     /**
      * A mapping containing the signatures of those methodExecution the user requests contracts for
      * and as values the file names these contracts should be written to.
      */
-    private Map<String, String> requiredContracts;
+    private Map<String, String> requiredContractsForReuse;
 
     /**
      * The directory that contains the case study's output for report generation
@@ -214,6 +227,45 @@ public class OutputSettings {
         return pathForGrammar + File.separator + folderForGrammar;
     }
 
+    /**
+     * @return True if and only if used contracts should be exported.
+     */
+    public boolean isExportContractsForInspection() {
+
+        return exportContractsForInspection;
+    }
+
+    /**
+     * @param exportContracts True if and only if used contracts should be exported for inspection.
+     */
+    public void setExportContractsForInspection(boolean exportContracts) {
+
+        this.exportContractsForInspection = exportContracts;
+    }
+
+    /**
+     * @param pathForContracts The path where exported contracts for inspection are stored.
+     */
+    public void setPathForContractsForInspection( String pathForContracts ) {
+
+        this.pathForContractsForInspection = pathForContracts;
+    }
+
+    /**
+     * @param folderForContracts The directory containing exported contracts for inspection.
+     */
+    public void setFolderForContractsForInspection(String folderForContracts) {
+
+        this.folderForContractsForInspection = folderForContracts;
+    }
+
+    /**
+     * @return The fully qualified path to the directory containing exported contracts for inspection.
+     */
+    public String getLocationForContractsForInspection() {
+
+        return pathForContractsForInspection + File.separator + folderForContractsForInspection;
+    }
 
     /**
      * @return True if and only if custom HCs should be exported (for debugging purpose).
@@ -274,29 +326,29 @@ public class OutputSettings {
         return pathForCustomHcs + File.separator + folderForCustomHcs;
     }
 
-    public boolean isExportContracts() {
+    public boolean isExportContractsForReuse() {
 
-        return exportContracts;
+        return exportContractsForReuse;
     }
 
     /**
      * @param exportContracts true if and only if (some) contracts should be exported.
      */
-    public void setExportContracts(boolean exportContracts) {
+    public void setExportContractsForReuse(boolean exportContracts) {
 
-        this.exportContracts = exportContracts;
+        this.exportContractsForReuse = exportContracts;
 
         if (exportContracts) {
-            this.requiredContracts = new LinkedHashMap<>();
+            this.requiredContractsForReuse = new LinkedHashMap<>();
         }
     }
 
     /**
      * @return The directory that is created and contains the exported contracts.
      */
-    public String getDirectoryForContracts() {
+    public String getDirectoryForReuseContracts() {
 
-        return this.folderForContracts;
+        return this.folderForReuseContracts;
     }
 
     /**
@@ -304,9 +356,9 @@ public class OutputSettings {
      *
      * @param directory
      */
-    public void setDirectoryForContracts(String directory) {
+    public void setDirectoryForReuseContracts(String directory) {
 
-        this.folderForContracts = directory;
+        this.folderForReuseContracts = directory;
     }
 
     /**
@@ -315,9 +367,9 @@ public class OutputSettings {
      *
      * @return
      */
-    public Map<String, String> getContractRequests() {
+    public Map<String, String> getContractForReuseRequests() {
 
-        return this.requiredContracts;
+        return this.requiredContractsForReuse;
     }
 
     /**
@@ -326,9 +378,9 @@ public class OutputSettings {
      * @param signature the signature of the method whose contract is requested
      * @param filename  the name of the file where the contract should be written to.
      */
-    public void addRequiredContract(String signature, String filename) {
+    public void addRequiredContractForReuse(String signature, String filename) {
 
-        this.requiredContracts.put(signature, filename + ".json");
+        this.requiredContractsForReuse.put(signature, filename + ".json");
     }
 
     /**
@@ -359,7 +411,7 @@ public class OutputSettings {
         this.pathForGrammar = rootPath + File.separator + this.pathForGrammar;
         this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
         this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
-        this.folderForContracts = rootPath + File.separator + this.folderForContracts;
+        this.folderForReuseContracts = rootPath + File.separator + this.folderForReuseContracts;
     }
 
     public List<HcLabelPair> getCustomHcSet() {

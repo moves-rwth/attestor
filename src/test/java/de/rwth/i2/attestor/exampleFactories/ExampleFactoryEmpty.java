@@ -1,16 +1,13 @@
 package de.rwth.i2.attestor.exampleFactories;
 
+import java.util.Collections;
+
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceSupplier;
-
-import java.util.Collections;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 public class ExampleFactoryEmpty {
 

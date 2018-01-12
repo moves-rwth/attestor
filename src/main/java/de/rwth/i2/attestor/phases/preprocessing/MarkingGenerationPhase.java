@@ -1,10 +1,13 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
+import java.util.*;
+import java.util.regex.Pattern;
+
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -14,10 +17,7 @@ import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
-import de.rwth.i2.attestor.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
-import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.phases.transformers.*;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.identicalNeighbourhood.NeighbourhoodAutomaton;
@@ -25,9 +25,6 @@ import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-
-import java.util.*;
-import java.util.regex.Pattern;
 
 public class MarkingGenerationPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {

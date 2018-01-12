@@ -1,32 +1,23 @@
 package de.rwth.i2.attestor.phases.report;
 
+import java.io.*;
+import java.util.*;
+
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.CustomHcListExporter;
 import de.rwth.i2.attestor.io.FileUtils;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonCustomHcListExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
-import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
+import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
-import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
-import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
-import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
-import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.phases.transformers.*;
 import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import de.rwth.i2.attestor.util.ZipUtils;
-
-import java.io.*;
-import java.util.Collection;
-import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
 
@@ -70,8 +61,12 @@ public class ReportGenerationPhase extends AbstractPhase {
                 exportCustomHcs();
             }
 
-            if (outputSettings.isExportContracts()) {
-                exportContracts();
+            if (outputSettings.isExportContractsForReuse()) {
+                exportContractsForReuse();
+            }
+            
+            if( outputSettings.isExportContractsForInspection() ){
+            	exportContractsForInspection();
             }
 
         } catch (IOException e) {
@@ -79,23 +74,53 @@ public class ReportGenerationPhase extends AbstractPhase {
         }
 
     }
+    
+	private void exportContractsForReuse() throws IOException {
 
-    private void exportContracts() throws IOException {
-
-        String directory = outputSettings.getDirectoryForContracts();
+        String directory = outputSettings.getDirectoryForReuseContracts();
         FileUtils.createDirectories(directory);
-        for (String signature : outputSettings.getContractRequests().keySet()) {
+        for (String signature : outputSettings.getContractForReuseRequests().keySet()) {
 
-            String filename = outputSettings.getContractRequests().get(signature);
+            String filename = outputSettings.getContractForReuseRequests().get(signature);
             FileWriter writer = new FileWriter(directory + File.separator + filename);
 
-            Collection<Contract> contracts = scene().getMethod(signature).getContracts();
+            Collection<Contract> contracts = scene().getMethod(signature).getContractsForExport();
 
             ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
             exporter.export(signature, contracts);
             writer.close();
         }
+        logger.info("Exported contracts for reuse to '"
+                + directory
+                + "'"
+        );
     }
+	
+    private void exportContractsForInspection() throws IOException {
+
+        logger.info("Exporting contracts for inspection ...");
+
+        String location = outputSettings.getLocationForContractsForInspection();
+
+        // Copy necessary libraries
+        InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
+                ".zip");//TODO
+
+        File targetDirectory = new File(location + File.separator);
+        ZipUtils.unzip(zis, targetDirectory);
+        
+        Map<String,Collection<Contract>> contracts = new HashMap<>();
+        for( Method method : scene().getRegisteredMethods() ){
+        	contracts.put(method.getName(), method.getContractsForExport());
+        }
+
+        // Generate JSON files
+        JsonContractExporter exporter = new JsonContractExporter();
+        exporter.export(location + File.separator + "contractData", contracts);
+
+        logger.info("done. Grammar exported to '" + location + "'");
+    }
+
 
     private void exportCustomHcs() throws IOException {
 

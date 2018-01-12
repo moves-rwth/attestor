@@ -1,5 +1,6 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.strategies;
 
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.Collection;

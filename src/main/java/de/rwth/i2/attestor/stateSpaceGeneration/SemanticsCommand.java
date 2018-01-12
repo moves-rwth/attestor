@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 import java.util.Collection;

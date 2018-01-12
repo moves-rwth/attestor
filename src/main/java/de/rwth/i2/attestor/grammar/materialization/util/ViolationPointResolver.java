@@ -1,15 +1,12 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.util;
+
+import java.util.*;
 
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarRequest;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Responsible for computing and caching the rules (lhs &#8594; rhs) in the grammar which resolve a certain
@@ -19,14 +16,14 @@ import java.util.Map;
  */
 public class ViolationPointResolver {
 
-    private final Grammar grammar;
+    private final GrammarAdapter grammar;
 
     private final Map<GrammarRequest, Map<Nonterminal, Collection<HeapConfiguration>>>
             ruleGraphsCreatingSelector = new LinkedHashMap<>();
 
     public ViolationPointResolver(Grammar grammar) {
 
-        this.grammar = grammar;
+        this.grammar = new GrammarAdapter(grammar);
     }
 
     /**
@@ -72,61 +69,36 @@ public class ViolationPointResolver {
     private Map<Nonterminal, Collection<HeapConfiguration>> computeRulesCreatingSelector(
             Nonterminal nonterminal, int tentacle, String requiredSelector) {
 
-        Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
+    	Map<Nonterminal, Collection<HeapConfiguration>> rules = grammar.getAllRulesFor(nonterminal);
+    	
+        for( Nonterminal nt : rules.keySet() ){
 
-        for (Nonterminal grammarNt : grammar.getAllLeftHandSides()) {
-
-            if (grammarNt.getLabel().equals(nonterminal.getLabel())) {
-
-                Collection<HeapConfiguration> rulesForGrammarNt =
-                        getRuleGraphsResolvingViolationPointFor(grammarNt,
-                                tentacle, requiredSelector);
-                if (!rulesForGrammarNt.isEmpty()) {
-                    res.put(grammarNt, rulesForGrammarNt);
-                }
-
+            Collection<HeapConfiguration> rhs = new LinkedList<>( rules.get(nt) );
+            rhs.removeIf( hc -> ! ruleResolvesViolationPoint(hc, tentacle, requiredSelector));
+            if( rhs.isEmpty() ){
+            	rules.remove(nt);
+            }else{
+            	rules.put(nt, rhs);
             }
-        }
-
-        return res;
+         }
+        
+        return rules;
     }
+    
+    private boolean ruleResolvesViolationPoint( HeapConfiguration hc, int tentacle, String requiredSelector ){
+    	 int node = hc.externalNodeAt(tentacle);
 
-    /**
-     * For a given lhs (a nonterminal in the grammar) computes all rules creating the
-     * requested selector at the requested tentacle of the nonterminal
-     *
-     * @param grammarNt        a lhs in the grammar
-     * @param tentacle         the tentacle of the nonterminal (i.e. external node of the rhs)
-     *                         at which the selector is requested
-     * @param requiredSelector the name of the requested selector
-     * @return the set of all rhs for this lhs which create the selector at the tentacle
-     */
-    private Collection<HeapConfiguration> getRuleGraphsResolvingViolationPointFor(
-            Nonterminal grammarNt,
-            int tentacle,
-            String requiredSelector) {
+         for (SelectorLabel sel : hc.selectorLabelsOf(node)) {
 
-        Collection<HeapConfiguration> rulesForGrammarNt = new ArrayList<>();
+             if (sel.hasLabel(requiredSelector)) {
 
-
-        for (HeapConfiguration hc : grammar.getRightHandSidesFor(grammarNt)) {
-
-
-            int node = hc.externalNodeAt(tentacle);
-
-            for (SelectorLabel sel : hc.selectorLabelsOf(node)) {
-
-                if (sel.hasLabel(requiredSelector)) {
-
-                    if (hc.selectorTargetOf(node, sel) != HeapConfiguration.INVALID_ELEMENT) {
-                        rulesForGrammarNt.add(hc);
-                    }
-                    break;
-                }
-            }
-
-        }
-        return rulesForGrammarNt;
+                 if (hc.selectorTargetOf(node, sel) != HeapConfiguration.INVALID_ELEMENT) {
+                    return true;
+                 }
+                 return false;
+             }
+         }
+         return false;
     }
 
 

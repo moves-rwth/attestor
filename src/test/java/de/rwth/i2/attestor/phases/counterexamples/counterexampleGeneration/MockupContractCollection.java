@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.procedures.ContractCollection;
-import de.rwth.i2.attestor.procedures.ContractMatch;
+import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.procedures.*;
 
 public class MockupContractCollection implements ContractCollection {
 
@@ -57,4 +56,10 @@ public class MockupContractCollection implements ContractCollection {
                 }
             };
     }
+
+	@Override
+	public Collection<Contract> getContractsForExport() {
+		fail("should not be called");
+		return Collections.emptyList();
+	}
 }

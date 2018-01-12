@@ -5,6 +5,8 @@ import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarR
 import de.rwth.i2.attestor.grammar.materialization.communication.DefaultGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
+import de.rwth.i2.attestor.grammar.materialization.util.GrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.util.GraphMaterializer;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;

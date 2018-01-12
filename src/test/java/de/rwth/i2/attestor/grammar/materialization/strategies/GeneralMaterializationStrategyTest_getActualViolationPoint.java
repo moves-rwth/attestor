@@ -1,6 +1,8 @@
-package de.rwth.i2.attestor.grammar.materialization;
+package de.rwth.i2.attestor.grammar.materialization.strategies;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.materialization.strategies.GeneralMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.grammar.testUtil.TestGraphs;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;

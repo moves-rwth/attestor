@@ -1,11 +1,19 @@
 package de.rwth.i2.attestor.markingGeneration.visited;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategyBuilder;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -14,13 +22,6 @@ import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoAbortStrate
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class VisitedMarkingGeneratorTest {
 
