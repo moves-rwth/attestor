@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.markingGeneration.visited;
 import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
@@ -15,19 +16,19 @@ import java.util.Set;
 
 public class VisitedMarkingCommand implements SemanticsCommand {
 
-    private final String markingName;
+    public static final String MARKING_NAME = Markings.MARKING_PREFIX + "visited";
+
     private final Collection<String> availableSelectorNames;
     private final ViolationPoints potentialViolationPoints;
     private final int nextPc;
 
-    public VisitedMarkingCommand(String markingName, Collection<String> availableSelectorNames, int nextPc) {
+    public VisitedMarkingCommand(Collection<String> availableSelectorNames, int nextPc) {
 
-        this.markingName = markingName;
         this.availableSelectorNames = availableSelectorNames;
 
         potentialViolationPoints = new ViolationPoints();
         for(String selName : availableSelectorNames) {
-            potentialViolationPoints.add(markingName, selName);
+            potentialViolationPoints.add(MARKING_NAME, selName);
         }
 
         this.nextPc = nextPc;
@@ -37,7 +38,7 @@ public class VisitedMarkingCommand implements SemanticsCommand {
     public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         HeapConfiguration hc = programState.getHeap();
-        int variable = hc.variableWith(markingName);
+        int variable = hc.variableWith(MARKING_NAME);
 
         if(variable == HeapConfiguration.INVALID_ELEMENT) {
             throw new IllegalArgumentException("Provided state is not marked.");
@@ -57,7 +58,7 @@ public class VisitedMarkingCommand implements SemanticsCommand {
                 ProgramState successorState = programState.clone();
                 successorState.getHeap().builder()
                         .removeVariableEdge(variable)
-                        .addVariableEdge(markingName, target)
+                        .addVariableEdge(MARKING_NAME, target)
                         .build();
                 result.add(successorState);
             }

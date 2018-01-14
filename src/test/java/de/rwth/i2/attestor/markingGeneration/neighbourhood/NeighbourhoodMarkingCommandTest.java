@@ -44,16 +44,15 @@ public class NeighbourhoodMarkingCommandTest {
         type = sceneObject.scene().getType("type");
         selA = sceneObject.scene().getSelectorLabel("selA");
         selB = sceneObject.scene().getSelectorLabel("selB");
-        initialMarkingName = "%initialMarking";
-        markingName = "%marking";
+        initialMarkingName = NeighbourhoodMarkingCommand.INITIAL_MARKING_NAME;
+        markingName = NeighbourhoodMarkingCommand.MARKING_NAME;
         markingSeparator = "-";
 
         availableSelectorNames = new LinkedHashSet<>();
         availableSelectorNames.add("selA");
         availableSelectorNames.add("selB");
 
-        command = new NeighbourhoodMarkingCommand(NEXT_PC, initialMarkingName, markingName,
-                markingSeparator, availableSelectorNames);
+        command = new NeighbourhoodMarkingCommand(NEXT_PC, availableSelectorNames);
     }
 
     @Test

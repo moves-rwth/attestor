@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
@@ -18,24 +19,21 @@ import java.util.Set;
 
 public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
+    protected static final String INITIAL_MARKING_NAME = Markings.MARKING_PREFIX + "initialNeighbourhood";
+    public static final String MARKING_NAME = Markings.MARKING_PREFIX + "neighbourhood";
+
     private final Set<Integer> successorPCs;
-    private final String initialMarkingName;
-    private final String markingName;
-    private final String markingSeparator;
     private final ViolationPoints potentialViolationPoints;
 
-    public NeighbourhoodMarkingCommand(int nextPC, String initialMarkingName, String markingName,
-                                       String markingSeparator, Collection<String> availableSelectorNames) {
+    public NeighbourhoodMarkingCommand(int nextPC,
+                                       Collection<String> availableSelectorNames) {
 
         successorPCs = Collections.singleton(nextPC);
-        this.initialMarkingName = initialMarkingName;
-        this.markingName = markingName;
-        this.markingSeparator = markingSeparator;
 
         this.potentialViolationPoints = new ViolationPoints();
         for(String selectorName : availableSelectorNames) {
-            this.potentialViolationPoints.add(markingName, selectorName);
-            this.potentialViolationPoints.add(initialMarkingName, selectorName);
+            this.potentialViolationPoints.add(MARKING_NAME, selectorName);
+            this.potentialViolationPoints.add(INITIAL_MARKING_NAME, selectorName);
             String variableName = getVariableName(selectorName);
             for(String selName: availableSelectorNames) {
                 this.potentialViolationPoints.add(variableName, selName);
@@ -45,7 +43,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
     private String getVariableName(String selectorName) {
 
-        return markingName + markingSeparator + selectorName;
+        return MARKING_NAME + Markings.MARKING_SEPARATOR + selectorName;
     }
 
 
@@ -53,7 +51,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
     public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
-        int initialMarkingTarget = programState.getHeap().variableTargetOf(initialMarkingName);
+        int initialMarkingTarget = programState.getHeap().variableTargetOf(INITIAL_MARKING_NAME);
 
 
         if(initialMarkingTarget == HeapConfiguration.INVALID_ELEMENT) {
@@ -68,7 +66,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
 
         HeapConfiguration heap = programState.getHeap();
-        int origin = heap.variableTargetOf(markingName);
+        int origin = heap.variableTargetOf(MARKING_NAME);
 
         Set<Integer> nextOrigins  = getNextOrigins(heap, origin);
         ProgramState cleanedState = getCleanedState(programState);
@@ -86,7 +84,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
                                                                          int initialMarkingTarget) {
 
         ProgramState markedState = markState(programState, initialMarkingTarget);
-        markedState.removeVariable(initialMarkingName);
+        markedState.removeVariable(INITIAL_MARKING_NAME);
         return Collections.singleton(markedState);
     }
 
@@ -103,11 +101,11 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
         ProgramState result = programState.clone();
         HeapConfiguration heap = programState.getHeap();
-        result.removeVariable(markingName);
+        result.removeVariable(MARKING_NAME);
         TIntIterator iterator = programState.getHeap().variableEdges().iterator();
         while(iterator.hasNext()) {
             int varEdge = iterator.next();
-            if(heap.nameOf(varEdge).startsWith(markingName+markingSeparator)) {
+            if(heap.nameOf(varEdge).startsWith(MARKING_NAME +Markings.MARKING_SEPARATOR)) {
                 result.getHeap().builder().removeVariableEdge(varEdge).build();
             }
         }
@@ -119,7 +117,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
         ProgramState result = cleanedState.clone();
         HeapConfiguration heap = result.getHeap();
         HeapConfigurationBuilder builder = heap.builder();
-        builder.addVariableEdge(markingName, nextOrigin);
+        builder.addVariableEdge(MARKING_NAME, nextOrigin);
 
         for(SelectorLabel sel : heap.selectorLabelsOf(nextOrigin)) {
 

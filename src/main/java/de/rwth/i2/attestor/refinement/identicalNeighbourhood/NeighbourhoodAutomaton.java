@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.refinement.identicalNeighbourhood;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.markings.Marking;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import gnu.trove.iterator.TIntIterator;
 
@@ -12,24 +12,24 @@ import java.util.Set;
 
 public class NeighbourhoodAutomaton extends SceneObject implements StatelessHeapAutomaton {
 
-    private final Marking marking;
+    private final String markingName;
 
-    public NeighbourhoodAutomaton(SceneObject sceneObject, Marking marking) {
+    public NeighbourhoodAutomaton(SceneObject sceneObject, String markingName) {
 
         super(sceneObject);
-        this.marking = marking;
+        this.markingName = markingName;
     }
 
     @Override
     public Set<String> transition(HeapConfiguration heapConfiguration) {
 
-        int varNode = heapConfiguration.variableTargetOf(marking.getUniversalVariableName());
+        int varNode = heapConfiguration.variableTargetOf(markingName);
 
         TIntIterator iter = heapConfiguration.variableEdges().iterator();
         while (iter.hasNext()) {
             int var = iter.next();
             String varName = heapConfiguration.nameOf(var);
-            String selName = marking.extractSelectorName(varName);
+            String selName = extractSelectorName(varName);
             if (selName != null) {
                 int node = heapConfiguration.targetOf(var);
                 SelectorLabel label = scene().getSelectorLabel(selName);
@@ -41,5 +41,9 @@ public class NeighbourhoodAutomaton extends SceneObject implements StatelessHeap
 
         return Collections.singleton("{ identicNeighbours }");
 
+    }
+
+    private String extractSelectorName(String varName) {
+        return varName.split(markingName+ Markings.MARKING_SEPARATOR)[1];
     }
 }

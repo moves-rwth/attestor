@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.refinement.visited;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.markings.Marking;
-import de.rwth.i2.attestor.markings.Markings;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIterator;
@@ -16,17 +15,17 @@ public class StatelessVisitedAutomaton implements StatelessHeapAutomaton {
 
     private static final Logger logger = LogManager.getLogger("StatelessVisitedAutomaton");
 
-    private final Marking marking;
+    private final String markingName;
 
-    public StatelessVisitedAutomaton(Marking marking) {
+    public StatelessVisitedAutomaton(String markingName) {
 
-        this.marking = marking;
+        this.markingName = markingName;
     }
 
     @Override
     public Set<String> transition(HeapConfiguration heapConfiguration) {
 
-        int markedNode = heapConfiguration.variableTargetOf(marking.getUniversalVariableName());
+        int markedNode = heapConfiguration.variableTargetOf(markingName);
 
         if (markedNode == HeapConfiguration.INVALID_ELEMENT) {
             logger.error("Found a heap configuration that does not contain a marking.");

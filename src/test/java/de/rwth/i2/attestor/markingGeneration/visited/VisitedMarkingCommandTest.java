@@ -47,9 +47,9 @@ public class VisitedMarkingCommandTest {
         availableSelectorNames.add("selA");
         availableSelectorNames.add("selB");
 
-        markingName = "%visitedMarking";
+        markingName = VisitedMarkingCommand.MARKING_NAME;
 
-        command = new VisitedMarkingCommand(markingName, availableSelectorNames, NEXT_PC);
+        command = new VisitedMarkingCommand(availableSelectorNames, NEXT_PC);
 
     }
 

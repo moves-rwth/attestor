@@ -17,10 +17,7 @@ import java.util.List;
 
 public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
-    private final String markingName;
-
-    public VisitedMarkingGenerator(String markingName,
-                                   Collection<String> availableSelectorLabelNames,
+    public VisitedMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                    AbortStrategy abortStrategy,
                                    MaterializationStrategy materializationStrategy,
                                    CanonicalizationStrategy canonicalizationStrategy,
@@ -28,8 +25,6 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
         super(availableSelectorLabelNames, abortStrategy, materializationStrategy,
                 canonicalizationStrategy, aggressiveCanonicalizationStrategy);
-
-        this.markingName = markingName;
     }
 
     @Override
@@ -43,7 +38,7 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
             if(!isAttachedToConstant(initialHeap, node)) {
                 HeapConfiguration markedHeap = initialHeap.clone()
                         .builder()
-                        .addVariableEdge(markingName, node)
+                        .addVariableEdge(VisitedMarkingCommand.MARKING_NAME, node)
                         .build();
                 ProgramState markedState = initialState.shallowCopyWithUpdateHeap(markedHeap);
                 markedState.setProgramCounter(0);
@@ -68,8 +63,7 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
     @Override
     protected Program getProgram() {
 
-        SemanticsCommand command = new VisitedMarkingCommand(markingName,
-                getAvailableSelectorLabelNames(), 0);
+        SemanticsCommand command = new VisitedMarkingCommand(getAvailableSelectorLabelNames(), 0);
 
         return new ProgramImpl(Collections.singletonList(command));
     }

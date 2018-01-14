@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.semantics.util;
 
 
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.markings.Markings;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Set;

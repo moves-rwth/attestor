@@ -42,7 +42,7 @@ public class VisitedMarkingGeneratorTest {
     @Test
     public void testWithoutNonterminals() {
 
-        VisitedMarkingGenerator generator = createGenerator("%x", Collections.singleton("next"));
+        VisitedMarkingGenerator generator = createGenerator(Collections.singleton("next"));
 
         HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
         ProgramState initialState = sceneObject.scene().createProgramState(hc);
@@ -52,7 +52,7 @@ public class VisitedMarkingGeneratorTest {
 
     }
 
-    private VisitedMarkingGenerator createGenerator(String markingName, Collection<String> availableSelectors) {
+    private VisitedMarkingGenerator createGenerator(Collection<String> availableSelectors) {
 
         Grammar grammar = setupGrammar();
 
@@ -68,7 +68,6 @@ public class VisitedMarkingGeneratorTest {
                 .build();
 
         return new VisitedMarkingGenerator(
-                markingName,
                 availableSelectors,
                 new NoAbortStrategy(),
                 materializationStrategy,
@@ -92,8 +91,8 @@ public class VisitedMarkingGeneratorTest {
     @Test
     public void testWithNonterminals() {
 
-        final String markingName = "%z";
-        VisitedMarkingGenerator generator = createGenerator(markingName, Collections.singleton("next"));
+        final String markingName = VisitedMarkingCommand.MARKING_NAME;
+        VisitedMarkingGenerator generator = createGenerator(Collections.singleton("next"));
 
         HeapConfiguration hc = hcFactory.getEmptyGraphWithConstants();
         TIntArrayList nodes = new TIntArrayList();
