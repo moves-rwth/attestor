@@ -13,6 +13,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedExcep
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InternalProcedureCall implements ProcedureCall {
 
@@ -20,8 +21,6 @@ public class InternalProcedureCall implements ProcedureCall {
     private ProgramState preconditionState;
     private StateSpaceGeneratorFactory factory;
     private StateSpace stateSpace;
-
-    private final static int PRIME = 31;
 
     public InternalProcedureCall(Method method, ProgramState preconditionState, StateSpaceGeneratorFactory factory) {
 
@@ -68,12 +67,11 @@ public class InternalProcedureCall implements ProcedureCall {
     @Override
     public int hashCode() {
 
-        /* TODO fix this
-        int result = PRIME + ((preconditionState == null) ? 0 : preconditionState.hashCode());
-        result = PRIME * result + ((method == null) ? 0 : method.hashCode());
-        return result;
-        */
-        return PRIME;
+        if(preconditionState == null) {
+            return Objects.hashCode(method);
+        } else {
+            return Objects.hash(method, preconditionState.getHeap());
+        }
     }
 
     @Override
