@@ -1,13 +1,5 @@
 package de.rwth.i2.attestor.markingGeneration.visited;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
@@ -22,6 +14,13 @@ import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoAbortStrate
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class VisitedMarkingGeneratorTest {
 
@@ -37,8 +36,6 @@ public class VisitedMarkingGeneratorTest {
         hcFactory = new ExampleHcImplFactory(sceneObject);
         nt = sceneObject.scene().createNonterminal("List", 2, new boolean[]{false, true});
         type = sceneObject.scene().getType("List");
-
-
     }
 
 

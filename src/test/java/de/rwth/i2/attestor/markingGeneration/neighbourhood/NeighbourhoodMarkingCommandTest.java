@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.markingGeneration.neighbourhood;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -30,6 +30,7 @@ public class NeighbourhoodMarkingCommandTest {
     private SelectorLabel selA;
     private SelectorLabel selB;
 
+    private String initialMarkingName;
     private String markingName;
     private String markingSeparator;
     private Collection<String> availableSelectorNames;
@@ -43,6 +44,7 @@ public class NeighbourhoodMarkingCommandTest {
         type = sceneObject.scene().getType("type");
         selA = sceneObject.scene().getSelectorLabel("selA");
         selB = sceneObject.scene().getSelectorLabel("selB");
+        initialMarkingName = "%initialMarking";
         markingName = "%marking";
         markingSeparator = "-";
 
@@ -50,7 +52,7 @@ public class NeighbourhoodMarkingCommandTest {
         availableSelectorNames.add("selA");
         availableSelectorNames.add("selB");
 
-        command = new NeighbourhoodMarkingCommand(NEXT_PC, markingName,
+        command = new NeighbourhoodMarkingCommand(NEXT_PC, initialMarkingName, markingName,
                 markingSeparator, availableSelectorNames);
     }
 
@@ -62,6 +64,7 @@ public class NeighbourhoodMarkingCommandTest {
 
         Set<String> expectedVariables = new LinkedHashSet<>();
         expectedVariables.add(markingName);
+        expectedVariables.add(initialMarkingName);
         expectedVariables.add(markingName + markingSeparator + selA);
         expectedVariables.add(markingName + markingSeparator + selB);
 
@@ -124,8 +127,45 @@ public class NeighbourhoodMarkingCommandTest {
         }
 
         assertEquals(expected, resultStates);
+    }
 
+    @Test
+    public void testFromInitialMarking() {
 
+        ProgramState baseState = sceneObject.scene().createProgramState();
+        TIntArrayList nodes = new TIntArrayList();
+        baseState.getHeap()
+                .builder()
+                .addNodes(type, 3, nodes)
+                .addSelector(nodes.get(0), selA, nodes.get(1))
+                .addSelector(nodes.get(0), selB, nodes.get(2))
+                .build();
+
+        ProgramState inputState = baseState.clone();
+        inputState.getHeap()
+                .builder()
+                .addVariableEdge(initialMarkingName, nodes.get(0))
+                .build();
+
+        Set<ProgramState> expected = new LinkedHashSet<>();
+
+        ProgramState firstExpected = baseState.clone();
+        firstExpected.getHeap()
+                .builder()
+                .addVariableEdge(markingName, nodes.get(0))
+                .addVariableEdge(markingName+markingSeparator+selA.getLabel(), nodes.get(1))
+                .addVariableEdge(markingName+markingSeparator+selB.getLabel(), nodes.get(2))
+                .build();
+        expected.add(firstExpected);
+
+        Collection<ProgramState> resultStates = null;
+        try {
+            resultStates = command.computeSuccessors(inputState);
+        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
+            fail();
+        }
+
+        assertEquals(expected, resultStates);
 
     }
 }
