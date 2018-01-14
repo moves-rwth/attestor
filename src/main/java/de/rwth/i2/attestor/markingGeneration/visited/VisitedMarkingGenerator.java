@@ -10,10 +10,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
@@ -69,7 +66,14 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
     }
 
     @Override
-    protected boolean isResultState(StateSpace stateSpace, ProgramState programState) {
-        return true;
+    protected Collection<HeapConfiguration> getResultingHeaps(StateSpace stateSpace) {
+
+        Collection<HeapConfiguration> result = new LinkedHashSet<>();
+        stateSpace.getStates().forEach(
+                state -> {
+                    result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()));
+                }
+        );
+        return result;
     }
 }

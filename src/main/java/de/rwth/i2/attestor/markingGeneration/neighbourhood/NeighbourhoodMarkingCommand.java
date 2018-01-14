@@ -73,8 +73,10 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
         Collection<ProgramState> result = new LinkedHashSet<>();
         for(int nextOrigin : nextOrigins) {
-            ProgramState markedState = markState(cleanedState, nextOrigin);
-            result.add(markedState);
+            if(!isAttachedToConstant(heap, nextOrigin)) {
+                ProgramState markedState = markState(cleanedState, nextOrigin);
+                result.add(markedState);
+            }
         }
 
         return result;
@@ -117,6 +119,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
         ProgramState result = cleanedState.clone();
         HeapConfiguration heap = result.getHeap();
         HeapConfigurationBuilder builder = heap.builder();
+
         builder.addVariableEdge(MARKING_NAME, nextOrigin);
 
         for(SelectorLabel sel : heap.selectorLabelsOf(nextOrigin)) {

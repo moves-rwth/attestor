@@ -9,16 +9,15 @@ import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 public abstract  class AbstractMarkingGenerator {
 
-    private final Collection<String> availableSelectorLabelNames;
-    private final AbortStrategy abortStrategy;
-    private final MaterializationStrategy materializationStrategy;
-    private final CanonicalizationStrategy canonicalizationStrategy;
-    private final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
+    protected final Collection<String> availableSelectorLabelNames;
+    protected final AbortStrategy abortStrategy;
+    protected final MaterializationStrategy materializationStrategy;
+    protected final CanonicalizationStrategy canonicalizationStrategy;
+    protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                     AbortStrategy abortStrategy,
@@ -35,7 +34,7 @@ public abstract  class AbstractMarkingGenerator {
 
     protected abstract List<ProgramState> placeInitialMarkings(ProgramState initialState);
     protected abstract Program getProgram();
-    protected abstract boolean isResultState(StateSpace stateSpace, ProgramState programState);
+    protected abstract Collection<HeapConfiguration> getResultingHeaps(StateSpace stateSpace);
 
     protected Collection<String> getAvailableSelectorLabelNames() {
 
@@ -68,16 +67,8 @@ public abstract  class AbstractMarkingGenerator {
                 .build();
 
         try {
-
-            Collection<HeapConfiguration> result = new LinkedHashSet<>();
-
             StateSpace stateSpace = generator.generate();
-            stateSpace.getStates().forEach(
-                    state -> { if(isResultState(stateSpace, state)) {
-                        result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap())); }
-                    }
-            );
-            return result;
+            return getResultingHeaps(stateSpace);
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Marking generation aborted. This is most likely caused by non-termination.");
         }

@@ -44,6 +44,10 @@ public class NeighbourhoodAutomaton extends SceneObject implements StatelessHeap
     }
 
     private String extractSelectorName(String varName) {
-        return varName.split(markingName+ Markings.MARKING_SEPARATOR)[1];
+        String[] splitted = varName.split(markingName+ Markings.MARKING_SEPARATOR);
+        if(splitted.length == 2) {
+            return splitted[1];
+        }
+        return null;
     }
 }
