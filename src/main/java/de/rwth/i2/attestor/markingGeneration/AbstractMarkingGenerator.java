@@ -35,6 +35,7 @@ public abstract  class AbstractMarkingGenerator {
 
     protected abstract List<ProgramState> placeInitialMarkings(ProgramState initialState);
     protected abstract Program getProgram();
+    protected abstract boolean isResultState(StateSpace stateSpace, ProgramState programState);
 
     protected Collection<String> getAvailableSelectorLabelNames() {
 
@@ -72,7 +73,9 @@ public abstract  class AbstractMarkingGenerator {
 
             StateSpace stateSpace = generator.generate();
             stateSpace.getStates().forEach(
-                    state -> result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()))
+                    state -> { if(isResultState(stateSpace, state)) {
+                        result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap())); }
+                    }
             );
             return result;
         } catch (StateSpaceGenerationAbortedException e) {

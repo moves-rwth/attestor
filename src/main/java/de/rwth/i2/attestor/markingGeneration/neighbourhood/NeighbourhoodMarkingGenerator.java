@@ -1,16 +1,12 @@
 package de.rwth.i2.attestor.markingGeneration.neighbourhood;
 
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
-import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingCommand;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.semantics.util.Constants;
-import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -21,9 +17,10 @@ import java.util.List;
 
 public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
 
+    private final String initialMarkingName;
     private final String markingName;
 
-    public NeighbourhoodMarkingGenerator(String markingName,
+    public NeighbourhoodMarkingGenerator(String initialMarkingName, String markingName,
                                          Collection<String> availableSelectorLabelNames,
                                          AbortStrategy abortStrategy,
                                          MaterializationStrategy materializationStrategy,
@@ -33,6 +30,7 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
         super(availableSelectorLabelNames, abortStrategy, materializationStrategy,
                 canonicalizationStrategy, aggressiveCanonicalizationStrategy);
 
+        this.initialMarkingName = initialMarkingName;
         this.markingName = markingName;
     }
 
@@ -44,20 +42,10 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
         TIntIterator iterator = initialHeap.nodes().iterator();
         while(iterator.hasNext()) {
             int node = iterator.next();
-            TIntArrayList attachedVariables = initialHeap.attachedVariablesOf(node);
-            boolean isConstant = false;
-            for(int i=0; i< attachedVariables.size(); i++) {
-                int var = attachedVariables.get(i);
-                if(Constants.isConstant(initialHeap.nameOf(var))) {
-                    isConstant = true;
-                    break;
-                }
-            }
-
-            if(!isConstant) {
+            if(!isAttachedToConstant(initialHeap, node)) {
                 HeapConfiguration markedHeap = initialHeap.clone()
                         .builder()
-                        .addVariableEdge(markingName, node)
+                        .addVariableEdge(initialMarkingName, node)
                         .build();
                 ProgramState markedState = initialState.shallowCopyWithUpdateHeap(markedHeap);
                 markedState.setProgramCounter(0);
@@ -67,12 +55,32 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
         return result;
     }
 
+    private boolean isAttachedToConstant(HeapConfiguration heap, int node) {
+
+        TIntArrayList attachedVariables = heap.attachedVariablesOf(node);
+        for(int i=0; i< attachedVariables.size(); i++) {
+            int var = attachedVariables.get(i);
+            if(Constants.isConstant(heap.nameOf(var))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected Program getProgram() {
 
-        SemanticsCommand command = new VisitedMarkingCommand(markingName,
-                getAvailableSelectorLabelNames(), 0);
+        SemanticsCommand command = new NeighbourhoodMarkingCommand(0,
+                initialMarkingName, markingName, "-",
+                getAvailableSelectorLabelNames()
+        );
 
         return new ProgramImpl(Collections.singletonList(command));
+    }
+
+    @Override
+    protected boolean isResultState(StateSpace stateSpace, ProgramState programState) {
+
+        return programState.getHeap().variableWith(initialMarkingName) != HeapConfiguration.INVALID_ELEMENT;
     }
 }
