@@ -4,9 +4,11 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
+import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -55,14 +57,15 @@ public class MinAbstractionDistance implements FeasibilityFunction {
                 //if the option aggressiveConstantAbstraction is enabled, constants are ignored.
                 if (!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
                     int attachedNode = graph.getSuccessorsOf(i).get(0);
-                    if (dist.get(attachedNode) < minAbstractionDistance) {
+                    if (dist.get(attachedNode) < minAbstractionDistance
+                            && !Markings.isComposedMarking(label)) {
                         return false;
 
                     }
                 }
             } else if (graph.isExternal(i)) {
                 Type type = (Type) nodeLabel;
-                if (!(aggressiveConstantAbstraction && (type.toString().equals("NULL") || type.toString().startsWith("int")))) {
+                if (!(aggressiveConstantAbstraction && Types.isConstantType(type))) {
                     if (dist.get(i) < minAbstractionDistance) {
                         return false;
                     }
