@@ -54,6 +54,8 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
         int initialMarkingTarget = programState.getHeap().variableTargetOf(initialMarkingName);
+
+
         if(initialMarkingTarget == HeapConfiguration.INVALID_ELEMENT) {
             return advanceNeighbourhoodMarkings(programState);
         } else {
@@ -118,6 +120,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
         HeapConfiguration heap = result.getHeap();
         HeapConfigurationBuilder builder = heap.builder();
         builder.addVariableEdge(markingName, nextOrigin);
+
         for(SelectorLabel sel : heap.selectorLabelsOf(nextOrigin)) {
 
             int target = heap.selectorTargetOf(nextOrigin, sel);

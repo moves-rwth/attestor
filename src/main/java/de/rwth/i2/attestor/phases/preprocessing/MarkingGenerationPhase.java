@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
-import java.util.*;
-import java.util.regex.Pattern;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -12,12 +9,16 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
+import de.rwth.i2.attestor.markingGeneration.neighbourhood.NeighbourhoodMarkingGenerator;
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.markings.MarkedHcGenerator;
 import de.rwth.i2.attestor.markings.Marking;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
-import de.rwth.i2.attestor.phases.transformers.*;
+import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategy;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import de.rwth.i2.attestor.refinement.identicalNeighbourhood.NeighbourhoodAutomaton;
@@ -25,6 +26,9 @@ import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class MarkingGenerationPhase extends AbstractPhase
         implements InputTransformer, StateLabelingStrategyBuilderTransformer {
@@ -34,7 +38,9 @@ public class MarkingGenerationPhase extends AbstractPhase
     private static final Pattern visitedPattern = Pattern.compile("^visited$");
     private static final Pattern identicNeighboursPattern = Pattern.compile("^identicNeighbours$");
 
-    private static final String MARKING_NAME = "%visited";
+    private static final String VISITED_MARKING_NAME = "%visited";
+    private static final String NEIGHBOURHOOD_MARKING_NAME = "%neighbourhood";
+    private static final String NEIGHBOURHOOD_INITIAL_NAME = "%initialNeighbours";
 
     private static final String VISITED = "visited";
     private static final String VISITED_BY = "visitedBy";
@@ -125,12 +131,14 @@ public class MarkingGenerationPhase extends AbstractPhase
         switch (marking) {
             case VISITED:
             case VISITED_BY:
-                generator = new VisitedMarkingGenerator(MARKING_NAME, availableSelectorNames,
+                generator = new VisitedMarkingGenerator(VISITED_MARKING_NAME, availableSelectorNames,
                         abortStrategy, materializationStrategy,
                         canonicalizationStrategy, aggressiveCanonicalizationStrategy);
                 break;
             case IDENTIC_NEIGHBOURS:
-                // TODO
+                generator = new NeighbourhoodMarkingGenerator(NEIGHBOURHOOD_INITIAL_NAME,
+                        NEIGHBOURHOOD_MARKING_NAME, availableSelectorNames, abortStrategy,
+                        materializationStrategy, canonicalizationStrategy, aggressiveCanonicalizationStrategy);
                 break;
             default:
                 logger.error("Unknown marking.");
@@ -164,7 +172,6 @@ public class MarkingGenerationPhase extends AbstractPhase
                 break;
             case IDENTIC_NEIGHBOURS:
                 Marking marking = new Marking("neighbourhood", true);
-                markInputs(marking);
                 stateLabelingStrategyBuilder.add(new NeighbourhoodAutomaton(this, marking));
                 break;
             default:

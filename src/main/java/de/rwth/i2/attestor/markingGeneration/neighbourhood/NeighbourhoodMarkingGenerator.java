@@ -81,6 +81,6 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
     @Override
     protected boolean isResultState(StateSpace stateSpace, ProgramState programState) {
 
-        return programState.getHeap().variableWith(initialMarkingName) != HeapConfiguration.INVALID_ELEMENT;
+        return programState.getHeap().variableWith(initialMarkingName) == HeapConfiguration.INVALID_ELEMENT;
     }
 }

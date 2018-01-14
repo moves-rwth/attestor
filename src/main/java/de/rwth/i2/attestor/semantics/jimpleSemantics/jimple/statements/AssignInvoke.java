@@ -72,13 +72,13 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
     public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
 
+        // programState is callingState, prepared state is new input
         ProgramState preparedState = programState.clone();
         invokePrepare.prepareHeap(preparedState);
 
         Collection<ProgramState> methodResult = method
                 .getMethodExecutor()
                 .getResultStates(programState, preparedState);
-        // TODO programState is callingState, prepared state is new input
         return getCleanedResultStates(methodResult);
     }
 
