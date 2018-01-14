@@ -75,6 +75,13 @@ public class CLIPhase extends AbstractPhase
                 + inputSettings.getMethodName()
         );
 
+        String name = inputSettings.getName();
+        if(name != null && !name.isEmpty()) {
+            logSum("Benchmark name: " + name);
+        } else {
+            logSum("Benchmark name: not specified");
+        }
+
         String scenario = inputSettings.getScenario();
         if (scenario != null && !scenario.isEmpty()) {
             logSum("Scenario: " + scenario);

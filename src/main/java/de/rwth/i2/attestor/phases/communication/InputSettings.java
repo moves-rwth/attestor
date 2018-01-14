@@ -27,7 +27,11 @@ public class InputSettings {
      */
     ArrayList<String> contractFiles = new ArrayList<>();
     /**
-     * Description of the analyzed scenario.
+     * Short name of the analyzed scenario (optional).
+     */
+    private String name = "";
+    /**
+     * Description of the analyzed scenario (optional).
      */
     private String scenario = "";
     /**
@@ -108,9 +112,19 @@ public class InputSettings {
         pathToInput = path;
     }
 
+    public String getName() {
+
+        return name;
+    }
+
     public String getScenario() {
 
         return scenario;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
     }
 
     public void setScenario(String scenario) {

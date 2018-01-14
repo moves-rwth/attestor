@@ -1,17 +1,18 @@
 package de.rwth.i2.attestor.io.settings;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.phases.communication.InputSettings;
+import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
-import de.rwth.i2.attestor.phases.communication.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
 
 /**
  * @author Hannah Arndt, Christoph, Christina
@@ -66,6 +67,10 @@ public class SettingsFileReader {
 
         JSONObject jsonInput = jsonSettings.getJSONObject("input");
         boolean hasDefaultPath = false;
+
+        if(jsonSettings.has("name")) {
+            input.setName(jsonSettings.getString("name"));
+        }
 
         if(jsonSettings.has("scenario")) {
             input.setScenario(jsonSettings.getString("scenario"));
