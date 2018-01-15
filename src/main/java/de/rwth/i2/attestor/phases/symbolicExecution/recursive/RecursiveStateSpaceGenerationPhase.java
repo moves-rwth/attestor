@@ -74,7 +74,23 @@ public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements
     private void loadMainMethod() {
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
-        mainMethod = scene().getMethod(inputSettings.getMethodName());
+        String methodName = inputSettings.getMethodName();
+        mainMethod = scene().getMethod(methodName);
+        if(mainMethod.getBody() == null) {
+            mainMethod = findMatchingMethod(methodName);
+        }
+    }
+
+    private Method findMatchingMethod(String methodName) {
+
+        for(Method method : scene().getRegisteredMethods()) {
+            if(methodName.equals(method.getName())) {
+                logger.info("Found matching top-level method with signature: " + method.getSignature());
+                return method;
+            }
+        }
+
+        throw new IllegalArgumentException("Could not find top-level method '" + methodName + "'.");
     }
 
     private void initializeMethodExecutors() {

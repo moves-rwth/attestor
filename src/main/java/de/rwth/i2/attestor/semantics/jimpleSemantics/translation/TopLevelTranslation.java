@@ -108,7 +108,9 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         for (SootMethod method : methods) {
             logger.trace("Found soot method: " + method.getSignature());
+
             String shortName = shortMethodSignature(method);
+
             String signature = method.getSignature();
 
             final Method abstractMethod = scene().getMethod(signature);
@@ -130,6 +132,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
      */
     private String shortMethodSignature(SootMethod method) {
 
+        /*
         StringBuilder params = new StringBuilder("(");
         boolean isFirst = true;
         for (soot.Type type : method.getParameterTypes()) {
@@ -141,6 +144,8 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
         }
         params.append(")");
         return getShortName(method.getReturnType()) + " " + method.getName() + params;
+        */
+        return method.getName();
     }
 
     /**
