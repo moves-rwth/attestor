@@ -62,7 +62,7 @@ public class MarkingGenerationPhase extends AbstractPhase
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         inputs = getPhase(InputTransformer.class).getInputs();
 

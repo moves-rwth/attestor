@@ -66,7 +66,7 @@ public class ReportOutputPhase extends AbstractPhase {
     }
 
     @Override
-    protected void executePhase() throws IOException {
+    public void executePhase() throws IOException {
 
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 

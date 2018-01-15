@@ -48,7 +48,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
         grammar = getPhase(GrammarTransformer.class).getGrammar();

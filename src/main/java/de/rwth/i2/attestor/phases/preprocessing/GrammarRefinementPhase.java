@@ -54,7 +54,7 @@ public class GrammarRefinementPhase extends AbstractPhase
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         grammar = getPhase(GrammarTransformer.class).getGrammar();
         inputs = getPhase(InputTransformer.class).getInputs();

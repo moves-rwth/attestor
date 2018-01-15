@@ -20,7 +20,7 @@ public class DelayedPhase extends AbstractPhase {
     }
 
     @Override
-    protected void executePhase() throws IOException {
+    public void executePhase() throws IOException {
 
         try {
             Thread.sleep(delay);

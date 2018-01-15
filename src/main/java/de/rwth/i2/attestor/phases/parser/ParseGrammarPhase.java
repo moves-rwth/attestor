@@ -40,7 +40,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         boolean hasUserDefinedGrammar = inputSettings.getUserDefinedGrammarName() != null;

@@ -1,21 +1,31 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.*;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.*;
-import de.rwth.i2.attestor.phases.transformers.*;
-import de.rwth.i2.attestor.procedures.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.InterproceduralAnalysis;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.PartialStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.RecursiveMethodExecutor;
+import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.InputTransformer;
+import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
+import de.rwth.i2.attestor.procedures.ContractCollection;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.MethodExecutor;
+import de.rwth.i2.attestor.procedures.PreconditionMatchingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
+public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
 
     private final StateSpaceGeneratorFactory stateSpaceGeneratorFactory;
 
@@ -24,7 +34,7 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
     private Method mainMethod;
     private StateSpace mainStateSpace = null;
 
-    public InterproceduralStateSpaceGenerationPhase(Scene scene) {
+    public RecursiveStateSpaceGenerationPhase(Scene scene) {
 
         super(scene);
         stateSpaceGeneratorFactory = new StateSpaceGeneratorFactory(scene);
@@ -37,7 +47,7 @@ public class InterproceduralStateSpaceGenerationPhase extends AbstractPhase impl
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         interproceduralAnalysis = new InterproceduralAnalysis();
         loadInitialStates();

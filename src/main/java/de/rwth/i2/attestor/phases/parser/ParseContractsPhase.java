@@ -31,7 +31,7 @@ public class ParseContractsPhase extends AbstractPhase {
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         ArrayList<String> fileNames = inputSettings.getContractFileNames();

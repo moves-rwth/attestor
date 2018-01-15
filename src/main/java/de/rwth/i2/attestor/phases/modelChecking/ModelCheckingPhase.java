@@ -37,7 +37,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         ModelCheckingSettings mcSettings = getPhase(MCSettingsTransformer.class).getMcSettings();
         Set<LTLFormula> formulae = mcSettings.getFormulae();

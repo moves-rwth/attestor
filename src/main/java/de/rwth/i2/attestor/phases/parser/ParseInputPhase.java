@@ -35,7 +35,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         String str;
 

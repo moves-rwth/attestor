@@ -47,7 +47,7 @@ public class InterproceduralAnalysisIT {
         Method traverseMethod = sceneObject.scene().getMethod("callNext");
         traverseMethod.setBody(examplePrograms.getCallNextProgram() );
 
-        InterproceduralStateSpaceGenerationPhase ipaPhase = new InterproceduralStateSpaceGenerationPhase(sceneObject.scene());
+        RecursiveStateSpaceGenerationPhase ipaPhase = new RecursiveStateSpaceGenerationPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
             .addPhase(
                 new MockupPhase(sceneObject, Collections.singletonList(input), "callNext")
@@ -80,7 +80,7 @@ public class InterproceduralAnalysisIT {
         traverseMethod.setBody(examplePrograms.getRecursiveProgram(traverseMethod) );
 
 
-        InterproceduralStateSpaceGenerationPhase ipaPhase = new InterproceduralStateSpaceGenerationPhase(sceneObject.scene());
+        RecursiveStateSpaceGenerationPhase ipaPhase = new RecursiveStateSpaceGenerationPhase(sceneObject.scene());
         PhaseRegistry registry = new PhaseRegistry()
                 .addPhase(
                         new MockupPhase(sceneObject, Collections.singletonList(input), "traverse")

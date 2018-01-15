@@ -25,7 +25,7 @@ public class ParseProgramPhase extends AbstractPhase implements ProgramTransform
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         JimpleParser programParser = new JimpleParser(this, new StandardAbstractSemantics(this));

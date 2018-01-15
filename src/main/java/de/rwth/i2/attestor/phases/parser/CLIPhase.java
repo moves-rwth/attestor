@@ -36,7 +36,7 @@ public class CLIPhase extends AbstractPhase
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         CommandLineReader commandLineReader = new CommandLineReader(this);
         commandLineReader.setupCLI();

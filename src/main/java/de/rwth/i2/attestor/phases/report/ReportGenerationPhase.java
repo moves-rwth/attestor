@@ -1,8 +1,5 @@
 package de.rwth.i2.attestor.phases.report;
 
-import java.io.*;
-import java.util.*;
-
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
@@ -13,11 +10,23 @@ import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExport
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
-import de.rwth.i2.attestor.phases.transformers.*;
+import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
+import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
+import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import de.rwth.i2.attestor.util.ZipUtils;
+
+import java.io.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
 
@@ -37,7 +46,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 

@@ -39,7 +39,7 @@ public abstract class AbstractPhase extends SceneObject {
         return registry.getMostRecentPhase(phaseId, phaseType);
     }
 
-    protected abstract void executePhase() throws IOException;
+    public abstract void executePhase() throws IOException;
 
     public abstract void logSummary();
 

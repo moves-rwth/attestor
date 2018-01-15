@@ -29,7 +29,7 @@ public class MockupPhase extends AbstractPhase implements InputTransformer, Inpu
     }
 
     @Override
-    protected void executePhase() throws IOException {
+    public void executePhase() throws IOException {
 
     }
 

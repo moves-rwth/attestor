@@ -39,7 +39,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
     }
 
     @Override
-    protected void executePhase() {
+    public void executePhase() {
 
         grammar = getPhase(GrammarTransformer.class).getGrammar();
 
