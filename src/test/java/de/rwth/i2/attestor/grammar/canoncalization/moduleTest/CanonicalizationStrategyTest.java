@@ -67,6 +67,17 @@ public class CanonicalizationStrategyTest {
     }
 
     @Test
+    public void testCyclic() {
+
+        HeapConfiguration test = hcFactory.getCyclicList();
+
+        HeapConfiguration result = canonicalizationStrategy.canonicalize(test);
+
+        assertEquals(hcFactory.getAbstractCyclicList(), result);
+
+    }
+
+    @Test
     public void testBig() {
 
         HeapConfiguration test = hcFactory.getCanonizationTest2();

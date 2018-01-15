@@ -123,6 +123,12 @@ public class VF2State {
      */
     public boolean nextCandidate(boolean multipleExternalMatches) {
 
+        if(multipleExternalMatches) {
+            // this is a less optimized, but safe version if several external
+            // pattern nodes may be mapped onto the same target node.
+            return computeAllCandidates(multipleExternalMatches);
+        }
+
         if (!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
             return computeOutgoingCandidates(multipleExternalMatches);
         } else if (!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
