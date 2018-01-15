@@ -1,22 +1,22 @@
 package de.rwth.i2.attestor.main;
 
+import de.rwth.i2.attestor.main.scene.Scene;
+
 import java.io.IOException;
 
 public class DelayedPhase extends AbstractPhase {
 
-    private AbstractPhase phase;
     private long delay;
 
-    public DelayedPhase(AbstractPhase phase, long delay) {
+    public DelayedPhase(Scene scene, long delay) {
 
-        super(phase.scene());
-        this.phase = phase;
+        super(scene);
         this.delay = delay;
     }
 
     @Override
     public String getName() {
-        return phase.getName();
+        return "Delay";
     }
 
     @Override
@@ -27,18 +27,14 @@ public class DelayedPhase extends AbstractPhase {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        phase.executePhase();
     }
 
     @Override
     public void logSummary() {
-
-        phase.logSummary();
     }
 
     @Override
     public boolean isVerificationPhase() {
-        return phase.isVerificationPhase();
+        return false;
     }
 }
