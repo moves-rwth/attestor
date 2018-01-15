@@ -45,7 +45,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     int size();
 
     /**
-     * Gets the target of the variable in the current scope.
+     * Gets the target of the variable in the current scopes.
      *
      * @param variableName The name of the requested variable
      * @return The referenced element on the heap.
@@ -53,7 +53,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     ConcreteValue getVariableTarget(String variableName);
 
     /**
-     * Removes the variable (in the current scope) from the executable.
+     * Removes the variable (in the current scopes) from the executable.
      *
      * @param variableName The name of the variable to remove.
      */
@@ -77,8 +77,8 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
     ConcreteValue getConstant(String constantName);
 
     /**
-     * Removes an intermediate (in the current scope) from the executable.
-     * Intermediates are internal variables for communication between methods, such that this, return,
+     * Removes an intermediate (in the current scopes) from the executable.
+     * Intermediates are internal variables for communication between methodExecution, such that this, return,
      * param_n, etc.
      *
      * @param name The name of the intermediate
@@ -88,7 +88,7 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
     /**
      * Sets an intermediate to the given value.
-     * Intermediates are internal variables for communication between methods, such that this, return,
+     * Intermediates are internal variables for communication between methodExecution, such that this, return,
      * param_n, etc.
      *
      * @param name  The name of the intermediate .
@@ -158,19 +158,13 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 
     /**
-     * Checks whether the set of all concrete program states of this state is subsumed by the set of all
-     * concrete program states of the given other state.
-     *
-     * @param otherState The other abstract program state.
-     * @return true if the concretizations of this state are subsumed by the concretizations of the other state.
-     */
-    boolean isSubsumedBy(ProgramState otherState);
-
-    /**
      * determines whether this state is part of the top level statespace
      * (and not of the state space of a method call)
      *
      * @return true if and only  if the state is from the top level
      */
     boolean isFromTopLevelStateSpace();
+
+	StateSpace getContainingStateSpace();
+	void setContainingStateSpace(StateSpace containingStateSpace);
 }

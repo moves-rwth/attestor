@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
 
 /**
- * This class provides the methods to canonicalisation which are specific for
+ * This class provides the methodExecution to canonicalisation which are specific for
  * indexed grammars.
  *
  * @author Hannah

@@ -1,11 +1,11 @@
 package de.rwth.i2.attestor.grammar;
 
 import de.rwth.i2.attestor.MockupSceneObject;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationRuleManager;
-import de.rwth.i2.attestor.grammar.materialization.ViolationPointResolver;
 import de.rwth.i2.attestor.grammar.materialization.communication.MaterializationAndRuleResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.MaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPointResolver;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;

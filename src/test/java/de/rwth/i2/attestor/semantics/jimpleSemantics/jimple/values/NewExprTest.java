@@ -5,8 +5,8 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.util.Constants;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class NewExprTest {
         int hash = testGraph.hashCode();
         int oldNodeNumber = testGraph.countNodes();
 
-        DefaultProgramState executable = new DefaultProgramState(sceneObject, testGraph.clone());
+        ProgramState executable = sceneObject.scene().createProgramState(testGraph.clone());
 
         expr.evaluateOn(executable);
 

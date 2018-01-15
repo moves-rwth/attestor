@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
@@ -9,12 +9,12 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -70,10 +70,8 @@ public class AssignStmt extends Statement {
      * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException {
-
-        observer.update(this, programState);
 
         programState = programState.clone();
         ConcreteValue concreteRHS;
@@ -92,7 +90,7 @@ public class AssignStmt extends Statement {
             logger.error(e.getErrorMessage(this));
         }
 
-        if (observer.isDeadVariableEliminationEnabled()) {
+        if (scene().options().isRemoveDeadVariables()) {
             DeadVariableEliminator.removeDeadVariables(this, rhs.toString(),
                     programState, liveVariableNames);
 
@@ -104,12 +102,6 @@ public class AssignStmt extends Statement {
         result.setProgramCounter(nextPC);
 
         return SingleElementUtil.createSet(result);
-    }
-
-    @Override
-    public boolean needsMaterialization(ProgramState programState) {
-
-        return rhs.needsMaterialization(programState) || lhs.needsMaterialization(programState);
     }
 
 
@@ -128,6 +120,11 @@ public class AssignStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

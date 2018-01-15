@@ -17,8 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -40,7 +40,7 @@ public class AssignStmtTest {
 
         HeapConfiguration testGraph = hcFactory.getTLLRule();
 
-        DefaultProgramState tmp = new DefaultProgramState(sceneObject, testGraph);
+        ProgramState tmp = sceneObject.scene().createProgramState(testGraph);
 
         tmp.prepareHeap();
         testGraph = tmp.getHeap();
@@ -56,9 +56,9 @@ public class AssignStmtTest {
         AssignStmt stmt = new AssignStmt(sceneObject, lhs, rhs, 2, new LinkedHashSet<>());
         try {
 
-            DefaultProgramState input = new DefaultProgramState(sceneObject, testGraph);
+            ProgramState input = sceneObject.scene().createProgramState(testGraph);
 
-            Set<ProgramState> res = stmt.computeSuccessors(input, new MockupSymbolicExecutionObserver(sceneObject));
+            Collection<ProgramState> res = stmt.computeSuccessors(input);
 
             assertNotNull("test graph became null", testGraph);
             assertEquals("testGraph has changed", test, testGraph.toString());
@@ -86,7 +86,7 @@ public class AssignStmtTest {
                 assertFalse(resState.getHeap().equals(input.getHeap()));
 
                 HeapConfiguration expectedHeap = hcFactory.getExpectedResult_AssignStmt();
-                DefaultProgramState tmpState = new DefaultProgramState(sceneObject, expectedHeap);
+                ProgramState tmpState = sceneObject.scene().createProgramState(expectedHeap);
                 tmpState.prepareHeap();
                 expectedHeap = tmpState.getHeap();
                 assertEquals(expectedHeap, resState.getHeap());

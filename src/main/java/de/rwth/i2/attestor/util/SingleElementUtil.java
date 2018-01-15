@@ -4,7 +4,7 @@ import java.util.*;
 
 
 /**
- * Auxiliary methods to create collections that contain a single element.
+ * Auxiliary methodExecution to create collections that contain a single element.
  *
  * @author Christoph, Hannah Arndt.
  */

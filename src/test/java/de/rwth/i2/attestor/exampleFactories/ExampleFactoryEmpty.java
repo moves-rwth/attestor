@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.exampleFactories;
 
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
-import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.MockupSymbolicExecutionObserver;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoCanonicalizationStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
-
 import java.util.Collections;
+
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 public class ExampleFactoryEmpty {
 
@@ -37,11 +36,6 @@ public class ExampleFactoryEmpty {
 
         return s -> {
         };
-    }
-
-    public SemanticsObserverSupplier getSemanticsOptionsSupplier(SceneObject sceneObject) {
-
-        return s -> new MockupSymbolicExecutionObserver(sceneObject);
     }
 
     public StateSpaceSupplier getStateSpaceSupplier() {

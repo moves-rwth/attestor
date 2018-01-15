@@ -1,8 +1,7 @@
 package de.rwth.i2.attestor.refinement.visited;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.markings.Marking;
-import de.rwth.i2.attestor.markings.Markings;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.refinement.StatelessHeapAutomaton;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIterator;
@@ -14,17 +13,17 @@ import java.util.Set;
 public class StatelessVisitedByAutomaton implements StatelessHeapAutomaton {
 
 
-    private final Marking marking;
+    private final String markingName;
 
-    public StatelessVisitedByAutomaton(Marking marking) {
+    public StatelessVisitedByAutomaton(String markingName) {
 
-        this.marking = marking;
+        this.markingName = markingName;
     }
 
     @Override
     public Set<String> transition(HeapConfiguration heapConfiguration) {
 
-        int markedNode = heapConfiguration.variableTargetOf(marking.getUniversalVariableName());
+        int markedNode = heapConfiguration.variableTargetOf(markingName);
 
         // This case may occur if the marking is currently not part of the reachable fragment
         // considered by an interprocedural analysis.

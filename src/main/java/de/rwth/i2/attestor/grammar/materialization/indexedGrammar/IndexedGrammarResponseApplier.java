@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.materialization.indexedGrammar;
 
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
 import de.rwth.i2.attestor.grammar.materialization.communication.*;
+import de.rwth.i2.attestor.grammar.materialization.util.GraphMaterializer;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import org.apache.logging.log4j.LogManager;

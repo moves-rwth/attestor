@@ -53,4 +53,10 @@ public interface StateSpace {
     int getMaximalStateSize();
 
     boolean satisfiesAP(int stateId, String expectedAP);
+
+    /**
+     * adds artificial inf-paths to all states without successors,
+     * to formally avoid terminal states.
+     */
+	void transformTerminalStates();
 }

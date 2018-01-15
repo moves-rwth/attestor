@@ -4,6 +4,11 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
@@ -14,8 +19,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoPostProcessingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.impl.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.types.Type;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +31,7 @@ import static org.junit.Assert.*;
 
 public class StateSpaceGeneratorTest {
 
-    private SSGBuilder ssgBuilder;
+    private StateSpaceGeneratorBuilder stateSpaceGeneratorBuilder;
 
     private SceneObject sceneObject;
     private ExampleHcImplFactory hcFactory;
@@ -39,7 +42,7 @@ public class StateSpaceGeneratorTest {
         sceneObject = new MockupSceneObject();
         hcFactory = new ExampleHcImplFactory(sceneObject);
 
-        ssgBuilder = StateSpaceGenerator.builder(sceneObject)
+        stateSpaceGeneratorBuilder = StateSpaceGenerator.builder()
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setCanonizationStrategy(new MockupCanonicalizationStrategy())
@@ -47,10 +50,9 @@ public class StateSpaceGeneratorTest {
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setStateCounter(s -> {
                 })
-                .setExplorationStrategy((s, sp) -> true)
+                .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
-                .setSemanticsOptionsSupplier(s -> new DefaultSymbolicExecutionObserver(s))
         ;
     }
 
@@ -59,16 +61,16 @@ public class StateSpaceGeneratorTest {
 
         HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 
-        List<Semantics> programInstructions = new ArrayList<>();
+        List<SemanticsCommand> programInstructions = new ArrayList<>();
         programInstructions.add(new Skip(sceneObject, 1));
         programInstructions.add(new ReturnVoidStmt(sceneObject));
-        Program mainProgram = new Program(programInstructions);
+        ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
                     .build()
@@ -90,7 +92,7 @@ public class StateSpaceGeneratorTest {
 
         Type type = sceneObject.scene().getType("type");
 
-        List<Semantics> programInstructions = new ArrayList<>();
+        List<SemanticsCommand> programInstructions = new ArrayList<>();
         Statement skipStmt = new Skip(sceneObject, 1);
         programInstructions.add(skipStmt);
         Statement assignStmt = new AssignStmt(sceneObject, new Local(type, "x"), new NewExpr(type),
@@ -99,15 +101,14 @@ public class StateSpaceGeneratorTest {
         Statement returnStmt = new ReturnVoidStmt(sceneObject);
         programInstructions.add(returnStmt);
 
-        Program mainProgram = new Program(programInstructions);
+        ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
-                    .setDeadVariableElimination(true)
                     .build()
                     .generate();
         } catch (StateSpaceGenerationAbortedException e) {
@@ -154,19 +155,19 @@ public class StateSpaceGeneratorTest {
 
         HeapConfiguration initialGraph = hcFactory.getEmptyGraphWithConstants();
 
-        List<Semantics> programInstructions = new ArrayList<>();
+        List<SemanticsCommand> programInstructions = new ArrayList<>();
         Statement ifStmt = new IfStmt(sceneObject, new IntConstant(1), 1, 2, new LinkedHashSet<>());
         programInstructions.add(ifStmt);
         Statement firstReturn = new ReturnVoidStmt(sceneObject);
         programInstructions.add(firstReturn);
         Statement secondReturn = new ReturnValueStmt(sceneObject, new IntConstant(0), null);
         programInstructions.add(secondReturn);
-        Program mainProgram = new Program(programInstructions);
+        ProgramImpl mainProgram = new ProgramImpl(programInstructions);
 
-        ProgramState initialState = new DefaultProgramState(sceneObject, initialGraph);
+        ProgramState initialState = new DefaultProgramState(initialGraph);
         StateSpace res = null;
         try {
-            res = ssgBuilder
+            res = stateSpaceGeneratorBuilder
                     .setProgram(mainProgram)
                     .addInitialState(initialState)
                     .build()

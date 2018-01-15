@@ -1,12 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
@@ -52,10 +51,8 @@ public class IdentityStmt extends Statement {
      * (i.e. this statement can only be called once per intermediate)
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Set<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException {
-
-        observer.update(this, programState);
 
         programState = programState.clone();
         ConcreteValue concreteRHS = programState.removeIntermediate(rhs);
@@ -69,7 +66,6 @@ public class IdentityStmt extends Statement {
         return Collections.singleton(programState.shallowCopyUpdatePC(nextPC));
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return lhs.needsMaterialization(programState);
@@ -90,6 +86,11 @@ public class IdentityStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return SingleElementUtil.createSet(nextPC);
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return false;
     }
 
 }

@@ -1,11 +1,10 @@
 package de.rwth.i2.attestor.io.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.phases.communication.InputSettings;
-import de.rwth.i2.attestor.main.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.main.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.main.scene.Options;
-import org.apache.logging.log4j.Level;
+import de.rwth.i2.attestor.phases.communication.InputSettings;
+import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -68,6 +67,10 @@ public class SettingsFileReader {
 
         JSONObject jsonInput = jsonSettings.getJSONObject("input");
         boolean hasDefaultPath = false;
+
+        if(jsonSettings.has("name")) {
+            input.setName(jsonSettings.getString("name"));
+        }
 
         if(jsonSettings.has("scenario")) {
             input.setScenario(jsonSettings.getString("scenario"));
@@ -269,6 +272,17 @@ public class SettingsFileReader {
             }
         }
 
+        if (jsonOutput.has("contractsForInspection")) {
+            output.setExportContractsForInspection(true);
+            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
+            if (jsonContracts.has("path")) {
+                output.setPathForContractsForInspection(jsonContracts.getString("path"));
+            }
+            if (jsonContracts.has("folder")) {
+                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
+            }
+        }
+        
         if (jsonOutput.has("customHCs")) {
             output.setExportCustomHcs(true);
             JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
@@ -280,18 +294,18 @@ public class SettingsFileReader {
             }
         }
 
-        if (jsonOutput.has("contracts")) {
-            output.setExportContracts(true);
-            JSONObject jsonC = jsonOutput.getJSONObject("contracts");
+        if (jsonOutput.has("contractsForReuse")) {
+            output.setExportContractsForReuse(true);
+            JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
             if (jsonC.has("path")) {
-                output.setDirectoryForContracts(jsonC.getString("path"));
+                output.setDirectoryForReuseContracts(jsonC.getString("path"));
             }
             JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
             for (int i = 0; i < requestArray.length(); i++) {
                 JSONObject request = requestArray.getJSONObject(i);
                 String signature = request.getString("signature");
                 String filename = request.getString("filename");
-                output.addRequiredContract(signature, filename);
+                output.addRequiredContractForReuse(signature, filename);
             }
         }
 
@@ -325,7 +339,7 @@ public class SettingsFileReader {
                     ltlFormula.toPNF();
                     mc.addFormula(ltlFormula);
                 } catch (Exception e) {
-                    logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
+                    logger.error("The input " + formula + " is not a valid LTL formula. Skipping it.");
 
                 }
             }

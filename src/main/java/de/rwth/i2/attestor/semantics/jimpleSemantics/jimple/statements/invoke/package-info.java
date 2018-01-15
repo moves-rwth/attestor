@@ -1,5 +1,5 @@
 /**
- * This package containsSubsumingState classes that deal with abstract methods and the procedure of calling
+ * This package containsSubsumingState classes that deal with abstract methodExecution and the procedure of calling
  * them.
  *
  * @author Hannah Arndt

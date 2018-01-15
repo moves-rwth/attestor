@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 
 /**
- * This class provides the methods to canonicalisation which are specific for
+ * This class provides the methodExecution to canonicalisation which are specific for
  * default (non-indexed) grammars.
  *
  * @author Hannah

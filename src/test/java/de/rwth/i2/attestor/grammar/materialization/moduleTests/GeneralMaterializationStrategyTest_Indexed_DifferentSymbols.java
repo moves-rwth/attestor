@@ -8,13 +8,15 @@ import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedGrammarResponseApplier;
 import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexedMaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.strategies.GeneralMaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.util.*;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
-import de.rwth.i2.attestor.programState.indexedState.IndexedState;
 import de.rwth.i2.attestor.programState.indexedState.index.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
@@ -48,6 +50,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
     public void setUp() {
 
         sceneObject = new MockupSceneObject();
+        sceneObject.scene().options().setIndexedMode(true);
 
         oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
         otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;
@@ -72,10 +75,10 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
 
 
         HeapConfiguration inputGraph = getInput();
-        ProgramState inputState = new IndexedState(sceneObject, inputGraph).prepareHeap();
+        ProgramState inputState = sceneObject.scene().createProgramState(inputGraph).prepareHeap();
 
         HeapConfiguration expectedGraph = getExpected();
-        ProgramState expectedState = new IndexedState(sceneObject, expectedGraph).prepareHeap();
+        ProgramState expectedState = sceneObject.scene().createProgramState(expectedGraph).prepareHeap();
 
         Collection<HeapConfiguration> result = materializer.materialize(inputState.getHeap(), inputViolationPoint);
 

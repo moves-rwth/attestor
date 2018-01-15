@@ -1,13 +1,12 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +23,8 @@ import java.util.Set;
  * only be visible inside the method, e.g. references which the method did not
  * remove and its local variables.
  * <br><br>
- * Call {@link #prepareHeap(ProgramState, SymbolicExecutionObserver) prepareHeap(input)} for the heap that initializes the method call
- * and {@link #cleanHeap(ProgramState, SymbolicExecutionObserver) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
+ * Call {@link #prepareHeap(ProgramState) prepareHeap(input)} for the heap that initializes the method call
+ * and {@link #cleanHeap(ProgramState) cleanHeap( result )} on heaps that result from the execution of the abstract Method.<br>
  *
  * @author Hannah Arndt
  */
@@ -59,11 +58,10 @@ public abstract class InvokeHelper extends SceneObject {
      * Value cause them.
      *
      * @param programState : the programState which will be the input of the called method
-     * @param options      Current configuration of the symbolic execution that uses this InvokeHelper.
      * @throws NotSufficientlyMaterializedException if the argument or the base value
      *                                              can not be evaluated on the heap before it is materialized.
      */
-    public abstract void prepareHeap(ProgramState programState, SymbolicExecutionObserver options)
+    public abstract void prepareHeap(ProgramState programState)
             throws NotSufficientlyMaterializedException;
 
     /**
@@ -72,9 +70,8 @@ public abstract class InvokeHelper extends SceneObject {
      *
      * @param programState after execution of method (potentially wiht unused
      *                     intermediates and local variables)
-     * @param options      Current configuration of the symbolic execution that uses this InvokeHelper.
      */
-    public abstract void cleanHeap(ProgramState programState, SymbolicExecutionObserver options);
+    public abstract void cleanHeap(ProgramState programState);
 
     void precomputePotentialViolationPoints() {
 
@@ -94,7 +91,7 @@ public abstract class InvokeHelper extends SceneObject {
     }
 
 
-    void appendArguments(ProgramState programState, SymbolicExecutionObserver options)
+    void appendArguments(ProgramState programState)
             throws NotSufficientlyMaterializedException {
 
         for (int i = 0; i < argumentValues.size(); i++) {
@@ -114,7 +111,7 @@ public abstract class InvokeHelper extends SceneObject {
                 programState.setIntermediate(referenceName, concreteArgument);
             }
 
-            if (options.isDeadVariableEliminationEnabled()) {
+            if (scene().options().isRemoveDeadVariables()) {
                 DeadVariableEliminator.removeDeadVariables(this, argumentValues.get(i).toString(),
                         programState, liveVariableNames);
             }

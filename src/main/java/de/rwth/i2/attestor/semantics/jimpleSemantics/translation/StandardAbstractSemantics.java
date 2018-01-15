@@ -2,8 +2,8 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.AbstractMethod;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InstanceInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
@@ -169,8 +169,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
             soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();
             InvokeHelper invokePrepare = createInvokeHelper(invokeExpr);
             invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));
-            AbstractMethod method;
-            method = topLevel.getMethod(invokeExpr.getMethod().getSignature());
+            Method method = topLevel.getMethod(invokeExpr.getMethod().getSignature());
             return new AssignInvoke(this, lhs, method, invokePrepare, pc + 1);
         } else {
             Value rhs = topLevel.translateValue(stmt.getRightOp());
@@ -192,7 +191,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
         // SootMethod method = expr.getMethod();
 
         String name = expr.getMethod().getSignature();
-        AbstractMethod translatedMethod = topLevel.getMethod(name);
+        Method translatedMethod = topLevel.getMethod(name);
 
         InvokeHelper invokePrepare = createInvokeHelper(expr);
         invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));

@@ -57,6 +57,11 @@ public interface HeapConfiguration {
      */
     HeapConfiguration clone();
 
+    /**
+     * @return An empty heap configuration
+     */
+    HeapConfiguration getEmpty();
+
 
     /**
      * Mark a HeapConfiguration as temporarily mutable by a {@link HeapConfigurationBuilder}.

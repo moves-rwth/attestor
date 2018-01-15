@@ -9,7 +9,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.ReturnVoidStmt;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Skip;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement;
-import de.rwth.i2.attestor.stateSpaceGeneration.Semantics;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Test;
@@ -69,7 +69,7 @@ public class DefaultEmbeddingCheckerProviderTest {
 
 
     private void performTest(int aggressiveAbstractionThreshold, boolean aggressiveReturnAbstraction,
-                             HeapConfiguration graph, HeapConfiguration pattern, Semantics semantics, AbstractMatchingChecker expected) {
+                             HeapConfiguration graph, HeapConfiguration pattern, SemanticsCommand semanticsCommand, AbstractMatchingChecker expected) {
 
         final int minDereferenceDepth = 1;
         boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();

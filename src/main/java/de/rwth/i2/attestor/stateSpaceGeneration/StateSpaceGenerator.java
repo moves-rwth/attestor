@@ -1,15 +1,13 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import de.rwth.i2.attestor.main.scene.SceneObject;
+
+import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Set;
-
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -23,14 +21,10 @@ import java.util.Set;
  *
  * @author christoph
  */
-public class StateSpaceGenerator extends SceneObject {
+public class StateSpaceGenerator {
 
     private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
-    /**
-     * Stores the program configurations that still have
-     * to be executed by the state space generation
-     */
-    final LinkedList<ProgramState> unexploredConfigurations = new LinkedList<>();
+
     /**
      * Stores the state space generated upon instantiation of
      * this generator.
@@ -52,7 +46,7 @@ public class StateSpaceGenerator extends SceneObject {
      * This strategy is invoked after execution of abstract transfer
      * functions in order to generalize.
      */
-    StateCanonicalizationStrategy canonicalizationStrategy;
+    StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     /**
      * Strategy determining when to give up on further state space
      * exploration.
@@ -67,9 +61,9 @@ public class StateSpaceGenerator extends SceneObject {
      */
     StateRefinementStrategy stateRefinementStrategy;
     /**
-     * Strategy determining whether successors of a given state should also be explored.
+     * Strategy determining how states are explored before being added to the state space
      */
-    ExplorationStrategy explorationStrategy;
+    StateExplorationStrategy stateExplorationStrategy;
     /**
      * Strategy determining post-processing after termination of state space generation
      */
@@ -79,59 +73,32 @@ public class StateSpaceGenerator extends SceneObject {
      */
     TotalStatesCounter totalStatesCounter;
     /**
-     * Flag that determines whether dead variables may be eliminated after
-     * a single step of the symbolic execution.
-     * Whether variables are actually eliminated depends on the executed
-     * statement.
-     */
-    boolean deadVariableEliminationEnabled;
-    /**
-     * Flag that determines whether the state space is generated in a depth-first
-     * or breadth-first fashion.
-     */
-    boolean breadthFirstSearchEnabled;
-    /**
-     * The options for this state space generator that configure the individual
-     * steps of the symbolic execution.
-     */
-    SymbolicExecutionObserver symbolicExecutionObserver;
-    /**
      * Functional interface to obtain instances of state spaces.
      */
     StateSpaceSupplier stateSpaceSupplier;
-    /**
-     * Functional interface determining the semantics options passed to Semantics objects during
-     * symbolic execution
-     */
-    SemanticsObserverSupplier semanticsObserverSupplier;
 
-    protected StateSpaceGenerator(SceneObject otherObject) {
-
-        super(otherObject);
+    protected StateSpaceGenerator() {
     }
 
     /**
-     * @return An SSGBuilder which is the only means to create a new
+     * @return An StateSpaceGeneratorBuilder which is the only means to create a new
      * StateSpaceGenerator object.
      */
-    public static SSGBuilder builder(SceneObject sceneObject) {
+    public static StateSpaceGeneratorBuilder builder() {
 
-        return new SSGBuilder(sceneObject);
+        return new StateSpaceGeneratorBuilder();
     }
 
-    public static SSGBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
+    public static StateSpaceGeneratorBuilder builder(StateSpaceGenerator stateSpaceGenerator) {
 
-        return new SSGBuilder(stateSpaceGenerator)
+        return new StateSpaceGeneratorBuilder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
-                .setDeadVariableElimination(stateSpaceGenerator.isDeadVariableEliminationEnabled())
-                .setBreadthFirstSearchEnabled(stateSpaceGenerator.isBreadthFirstSearchEnabled())
-                .setExplorationStrategy(stateSpaceGenerator.getExplorationStrategy())
+                .setStateExplorationStrategy(stateSpaceGenerator.getStateExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
-                .setSemanticsOptionsSupplier(stateSpaceGenerator.getSemanticsObserverSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
     }
@@ -155,7 +122,7 @@ public class StateSpaceGenerator extends SceneObject {
     /**
      * @return The strategy determining how canonicalization is performed.
      */
-    public StateCanonicalizationStrategy getCanonizationStrategy() {
+    public StateCanonicalizationStrategyWrapper getCanonizationStrategy() {
 
         return canonicalizationStrategy;
     }
@@ -181,32 +148,14 @@ public class StateSpaceGenerator extends SceneObject {
         return stateSpaceSupplier;
     }
 
-    public SemanticsObserverSupplier getSemanticsObserverSupplier() {
+    public StateExplorationStrategy getStateExplorationStrategy() {
 
-        return semanticsObserverSupplier;
-    }
-
-    /**
-     * @return The strategy determining whether successors of a given state should be explored or not.
-     */
-    public ExplorationStrategy getExplorationStrategy() {
-
-        return explorationStrategy;
+        return stateExplorationStrategy;
     }
 
     public PostProcessingStrategy getPostProcessingStrategy() {
 
         return postProcessingStrategy;
-    }
-
-    public boolean isDeadVariableEliminationEnabled() {
-
-        return deadVariableEliminationEnabled;
-    }
-
-    public boolean isBreadthFirstSearchEnabled() {
-
-        return breadthFirstSearchEnabled;
     }
 
     public StateSpace getStateSpace() {
@@ -227,9 +176,10 @@ public class StateSpaceGenerator extends SceneObject {
      */
     public StateSpace generate() throws StateSpaceGenerationAbortedException {
 
-        while (hasUnexploredStates()) {
+        while (stateExplorationStrategy.hasUnexploredStates()) {
 
-            ProgramState state = nextUnexploredState();
+            ProgramState state = stateExplorationStrategy.getNextUnexploredState();
+            state.setContainingStateSpace( this.stateSpace );
 
             try {
                 abortStrategy.checkAbort(stateSpace);
@@ -240,24 +190,24 @@ public class StateSpaceGenerator extends SceneObject {
                 break;
             }
 
-            Semantics stateSemantics = semanticsOf(state);
-            boolean isSufficientlyMaterialized = materializationPhase(stateSemantics, state);
+            SemanticsCommand stateSemanticsCommand = semanticsOf(state);
+            boolean isSufficientlyMaterialized = materializationPhase(stateSemanticsCommand, state);
 
             if (isSufficientlyMaterialized) {
-                Set<ProgramState> successorStates = executionPhase(stateSemantics, state);
-                if (successorStates.isEmpty()) {
+                Collection<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
+                if (successorStates.isEmpty() && isTerminalStatement(stateSemanticsCommand) ) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
                     stateSpace.addArtificialInfPathsTransition(state);
                 } else {
                     successorStates.forEach(nextState -> {
-                        Semantics semantics = semanticsOf(nextState);
-                        nextState = stateRefinementStrategy.refine(semantics, nextState);
-                        nextState = canonicalizationPhase(semantics, nextState);
+                        SemanticsCommand semanticsCommand = semanticsOf(nextState);
+                        nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
+                        nextState = canonicalizationPhase(semanticsCommand, nextState);
                         if (state.isFromTopLevelStateSpace()) {
                             stateLabelingStrategy.computeAtomicPropositions(nextState);
                         }
-                        addingPhase(semantics, state, nextState);
+                        addingPhase(semanticsCommand, state, nextState);
                     });
                 }
             }
@@ -268,31 +218,11 @@ public class StateSpaceGenerator extends SceneObject {
         return stateSpace;
     }
 
-    /**
-     * @return true iff further states can and should be generated.
-     */
-    private boolean hasUnexploredStates() {
+	private boolean isTerminalStatement(SemanticsCommand stateSemantics) {
+		return stateSemantics.getClass() == TerminalStatement.class;
+	}
 
-        return !unexploredConfigurations.isEmpty();
-    }
-
-    private ProgramState nextUnexploredState() {
-
-        if (breadthFirstSearchEnabled) {
-            return unexploredConfigurations.removeFirst();
-        } else {
-            return unexploredConfigurations.removeLast();
-        }
-    }
-
-    protected void addUnexploredState(ProgramState state) {
-
-        if (explorationStrategy.check(state, stateSpace)) {
-            unexploredConfigurations.addLast(state);
-        }
-    }
-
-    private Semantics semanticsOf(ProgramState state) {
+    private SemanticsCommand semanticsOf(ProgramState state) {
 
         return program.getStatement(state.getProgramCounter());
     }
@@ -302,46 +232,47 @@ public class StateSpaceGenerator extends SceneObject {
      * can be executed. The materialized states are immediately added to the state space as successors of the
      * given state.
      *
-     * @param semantics The statement that should be executed next and thus determines the necessary materialization.
+     * @param semanticsCommand The statement that should be executed next and thus determines the necessary materialization.
      * @param state     The program state that should be materialized.
      * @return True if and only if no materialization is needed.
      */
-    private boolean materializationPhase(Semantics semantics, ProgramState state) {
+    private boolean materializationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
 
         Collection<ProgramState> materialized = materializationStrategy.materialize(
                 state,
-                semantics.getPotentialViolationPoints()
+                semanticsCommand.getPotentialViolationPoints()
         );
 
         for (ProgramState m : materialized) {
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
-            addUnexploredState(m);
+            stateExplorationStrategy.addUnexploredState(m, true);
             stateSpace.addMaterializationTransition(state, m);
         }
         return materialized.isEmpty();
     }
 
     /**
-     * Computes canonical successors of the given program state.
+     * Computes successors of the given program state by executing a single step of the
+     * abstract program semantics.
      *
-     * @param semantics The statement that should be executed.
+     * @param semanticsCommand The statement that should be executed.
      * @param state     The program state whose successor states shall be computed.
      */
-    private Set<ProgramState> executionPhase(Semantics semantics, ProgramState state)
+    private Collection<ProgramState> executionPhase(SemanticsCommand semanticsCommand, ProgramState state)
             throws StateSpaceGenerationAbortedException {
 
         try {
-            return semantics.computeSuccessors(state, symbolicExecutionObserver);
+            return semanticsCommand.computeSuccessors(state);
         } catch (NotSufficientlyMaterializedException e) {
             logger.error("A state could not be sufficiently materialized.");
             return Collections.emptySet();
         }
     }
 
-    private ProgramState canonicalizationPhase(Semantics semantics, ProgramState state) {
+    private ProgramState canonicalizationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
 
-        if (semantics.permitsCanonicalization()) {
+        if (needsCanonicalization(semanticsCommand, state)) {
             state = canonicalizationStrategy.canonicalize(state);
         }
         return state;
@@ -351,21 +282,25 @@ public class StateSpaceGenerator extends SceneObject {
      * Adds a state as a successor of the given previous state to the state space
      * provided to no subsuming state already exists.
      *
-     * @param semantics     The statement that has been executed on previousState to get to state.
+     * @param semanticsCommand     The statement that has been executed on previousState to get to state.
      * @param previousState The predecessor of the given state.
      * @param state         The state that should be added.
      */
-    private void addingPhase(Semantics semantics, ProgramState previousState, ProgramState state) {
+    private void addingPhase(SemanticsCommand semanticsCommand, ProgramState previousState, ProgramState state) {
 
         // performance optimization that prevents isomorphism checks against states in the state space.
-        if (!semantics.permitsCanonicalization()) {
+        if (!needsCanonicalization(semanticsCommand, state)) {
             stateSpace.addState(state);
-            addUnexploredState(state);
+            stateExplorationStrategy.addUnexploredState(state, false);
         } else if (stateSpace.addStateIfAbsent(state)) {
-            addUnexploredState(state);
+            stateExplorationStrategy.addUnexploredState(state, false);
         }
 
         stateSpace.addControlFlowTransition(previousState, state);
+    }
+
+    private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
+        return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
     }
 
     @FunctionalInterface

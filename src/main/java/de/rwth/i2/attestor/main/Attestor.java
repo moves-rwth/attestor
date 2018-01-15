@@ -1,15 +1,14 @@
 package de.rwth.i2.attestor.main;
 
-import de.rwth.i2.attestor.main.phases.PhaseRegistry;
-import de.rwth.i2.attestor.main.phases.impl.*;
-import de.rwth.i2.attestor.main.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.main.scene.DefaultScene;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.util.Properties;
+import de.rwth.i2.attestor.phases.counterexamples.CounterexampleGenerationPhase;
+import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
+import de.rwth.i2.attestor.phases.parser.*;
+import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
+import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
+import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
+import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
+import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.RecursiveStateSpaceGenerationPhase;
 
 
 /**
@@ -37,30 +36,16 @@ import java.util.Properties;
  *
  * @author Christoph
  */
-public class Attestor {
+public class Attestor extends AbstractAttestor {
 
-    private static final Logger logger = LogManager.getLogger("Attestor");
-    private final Properties properties = new Properties();
-    private PhaseRegistry registry;
+    public static void main(String[] args) {
 
-    private DefaultScene scene = new DefaultScene();
+        AbstractAttestor main = new Attestor();
+        main.run(args);
+    }
 
-
-    /**
-     * Runs attestor to perform a program analysis.
-     *
-     * @param args The command line arguments determining communication and analysis customizations.
-     * @see <a href="https://github.com/moves-rwth/attestor/wiki/Command-Line-Options">
-
-     * Explanation of all command line options
-     * </a>
-     */
-    public void run(String[] args) {
-
-
-        printVersion();
-
-        registry = new PhaseRegistry();
+    @Override
+    protected void registerPhases(String[] args) {
 
         registry
                 .addPhase(new CLIPhase(scene, args))
@@ -71,47 +56,11 @@ public class Attestor {
                 .addPhase(new MarkingGenerationPhase(scene))
                 .addPhase(new GrammarRefinementPhase(scene))
                 .addPhase(new AbstractionPreprocessingPhase(scene))
-                .addPhase(new StateSpaceGenerationPhase(scene))
+                .addPhase(new RecursiveStateSpaceGenerationPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
                 .addPhase(new ReportGenerationPhase(scene))
-				.addPhase( new ReportOutputPhase(scene, registry.getPhases()) )
+                .addPhase( new ReportOutputPhase(scene, registry.getPhases()) )
                 .execute();
-
-        registry.logExecutionSummary();
-        registry.logExecutionTimes();
-    }
-
-    public long getTotalNumberOfStates() {
-
-        return scene.getNumberOfGeneratedStates();
-    }
-
-    public int getNumberOfStatesWithoutProcedureCalls() {
-
-        return registry.getMostRecentPhase(StateSpaceTransformer.class)
-                .getStateSpace()
-                .getStates()
-                .size();
-    }
-
-    public int getNumberOfFinalStates() {
-
-        return registry.getMostRecentPhase(StateSpaceTransformer.class)
-                .getStateSpace()
-                .getFinalStates()
-                .size();
-    }
-
-    private void printVersion() {
-
-        try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("attestor.properties"));
-            logger.log(Level.getLevel("VERSION"), properties.getProperty("artifactId")
-                    + " - version " + properties.getProperty("version"));
-        } catch (IOException e) {
-            logger.fatal("Project version could not be found. Aborting.");
-            System.exit(1);
-        }
     }
 }

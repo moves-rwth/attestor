@@ -4,9 +4,8 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
-import de.rwth.i2.attestor.grammar.materialization.MaterializationStrategy;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ExplorationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
@@ -17,11 +16,14 @@ public class Strategies {
     private MaterializationStrategy materializationStrategy;
     private CanonicalizationStrategy aggressiveCanonicalizationStrategy;
     private CanonicalizationStrategy lenientCanonicalizationStrategy;
-    private ExplorationStrategy explorationStrategy;
     private AbortStrategy abortStrategy;
     private StateLabelingStrategy stateLabelingStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private LanguageInclusionStrategy languageInclusionStrategy;
+
+    protected Strategies() {
+
+    }
 
     public SingleStepConcretizationStrategy getSingleStepConcretizationStrategy() {
 
@@ -71,16 +73,6 @@ public class Strategies {
     public void setLenientCanonicalizationStrategy(CanonicalizationStrategy lenientCanonicalizationStrategy) {
 
         this.lenientCanonicalizationStrategy = lenientCanonicalizationStrategy;
-    }
-
-    public ExplorationStrategy getExplorationStrategy() {
-
-        return explorationStrategy;
-    }
-
-    public void setExplorationStrategy(ExplorationStrategy explorationStrategy) {
-
-        this.explorationStrategy = explorationStrategy;
     }
 
     public AbortStrategy getAbortStrategy() {

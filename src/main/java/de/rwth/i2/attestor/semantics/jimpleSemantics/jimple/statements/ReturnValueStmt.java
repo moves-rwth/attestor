@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
-import de.rwth.i2.attestor.grammar.materialization.ViolationPoints;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
@@ -9,13 +9,13 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SymbolicExecutionObserver;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.iterator.TIntIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -47,10 +47,8 @@ public class ReturnValueStmt extends Statement {
     }
 
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState, SymbolicExecutionObserver observer)
+    public Collection<ProgramState> computeSuccessors(ProgramState programState)
             throws NotSufficientlyMaterializedException {
-
-        observer.update(this, programState);
 
         programState = programState.clone();
 
@@ -78,7 +76,6 @@ public class ReturnValueStmt extends Statement {
         return Collections.singleton(programState);
     }
 
-    @Override
     public boolean needsMaterialization(ProgramState programState) {
 
         return returnValue.needsMaterialization(programState);
@@ -99,6 +96,11 @@ public class ReturnValueStmt extends Statement {
     public Set<Integer> getSuccessorPCs() {
 
         return new LinkedHashSet<>();
+    }
+
+    @Override
+    public boolean needsCanonicalization() {
+        return true;
     }
 
     /**

@@ -30,16 +30,23 @@
                 <SizeBasedTriggeringPolicy size="50 MB" />
             </Policies>
             <DefaultRolloverStrategy max="4"/>
+            <Filters>
+                <ThresholdFilter level="REPORT" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
         </RollingFile>
         <Async name="AsyncAppender" bufferSize="80">
             <AppenderRef ref="RollingFile"/>
         </Async>
+        <Http name="Http" url="http://localhost:9200/benchmark?bid=1" ignoreExceptions="true">
+            <JsonLayout compact="false" complete="true" eventEol="true"/>
+        </Http>
     </Appenders>
     <Loggers>
         <Root level="ERROR">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Report"/>
-            <!-- <AppenderRef ref="AsyncAppender" /> -->
+            <!--<AppenderRef ref="AsyncAppender" />-->
+            <AppenderRef ref="Http"/>
         </Root>
     </Loggers>
 </Configuration>

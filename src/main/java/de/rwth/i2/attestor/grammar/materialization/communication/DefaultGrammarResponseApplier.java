@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.grammar.materialization.communication;
 
-import de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier;
-import de.rwth.i2.attestor.grammar.materialization.GraphMaterializer;
+import de.rwth.i2.attestor.grammar.materialization.util.GrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.util.GraphMaterializer;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class DefaultGrammarResponseApplier implements GrammarResponseApplier {
     /**
      * @throws WrongResponseTypeException if the grammarResponse is not instanceof
      *                                    {@link DefaultGrammarResponse}.
-     * @see de.rwth.i2.attestor.grammar.materialization.GrammarResponseApplier#applyGrammarResponseTo(de.rwth.i2.attestor.graph.heap.HeapConfiguration, int, de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse)
+     * @see de.rwth.i2.attestor.grammar.materialization.util.GrammarResponseApplier#applyGrammarResponseTo(de.rwth.i2.attestor.graph.heap.HeapConfiguration, int, de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse)
      */
     @Override
     public Collection<HeapConfiguration> applyGrammarResponseTo(HeapConfiguration inputGraph,

@@ -13,7 +13,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.NonterminalEdgeBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -50,7 +49,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
         GeneralCanonicalizationStrategy canonizer
                 = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
 
-        ProgramState inputState = new DefaultProgramState(sceneObject, getSimpleGraph());
+        ProgramState inputState = sceneObject.scene().createProgramState(getSimpleGraph());
         ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 
         assertEquals(expectedSimpleAbstraction(lhs), res);
@@ -98,6 +97,6 @@ public class GeneralCanonicalizationTest_Default_Simple {
                 .addTentacle(nodes.get(1))
                 .addTentacle(nodes.get(0));
         hc = builder.build().build();
-        return new DefaultProgramState(sceneObject, hc);
+        return sceneObject.scene().createProgramState(hc);
     }
 }
