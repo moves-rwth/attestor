@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.grammar.materialization.util;
 
-import java.util.*;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarRequest;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+
+import java.util.*;
 
 /**
  * Responsible for computing and caching the rules (lhs &#8594; rhs) in the grammar which resolve a certain
@@ -70,18 +70,19 @@ public class ViolationPointResolver {
             Nonterminal nonterminal, int tentacle, String requiredSelector) {
 
     	Map<Nonterminal, Collection<HeapConfiguration>> rules = grammar.getAllRulesFor(nonterminal);
-    	
-        for( Nonterminal nt : rules.keySet() ){
 
-            Collection<HeapConfiguration> rhs = new LinkedList<>( rules.get(nt) );
+    	Iterator<Map.Entry<Nonterminal, Collection<HeapConfiguration>>> iterator = rules.entrySet().iterator();
+    	while(iterator.hasNext()) {
+    	    Map.Entry<Nonterminal, Collection<HeapConfiguration>> next = iterator.next();
+            Collection<HeapConfiguration> rhs = new LinkedList<>( next.getValue() );
             rhs.removeIf( hc -> ! ruleResolvesViolationPoint(hc, tentacle, requiredSelector));
             if( rhs.isEmpty() ){
-            	rules.remove(nt);
+                iterator.remove();
             }else{
-            	rules.put(nt, rhs);
+                next.setValue(rhs);
             }
-         }
-        
+        }
+
         return rules;
     }
     

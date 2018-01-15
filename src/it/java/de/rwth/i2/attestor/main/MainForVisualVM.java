@@ -29,7 +29,7 @@ public class MainForVisualVM extends AbstractAttestor{
         registry.addPhase(new MarkingGenerationPhase(scene));
         registry.addPhase(new GrammarRefinementPhase(scene));
         registry.addPhase(new AbstractionPreprocessingPhase(scene));
-        registry.addPhase(new DelayedPhase(scene,5000));
+        registry.addPhase(new DelayedPhase(scene,10000));
         registry.addPhase(new RecursiveStateSpaceGenerationPhase(scene));
         registry.addPhase(new ModelCheckingPhase(scene));
         registry.addPhase(new CounterexampleGenerationPhase(scene));
