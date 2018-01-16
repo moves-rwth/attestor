@@ -219,6 +219,22 @@ public class HeapConfigurationBuilderTest {
 
         try {
             hc.builder()
+                    .addSelector(buffer.get(3), sel, HeapConfiguration.INVALID_ELEMENT)
+                    .build();
+            fail("Selectors may not be pointed to invalid elements");
+        } catch(IllegalArgumentException ex) {
+        }
+
+        try {
+            hc.builder()
+                    .addSelector(HeapConfiguration.INVALID_ELEMENT, sel, buffer.get(3))
+                    .build();
+            fail("Selectors may not originate from invalid elements");
+        } catch(IllegalArgumentException ex) {
+        }
+
+        try {
+            hc.builder()
                     .addVariableEdge("var", buffer.get(0))
                     .addSelector(buffer.get(1), sel, 4)
                     .build();
@@ -923,6 +939,33 @@ public class HeapConfigurationBuilderTest {
             fail("The rank of the provided nonterminal does not match the number of external nodes of the replacement.");
         } catch (IllegalArgumentException ex) {
         }
+
+    }
+
+    @Test
+    public void testReplaceNonterminalEdgeDoubleTentacle() {
+
+        HeapConfiguration source = new InternalHeapConfiguration();
+        TIntArrayList srcNodes = new TIntArrayList();
+
+        source.builder()
+                .addNodes(new MockupType(), 3, srcNodes)
+                .addNonterminalEdge(new MockupNonterminal("nt", 2), new TIntArrayList(new int[]{srcNodes.get(1), srcNodes.get(1)}))
+                .build();
+
+        HeapConfiguration rule = new InternalHeapConfiguration();
+        TIntArrayList ruleNodes = new TIntArrayList();
+        rule.builder()
+                .addNodes(new MockupType(), 2, ruleNodes)
+                .addSelector(ruleNodes.get(0), new MockupSelector("sel"), ruleNodes.get(1))
+                .setExternal(ruleNodes.get(0))
+                .setExternal(ruleNodes.get(1))
+                .build();
+
+        source.builder().replaceNonterminalEdge(3, rule).build();
+
+        int target = source.selectorTargetOf(srcNodes.get(1), new MockupSelector("sel"));
+        assertEquals(srcNodes.get(1), target);
 
     }
 

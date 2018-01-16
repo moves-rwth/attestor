@@ -565,15 +565,16 @@ public class LabeledDigraph {
 
         replaceAll(externalNodes, from, to);
 
+        TIntArrayList predecessorsCopy = new TIntArrayList(predecessors.get(from));
         for (int i = 0; i < successors.get(from).size(); i++) {
 
             int s = successors.get(from).get(i);
             replaceAll(predecessors.get(s), from, to);
         }
 
-        for (int i = 0; i < predecessors.get(from).size(); i++) {
+        for (int i = 0; i < predecessorsCopy.size(); i++) {
 
-            int p = predecessors.get(from).get(i);
+            int p = predecessorsCopy.get(i);
             replaceAll(successors.get(p), from, to);
         }
 
