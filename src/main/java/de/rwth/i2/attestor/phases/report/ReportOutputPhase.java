@@ -31,9 +31,24 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.json.JSONWriter;
+
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -88,6 +103,8 @@ public class ReportOutputPhase extends AbstractPhase {
         if (outputSettings.isNoExport()) {
             return;
         }
+
+        sendBenchmarkRegisterRequest(scene().getIdentifier(), inputSettings.getName());
 
         stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         program = getPhase(ProgramTransformer.class).getProgram();
@@ -258,6 +275,24 @@ public class ReportOutputPhase extends AbstractPhase {
         HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
         exporter.exportForReport(hc);
         writer.close();
+    }
+
+    private void sendBenchmarkRegisterRequest(int id, String bName) throws UnsupportedEncodingException {
+        // Set up http client
+        HttpClient httpclient = HttpClientBuilder.create().build();
+        HttpPost httppost = new HttpPost("http://localhost:9200/benchmark");
+        httppost.addHeader("content-type", "application/json");
+
+        // Request parameters
+        StringEntity params = new StringEntity("{\"id\":" + id + ",\"name\":\"" + bName + "\"} ");
+        httppost.setEntity(params);
+
+        //Execute
+        try {
+            httpclient.execute(httppost);
+        } catch (IOException e) {
+            logger.warn("Not able to register benchmark with the API.");
+        }
     }
 
 }
