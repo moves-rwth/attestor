@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.phases.parser;
 import de.rwth.i2.attestor.io.settings.CommandLineReader;
 import de.rwth.i2.attestor.io.settings.SettingsFileReader;
 import de.rwth.i2.attestor.main.AbstractPhase;
+import de.rwth.i2.attestor.main.scene.DefaultScene;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
@@ -12,6 +13,8 @@ import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
+
+import java.util.Objects;
 
 public class CLIPhase extends AbstractPhase
         implements InputSettingsTransformer, OutputSettingsTransformer,
@@ -49,6 +52,8 @@ public class CLIPhase extends AbstractPhase
                     new SettingsFileReader(commandLineReader.getPathToSettingsFile());
             settingsReader.getInputSettings(inputSettings);
             inputSettings.setPathToSettingsFile(commandLineReader.getPathToSettingsFile());
+            DefaultScene defaultScene = (DefaultScene) scene();
+            defaultScene.setIdentifier(Objects.hashCode(commandLineReader.getPathToSettingsFile()));
             settingsReader.getOptionSettings(scene().options());
             settingsReader.getOutputSettings(outputSettings);
             settingsReader.getMCSettings(modelCheckingSettings);

@@ -355,6 +355,48 @@ public final class ExampleHcImplFactory extends SceneObject {
                 .build();
     }
 
+    public HeapConfiguration getCyclicList() {
+
+        HeapConfiguration result = new InternalHeapConfiguration();
+        TIntArrayList nodes = new TIntArrayList();
+
+        Type type = scene().getType("List");
+
+        Nonterminal nt = scene().createNonterminal("List", 2, new boolean[]{false, true});
+
+        return result.builder()
+                .addNodes(type, 2, nodes)
+                .addVariableEdge("x", nodes.get(0))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(1))
+                .build()
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(1))
+                .addTentacle(nodes.get(0))
+                .build()
+                .build();
+    }
+
+    public HeapConfiguration getAbstractCyclicList() {
+
+        HeapConfiguration result = new InternalHeapConfiguration();
+        TIntArrayList nodes = new TIntArrayList();
+
+        Type type = scene().getType("List");
+
+        Nonterminal nt = scene().createNonterminal("List", 2, new boolean[]{false, true});
+
+        return result.builder()
+                .addNodes(type, 1, nodes)
+                .addVariableEdge("x", nodes.get(0))
+                .addNonterminalEdge(nt)
+                .addTentacle(nodes.get(0))
+                .addTentacle(nodes.get(0))
+                .build()
+                .build();
+    }
+
     public HeapConfiguration getAbstractList() {
 
         HeapConfiguration result = new InternalHeapConfiguration();

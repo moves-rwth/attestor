@@ -12,6 +12,8 @@ import java.util.Collection;
 
 public interface Scene {
 
+    int getIdentifier();
+
     Type getType(String name);
 
     SelectorLabel getSelectorLabel(String name);
