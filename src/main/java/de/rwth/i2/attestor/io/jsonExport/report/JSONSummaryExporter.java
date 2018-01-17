@@ -52,13 +52,18 @@ public class JSONSummaryExporter implements SummaryExporter {
                 .key("mcresults")
                 .array();
 
+        int i = 0;
         for (Map.Entry<LTLFormula, Boolean> result : mcPhase.getLTLResults().entrySet()) {
             jsonWriter.object()
+                    .key("id")
+                    .value(i)
                     .key("formula")
                     .value(result.getKey().getFormulaString())
                     .key("satisfied")
                     .value(result.getValue().toString())
                     .endObject();
+
+            i++;
         }
 
 

@@ -190,7 +190,7 @@ public class ReportOutputPhase extends AbstractPhase {
         exporter.exportForReport(location,
                 getPhase(GrammarTransformer.class).getGrammar());
 
-        logger.info("done. Grammar for report exported to '" + location + "'");
+        logger.info("done. Grammar for report exported to " + location );
     }
 
     private void exportStateSpace(String location) throws IOException {
@@ -215,9 +215,8 @@ public class ReportOutputPhase extends AbstractPhase {
             );
         }
 
-        logger.info("done. State space for report exported to '"
+        logger.info("done. State space for report exported to "
                 + location
-                + "'"
         );
     }
 
@@ -234,9 +233,8 @@ public class ReportOutputPhase extends AbstractPhase {
         exporter.exportForReport(scene(), stateSpace, (ModelCheckingPhase) getPhase(ModelCheckingResultsTransformer.class), getPhase(MCSettingsTransformer.class).getMcSettings(),(CLIPhase) getPhase(CLIPhase.class), phases);
         writer.close();
 
-        logger.info("done. Analysis summary for report exported to '"
+        logger.info("done. Analysis summary for report exported to "
                 + location
-                + "'"
         );
     }
 
