@@ -1,11 +1,14 @@
 package de.rwth.i2.attestor.io.jsonExport.report;
 
+import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.main.scene.Options;
 import de.rwth.i2.attestor.main.scene.Scene;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
@@ -13,21 +16,21 @@ import java.io.Writer;
  */
 public class JSONOptionExporter {
 
-    protected final Writer writer;
-
+    protected final HttpExporter httpExporter;
     private static final Logger logger = LogManager.getLogger("JSONOptionExporter");
 
 
-    public JSONOptionExporter(Writer writer) {
+    public JSONOptionExporter(HttpExporter httpExporter) {
 
-        this.writer = writer;
+        this.httpExporter = httpExporter;
     }
+
 
     public void exportForReport(Scene scene){
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.array();
+        jsonStringer.array();
 
         // Specify which options should be exported
         String[] optionNames = {"mode", "abstractionDistance", "maximalStateSpace", "maximalHeap", "removeDeadVariables", "aggressiveNullAbstraction", "garbageCollection", "stateSpacePostProcessing"};
@@ -70,10 +73,17 @@ public class JSONOptionExporter {
                     logger.error("Cannot export option value for option: " + optionName + ". Option handling not specified.");
                     break;
             }
-            writeOption(jsonWriter, optionName, value);
+            writeOption(jsonStringer, optionName, value);
         }
 
-        jsonWriter.endArray();
+        jsonStringer.endArray();
+
+        try {
+            httpExporter.sendOptionsRequest(scene.getIdentifier(),jsonStringer.toString());
+        } catch (UnsupportedEncodingException e) {
+            // todo, json stringer returns wrong format, this should not happen!!
+        }
+        System.out.println(jsonStringer.toString());
 
     }
 

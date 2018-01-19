@@ -37,6 +37,7 @@ import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 
@@ -100,11 +101,11 @@ public class ReportOutputPhase extends AbstractPhase {
         inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 
-        if (outputSettings.isNoExport()) {
+        if (outputSettings.isNoExport() || !outputSettings.isExportReportOutput()) {
             return;
         }
 
-        sendBenchmarkRegisterRequest(scene().getIdentifier(), inputSettings.getName());
+        scene().getHttpExporter().sendBenchmarkRegisterRequest(scene().getIdentifier(), inputSettings.getName());
 
         stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         program = getPhase(ProgramTransformer.class).getProgram();
@@ -114,13 +115,12 @@ public class ReportOutputPhase extends AbstractPhase {
         /* Export the attestor input relevant for the report */
 
         // Export the initial heap configurations (consequtively numbered)
-        exportSummaryInitialHCs(outputDirectory);
         exportInitialHCs(outputDirectory);
+
         // Copy the settingsfile
         copySettingsFile(outputDirectory);
         // Export _all_ options
         exportOptions(outputDirectory);
-
 
         // Copy input class definition
         copyInputProgram(outputDirectory);
@@ -137,13 +137,11 @@ public class ReportOutputPhase extends AbstractPhase {
         exportStateSpace(outputDirectory);
     }
 
-    private void exportSummaryInitialHCs(String outputDirectory) {
-    }
-
+    // todo remove writer stuff
     private void exportOptions(String outputDirectory) throws IOException {
         FileUtils.createDirectories(outputDirectory);
         FileWriter writer = new FileWriter(outputDirectory + File.separator + "attestorInput" + File.separator + "options.json");
-        JSONOptionExporter exporter = new JSONOptionExporter(writer);
+        JSONOptionExporter exporter = new JSONOptionExporter(scene().getHttpExporter());
         exporter.exportForReport(scene());
         writer.close();
     }
@@ -170,7 +168,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
         FileUtils.createDirectories(location);
         FileWriter writer = new FileWriter(location + File.separator + "attestorInput" + File.separator + "initialHCsSummary.json");
-        exportSummaryInitialHCs(writer, initialHCs);
+        exportSummaryInitialHCs(initialHCs);
         writer.close();
 
         int i = 0;
@@ -187,13 +185,22 @@ public class ReportOutputPhase extends AbstractPhase {
         }
     }
 
-    private void exportSummaryInitialHCs(FileWriter writer, List<HeapConfiguration> initialHCs) {
+    private void exportSummaryInitialHCs(List<HeapConfiguration> initialHCs) {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.object()
+        jsonStringer.object()
                     .key("number").value(initialHCs.size())
                     .endObject();
+
+        try {
+            scene().getHttpExporter().sendSummaryInitialHCsRequest(scene().getIdentifier(),jsonStringer.toString());
+        } catch (UnsupportedEncodingException e) {
+            // todo, json stringer returns wrong format, this should not happen!!
+        }
+        System.out.println(jsonStringer.toString());
+
+
     }
 
     private void exportGrammar(String location) throws IOException {
@@ -204,7 +211,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
         // Generate JSON files
         GrammarExporter exporter = new JsonGrammarExporter();
-        exporter.exportForReport(location,
+        exporter.exportForReport(scene().getIdentifier(), scene().getHttpExporter(), location,
                 getPhase(GrammarTransformer.class).getGrammar());
 
         logger.info("done. Grammar for report exported to " + location );
@@ -246,7 +253,7 @@ public class ReportOutputPhase extends AbstractPhase {
         FileUtils.createDirectories(location);
         FileWriter writer = new FileWriter(location + File.separator + "analysisSummary.json");
 
-        SummaryExporter exporter = new JSONSummaryExporter(writer);
+        SummaryExporter exporter = new JSONSummaryExporter(scene().getHttpExporter());
         exporter.exportForReport(scene(), stateSpace, (ModelCheckingPhase) getPhase(ModelCheckingResultsTransformer.class), getPhase(MCSettingsTransformer.class).getMcSettings(),(CLIPhase) getPhase(CLIPhase.class), phases);
         writer.close();
 
@@ -275,24 +282,6 @@ public class ReportOutputPhase extends AbstractPhase {
         HeapConfigurationExporter exporter = new JsonHeapConfigurationExporter(writer);
         exporter.exportForReport(hc);
         writer.close();
-    }
-
-    private void sendBenchmarkRegisterRequest(int id, String bName) throws UnsupportedEncodingException {
-        // Set up http client
-        HttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost httppost = new HttpPost("http://localhost:9200/benchmark");
-        httppost.addHeader("content-type", "application/json");
-
-        // Request parameters
-        StringEntity params = new StringEntity("{\"id\":" + id + ",\"name\":\"" + bName + "\"} ");
-        httppost.setEntity(params);
-
-        //Execute
-        try {
-            httpclient.execute(httppost);
-        } catch (IOException e) {
-            logger.warn("Not able to register benchmark with the API.");
-        }
     }
 
 }

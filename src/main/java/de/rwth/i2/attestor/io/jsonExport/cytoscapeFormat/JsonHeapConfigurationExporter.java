@@ -5,17 +5,23 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.Writer;
 
 public class JsonHeapConfigurationExporter implements HeapConfigurationExporter {
 
-    protected final Writer writer;
+    protected Writer writer;
 
     public JsonHeapConfigurationExporter(Writer writer) {
 
         this.writer = writer;
+    }
+
+    public JsonHeapConfigurationExporter() {
+
+        this.writer = null;
     }
 
     @Override
@@ -38,18 +44,20 @@ public class JsonHeapConfigurationExporter implements HeapConfigurationExporter 
     }
 
     @Override
-    public void exportForReport(HeapConfiguration heapConfiguration) {
+    public String exportForReport(HeapConfiguration heapConfiguration) {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.object()
+        jsonStringer.object()
                 .key("nodes")
                 .array();
 
-        writeNodesAndEdges(jsonWriter, heapConfiguration);
+        writeNodesAndEdges(jsonStringer, heapConfiguration);
 
-        jsonWriter.endArray()
+        jsonStringer.endArray()
                 .endObject();
+
+        return jsonStringer.toString();
 
     }
 

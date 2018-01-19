@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.grammar;
 
+import de.rwth.i2.attestor.io.HttpExporter;
+
 import java.io.IOException;
 
 /**
@@ -23,6 +25,6 @@ public interface GrammarExporter {
      * @param grammar   The grammar that should be exported.
      * @throws IOException if writing of exported files fails.
      */
-    void exportForReport(String directory, Grammar grammar) throws IOException;
+    void exportForReport(int bid, HttpExporter httpExporter, String directory, Grammar grammar) throws IOException;
 
 }

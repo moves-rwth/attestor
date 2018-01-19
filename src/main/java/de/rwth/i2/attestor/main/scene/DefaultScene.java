@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -34,6 +35,8 @@ public class DefaultScene implements Scene {
     private long totalNumberOfStates = 0;
 
     private int identifier = 0;
+
+    private HttpExporter httpExporter = new HttpExporter();
 
     @Override
     public int getIdentifier() {
@@ -164,5 +167,10 @@ public class DefaultScene implements Scene {
     public Strategies strategies() {
 
         return strategies;
+    }
+
+    @Override
+    public HttpExporter getHttpExporter() {
+        return this.httpExporter;
     }
 }

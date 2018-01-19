@@ -14,5 +14,5 @@ public interface HeapConfigurationExporter {
      */
     void export(HeapConfiguration heapConfiguration);
 
-    void exportForReport(HeapConfiguration heapConfiguration);
+    String exportForReport(HeapConfiguration heapConfiguration);
 }

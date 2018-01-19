@@ -2,11 +2,13 @@ package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public abstract class AbstractPhase extends SceneObject {
 
@@ -73,6 +75,15 @@ public abstract class AbstractPhase extends SceneObject {
 
         logger.fatal(getName() + " failed.");
         logger.fatal(e.getMessage());
+
+        if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
+            try {
+                scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "ERROR", getName() + " failed.");
+            } catch (UnsupportedEncodingException exc) {
+                exc.printStackTrace();
+            }
+        }
+
         e.printStackTrace();
         System.exit(1);
     }
@@ -85,5 +96,14 @@ public abstract class AbstractPhase extends SceneObject {
     protected void logHighlight(String message) {
 
         logger.log(Level.getLevel("HIGHLIGHT"), message);
+
+            // TODO: speak with Christoph!!
+            //if (!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
+                try {
+                    scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "INFO", message);
+                } catch (UnsupportedEncodingException exc) {
+                    exc.printStackTrace();
+                }
+           // }
     }
 }

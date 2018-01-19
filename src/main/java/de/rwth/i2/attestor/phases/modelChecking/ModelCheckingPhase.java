@@ -9,10 +9,12 @@ import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ProofStructure;
 import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
+import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -89,8 +91,23 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
         for (Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
             if (result.getValue()) {
                 logger.log(Level.getLevel("LTL-SAT"), result.getKey().getFormulaString());
+
+                if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
+                    try {
+                        scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "LTL-SAT", result.getKey().getFormulaString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 logger.log(Level.getLevel("LTL-UNSAT"), result.getKey().getFormulaString());
+                if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
+                    try {
+                        scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "LTL-UNSAT", result.getKey().getFormulaString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }

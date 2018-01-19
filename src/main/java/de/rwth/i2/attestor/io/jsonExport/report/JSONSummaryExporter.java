@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.io.jsonExport.report;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -8,8 +9,10 @@ import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
 import de.rwth.i2.attestor.phases.parser.CLIPhase;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -19,31 +22,41 @@ import java.util.Map;
  */
 public class JSONSummaryExporter implements SummaryExporter {
 
+    protected final HttpExporter httpExporter;
 
-    protected final Writer writer;
+    public JSONSummaryExporter(HttpExporter httpExporter) {
 
-    public JSONSummaryExporter(Writer writer) {
-
-        this.writer = writer;
+        this.httpExporter = httpExporter;
     }
 
-    public void exportForReport(Scene scene, StateSpace statespace, ModelCheckingPhase mcPhase, ModelCheckingSettings mcSettings, CLIPhase cliPhase, List<AbstractPhase> phases){
+    public void exportForReport(Scene scene, StateSpace statespace, ModelCheckingPhase mcPhase, ModelCheckingSettings mcSettings, CLIPhase cliPhase, List<AbstractPhase> phases)  {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        //JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.array();
+        jsonStringer.array();
 
-        writeSummary(jsonWriter, cliPhase, scene, statespace, mcPhase, mcSettings);
+        writeSummary(jsonStringer, cliPhase, scene, statespace, mcPhase, mcSettings);
 
-        writeRuntime(jsonWriter, phases);
+        writeRuntime(jsonStringer, phases);
 
-        writeStateSpaceInfo(jsonWriter, scene, statespace);
+        writeStateSpaceInfo(jsonStringer, scene, statespace);
 
-        writeMessage(jsonWriter);
+        writeMessage(jsonStringer);
 
-        writeMCResults(jsonWriter, mcPhase);
+        writeMCResults(jsonStringer, mcPhase);
 
-        jsonWriter.endArray();
+        jsonStringer.endArray();
+
+
+        try {
+            httpExporter.sendSummaryRequest(scene.getIdentifier(),jsonStringer.toString());
+        } catch (UnsupportedEncodingException e) {
+            // todo, json stringer returns wrong format, this should not happen!!
+        }
+        System.out.println(jsonStringer.toString());
+
+
 
     }
 
