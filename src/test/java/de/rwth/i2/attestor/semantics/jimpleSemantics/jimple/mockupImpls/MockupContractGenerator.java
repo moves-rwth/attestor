@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContra
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.ContractGenerator;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -41,6 +42,7 @@ public class MockupContractGenerator implements ContractGenerator {
                     .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                     .setStateCounter(new NoStateCounter())
                     .setStateSpaceSupplier(new MockupStateSpaceSupplier())
+                    .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                     .build()
                     .generate()
                     .getFinalStates();

@@ -96,6 +96,10 @@ public class StateSpaceGeneratorBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No post-processing strategy.");
         }
 
+        if(generator.finalStateStrategy == null) {
+            throw new IllegalStateException("StateSpaceGenerator: No final state strategy.");
+        }
+
         if(initialStateSpace == null) {
             generator.stateSpace = generator.stateSpaceSupplier.get();
         } else {
@@ -247,6 +251,12 @@ public class StateSpaceGeneratorBuilder {
     public StateSpaceGeneratorBuilder setInitialStateSpace(StateSpace initialStateSpace) {
 
         this.initialStateSpace = initialStateSpace;
+        return this;
+    }
+
+    public StateSpaceGeneratorBuilder setFinalStateStrategy(FinalStateStrategy finalStateStrategy) {
+
+        generator.finalStateStrategy = finalStateStrategy;
         return this;
     }
 

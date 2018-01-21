@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.Pro
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
@@ -53,6 +54,7 @@ public class StateSpaceGeneratorTest {
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100))
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
+                .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
         ;
     }
 

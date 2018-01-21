@@ -64,6 +64,7 @@ public abstract  class AbstractMarkingGenerator {
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
+                .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                 .build();
 
         try {
