@@ -95,7 +95,8 @@ public class CounterexampleGenerator {
         StateSpaceGenerator stateSpaceGenerator = setupStateSpaceGenerator(
                topLevelProgram,
                getInitialState(),
-               topLevelExplorationStrategy
+               topLevelExplorationStrategy,
+                new TraceBasedFinalStateStrategy(stateSubsumptionStrategy, trace.getFinalState())
         );
         try {
             return stateSpaceGenerator
@@ -107,7 +108,8 @@ public class CounterexampleGenerator {
     }
 
     private StateSpaceGenerator setupStateSpaceGenerator(Program program, ProgramState initialState,
-                                                         StateExplorationStrategy stateExplorationStrategy) {
+                                                         StateExplorationStrategy stateExplorationStrategy,
+                                                         FinalStateStrategy finalStateStrategy) {
 
         return StateSpaceGenerator.builder()
                 .setProgram(program)
@@ -121,6 +123,7 @@ public class CounterexampleGenerator {
                 .setStateLabelingStrategy(state -> {})
                 .setStateCounter(states -> {})
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())
+                .setFinalStateStrategy(finalStateStrategy)
                 .build();
     }
 
@@ -164,7 +167,8 @@ public class CounterexampleGenerator {
                 return setupStateSpaceGenerator(
                         method.getBody(),
                         programState,
-                        new TargetBasedStateExplorationStrategy(targetStates, stateSubsumptionStrategy)
+                        new TargetBasedStateExplorationStrategy(targetStates, stateSubsumptionStrategy),
+                        new NoSuccessorFinalStateStrategy()
                 ).generate().getFinalStates();
             } catch (StateSpaceGenerationAbortedException e) {
                 throw new IllegalStateException("Failed to execute method: " + method);

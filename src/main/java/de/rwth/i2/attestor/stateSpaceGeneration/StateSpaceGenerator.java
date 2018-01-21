@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import de.rwth.i2.attestor.semantics.TerminalStatement;
 import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,6 +75,10 @@ public class StateSpaceGenerator {
      * Functional interface to obtain instances of state spaces.
      */
     StateSpaceSupplier stateSpaceSupplier;
+    /**
+     * Functional interface to check whether a state has to be marked as final
+     */
+    FinalStateStrategy finalStateStrategy;
 
     protected StateSpaceGenerator() {
     }
@@ -100,6 +103,7 @@ public class StateSpaceGenerator {
                 .setStateExplorationStrategy(stateSpaceGenerator.getStateExplorationStrategy())
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
+                .setFinalStateStrategy(stateSpaceGenerator.getFinalStateStrategy())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
     }
 
@@ -168,6 +172,10 @@ public class StateSpaceGenerator {
         return totalStatesCounter;
     }
 
+    public FinalStateStrategy getFinalStateStrategy() {
+        return finalStateStrategy;
+    }
+
     /**
      * Attempts to generate a StateSpace according to the
      * underlying analysis.
@@ -195,7 +203,7 @@ public class StateSpaceGenerator {
 
             if (isSufficientlyMaterialized) {
                 Collection<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
-                if (successorStates.isEmpty() && isTerminalStatement(stateSemanticsCommand) ) {
+                if(finalStateStrategy.isFinalState(state, successorStates, stateSemanticsCommand)) {
                     stateSpace.setFinal(state);
                     // Add self-loop to each final state
                     stateSpace.addArtificialInfPathsTransition(state);
@@ -218,9 +226,6 @@ public class StateSpaceGenerator {
         return stateSpace;
     }
 
-	private boolean isTerminalStatement(SemanticsCommand stateSemantics) {
-		return stateSemantics.getClass() == TerminalStatement.class;
-	}
 
     private SemanticsCommand semanticsOf(ProgramState state) {
 
