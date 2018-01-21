@@ -311,10 +311,7 @@ public class SettingsFileReader {
 
         if( jsonOutput.has( "report" ) ){
             output.setExportReportOutput( true );
-            JSONObject jsonReportOpt = jsonOutput.getJSONObject( "report" );
-            if( jsonReportOpt.has("path" ) ){
-                output.setFolderForReportOutput( jsonReportOpt.getString("path" ) );
-            }
+            //JSONObject jsonReportOpt = jsonOutput.getJSONObject( "report" );
         }
     }
 

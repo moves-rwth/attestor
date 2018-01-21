@@ -72,7 +72,7 @@ public class ReportOutputPhase extends AbstractPhase {
     public void logSummary(){
        if(!outputSettings.isNoExport() && outputSettings.isExportReportOutput()) {
 
-            logSum("Output for report generated in " + outputSettings.getFolderForReportOutput());
+            logSum("Output for report generated.");
        }
     }
 
@@ -90,8 +90,6 @@ public class ReportOutputPhase extends AbstractPhase {
 
         stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         program = getPhase(ProgramTransformer.class).getProgram();
-
-        String outputDirectory = outputSettings.getFolderForReportOutput();
 
         /* Export the attestor input relevant for the report */
 

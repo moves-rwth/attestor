@@ -103,11 +103,6 @@ public class OutputSettings {
     private Map<String, String> requiredContractsForReuse;
 
     /**
-     * The directory that contains the case study's output for report generation
-     */
-    private String folderForReportOutput;
-
-    /**
      * True if and only if report output should be generated.
      */
     private boolean exportReportOutput = false;
@@ -144,7 +139,6 @@ public class OutputSettings {
         pathForStateSpace = path;
         pathForGrammar = path;
         pathForCustomHcs = path;
-        folderForReportOutput = path;
     }
 
     /**
@@ -417,14 +411,6 @@ public class OutputSettings {
     public List<HcLabelPair> getCustomHcSet() {
 
         return this.customHcList;
-    }
-
-    public String getFolderForReportOutput() {
-        return folderForReportOutput;
-    }
-
-    public void setFolderForReportOutput(String folderForReportOutput) {
-        this.folderForReportOutput = folderForReportOutput;
     }
 
     public boolean isExportReportOutput() {
