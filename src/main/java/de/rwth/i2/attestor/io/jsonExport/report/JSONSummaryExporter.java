@@ -13,9 +13,9 @@ import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by christina on 05.12.17.
@@ -31,7 +31,6 @@ public class JSONSummaryExporter implements SummaryExporter {
 
     public void exportForReport(Scene scene, StateSpace statespace, ModelCheckingPhase mcPhase, ModelCheckingSettings mcSettings, CLIPhase cliPhase, List<AbstractPhase> phases)  {
 
-        //JSONWriter jsonWriter = new JSONWriter(writer);
         JSONStringer jsonStringer = new JSONStringer();
 
         jsonStringer.array();
@@ -54,9 +53,6 @@ public class JSONSummaryExporter implements SummaryExporter {
         } catch (UnsupportedEncodingException e) {
             // todo, json stringer returns wrong format, this should not happen!!
         }
-        System.out.println(jsonStringer.toString());
-
-
 
     }
 
@@ -65,18 +61,16 @@ public class JSONSummaryExporter implements SummaryExporter {
                 .key("mcresults")
                 .array();
 
-        int i = 0;
         for (Map.Entry<LTLFormula, Boolean> result : mcPhase.getLTLResults().entrySet()) {
             jsonWriter.object()
                     .key("id")
-                    .value(i)
+                    .value(Objects.hashCode(result.getKey().getFormulaString()))
                     .key("formula")
                     .value(result.getKey().getFormulaString())
                     .key("satisfied")
                     .value(result.getValue().toString())
                     .endObject();
 
-            i++;
         }
 
 

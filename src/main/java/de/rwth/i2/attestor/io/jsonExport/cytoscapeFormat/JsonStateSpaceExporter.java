@@ -10,6 +10,7 @@ import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -23,8 +24,9 @@ import java.util.Set;
  */
 public class JsonStateSpaceExporter implements StateSpaceExporter {
 
-    private final Writer writer;
+    private Writer writer;
     private JSONWriter jsonWriter;
+    private JSONStringer jsonStringer;
     private StateSpace stateSpace;
     private Program program;
 
@@ -38,6 +40,10 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
     public JsonStateSpaceExporter(Writer writer) {
 
         this.writer = writer;
+    }
+
+    public JsonStateSpaceExporter() {
+        this.writer = null;
     }
 
     @Override
@@ -61,18 +67,18 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
                 .object()
                 .key("nodes")
                 .array();
-        addNodes();
+        addNodes(jsonWriter);
         jsonWriter.endArray().key("edges").array();
-        addStateSpaceEdges();
-        addTransitiveEdges();
+        addStateSpaceEdges(jsonWriter);
+        addTransitiveEdges(jsonWriter);
         jsonWriter.endArray().endObject().endObject();
         writer.close();
     }
 
     @Override
-    public void exportForReport(StateSpace stateSpace, Program program) throws IOException {
+    public String exportForReport(StateSpace stateSpace, Program program) throws IOException {
 
-        jsonWriter = new JSONWriter(writer);
+        jsonStringer = new JSONStringer();
         this.stateSpace = stateSpace;
         this.program = program;
 
@@ -85,15 +91,16 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
 
         computeNumberOfIncomingEdges();
 
-        jsonWriter.object()
+        jsonStringer.object()
                 .key("nodes")
                 .array();
-        addNodes();
-        jsonWriter.endArray().key("edges").array();
-        addStateSpaceEdges();
-        addTransitiveEdges();
-        jsonWriter.endArray().endObject();
-        writer.close();
+        addNodes(jsonStringer);
+        jsonStringer.endArray().key("edges").array();
+        addStateSpaceEdges(jsonStringer);
+        addTransitiveEdges(jsonStringer);
+        jsonStringer.endArray().endObject();
+
+        return jsonStringer.toString();
 
     }
 
@@ -122,7 +129,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private void addNodes() {
+    private void addNodes(JSONWriter jsonWriter) {
 
         for (ProgramState s : states) {
             int id = s.getStateSpaceId();
@@ -160,7 +167,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private void addStateSpaceEdges() {
+    private void addStateSpaceEdges(JSONWriter jsonWriter) {
 
         for (ProgramState predecessorState : states) {
             int source = predecessorState.getStateSpaceId();
@@ -193,7 +200,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private void addTransitiveEdges() {
+    private void addTransitiveEdges(JSONWriter jsonWriter) {
 
         for (ProgramState s : stateSpace.getStates()) {
             int source = s.getStateSpaceId();

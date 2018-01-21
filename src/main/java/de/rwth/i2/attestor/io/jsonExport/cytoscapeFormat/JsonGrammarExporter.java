@@ -42,12 +42,9 @@ public class JsonGrammarExporter implements GrammarExporter {
     }
 
     @Override
-    public void exportForReport(int bid, HttpExporter httpExporter, String directory, Grammar grammar) throws IOException {
+    public void exportForReport(int bid, HttpExporter httpExporter, Grammar grammar) throws IOException {
 
-        FileUtils.createDirectories(directory);
-        FileWriter writer = new FileWriter(directory + File.separator + "grammarExport.json");
         httpExporter.sendGrammarSummaryRequest(bid, exportGrammar(grammar));
-        writer.close();
 
         int ntCount = 1;
         for (Nonterminal nt : grammar.getAllLeftHandSides()) {
@@ -59,14 +56,6 @@ public class JsonGrammarExporter implements GrammarExporter {
             }
             ntCount++;
         }
-    }
-
-    private void writeHeapConfigurationForReport(String filePath, HeapConfiguration hc) throws IOException {
-
-        FileWriter writer = new FileWriter(filePath);
-        HeapConfigurationExporter exporter = new JsonExtendedHeapConfigurationExporter(writer);
-        exporter.exportForReport(hc);
-        writer.close();
     }
 
     private void exportGrammar(Writer writer, Grammar grammar) {

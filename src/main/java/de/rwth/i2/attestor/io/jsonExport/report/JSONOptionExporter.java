@@ -9,7 +9,6 @@ import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 
 /**
  * Created by christina on 19.12.17.
@@ -83,8 +82,6 @@ public class JSONOptionExporter {
         } catch (UnsupportedEncodingException e) {
             // todo, json stringer returns wrong format, this should not happen!!
         }
-        System.out.println(jsonStringer.toString());
-
     }
 
     private void writeOption(JSONWriter jsonWriter, String name, String value){
