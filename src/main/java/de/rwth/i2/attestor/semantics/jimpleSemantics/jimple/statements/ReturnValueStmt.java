@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -118,7 +119,7 @@ public class ReturnValueStmt extends Statement {
         while (iter.hasNext()) {
             int var = iter.next();
             String name = heap.nameOf(var);
-            if (!(Constants.isConstant(name) || name.startsWith("@return"))) {
+            if (!(Markings.isMarking(name) || Constants.isConstant(name) || name.startsWith("@return"))) {
                 builder.removeVariableEdge(var);
             }
         }
