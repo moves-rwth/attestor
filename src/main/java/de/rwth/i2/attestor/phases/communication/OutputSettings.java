@@ -412,6 +412,7 @@ public class OutputSettings {
         this.pathForStateSpace = rootPath + File.separator + this.pathForStateSpace;
         this.pathForCustomHcs = rootPath + File.separator + this.pathForCustomHcs;
         this.folderForReuseContracts = rootPath + File.separator + this.folderForReuseContracts;
+        this.pathForContractsForInspection = rootPath + File.separator + this.pathForContractsForInspection;
     }
 
     public List<HcLabelPair> getCustomHcSet() {
