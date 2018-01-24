@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.main.scene;
 
+import java.util.Collection;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -7,8 +9,6 @@ import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-
-import java.util.Collection;
 
 public interface Scene {
 
@@ -29,7 +29,7 @@ public interface Scene {
 
     Contract createContract(HeapConfiguration precondition, Collection<HeapConfiguration> postconditions);
 
-    Method getMethod(String signature);
+    Method getOrCreateMethod(String signature);
 
     Collection<Method> getRegisteredMethods();
 
@@ -40,5 +40,7 @@ public interface Scene {
     Options options();
 
     Strategies strategies();
+
+	Method getMethodIfPresent(String signature) throws ElementNotPresentException;
 
 }

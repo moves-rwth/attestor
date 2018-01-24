@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
+import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import de.rwth.i2.attestor.phases.transformers.*;
@@ -84,10 +85,17 @@ public class ReportGenerationPhase extends AbstractPhase {
             String filename = outputSettings.getContractForReuseRequests().get(signature);
             FileWriter writer = new FileWriter(directory + File.separator + filename);
 
-            Collection<Contract> contracts = scene().getMethod(signature).getContractsForExport();
+            Collection<Contract> contracts;
+			try {
+				contracts = scene().getMethodIfPresent(signature).getContractsForExport();
+				ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
+	            exporter.export(signature, contracts);
+	            
+			} catch (ElementNotPresentException e) {
+				logger.info("The contract for " + signature + " is not present.");
+			}
 
-            ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
-            exporter.export(signature, contracts);
+            
             writer.close();
         }
         logger.info("Exported contracts for reuse to '"

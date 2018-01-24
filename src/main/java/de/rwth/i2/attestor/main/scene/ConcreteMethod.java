@@ -16,7 +16,7 @@ class ConcreteMethod implements Method {
     public ConcreteMethod(String signature) {
 
         this.signature = signature;
-        //this.name = signature;
+        this.name = signature;
     }
 
     @Override

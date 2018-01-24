@@ -45,7 +45,7 @@ public class AssignInvokeTest_trivial {
                 = new Local(type, "x");
 
 
-        Method method = sceneObject.scene().getMethod("method");
+        Method method = sceneObject.scene().getOrCreateMethod("method");
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new Skip(sceneObject, -1));
         method.setBody(new ProgramImpl(defaultControlFlow));
