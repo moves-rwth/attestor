@@ -1,18 +1,17 @@
 package de.rwth.i2.attestor.io.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
-import de.rwth.i2.attestor.phases.communication.InputSettings;
-import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.phases.communication.OutputSettings;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.phases.communication.*;
 
 /**
  * @author Hannah Arndt, Christoph, Christina
@@ -161,13 +160,17 @@ public class SettingsFileReader {
 
     private void loadGrammarSettings(InputSettings input, boolean hasDefaultPath, JSONObject grammarSettings) {
 
-        if (grammarSettings.has("file")) {
+        if (grammarSettings.has("files")) {
             if (grammarSettings.has("path")) {
                 input.setPathToGrammar(grammarSettings.getString("path"));
             } else if (!hasDefaultPath) {
                 logger.error("You must define a default path or a path for the grammar");
             }
-            input.setUserDefinedGrammarName(grammarSettings.getString("file"));
+            JSONArray fileNames = grammarSettings.getJSONArray("files");
+            for( int i = 0; i < fileNames.length(); i++ ){
+            	input.addUserDefinedGrammarName( fileNames.getString(i) );
+            }
+            
         }
     }
 

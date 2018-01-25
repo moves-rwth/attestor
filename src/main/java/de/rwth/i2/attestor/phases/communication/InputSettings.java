@@ -2,9 +2,7 @@ package de.rwth.i2.attestor.phases.communication;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * All global communication regarding input files.
@@ -53,7 +51,7 @@ public class InputSettings {
     /**
      * The name of the file of the graph grammar underlying the analysis.
      */
-    private String userDefinedGrammarName = null;
+    private List<String> userDefinedGrammarName;
     /**
      * The list of predefined grammars used by the current analysis
      */
@@ -201,9 +199,9 @@ public class InputSettings {
      *
      * @return the location of the userDefinedGrammar
      */
-    public String getUserDefinedGrammarName() {
-
-        return this.userDefinedGrammarName;
+    public boolean hasUserDefinedGrammar() {
+    	
+        return this.userDefinedGrammarName != null;
     }
 
     /**
@@ -211,9 +209,24 @@ public class InputSettings {
      *
      * @param userDefinedGrammarName The name of the file containing the graph grammar.
      */
-    public void setUserDefinedGrammarName(String userDefinedGrammarName) {
+    public void addUserDefinedGrammarName(String userDefinedGrammarName) {
+    	
+    	if( this.userDefinedGrammarName == null ){
+    		this.userDefinedGrammarName = new ArrayList<>();
+    	}
+        this.userDefinedGrammarName.add( userDefinedGrammarName );
+    }
+    
+    /**
+     * @return The fully qualified paths to the files holding the graph grammar underlying the analysis.
+     */
+    public List<String> getGrammarLocations() {
 
-        this.userDefinedGrammarName = userDefinedGrammarName;
+    	List<String> grammarLocations = new ArrayList<>();
+    	for( String filename : userDefinedGrammarName ){
+    		grammarLocations.add( pathToGrammar + File.separator + filename );
+    	}
+        return grammarLocations;
     }
 
     /**
@@ -254,13 +267,7 @@ public class InputSettings {
         return this.contractFiles;
     }
 
-    /**
-     * @return The fully qualified path to the file holding the graph grammar underlying the analysis.
-     */
-    public String getGrammarLocation() {
 
-        return pathToGrammar + File.separator + userDefinedGrammarName;
-    }
 
     /**
      * Sets the path to the file holding the initial state.
