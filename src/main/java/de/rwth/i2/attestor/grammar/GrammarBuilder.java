@@ -41,9 +41,9 @@ public class GrammarBuilder {
         return this;
     }
 
-    public GrammarBuilder addRules(Map<Nonterminal, Collection<HeapConfiguration>> newRules) {
+    public GrammarBuilder addRules(Map<Nonterminal, ? extends Collection<HeapConfiguration>> newRules) {
 
-        for (Map.Entry<Nonterminal, Collection<HeapConfiguration>> ruleEntry : newRules.entrySet()) {
+        for (Map.Entry<Nonterminal, ? extends Collection<HeapConfiguration>> ruleEntry : newRules.entrySet()) {
             this.addRules(ruleEntry.getKey(), ruleEntry.getValue());
         }
         return this;

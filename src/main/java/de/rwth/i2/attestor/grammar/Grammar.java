@@ -3,10 +3,7 @@ package de.rwth.i2.attestor.grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Immutable data-object storing all the rules (lhs &#8594; rhs).
@@ -17,10 +14,12 @@ import java.util.Set;
 public class Grammar {
 
     final Map<Nonterminal, Set<HeapConfiguration>> rules;
+    Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules;
 
-    public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+    Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
 
         this.rules = rules;
+        this.collapsedRules = new LinkedHashMap<>();
     }
 
     public static GrammarBuilder builder() {
@@ -54,7 +53,11 @@ public class Grammar {
 
     public Set<CollapsedHeapConfiguration> getCollapsedRightHandSidesFor(Nonterminal nonterminal) {
 
-        return Collections.emptySet();
+        if(!collapsedRules.containsKey(nonterminal)) {
+            return Collections.emptySet();
+        } else {
+            return Collections.unmodifiableSet(collapsedRules.get(nonterminal));
+        }
     }
 
 
