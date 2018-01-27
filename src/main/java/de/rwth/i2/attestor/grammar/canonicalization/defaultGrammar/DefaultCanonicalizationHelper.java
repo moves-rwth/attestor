@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
+import de.rwth.i2.attestor.grammar.CollapsedHeapConfiguration;
+import de.rwth.i2.attestor.grammar.OriginalEmbedding;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -59,6 +61,24 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
     public HeapConfiguration prepareHeapForCanonicalization(HeapConfiguration toAbstract) {
 
         return toAbstract;
+    }
+
+    @Override
+    public HeapConfiguration tryReplaceMatching(HeapConfiguration toAbstract,
+                                                CollapsedHeapConfiguration rhs,
+                                                Nonterminal lhs) {
+
+        HeapConfiguration collapsedHc = rhs.getCollapsed();
+        AbstractMatchingChecker checker = provider.getEmbeddingChecker(toAbstract, collapsedHc);
+
+        if (checker.hasMatching()) {
+
+            Matching collapsedEmbedding = checker.getMatching();
+            Matching embedding = new OriginalEmbedding(rhs, collapsedEmbedding);
+
+            return replaceEmbeddingBy(toAbstract, embedding, lhs);
+        }
+        return null;
     }
 
 

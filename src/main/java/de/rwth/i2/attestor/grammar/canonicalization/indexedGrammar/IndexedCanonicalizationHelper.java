@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
+import de.rwth.i2.attestor.grammar.CollapsedHeapConfiguration;
+import de.rwth.i2.attestor.grammar.OriginalEmbedding;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -85,6 +87,30 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
         HeapConfiguration heap = toAbstract.clone();
         indexCanonizationStrategy.canonizeIndex(heap);
         return heap;
+    }
+
+    @Override
+    public HeapConfiguration tryReplaceMatching(HeapConfiguration toAbstract, CollapsedHeapConfiguration rhs, Nonterminal lhs) {
+
+        HeapConfiguration result = null;
+
+        AbstractMatchingChecker checker =
+                checkerProvider.getEmbeddingChecker(toAbstract, rhs.getCollapsed());
+
+        if (checker.hasMatching()) {
+            Matching collapsedEmbedding = checker.getMatching();
+            Matching embedding = new OriginalEmbedding(rhs, collapsedEmbedding);
+            try {
+                IndexEmbeddingResult res =
+                        indexChecker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
+
+                result = replaceEmbeddingBy(res.getMaterializedToAbstract(),
+                        embedding, res.getInstantiatedLhs());
+            } catch (CannotMatchException e) {
+                //this may happen. continue as if no matching has been found.
+            }
+        }
+        return result;
     }
 
 

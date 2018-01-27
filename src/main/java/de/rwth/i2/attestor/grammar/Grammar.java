@@ -52,5 +52,10 @@ public class Grammar {
         return Collections.unmodifiableSet(rules.keySet());
     }
 
+    public Set<CollapsedHeapConfiguration> getCollapsedRightHandSidesFor(Nonterminal nonterminal) {
+
+        return Collections.emptySet();
+    }
+
 
 }
