@@ -63,4 +63,6 @@ public interface Graph {
      * or -1 if the given node does not exist or is not external.
      */
     int getExternalIndex(int node);
+
+    boolean isEdgeBetweenMarkedNodes(int from, int to);
 }

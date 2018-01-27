@@ -23,12 +23,33 @@ public class EmbeddingEdgeLabels implements FeasibilityFunction {
         Graph patternGraph = pattern.getGraph();
         Graph targetGraph = target.getGraph();
 
+
+        // TODO
+        TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
+        for(int i=0; i < succsOfT.size(); i++) {
+            int succ = succsOfT.get(i);
+            if(target.containsMatch(succ) && targetGraph.isEdgeBetweenMarkedNodes(t, succ)) {
+                return false;
+            }
+        }
+
+        TIntArrayList predsOfT = targetGraph.getPredecessorsOf(t);
+        for(int i=0; i < predsOfT.size(); i++) {
+            int pred= predsOfT.get(i);
+            if(target.containsMatch(pred) && targetGraph.isEdgeBetweenMarkedNodes(pred, t)) {
+                return false;
+            }
+        }
+
+
+
         TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
         for (int i = 0; i < succsOfP.size(); i++) {
 
             int succ = succsOfP.get(i);
             if (pattern.containsMatch(succ)) {
                 int match = pattern.getMatch(succ);
+
 
                 if (patternGraph.isExternal(p) && patternGraph.isExternal(succ)) {
 

@@ -60,7 +60,8 @@ public class Grammar {
         if(!collapsedRules.containsKey(nonterminal)) {
             return Collections.emptySet();
         } else {
-            return Collections.unmodifiableSet(collapsedRules.get(nonterminal));
+            return Collections.emptySet();
+            //TODO return Collections.unmodifiableSet(collapsedRules.get(nonterminal));
         }
     }
 
