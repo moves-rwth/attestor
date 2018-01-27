@@ -790,12 +790,21 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         while (edgeIterator.hasNext()) {
             int edge = edgeIterator.next();
             TIntArrayList tentacles = heapConf.attachedNodesOf(edge);
+            TIntArrayList newTentacles = new TIntArrayList(tentacles);
+            boolean changed = false;
             for(int i=0; i < tentacles.size(); i++) {
                 int target = tentacles.get(i);
                 if(target == oldNode) {
-                    tentacles.set(i, mergedNode);
+                    newTentacles.set(i, mergedNode);
+                    changed = true;
                 }
             }
+            if(changed) {
+                Nonterminal nt = heapConf.labelOf(edge);
+                addNonterminalEdge(nt, newTentacles);
+                removeNonterminalEdge(edge);
+            }
+
         }
 
     }
