@@ -16,7 +16,6 @@ import gnu.trove.list.array.TIntArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -67,7 +66,6 @@ public class CanonicalizationStrategyTest {
         assertEquals("result not as expected", hcFactory.getCanonizationRes1(), state.getHeap());
     }
 
-    @Ignore // TODO collapsed rules are not added
     @Test
     public void testCyclic() {
 

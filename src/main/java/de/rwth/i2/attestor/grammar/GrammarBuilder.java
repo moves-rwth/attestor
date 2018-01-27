@@ -41,6 +41,7 @@ public class GrammarBuilder {
                 rhs = collapsedRules.get(nonterminal);
             } else {
                 rhs = new LinkedHashSet<>();
+                collapsedRules.put(nonterminal, rhs);
             }
 
             for(HeapConfiguration hc : entry.getValue()) {

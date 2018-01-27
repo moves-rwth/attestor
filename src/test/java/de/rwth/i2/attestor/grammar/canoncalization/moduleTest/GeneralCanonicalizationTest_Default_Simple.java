@@ -17,7 +17,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -40,7 +39,6 @@ public class GeneralCanonicalizationTest_Default_Simple {
         canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
     }
 
-    @Ignore // TODO collapsed rules are not added
     @Test
     public void testSimple() {
 
@@ -97,7 +95,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
                 .addNonterminalEdge(lhs)
                 .addTentacle(nodes.get(0))
                 .addTentacle(nodes.get(1))
-                .addTentacle(nodes.get(0));
+                .addTentacle(nodes.get(2));
         hc = builder.build().build();
         return sceneObject.scene().createProgramState(hc);
     }
