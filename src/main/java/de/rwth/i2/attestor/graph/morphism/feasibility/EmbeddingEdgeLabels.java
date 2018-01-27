@@ -24,7 +24,6 @@ public class EmbeddingEdgeLabels implements FeasibilityFunction {
         Graph targetGraph = target.getGraph();
 
 
-        // TODO
         TIntArrayList succsOfT = targetGraph.getSuccessorsOf(t);
         for(int i=0; i < succsOfT.size(); i++) {
             int succ = succsOfT.get(i);
@@ -40,8 +39,6 @@ public class EmbeddingEdgeLabels implements FeasibilityFunction {
                 return false;
             }
         }
-
-
 
         TIntArrayList succsOfP = patternGraph.getSuccessorsOf(p);
         for (int i = 0; i < succsOfP.size(); i++) {

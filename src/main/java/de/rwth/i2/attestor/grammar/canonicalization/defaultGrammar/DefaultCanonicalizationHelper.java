@@ -36,40 +36,11 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
         AbstractMatchingChecker checker = provider.getEmbeddingChecker(toAbstract, rhs);
 
         if (checker.hasMatching()) {
-
             Matching embedding = checker.getMatching();
             HeapConfiguration result = replaceEmbeddingBy(toAbstract, embedding, lhs);
-
-            // TODO remove
-            if(!containsShit(toAbstract) && containsShit(result)) {
-                int x = 0;
-            }
-
             return result;
         }
         return null;
-    }
-
-    // TODO remove
-    private boolean containsShit(HeapConfiguration hc) {
-
-        int var = hc.variableWith("%neighbourhood-right");
-        if(var != HeapConfiguration.INVALID_ELEMENT) {
-            int nr = hc.targetOf(var);
-            TIntArrayList att = hc.attachedNonterminalEdgesOf(nr);
-            for (int i = 0; i < att.size(); i++) {
-                int ntEdge = att.get(i);
-                Nonterminal nt = hc.labelOf(ntEdge);
-                if (nt.getLabel().equals("RefTP")) {
-                    int mark = hc.variableTargetOf("%neighbourhood");
-                    if(!hc.successorNodesOf(mark).contains(nr)
-                            && ! hc.successorNodesOf(nr).contains(mark)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**
