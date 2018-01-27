@@ -699,6 +699,107 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         return this;
     }
 
+    @Override
+    public HeapConfigurationBuilder mergeExternals(TIntArrayList extIndicesMap) {
+
+        TIntArrayList originalExternalNodes = heapConf.externalNodes();
+
+        TIntIterator iterator = originalExternalNodes.iterator();
+        while (iterator.hasNext()) {
+            int ext = iterator.next();
+            unsetExternal(ext);
+        }
+
+        int countNewExternalNodes = extIndicesMap.max();
+        TIntArrayList newExternalNodes = new TIntArrayList(countNewExternalNodes);
+
+        for(int newExt = 0; newExt <= countNewExternalNodes; newExt++) {
+
+            int mergedNode = mergeNodesMappedTo(newExt, extIndicesMap, originalExternalNodes);
+            newExternalNodes.add(mergedNode);
+        }
+
+        iterator = newExternalNodes.iterator();
+        while (iterator.hasNext()) {
+            int ext = iterator.next();
+            setExternal(ext);
+        }
+
+        return this;
+    }
+
+    private int mergeNodesMappedTo(int newExt, TIntArrayList extIndicesMap, TIntArrayList originalExternalNodes) {
+
+        int mergedNode = HeapConfiguration.INVALID_ELEMENT;
+        for(int oldIndex = 0; oldIndex < originalExternalNodes.size(); oldIndex++) {
+            int newIndex = extIndicesMap.get(oldIndex);
+            if(newIndex == newExt) {
+                int oldNode = originalExternalNodes.get(oldIndex);
+                if(mergedNode == HeapConfiguration.INVALID_ELEMENT) {
+                    mergedNode = oldNode;
+                } else {
+                    mergeNodeInto(oldNode, mergedNode);
+                }
+            }
+        }
+
+        if(mergedNode == HeapConfiguration.INVALID_ELEMENT) {
+            throw new IllegalStateException("Unable to merge external nodes.");
+        }
+        return mergedNode;
+    }
+
+    private void mergeNodeInto(int oldNode, int mergedNode) {
+
+        mergeOutgoingSelectorsInto(oldNode, mergedNode);
+        mergeIngoingSelectorsInto(oldNode, mergedNode);
+        mergeNonterminalTentaclesInto(oldNode, mergedNode);
+        removeIsolatedNode(oldNode);
+    }
+
+
+
+    private void mergeOutgoingSelectorsInto(int oldNode, int mergedNode) {
+
+        for(SelectorLabel sel : heapConf.selectorLabelsOf(oldNode)) {
+            int target = heapConf.selectorTargetOf(oldNode, sel);
+            addSelector(mergedNode, sel, target);
+            removeSelector(oldNode, sel);
+        }
+    }
+
+    private void mergeIngoingSelectorsInto(int oldNode, int mergedNode) {
+
+        TIntIterator predecessorIterator = heapConf.predecessorNodesOf(oldNode).iterator();
+        while(predecessorIterator.hasNext()) {
+            int predecessor = predecessorIterator.next();
+            for(SelectorLabel sel : heapConf.selectorLabelsOf(predecessor)) {
+                int target = heapConf.selectorTargetOf(predecessor, sel);
+                if(target == oldNode) {
+                    removeSelector(predecessor, sel);
+                    addSelector(predecessor, sel, mergedNode);
+                }
+
+            }
+        }
+    }
+
+    private void mergeNonterminalTentaclesInto(int oldNode, int mergedNode) {
+
+        TIntIterator edgeIterator = heapConf.attachedNonterminalEdgesOf(oldNode).iterator();
+        while (edgeIterator.hasNext()) {
+            int edge = edgeIterator.next();
+            TIntArrayList tentacles = heapConf.attachedNodesOf(edge);
+            for(int i=0; i < tentacles.size(); i++) {
+                int target = tentacles.get(i);
+                if(target == oldNode) {
+                    tentacles.set(i, mergedNode);
+                }
+            }
+        }
+
+    }
+
     /**
      * Removes all selector and tentacle edges in the underlying HeapConfiguration that belong to the provided
      * HeapConfiguration according to the provided matching.

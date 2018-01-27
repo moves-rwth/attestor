@@ -200,7 +200,27 @@ public interface HeapConfigurationBuilder {
      */
     HeapConfigurationBuilder replaceNodeType(int node, Type newType);
 
-    HeapConfigurationBuilder replaceMatchingWithCollapsedExternals(Matching embedding,
+    /**
+     *
+     * Replaces the graph captured by the provided matching by a fresh nonterminal edge labeled with the provided nonterminal.
+     * The rank of the nonterminal and the number of external nodes of the pattern graph contained in the matching
+     * do not have to coincide as long as the rank matches the size provided externalIndicesMap.
+     * In this case, additional tentacles will be added according to that map.
+     *
+     * @param matching    A matching of a pattern graph in the current graph.
+     * @param nonterminal The label of the nonterminal edge to be created.
+     * @param externalIndicesMap
+     * @return the builder
+     */
+    HeapConfigurationBuilder replaceMatchingWithCollapsedExternals(Matching matching,
                                                                    Nonterminal nonterminal,
                                                                    TIntArrayList externalIndicesMap);
+
+    /**
+     * Merges external nodes according to the provided index map.
+     * @param extIndicesMap A mapping from external node positions in the current graph to external node positions
+     *                      in the resulting graph, e.g. {0,1,2,0} in order to merge the first and last node.
+     * @return the builder
+     */
+    HeapConfigurationBuilder mergeExternals(TIntArrayList extIndicesMap);
 }
