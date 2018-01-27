@@ -90,7 +90,6 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
                                 depth,
                                 aggressiveNullAbstractionEnabled
                         ))
-                        .allowMultipleExternalMatches()
                         .build()
         );
     }

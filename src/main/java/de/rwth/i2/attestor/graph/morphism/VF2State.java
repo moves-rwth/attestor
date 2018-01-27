@@ -121,20 +121,14 @@ public class VF2State {
      *
      * @return True if and only if another candidate pair has been found.
      */
-    public boolean nextCandidate(boolean multipleExternalMatches) {
-
-        if(multipleExternalMatches) {
-            // this is a less optimized, but safe version if several external
-            // pattern nodes may be mapped onto the same target node.
-            return computeAllCandidates(multipleExternalMatches);
-        }
+    public boolean nextCandidate() {
 
         if (!pattern.isOutgoingEmpty() && !target.isOutgoingEmpty()) {
-            return computeOutgoingCandidates(multipleExternalMatches);
+            return computeOutgoingCandidates();
         } else if (!pattern.isIngoingEmpty() && !target.isIngoingEmpty()) {
-            return computeIngoingCandidates(multipleExternalMatches);
+            return computeIngoingCandidates();
         } else {
-            return computeAllCandidates(multipleExternalMatches);
+            return computeAllCandidates();
         }
     }
 
@@ -142,7 +136,7 @@ public class VF2State {
      * Computes possible candidate pairs based on nodes reachable via outgoing edges from nodes that already have
      * been matched.
      */
-    private boolean computeOutgoingCandidates(boolean multipleExternalMatches) {
+    private boolean computeOutgoingCandidates() {
 
         int start = targetCandidate + 1;
 
@@ -150,11 +144,9 @@ public class VF2State {
 
             if (pattern.containsOutgoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
 
-                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
-
                 for (int t = start; t < countTargetNodes; t++) {
 
-                    if (target.containsOutgoing(t) && (isExternal || !target.containsMatch(t))) {
+                    if (target.containsOutgoing(t) && !target.containsMatch(t)) {
                         patternCandidate = p;
                         targetCandidate = t;
                         patternMin = p;
@@ -172,7 +164,7 @@ public class VF2State {
      * Computes possible candidate pairs based on nodes reachable via ingoing edges from nodes that already have
      * been matched.
      */
-    private boolean computeIngoingCandidates(boolean multipleExternalMatches) {
+    private boolean computeIngoingCandidates() {
 
         int start = targetCandidate + 1;
         for (int p = patternCandidate; p < countPatternNodes; p++) {
@@ -180,11 +172,9 @@ public class VF2State {
 
             if (pattern.containsIngoingUnmatched(p) && !pattern.isLessThan(patternMin, p)) {
 
-                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
-
                 for (int t = start; t < countTargetNodes; t++) {
 
-                    if (target.containsIngoing(t) && (isExternal || !target.containsMatch(t))) {
+                    if (target.containsIngoing(t) && !target.containsMatch(t)) {
                         patternCandidate = p;
                         targetCandidate = t;
                         patternMin = p;
@@ -199,7 +189,7 @@ public class VF2State {
     /**
      * Computes all possible candidate pairs based on nodes that have not been matched yet.
      */
-    private boolean computeAllCandidates(boolean multipleExternalMatches) {
+    private boolean computeAllCandidates() {
 
         int start = targetCandidate + 1;
 
@@ -207,11 +197,9 @@ public class VF2State {
 
             if (!pattern.containsMatch(p) && !pattern.isLessThan(patternMin, p)) {
 
-                boolean isExternal = multipleExternalMatches && pattern.getGraph().isExternal(p);
-
                 for (int t = start; t < countTargetNodes; t++) {
 
-                    if (isExternal || !target.containsMatch(t)) {
+                    if (!target.containsMatch(t)) {
                         patternCandidate = p;
                         targetCandidate = t;
                         patternMin = p;
