@@ -670,6 +670,35 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         return this;
     }
 
+    @Override
+    public HeapConfigurationBuilder replaceMatchingWithCollapsedExternals(Matching matching,
+                                                                          Nonterminal nonterminal,
+                                                                          TIntArrayList externalIndicesMap) {
+
+        if (matching == null || nonterminal == null) {
+            throw new NullPointerException();
+        }
+
+        InternalHeapConfiguration pattern = (InternalHeapConfiguration) matching.pattern();
+
+        // Use the mapping of externals instead of the actual smaller number of external nodes
+        if (externalIndicesMap.size() != nonterminal.getRank()) {
+            throw new IllegalArgumentException("The number of external nodes in pattern must " +
+                    "match the rank of the provided nonterminal.");
+        }
+
+        InternalMatching internalMatching = (InternalMatching) matching;
+
+        // First remove all selector edges and tentacles that also occur in pattern
+        removeSelectorAndTentacleEdges(internalMatching, pattern);
+
+        removeNonExternalNodes(internalMatching, pattern);
+
+        addMatchingNonterminalEdgeWithCollapsedExternals(internalMatching, pattern, nonterminal, externalIndicesMap);
+
+        return this;
+    }
+
     /**
      * Removes all selector and tentacle edges in the underlying HeapConfiguration that belong to the provided
      * HeapConfiguration according to the provided matching.
@@ -749,6 +778,29 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         }
         ++heapConf.countNonterminalEdges;
     }
+
+    private void addMatchingNonterminalEdgeWithCollapsedExternals(InternalMatching matching,
+                                                                  InternalHeapConfiguration pattern,
+                                                                  Nonterminal nonterminal,
+                                                                  TIntArrayList externalIndicesMap) {
+
+        int privateId = getNextPrivateId();
+        addPrivatePublicIdPair();
+        heapConf.graph.addNode(nonterminal, nonterminal.getRank(), 0);
+        for (int i = 0; i < nonterminal.getRank(); i++) {
+
+            int extPosition = externalIndicesMap.get(i);
+            int extId = pattern.graph.externalNodeAt(extPosition);
+            if (extId == LabeledDigraph.INVALID) {
+                throw new IllegalArgumentException("One of the patterns external nodes could not be matched");
+            }
+
+            int t = matching.internalMatch(extId);
+            heapConf.graph.addEdge(privateId, i, t);
+        }
+        ++heapConf.countNonterminalEdges;
+    }
+
 
 
 }

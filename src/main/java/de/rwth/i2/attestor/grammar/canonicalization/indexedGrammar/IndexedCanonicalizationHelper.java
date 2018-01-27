@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.grammar.canonicalization.indexedGrammar;
 
 import de.rwth.i2.attestor.grammar.CollapsedHeapConfiguration;
-import de.rwth.i2.attestor.grammar.OriginalEmbedding;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -9,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * This class provides the methodExecution to canonicalisation which are specific for
@@ -98,19 +98,29 @@ public class IndexedCanonicalizationHelper implements CanonicalizationHelper {
                 checkerProvider.getEmbeddingChecker(toAbstract, rhs.getCollapsed());
 
         if (checker.hasMatching()) {
-            Matching collapsedEmbedding = checker.getMatching();
-            Matching embedding = new OriginalEmbedding(rhs, collapsedEmbedding);
+            Matching embedding = checker.getMatching();
             try {
                 IndexEmbeddingResult res =
                         indexChecker.getIndexEmbeddingResult(toAbstract, embedding, lhs);
 
-                result = replaceEmbeddingBy(res.getMaterializedToAbstract(),
-                        embedding, res.getInstantiatedLhs());
+                result = replaceCollapsedEmbeddingBy(res.getMaterializedToAbstract(),
+                        embedding, res.getInstantiatedLhs(), rhs.getOriginalToCollapsedExternalIndices());
             } catch (CannotMatchException e) {
                 //this may happen. continue as if no matching has been found.
             }
         }
         return result;
+    }
+
+    private HeapConfiguration replaceCollapsedEmbeddingBy(HeapConfiguration toAbstract,
+                                                          Matching embedding,
+                                                          Nonterminal nonterminal,
+                                                          TIntArrayList externalIndicesMap) {
+
+        toAbstract = toAbstract.clone();
+        return toAbstract.builder()
+                .replaceMatchingWithCollapsedExternals(embedding, nonterminal, externalIndicesMap)
+                .build();
     }
 
 

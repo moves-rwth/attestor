@@ -15,10 +15,11 @@ import java.util.*;
 public class GrammarBuilder {
 
     final Map<Nonterminal, Set<HeapConfiguration>> rules = new LinkedHashMap<>();
+    final Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules = new LinkedHashMap<>();
 
     public Grammar build() {
 
-        return new Grammar(rules);
+        return new Grammar(rules, collapsedRules);
     }
 
     public GrammarBuilder addRule(Nonterminal lhs, HeapConfiguration rhs) {
@@ -49,5 +50,14 @@ public class GrammarBuilder {
         return this;
     }
 
+    public GrammarBuilder addCollapsedRule(Nonterminal lhs, CollapsedHeapConfiguration rhs) {
+
+        if (!collapsedRules.containsKey(lhs)) {
+            collapsedRules.put(lhs, new LinkedHashSet<>());
+        }
+        collapsedRules.get(lhs).add(rhs);
+        return this;
+
+    }
 
 }

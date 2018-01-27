@@ -3,7 +3,10 @@ package de.rwth.i2.attestor.grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Immutable data-object storing all the rules (lhs &#8594; rhs).
@@ -14,12 +17,13 @@ import java.util.*;
 public class Grammar {
 
     final Map<Nonterminal, Set<HeapConfiguration>> rules;
-    Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules;
+    final Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules;
 
-    Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+    Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules,
+            Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules) {
 
         this.rules = rules;
-        this.collapsedRules = new LinkedHashMap<>();
+        this.collapsedRules = collapsedRules;
     }
 
     public static GrammarBuilder builder() {

@@ -62,7 +62,7 @@ public final class VF2AlgorithmBuilder {
 
     public VF2AlgorithmBuilder allowMultipleExternalMatches() {
 
-        algorithm.multipleExternalMatches = true;
+        // TODO algorithm.multipleExternalMatches = true;
         return this;
     }
 }

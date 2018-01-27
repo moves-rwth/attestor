@@ -200,4 +200,7 @@ public interface HeapConfigurationBuilder {
      */
     HeapConfigurationBuilder replaceNodeType(int node, Type newType);
 
+    HeapConfigurationBuilder replaceMatchingWithCollapsedExternals(Matching embedding,
+                                                                   Nonterminal nonterminal,
+                                                                   TIntArrayList externalIndicesMap);
 }
