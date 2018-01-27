@@ -21,8 +21,6 @@ public class GrammarBuilder {
 
     public Grammar build() {
 
-        computeCollapsedRules();
-
         return new Grammar(rules, collapsedRules);
     }
 
@@ -83,6 +81,12 @@ public class GrammarBuilder {
         return this;
     }
 
+    public GrammarBuilder addRules(Grammar grammar) {
+
+        rules.putAll(grammar.rules);
+        return this;
+    }
+
     public GrammarBuilder addCollapsedRule(Nonterminal lhs, CollapsedHeapConfiguration rhs) {
 
         if (!collapsedRules.containsKey(lhs)) {
@@ -91,6 +95,11 @@ public class GrammarBuilder {
         collapsedRules.get(lhs).add(rhs);
         return this;
 
+    }
+
+    public GrammarBuilder updateCollapsedRules() {
+        computeCollapsedRules();
+        return this;
     }
 
 }

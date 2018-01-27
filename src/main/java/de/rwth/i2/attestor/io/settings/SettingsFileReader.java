@@ -225,6 +225,9 @@ public class SettingsFileReader {
                 case "stateSpacePostProcessing":
                     options.setPostProcessingEnabled(jsonOptions.getBoolean(key));
                     break;
+                case "collapseRules":
+                    options.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
+                    break;
                 default:
                     logger.error("Ignoring unknown option: " + key);
                     break;
