@@ -1,10 +1,11 @@
 package de.rwth.i2.attestor.grammar.materialization.strategies;
 
-import de.rwth.i2.attestor.grammar.materialization.*;
 import de.rwth.i2.attestor.grammar.materialization.communication.GrammarResponse;
 import de.rwth.i2.attestor.grammar.materialization.communication.UnexpectedNonterminalTypeException;
 import de.rwth.i2.attestor.grammar.materialization.communication.WrongResponseTypeException;
-import de.rwth.i2.attestor.grammar.materialization.util.*;
+import de.rwth.i2.attestor.grammar.materialization.util.GrammarResponseApplier;
+import de.rwth.i2.attestor.grammar.materialization.util.MaterializationRuleManager;
+import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -109,8 +110,9 @@ public class GeneralMaterializationStrategy implements MaterializationStrategy {
                 Collection<HeapConfiguration> materializationResults =
                         ruleApplier.applyGrammarResponseTo(current, ntEdge, rulesToApply);
 
-
-                return materializationResults;
+                if(!materializationResults.isEmpty()) {
+                    return materializationResults;
+                }
 
             } catch (UnexpectedNonterminalTypeException e) {
                 logger.error("rule Manager cannot deal with this nonterminal type: " + nt.getClass());
