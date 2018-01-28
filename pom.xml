@@ -24,11 +24,13 @@
         <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository>
+    <!-- We cache the current version of soot in our own repository due to recent downtimes of the official server
     <repository>
       <id>soot-snapshot</id>
       <name>soot snapshots</name>
       <url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url>
     </repository>
+    -->
   </repositories>
   <distributionManagement>
     <repository>
