@@ -22,13 +22,13 @@ public class VF2State {
      * The currently found partial mapping from pattern to target together
      * with additional data to prune the search space.
      */
-    private final VF2PatternGraphData pattern;
+    private final VF2GraphData pattern;
 
     /**
      * The currently found partial mapping from target to pattern together
      * with additional data to prune the search space.
      */
-    private final VF2TargetGraphData target;
+    private final VF2GraphData target;
     private final int countPatternNodes;
     private final int countTargetNodes;
     private int patternCandidate;
@@ -43,8 +43,8 @@ public class VF2State {
      */
     public VF2State(Graph patternGraph, Graph targetGraph) {
 
-        pattern = new VF2PatternGraphData(patternGraph);
-        target = new VF2TargetGraphData(targetGraph);
+        pattern = new VF2GraphData(patternGraph);
+        target = new VF2GraphData(targetGraph);
         countPatternNodes = pattern.getGraph().size();
         countTargetNodes = target.getGraph().size();
         patternCandidate = 0;
@@ -61,8 +61,8 @@ public class VF2State {
      */
     private VF2State(VF2State state) {
 
-        pattern = new VF2PatternGraphData(state.pattern);
-        target = new VF2TargetGraphData(state.target);
+        pattern = new VF2GraphData(state.pattern);
+        target = new VF2GraphData(state.target);
         countPatternNodes = state.countPatternNodes;
         countTargetNodes = state.countTargetNodes;
         patternCandidate = 0;
@@ -81,7 +81,7 @@ public class VF2State {
     /**
      * @return The data stored for the pattern graph within this state.
      */
-    public VF2PatternGraphData getPattern() {
+    public VF2GraphData getPattern() {
 
         return pattern;
     }
@@ -89,7 +89,7 @@ public class VF2State {
     /**
      * @return The data stored for the target graph within this state.
      */
-    public VF2TargetGraphData getTarget() {
+    public VF2GraphData getTarget() {
 
         return target;
     }

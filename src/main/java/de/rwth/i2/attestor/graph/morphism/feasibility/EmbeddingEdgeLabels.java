@@ -1,6 +1,9 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.*;
+import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
+import de.rwth.i2.attestor.graph.morphism.VF2State;
 import de.rwth.i2.attestor.util.ListUtil;
 import gnu.trove.list.array.TIntArrayList;
 
@@ -17,8 +20,8 @@ public class EmbeddingEdgeLabels implements FeasibilityFunction {
     @Override
     public boolean eval(VF2State state, int p, int t) {
 
-        VF2PatternGraphData pattern = state.getPattern();
-        VF2TargetGraphData target = state.getTarget();
+        VF2GraphData pattern = state.getPattern();
+        VF2GraphData target = state.getTarget();
 
         Graph patternGraph = pattern.getGraph();
         Graph targetGraph = target.getGraph();
