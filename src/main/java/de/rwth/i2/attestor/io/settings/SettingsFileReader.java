@@ -76,6 +76,10 @@ public class SettingsFileReader {
             input.setScenario(jsonSettings.getString("scenario"));
         }
 
+        if(jsonSettings.has("specificationDescription")) {
+            input.setSpecificationDescription(jsonSettings.getString("specificationDescription"));
+        }
+
         for (String key : jsonInput.keySet()) {
 
             switch (key) {
