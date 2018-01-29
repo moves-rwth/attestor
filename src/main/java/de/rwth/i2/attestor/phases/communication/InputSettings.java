@@ -27,7 +27,7 @@ public class InputSettings {
      */
     ArrayList<String> contractFiles = new ArrayList<>();
     /**
-     * Short name of the analyzed scenario (optional).
+     * Name of the analyzed scenario (optional).
      */
     private String name = "";
     /**
@@ -39,6 +39,10 @@ public class InputSettings {
      * The path to the settings file
      */
     private String pathToSettingsFile = "";
+    /**
+     * Short description of the analyzed specification (optional)
+     */
+    private String specificationDescription = "";
     /**
      * The classpath of source code files that are analyzed.
      */
@@ -135,6 +139,16 @@ public class InputSettings {
     public void setScenario(String scenario) {
 
         this.scenario = scenario;
+    }
+
+    public void setSpecificationDescription(String specificationDescription) {
+
+        this.specificationDescription = specificationDescription;
+    }
+
+    public String getSpecificationDescription() {
+
+        return specificationDescription;
     }
 
     /**

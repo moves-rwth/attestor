@@ -310,4 +310,10 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
 
         return ((Graph) actual).getExternalIndex(node);
     }
+
+    @Override
+    public boolean isEdgeBetweenMarkedNodes(int from, int to) {
+
+        return ((Graph) actual).isEdgeBetweenMarkedNodes(from, to);
+    }
 }

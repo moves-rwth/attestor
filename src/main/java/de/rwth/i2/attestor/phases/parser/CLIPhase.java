@@ -85,14 +85,22 @@ public class CLIPhase extends AbstractPhase
         if(name != null && !name.isEmpty()) {
             logSum("Benchmark name: " + name);
         } else {
-            logSum("Benchmark name: not specified");
+            logSum("Benchmark name: n/a");
         }
+
+        String specificationDescription = inputSettings.getSpecificationDescription();
+        if(specificationDescription != null && !specificationDescription.isEmpty()) {
+            logSum("Specification summary: " + specificationDescription);
+        } else {
+            logSum("Specification summary: n/a");
+        }
+
 
         String scenario = inputSettings.getScenario();
         if (scenario != null && !scenario.isEmpty()) {
             logSum("Scenario: " + scenario);
         } else {
-            logSum("Scenario: not specified");
+            logSum("Scenario: n/a");
         }
 
     }

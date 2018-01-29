@@ -17,10 +17,13 @@ import java.util.Set;
 public class Grammar {
 
     final Map<Nonterminal, Set<HeapConfiguration>> rules;
+    final Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules;
 
-    public Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules) {
+    Grammar(Map<Nonterminal, Set<HeapConfiguration>> rules,
+            Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules) {
 
         this.rules = rules;
+        this.collapsedRules = collapsedRules;
     }
 
     public static GrammarBuilder builder() {
@@ -50,6 +53,15 @@ public class Grammar {
     public Set<Nonterminal> getAllLeftHandSides() {
 
         return Collections.unmodifiableSet(rules.keySet());
+    }
+
+    public Set<CollapsedHeapConfiguration> getCollapsedRightHandSidesFor(Nonterminal nonterminal) {
+
+        if(!collapsedRules.containsKey(nonterminal)) {
+            return Collections.emptySet();
+        } else {
+            return Collections.unmodifiableSet(collapsedRules.get(nonterminal));
+        }
     }
 
 

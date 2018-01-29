@@ -57,10 +57,9 @@ public class MinAbstractionDistance implements FeasibilityFunction {
                 //if the option aggressiveConstantAbstraction is enabled, constants are ignored.
                 if (!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
                     int attachedNode = graph.getSuccessorsOf(i).get(0);
-                    if (dist.get(attachedNode) < minAbstractionDistance
-                            && !Markings.isComposedMarking(label)) {
-                        return false;
 
+                    if (dist.get(attachedNode) < minAbstractionDistance && !Markings.isComposedMarking(label)) {
+                        return false;
                     }
                 }
             } else if (graph.isExternal(i)) {

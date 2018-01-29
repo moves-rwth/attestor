@@ -43,6 +43,7 @@ public class CanonicalizationStrategyTest {
                 .addRule(listLabel, hcFactory.getListRule1())
                 .addRule(listLabel, hcFactory.getListRule2())
                 .addRule(listLabel, hcFactory.getListRule3())
+                .updateCollapsedRules()
                 .build();
 
         final int minDereferenceDepth = 0;

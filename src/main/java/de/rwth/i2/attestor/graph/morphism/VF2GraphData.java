@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.graph.morphism;
 
-public class VF2PatternGraphData extends AbstractVF2GraphData {
+public class VF2GraphData extends AbstractVF2GraphData {
 
     /**
      * The current (partial) mapping from graph to the other considered graph.
@@ -13,7 +13,7 @@ public class VF2PatternGraphData extends AbstractVF2GraphData {
      */
     private final int[] nodeOrder;
 
-    public VF2PatternGraphData(Graph graph) {
+    public VF2GraphData(Graph graph) {
 
         super(graph);
 
@@ -28,7 +28,7 @@ public class VF2PatternGraphData extends AbstractVF2GraphData {
         }
     }
 
-    public VF2PatternGraphData(VF2PatternGraphData data) {
+    public VF2GraphData(VF2GraphData data) {
 
         super(data);
         match = data.match;

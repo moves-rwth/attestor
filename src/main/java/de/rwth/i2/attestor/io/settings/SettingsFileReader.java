@@ -76,6 +76,10 @@ public class SettingsFileReader {
             input.setScenario(jsonSettings.getString("scenario"));
         }
 
+        if(jsonSettings.has("specificationDescription")) {
+            input.setSpecificationDescription(jsonSettings.getString("specificationDescription"));
+        }
+
         for (String key : jsonInput.keySet()) {
 
             switch (key) {
@@ -224,6 +228,9 @@ public class SettingsFileReader {
                     break;
                 case "stateSpacePostProcessing":
                     options.setPostProcessingEnabled(jsonOptions.getBoolean(key));
+                    break;
+                case "collapseRules":
+                    options.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
                     break;
                 default:
                     logger.error("Ignoring unknown option: " + key);

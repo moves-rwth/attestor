@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.rwth.i2</groupId>
   <artifactId>attestor</artifactId>
-  <version>0.2.7-SNAPSHOT</version>
+  <version>0.2.9-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>attestor</name>
   <url>http://moves.rwth-aachen.de/cmatheja</url>
@@ -24,11 +24,13 @@
         <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository>
+    <!-- We cache the current version of soot in our own repository due to recent downtimes of the official server
     <repository>
       <id>soot-snapshot</id>
       <name>soot snapshots</name>
       <url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url>
     </repository>
+    -->
   </repositories>
   <distributionManagement>
     <repository>

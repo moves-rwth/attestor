@@ -52,7 +52,7 @@ public class GrammarRefinement {
 
     public Grammar getRefinedGrammar() {
 
-        return new Grammar(refinedRules);
+        return Grammar.builder().addRules(refinedRules).build();
     }
 
     private void refineBaseRules() {

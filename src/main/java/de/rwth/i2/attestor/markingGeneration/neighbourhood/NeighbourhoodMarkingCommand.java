@@ -8,8 +8,6 @@ import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.iterator.TIntIterator;
 
 import java.util.Collection;
@@ -48,8 +46,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
 
 
     @Override
-    public Collection<ProgramState> computeSuccessors(ProgramState programState)
-            throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         int initialMarkingTarget = programState.getHeap().variableTargetOf(INITIAL_MARKING_NAME);
 
@@ -125,9 +122,7 @@ public class NeighbourhoodMarkingCommand implements SemanticsCommand {
         for(SelectorLabel sel : heap.selectorLabelsOf(nextOrigin)) {
 
             int target = heap.selectorTargetOf(nextOrigin, sel);
-            if(!isAttachedToConstant(heap, target)) {
-                builder.addVariableEdge(getVariableName(sel.getLabel()), target);
-            }
+            builder.addVariableEdge(getVariableName(sel.getLabel()), target);
         }
 
         return result;

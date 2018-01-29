@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.iterator.TIntIterator;
@@ -78,7 +79,7 @@ public class ReturnVoidStmt extends Statement {
         while (iter.hasNext()) {
             int var = iter.next();
             String name = heap.nameOf(var);
-            if (!(Constants.isConstant(name) || name.startsWith("@return"))) {
+            if (!(Markings.isMarking(name) || Constants.isConstant(name) || name.startsWith("@return"))) {
                 builder.removeVariableEdge(var);
             }
         }

@@ -156,9 +156,12 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
             logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
 
+        if(scene().options().isRuleCollapsingEnabled()) {
+            grammarBuilder.updateCollapsedRules();
+        }
+
         // Even if all grammar files could not be parsed, an empty grammar is created.
         this.grammar = grammarBuilder.build();
-
     }
 
     /**
@@ -210,6 +213,10 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
 
         } catch (IOException e) {
             logger.error("Could not parse grammar at location " + resource.getPath() + ". Skipping it.");
+        }
+
+        if(scene().options().isRuleCollapsingEnabled()) {
+            grammarBuilder.updateCollapsedRules();
         }
 
         // Even if all grammar files could not be parsed, an empty grammar is created.
