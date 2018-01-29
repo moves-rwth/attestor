@@ -36,8 +36,6 @@ public class DefaultScene implements Scene {
 
     private int identifier = 0;
 
-    private HttpExporter httpExporter = new HttpExporter();
-
     @Override
     public int getIdentifier() {
         return identifier;
@@ -169,8 +167,4 @@ public class DefaultScene implements Scene {
         return strategies;
     }
 
-    @Override
-    public HttpExporter getHttpExporter() {
-        return this.httpExporter;
-    }
 }

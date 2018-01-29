@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
+import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonGrammarExporter;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonHeapConfigurationExporter;
@@ -49,11 +50,14 @@ public class ReportOutputPhase extends AbstractPhase {
     private StateSpace stateSpace;
     private Program program;
 
+    private HttpExporter httpExporter;
+
 
     public ReportOutputPhase(Scene scene, List<AbstractPhase> phases) {
 
         super(scene);
         this.phases = phases;
+        this.httpExporter = new HttpExporter();
     }
 
     @Override
@@ -86,7 +90,7 @@ public class ReportOutputPhase extends AbstractPhase {
             return;
         }
 
-        scene().getHttpExporter().sendBenchmarkRegisterRequest(scene().getIdentifier(), inputSettings.getName());
+        this.httpExporter.sendBenchmarkRegisterRequest(scene().getIdentifier(), inputSettings.getName());
 
         stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         program = getPhase(ProgramTransformer.class).getProgram();
@@ -127,7 +131,7 @@ public class ReportOutputPhase extends AbstractPhase {
             StateSpace counterexample = trace.getStateSpace();
             StateSpaceExporter exporter = new JsonStateSpaceExporter();
             // Send counterexample state space
-            scene().getHttpExporter().sendCounterexampleSummaryRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), exporter.exportForReport(counterexample, program));
+            this.httpExporter.sendCounterexampleSummaryRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), exporter.exportForReport(counterexample, program));
 
             // Send state HCs
             Set<ProgramState> states = counterexample.getStates();
@@ -135,19 +139,19 @@ public class ReportOutputPhase extends AbstractPhase {
             HeapConfigurationExporter hcExporter = new JsonHeapConfigurationExporter();
             for (ProgramState state : states) {
                 int i = state.getStateSpaceId();
-                scene().getHttpExporter().sendCounterexampleHCRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), i, hcExporter.exportForReport(state.getHeap()));
+                this.httpExporter.sendCounterexampleHCRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), i, hcExporter.exportForReport(state.getHeap()));
             }
 
             // Send concrete HC
             HeapConfiguration concreteHC = getPhase(CounterexampleTransformer.class).getInputOf(formula).getHeap();
-            scene().getHttpExporter().sendCounterexampleConcreteHCRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), hcExporter.exportForReport(concreteHC));
+            this.httpExporter.sendCounterexampleConcreteHCRequest(scene().getIdentifier(), Objects.hashCode(formula.getFormulaString()), hcExporter.exportForReport(concreteHC));
 
         }
 
     }
 
     private void exportOptions() throws IOException {
-        JSONOptionExporter exporter = new JSONOptionExporter(scene().getHttpExporter());
+        JSONOptionExporter exporter = new JSONOptionExporter(this.httpExporter);
         exporter.exportForReport(scene());
     }
 
@@ -162,7 +166,7 @@ public class ReportOutputPhase extends AbstractPhase {
         // Remove unnecessary tabs & whitespaces
         JSONObject jsonSettings = new JSONObject(settings.toString());
 
-        scene().getHttpExporter().sendSettingsFileRequest(scene().getIdentifier(), jsonSettings.toString());
+        this.httpExporter.sendSettingsFileRequest(scene().getIdentifier(), jsonSettings.toString());
 
 
     }
@@ -175,7 +179,7 @@ public class ReportOutputPhase extends AbstractPhase {
             settings += line + System.lineSeparator();
         }
 
-        scene().getHttpExporter().sendProgramFileRequest(scene().getIdentifier(), settings);
+        this.httpExporter.sendProgramFileRequest(scene().getIdentifier(), settings);
     }
 
     private void exportInitialHCs() throws IOException {
@@ -188,7 +192,8 @@ public class ReportOutputPhase extends AbstractPhase {
 
             HeapConfigurationExporter hcExporter = new JsonHeapConfigurationExporter();
 
-            scene().getHttpExporter().sendInitialHCRequest(scene().getIdentifier(), i, hcExporter.exportForReport(initialHC));
+            this.httpExporter.sendInitialHCRequest(scene().getIdentifier(), i, hcExporter.exportForReport(initialHC));
+            i++;
         }
     }
 
@@ -203,7 +208,7 @@ public class ReportOutputPhase extends AbstractPhase {
                     .endObject();
 
         try {
-            scene().getHttpExporter().sendSummaryInitialHCsRequest(scene().getIdentifier(),jsonStringer.toString());
+            this.httpExporter.sendSummaryInitialHCsRequest(scene().getIdentifier(),jsonStringer.toString());
         } catch (UnsupportedEncodingException e) {
             // todo, json stringer returns wrong format, this should not happen!!
         }
@@ -216,7 +221,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
         // Generate JSON files
         GrammarExporter exporter = new JsonGrammarExporter();
-        exporter.exportForReport(scene().getIdentifier(), scene().getHttpExporter(),
+        exporter.exportForReport(scene().getIdentifier(), this.httpExporter,
                 getPhase(GrammarTransformer.class).getGrammar());
 
         logger.info("done. Grammar for report exported." );
@@ -227,14 +232,14 @@ public class ReportOutputPhase extends AbstractPhase {
         logger.info("Exporting state space for report...");
 
         StateSpaceExporter exporter = new JsonStateSpaceExporter();
-        scene().getHttpExporter().sendStateSpaceSummaryRequest(scene().getIdentifier(), exporter.exportForReport(stateSpace, program));
+        this.httpExporter.sendStateSpaceSummaryRequest(scene().getIdentifier(), exporter.exportForReport(stateSpace, program));
 
         Set<ProgramState> states = stateSpace.getStates();
 
         HeapConfigurationExporter hcExporter = new JsonHeapConfigurationExporter();
         for (ProgramState state : states) {
             int i = state.getStateSpaceId();
-            scene().getHttpExporter().sendStateSpaceHCRequest(scene().getIdentifier(), i, hcExporter.exportForReport(state.getHeap()));
+            this.httpExporter.sendStateSpaceHCRequest(scene().getIdentifier(), i, hcExporter.exportForReport(state.getHeap()));
         }
 
         logger.info("done. State space for report exported."
@@ -245,7 +250,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
         logger.info("Exporting analysis summary for report...");
 
-        SummaryExporter exporter = new JSONSummaryExporter(scene().getHttpExporter());
+        SummaryExporter exporter = new JSONSummaryExporter(this.httpExporter);
         exporter.exportForReport(scene(), stateSpace, (ModelCheckingPhase) getPhase(ModelCheckingResultsTransformer.class), getPhase(MCSettingsTransformer.class).getMcSettings(),(CLIPhase) getPhase(CLIPhase.class), phases);
 
         logger.info("done. Analysis summary for report exported."

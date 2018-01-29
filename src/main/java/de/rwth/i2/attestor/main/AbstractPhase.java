@@ -76,14 +76,6 @@ public abstract class AbstractPhase extends SceneObject {
         logger.fatal(getName() + " failed.");
         logger.fatal(e.getMessage());
 
-        if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
-            try {
-                scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "ERROR", getName() + " failed.");
-            } catch (UnsupportedEncodingException exc) {
-                exc.printStackTrace();
-            }
-        }
-
         e.printStackTrace();
         System.exit(1);
     }
@@ -96,14 +88,5 @@ public abstract class AbstractPhase extends SceneObject {
     protected void logHighlight(String message) {
 
         logger.log(Level.getLevel("HIGHLIGHT"), message);
-
-            // TODO: speak with Christoph!!
-            //if (!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
-                try {
-                    scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "INFO", message);
-                } catch (UnsupportedEncodingException exc) {
-                    exc.printStackTrace();
-                }
-           // }
     }
 }

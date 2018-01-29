@@ -42,6 +42,4 @@ public interface Scene {
 
     Strategies strategies();
 
-    HttpExporter getHttpExporter();
-
 }

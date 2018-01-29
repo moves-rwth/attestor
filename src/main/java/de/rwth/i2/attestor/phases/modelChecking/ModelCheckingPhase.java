@@ -91,23 +91,8 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
         for (Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
             if (result.getValue()) {
                 logger.log(Level.getLevel("LTL-SAT"), result.getKey().getFormulaString());
-
-                if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
-                    try {
-                        scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "LTL-SAT", result.getKey().getFormulaString());
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
             } else {
                 logger.log(Level.getLevel("LTL-UNSAT"), result.getKey().getFormulaString());
-                if(!getPhase(OutputSettingsTransformer.class).getOutputSettings().isNoExport() && getPhase(OutputSettingsTransformer.class).getOutputSettings().isExportReportOutput()) {
-                    try {
-                        scene().getHttpExporter().sendMessageRequest(scene().getIdentifier(), "LTL-UNSAT", result.getKey().getFormulaString());
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
     }
