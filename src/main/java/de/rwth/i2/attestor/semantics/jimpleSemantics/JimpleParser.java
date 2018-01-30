@@ -1,16 +1,16 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.ProgramParser;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.JimpleToAbstractSemantics;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.translation.TopLevelTranslation;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import soot.PackManager;
-import soot.Scene;
-import soot.SootClass;
+import soot.*;
 import soot.options.Options;
 
 /**
@@ -82,6 +82,11 @@ public class JimpleParser extends SceneObject implements ProgramParser {
 
         String mainMethodName = sootClass.getMethodByName(entryPoint).getSignature();
 
-        return translator.getMethod(mainMethodName).getBody();
+        try {
+			return scene().getMethodIfPresent(mainMethodName).getBody();
+		} catch (ElementNotPresentException e) {
+			logger.fatal("Translation did not generate main method");
+			throw new IllegalStateException();
+		}
     }
 }

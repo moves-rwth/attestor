@@ -236,7 +236,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
      * @param signature The signature of the requested method.
      * @return The corresponding abstract method.
      */
-    public Method getMethod(String signature) {
+    public Method getMethodForCall(String signature) {
 
         Method res = scene().getOrCreateMethod(signature);
         recursiveMethodDetection.addCallEdge(currentMethod, res);

@@ -169,7 +169,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
             soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();
             InvokeHelper invokePrepare = createInvokeHelper(invokeExpr);
             invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));
-            Method method = topLevel.getMethod(invokeExpr.getMethod().getSignature());
+            Method method = topLevel.getMethodForCall(invokeExpr.getMethod().getSignature());
             return new AssignInvoke(this, lhs, method, invokePrepare, pc + 1);
         } else {
             Value rhs = topLevel.translateValue(stmt.getRightOp());
@@ -191,7 +191,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
         // SootMethod method = expr.getMethod();
 
         String name = expr.getMethod().getSignature();
-        Method translatedMethod = topLevel.getMethod(name);
+        Method translatedMethod = topLevel.getMethodForCall(name);
 
         InvokeHelper invokePrepare = createInvokeHelper(expr);
         invokePrepare.setLiveVariableNames(LiveVariableHelper.extractLiveVariables(input));
