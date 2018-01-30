@@ -102,11 +102,6 @@ public class OutputSettings {
      */
     private Map<String, String> requiredContractsForReuse;
 
-    /**
-     * True if and only if report output should be generated.
-     */
-    private boolean exportReportOutput = false;
-
 
     /**
      * If true, no export happens.
@@ -413,14 +408,5 @@ public class OutputSettings {
 
         return this.customHcList;
     }
-
-    public boolean isExportReportOutput() {
-        return exportReportOutput;
-    }
-
-    public void setExportReportOutput(boolean exportReportOutput) {
-        this.exportReportOutput = exportReportOutput;
-    }
-
 
 }

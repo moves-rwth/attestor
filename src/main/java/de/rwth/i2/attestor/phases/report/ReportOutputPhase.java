@@ -74,7 +74,7 @@ public class ReportOutputPhase extends AbstractPhase {
 
     @Override
     public void logSummary(){
-       if(!outputSettings.isNoExport() && outputSettings.isExportReportOutput()) {
+       if(!outputSettings.isNoExport()) {
 
             logSum("Output for report generated.");
        }
@@ -86,7 +86,7 @@ public class ReportOutputPhase extends AbstractPhase {
         inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 
-        if (outputSettings.isNoExport() || !outputSettings.isExportReportOutput()) {
+        if (outputSettings.isNoExport()) {
             return;
         }
 

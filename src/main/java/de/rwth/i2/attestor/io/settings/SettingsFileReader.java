@@ -315,11 +315,6 @@ public class SettingsFileReader {
                 output.addRequiredContractForReuse(signature, filename);
             }
         }
-
-        if( jsonOutput.has( "report" ) ){
-            output.setExportReportOutput( true );
-            //JSONObject jsonReportOpt = jsonOutput.getJSONObject( "report" );
-        }
     }
 
     /**
