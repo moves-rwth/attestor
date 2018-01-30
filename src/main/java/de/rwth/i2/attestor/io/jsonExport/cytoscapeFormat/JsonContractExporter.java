@@ -25,13 +25,14 @@ public class JsonContractExporter {
 	        for ( Entry<String, Collection<Contract>> entry : contracts.entrySet() ) {
 	        	
 	        	String signature = entry.getKey();
+	        	signature = signature.replaceAll("[^A-Za-z0-9]", "");
 	        	Collection<Contract> contractsForMethod = entry.getValue();
 	        	
 	        	int prCount = 1;
 	        	for( Contract contract : contractsForMethod ){
 	        		
 	        		HeapConfiguration precondition = contract.getPrecondition();
-	        		signature = signature.replaceAll("[^A-Za-z0-9]", "");
+	        		
 					exportHeapConfiguration(directory + File.separator + signature + "pr" + prCount + ".json",
 	                        precondition);
 					
@@ -54,7 +55,8 @@ public class JsonContractExporter {
 	        jsonWriter.array();
 	        for ( Entry<String, Collection<Contract>> entry : contracts.entrySet() ) {
 	        	
-	        	final String signature = entry.getKey();
+	        	String signature = entry.getKey();
+	        	signature = signature.replaceAll("[^A-Za-z0-9]", "");
 	        	Collection<Contract> contractsForMethod = entry.getValue();
 	        	
 	            jsonWriter.object()

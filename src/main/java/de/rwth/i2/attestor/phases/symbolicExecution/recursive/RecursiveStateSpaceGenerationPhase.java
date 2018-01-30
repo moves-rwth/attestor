@@ -1,28 +1,19 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
+import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.*;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.InterproceduralAnalysis;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.PartialStateSpace;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.RecursiveMethodExecutor;
-import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
-import de.rwth.i2.attestor.phases.transformers.InputTransformer;
-import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
-import de.rwth.i2.attestor.procedures.ContractCollection;
-import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.procedures.MethodExecutor;
-import de.rwth.i2.attestor.procedures.PreconditionMatchingStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.*;
+import de.rwth.i2.attestor.phases.transformers.*;
+import de.rwth.i2.attestor.procedures.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 
 public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements StateSpaceTransformer {
@@ -75,13 +66,17 @@ public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         String methodName = inputSettings.getMethodName();
-        mainMethod = scene().getMethod(methodName);
+        try {
+			mainMethod = scene().getMethodIfPresent(methodName);
+		} catch (ElementNotPresentException e) {
+			mainMethod = findMatchingMethod(methodName);
+		}
         if(mainMethod.getBody() == null) {
             mainMethod = findMatchingMethod(methodName);
         }
     }
 
-    private Method findMatchingMethod(String methodName) {
+    private Method findMatchingMethod(String methodName) { 
 
         for(Method method : scene().getRegisteredMethods()) {
             if(methodName.equals(method.getName())) {

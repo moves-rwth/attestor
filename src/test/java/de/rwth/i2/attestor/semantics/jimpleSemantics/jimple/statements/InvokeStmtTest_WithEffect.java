@@ -60,7 +60,7 @@ public class InvokeStmtTest_WithEffect {
         Field nextOfX = new Field(type, varX, next);
         Field nextOfY = new Field(type, varY, next);
 
-        Method method = sceneObject.scene().getMethod("method");
+        Method method = sceneObject.scene().getOrCreateMethod("method");
 
         List<SemanticsCommand> methodBody = new ArrayList<>();
         methodBody.add(new IdentityStmt(sceneObject, 1, varY, "@parameter0:"));

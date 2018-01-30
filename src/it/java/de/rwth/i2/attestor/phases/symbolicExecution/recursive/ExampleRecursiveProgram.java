@@ -48,7 +48,7 @@ public class ExampleRecursiveProgram extends SceneObject {
                 )
         );
 
-        Method nextMethod = scene().getMethod("next");
+        Method nextMethod = scene().getOrCreateMethod("next");
         nextMethod.setBody( getNextProgram() );
 
         InvokeHelper invokePrepare = new InstanceInvokeHelper( this,
@@ -148,7 +148,7 @@ public class ExampleRecursiveProgram extends SceneObject {
                 )
         );
 
-        Method nextMethod = scene().getMethod("next");
+        Method nextMethod = scene().getOrCreateMethod("next");
         nextMethod.setBody( getNextProgram() );
         InvokeHelper invokePrepare = new InstanceInvokeHelper( this,
                 new Local(type,"y"),

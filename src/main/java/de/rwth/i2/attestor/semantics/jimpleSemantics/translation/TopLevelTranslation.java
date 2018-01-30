@@ -1,5 +1,11 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.procedures.Method;
@@ -8,19 +14,9 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.types.Type;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import soot.Scene;
-import soot.SootClass;
-import soot.SootMethod;
-import soot.Unit;
+import soot.*;
 import soot.jimple.Stmt;
 import soot.util.Chain;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class organizes the actual translation process by splitting a Jimple program
@@ -113,7 +109,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
             String signature = method.getSignature();
 
-            final Method abstractMethod = scene().getMethod(signature);
+            final Method abstractMethod = scene().getOrCreateMethod(signature);
             abstractMethod.setName(shortName);
             recursiveMethodDetection.addMethodAsVertex(abstractMethod);
         }
@@ -172,7 +168,9 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
      */
     private void translateMethod(SootMethod method) {
 
-        currentMethod = scene().getMethod(method.getSignature());
+        try {
+			currentMethod = scene().getMethodIfPresent(method.getSignature());
+		
         currentUnitToPC = new LinkedHashMap<>();
 
         Chain<Unit> units = method.getActiveBody().getUnits();
@@ -195,6 +193,9 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         currentMethod.setBody(new ProgramImpl(programStatements));
 
+        } catch (ElementNotPresentException e) {
+			logger.error("The method " + method.getSignature() + " was not correctly instantiated");
+		}
     }
 
     @Override
@@ -237,7 +238,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
      */
     public Method getMethod(String signature) {
 
-        Method res = scene().getMethod(signature);
+        Method res = scene().getOrCreateMethod(signature);
         recursiveMethodDetection.addCallEdge(currentMethod, res);
         if (res.getBody() == null) {
 

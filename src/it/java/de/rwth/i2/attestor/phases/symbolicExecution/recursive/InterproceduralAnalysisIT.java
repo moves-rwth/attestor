@@ -44,7 +44,7 @@ public class InterproceduralAnalysisIT {
         ExampleRecursiveProgram examplePrograms = new ExampleRecursiveProgram(sceneObject, type, paramName, next);
 
 
-        Method traverseMethod = sceneObject.scene().getMethod("callNext");
+        Method traverseMethod = sceneObject.scene().getOrCreateMethod("callNext");
         traverseMethod.setBody(examplePrograms.getCallNextProgram() );
 
         RecursiveStateSpaceGenerationPhase ipaPhase = new RecursiveStateSpaceGenerationPhase(sceneObject.scene());
@@ -75,7 +75,7 @@ public class InterproceduralAnalysisIT {
 
         ExampleRecursiveProgram examplePrograms = new ExampleRecursiveProgram(sceneObject, type, paramName, next);
 
-        Method traverseMethod = sceneObject.scene().getMethod("traverse");
+        Method traverseMethod = sceneObject.scene().getOrCreateMethod("traverse");
         traverseMethod.setRecursive(true);
         traverseMethod.setBody(examplePrograms.getRecursiveProgram(traverseMethod) );
 
