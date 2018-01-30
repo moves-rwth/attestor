@@ -95,7 +95,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
                 .addNonterminalEdge(lhs)
                 .addTentacle(nodes.get(0))
                 .addTentacle(nodes.get(1))
-                .addTentacle(nodes.get(0));
+                .addTentacle(nodes.get(2));
         hc = builder.build().build();
         return sceneObject.scene().createProgramState(hc);
     }

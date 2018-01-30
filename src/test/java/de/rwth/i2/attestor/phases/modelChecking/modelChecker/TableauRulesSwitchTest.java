@@ -13,6 +13,7 @@ import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("unchecked")
 public class TableauRulesSwitchTest extends InternalStateSpace {
 
     private SceneObject sceneObject;
@@ -71,7 +72,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
         term2.apply(rulesSwitch);
 
         assertFalse(currentVertex.isTrue());
-        HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(term2);
+        @SuppressWarnings("unchecked") HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(term2);
 
         assertEquals(output.size(), 1);
         for (Assertion newAssertion : output) {
@@ -100,6 +101,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
         assertEquals(rulesSwitch.getOut(ltlTerm), null);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void caseAFalseTerm() {
 
@@ -217,7 +219,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
         andStateForm.apply(rulesSwitch);
 
         assertFalse(currentVertex.isTrue());
-        HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(andStateForm);
+        @SuppressWarnings("unchecked") HashSet<Assertion> output = (HashSet<Assertion>) rulesSwitch.getOut(andStateForm);
 
         assertEquals(output.size(), 2);
         for (Assertion outputAssertion : output) {
@@ -226,6 +228,7 @@ public class TableauRulesSwitchTest extends InternalStateSpace {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void caseAUntilLtlform() {
 

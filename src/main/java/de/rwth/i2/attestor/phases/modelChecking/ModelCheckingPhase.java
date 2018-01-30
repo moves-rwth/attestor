@@ -9,10 +9,12 @@ import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ProofStructure;
 import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
+import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;

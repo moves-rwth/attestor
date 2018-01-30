@@ -233,7 +233,7 @@ public class ProofStructure {
                     currentSubformula.apply(rulesSwitch);
 
                     // Retrieve the generated assertions
-                    HashSet<Assertion> successors = (HashSet<Assertion>) rulesSwitch.getOut(currentSubformula);
+                    @SuppressWarnings("unchecked") Set<Assertion> successors = (Set<Assertion>) rulesSwitch.getOut(currentSubformula);
                     // This means that the current vertex is not (yet) successful
                     if (successors != null) {
                         HashSet<SuccState> successorStates = new LinkedHashSet<>();

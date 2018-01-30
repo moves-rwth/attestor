@@ -36,9 +36,6 @@ public class VF2Algorithm {
     public static final boolean DEBUG = false;
     private static final Logger logger = LogManager.getLogger("VF2Algorithm");
 
-
-    boolean multipleExternalMatches = false;
-
     /**
      * The FeasibilityFunctions that are evaluated to determine whether a candidate pair
      * represents a pair of pattern-target nodes that can be added to the current state without invalidating
@@ -110,7 +107,7 @@ public class VF2Algorithm {
            	   searching for one. To this end we go through all (reachable)
                pairs (patternNode, targetNode) of candidates that might be
                added to the partial morphism. */
-            while (state.nextCandidate(multipleExternalMatches)) {
+            while (state.nextCandidate()) {
                 int p = state.getPatternCandidate();
                 int t = state.getTargetCandidate();
                 if (isFeasible(state, p, t)) {

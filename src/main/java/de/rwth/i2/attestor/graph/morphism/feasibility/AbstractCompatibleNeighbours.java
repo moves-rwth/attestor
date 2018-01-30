@@ -1,6 +1,9 @@
 package de.rwth.i2.attestor.graph.morphism.feasibility;
 
-import de.rwth.i2.attestor.graph.morphism.*;
+import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
+import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
+import de.rwth.i2.attestor.graph.morphism.VF2State;
 import gnu.trove.list.array.TIntArrayList;
 
 public abstract class AbstractCompatibleNeighbours implements FeasibilityFunction {
@@ -23,9 +26,9 @@ public abstract class AbstractCompatibleNeighbours implements FeasibilityFunctio
     @Override
     public boolean eval(VF2State state, int p, int t) {
 
-        VF2PatternGraphData pattern = state.getPattern();
+        VF2GraphData pattern = state.getPattern();
         Graph patternGraph = pattern.getGraph();
-        VF2TargetGraphData target = state.getTarget();
+        VF2GraphData target = state.getTarget();
         Graph targetGraph = target.getGraph();
 
         boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);
@@ -34,10 +37,13 @@ public abstract class AbstractCompatibleNeighbours implements FeasibilityFunctio
         TIntArrayList adjacentNodesOfT = getAdjacent(targetGraph, t);
 
         TIntArrayList targetMatches = new TIntArrayList(adjacentNodesOfP.size());
+        int countSelfLoops = 0;
+
 
         for (int i = 0; i < adjacentNodesOfP.size(); i++) {
 
             int adjP = adjacentNodesOfP.get(i);
+
             if (pattern.containsMatch(adjP)) {
 
                 int match = pattern.getMatch(adjP);
@@ -45,7 +51,24 @@ public abstract class AbstractCompatibleNeighbours implements FeasibilityFunctio
                     return false;
                 }
                 targetMatches.add(match);
+            } else if (p == adjP) {
+                ++countSelfLoops;
             }
+        }
+
+        if(countSelfLoops > 0) {
+            int countTargetSelfLoops = 0;
+            for(int i=0; i < adjacentNodesOfT.size(); i++) {
+                if(adjacentNodesOfT.get(i) == t) {
+                    ++countTargetSelfLoops;
+                }
+            }
+            if(countSelfLoops > countTargetSelfLoops) {
+                return false;
+            }
+        }
+
+        for(int i=0; i < countSelfLoops; i++) {
         }
 
         for (int i = 0; i < adjacentNodesOfT.size(); i++) {

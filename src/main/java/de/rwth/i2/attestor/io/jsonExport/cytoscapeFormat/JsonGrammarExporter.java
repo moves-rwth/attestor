@@ -6,6 +6,8 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.FileUtils;
+import de.rwth.i2.attestor.io.HttpExporter;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.File;
@@ -40,47 +42,35 @@ public class JsonGrammarExporter implements GrammarExporter {
     }
 
     @Override
-    public void exportForReport(String directory, Grammar grammar) throws IOException {
+    public void exportForReport(int bid, HttpExporter httpExporter, Grammar grammar) throws IOException {
 
-        FileUtils.createDirectories(directory);
-        FileWriter writer = new FileWriter(directory + File.separator + "grammarExport.json");
-        exportGrammar(writer, grammar);
-        writer.close();
+        httpExporter.sendGrammarSummaryRequest(bid, exportGrammar(grammar));
 
         int ntCount = 1;
         for (Nonterminal nt : grammar.getAllLeftHandSides()) {
             int count = 1;
             for (HeapConfiguration hc : grammar.getRightHandSidesFor(nt)) {
-                writeHeapConfigurationForReport(
-                        directory + File.separator + nt.getLabel() + ntCount + "Rule" + count + ".json",
-                        hc);
+                String hcJson = new JsonExtendedHeapConfigurationExporter().exportForReport(hc);
+                httpExporter.sendRuleHCRequest(bid, nt.getLabel() + ntCount + "Rule" + count + ".json", hcJson);
                 count++;
             }
             ntCount++;
         }
     }
 
-    private void writeHeapConfigurationForReport(String filePath, HeapConfiguration hc) throws IOException {
-
-        FileWriter writer = new FileWriter(filePath);
-        HeapConfigurationExporter exporter = new JsonExtendedHeapConfigurationExporter(writer);
-        exporter.exportForReport(hc);
-        writer.close();
-    }
-
-
     private void exportGrammar(Writer writer, Grammar grammar) {
 
         JSONWriter jsonWriter = new JSONWriter(writer);
 
         jsonWriter.array();
+        int ntCount = 1;
         for (Nonterminal nonterminal : grammar.getAllLeftHandSides()) {
 
-            String nonterminalName = nonterminal.toString();
+            String nonterminalName = nonterminal.getLabel();
             int ruleNumber = grammar.getRightHandSidesFor(nonterminal).size();
 
             jsonWriter.object()
-                    .key("nonterminal").value(nonterminalName)
+                    .key("nonterminal").value(nonterminalName + ntCount)
                     .key("numberRules").value(ruleNumber)
                     .key("rules").array();
             for (int count = 1; count <= ruleNumber; count++) {
@@ -90,9 +80,42 @@ public class JsonGrammarExporter implements GrammarExporter {
             }
             jsonWriter.endArray();
             jsonWriter.endObject();
+
+            ntCount++;
         }
         jsonWriter.endArray();
 
+    }
+
+
+    private String exportGrammar(Grammar grammar) {
+
+        JSONStringer jsonStringer = new JSONStringer();
+
+        jsonStringer.array();
+        int ntCount = 1;
+        for (Nonterminal nonterminal : grammar.getAllLeftHandSides()) {
+
+            String nonterminalName = nonterminal.getLabel();
+            int ruleNumber = grammar.getRightHandSidesFor(nonterminal).size();
+
+            jsonStringer.object()
+                    .key("nonterminal").value(nonterminalName + ntCount)
+                    .key("numberRules").value(ruleNumber)
+                    .key("rules").array();
+            for (int count = 1; count <= ruleNumber; count++) {
+
+                jsonStringer.value("rule" + count);
+
+            }
+            jsonStringer.endArray();
+            jsonStringer.endObject();
+
+            ntCount++;
+        }
+        jsonStringer.endArray();
+
+        return jsonStringer.toString();
     }
 
     private void exportHeapConfiguration(String filename, HeapConfiguration hc)

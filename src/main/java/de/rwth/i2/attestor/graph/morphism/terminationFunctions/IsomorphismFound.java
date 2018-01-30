@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.terminationFunctions;
 
 import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
-import de.rwth.i2.attestor.graph.morphism.VF2PatternGraphData;
+import de.rwth.i2.attestor.graph.morphism.VF2GraphData;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 
 /**
@@ -18,7 +18,7 @@ public class IsomorphismFound implements TerminationFunction {
     @Override
     public boolean eval(VF2State state) {
 
-        VF2PatternGraphData pattern = state.getPattern();
+        VF2GraphData pattern = state.getPattern();
 
         return pattern.getMatchingSize() == pattern.getGraph().size()
                 && pattern.getMatchingSize() == state.getTarget().getGraph().size();

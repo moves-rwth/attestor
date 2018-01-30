@@ -51,10 +51,9 @@ public class CLIPhase extends AbstractPhase
             SettingsFileReader settingsReader =
                     new SettingsFileReader(commandLineReader.getPathToSettingsFile());
             settingsReader.getInputSettings(inputSettings);
-
+            inputSettings.setPathToSettingsFile(commandLineReader.getPathToSettingsFile());
             DefaultScene defaultScene = (DefaultScene) scene();
             defaultScene.setIdentifier(Objects.hashCode(commandLineReader.getPathToSettingsFile()));
-
             settingsReader.getOptionSettings(scene().options());
             settingsReader.getOutputSettings(outputSettings);
             settingsReader.getMCSettings(modelCheckingSettings);
@@ -86,14 +85,22 @@ public class CLIPhase extends AbstractPhase
         if(name != null && !name.isEmpty()) {
             logSum("Benchmark name: " + name);
         } else {
-            logSum("Benchmark name: not specified");
+            logSum("Benchmark name: n/a");
         }
+
+        String specificationDescription = inputSettings.getSpecificationDescription();
+        if(specificationDescription != null && !specificationDescription.isEmpty()) {
+            logSum("Specification summary: " + specificationDescription);
+        } else {
+            logSum("Specification summary: n/a");
+        }
+
 
         String scenario = inputSettings.getScenario();
         if (scenario != null && !scenario.isEmpty()) {
             logSum("Scenario: " + scenario);
         } else {
-            logSum("Scenario: not specified");
+            logSum("Scenario: n/a");
         }
 
     }

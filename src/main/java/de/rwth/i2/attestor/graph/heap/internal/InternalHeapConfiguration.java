@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.graph.heap.matching.EmbeddingChecker;
 import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
 import de.rwth.i2.attestor.graph.heap.matching.MinDistanceEmbeddingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIntIterator;
@@ -19,6 +20,8 @@ import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +125,7 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
      */
     int countNonterminalEdges;
 
+    TIntSet markedNodes;
 
     /**
      * Sets up an empty InternalHeapConfiguration.
@@ -791,6 +795,38 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
 
         return graph.externalPosOf(privateNodeId);
     }
+
+    @Override
+    public boolean isEdgeBetweenMarkedNodes(int from, int to) {
+
+        if(!isNode(from) ||!isNode(to)) {
+            return false;
+        }
+
+        if(markedNodes == null) {
+            updateMarkedNodes();
+        }
+
+        int fromNode = getPublicId(from);
+        int toNode = getPublicId(to);
+
+        return markedNodes.contains(fromNode)
+                && markedNodes.contains(toNode);
+    }
+
+    private void updateMarkedNodes() {
+
+        markedNodes = new TIntHashSet();
+        TIntIterator varIterator = variableEdges().iterator();
+        while (varIterator.hasNext()) {
+            int var = varIterator.next();
+            if(Markings.isMarking(nameOf(var))) {
+                markedNodes.add(targetOf(var));
+            }
+        }
+    }
+
+
 
 
     /**

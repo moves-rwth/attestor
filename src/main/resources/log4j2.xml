@@ -21,25 +21,11 @@
                 <ThresholdFilter level="REPORT" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </Console>
-        <RollingFile name="RollingFile" fileName="logfiles/log.json"
-                     filePattern="logfiles/%d{yyyyMMdd}_log-%i.json" >
-            <JSONLayout compact="false" complete="true" eventEol="true"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy />
-                <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="50 MB" />
-            </Policies>
-            <DefaultRolloverStrategy max="4"/>
-        </RollingFile>
-        <Async name="AsyncAppender" bufferSize="80">
-            <AppenderRef ref="RollingFile"/>
-        </Async>
     </Appenders>
     <Loggers>
         <Root level="ERROR">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Report"/>
-            <!-- <AppenderRef ref="AsyncAppender" /> -->
         </Root>
     </Loggers>
 </Configuration>

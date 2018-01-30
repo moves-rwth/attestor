@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.io.jsonExport.report;
 
 import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.io.SummaryExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -8,42 +9,50 @@ import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
 import de.rwth.i2.attestor.phases.parser.CLIPhase;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
-import java.io.Writer;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by christina on 05.12.17.
  */
 public class JSONSummaryExporter implements SummaryExporter {
 
+    protected final HttpExporter httpExporter;
 
-    protected final Writer writer;
+    public JSONSummaryExporter(HttpExporter httpExporter) {
 
-    public JSONSummaryExporter(Writer writer) {
-
-        this.writer = writer;
+        this.httpExporter = httpExporter;
     }
 
-    public void exportForReport(Scene scene, StateSpace statespace, ModelCheckingPhase mcPhase, ModelCheckingSettings mcSettings, CLIPhase cliPhase, List<AbstractPhase> phases){
+    public void exportForReport(Scene scene, StateSpace statespace, ModelCheckingPhase mcPhase, ModelCheckingSettings mcSettings, CLIPhase cliPhase, List<AbstractPhase> phases)  {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.array();
+        jsonStringer.array();
 
-        writeSummary(jsonWriter, cliPhase, scene, statespace, mcPhase, mcSettings);
+        writeSummary(jsonStringer, cliPhase, scene, statespace, mcPhase, mcSettings);
 
-        writeRuntime(jsonWriter, phases);
+        writeRuntime(jsonStringer, phases);
 
-        writeStateSpaceInfo(jsonWriter, scene, statespace);
+        writeStateSpaceInfo(jsonStringer, scene, statespace);
 
-        writeMessage(jsonWriter);
+        writeMessage(jsonStringer);
 
-        writeMCResults(jsonWriter, mcPhase);
+        writeMCResults(jsonStringer, mcPhase);
 
-        jsonWriter.endArray();
+        jsonStringer.endArray();
+
+
+        try {
+            httpExporter.sendSummaryRequest(scene.getIdentifier(),jsonStringer.toString());
+        } catch (UnsupportedEncodingException e) {
+            // todo, json stringer returns wrong format, this should not happen!!
+        }
 
     }
 
@@ -54,11 +63,14 @@ public class JSONSummaryExporter implements SummaryExporter {
 
         for (Map.Entry<LTLFormula, Boolean> result : mcPhase.getLTLResults().entrySet()) {
             jsonWriter.object()
+                    .key("id")
+                    .value(Objects.hashCode(result.getKey().getFormulaString()))
                     .key("formula")
                     .value(result.getKey().getFormulaString())
                     .key("satisfied")
                     .value(result.getValue().toString())
                     .endObject();
+
         }
 
 
@@ -116,16 +128,18 @@ public class JSONSummaryExporter implements SummaryExporter {
         // Generate JSON output and calculate total time
         for (AbstractPhase p : phases) {
             double elapsed = p.getElapsedTime();
-            elapsedTotal += elapsed;
+            if(p.getName() != "Report output generation") {
+                elapsedTotal += elapsed;
 
-            jsonWriter.object()
+                jsonWriter.object()
                     .key("name")
                     .value(p.getName())
                     .key("time")
                     .value(elapsed)
                     .endObject();
-            if (p.isVerificationPhase()) {
-                elapsedVerify += elapsed;
+                if (p.isVerificationPhase()) {
+                    elapsedVerify += elapsed;
+                }
             }
         }
 
@@ -136,13 +150,13 @@ public class JSONSummaryExporter implements SummaryExporter {
                 .array()
                 .object()
                 .key("name")
-                .value("sum")
+                .value("total")
                 .key("time")
                 .value(elapsedTotal)
                 .endObject()
                 .object()
                 .key("name")
-                .value("sumVerification")
+                .value("totalVerification")
                 .key("time")
                 .value(elapsedVerify)
                 .endObject()
@@ -156,10 +170,6 @@ public class JSONSummaryExporter implements SummaryExporter {
         jsonWriter.object()
                 .key("summary")
                 .array()
-                .object()
-                .key("name")
-                .value(cliPhase.getInputSettings().getScenario())
-                .endObject()
                 .object()
                 .key("numberStates")
                 .value(scene.getNumberOfGeneratedStates())

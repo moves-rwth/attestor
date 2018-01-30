@@ -33,9 +33,9 @@ public class TwoStepLookahead implements FeasibilityFunction {
     @Override
     public boolean eval(VF2State state, int p, int t) {
 
-        VF2PatternGraphData pattern = state.getPattern();
+        VF2GraphData pattern = state.getPattern();
         Graph patternGraph = pattern.getGraph();
-        VF2TargetGraphData target = state.getTarget();
+        VF2GraphData target = state.getTarget();
         Graph targetGraph = target.getGraph();
 
         boolean checkEquality = checkEqualityOnExternal || !patternGraph.isExternal(p);

@@ -188,6 +188,11 @@ public class GrammarRefinementPhase extends AbstractPhase
                 automaton
         );
         Grammar refinedGrammar = grammarRefinement.getRefinedGrammar();
+
+        if(scene().options().isRuleCollapsingEnabled()) {
+            refinedGrammar = Grammar.builder().addRules(refinedGrammar).updateCollapsedRules().build();
+        }
+
         logger.info("done. Number of refined nonterminals: "
                 + refinedGrammar.getAllLeftHandSides().size());
         return refinedGrammar;

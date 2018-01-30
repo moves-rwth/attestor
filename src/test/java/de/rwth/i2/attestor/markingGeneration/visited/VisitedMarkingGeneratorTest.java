@@ -85,7 +85,7 @@ public class VisitedMarkingGeneratorTest {
         rules.get(nt).add(hcFactory.getListRule2());
         rules.get(nt).add(hcFactory.getListRule3());
 
-        return new Grammar(rules);
+        return Grammar.builder().addRules(rules).build();
     }
 
     @Test
