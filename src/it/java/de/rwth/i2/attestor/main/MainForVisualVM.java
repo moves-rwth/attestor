@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.phases.parser.*;
 import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
 import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
-import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
 import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.RecursiveStateSpaceGenerationPhase;
 
@@ -33,7 +32,6 @@ public class MainForVisualVM extends AbstractAttestor{
         registry.addPhase(new RecursiveStateSpaceGenerationPhase(scene));
         registry.addPhase(new ModelCheckingPhase(scene));
         registry.addPhase(new CounterexampleGenerationPhase(scene));
-        registry.addPhase(new ReportGenerationPhase(scene));
         registry.addPhase(new ReportOutputPhase(scene, registry.getPhases()));
         registry.execute();
     }

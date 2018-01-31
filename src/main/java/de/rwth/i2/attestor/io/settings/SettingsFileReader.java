@@ -248,72 +248,8 @@ public class SettingsFileReader {
 
         JSONObject jsonOutput = jsonSettings.getJSONObject("output");
 
-        if (jsonOutput.has("defaultPath")) {
-            output.setDefaultPath(jsonOutput.getString("defaultPath"));
-        }
-
         if (jsonOutput.has("enabled")) {
             output.setNoExport(!jsonOutput.getBoolean("enabled"));
-        }
-
-        if (jsonOutput.has("stateSpace")) {
-            output.setExportStateSpace(true);
-            JSONObject jsonStateSpace = jsonOutput.getJSONObject("stateSpace");
-            if (jsonStateSpace.has("path")) {
-                output.setPathForStateSpace(jsonStateSpace.getString("path"));
-            }
-            if (jsonStateSpace.has("folder")) {
-                output.setFolderForStateSpace(jsonStateSpace.getString("folder"));
-            }
-        }
-
-
-        if (jsonOutput.has("grammar")) {
-            output.setExportGrammar(true);
-            JSONObject jsonGrammar = jsonOutput.getJSONObject("grammar");
-            if (jsonGrammar.has("path")) {
-                output.setPathForGrammar(jsonGrammar.getString("path"));
-            }
-            if (jsonGrammar.has("folder")) {
-                output.setFolderForGrammar(jsonGrammar.getString("folder"));
-            }
-        }
-
-        if (jsonOutput.has("contractsForInspection")) {
-            output.setExportContractsForInspection(true);
-            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
-            if (jsonContracts.has("path")) {
-                output.setPathForContractsForInspection(jsonContracts.getString("path"));
-            }
-            if (jsonContracts.has("folder")) {
-                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
-            }
-        }
-        
-        if (jsonOutput.has("customHCs")) {
-            output.setExportCustomHcs(true);
-            JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
-            if (jsonGrammar.has("path")) {
-                output.setPathForCustomHcs(jsonGrammar.getString("path"));
-            }
-            if (jsonGrammar.has("folder")) {
-                output.setFolderForCustomHcs(jsonGrammar.getString("folder"));
-            }
-        }
-
-        if (jsonOutput.has("contractsForReuse")) {
-            output.setExportContractsForReuse(true);
-            JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
-            if (jsonC.has("path")) {
-                output.setDirectoryForReuseContracts(jsonC.getString("path"));
-            }
-            JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
-            for (int i = 0; i < requestArray.length(); i++) {
-                JSONObject request = requestArray.getJSONObject(i);
-                String signature = request.getString("signature");
-                String filename = request.getString("filename");
-                output.addRequiredContractForReuse(signature, filename);
-            }
         }
     }
 

@@ -228,14 +228,6 @@ public class CommandLineReader extends SceneObject {
         if (cmd.hasOption("ne")) {
             outputSettings.setNoExport(true);
         }
-
-        if (cmd.hasOption("html")) {
-            outputSettings.setExportStateSpace(true);
-        }
-
-        if (cmd.hasOption("ghtml")) {
-            outputSettings.setExportGrammar(true);
-        }
     }
 
     /**
