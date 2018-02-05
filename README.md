@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
+![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
 
 # About
 
@@ -40,6 +40,9 @@ The following software has to be installed prior to the installation of Attestor
 Please note that the installation requires an internet connection as maven will install additional dependencies.
   
 # Running Attestor
+
+![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
+(status of examples repository)
 
 The simplest (and recommended) way to use Attestor is to create a new benchmark project that contains the code to be analyzed.
 To get started, there is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
