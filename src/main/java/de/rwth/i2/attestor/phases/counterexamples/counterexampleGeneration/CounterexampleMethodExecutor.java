@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.procedures.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
 
@@ -33,7 +34,10 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
         counterexampleContractGenerator.setRequiredFinalHeaps(abstractMatch.getPostconditions());
 
         ContractMatch contractMatch = computeNewContract(inputState, scopedHeap);
-        return scopedHeap.merge(contractMatch);
+        if(contractMatch.hasMatch()) {
+            return scopedHeap.merge(contractMatch);
+        }
+        return Collections.emptySet();
     }
 
     private ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
