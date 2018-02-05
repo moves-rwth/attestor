@@ -1,6 +1,6 @@
 ![Build Status](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
 
-# Attestor
+# About
 
 Pointers constitute an essential concept in modern programming languages, and are used for implementing dynamic data structures like lists, trees etc. 
 However, many software bugs can be traced back to the erroneous use of pointers by e.g. dereferencing null pointers or accidentally pointing to wrong parts of the heap.
@@ -23,7 +23,7 @@ These contracts can be automatically derived or manually specified.
 
 
 
-## System Requirements
+# System Requirements
 
 The following software has to be installed prior to the installation of Attestor:
 
@@ -32,14 +32,14 @@ The following software has to be installed prior to the installation of Attestor
 - (Windows) Since Attestor uses [soot][13], please make sure that rt.jar is in your CLASSPATH.
 
 
-## Installation
+# Installation
 
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
 
 Please note that the installation requires an internet connection as maven will install additional dependencies.
   
-## Running Attestor
+# Running Attestor
 
 The simplest (and recommended) way to use Attestor is to create a new benchmark project that contains the code to be analyzed.
 To get started, there is a [separate repository][2] that collects benchmarks and example programs that have been successfully analyzed.
@@ -54,7 +54,7 @@ It is also possible to directly run attestor from the command-line using individ
 Instructions on running attestor from the command-line can be found in the [wiki][15].
 The format and possible options of Attestor's settings are also explained in the [wiki][16].
 
-## Documentation and Publications
+# Documentation and Publications
 
 The API document is available as part of this repository [here][1].
 Furthermore, the theoretical foundations underlying Attestor are described in the following research papers:
