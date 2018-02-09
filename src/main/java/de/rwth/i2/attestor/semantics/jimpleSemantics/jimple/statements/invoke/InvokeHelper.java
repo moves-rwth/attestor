@@ -101,7 +101,7 @@ public abstract class InvokeHelper extends SceneObject {
                 concreteArgument = programState.getUndefined();
             }
             if (concreteArgument.isUndefined()) {
-                logger.warn("param " + i + " evaluated to undefined and is therefore not attached. ");
+                logger.debug("param " + i + " evaluated to undefined and is therefore not attached. ");
             } else {
                 programState.setIntermediate(referenceName, concreteArgument);
             }

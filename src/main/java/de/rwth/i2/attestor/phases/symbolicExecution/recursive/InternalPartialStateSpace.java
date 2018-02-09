@@ -34,10 +34,15 @@ public class InternalPartialStateSpace implements PartialStateSpace {
             Method method = call.getMethod();
             ProgramState preconditionState = call.getInput();
 
+            StateSpace containingStateSpace = callingState.getContainingStateSpace();
+            if(containingStateSpace.containsAbortedStates()) {
+                return;
+            }
+
             StateSpace stateSpace = stateSpaceGeneratorFactory.create(
                     call.getMethod().getBody(),
                     callingState,
-                    callingState.getContainingStateSpace()
+                    containingStateSpace
             ).generate();
 
             List<HeapConfiguration> finalHeaps = new ArrayList<>();

@@ -49,7 +49,7 @@ public class HttpExporter {
         try {
             httpclient.execute(httppost);
         } catch (IOException e) {
-            logger.warn("Not able to register benchmark with the API.");
+            logger.debug("Not able to register benchmark with the API.");
         }
     }
 
@@ -73,7 +73,7 @@ public class HttpExporter {
         try {
             httpclient.execute(httppost);
         } catch (IOException e) {
-            logger.warn("Not able to register benchmark with the API.");
+            logger.debug("Not able to register benchmark with the API.");
         }
     }
 
@@ -151,7 +151,7 @@ public class HttpExporter {
         try {
             httpclient.execute(httpput);
         } catch (IOException e) {
-            logger.warn("Not able to register benchmark with the API.");
+            logger.debug("Not able to register benchmark with the API.");
         }
     }
 
@@ -169,7 +169,7 @@ public class HttpExporter {
         try {
             httpclient.execute(httpput);
         } catch (IOException e) {
-            logger.warn("Not able to register benchmark with the API.");
+            logger.debug("Not able to register benchmark with the API.");
         }
 
 

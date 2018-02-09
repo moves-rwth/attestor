@@ -81,7 +81,7 @@ public class ProofStructureHtmlExporter implements ProofStructureExporter {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            logger.warn("Not able to create file for proof structure visualisation: " + filename);
+            logger.debug("Not able to create file for proof structure visualisation: " + filename);
             throw e;
         }
 

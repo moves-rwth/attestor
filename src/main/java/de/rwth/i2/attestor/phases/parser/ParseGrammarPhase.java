@@ -62,7 +62,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         List<String> usedPredefinedGrammars = inputSettings.getUsedPredefinedGrammars();
 
         if (usedPredefinedGrammars == null) {
-            logger.warn("No suitable predefined grammar could be found");
+            logger.error("No suitable predefined grammar could be found");
             return;
         }
 
@@ -74,7 +74,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
                 loadGrammarFromURL(Attestor.class.getClassLoader()
                         .getResource("predefinedGrammars/" + predefinedGrammar + ".json"));
             } catch (FileNotFoundException e) {
-                logger.warn("Skipping predefined grammar "
+                logger.error("Skipping predefined grammar "
                         + predefinedGrammar + ".");
             }
         }
@@ -109,7 +109,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
             }
             br.close();
         } catch (FileNotFoundException e) {
-            logger.warn("File " + locationOfRenamingMap + " not found. ");
+            logger.error("File " + locationOfRenamingMap + " not found. ");
             throw e;
         } catch (IOException e) {
             e.printStackTrace();

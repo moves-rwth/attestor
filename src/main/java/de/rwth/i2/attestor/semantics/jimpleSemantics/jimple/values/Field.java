@@ -95,7 +95,7 @@ public class Field implements SettableValue {
 
         ConcreteValue concreteOrigin = originValue.evaluateOn(programState);
         if (concreteOrigin.isUndefined()) {
-            logger.warn("Origin evaluated to undefined. Field is not reassigned");
+            logger.debug("Origin evaluated to undefined. Field is not reassigned");
         } else {
             programState.setSelector(concreteOrigin, selectorLabel, concreteTarget);
         }

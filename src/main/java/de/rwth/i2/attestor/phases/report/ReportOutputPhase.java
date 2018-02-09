@@ -12,28 +12,28 @@ import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.JsonStateSpaceExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONOptionExporter;
 import de.rwth.i2.attestor.io.jsonExport.report.JSONSummaryExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
+import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
-import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
-import de.rwth.i2.attestor.phases.transformers.*;
-import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
+import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
 import de.rwth.i2.attestor.phases.parser.CLIPhase;
+import de.rwth.i2.attestor.phases.transformers.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import org.json.JSONObject;
-import org.json.JSONStringer;
 
 /**
  * Created by christina on 01.12.17.
@@ -74,10 +74,6 @@ public class ReportOutputPhase extends AbstractPhase {
 
     @Override
     public void logSummary(){
-       if(!outputSettings.isNoExport()) {
-
-            logSum("Output for report generated.");
-       }
     }
 
     @Override

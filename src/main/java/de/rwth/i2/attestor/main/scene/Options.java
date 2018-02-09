@@ -161,7 +161,7 @@ public class Options {
     public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
 
         if (abstractionDistance == 0 && aggressiveNullAbstraction) {
-            logger.warn("The option 'aggressiveNullAbstraction' will have no effect " +
+            logger.info("The option 'aggressiveNullAbstraction' will have no effect " +
                     "since the dereference depth is already set to 0");
         }
         this.aggressiveNullAbstraction = aggressiveNullAbstraction;

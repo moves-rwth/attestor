@@ -187,7 +187,10 @@ public class StateSpaceGenerator {
             ProgramState state = stateExplorationStrategy.getNextUnexploredState();
             state.setContainingStateSpace( this.stateSpace );
 
-            checkAbortCriteria(state);
+            if(!checkAbortCriteria(state)) {
+                totalStatesCounter.addStates(stateSpace.size());
+                return stateSpace;
+            }
 
             SemanticsCommand stateSemanticsCommand = semanticsOf(state);
 
@@ -209,7 +212,7 @@ public class StateSpaceGenerator {
         return stateSpace;
     }
 
-    private void checkAbortCriteria(ProgramState state) throws StateSpaceGenerationAbortedException {
+    private boolean checkAbortCriteria(ProgramState state) throws StateSpaceGenerationAbortedException {
 
         try {
             abortStrategy.checkAbort(stateSpace);
@@ -220,7 +223,9 @@ public class StateSpaceGenerator {
             if (!state.isFromTopLevelStateSpace()) {
                 throw e;
             }
+            return false;
         }
+        return true;
     }
 
     private void abortRemainingStates() {

@@ -157,7 +157,7 @@ public class SettingsFileReader {
                 input.addPredefinedGrammar(grammarType, renameFileLocation);
                 logger.debug("Adding predefined grammar " + grammarType);
             } else {
-                logger.warn("No predefined grammar of type " + grammarType
+                logger.debug("No predefined grammar of type " + grammarType
                         + " available. Skipping it.");
             }
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="ERROR">
+<Configuration status="WARN">
     <CustomLevels>
         <CustomLevel name="VERSION" intLevel="50"/>
         <CustomLevel name="REPORT" intLevel="49"/>
@@ -11,7 +11,7 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%highlight{%-10level{WARN=[Warn], HIGHLIGHT=[Summary], DEBUG=[Debug], ERROR=[Error], TRACE=[Trace], INFO=[Info], VERSION=[Version], LTL-SAT=[SAT], LTL-UNSAT=[UNSAT], LTL-UNKNOWN=[UNKNOWN]}}{STYLE=Logback, VERSION=blue, REPORT=Normal, HIGHLIGHT=blue, LTL-SAT=green, LTL-UNSAT=red, LTL-UNKNOWN=yellow} %msg%n"/>
+                    pattern="%highlight{%-10level{WARN=[Warning], HIGHLIGHT=[Summary], DEBUG=[Debug], ERROR=[Error], TRACE=[Trace], INFO=[Info], VERSION=[Version], LTL-SAT=[SAT], LTL-UNSAT=[UNSAT], LTL-UNKNOWN=[UNKNOWN]}}{STYLE=Logback, VERSION=blue, REPORT=Normal, HIGHLIGHT=blue, LTL-SAT=green, LTL-UNSAT=red, LTL-UNKNOWN=yellow} %msg%n"/>
             <Filters>
                 <ThresholdFilter level="REPORT" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
@@ -24,7 +24,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="ERROR">
+        <Root level="WARN">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Report"/>
         </Root>

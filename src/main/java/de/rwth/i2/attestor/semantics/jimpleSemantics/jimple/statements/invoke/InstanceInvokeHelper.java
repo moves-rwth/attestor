@@ -82,7 +82,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
             concreteBase = programState.getUndefined();
         }
         if (concreteBase.isUndefined()) {
-            logger.warn("base evaluated to undefined and is therefore not attached. ");
+            logger.debug("base evaluated to undefined and is therefore not attached. ");
         } else {
             // String type = " " + baseValue.getType().toString();
             String type = "";
