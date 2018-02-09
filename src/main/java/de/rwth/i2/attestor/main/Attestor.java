@@ -38,7 +38,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.recursive.RecursiveStateSpac
 public class Attestor extends AbstractAttestor {
 
     @Override
-    protected void registerPhases(String[] args) {
+    protected void registerPhases(String[] args) throws Exception {
 
         registry
                 .addPhase(new CLIPhase(scene, args))

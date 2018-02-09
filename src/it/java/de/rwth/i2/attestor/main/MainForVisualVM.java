@@ -18,7 +18,7 @@ public class MainForVisualVM extends AbstractAttestor{
     }
 
     @Override
-    protected void registerPhases(String[] args) {
+    protected void registerPhases(String[] args) throws Exception {
 
         registry.addPhase(new CLIPhase(scene, args));
         registry.addPhase(new ParseProgramPhase(scene));
