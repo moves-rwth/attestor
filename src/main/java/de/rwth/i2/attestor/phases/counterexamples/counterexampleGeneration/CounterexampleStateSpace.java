@@ -179,6 +179,15 @@ public class CounterexampleStateSpace implements StateSpace {
     }
 
     @Override
+    public void setAborted(ProgramState state) {
+    }
+
+    @Override
+    public boolean containsAbortedStates() {
+        return false;
+    }
+
+    @Override
     public void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping) {
 
     }
@@ -226,8 +235,4 @@ public class CounterexampleStateSpace implements StateSpace {
         return getState(stateId).satisfiesAP(expectedAP);
     }
 
-    @Override
-    public void transformTerminalStates() {
-
-    }
 }

@@ -12,7 +12,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class IndexedSemanticsCommandTest {
 
@@ -49,15 +47,9 @@ public class IndexedSemanticsCommandTest {
         Local varX = new Local(type, "x");
         Field xLeft = new Field(type, varX, left);
         AssignStmt stmt = new AssignStmt(sceneObject, varX, xLeft, 0, new LinkedHashSet<>());
-        try {
-            Collection<ProgramState> result = stmt.computeSuccessors(input);
-            assertEquals(1, result.size());
-            assertEquals(expected, result.iterator().next());
-        } catch (NotSufficientlyMaterializedException e) {
-            e.printStackTrace();
-            fail("Unexpected Exception " + e.getMessage());
-        }
-
+        Collection<ProgramState> result = stmt.computeSuccessors(input);
+        assertEquals(1, result.size());
+        assertEquals(expected, result.iterator().next());
     }
 
     @Test
@@ -73,14 +65,9 @@ public class IndexedSemanticsCommandTest {
         Local varTmp = new Local(type, "tmp");
         NewExpr expr = new NewExpr(type);
         AssignStmt stmt = new AssignStmt(sceneObject, varTmp, expr, 0, new LinkedHashSet<>());
-        try {
-            Collection<ProgramState> result = stmt.computeSuccessors(input);
-            assertEquals(1, result.size());
-            assertEquals(expected, result.iterator().next());
-        } catch (NotSufficientlyMaterializedException e) {
-            e.printStackTrace();
-            fail("Unexpected Exception " + e.getMessage());
-        }
+        Collection<ProgramState> result = stmt.computeSuccessors(input);
+        assertEquals(1, result.size());
+        assertEquals(expected, result.iterator().next());
     }
 
     @Test
@@ -100,13 +87,8 @@ public class IndexedSemanticsCommandTest {
         Field xLeft = new Field(type, varX, left);
         AssignStmt stmt = new AssignStmt(sceneObject, xLeft, varTmp, 0, new LinkedHashSet<>());
 
-        try {
-            Collection<ProgramState> result = stmt.computeSuccessors(input);
-            assertEquals(1, result.size());
-            assertEquals(expected, result.iterator().next());
-        } catch (NotSufficientlyMaterializedException e) {
-            e.printStackTrace();
-            fail("Unexpected Exception " + e.getMessage());
-        }
+        Collection<ProgramState> result = stmt.computeSuccessors(input);
+        assertEquals(1, result.size());
+        assertEquals(expected, result.iterator().next());
     }
 }

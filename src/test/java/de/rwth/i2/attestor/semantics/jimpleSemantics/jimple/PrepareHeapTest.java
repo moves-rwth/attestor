@@ -14,9 +14,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,7 +52,6 @@ public class PrepareHeapTest {
         Value condition = new EqualExpr(leftExpr, rightExpr);
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
             Collection<ProgramState> res = stmt.computeSuccessors(input);
@@ -67,11 +64,6 @@ public class PrepareHeapTest {
                 assertFalse("condition has evaluated to true", s.getProgramCounter() == truePC);
                 assertNotNull("resHeap null", s.getHeap());
             }
-
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
-
     }
 
     @Test
@@ -85,7 +77,6 @@ public class PrepareHeapTest {
         Value condition = new EqualExpr(leftExpr, rightExpr);
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
             Collection<ProgramState> res = stmt.computeSuccessors(input);
@@ -97,10 +88,6 @@ public class PrepareHeapTest {
                 assertFalse("condition has evaluated to true", s.getProgramCounter() == truePC);
                 assertNotNull("resHeap null", s.getHeap());
             }
-
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
     }
 
     @Test
@@ -116,7 +103,6 @@ public class PrepareHeapTest {
         Value condition = new EqualExpr(leftExpr, rightExpr);
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             DefaultProgramState input = new DefaultProgramState(testGraph);
             input.prepareHeap();
 
@@ -129,10 +115,6 @@ public class PrepareHeapTest {
                 assertTrue("condition should evaluate to true", s.getProgramCounter() == truePC);
                 assertNotNull("resHeap null", s.getHeap());
             }
-
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
     }
 
 }

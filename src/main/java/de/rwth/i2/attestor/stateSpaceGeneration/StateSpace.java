@@ -40,6 +40,10 @@ public interface StateSpace {
 
     void setFinal(ProgramState state);
 
+    void setAborted(ProgramState state);
+
+    boolean containsAbortedStates();
+
     void updateFinalStates(Set<ProgramState> newFinalStates, Map<Integer, Integer> idMapping);
 
     void addMaterializationTransition(ProgramState from, ProgramState to);
@@ -54,9 +58,5 @@ public interface StateSpace {
 
     boolean satisfiesAP(int stateId, String expectedAP);
 
-    /**
-     * adds artificial inf-paths to all states without successors,
-     * to formally avoid terminal states.
-     */
-	void transformTerminalStates();
+
 }

@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * Values model all kinds of expressions. They can be evaluated on
@@ -13,8 +12,7 @@ import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
  */
 public interface Value {
 
-    ConcreteValue evaluateOn(ProgramState programState)
-            throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
+    ConcreteValue evaluateOn(ProgramState programState) throws NullPointerDereferenceException;
 
     boolean needsMaterialization(ProgramState programState);
 

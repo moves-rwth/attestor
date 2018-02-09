@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,11 +57,8 @@ public abstract class InvokeHelper extends SceneObject {
      * Value cause them.
      *
      * @param programState : the programState which will be the input of the called method
-     * @throws NotSufficientlyMaterializedException if the argument or the base value
-     *                                              can not be evaluated on the heap before it is materialized.
      */
-    public abstract void prepareHeap(ProgramState programState)
-            throws NotSufficientlyMaterializedException;
+    public abstract void prepareHeap(ProgramState programState);
 
     /**
      * Removes unused intermediates (this, params, return) and local variables
@@ -91,8 +87,7 @@ public abstract class InvokeHelper extends SceneObject {
     }
 
 
-    void appendArguments(ProgramState programState)
-            throws NotSufficientlyMaterializedException {
+    void appendArguments(ProgramState programState) {
 
         for (int i = 0; i < argumentValues.size(); i++) {
             // String name = "@parameter"+i+": "+arguments.get(i).getType();

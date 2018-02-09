@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,7 +48,7 @@ public class EqualExpr implements Value {
      * @return the heap element representing true/false or undefined.
      */
     @Override
-    public ConcreteValue evaluateOn(ProgramState programState) throws NotSufficientlyMaterializedException {
+    public ConcreteValue evaluateOn(ProgramState programState) {
 
         ConcreteValue leftRes;
         try {
