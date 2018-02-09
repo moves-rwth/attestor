@@ -68,7 +68,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
                 }
 
             } else {
-                logger.warn("Formula is violated: " + formulaString);
+                logger.info("Formula is violated: " + formulaString);
                 allSatisfied = false;
                 formulaResults.put(formula, ModelCheckingResult.UNSATISFIED);
 
