@@ -194,7 +194,8 @@ public class StateSpaceGenerator {
 
             SemanticsCommand stateSemanticsCommand = semanticsOf(state);
 
-            if(materializationPhase(stateSemanticsCommand, state)) {
+            boolean isMaterialized = materializationPhase(stateSemanticsCommand, state) ;
+            if(isMaterialized) {
                 Collection<ProgramState> successorStates = stateSemanticsCommand.computeSuccessors(state);
                 if(finalStateStrategy.isFinalState(state, successorStates, stateSemanticsCommand)) {
                     stateSpace.setFinal(state);

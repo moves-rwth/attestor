@@ -2,13 +2,11 @@ package de.rwth.i2.attestor.main;
 
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public abstract class AbstractPhase extends SceneObject {
 
@@ -74,9 +72,8 @@ public abstract class AbstractPhase extends SceneObject {
     private void logFail(Exception e) {
 
         logger.fatal(getName() + " failed.");
+        logger.fatal("Reason for failure:");
         logger.fatal(e.getMessage());
-
-        e.printStackTrace();
         System.exit(1);
     }
 

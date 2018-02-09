@@ -390,8 +390,9 @@ public abstract class GeneralProgramState implements ProgramState {
                 if (baseNodeType.isOptional(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
                 } else {
-                    throw new IllegalStateException("Required selector label " + from
-                            + "." + selectorLabel + " is missing.");
+                    throw new IllegalStateException("Required selector label " + selectorLabel + " of node "
+                            + baseNode + " could not be found." +
+                            " This is probably caused by a flawed initial heap or an error in the provided grammar.");
                 }
             }
 
