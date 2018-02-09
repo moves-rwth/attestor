@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
+import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingResult;
 import de.rwth.i2.attestor.phases.parser.CLIPhase;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.json.JSONStringer;
@@ -61,18 +62,17 @@ public class JSONSummaryExporter implements SummaryExporter {
                 .key("mcresults")
                 .array();
 
-        for (Map.Entry<LTLFormula, Boolean> result : mcPhase.getLTLResults().entrySet()) {
+        for (Map.Entry<LTLFormula, ModelCheckingResult> result : mcPhase.getLTLResults().entrySet()) {
+            String modelCheckingResult = ModelCheckingResult.getString(result.getValue());
             jsonWriter.object()
                     .key("id")
                     .value(Objects.hashCode(result.getKey().getFormulaString()))
                     .key("formula")
                     .value(result.getKey().getFormulaString())
                     .key("satisfied")
-                    .value(result.getValue().toString())
+                    .value(modelCheckingResult)
                     .endObject();
-
         }
-
 
         jsonWriter.endArray()
                 .endObject();

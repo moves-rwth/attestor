@@ -5,23 +5,22 @@ import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.FailureTrace;
+import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingResult;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ProofStructure;
 import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
-import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import org.apache.logging.log4j.Level;
 
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingResultsTransformer {
 
-    private final Map<LTLFormula, Boolean> formulaResults = new LinkedHashMap<>();
+    private final Map<LTLFormula, ModelCheckingResult> formulaResults = new LinkedHashMap<>();
     private final Map<LTLFormula, ModelCheckingTrace> traces = new LinkedHashMap<>();
     private boolean allSatisfied = true;
 
@@ -57,13 +56,21 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
             ProofStructure proofStructure = new ProofStructure();
             proofStructure.build(stateSpace, formula);
             if (proofStructure.isSuccessful()) {
-                formulaResults.put(formula, true);
-                logger.info("done. Formula is satisfied.");
-                numberSatFormulae++;
+
+                if(stateSpace.containsAbortedStates()) {
+                    allSatisfied = false;
+                    formulaResults.put(formula, ModelCheckingResult.UNKNOWN);
+                    logger.info("done. It is unknown whether the formula is satisfied.");
+                } else {
+                    formulaResults.put(formula, ModelCheckingResult.SATISFIED);
+                    logger.info("done. Formula is satisfied.");
+                    numberSatFormulae++;
+                }
+
             } else {
                 logger.warn("Formula is violated: " + formulaString);
                 allSatisfied = false;
-                formulaResults.put(formula, false);
+                formulaResults.put(formula, ModelCheckingResult.UNSATISFIED);
 
                 if (scene().options().isIndexedMode()) {
                     logger.warn("Counterexample generation for indexed grammars is not supported yet.");
@@ -85,15 +92,13 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
         if (allSatisfied) {
             logHighlight("Model checking results: All provided LTL formulae are satisfied.");
         } else {
-            logHighlight("Model checking results: Some provided LTL formulae are violated.");
+            logHighlight("Model checking results: Some provided LTL formulae could not be verified.");
         }
 
-        for (Map.Entry<LTLFormula, Boolean> result : formulaResults.entrySet()) {
-            if (result.getValue()) {
-                logger.log(Level.getLevel("LTL-SAT"), result.getKey().getFormulaString());
-            } else {
-                logger.log(Level.getLevel("LTL-UNSAT"), result.getKey().getFormulaString());
-            }
+        for (Map.Entry<LTLFormula, ModelCheckingResult> result : formulaResults.entrySet()) {
+            Level level = Level.getLevel(ModelCheckingResult.getString(result.getValue()));
+            String formulaString = result.getKey().getFormulaString();
+            logger.log(level, formulaString);
         }
     }
 
@@ -104,7 +109,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
     }
 
     @Override
-    public Map<LTLFormula, Boolean> getLTLResults() {
+    public Map<LTLFormula, ModelCheckingResult> getLTLResults() {
 
         return formulaResults;
     }

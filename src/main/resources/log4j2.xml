@@ -5,12 +5,13 @@
         <CustomLevel name="REPORT" intLevel="49"/>
         <CustomLevel name="LTL-SAT" intLevel="50"/>
         <CustomLevel name="LTL-UNSAT" intLevel="50"/>
+        <CustomLevel name="LTL-UNKNOWN" intLevel="50"/>
         <CustomLevel name="HIGHLIGHT" intLevel="50"/>
     </CustomLevels>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%highlight{%-10level{WARN=[Warn], HIGHLIGHT=[Summary], DEBUG=[Debug], ERROR=[Error], TRACE=[Trace], INFO=[Info], VERSION=[Version], LTL-SAT=[SAT], LTL-UNSAT=[UNSAT]}}{STYLE=Logback, VERSION=blue, REPORT=Normal, HIGHLIGHT=blue, LTL-SAT=green, LTL-UNSAT=red} %msg%n"/>
+                    pattern="%highlight{%-10level{WARN=[Warn], HIGHLIGHT=[Summary], DEBUG=[Debug], ERROR=[Error], TRACE=[Trace], INFO=[Info], VERSION=[Version], LTL-SAT=[SAT], LTL-UNSAT=[UNSAT], LTL-UNKNOWN=[UNKNOWN]}}{STYLE=Logback, VERSION=blue, REPORT=Normal, HIGHLIGHT=blue, LTL-SAT=green, LTL-UNSAT=red, LTL-UNKNOWN=yellow} %msg%n"/>
             <Filters>
                 <ThresholdFilter level="REPORT" onMatch="DENY" onMismatch="NEUTRAL"/>
             </Filters>
