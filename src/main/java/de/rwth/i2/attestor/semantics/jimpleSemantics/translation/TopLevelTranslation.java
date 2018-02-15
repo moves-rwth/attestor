@@ -1,10 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.translation;
 
-import java.util.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
@@ -14,9 +9,19 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.Statement
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.types.Type;
-import soot.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Unit;
 import soot.jimple.Stmt;
 import soot.util.Chain;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class organizes the actual translation process by splitting a Jimple program
@@ -249,7 +254,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             defaultControlFlow.add(new Skip(this, -1));
             res.setBody(new ProgramImpl(defaultControlFlow));
 
-            logger.warn("Method " + signature + " replaced by empty default method.");
+            logger.info("Method " + signature + " replaced by empty default method.");
 
         }
 

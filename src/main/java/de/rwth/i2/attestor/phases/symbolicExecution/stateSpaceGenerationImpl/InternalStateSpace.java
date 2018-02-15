@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl;
 
+import de.rwth.i2.attestor.programState.AtomicPropositions;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import gnu.trove.TIntCollection;
@@ -27,6 +28,7 @@ public class InternalStateSpace implements StateSpace {
     private TIntObjectMap<ProgramState> stateIdLookupTable = null;
     private int nextStateId = 0;
     private int maximalStateSize = 0;
+    private boolean containsAtLeastOneAbortedState = false;
 
     public InternalStateSpace(int capacity) {
 
@@ -206,6 +208,19 @@ public class InternalStateSpace implements StateSpace {
 
         finalStateIds.add(state.getStateSpaceId());
         state.addAP("{ terminated }");
+    }
+
+    @Override
+    public void setAborted(ProgramState state) {
+
+        state.addAP(AtomicPropositions.ABORTED);
+        this.containsAtLeastOneAbortedState = true;
+    }
+
+    @Override
+    public boolean containsAbortedStates() {
+
+        return containsAtLeastOneAbortedState;
     }
 
     @Override
@@ -403,15 +418,5 @@ public class InternalStateSpace implements StateSpace {
             }
         };
     }
-
-	@Override
-	public void transformTerminalStates() {
-		for( ProgramState state : getStates() ){
-			if( getControlFlowSuccessorsOf(state).isEmpty() && getMaterializationSuccessorsOf(state).isEmpty() ){
-				addArtificialInfPathsTransition(state);
-			}
-		}
-
-	}
 
 }

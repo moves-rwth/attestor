@@ -15,16 +15,15 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class InvokeStmtTest_WithEffect {
 
@@ -79,14 +78,9 @@ public class InvokeStmtTest_WithEffect {
     @Test
     public void testComputeSuccessors() {
 
-        try {
             Collection<ProgramState> resStates = stmt.computeSuccessors(testInput);
             assertEquals(1, resStates.size());
             assertEquals(expectedHeap, resStates.iterator().next().getHeap());
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            e.printStackTrace();
-            fail("unexpected exception");
-        }
     }
 
     @Test

@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import gnu.trove.iterator.TIntIterator;
+import org.json.JSONStringer;
 import org.json.JSONWriter;
 
 import java.io.Writer;
@@ -16,6 +17,10 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
     public JsonExtendedHeapConfigurationExporter(Writer writer) {
 
         super(writer);
+    }
+
+    public JsonExtendedHeapConfigurationExporter() {
+
     }
 
     public void export(HeapConfiguration heapConfiguration) {
@@ -36,19 +41,20 @@ public class JsonExtendedHeapConfigurationExporter extends JsonHeapConfiguration
 
     }
 
-    public void exportForReport(HeapConfiguration heapConfiguration) {
+    public String exportForReport(HeapConfiguration heapConfiguration) {
 
-        JSONWriter jsonWriter = new JSONWriter(writer);
+        JSONStringer jsonStringer = new JSONStringer();
 
-        jsonWriter.object()
+        jsonStringer.object()
                 .key("nodes")
                 .array();
 
-        writeNodesAndEdges(jsonWriter, heapConfiguration);
+        writeNodesAndEdges(jsonStringer, heapConfiguration);
 
-        jsonWriter.endArray()
+        jsonStringer.endArray()
                 .endObject();
 
+        return jsonStringer.toString();
     }
 
     private void writeNodesAndEdges(JSONWriter jsonWriter, HeapConfiguration heapConfiguration){

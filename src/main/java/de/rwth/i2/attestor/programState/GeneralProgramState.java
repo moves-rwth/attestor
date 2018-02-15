@@ -274,7 +274,7 @@ public abstract class GeneralProgramState implements ProgramState {
             return new GeneralConcreteValue(t, n);
         } catch (NullPointerException | IllegalArgumentException e) {
 
-            logger.warn("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
+            logger.debug("Constant '" + constantName + "' not found. Will be replaced by undefined value.");
             return GeneralConcreteValue.getUndefined();
         }
     }
@@ -372,7 +372,7 @@ public abstract class GeneralProgramState implements ProgramState {
             GeneralConcreteValue dFrom = (GeneralConcreteValue) from;
 
             if (dFrom.isUndefined()) {
-                logger.warn("getSelectorTarget: origin is undefined");
+                logger.debug("getSelectorTarget: origin is undefined");
                 return dFrom;
             }
 
@@ -390,8 +390,9 @@ public abstract class GeneralProgramState implements ProgramState {
                 if (baseNodeType.isOptional(selectorLabel)) {
                     return GeneralConcreteValue.getUndefined();
                 } else {
-                    throw new IllegalStateException("Required selector label " + from
-                            + "." + selectorLabel + " is missing.");
+                    throw new IllegalStateException("Required selector label " + selectorLabel + " of node "
+                            + baseNode + " could not be found." +
+                            " This is probably caused by a flawed initial heap or an error in the provided grammar.");
                 }
             }
 
@@ -408,7 +409,7 @@ public abstract class GeneralProgramState implements ProgramState {
     public void setSelector(ConcreteValue from, SelectorLabel selectorLabel, ConcreteValue to) {
 
         if (from.isUndefined() || to.isUndefined()) {
-            logger.warn("Specified edge has undefined source or target.");
+            logger.debug("Specified edge has undefined source or target.");
             return;
         }
 
@@ -429,7 +430,7 @@ public abstract class GeneralProgramState implements ProgramState {
                         .build();
             } catch (IllegalArgumentException e) {
                 getHeap().builder().build();
-                logger.warn("Specified edge has invalid source or target.");
+                logger.debug("Specified edge has invalid source or target.");
             }
         }
     }

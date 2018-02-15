@@ -10,8 +10,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,8 +67,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
      * as it is clearly not live at this point.
      */
     @Override
-    public Collection<ProgramState> computeSuccessors(ProgramState programState)
-            throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         // programState is callingState, prepared state is new input
         ProgramState preparedState = programState.clone();
@@ -82,8 +79,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
         return getCleanedResultStates(methodResult);
     }
 
-    protected Collection<ProgramState> getCleanedResultStates(Collection<ProgramState> resultStates)
-            throws NotSufficientlyMaterializedException {
+    protected Collection<ProgramState> getCleanedResultStates(Collection<ProgramState> resultStates) {
 
         Set<ProgramState> assignResult = new LinkedHashSet<>();
         for (ProgramState resState : resultStates) {
@@ -96,8 +92,7 @@ public class AssignInvoke extends Statement implements InvokeCleanup {
         return assignResult;
     }
 
-    public ProgramState getCleanedResultState(ProgramState state)
-            throws NotSufficientlyMaterializedException {
+    public ProgramState getCleanedResultState(ProgramState state) {
 
         ConcreteValue concreteRHS = state.removeIntermediate("@return");
         invokePrepare.cleanHeap(state);

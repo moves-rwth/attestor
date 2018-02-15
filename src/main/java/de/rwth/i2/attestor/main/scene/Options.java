@@ -61,6 +61,10 @@ public class Options {
      * Determines if post-processing is applied to generated state spaces.
      */
     private boolean postProcessingEnabled = true;
+    /**
+     * If enabled, external nodes of rules are collapsed before applying abstraction
+     */
+    private boolean ruleCollapsingEnabled = true;
 
     protected Options() {}
 
@@ -157,7 +161,7 @@ public class Options {
     public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
 
         if (abstractionDistance == 0 && aggressiveNullAbstraction) {
-            logger.warn("The option 'aggressiveNullAbstraction' will have no effect " +
+            logger.info("The option 'aggressiveNullAbstraction' will have no effect " +
                     "since the dereference depth is already set to 0");
         }
         this.aggressiveNullAbstraction = aggressiveNullAbstraction;
@@ -240,5 +244,15 @@ public class Options {
     public Set<String> getUsedSelectorLabels() {
 
         return usedSelectorLabels;
+    }
+
+    public boolean isRuleCollapsingEnabled() {
+
+        return ruleCollapsingEnabled;
+    }
+
+    public void setRuleCollapsingEnabled(boolean enabled) {
+
+        ruleCollapsingEnabled = enabled;
     }
 }

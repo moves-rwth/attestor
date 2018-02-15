@@ -22,6 +22,7 @@ public abstract class AbstractAttestor {
     protected final Properties properties = new Properties();
     protected PhaseRegistry registry;
     protected DefaultScene scene = new DefaultScene();
+    private boolean hasFatalError = false;
 
     /**
      * Runs attestor to perform a program analysis.
@@ -34,14 +35,23 @@ public abstract class AbstractAttestor {
      */
     public void run(String[] args) {
 
-        printVersion();
-        registry = new PhaseRegistry();
-        registerPhases(args);
-        registry.logExecutionSummary();
-        registry.logExecutionTimes();
+        try {
+            printVersion();
+            registry = new PhaseRegistry();
+            registerPhases(args);
+            registry.logExecutionSummary();
+            registry.logExecutionTimes();
+        } catch(Exception e) {
+            hasFatalError = true;
+        }
     }
 
-    protected abstract void registerPhases(String[] args);
+    protected abstract void registerPhases(String[] args) throws Exception;
+
+    public boolean hasFatalError() {
+
+        return hasFatalError;
+    }
 
     public long getTotalNumberOfStates() {
 

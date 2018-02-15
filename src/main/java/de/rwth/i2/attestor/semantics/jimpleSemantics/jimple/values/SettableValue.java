@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 
 /**
  * SettableValues are Values to which something can be assigned, i.e. that can
@@ -19,12 +18,10 @@ public interface SettableValue extends Value {
      *
      * @param programState The programState used to evaluate the given value.
      * @param concreteRHS  The value this value should be set to.
-     * @throws NotSufficientlyMaterializedException if the evaluation of originValue
-     *                                              tries to access an abstracted selector
      * @throws NullPointerDereferenceException      if the evaluation of originValue
      *                                              results in a null pointer dereference.
      */
     void setValue(ProgramState programState, ConcreteValue concreteRHS)
-            throws NotSufficientlyMaterializedException, NullPointerDereferenceException;
+            throws NullPointerDereferenceException;
 
 }

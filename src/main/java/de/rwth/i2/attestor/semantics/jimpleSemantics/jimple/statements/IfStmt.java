@@ -10,7 +10,6 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Types;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,8 +67,7 @@ public class IfStmt extends Statement {
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Set<ProgramState> computeSuccessors(ProgramState programState)
-            throws NotSufficientlyMaterializedException {
+    public Set<ProgramState> computeSuccessors(ProgramState programState) {
 
         Set<ProgramState> defaultRes = new LinkedHashSet<>();
         defaultRes.add(programState.shallowCopyUpdatePC(truePC));

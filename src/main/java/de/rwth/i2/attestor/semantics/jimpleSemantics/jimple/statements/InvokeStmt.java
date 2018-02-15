@@ -6,8 +6,6 @@ import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeCleanup;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 
 import java.util.Collection;
@@ -50,8 +48,7 @@ public class InvokeStmt extends Statement implements InvokeCleanup {
      * it will be removed from the heap to enable abstraction.
      */
     @Override
-    public Collection<ProgramState> computeSuccessors(ProgramState programState)
-            throws NotSufficientlyMaterializedException, StateSpaceGenerationAbortedException {
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         ProgramState preparedState = programState.clone();
         invokePrepare.prepareHeap(preparedState);

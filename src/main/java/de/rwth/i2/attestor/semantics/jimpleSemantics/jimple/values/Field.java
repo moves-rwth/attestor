@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,7 +60,7 @@ public class Field implements SettableValue {
      */
     @Override
     public ConcreteValue evaluateOn(ProgramState programState)
-            throws NotSufficientlyMaterializedException, NullPointerDereferenceException {
+            throws NullPointerDereferenceException {
 
         ConcreteValue concreteOrigin = originValue.evaluateOn(programState);
 
@@ -92,11 +91,11 @@ public class Field implements SettableValue {
      */
     @Override
     public void setValue(ProgramState programState, ConcreteValue concreteTarget)
-            throws NotSufficientlyMaterializedException, NullPointerDereferenceException {
+            throws NullPointerDereferenceException {
 
         ConcreteValue concreteOrigin = originValue.evaluateOn(programState);
         if (concreteOrigin.isUndefined()) {
-            logger.warn("Origin evaluated to undefined. Field is not reassigned");
+            logger.debug("Origin evaluated to undefined. Field is not reassigned");
         } else {
             programState.setSelector(concreteOrigin, selectorLabel, concreteTarget);
         }

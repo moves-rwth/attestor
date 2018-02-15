@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar;
 
+import de.rwth.i2.attestor.grammar.CollapsedHeapConfiguration;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * This class provides the methodExecution to canonicalisation which are specific for
@@ -34,10 +36,9 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
         AbstractMatchingChecker checker = provider.getEmbeddingChecker(toAbstract, rhs);
 
         if (checker.hasMatching()) {
-
             Matching embedding = checker.getMatching();
-
-            return replaceEmbeddingBy(toAbstract, embedding, lhs);
+            HeapConfiguration result = replaceEmbeddingBy(toAbstract, embedding, lhs);
+            return result;
         }
         return null;
     }
@@ -59,6 +60,32 @@ public class DefaultCanonicalizationHelper implements CanonicalizationHelper {
     public HeapConfiguration prepareHeapForCanonicalization(HeapConfiguration toAbstract) {
 
         return toAbstract;
+    }
+
+    @Override
+    public HeapConfiguration tryReplaceMatching(HeapConfiguration toAbstract,
+                                                CollapsedHeapConfiguration rhs,
+                                                Nonterminal lhs) {
+
+        HeapConfiguration collapsedHc = rhs.getCollapsed();
+        AbstractMatchingChecker checker = provider.getEmbeddingChecker(toAbstract, collapsedHc);
+
+        if (checker.hasMatching()) {
+
+            Matching embedding = checker.getMatching();
+            return replaceCollapsedEmbeddingBy(toAbstract, embedding, lhs, rhs.getOriginalToCollapsedExternalIndices());
+        }
+        return null;
+    }
+
+    private HeapConfiguration replaceCollapsedEmbeddingBy(HeapConfiguration toAbstract,
+                                                          Matching embedding,
+                                                          Nonterminal nonterminal,
+                                                          TIntArrayList externalIndicesMap) {
+
+        return toAbstract.clone().builder().replaceMatchingWithCollapsedExternals(
+                embedding, nonterminal, externalIndicesMap
+        ).build();
     }
 
 

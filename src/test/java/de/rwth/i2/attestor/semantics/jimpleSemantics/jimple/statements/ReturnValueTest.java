@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +40,6 @@ public class ReturnValueTest {
     @Test
     public void testComputeSuccessors() {
 
-        try {
             Collection<ProgramState> res = stmt.computeSuccessors(inputState);
             assertEquals(1, res.size());
             DefaultProgramState resState = (DefaultProgramState) res.iterator().next();
@@ -52,10 +50,6 @@ public class ReturnValueTest {
             tmp.prepareHeap();
             HeapConfiguration expectedGraph = tmp.getHeap();
             assertEquals("ensure inputGraph didn't change", expectedGraph, inputGraph);
-        } catch (NotSufficientlyMaterializedException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
-
     }
 
     @Test

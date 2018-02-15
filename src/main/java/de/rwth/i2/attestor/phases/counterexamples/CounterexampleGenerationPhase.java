@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.CounterexampleGenerator;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.CounterexampleTrace;
+import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingResult;
 import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingTrace;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.phases.transformers.CounterexampleTransformer;
@@ -52,8 +53,8 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
         modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
         grammar = getPhase(GrammarTransformer.class).getGrammar();
-        for (Map.Entry<LTLFormula, Boolean> result : modelCheckingResults.getLTLResults().entrySet()) {
-            if (!result.getValue()) {
+        for (Map.Entry<LTLFormula, ModelCheckingResult> result : modelCheckingResults.getLTLResults().entrySet()) {
+            if (result.getValue() == ModelCheckingResult.UNSATISFIED) {
                 LTLFormula formula = result.getKey();
                 ModelCheckingTrace trace = modelCheckingResults.getTraceOf(formula);
                 if (trace == null) {

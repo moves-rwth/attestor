@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markingGeneration.AbstractMarkingGenerator;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
@@ -75,7 +76,7 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
         Collection<HeapConfiguration> result = new LinkedHashSet<>();
         stateSpace.getStates().forEach(
                 state -> {
-                    if(isNotInitialState(state)) {
+                    if(isValidState(state)) {
                         result.add(state.getHeap());
                     }
                 }
@@ -83,10 +84,25 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
         return result;
     }
 
-    private boolean isNotInitialState(ProgramState state) {
+    private boolean isValidState(ProgramState state) {
 
-        return state
-                .getHeap()
-                .variableWith(NeighbourhoodMarkingCommand.INITIAL_MARKING_NAME) == HeapConfiguration.INVALID_ELEMENT;
+        HeapConfiguration heap = state.getHeap();
+
+        if(heap.variableWith(NeighbourhoodMarkingCommand.INITIAL_MARKING_NAME) != HeapConfiguration.INVALID_ELEMENT) {
+            return false;
+        }
+
+        int counter = 0;
+        TIntIterator iterator = heap.variableEdges().iterator();
+        while (iterator.hasNext()) {
+            int var = iterator.next();
+            String name = heap.nameOf(var);
+            if(Markings.isMarking(name)) {
+                ++counter;
+            }
+        }
+
+        return (counter == 1 + availableSelectorLabelNames.size());
+
     }
 }

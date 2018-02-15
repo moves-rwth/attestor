@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.phases.parser.*;
 import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
 import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
-import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
 import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
 import de.rwth.i2.attestor.phases.symbolicExecution.nonRecursive.StateSpaceGenerationPhase;
 
@@ -45,7 +44,7 @@ public class AttestorNonRecursive extends AbstractAttestor {
     }
 
     @Override
-    protected void registerPhases(String[] args) {
+    protected void registerPhases(String[] args) throws Exception {
 
         registry
                 .addPhase(new CLIPhase(scene, args))
@@ -59,8 +58,7 @@ public class AttestorNonRecursive extends AbstractAttestor {
                 .addPhase(new StateSpaceGenerationPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
-                .addPhase(new ReportGenerationPhase(scene))
-                .addPhase( new ReportOutputPhase(scene, registry.getPhases()) )
+                .addPhase(new ReportOutputPhase(scene, registry.getPhases()) )
                 .execute();
     }
 }

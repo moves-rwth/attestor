@@ -60,9 +60,4 @@ public final class VF2AlgorithmBuilder {
         return this;
     }
 
-    public VF2AlgorithmBuilder allowMultipleExternalMatches() {
-
-        algorithm.multipleExternalMatches = true;
-        return this;
-    }
 }

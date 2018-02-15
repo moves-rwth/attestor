@@ -42,14 +42,10 @@ public class PhaseRegistry {
         return getMostRecentPhase(phases.size(), phaseType);
     }
 
-    public void execute() {
+    public void execute() throws Exception {
 
-        try {
-            for (AbstractPhase p : phases) {
-                p.run();
-            }
-        } catch (Exception e) {
-            logger.fatal(e.getMessage());
+        for (AbstractPhase p : phases) {
+            p.run();
         }
     }
 

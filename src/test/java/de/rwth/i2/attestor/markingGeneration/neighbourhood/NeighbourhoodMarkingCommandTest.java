@@ -5,9 +5,7 @@ import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +17,6 @@ import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class NeighbourhoodMarkingCommandTest {
 
@@ -118,12 +115,7 @@ public class NeighbourhoodMarkingCommandTest {
                 .build();
         expected.add(secondExpected);
 
-        Collection<ProgramState> resultStates = null;
-        try {
-            resultStates = command.computeSuccessors(inputState);
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail();
-        }
+        Collection<ProgramState> resultStates = command.computeSuccessors(inputState);
 
         assertEquals(expected, resultStates);
     }
@@ -157,12 +149,7 @@ public class NeighbourhoodMarkingCommandTest {
                 .build();
         expected.add(firstExpected);
 
-        Collection<ProgramState> resultStates = null;
-        try {
-            resultStates = command.computeSuccessors(inputState);
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail();
-        }
+        Collection<ProgramState> resultStates = command.computeSuccessors(inputState);
 
         assertEquals(expected, resultStates);
 

@@ -12,9 +12,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullConstant;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.boolExpr.EqualExpr;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +59,6 @@ public class IfStmtTest {
 
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             ProgramState input = testState.clone();
 
             Collection<ProgramState> res = stmt.computeSuccessors(input);
@@ -80,11 +77,6 @@ public class IfStmtTest {
                 assertTrue("Heap after evaluating condition should not change",
                         testState.getHeap().equals(resState.getHeap()));
             }
-
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
-
     }
 
     @Test
@@ -104,7 +96,6 @@ public class IfStmtTest {
 
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             ProgramState input = testState.clone();
             Collection<ProgramState> res = stmt.computeSuccessors(input);
 
@@ -121,11 +112,6 @@ public class IfStmtTest {
                 assertTrue("Heap after evaluating condition should not change",
                         testState.getHeap().equals(resState.getHeap()));
             }
-
-
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
     }
 
     @Test
@@ -146,7 +132,6 @@ public class IfStmtTest {
 
         Statement stmt = new IfStmt(sceneObject, condition, truePC, falsePC, new LinkedHashSet<>());
 
-        try {
             ProgramState input = testState.clone();
 
             Collection<ProgramState> res = stmt.computeSuccessors(input);
@@ -164,9 +149,6 @@ public class IfStmtTest {
                 assertTrue("Heap after evaluating condition should not change",
                         testState.getHeap().equals(resState.getHeap()));
             }
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("Unexpected Exception: " + e.getMessage());
-        }
     }
 
 }

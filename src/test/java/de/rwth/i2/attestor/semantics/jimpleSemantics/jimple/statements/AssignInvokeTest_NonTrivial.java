@@ -16,9 +16,7 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NewExpr;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,7 +69,6 @@ public class AssignInvokeTest_NonTrivial {
     @Test
     public void testComputeSuccessors() {
 
-        try {
             Collection<ProgramState> resStates = stmt.computeSuccessors(inputState);
             assertEquals(1, resStates.size());
             DefaultProgramState resState = (DefaultProgramState) resStates.iterator().next();
@@ -81,9 +78,6 @@ public class AssignInvokeTest_NonTrivial {
             assertEquals(hcFactory.getListAndConstants(), inputGraph);
             assertFalse(inputGraph.equals(resState.getHeap()));
             assertEquals(hcFactory.getExpectedResult_AssignInvokeNonTrivial(), resState.getHeap());
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail("unexpected exception: " + e.getMessage());
-        }
     }
 
 

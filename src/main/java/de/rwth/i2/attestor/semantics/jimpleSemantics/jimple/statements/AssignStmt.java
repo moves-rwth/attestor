@@ -9,7 +9,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,12 +65,9 @@ public class AssignStmt extends Statement {
      * <p>
      * If the variable in rhs is not live in this statement, it will be removed from the heap
      * to enable abstraction at this point.
-     *
-     * @throws NotSufficientlyMaterializedException if rhs or lhs cannot be evaluated on the given heap
      */
     @Override
-    public Collection<ProgramState> computeSuccessors(ProgramState programState)
-            throws NotSufficientlyMaterializedException {
+    public Collection<ProgramState> computeSuccessors(ProgramState programState) {
 
         programState = programState.clone();
         ConcreteValue concreteRHS;

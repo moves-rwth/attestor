@@ -225,16 +225,8 @@ public class CommandLineReader extends SceneObject {
      */
     public void getOutputSettings(OutputSettings outputSettings) {
 
-        if (cmd.hasOption("ne")) {
+        if (cmd.hasOption("ne") || System.getProperty("attestor.ne") != null) {
             outputSettings.setNoExport(true);
-        }
-
-        if (cmd.hasOption("html")) {
-            outputSettings.setExportStateSpace(true);
-        }
-
-        if (cmd.hasOption("ghtml")) {
-            outputSettings.setExportGrammar(true);
         }
     }
 

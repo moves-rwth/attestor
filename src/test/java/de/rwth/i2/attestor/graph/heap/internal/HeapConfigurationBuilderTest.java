@@ -1103,8 +1103,49 @@ public class HeapConfigurationBuilderTest {
         assertEquals(hc.nodeTypeOf(nodes.get(0)), type);
         assertEquals(hc.nodeTypeOf(nodes.get(1)), otherType);
         assertEquals(hc.nodeTypeOf(nodes.get(2)), type);
+    }
+
+    @Test
+    public void testMergeExternals() {
 
 
+        SelectorLabel s1 = new MockupSelector("first");
+        SelectorLabel s2 = new MockupSelector("second");
+        MockupType type = new MockupType();
+
+        TIntArrayList nodes = new TIntArrayList();
+        HeapConfiguration test = new InternalHeapConfiguration().builder()
+                .addNodes(type, 4, nodes)
+                .addSelector(nodes.get(1), s2, nodes.get(0))
+                .addSelector(nodes.get(1), s1, nodes.get(2))
+                .addSelector(nodes.get(2), s1, nodes.get(3))
+                .addSelector(nodes.get(2), s2, nodes.get(1))
+                .setExternal(nodes.get(0))
+                .setExternal(nodes.get(1))
+                .setExternal(nodes.get(2))
+                .setExternal(nodes.get(3))
+                .build();
+
+        TIntArrayList expectedNodes = new TIntArrayList();
+        HeapConfiguration expected = new InternalHeapConfiguration().builder()
+                .addNodes(type, 3, expectedNodes)
+                .addSelector(expectedNodes.get(1), s2, expectedNodes.get(0))
+                .addSelector(expectedNodes.get(1), s1, expectedNodes.get(2))
+                .addSelector(expectedNodes.get(2), s1, expectedNodes.get(0))
+                .addSelector(expectedNodes.get(2), s2, expectedNodes.get(1))
+                .setExternal(expectedNodes.get(0))
+                .setExternal(expectedNodes.get(1))
+                .setExternal(expectedNodes.get(2))
+                .build();
+
+        TIntArrayList extMapping = new TIntArrayList();
+        extMapping.add(0);
+        extMapping.add(1);
+        extMapping.add(2);
+        extMapping.add(0);
+
+        HeapConfiguration result = test.clone().builder().mergeExternals(extMapping).build();
+        assertEquals(expected, result);
     }
 
 }

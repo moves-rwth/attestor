@@ -1,12 +1,7 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * A StateSpaceGenerator takes an analysis and generates a
@@ -22,7 +17,10 @@ import java.util.Collections;
  */
 public class StateSpaceGenerator {
 
-    private final static Logger logger = LogManager.getLogger("StateSpaceGenerator");
+    @FunctionalInterface
+    public interface TotalStatesCounter {
+        void addStates(int states);
+    }
 
     /**
      * Stores the state space generated upon instantiation of
@@ -189,34 +187,23 @@ public class StateSpaceGenerator {
             ProgramState state = stateExplorationStrategy.getNextUnexploredState();
             state.setContainingStateSpace( this.stateSpace );
 
-            try {
-                abortStrategy.checkAbort(stateSpace);
-            } catch (StateSpaceGenerationAbortedException e) {
-                if (!state.isFromTopLevelStateSpace()) {
-                    throw e;
-                }
-                break;
+            if(!checkAbortCriteria(state)) {
+                totalStatesCounter.addStates(stateSpace.size());
+                return stateSpace;
             }
 
             SemanticsCommand stateSemanticsCommand = semanticsOf(state);
-            boolean isSufficientlyMaterialized = materializationPhase(stateSemanticsCommand, state);
 
-            if (isSufficientlyMaterialized) {
-                Collection<ProgramState> successorStates = executionPhase(stateSemanticsCommand, state);
+            boolean isMaterialized = materializationPhase(stateSemanticsCommand, state) ;
+            if(isMaterialized) {
+                Collection<ProgramState> successorStates = stateSemanticsCommand.computeSuccessors(state);
                 if(finalStateStrategy.isFinalState(state, successorStates, stateSemanticsCommand)) {
                     stateSpace.setFinal(state);
-                    // Add self-loop to each final state
-                    stateSpace.addArtificialInfPathsTransition(state);
+                    stateSpace.addArtificialInfPathsTransition(state); // Add self-loop to each final state
                 } else {
-                    successorStates.forEach(nextState -> {
-                        SemanticsCommand semanticsCommand = semanticsOf(nextState);
-                        nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
-                        nextState = canonicalizationPhase(semanticsCommand, nextState);
-                        if (state.isFromTopLevelStateSpace()) {
-                            stateLabelingStrategy.computeAtomicPropositions(nextState);
-                        }
-                        addingPhase(semanticsCommand, state, nextState);
-                    });
+                    for(ProgramState nextState : successorStates) {
+                        handleSuccessorState(state, nextState);
+                    }
                 }
             }
         }
@@ -224,6 +211,31 @@ public class StateSpaceGenerator {
         postProcessingStrategy.process(stateSpace);
         totalStatesCounter.addStates(stateSpace.size());
         return stateSpace;
+    }
+
+    private boolean checkAbortCriteria(ProgramState state) throws StateSpaceGenerationAbortedException {
+
+        try {
+            abortStrategy.checkAbort(stateSpace);
+        } catch (StateSpaceGenerationAbortedException e) {
+
+            stateSpace.setAborted(state);
+            abortRemainingStates();
+            if (!state.isFromTopLevelStateSpace()) {
+                throw e;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private void abortRemainingStates() {
+
+        while (stateExplorationStrategy.hasUnexploredStates()) {
+            ProgramState unexploredState = stateExplorationStrategy.getNextUnexploredState();
+            stateSpace.setAborted(unexploredState);
+        }
+        assert !stateExplorationStrategy.hasUnexploredStates();
     }
 
 
@@ -237,7 +249,8 @@ public class StateSpaceGenerator {
      * can be executed. The materialized states are immediately added to the state space as successors of the
      * given state.
      *
-     * @param semanticsCommand The statement that should be executed next and thus determines the necessary materialization.
+     * @param semanticsCommand The statement that should be executed next
+     *                         and thus determines the necessary materialization.
      * @param state     The program state that should be materialized.
      * @return True if and only if no materialization is needed.
      */
@@ -257,23 +270,17 @@ public class StateSpaceGenerator {
         return materialized.isEmpty();
     }
 
-    /**
-     * Computes successors of the given program state by executing a single step of the
-     * abstract program semantics.
-     *
-     * @param semanticsCommand The statement that should be executed.
-     * @param state     The program state whose successor states shall be computed.
-     */
-    private Collection<ProgramState> executionPhase(SemanticsCommand semanticsCommand, ProgramState state)
-            throws StateSpaceGenerationAbortedException {
+    private void handleSuccessorState(ProgramState state, ProgramState nextState) {
 
-        try {
-            return semanticsCommand.computeSuccessors(state);
-        } catch (NotSufficientlyMaterializedException e) {
-            logger.error("A state could not be sufficiently materialized.");
-            return Collections.emptySet();
+        SemanticsCommand semanticsCommand = semanticsOf(nextState);
+        nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
+        nextState = canonicalizationPhase(semanticsCommand, nextState);
+        if (state.isFromTopLevelStateSpace()) {
+            stateLabelingStrategy.computeAtomicPropositions(nextState);
         }
+        addingPhase(semanticsCommand, state, nextState);
     }
+
 
     private ProgramState canonicalizationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
 
@@ -308,10 +315,5 @@ public class StateSpaceGenerator {
         return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
     }
 
-    @FunctionalInterface
-    public interface TotalStatesCounter {
-
-        void addStates(int states);
-    }
 
 }

@@ -12,11 +12,9 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.SettableValue
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -54,7 +52,6 @@ public class AssignStmtTest {
         Value rhs = new Field(type, origin, right);
 
         AssignStmt stmt = new AssignStmt(sceneObject, lhs, rhs, 2, new LinkedHashSet<>());
-        try {
 
             ProgramState input = sceneObject.scene().createProgramState(testGraph);
 
@@ -90,14 +87,7 @@ public class AssignStmtTest {
                 tmpState.prepareHeap();
                 expectedHeap = tmpState.getHeap();
                 assertEquals(expectedHeap, resState.getHeap());
-
             }
-
-
-        } catch (NotSufficientlyMaterializedException e) {
-            fail("Unexpected Exception: " + Arrays.toString(e.getStackTrace()));
-        }
-
     }
 
 }

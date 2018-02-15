@@ -16,16 +16,15 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Field;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CounterexampleGeneratorTest {
 
@@ -57,12 +56,9 @@ public class CounterexampleGeneratorTest {
         Type type = sceneObject.scene().getType("List");
         ProgramImpl program = getSetNextProgram(type);
 
-        ProgramState finalState = null;
-        try {
-            finalState = program.getStatement(0).computeSuccessors(initialState.clone()).iterator().next();
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail();
-        }
+        ProgramState finalState = program
+                .getStatement(0)
+                .computeSuccessors(initialState.clone()).iterator().next();
 
         MockupTrace trace = new MockupTrace();
         trace.addState(initialState)
@@ -122,17 +118,12 @@ public class CounterexampleGeneratorTest {
         }
         assertNotNull(materialized);
 
-        ProgramState finalState = null;
-        try {
-            finalState = stmt.computeSuccessors(
+        ProgramState finalState = stmt.computeSuccessors(
                     initialState.shallowCopyWithUpdateHeap(materialized.clone())
             ).iterator().next();
             finalState = finalState.shallowCopyWithUpdateHeap(
                     factorySLL.getCanonicalization().canonicalize(finalState.getHeap())
             );
-        } catch (NotSufficientlyMaterializedException | StateSpaceGenerationAbortedException e) {
-            fail();
-        }
 
         MockupTrace trace = new MockupTrace();
         trace.addState(initialState)

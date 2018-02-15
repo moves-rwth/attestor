@@ -163,4 +163,20 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
         this.actualBuilder.replaceNodeType(node, newType);
         return this;
     }
+
+    @Override
+    public HeapConfigurationBuilder replaceMatchingWithCollapsedExternals(Matching embedding,
+                                                                          Nonterminal nonterminal,
+                                                                          TIntArrayList externalIndicesMap) {
+
+        this.actualBuilder.replaceMatchingWithCollapsedExternals(embedding, nonterminal, externalIndicesMap);
+        return this;
+    }
+
+    @Override
+    public HeapConfigurationBuilder mergeExternals(TIntArrayList extIndicesMap) {
+
+        this.actualBuilder.mergeExternals(extIndicesMap);
+        return this;
+    }
 }

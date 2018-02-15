@@ -52,13 +52,15 @@ public class StateSpaceBoundedAbortStrategy implements AbortStrategy {
 
         if (maxStateSpaceSize != NO_MAXIMUM && stateSpace.getMaximalStateSize() > maxStateSize) {
 
-            logger.error("Exceeded " + maxStateSize + " nodes in a heap configuration of a single state.");
+            logger.warn("Encountered a heap with more than "
+                    + maxStateSize + " nodes. State space generation for this procedure call is aborted.");
             throw new StateSpaceGenerationAbortedException();
         }
 
         if (maxStateSpaceSize != NO_MAXIMUM && stateSpace.getStates().size() > maxStateSpaceSize) {
 
-            logger.error("Exceeded " + maxStateSpaceSize + " states.");
+            logger.warn("A state space exceeded "
+                    + maxStateSpaceSize + " states. State space generation for this procedure call is aborted.");
             throw new StateSpaceGenerationAbortedException();
         }
     }

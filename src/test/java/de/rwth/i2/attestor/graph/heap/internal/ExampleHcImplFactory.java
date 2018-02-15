@@ -945,6 +945,21 @@ public final class ExampleHcImplFactory extends SceneObject {
                 .build();
     }
 
+    public HeapConfiguration getTrivialCyclicSLL() {
+
+        HeapConfiguration result = new InternalHeapConfiguration();
+
+        Type listType = scene().getType("List");
+        SelectorLabel nextSel = scene().getSelectorLabel("next");
+
+        TIntArrayList nodes = new TIntArrayList();
+
+        return result.builder()
+                .addNodes(listType, 1, nodes)
+                .addSelector(nodes.get(0), nextSel, nodes.get(0))
+                .build();
+    }
+
     /*
      * results in res1 and needs only a single abstraction step
      */
@@ -960,6 +975,21 @@ public final class ExampleHcImplFactory extends SceneObject {
         return result.builder()
                 .addNodes(listType, 2, nodes)
                 .addSelector(nodes.get(0), nextSel, nodes.get(1))
+                .build();
+    }
+
+    public HeapConfiguration getCyclicListHandle() {
+
+        HeapConfiguration result = new InternalHeapConfiguration();
+
+        Type listType = scene().getType("List");
+        Nonterminal listLabel = scene().createNonterminal("List", 2, new boolean[]{false, true});
+
+        TIntArrayList nodes = new TIntArrayList();
+
+        return result.builder()
+                .addNodes(listType, 1, nodes)
+                .addNonterminalEdge(listLabel, new TIntArrayList(new int[]{nodes.get(0), nodes.get(0)}))
                 .build();
     }
 

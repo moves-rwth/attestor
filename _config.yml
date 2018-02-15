@@ -1,4 +1,4 @@
 title: Attestor
-description: A shape analysis based on graph grammars.
+description: Model-checking Java Pointer Programs
 show_downloads: true
 theme: jekyll-theme-slate

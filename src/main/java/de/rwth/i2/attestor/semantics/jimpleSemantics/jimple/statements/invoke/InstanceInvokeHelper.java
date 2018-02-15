@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDe
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.semantics.util.DeadVariableEliminator;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,7 +72,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
      * JimpleProgramState)
      */
     @Override
-    public void prepareHeap(ProgramState programState) throws NotSufficientlyMaterializedException {
+    public void prepareHeap(ProgramState programState) {
 
         ConcreteValue concreteBase;
         try {
@@ -83,7 +82,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
             concreteBase = programState.getUndefined();
         }
         if (concreteBase.isUndefined()) {
-            logger.warn("base evaluated to undefined and is therefore not attached. ");
+            logger.debug("base evaluated to undefined and is therefore not attached. ");
         } else {
             // String type = " " + baseValue.getType().toString();
             String type = "";

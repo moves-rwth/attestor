@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.canonicalization;
 
+import de.rwth.i2.attestor.grammar.CollapsedHeapConfiguration;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -34,6 +35,15 @@ public class GeneralCanonicalizationStrategy implements CanonicalizationStrategy
                     return performCanonicalization(abstractedHeap);
                 }
             }
+
+            for(CollapsedHeapConfiguration rhs : grammar.getCollapsedRightHandSidesFor(lhs)) {
+                        HeapConfiguration abstractedHeap =
+                        canonicalizationHelper.tryReplaceMatching(heapConfiguration, rhs, lhs);
+                if (abstractedHeap != null) {
+                    return performCanonicalization(abstractedHeap);
+                }
+            }
+
         }
         return heapConfiguration;
     }

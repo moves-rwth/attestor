@@ -52,7 +52,11 @@ public class InterproceduralAnalysisIT {
             .addPhase(
                 new MockupPhase(sceneObject, Collections.singletonList(input), "callNext")
             ).addPhase(ipaPhase);
-        registry.execute();
+        try {
+            registry.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         StateSpace stateSpace = ipaPhase.getStateSpace();
         assertNotNull(stateSpace);
@@ -85,7 +89,11 @@ public class InterproceduralAnalysisIT {
                 .addPhase(
                         new MockupPhase(sceneObject, Collections.singletonList(input), "traverse")
                 ).addPhase(ipaPhase);
-        registry.execute();
+        try {
+            registry.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         StateSpace stateSpace = ipaPhase.getStateSpace();
         assertNotNull(stateSpace);

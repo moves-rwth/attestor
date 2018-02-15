@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,8 +42,6 @@ public class FieldTest {
 
         int hash = testGraph.hashCode();
 
-        try {
-
             ProgramState executable = sceneObject.scene().createProgramState(testGraph.clone());
             executable.prepareHeap();
 
@@ -76,10 +73,6 @@ public class FieldTest {
             original.prepareHeap();
 
             assertTrue("heap should not change", original.getHeap().equals(resHeapConfig));
-        } catch (NotSufficientlyMaterializedException e) {
-            fail("unexpected exception" + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -90,7 +83,6 @@ public class FieldTest {
         ProgramState testState = sceneObject.scene().createProgramState(testGraph);
         testState.prepareHeap();
 
-        try {
             ProgramState executable = testState.clone();
 
             ConcreteValue concreteLocal = local.evaluateOn(executable);
@@ -126,12 +118,6 @@ public class FieldTest {
             expectedState.prepareHeap();
 
             assertTrue("heap not as expected", expectedState.getHeap().equals(resultHeap));
-
-        } catch (NotSufficientlyMaterializedException e) {
-            fail("unexpected exception" + e.getMessage());
-            e.printStackTrace();
-        }
-
     }
 
 

@@ -45,7 +45,7 @@ public abstract class AbstractPhase extends SceneObject {
 
     public abstract boolean isVerificationPhase();
 
-    public void run() {
+    public void run() throws Exception {
 
         try {
             logStart();
@@ -69,12 +69,12 @@ public abstract class AbstractPhase extends SceneObject {
         logger.debug(getName() + " finished.");
     }
 
-    private void logFail(Exception e) {
+    private void logFail(Exception e) throws Exception {
 
         logger.fatal(getName() + " failed.");
+        logger.fatal("Reason for failure:");
         logger.fatal(e.getMessage());
-        e.printStackTrace();
-        System.exit(1);
+        throw e;
     }
 
     protected void logSum(String message) {

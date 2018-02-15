@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.util.NotSufficientlyMaterializedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,11 +46,9 @@ public class StaticInvokeHelper extends InvokeHelper {
      * evaluates the expressions for the arguments and appends them to the heap.
      */
     @Override
-    public void prepareHeap(ProgramState programState)
-            throws NotSufficientlyMaterializedException {
+    public void prepareHeap(ProgramState programState) {
 
         appendArguments(programState);
-
     }
 
     /**

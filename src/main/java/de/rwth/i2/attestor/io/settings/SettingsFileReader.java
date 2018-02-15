@@ -75,6 +75,10 @@ public class SettingsFileReader {
             input.setScenario(jsonSettings.getString("scenario"));
         }
 
+        if(jsonSettings.has("specificationDescription")) {
+            input.setSpecificationDescription(jsonSettings.getString("specificationDescription"));
+        }
+
         for (String key : jsonInput.keySet()) {
 
             switch (key) {
@@ -152,7 +156,7 @@ public class SettingsFileReader {
                 input.addPredefinedGrammar(grammarType, renameFileLocation);
                 logger.debug("Adding predefined grammar " + grammarType);
             } else {
-                logger.warn("No predefined grammar of type " + grammarType
+                logger.debug("No predefined grammar of type " + grammarType
                         + " available. Skipping it.");
             }
         }
@@ -228,6 +232,9 @@ public class SettingsFileReader {
                 case "stateSpacePostProcessing":
                     options.setPostProcessingEnabled(jsonOptions.getBoolean(key));
                     break;
+                case "collapseRules":
+                    options.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
+                    break;
                 default:
                     logger.error("Ignoring unknown option: " + key);
                     break;
@@ -244,80 +251,8 @@ public class SettingsFileReader {
 
         JSONObject jsonOutput = jsonSettings.getJSONObject("output");
 
-        if (jsonOutput.has("defaultPath")) {
-            output.setDefaultPath(jsonOutput.getString("defaultPath"));
-        }
-
         if (jsonOutput.has("enabled")) {
             output.setNoExport(!jsonOutput.getBoolean("enabled"));
-        }
-
-        if (jsonOutput.has("stateSpace")) {
-            output.setExportStateSpace(true);
-            JSONObject jsonStateSpace = jsonOutput.getJSONObject("stateSpace");
-            if (jsonStateSpace.has("path")) {
-                output.setPathForStateSpace(jsonStateSpace.getString("path"));
-            }
-            if (jsonStateSpace.has("folder")) {
-                output.setFolderForStateSpace(jsonStateSpace.getString("folder"));
-            }
-        }
-
-
-        if (jsonOutput.has("grammar")) {
-            output.setExportGrammar(true);
-            JSONObject jsonGrammar = jsonOutput.getJSONObject("grammar");
-            if (jsonGrammar.has("path")) {
-                output.setPathForGrammar(jsonGrammar.getString("path"));
-            }
-            if (jsonGrammar.has("folder")) {
-                output.setFolderForGrammar(jsonGrammar.getString("folder"));
-            }
-        }
-
-        if (jsonOutput.has("contractsForInspection")) {
-            output.setExportContractsForInspection(true);
-            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
-            if (jsonContracts.has("path")) {
-                output.setPathForContractsForInspection(jsonContracts.getString("path"));
-            }
-            if (jsonContracts.has("folder")) {
-                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
-            }
-        }
-        
-        if (jsonOutput.has("customHCs")) {
-            output.setExportCustomHcs(true);
-            JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
-            if (jsonGrammar.has("path")) {
-                output.setPathForCustomHcs(jsonGrammar.getString("path"));
-            }
-            if (jsonGrammar.has("folder")) {
-                output.setFolderForCustomHcs(jsonGrammar.getString("folder"));
-            }
-        }
-
-        if (jsonOutput.has("contractsForReuse")) {
-            output.setExportContractsForReuse(true);
-            JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
-            if (jsonC.has("path")) {
-                output.setDirectoryForReuseContracts(jsonC.getString("path"));
-            }
-            JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
-            for (int i = 0; i < requestArray.length(); i++) {
-                JSONObject request = requestArray.getJSONObject(i);
-                String signature = request.getString("signature");
-                String filename = request.getString("filename");
-                output.addRequiredContractForReuse(signature, filename);
-            }
-        }
-
-        if( jsonOutput.has( "report" ) ){
-            output.setExportReportOutput( true );
-            JSONObject jsonReportOpt = jsonOutput.getJSONObject( "report" );
-            if( jsonReportOpt.has("path" ) ){
-                output.setFolderForReportOutput( jsonReportOpt.getString("path" ) );
-            }
         }
     }
 
