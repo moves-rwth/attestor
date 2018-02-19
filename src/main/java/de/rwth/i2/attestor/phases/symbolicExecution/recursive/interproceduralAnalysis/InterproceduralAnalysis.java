@@ -43,8 +43,8 @@ public class InterproceduralAnalysis {
             ProcedureCall call;
             if(!remainingProcedureCalls.isEmpty()) {
                 call = remainingProcedureCalls.pop();
-                PartialStateSpace partialStateSpace = call.execute();
-                stateSpaceToAnalyzedCall.put(partialStateSpace.unfinishedStateSpace(), call);
+                StateSpace stateSpace = call.execute();
+                stateSpaceToAnalyzedCall.put( stateSpace, call );
             } else {
                 PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
                 call = stateSpaceToAnalyzedCall.get(partialStateSpace.unfinishedStateSpace());

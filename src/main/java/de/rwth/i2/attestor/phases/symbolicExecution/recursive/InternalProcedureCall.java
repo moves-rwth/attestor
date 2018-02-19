@@ -31,7 +31,7 @@ public class InternalProcedureCall implements ProcedureCall {
 
 
     @Override
-    public PartialStateSpace execute() {
+    public StateSpace execute() {
 
         try {
             stateSpace = factory.create(method.getBody(), preconditionState).generate();
@@ -41,7 +41,7 @@ public class InternalProcedureCall implements ProcedureCall {
             Contract contract = new InternalContract(preconditionState.getHeap(), finalHeaps);
             method.addContract(contract);
 
-            return new InternalPartialStateSpace(preconditionState, factory);
+            return preconditionState.getContainingStateSpace();
         } catch (StateSpaceGenerationAbortedException e) {
             throw new IllegalStateException("Procedure call execution failed.");
         }
