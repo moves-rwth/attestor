@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.StateSpaceGeneratorFactory;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.InterproceduralAnalysis;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.PartialStateSpace;
@@ -20,8 +21,9 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
         this.stateSpaceGeneratorFactory = stateSpaceGeneratorFactory;
     }
     
-	public InternalProcedureCall getProcedureCall(Method method, ProgramState preconditionState) {
-		return new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
+    @Override
+	public InternalProcedureCall getProcedureCall(Method method, HeapConfiguration initialHeap ) {
+		return new InternalProcedureCall(method, initialHeap, stateSpaceGeneratorFactory);
 	}
 
     @Override

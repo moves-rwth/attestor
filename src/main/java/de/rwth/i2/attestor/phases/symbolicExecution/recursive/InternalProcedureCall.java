@@ -1,9 +1,13 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.StateSpaceGeneratorFactory;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.PartialStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
@@ -11,21 +15,18 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-public class InternalProcedureCall implements ProcedureCall {
+public class InternalProcedureCall extends SceneObject implements ProcedureCall {
 
     private Method method;
     private ProgramState preconditionState;
     private StateSpaceGeneratorFactory factory;
     private StateSpace stateSpace;
 
-    public InternalProcedureCall(Method method, ProgramState preconditionState, StateSpaceGeneratorFactory factory) {
+    public InternalProcedureCall(Method method, HeapConfiguration precondition, StateSpaceGeneratorFactory factory) {
 
+    	super( factory );
         this.method = method;
-        this.preconditionState = preconditionState;
+        this.preconditionState = scene().createProgramState(precondition);
         this.factory = factory;
     }
 

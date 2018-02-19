@@ -30,10 +30,8 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 	protected final Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ProgramState inputState, ScopedHeap scopedHeap) {
 	
 	    HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
-	    ProgramState preconditionState = inputState.shallowCopyWithUpdateHeap(heapInScope); //TODO hier bei heap bleiben
-	
 	    
-	    ProcedureCall call = procedureRegistry.getProcedureCall( method, preconditionState );
+	    ProcedureCall call = procedureRegistry.getProcedureCall( method, heapInScope );
 	    procedureRegistry.registerDependency(callingState, call );
 	
 	    ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
