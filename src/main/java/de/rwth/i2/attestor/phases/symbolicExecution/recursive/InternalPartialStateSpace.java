@@ -16,13 +16,15 @@ import java.util.List;
 
 public class InternalPartialStateSpace implements PartialStateSpace {
 
-    private ProgramState callingState;
+    private ProgramState stateToContinue;
     private StateSpaceGeneratorFactory stateSpaceGeneratorFactory;
+    StateSpace partialStateSpace;
 
     public InternalPartialStateSpace(ProgramState callingState,
                                      StateSpaceGeneratorFactory stateSpaceGeneratorFactory) {
 
-        this.callingState = callingState;
+        this.stateToContinue = callingState;
+        this.partialStateSpace = callingState.getContainingStateSpace();
         this.stateSpaceGeneratorFactory = stateSpaceGeneratorFactory;
     }
 
@@ -34,15 +36,14 @@ public class InternalPartialStateSpace implements PartialStateSpace {
             Method method = call.getMethod();
             ProgramState preconditionState = call.getInput();
 
-            StateSpace containingStateSpace = callingState.getContainingStateSpace();
-            if(containingStateSpace.containsAbortedStates()) {
+            if(partialStateSpace.containsAbortedStates()) {
                 return;
             }
 
             StateSpace stateSpace = stateSpaceGeneratorFactory.create(
                     call.getMethod().getBody(),
-                    callingState,
-                    containingStateSpace
+                    stateToContinue,
+                    partialStateSpace
             ).generate();
 
             List<HeapConfiguration> finalHeaps = new ArrayList<>();
@@ -55,33 +56,35 @@ public class InternalPartialStateSpace implements PartialStateSpace {
         }
     }
 
-    @Override
-    public int hashCode() {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((partialStateSpace == null) ? 0 : partialStateSpace.hashCode());
+		result = prime * result + ((stateToContinue == null) ? 0 : stateToContinue.hashCode());
+		return result;
+	}
 
-        return (callingState == null) ? 0 : callingState.getContainingStateSpace().hashCode();
-    }
-
-    public boolean equals(Object otherObject) {
-
-        if(this == otherObject) {
-            return true;
-        }
-        if(otherObject == null) {
-            return false;
-        }
-        if(otherObject.getClass() != InternalPartialStateSpace.class) {
-            return false;
-        }
-        if(callingState == null) {
-            return false;
-        }
-        InternalPartialStateSpace other = (InternalPartialStateSpace) otherObject;
-        if(other.callingState == null) {
-            return false;
-        }
-
-        return callingState.getContainingStateSpace() == other.callingState.getContainingStateSpace();
-
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		InternalPartialStateSpace other = (InternalPartialStateSpace) obj;
+		if (partialStateSpace == null) {
+			if (other.partialStateSpace != null)
+				return false;
+		} else if (!partialStateSpace.equals(other.partialStateSpace))
+			return false;
+		if (stateToContinue == null) {
+			if (other.stateToContinue != null)
+				return false;
+		} else if (!stateToContinue.equals(other.stateToContinue))
+			return false;
+		return true;
+	}
 
 }
