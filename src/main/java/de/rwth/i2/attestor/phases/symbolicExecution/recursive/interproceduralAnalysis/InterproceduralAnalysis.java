@@ -3,17 +3,19 @@ package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAn
 
 import java.util.*;
 
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+
 public class InterproceduralAnalysis {
 
     Map<ProcedureCall, Set<PartialStateSpace>> callingDependencies = new LinkedHashMap<>();
     Deque<ProcedureCall> remainingProcedureCalls = new ArrayDeque<>();
     Deque<PartialStateSpace> remainingPartialStateSpaces = new ArrayDeque<>();
-    Map<PartialStateSpace, ProcedureCall> partialStateSpaceToAnalyzedCall = new LinkedHashMap<>();
+    Map<StateSpace, ProcedureCall> stateSpaceToAnalyzedCall = new LinkedHashMap<>();
 
 
-    public void addMainProcedureCall(PartialStateSpace mainStateSpace, ProcedureCall mainCall) {
+    public void addMainProcedureCall( StateSpace mainStateSpace, ProcedureCall mainCall) {
 
-        partialStateSpaceToAnalyzedCall.put(mainStateSpace, mainCall);
+        stateSpaceToAnalyzedCall.put(mainStateSpace, mainCall);
     }
 
 
@@ -42,10 +44,10 @@ public class InterproceduralAnalysis {
             if(!remainingProcedureCalls.isEmpty()) {
                 call = remainingProcedureCalls.pop();
                 PartialStateSpace partialStateSpace = call.execute();
-                partialStateSpaceToAnalyzedCall.put(partialStateSpace, call);
+                stateSpaceToAnalyzedCall.put(partialStateSpace.unfinishedStateSpace(), call);
             } else {
                 PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
-                call = partialStateSpaceToAnalyzedCall.get(partialStateSpace);
+                call = stateSpaceToAnalyzedCall.get(partialStateSpace.unfinishedStateSpace());
                 partialStateSpace.continueExecution(call);
             }
             updateDependencies(call);

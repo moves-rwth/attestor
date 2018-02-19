@@ -56,11 +56,14 @@ public class InternalPartialStateSpace implements PartialStateSpace {
         }
     }
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((partialStateSpace == null) ? 0 : partialStateSpace.hashCode());
+		result = prime * result + ((stateToContinue == null) ? 0 : stateToContinue.hashCode());
 		return result;
 	}
 
@@ -78,7 +81,17 @@ public class InternalPartialStateSpace implements PartialStateSpace {
 				return false;
 		} else if (!partialStateSpace.equals(other.partialStateSpace))
 			return false;
+		if (stateToContinue == null) {
+			if (other.stateToContinue != null)
+				return false;
+		} else if (!stateToContinue.equals(other.stateToContinue))
+			return false;
 		return true;
+	}
+
+	@Override
+	public StateSpace unfinishedStateSpace() {
+		return this.partialStateSpace;
 	}
 
     

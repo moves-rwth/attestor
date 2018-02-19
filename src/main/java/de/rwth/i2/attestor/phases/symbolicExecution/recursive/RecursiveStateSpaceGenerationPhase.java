@@ -130,7 +130,7 @@ public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements
     private void registerMainProcedureCalls() {
 
         for(ProgramState iState : initialStates) {
-            PartialStateSpace mainStateSpace = new InternalPartialStateSpace(iState, stateSpaceGeneratorFactory);
+            StateSpace mainStateSpace = iState.getContainingStateSpace();
             ProcedureCall mainCall = new InternalProcedureCall(mainMethod, iState, stateSpaceGeneratorFactory);
             interproceduralAnalysis.addMainProcedureCall(mainStateSpace, mainCall);
         }
