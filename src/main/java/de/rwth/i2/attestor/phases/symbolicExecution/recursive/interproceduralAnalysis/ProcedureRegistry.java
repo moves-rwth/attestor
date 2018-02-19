@@ -4,8 +4,10 @@ import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public interface ProcedureRegistry {
+    
+    ProcedureCall getProcedureCall( Method method,  ProgramState callingState );
 
-    void registerProcedure(Method method, ProgramState preconditionState);
+	void registerProcedure(ProcedureCall call);
 
-    void registerDependency(ProgramState callingState, Method method, ProgramState preconditionState);
+	void registerDependency(ProgramState callingState, ProcedureCall call);
 }

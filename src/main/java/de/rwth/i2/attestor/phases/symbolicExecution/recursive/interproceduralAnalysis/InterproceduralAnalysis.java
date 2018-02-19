@@ -47,7 +47,7 @@ public class InterproceduralAnalysis {
                 stateSpaceToAnalyzedCall.put( stateSpace, call );
             } else {
                 PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
-                call = stateSpaceToAnalyzedCall.get(partialStateSpace.unfinishedStateSpace());
+                call = stateSpaceToAnalyzedCall.get( partialStateSpace.unfinishedStateSpace() );
                 partialStateSpace.continueExecution(call);
             }
             updateDependencies(call);

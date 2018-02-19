@@ -19,19 +19,24 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
         this.analysis = analysis;
         this.stateSpaceGeneratorFactory = stateSpaceGeneratorFactory;
     }
+    
+	public InternalProcedureCall getProcedureCall(Method method, ProgramState preconditionState) {
+		return new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
+	}
 
     @Override
-    public void registerProcedure(Method method, ProgramState preconditionState) {
+    public void registerProcedure( ProcedureCall call ) {
 
-        ProcedureCall call = new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
         analysis.registerProcedureCall(call);
     }
 
-    @Override
-    public void registerDependency(ProgramState callingState, Method method, ProgramState preconditionState) {
 
-        ProcedureCall call = new InternalProcedureCall(method, preconditionState, stateSpaceGeneratorFactory);
+
+    @Override
+    public void registerDependency(ProgramState callingState, ProcedureCall call) {
+
         PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, stateSpaceGeneratorFactory);
         analysis.registerDependency(call, partialStateSpace);
     }
+
 }

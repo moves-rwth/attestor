@@ -109,9 +109,10 @@ public class RecursiveStateSpaceGenerationPhase extends AbstractPhase implements
                 );
             } else {
                 executor = new NonRecursiveMethodExecutor(
+                		method,
                         new DefaultScopeExtractor(this, method.getName()),
                         contractCollection,
-                        new InternalContractGenerator(stateSpaceGeneratorFactory, method.getBody())
+                        procedureRegistry 
                 );
             }
             method.setMethodExecution(executor);

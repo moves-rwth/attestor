@@ -1,40 +1,47 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.*;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.AbstractInterproceduralMethodExecutor;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureRegistry;
+import de.rwth.i2.attestor.procedures.Contract;
+import de.rwth.i2.attestor.procedures.ContractCollection;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.ScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
-import java.util.Collection;
+public class NonRecursiveMethodExecutor extends AbstractInterproceduralMethodExecutor {
 
-public class NonRecursiveMethodExecutor extends AbstractMethodExecutor {
 
-    private ContractGenerator contractGenerator;
 
-    public NonRecursiveMethodExecutor(ScopeExtractor scopeExtractor, ContractCollection contractCollection,
-                                      ContractGenerator contractGenerator) {
+    public NonRecursiveMethodExecutor( Method method,
+    								   ScopeExtractor scopeExtractor, 
+    								   ContractCollection contractCollection,
+                                       ProcedureRegistry procedureRegistry ) {
 
-        super(scopeExtractor, contractCollection);
-        this.contractGenerator = contractGenerator;
+        super( method, scopeExtractor, contractCollection, procedureRegistry);
     }
 
-    @Override
-    protected Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ProgramState input,
-                                                            ScopedHeap scopedHeap) {
-
-        ContractMatch contractMatch = getContractCollection().matchContract(scopedHeap.getHeapInScope());
-        if(!contractMatch.hasMatch()) {
-            contractMatch = computeNewContract(input, scopedHeap);
+    /**
+     * generates the Contract by executing the call
+     */
+	@Override
+	protected void generateAndAddContract(ProcedureCall call, ContractCollection contractCollection) {
+		HeapConfiguration precondition = call.getInput().getHeap();
+		
+		Collection<ProgramState> finalStates = call.execute().getFinalStates();
+		List<HeapConfiguration> postconditions = new ArrayList<>(finalStates.size());
+        for(ProgramState state : finalStates) {
+            postconditions.add(state.getHeap());
         }
-        return scopedHeap.merge(contractMatch);
-    }
 
-    private ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
+        Contract contract = new InternalContract( precondition, postconditions );
+        contractCollection.addContract(contract);
+	}
 
-        HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
-        ProgramState initialState = input.shallowCopyWithUpdateHeap(heapInScope);
-        Contract generatedContract = contractGenerator.generateContract(initialState);
-        ContractCollection contractCollection = getContractCollection();
-        contractCollection.addContract(generatedContract);
-        return contractCollection.matchContract(heapInScope);
-    }
+  
 }
