@@ -149,20 +149,6 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
         return method.getName();
     }
 
-    /**
-     * Computes a shortened version of a type name that does not include all packages as a prefix.
-     *
-     * @param type The type whose shortened name should be determined.
-     * @return The shortened name of the given type.
-     */
-    private String getShortName(soot.Type type) {
-
-        // escaped name was recently removed in soot.Type
-        //String[] splitted = type.getEscapedName().split("\\.");
-
-        String[] splitted = type.toString().split("\\.");
-        return splitted[splitted.length - 1];
-    }
 
     /**
      * Sets {@link #currentUnitToPC} to a mapping with the units in this method.
