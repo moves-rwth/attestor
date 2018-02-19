@@ -11,19 +11,7 @@ import java.util.*;
  */
 public class InputSettings {
 
-    /**
-     * The paths to the file specifying the renaming used for the
-     * predefined grammars
-     */
-    private final HashMap<String, String> pathsToGrammar2RenameDefinition = new LinkedHashMap<>();
-    /**
-     * The url to the default empty initial state.
-     */
-    public URL initialStatesURL;
-    /**
-     * filenames containing user defined contracts to use
-     */
-    ArrayList<String> contractFiles = new ArrayList<>();
+//general information about the scenario
     /**
      * Name of the analyzed scenario (optional).
      */
@@ -32,15 +20,18 @@ public class InputSettings {
      * Description of the analyzed scenario (optional).
      */
     private String scenario = "";
-
-    /**
-     * The path to the settings file
-     */
-    private String pathToSettingsFile = "";
     /**
      * Short description of the analyzed specification (optional)
      */
     private String specificationDescription = "";
+    
+//the settings file
+    /**
+     * The path to the settings file
+     */
+    private String pathToSettingsFile = "";
+    
+//the code
     /**
      * The classpath of source code files that are analyzed.
      */
@@ -53,26 +44,12 @@ public class InputSettings {
      * The initial method that is analyzed.
      */
     private String methodName;
+    
+//the initial state
     /**
-     * The path to the file specifying the graph grammar underlying the analysis.
+     * The url to the default empty initial state.
      */
-    private String pathToGrammar;
-    /**
-     * The name of the file of the graph grammar underlying the analysis.
-     */
-    private List<String> userDefinedGrammarName;
-    /**
-     * The list of predefined grammars used by the current analysis
-     */
-    private ArrayList<String> usedPredefinedGrammars;
-    /**
-     * The mapping from predefined grammars to their rename mapping
-     */
-    private HashMap<String, HashMap<String, String>> grammar2RenameMap;
-    /**
-     * path to the files storing user defined contracts
-     */
-    private String pathToContracts;
+    public URL initialStatesURL;
     /**
      * The path to the file specifying the initial state.
      */
@@ -81,59 +58,52 @@ public class InputSettings {
      * The name of the file specifying the initial state.
      */
     private String inputName;
-
-    public URL getInitialStatesURL() {
-
-        return initialStatesURL;
-    }
-
-    public void setInitialStatesURL(URL resource) {
-
-        this.initialStatesURL = resource;
-    }
-
-    public String getInputName() {
-
-        return inputName;
-    }
-
+    
+//the grammar
     /**
-     * Sets the name of the file holding the initial state.
-     *
-     * @param inputName The name of the file holding the initial state.
+     * The path to the file specifying the graph grammar underlying the analysis.
      */
-    public void setInputName(String inputName) {
-
-        this.inputName = inputName;
-    }
-
+    private String pathToUserDefinedGrammar;
     /**
-     * Sets the default path to search for all possible input files.
-     *
-     * @param path The default path.
+     * The name of the file of the graph grammar underlying the analysis.
      */
-    public void setDefaultPath(String path) {
+    private List<String> userDefinedGrammarNames;
+    /**
+     * The list of predefined grammars used by the current analysis
+     */
+    private ArrayList<String> usedPredefinedGrammars;
+    /**
+     * The paths to the file specifying the renaming used for the
+     * predefined grammars
+     */
+    private final HashMap<String, String> pathsToGrammar2RenameDefinition = new LinkedHashMap<>();
+    
+//user defined contracts
+    /**
+     * path to the files storing user defined contracts
+     */
+    private String pathToContracts;
+    /**
+     * filenames containing user defined contracts to use
+     */
+    ArrayList<String> contractFiles = new ArrayList<>();
 
-        classpath = path;
-        pathToGrammar = path;
-        pathToInput = path;
-    }
 
+//----------------getters and setters--------------------------------------------------------------------
+//general information about the scenario
     public String getName() {
 
         return name;
+    }
+    public void setName(String name) {
+
+        this.name = name;
     }
 
     public String getScenario() {
 
         return scenario;
     }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
     public void setScenario(String scenario) {
 
         this.scenario = scenario;
@@ -143,12 +113,21 @@ public class InputSettings {
 
         this.specificationDescription = specificationDescription;
     }
-
     public String getSpecificationDescription() {
 
         return specificationDescription;
     }
 
+//the settings file
+    public String getPathToSettingsFile() {
+        return pathToSettingsFile;
+    }
+    public void setPathToSettingsFile(String pathToSettingsFile) {
+        this.pathToSettingsFile = pathToSettingsFile;
+    }
+
+    
+//the code
     /**
      * @return The path to the classes that are analyzed.
      */
@@ -156,7 +135,6 @@ public class InputSettings {
 
         return classpath;
     }
-
     /**
      * Sets the path to the classes that are analyzed.
      *
@@ -174,7 +152,6 @@ public class InputSettings {
 
         return className;
     }
-
     /**
      * Sets the name of the class that should be analyzed.
      *
@@ -192,7 +169,6 @@ public class InputSettings {
 
         return methodName;
     }
-
     /**
      * Sets the name of the method that should be analyzed.
      *
@@ -203,91 +179,29 @@ public class InputSettings {
         this.methodName = methodName;
     }
 
+//the initial state
+    public URL getInitialStatesURL() {
+
+        return initialStatesURL;
+    }
+    public void setInitialStatesURL(URL resource) {
+
+        this.initialStatesURL = resource;
+    }
+
+    public String getInputName() {
+
+        return inputName;
+    }
     /**
-     * Sets the path to the file containing the graph grammar underlying the analysis.
+     * Sets the name of the file holding the initial state.
      *
-     * @param pathToGrammar The path to the file containing the graph grammar.
+     * @param inputName The name of the file holding the initial state.
      */
-    public void setPathToGrammar(String pathToGrammar) {
+    public void setInputName(String inputName) {
 
-        this.pathToGrammar = pathToGrammar;
+        this.inputName = inputName;
     }
-
-    /**
-     * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
-     *
-     * @return the location of the userDefinedGrammar
-     */
-    public boolean hasUserDefinedGrammar() {
-    	
-        return this.userDefinedGrammarName != null;
-    }
-
-    /**
-     * Sets the name of the file containing the user-defined graph grammar underlying the analysis.
-     *
-     * @param userDefinedGrammarName The name of the file containing the graph grammar.
-     */
-    public void addUserDefinedGrammarName(String userDefinedGrammarName) {
-    	
-    	if( this.userDefinedGrammarName == null ){
-    		this.userDefinedGrammarName = new ArrayList<>();
-    	}
-        this.userDefinedGrammarName.add( userDefinedGrammarName );
-    }
-    
-    /**
-     * @return The fully qualified paths to the files holding the graph grammar underlying the analysis.
-     */
-    public List<String> getGrammarLocations() {
-
-    	List<String> grammarLocations = new ArrayList<>();
-    	for( String filename : userDefinedGrammarName ){
-    		grammarLocations.add( pathToGrammar + File.separator + filename );
-    	}
-        return grammarLocations;
-    }
-
-    /**
-     * Returns the path to the files containing user defined contracts
-     *
-     * @return the location of the user defined contracts
-     */
-    public String getPathToContracts() {
-
-        return this.pathToContracts;
-    }
-
-    /**
-     * Sets the path to the files containing user defined contracts
-     */
-    public void setPathToContracts(String pathToContracts) {
-
-        this.pathToContracts = pathToContracts;
-    }
-
-    /**
-     * Adds the provided name to the list of contract files to consider for this run
-     *
-     * @param name the filename
-     */
-    public void addContractFile(String name) {
-
-        this.contractFiles.add(name);
-    }
-
-    /**
-     * Returns the filenames of the user defined contracts to use
-     *
-     * @return a list containing the filenames
-     */
-    public ArrayList<String> getContractFileNames() {
-
-        return this.contractFiles;
-    }
-
-
-
     /**
      * Sets the path to the file holding the initial state.
      *
@@ -306,17 +220,52 @@ public class InputSettings {
         return pathToInput + File.separator + inputName;
     }
 
-    public void setRootPath(String rootPath) {
+//the grammar
+    //user defined
+    /**
+     * Sets the path to the file containing the graph grammar underlying the analysis.
+     *
+     * @param pathToGrammar The path to the file containing the graph grammar.
+     */
+    public void setPathToGrammar(String pathToGrammar) {
 
-        this.classpath = rootPath + File.separator + this.classpath;
-        this.pathToGrammar = rootPath + File.separator + this.pathToGrammar;
-        this.pathToInput = rootPath + File.separator + this.pathToInput;
-        this.pathToContracts = rootPath + File.separator + this.pathToContracts;
-        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
-            entry.setValue(rootPath + File.separator + entry.getValue());
-        }
+        this.pathToUserDefinedGrammar = pathToGrammar;
+    }
+    /**
+     * Sets the name of the file containing the user-defined graph grammar underlying the analysis.
+     *
+     * @param userDefinedGrammarName The name of the file containing the graph grammar.
+     */
+    public void addUserDefinedGrammarName(String userDefinedGrammarName) {
+    	
+    	if( this.userDefinedGrammarNames == null ){
+    		this.userDefinedGrammarNames = new ArrayList<>();
+    	}
+        this.userDefinedGrammarNames.add( userDefinedGrammarName );
+    }
+    
+    /**
+     * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
+     *
+     * @return the location of the userDefinedGrammar
+     */
+    public boolean hasUserDefinedGrammar() {
+    	
+        return this.userDefinedGrammarNames != null;
+    }
+    /**
+     * @return The fully qualified paths to the files holding the graph grammar underlying the analysis.
+     */
+    public List<String> getGrammarLocations() {
+
+    	List<String> grammarLocations = new ArrayList<>();
+    	for( String filename : userDefinedGrammarNames ){
+    		grammarLocations.add( pathToUserDefinedGrammar + File.separator + filename );
+    	}
+        return grammarLocations;
     }
 
+    //predefined
     /**
      * Adds a new predefined grammar (including its field maps) to the list of utilised grammars.
      * If no predefined grammar is set so far, the necessary list and map is created.
@@ -329,7 +278,6 @@ public class InputSettings {
 
         if (this.usedPredefinedGrammars == null) {
             this.usedPredefinedGrammars = new ArrayList<>();
-            this.grammar2RenameMap = new LinkedHashMap<>();
         }
 
         this.usedPredefinedGrammars.add(name);
@@ -340,17 +288,85 @@ public class InputSettings {
 
         return usedPredefinedGrammars;
     }
-
     public String getRenamingLocation(String predefinedGrammar) {
 
         return this.pathsToGrammar2RenameDefinition.get(predefinedGrammar);
     }
 
-    public String getPathToSettingsFile() {
-        return pathToSettingsFile;
+//user defined contracts
+    /**
+     * Returns the path to the files containing user defined contracts
+     *
+     * @return the location of the user defined contracts
+     */
+    public String getPathToContracts() {
+
+        return this.pathToContracts;
+    }
+    /**
+     * Sets the path to the files containing user defined contracts
+     */
+    public void setPathToContracts(String pathToContracts) {
+
+        this.pathToContracts = pathToContracts;
     }
 
-    public void setPathToSettingsFile(String pathToSettingsFile) {
-        this.pathToSettingsFile = pathToSettingsFile;
+    /**
+     * Adds the provided name to the list of contract files to consider for this run
+     *
+     * @param name the filename
+     */
+    public void addContractFile(String name) {
+
+        this.contractFiles.add(name);
     }
+    /**
+     * Returns the filenames of the user defined contracts to use
+     *
+     * @return a list containing the filenames
+     */
+    public ArrayList<String> getContractFileNames() {
+
+        return this.contractFiles;
+    }
+    
+   
+// ---------------------------------- path handling -----------------------------------------------------------------
+    /**
+     * Sets the default path to search for all possible user defined input files.
+     * Should be called first, so that all paths can be overwritten
+     *
+     * @param path The default path.
+     */
+    public void setDefaultPath(String path) {
+
+        classpath = path;
+        pathToUserDefinedGrammar = path;
+        pathToInput = path;
+        pathToContracts = path;
+        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
+            entry.setValue(path);
+        }   
+    }
+
+    /**
+     * prepends the rootPath to all user-defined paths. Has to be called <bf>after</bf> these paths
+     * have been set
+     * @param rootPath a path prefix which should be applied to all user defined paths
+     */
+    public void setRootPath(String rootPath) {
+
+        this.classpath = rootPath + File.separator + this.classpath;
+        this.pathToUserDefinedGrammar = rootPath + File.separator + this.pathToUserDefinedGrammar;
+        this.pathToInput = rootPath + File.separator + this.pathToInput;
+        this.pathToContracts = rootPath + File.separator + this.pathToContracts;
+        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
+            entry.setValue(rootPath + File.separator + entry.getValue());
+        }
+    }
+    
+
+
+   
+
 }
