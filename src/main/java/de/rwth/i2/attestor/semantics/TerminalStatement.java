@@ -16,11 +16,6 @@ import java.util.Set;
  */
 public class TerminalStatement implements SemanticsCommand {
 
-    /**
-     * Stores whether canonicalization may be performed
-     * after executing this statement.
-     */
-    private boolean isCanonicalizationPermitted = true;
 
     @Override
     public Collection<ProgramState> computeSuccessors(ProgramState executable) {

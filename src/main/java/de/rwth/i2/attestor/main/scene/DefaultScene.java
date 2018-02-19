@@ -5,7 +5,6 @@ import java.util.*;
 import de.rwth.i2.attestor.graph.*;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
-import de.rwth.i2.attestor.io.HttpExporter;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;

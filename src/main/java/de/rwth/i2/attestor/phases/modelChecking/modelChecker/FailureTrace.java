@@ -1,14 +1,12 @@
 package de.rwth.i2.attestor.phases.modelChecking.modelChecker;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
-import java.util.*;
-import java.util.function.Function;
 
 public class FailureTrace implements ModelCheckingTrace {
 

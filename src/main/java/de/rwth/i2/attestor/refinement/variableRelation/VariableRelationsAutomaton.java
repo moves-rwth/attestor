@@ -92,7 +92,6 @@ public class VariableRelationsAutomaton implements StatelessHeapAutomaton {
             int node = hc.targetOf(varEdge);
             if (field != null && node != HeapConfiguration.INVALID_ELEMENT) {
 
-                boolean foundSelector = false;
                 for (SelectorLabel sel : hc.selectorLabelsOf(node)) {
                     if (sel.getLabel().equals(lhsField)) {
                         return hc.selectorTargetOf(
