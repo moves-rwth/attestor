@@ -3,12 +3,13 @@ package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAn
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public interface ProcedureRegistry {
     
 	ProcedureCall getProcedureCall(Method method, HeapConfiguration initialHeap);
 
 	void registerProcedure(ProcedureCall call);
-
 	void registerDependency(ProgramState callingState, ProcedureCall call);
+	void registerStateSpace( ProcedureCall call, StateSpace generatedStateSpace );
 }

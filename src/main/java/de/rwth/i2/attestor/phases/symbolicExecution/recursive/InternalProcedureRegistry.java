@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAna
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureRegistry;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class InternalProcedureRegistry implements ProcedureRegistry {
 
@@ -23,7 +24,7 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
     
     @Override
 	public InternalProcedureCall getProcedureCall(Method method, HeapConfiguration initialHeap ) {
-		return new InternalProcedureCall(method, initialHeap, stateSpaceGeneratorFactory);
+		return new InternalProcedureCall(method, initialHeap, stateSpaceGeneratorFactory, this);
 	}
 
     @Override
@@ -40,5 +41,11 @@ public class InternalProcedureRegistry implements ProcedureRegistry {
         PartialStateSpace partialStateSpace = new InternalPartialStateSpace(callingState, stateSpaceGeneratorFactory);
         analysis.registerDependency(call, partialStateSpace);
     }
+
+	@Override
+	public void registerStateSpace(ProcedureCall call, StateSpace generatedStateSpace) {
+		analysis.registerStateSpace(call, generatedStateSpace);
+		
+	}
 
 }

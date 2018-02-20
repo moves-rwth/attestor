@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAna
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureRegistry;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class ProcedureRegistryStub implements ProcedureRegistry {
 
@@ -32,6 +33,12 @@ public class ProcedureRegistryStub implements ProcedureRegistry {
 	public void registerDependency(ProgramState callingState, ProcedureCall call) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void registerStateSpace(ProcedureCall call, StateSpace generatedStateSpace) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
