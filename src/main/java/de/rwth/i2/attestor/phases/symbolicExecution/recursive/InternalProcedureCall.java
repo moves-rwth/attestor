@@ -42,7 +42,7 @@ public class InternalProcedureCall extends SceneObject implements ProcedureCall 
     public StateSpace execute() {
 
         try {
-            StateSpace stateSpace = factory.create(method.getBody(), preconditionState).generate();
+            StateSpace stateSpace = factory.create( method.getBody(), preconditionState ).generate();
 
             List<HeapConfiguration> finalHeaps = new ArrayList<>();
             stateSpace.getFinalStates().forEach( finalState -> finalHeaps.add(finalState.getHeap()) );

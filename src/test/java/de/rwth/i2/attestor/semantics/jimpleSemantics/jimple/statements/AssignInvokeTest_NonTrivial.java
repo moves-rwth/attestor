@@ -8,7 +8,7 @@ import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutorExecutor;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -56,7 +56,7 @@ public class AssignInvokeTest_NonTrivial {
         defaultControlFlow.add(new AssignStmt(sceneObject, var, new NewExpr(type), 1, new LinkedHashSet<>()));
         defaultControlFlow.add(new ReturnValueStmt(sceneObject, var, type));
         method.setBody(new ProgramImpl(defaultControlFlow));
-        method.setMethodExecution(new MockupMethodExecutorExecutor(sceneObject, method));
+        method.setMethodExecution(new MockupMethodExecutor(sceneObject, method));
         InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 
 

@@ -7,9 +7,9 @@ import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.NonRecursiveMe
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.procedures.Method;
 
-public class MockupMethodExecutorExecutor extends NonRecursiveMethodExecutor {
+public class MockupMethodExecutor extends NonRecursiveMethodExecutor {
 
-    public MockupMethodExecutorExecutor(SceneObject sceneObject, Method method) {
+    public MockupMethodExecutor(SceneObject sceneObject, Method method) {
         super(	method,
                 new DefaultScopeExtractor(sceneObject, method.getName()),
                 new InternalContractCollection(new InternalPreconditionMatchingStrategy()),

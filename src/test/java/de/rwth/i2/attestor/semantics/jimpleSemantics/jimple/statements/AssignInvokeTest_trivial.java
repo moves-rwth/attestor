@@ -4,10 +4,16 @@ import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContractCollection;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalPreconditionMatchingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.NonRecursiveMethodExecutor;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.scopes.DefaultScopeExtractor;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutorExecutor;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.FakeProcedureCall;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.ProcedureRegistryStub;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Local;
@@ -47,7 +53,10 @@ public class AssignInvokeTest_trivial {
         List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
         defaultControlFlow.add(new Skip(sceneObject, -1));
         method.setBody(new ProgramImpl(defaultControlFlow));
-        method.setMethodExecution(new MockupMethodExecutorExecutor(sceneObject, method));
+        method.setMethodExecution( new NonRecursiveMethodExecutor(   method, 
+        															new DefaultScopeExtractor(sceneObject, method.getName()),
+        															new InternalContractCollection( new InternalPreconditionMatchingStrategy()), 
+        															new ProcedureRegistryStub(sceneObject) ) );
         InvokeHelper invokePrepare = new StaticInvokeHelper(sceneObject, new ArrayList<>());
 
         stmt = new AssignInvoke(sceneObject, var, method, invokePrepare, 1);
