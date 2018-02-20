@@ -95,4 +95,9 @@ public class InternalProcedureCall extends SceneObject implements ProcedureCall 
         return method.equals(call.method) &&
                 preconditionState.equals(call.preconditionState);
     }
+    
+    @Override
+    public String toString() {
+    	return method.getName();
+    }
 }

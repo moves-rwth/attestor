@@ -9,6 +9,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jf.util.OldWrappedIndentingWriter;
+
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class InterproceduralAnalysis {
@@ -48,15 +50,22 @@ public class InterproceduralAnalysis {
 
 		while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
 			ProcedureCall call;
+			boolean contractChanged = false;
 			if(!remainingProcedureCalls.isEmpty()) {
 				call = remainingProcedureCalls.pop();
-				call.execute();
+				StateSpace stateSpace = call.execute();
+				contractChanged = stateSpace.getFinalStateIds().size() > 0;
 			} else {
 				PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
+				int currentNumberOfFinalStates = partialStateSpace.unfinishedStateSpace().getFinalStateIds().size();
 				call = stateSpaceToAnalyzedCall.get( partialStateSpace.unfinishedStateSpace() );
 				partialStateSpace.continueExecution(call);
+				int newNumberOfFinalsStates = partialStateSpace.unfinishedStateSpace().getFinalStateIds().size();
+				contractChanged = newNumberOfFinalsStates > currentNumberOfFinalStates;
 			}
-			notifyDependencies(call);
+			if( contractChanged ) {
+				notifyDependencies(call);
+			}
 		}
 	}
 
