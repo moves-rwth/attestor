@@ -1,37 +1,39 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
-import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.procedures.ContractGenerator;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
-import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MockupContractGenerator implements ContractGenerator {
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
+import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
 
-    private Program program;
+public class FakeProcedureCall implements ProcedureCall {
 
-    public MockupContractGenerator(Program program) {
+	Method method;
+	ProgramState initialState;
+	
+	public FakeProcedureCall(Method method, ProgramState initialState) {
+		this.method = method;
+		this.initialState = initialState;
+	}
 
-        this.program = program;
-    }
-
-    @Override
-    public Contract generateContract(ProgramState initialState) {
-
-        try {
-            Collection<ProgramState> postStates = StateSpaceGenerator.builder()
+	@Override
+	public StateSpace execute() {
+		try {
+           return StateSpaceGenerator.builder()
                     .addInitialState(initialState)
-                    .setProgram(program)
+                    .setProgram(method.getBody())
                     .setCanonizationStrategy(new MockupCanonicalizationStrategy())
                     .setMaterializationStrategy(new MockupMaterializationStrategy())
                     .setAbortStrategy(new MockupAbortStrategy())
@@ -44,18 +46,25 @@ public class MockupContractGenerator implements ContractGenerator {
                     .setStateSpaceSupplier(new MockupStateSpaceSupplier())
                     .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                     .build()
-                    .generate()
-                    .getFinalStates();
+                    .generate();
 
-            Collection<HeapConfiguration> postconditions = new ArrayList<>();
-            for (ProgramState state : postStates) {
-                postconditions.add(state.getHeap());
-            }
-
-            return new InternalContract(initialState.getHeap(), postconditions);
         } catch (StateSpaceGenerationAbortedException e) {
-            assert false;
+            fail("Unexpected Exception when executing " + method.getName() );
+            return null;
         }
-        return null;
-    }
+        
+	}
+
+	@Override
+	public Method getMethod() {
+		return method;
+	}
+
+	@Override
+	public ProgramState getInput() {
+		return initialState;
+	}
+
+
+
 }

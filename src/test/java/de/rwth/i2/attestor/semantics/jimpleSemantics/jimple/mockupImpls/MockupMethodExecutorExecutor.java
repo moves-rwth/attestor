@@ -10,10 +10,10 @@ import de.rwth.i2.attestor.procedures.Method;
 public class MockupMethodExecutorExecutor extends NonRecursiveMethodExecutor {
 
     public MockupMethodExecutorExecutor(SceneObject sceneObject, Method method) {
-        super(
+        super(	method,
                 new DefaultScopeExtractor(sceneObject, method.getName()),
                 new InternalContractCollection(new InternalPreconditionMatchingStrategy()),
-                new MockupContractGenerator(method.getBody())
+                new ProcedureRegistryStub( sceneObject )
         );
     }
 }
