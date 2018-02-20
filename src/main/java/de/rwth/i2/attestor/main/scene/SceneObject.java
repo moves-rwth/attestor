@@ -11,7 +11,7 @@ public abstract class SceneObject {
 
     protected SceneObject(SceneObject otherObject) {
 
-        this.scene = otherObject.scene;
+        this.scene = otherObject.scene();
     }
 
     public Scene scene() {

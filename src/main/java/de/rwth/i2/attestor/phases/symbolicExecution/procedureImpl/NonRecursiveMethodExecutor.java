@@ -31,16 +31,7 @@ public class NonRecursiveMethodExecutor extends AbstractInterproceduralMethodExe
      */
 	@Override
 	protected void generateAndAddContract(ProcedureCall call, ContractCollection contractCollection) {
-		HeapConfiguration precondition = call.getInput().getHeap();
-		
-		Collection<ProgramState> finalStates = call.execute().getFinalStates();
-		List<HeapConfiguration> postconditions = new ArrayList<>(finalStates.size());
-        for(ProgramState state : finalStates) {
-            postconditions.add(state.getHeap());
-        }
-
-        Contract contract = new InternalContract( precondition, postconditions );
-        contractCollection.addContract(contract);
+		call.execute();
 	}
 
   

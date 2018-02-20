@@ -1,63 +1,70 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis;
 
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class InterproceduralAnalysis {
 
-    Map<ProcedureCall, Set<PartialStateSpace>> callingDependencies = new LinkedHashMap<>();
-    Deque<ProcedureCall> remainingProcedureCalls = new ArrayDeque<>();
-    Deque<PartialStateSpace> remainingPartialStateSpaces = new ArrayDeque<>();
-    Map<StateSpace, ProcedureCall> stateSpaceToAnalyzedCall = new LinkedHashMap<>();
+	Deque<ProcedureCall> remainingProcedureCalls = new ArrayDeque<>();
+	Deque<PartialStateSpace> remainingPartialStateSpaces = new ArrayDeque<>();
+
+	Map<ProcedureCall, Set<PartialStateSpace>> callingDependencies = new LinkedHashMap<>();
+	Map<StateSpace, ProcedureCall> stateSpaceToAnalyzedCall = new LinkedHashMap<>();
 
 
-    public void addMainProcedureCall( StateSpace mainStateSpace, ProcedureCall mainCall) {
+	public void registerStateSpace( ProcedureCall call, StateSpace stateSpace) {
 
-        stateSpaceToAnalyzedCall.put(mainStateSpace, mainCall);
-    }
+		stateSpaceToAnalyzedCall.put(stateSpace, call);
+	}
 
 
-    public void registerDependency(ProcedureCall procedureCall, PartialStateSpace dependentPartialStateSpace) {
+	public void registerDependency(ProcedureCall procedureCall, PartialStateSpace dependentPartialStateSpace) {
 
-        if(!callingDependencies.containsKey(procedureCall)) {
-            Set<PartialStateSpace> dependencies = new LinkedHashSet<>();
-            dependencies.add(dependentPartialStateSpace);
-            callingDependencies.put(procedureCall, dependencies);
-        } else {
-            callingDependencies.get(procedureCall).add(dependentPartialStateSpace);
-        }
-    }
+		if(!callingDependencies.containsKey(procedureCall)) {
+			Set<PartialStateSpace> dependencies = new LinkedHashSet<>();
+			dependencies.add(dependentPartialStateSpace);
+			callingDependencies.put(procedureCall, dependencies);
+		} else {
+			callingDependencies.get(procedureCall).add(dependentPartialStateSpace);
+		}
+	}
 
-    public void registerProcedureCall(ProcedureCall procedureCall) {
+	public void registerProcedureCall(ProcedureCall procedureCall) {
 
-        if(!remainingProcedureCalls.contains(procedureCall)) {
-            remainingProcedureCalls.push(procedureCall);
-        }
-    }
+		if(!remainingProcedureCalls.contains(procedureCall)) {
+			remainingProcedureCalls.push(procedureCall);
+		}
+	}
 
-    public void run() {
+	public void run() {
 
-        while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
-            ProcedureCall call;
-            if(!remainingProcedureCalls.isEmpty()) {
-                call = remainingProcedureCalls.pop();
-                StateSpace stateSpace = call.execute();
-                stateSpaceToAnalyzedCall.put( stateSpace, call );
-            } else {
-                PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
-                call = stateSpaceToAnalyzedCall.get( partialStateSpace.unfinishedStateSpace() );
-                partialStateSpace.continueExecution(call);
-            }
-            updateDependencies(call);
-        }
-    }
+		while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
+			ProcedureCall call;
+			if(!remainingProcedureCalls.isEmpty()) {
+				call = remainingProcedureCalls.pop();
+				call.execute();
+			} else {
+				PartialStateSpace partialStateSpace = remainingPartialStateSpaces.pop();
+				call = stateSpaceToAnalyzedCall.get( partialStateSpace.unfinishedStateSpace() );
+				partialStateSpace.continueExecution(call);
+			}
+			notifyDependencies(call);
+		}
+	}
 
-    private void updateDependencies(ProcedureCall call) {
+	private void notifyDependencies(ProcedureCall call) {
 
-        Set<PartialStateSpace> dependencies = callingDependencies.getOrDefault(call, Collections.emptySet());
-        remainingPartialStateSpaces.addAll(dependencies);
-    }
+		Set<PartialStateSpace> dependencies = callingDependencies.getOrDefault(call, Collections.emptySet());
+		remainingPartialStateSpaces.addAll(dependencies);
+	}
+
 
 }
