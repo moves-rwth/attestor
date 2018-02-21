@@ -83,9 +83,18 @@ public class AbstractInterproceduralMethodExecutorTest {
 	
 	@Test
 	public void testGetPrecondition_WhenContractIsNotPresent() {
+	//given
 		//ensure it does not match the given heap		
 		ContractMatch noMatch = NoContractMatch.NO_CONTRACT_MATCH;
 		when( contractCollection.matchContract(heapInScope)).thenReturn( noMatch );
+	//when
+		testSubject.getPostconditions(callingState, scopedHeap );
+	//then
+		//ensure the dependency is registered
+		verify( procedureRegistry ).registerDependency( eq(callingState), any() );
+		//ensure a new contract is generated
+		verify( testSubject ).generateAndAddContract( any(), eq(contractCollection) );
+		
 	}
 
 }
