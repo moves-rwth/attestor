@@ -49,7 +49,7 @@ public class CounterexampleMethodExecutorTest {
         );
 
         ProgramState input = sceneObject.scene().createProgramState(mockupHeaps.getHeap());
-        Collection<ProgramState> resultStates = executor.getResultStates(null, input);
+        Collection<ProgramState> resultStates = executor.getResultStates(input, input);
         ProgramState validFinalState = sceneObject.scene().createProgramState(mockupHeaps.getPostcondition());
 
         Collection<HeapConfiguration> predicate = contractGenerator.getRequiredFinalHeaps();
