@@ -6,9 +6,9 @@ import java.util.Collection;
 
 public final class NoContractMatch implements ContractMatch {
 
-    static final NoContractMatch NO_CONTRACT_MATCH = new NoContractMatch();
-
-    private NoContractMatch() {}
+    public static final NoContractMatch NO_CONTRACT_MATCH = new NoContractMatch();
+    
+	private NoContractMatch() {}
 
     @Override
     public boolean hasMatch() {
