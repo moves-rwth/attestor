@@ -192,7 +192,7 @@ public class InternalStateSpace implements StateSpace {
         artificialInfPathsSuccessors.put(nextStateId, new TIntArrayList());
         // TODO: In the long run remove APs from program state!
         atomicPropMap.put(nextStateId, state.getAPs());
-        maximalStateSize = Math.max(maximalStateSize, state.getSize());
+        maximalStateSize = Math.max(maximalStateSize, state.size());
         ++nextStateId;
     }
 

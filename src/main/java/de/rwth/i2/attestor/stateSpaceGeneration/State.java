@@ -8,6 +8,5 @@ public interface State {
 
     void setStateSpaceId(int id);
 
-
-    int getSize();
+    int size();
 }

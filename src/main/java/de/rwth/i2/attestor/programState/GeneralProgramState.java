@@ -471,12 +471,6 @@ public abstract class GeneralProgramState implements ProgramState {
     }
 
     @Override
-    public int getSize() {
-
-        return heap.countNodes();
-    }
-
-    @Override
     public int getStateSpaceId() {
 
         return stateSpaceId;
