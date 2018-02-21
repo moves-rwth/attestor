@@ -27,7 +27,7 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 
 	// template method. can be configured by overriding generateAndAddContract.
 	@Override
-	protected final Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ProgramState inputState, ScopedHeap scopedHeap) {
+	protected final Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ScopedHeap scopedHeap) {
 	
 	    HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
 	    

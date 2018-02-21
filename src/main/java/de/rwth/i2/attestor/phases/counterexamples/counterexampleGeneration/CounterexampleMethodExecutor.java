@@ -24,7 +24,7 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
 
     @Override
     protected Collection<HeapConfiguration> getPostconditions(ProgramState callingState,
-                                                              ProgramState inputState, ScopedHeap scopedHeap) {
+                                                              ScopedHeap scopedHeap) {
 
         HeapConfiguration abstractedHeapInScope = canonicalizationStrategy.canonicalize(scopedHeap.getHeapInScope());
         ContractMatch abstractMatch = getContractCollection().matchContract(abstractedHeapInScope);
@@ -33,17 +33,17 @@ public class CounterexampleMethodExecutor extends AbstractMethodExecutor {
         }
         counterexampleContractGenerator.setRequiredFinalHeaps(abstractMatch.getPostconditions());
 
-        ContractMatch contractMatch = computeNewContract(inputState, scopedHeap);
+        ContractMatch contractMatch = computeNewContract(callingState, scopedHeap);
         if(contractMatch.hasMatch()) {
             return scopedHeap.merge(contractMatch);
         }
         return Collections.emptySet();
     }
 
-    private ContractMatch computeNewContract(ProgramState input, ScopedHeap scopedHeap) {
+    private ContractMatch computeNewContract(ProgramState someState, ScopedHeap scopedHeap) {
 
         HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
-        ProgramState initialState = input.shallowCopyWithUpdateHeap(heapInScope);
+        ProgramState initialState = someState.shallowCopyWithUpdateHeap(heapInScope);
         Contract generatedContract = counterexampleContractGenerator.generateContract(initialState);
         ContractCollection contractCollection = getContractCollection();
         contractCollection.addContract(generatedContract);

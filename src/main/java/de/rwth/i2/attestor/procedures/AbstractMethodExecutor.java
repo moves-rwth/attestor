@@ -30,7 +30,7 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
 
         HeapConfiguration inputHeap = input.getHeap();
         ScopedHeap scopedHeap = scopeExtractor.extractScope(inputHeap);
-        Collection<HeapConfiguration> postconditions = getPostconditions(callingState, input, scopedHeap);
+        Collection<HeapConfiguration> postconditions = getPostconditions(callingState, scopedHeap);
         return createResultStates(input, postconditions);
     }
 
@@ -47,7 +47,6 @@ public abstract class AbstractMethodExecutor implements MethodExecutor {
     }
 
     protected abstract Collection<HeapConfiguration> getPostconditions(ProgramState callingState,
-                                                                       ProgramState inputState,
                                                                        ScopedHeap scopedHeap);
 
     @Override
