@@ -78,7 +78,7 @@ public class AbstractInterproceduralMethodExecutorTest {
 		verify( contractCollection ).matchContract( heapInScope );
 		verifyNoMoreInteractions( contractCollection );
 		
-		verify( testSubject, never() ).generateAndAddContract( any(), any() );
+		verify( testSubject, never() ).generateAndAddContract( any() );
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class AbstractInterproceduralMethodExecutorTest {
 		//ensure the dependency is registered
 		verify( procedureRegistry ).registerDependency( eq(callingState), any() );
 		//ensure a new contract is generated
-		verify( testSubject ).generateAndAddContract( any(), eq(contractCollection) );
+		verify( testSubject ).generateAndAddContract( any() );
 		
 	}
 

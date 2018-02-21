@@ -20,7 +20,7 @@ public class NonRecursiveMethodExecutor extends AbstractInterproceduralMethodExe
      * generates the Contract by executing the call
      */
 	@Override
-	protected void generateAndAddContract(ProcedureCall call, ContractCollection contractCollection) {
+	protected void generateAndAddContract(ProcedureCall call) {
 		call.execute();
 	}
 

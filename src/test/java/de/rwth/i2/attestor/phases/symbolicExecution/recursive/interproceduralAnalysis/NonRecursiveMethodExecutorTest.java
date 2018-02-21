@@ -34,7 +34,7 @@ public class NonRecursiveMethodExecutorTest {
 		ProcedureCall call = mock( ProcedureCall.class );
 		
 		//when
-		testSubject.generateAndAddContract(call, contractCollection);
+		testSubject.generateAndAddContract(call);
 		
 		//then
 		verify( call ).execute();

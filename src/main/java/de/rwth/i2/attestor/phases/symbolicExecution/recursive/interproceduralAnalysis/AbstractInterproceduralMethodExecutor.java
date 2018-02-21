@@ -38,7 +38,7 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 	    if(!contractMatch.hasMatch()) {
 	        
 	        ContractCollection contractCollection = getContractCollection();
-	        generateAndAddContract( call, contractCollection);
+	        generateAndAddContract( call);
 	        contractMatch = contractCollection.matchContract(heapInScope);
 	    }
 	    
@@ -48,8 +48,7 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 	/**
 	 * Is called when no contract for this call is found. 
      * @param call the procedureCall for this method and input
-     * @param contractCollection the contractCollection of the method
 	 */
-	abstract protected void generateAndAddContract( ProcedureCall call, ContractCollection contractCollection);
+	abstract protected void generateAndAddContract( ProcedureCall call);
 
 }

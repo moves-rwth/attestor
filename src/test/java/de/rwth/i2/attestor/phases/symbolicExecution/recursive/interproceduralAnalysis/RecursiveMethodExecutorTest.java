@@ -56,7 +56,7 @@ public class RecursiveMethodExecutorTest {
 		when( call.getInput() ).thenReturn( inputState );
 		
 		//when
-		testSubject.generateAndAddContract(call, contractCollection);
+		testSubject.generateAndAddContract(call);
 		
 		//then
 		//ensure empty contract with correct preconditon is added

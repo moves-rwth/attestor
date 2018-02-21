@@ -12,7 +12,7 @@ public class FakeInterproceduralMethodExecutor extends AbstractInterproceduralMe
 	}
 
 	@Override
-	protected void generateAndAddContract(ProcedureCall call, ContractCollection contractCollection) {
+	protected void generateAndAddContract(ProcedureCall call) {
 
 	}
 

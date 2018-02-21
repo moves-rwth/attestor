@@ -23,10 +23,10 @@ public class RecursiveMethodExecutor extends AbstractInterproceduralMethodExecut
      * Adds an empty contract and registers the call as for recursive Methods the contract is 
      * generated in a later phase in order to detect fixpoints.
      */
-	protected void generateAndAddContract( ProcedureCall call, ContractCollection contractCollection) {
+	protected void generateAndAddContract( ProcedureCall call) {
 		
 		Collection<HeapConfiguration> postconditions = new LinkedHashSet<>();
-		contractCollection.addContract(new InternalContract(call.getInput().getHeap(), postconditions));
+		getContractCollection().addContract(new InternalContract(call.getInput().getHeap(), postconditions));
 		
 		procedureRegistry.registerProcedure( call );
 	}
