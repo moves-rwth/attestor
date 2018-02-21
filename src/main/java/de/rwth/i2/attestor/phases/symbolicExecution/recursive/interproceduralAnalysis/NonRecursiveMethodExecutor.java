@@ -1,13 +1,10 @@
-package de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl;
+package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.AbstractInterproceduralMethodExecutor;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureRegistry;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.ContractCollection;
 import de.rwth.i2.attestor.procedures.Method;
