@@ -1,17 +1,18 @@
 package de.rwth.i2.attestor.io.settings;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
+import de.rwth.i2.attestor.LTLFormula;
+import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.phases.communication.InputSettings;
+import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
-import de.rwth.i2.attestor.phases.communication.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
 
 /**
  * @author Hannah Arndt, Christoph, Christina
@@ -156,7 +157,7 @@ public class SettingsFileReader {
                 input.addPredefinedGrammar(grammarType, renameFileLocation);
                 logger.debug("Adding predefined grammar " + grammarType);
             } else {
-                logger.debug("No predefined grammar of type " + grammarType
+                logger.warn("No predefined grammar of type " + grammarType
                         + " available. Skipping it.");
             }
         }
@@ -251,8 +252,72 @@ public class SettingsFileReader {
 
         JSONObject jsonOutput = jsonSettings.getJSONObject("output");
 
+        if (jsonOutput.has("defaultPath")) {
+            output.setDefaultPath(jsonOutput.getString("defaultPath"));
+        }
+
         if (jsonOutput.has("enabled")) {
             output.setNoExport(!jsonOutput.getBoolean("enabled"));
+        }
+
+        if (jsonOutput.has("stateSpace")) {
+            output.setExportStateSpace(true);
+            JSONObject jsonStateSpace = jsonOutput.getJSONObject("stateSpace");
+            if (jsonStateSpace.has("path")) {
+                output.setPathForStateSpace(jsonStateSpace.getString("path"));
+            }
+            if (jsonStateSpace.has("folder")) {
+                output.setFolderForStateSpace(jsonStateSpace.getString("folder"));
+            }
+        }
+
+
+        if (jsonOutput.has("grammar")) {
+            output.setExportGrammar(true);
+            JSONObject jsonGrammar = jsonOutput.getJSONObject("grammar");
+            if (jsonGrammar.has("path")) {
+                output.setPathForGrammar(jsonGrammar.getString("path"));
+            }
+            if (jsonGrammar.has("folder")) {
+                output.setFolderForGrammar(jsonGrammar.getString("folder"));
+            }
+        }
+
+        if (jsonOutput.has("contractsForInspection")) {
+            output.setExportContractsForInspection(true);
+            JSONObject jsonContracts = jsonOutput.getJSONObject("contractsForInspection");
+            if (jsonContracts.has("path")) {
+                output.setPathForContractsForInspection(jsonContracts.getString("path"));
+            }
+            if (jsonContracts.has("folder")) {
+                output.setFolderForContractsForInspection(jsonContracts.getString("folder"));
+            }
+        }
+        
+        if (jsonOutput.has("customHCs")) {
+            output.setExportCustomHcs(true);
+            JSONObject jsonGrammar = jsonOutput.getJSONObject("customHCs");
+            if (jsonGrammar.has("path")) {
+                output.setPathForCustomHcs(jsonGrammar.getString("path"));
+            }
+            if (jsonGrammar.has("folder")) {
+                output.setFolderForCustomHcs(jsonGrammar.getString("folder"));
+            }
+        }
+
+        if (jsonOutput.has("contractsForReuse")) {
+            output.setExportContractsForReuse(true);
+            JSONObject jsonC = jsonOutput.getJSONObject("contractsForReuse");
+            if (jsonC.has("path")) {
+                output.setDirectoryForReuseContracts(jsonC.getString("path"));
+            }
+            JSONArray requestArray = jsonC.getJSONArray("requestedContracts");
+            for (int i = 0; i < requestArray.length(); i++) {
+                JSONObject request = requestArray.getJSONObject(i);
+                String signature = request.getString("signature");
+                String filename = request.getString("filename");
+                output.addRequiredContractForReuse(signature, filename);
+            }
         }
     }
 

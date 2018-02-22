@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.phases.parser.*;
 import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
 import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
+import de.rwth.i2.attestor.phases.report.ReportGenerationPhase;
 import de.rwth.i2.attestor.phases.report.ReportOutputPhase;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.RecursiveStateSpaceGenerationPhase;
 
@@ -52,7 +53,7 @@ public class Attestor extends AbstractAttestor {
                 .addPhase(new RecursiveStateSpaceGenerationPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
-                .addPhase(new ReportOutputPhase(scene, registry.getPhases()) )
+                .addPhase( new ReportGenerationPhase(scene) )
                 .execute();
     }
 }
