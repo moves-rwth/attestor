@@ -9,8 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jf.util.OldWrappedIndentingWriter;
-
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 public class InterproceduralAnalysis {

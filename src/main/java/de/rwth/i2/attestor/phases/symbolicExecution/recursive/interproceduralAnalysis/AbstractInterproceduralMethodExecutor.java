@@ -32,7 +32,7 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 	    HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
 	    
 	    ProcedureCall call = procedureRegistry.getProcedureCall( method, heapInScope );
-	    procedureRegistry.registerDependency(callingState, call );
+	    procedureRegistry.registerDependency( callingState, call );
 	
 	    ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
 	    if(!contractMatch.hasMatch()) {
