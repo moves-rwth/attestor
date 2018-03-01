@@ -1,8 +1,8 @@
 package de.rwth.i2.attestor.procedures;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-
 import java.util.Collection;
+
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 public interface ContractMatch {
 
@@ -10,5 +10,6 @@ public interface ContractMatch {
 
     boolean hasMatch();
     int[] getExternalReordering();
+    HeapConfiguration getPrecondition();
     Collection<HeapConfiguration> getPostconditions();
 }
