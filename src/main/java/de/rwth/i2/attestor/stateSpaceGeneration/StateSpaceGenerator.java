@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
+import de.rwth.i2.attestor.grammar.admissibility.AdmissibilityStrategy;
+
 import java.util.Collection;
 
 /**
@@ -274,11 +276,20 @@ public class StateSpaceGenerator {
 
         SemanticsCommand semanticsCommand = semanticsOf(nextState);
         nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
-        nextState = canonicalizationPhase(semanticsCommand, nextState);
-        if (state.isFromTopLevelStateSpace()) {
-            stateLabelingStrategy.computeAtomicPropositions(nextState);
+
+        // TODO
+        AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
+        Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
+
+        for(ProgramState successor : successorStates) {
+            successor = canonicalizationPhase(semanticsCommand, successor);
+            if (state.isFromTopLevelStateSpace()) {
+                stateLabelingStrategy.computeAtomicPropositions(successor);
+            }
+            addingPhase(semanticsCommand, state, successor);
+
         }
-        addingPhase(semanticsCommand, state, nextState);
+
     }
 
 
