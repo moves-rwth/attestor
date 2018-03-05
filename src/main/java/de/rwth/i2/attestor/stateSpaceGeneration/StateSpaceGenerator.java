@@ -278,17 +278,27 @@ public class StateSpaceGenerator {
         nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
 
         // TODO
-        AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
-        Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
+        final boolean distanceEnabled = true;
+        if(distanceEnabled) {
+            AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
+            Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
 
-        for(ProgramState successor : successorStates) {
-            successor = canonicalizationPhase(semanticsCommand, successor);
-            if (state.isFromTopLevelStateSpace()) {
-                stateLabelingStrategy.computeAtomicPropositions(successor);
+            for(ProgramState successor : successorStates) {
+                successor = canonicalizationPhase(semanticsCommand, successor);
+                if (state.isFromTopLevelStateSpace()) {
+                    stateLabelingStrategy.computeAtomicPropositions(successor);
+                }
+                addingPhase(semanticsCommand, state, successor);
+
             }
-            addingPhase(semanticsCommand, state, successor);
-
+        } else {
+            nextState = canonicalizationPhase(semanticsCommand, nextState);
+            if (state.isFromTopLevelStateSpace()) {
+                stateLabelingStrategy.computeAtomicPropositions(nextState);
+            }
+            addingPhase(semanticsCommand, state, nextState);
         }
+
 
     }
 
