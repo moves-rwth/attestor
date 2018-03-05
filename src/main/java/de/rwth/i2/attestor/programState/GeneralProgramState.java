@@ -48,6 +48,13 @@ public abstract class GeneralProgramState implements ProgramState {
     private int stateSpaceId = -1;
 
     private StateSpace containingStateSpace = null;
+    
+    /**
+     * A flag to indicate whether this state is just continued (in a partial stateSpace)
+     * This is necessary, as the successors of continued states always have to be merged
+     * to avoid duplicate applications of the same contract
+     */
+    boolean isContinueState = false;
 
     /**
      * Initializes a state with the initial program location 0.
@@ -496,5 +503,16 @@ public abstract class GeneralProgramState implements ProgramState {
     @Override
 	public void setContainingStateSpace(StateSpace containingStateSpace) {
 		this.containingStateSpace = containingStateSpace;
+	}
+   
+    
+    public boolean isContinueState() {
+    	return this.isContinueState;
+    }
+	public void flagAsContinueState() {
+		this.isContinueState = true;
+	}
+	public void unflagContinueState() {
+		this.isContinueState = false;
 	}
 }

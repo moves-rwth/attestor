@@ -3,12 +3,7 @@ package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAn
 import java.util.Collection;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;
-import de.rwth.i2.attestor.procedures.ContractCollection;
-import de.rwth.i2.attestor.procedures.ContractMatch;
-import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.procedures.ScopeExtractor;
-import de.rwth.i2.attestor.procedures.ScopedHeap;
+import de.rwth.i2.attestor.procedures.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 
 public abstract class AbstractInterproceduralMethodExecutor extends AbstractMethodExecutor {
@@ -30,11 +25,14 @@ public abstract class AbstractInterproceduralMethodExecutor extends AbstractMeth
 	protected final Collection<HeapConfiguration> getPostconditions(ProgramState callingState, ScopedHeap scopedHeap) {
 	
 	    HeapConfiguration heapInScope = scopedHeap.getHeapInScope();
+	    ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
+	    if( contractMatch.hasMatch() ) {
+	    	heapInScope = contractMatch.getPrecondition();
+	    }
 	    
 	    ProcedureCall call = procedureRegistry.getProcedureCall( method, heapInScope );
-	    procedureRegistry.registerDependency(callingState, call );
-	
-	    ContractMatch contractMatch = getContractCollection().matchContract(heapInScope);
+	    procedureRegistry.registerDependency( callingState, call );
+	    
 	    if(!contractMatch.hasMatch()) {
 	        
 	        ContractCollection contractCollection = getContractCollection();

@@ -54,6 +54,15 @@ public class MockupContractCollection implements ContractCollection {
                         throw new IllegalStateException();
                     }
                 }
+
+				@Override
+				public HeapConfiguration getPrecondition() {
+					if( matched ) {
+						return precondition;
+					}else {
+						throw new IllegalStateException();
+					}
+				}
             };
     }
 

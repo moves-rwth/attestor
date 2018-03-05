@@ -41,6 +41,11 @@ public class CounterexampleContractCollectionTest {
                     public Collection<HeapConfiguration> getPostconditions() {
                         return null;
                     }
+
+					@Override
+					public HeapConfiguration getPrecondition() {
+						return null;
+					}
                 };
             }
 

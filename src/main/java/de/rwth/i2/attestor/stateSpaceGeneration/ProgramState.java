@@ -167,4 +167,13 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 	StateSpace getContainingStateSpace();
 	void setContainingStateSpace(StateSpace containingStateSpace);
+
+	/**
+	 * determines whether this state is just about to be continued (partial state space)
+	 * This is necessary to merge duplicate applications of previously known contracts
+	 * @return
+	 */
+	boolean isContinueState();
+	void flagAsContinueState();
+	void unflagContinueState();
 }

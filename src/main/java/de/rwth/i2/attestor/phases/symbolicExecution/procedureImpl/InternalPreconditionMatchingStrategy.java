@@ -3,9 +3,7 @@ package de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.matching.PreconditionChecker;
-import de.rwth.i2.attestor.procedures.Contract;
-import de.rwth.i2.attestor.procedures.ContractMatch;
-import de.rwth.i2.attestor.procedures.PreconditionMatchingStrategy;
+import de.rwth.i2.attestor.procedures.*;
 import gnu.trove.list.array.TIntArrayList;
 
 public class InternalPreconditionMatchingStrategy implements PreconditionMatchingStrategy {
@@ -16,7 +14,8 @@ public class InternalPreconditionMatchingStrategy implements PreconditionMatchin
         PreconditionChecker checker = new PreconditionChecker(contract.getPrecondition(), heapInScope);
         if(checker.hasMatching()) {
             int[] externalReordering = getExternalReordering(checker, contract.getPrecondition(), heapInScope);
-            return new InternalContractMatch(externalReordering, contract.getPostconditions());
+            return new InternalContractMatch(	externalReordering, contract.getPrecondition(), 
+            									contract.getPostconditions()	);
         }
         return ContractMatch.NO_CONTRACT_MATCH;
     }
