@@ -39,12 +39,16 @@ public class InternalPartialStateSpace implements PartialStateSpace {
             if(partialStateSpace.containsAbortedStates()) {
                 return;
             }
+            
+            stateToContinue.flagAsContinueState();
 
             StateSpace stateSpace = stateSpaceGeneratorFactory.create(
                     call.getMethod().getBody(),
                     stateToContinue,
                     partialStateSpace
             ).generate();
+            
+            stateToContinue.unflagContinueState();
 
             List<HeapConfiguration> finalHeaps = new ArrayList<>();
             stateSpace.getFinalStates().forEach( finalState -> finalHeaps.add(finalState.getHeap()) );

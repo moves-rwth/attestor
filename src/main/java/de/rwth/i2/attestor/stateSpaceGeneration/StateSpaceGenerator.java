@@ -301,7 +301,7 @@ public class StateSpaceGenerator {
     private void addingPhase(SemanticsCommand semanticsCommand, ProgramState previousState, ProgramState state) {
 
         // performance optimization that prevents isomorphism checks against states in the state space.
-        if (!needsCanonicalization(semanticsCommand, state)) {
+        if (!needsCanonicalization(semanticsCommand, state) && ! previousState.isContinueState() ) {
             stateSpace.addState(state);
             stateExplorationStrategy.addUnexploredState(state, false);
         } else if (stateSpace.addStateIfAbsent(state)) {
