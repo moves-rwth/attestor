@@ -278,7 +278,7 @@ public class StateSpaceGenerator {
         nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
 
         // TODO
-        final boolean distanceEnabled = true;
+        final boolean distanceEnabled = false;
         if(distanceEnabled) {
             AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
             Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
