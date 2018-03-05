@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.phases.report;
 
-import java.io.*;
-import java.util.*;
-
+import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
@@ -11,24 +9,36 @@ import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
 import de.rwth.i2.attestor.main.AbstractPhase;
+import de.rwth.i2.attestor.main.PhaseRegistry;
 import de.rwth.i2.attestor.main.scene.ElementNotPresentException;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.phases.modelChecking.modelChecker.ModelCheckingResult;
 import de.rwth.i2.attestor.phases.transformers.*;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import de.rwth.i2.attestor.util.ZipUtils;
+
+import java.io.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ReportGenerationPhase extends AbstractPhase {
 
-    private StateSpace stateSpace;
     private Program program;
     private OutputSettings outputSettings;
+    private final PhaseRegistry registry;
 
-    public ReportGenerationPhase(Scene scene) {
+    public ReportGenerationPhase(PhaseRegistry registry, Scene scene) {
 
         super(scene);
+        this.registry = registry;
     }
 
     @Override
@@ -46,16 +56,28 @@ public class ReportGenerationPhase extends AbstractPhase {
             return;
         }
 
-        stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         program = getPhase(ProgramTransformer.class).getProgram();
 
+
         try {
+
             if (outputSettings.isExportGrammar()) {
                 exportGrammar();
             }
 
             if (outputSettings.isExportStateSpace()) {
-                exportStateSpace();
+                StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
+                exportStateSpace(stateSpace, "data");
+                exportCounterexamples();
+
+                String location = outputSettings.getLocationForStateSpace();
+                InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
+                File targetDirectory = new File(location + File.separator);
+                ZipUtils.unzip(zis, targetDirectory);
+
+                exportOverview();
+
+
             }
 
             if (outputSettings.isExportCustomHcs()) {
@@ -75,8 +97,22 @@ public class ReportGenerationPhase extends AbstractPhase {
         }
 
     }
-    
-	private void exportContractsForReuse() throws IOException {
+
+    private void exportCounterexamples() throws IOException {
+
+        ModelCheckingResultsTransformer transformer = getPhase(ModelCheckingResultsTransformer.class);
+        int counter = 0;
+        for(Map.Entry<LTLFormula, ModelCheckingResult> entry : transformer.getLTLResults().entrySet()) {
+            if(entry.getValue() == ModelCheckingResult.UNSATISFIED) {
+                LTLFormula formula = entry.getKey();
+                StateSpace stateSpace = transformer.getTraceOf(formula).getStateSpace();
+                exportStateSpace(stateSpace, "cex_" + String.valueOf(counter));
+                ++counter;
+            }
+        }
+    }
+
+    private void exportContractsForReuse() throws IOException {
 
         String directory = outputSettings.getDirectoryForReuseContracts();
         FileUtils.createDirectories(directory);
@@ -150,13 +186,13 @@ public class ReportGenerationPhase extends AbstractPhase {
         );
     }
 
-    private void exportStateSpace() throws IOException {
+    private void exportStateSpace(StateSpace stateSpace, String directory) throws IOException {
 
         logger.info("Exporting state space...");
         String location = outputSettings.getLocationForStateSpace();
 
         exportStateSpace(
-                location + File.separator + "data",
+                location + File.separator + directory,
                 stateSpace,
                 program
         );
@@ -165,21 +201,29 @@ public class ReportGenerationPhase extends AbstractPhase {
         for (ProgramState state : states) {
             int i = state.getStateSpaceId();
             exportHeapConfiguration(
-                    location + File.separator + "data",
+                    location + File.separator + directory,
                     "hc_" + i + ".json",
                     state.getHeap()
             );
         }
 
-        InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
-
-        File targetDirectory = new File(location + File.separator);
-        ZipUtils.unzip(zis, targetDirectory);
 
         logger.info("done. State space exported to '"
                 + location
                 + "'"
         );
+    }
+
+    private void exportOverview() throws IOException {
+
+        logger.info("Exporting overview...");
+        String location = outputSettings.getLocationForStateSpace();
+        exportOverview(
+                location + File.separator + "data"
+        );
+
+
+
     }
 
     private void exportGrammar() throws IOException {
@@ -222,6 +266,17 @@ public class ReportGenerationPhase extends AbstractPhase {
         );
         StateSpaceExporter exporter = new JsonStateSpaceExporter(writer);
         exporter.export(stateSpace, program);
+        writer.close();
+    }
+
+    private void exportOverview(String directory) throws IOException {
+
+        FileUtils.createDirectories(directory);
+        Writer writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(directory + File.separator + "overview.json"))
+        );
+        JsonOverviewExporter exporter = new JsonOverviewExporter(writer);
+        exporter.export(registry);
         writer.close();
     }
 

@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceExporter;
 import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.set.TIntSet;
@@ -70,7 +69,6 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         addNodes(jsonWriter);
         jsonWriter.endArray().key("edges").array();
         addStateSpaceEdges(jsonWriter);
-        addTransitiveEdges(jsonWriter);
         jsonWriter.endArray().endObject().endObject();
         writer.close();
     }
@@ -97,7 +95,6 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         addNodes(jsonStringer);
         jsonStringer.endArray().key("edges").array();
         addStateSpaceEdges(jsonStringer);
-        addTransitiveEdges(jsonStringer);
         jsonStringer.endArray().endObject();
 
         return jsonStringer.toString();
@@ -152,17 +149,7 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
             jsonWriter.endArray();
             final int pc = s.getProgramCounter();
             final String statement = program.getStatement(pc).toString();
-            jsonWriter.key("statement").value("(" + pc + ")" + statement);
-            jsonWriter.key("essential");
-            boolean essential = !incomingEdgesOfStates.containsKey(id)
-                    || incomingEdgesOfStates.get(id) != 1
-                    || (stateSpace.getMaterializationSuccessorsIdsOf(id).size()
-                    + stateSpace.getControlFlowSuccessorsIdsOf(id).size()) != 1;
-            if (essential) {
-                isEssentialStateId.add(id);
-            }
-            jsonWriter.value(essential);
-            jsonWriter.key("size").value(s.getHeap().countNodes());
+            jsonWriter.key("statement").value(statement);
             jsonWriter.endObject().endObject();
         }
     }
@@ -200,47 +187,4 @@ public class JsonStateSpaceExporter implements StateSpaceExporter {
         }
     }
 
-    private void addTransitiveEdges(JSONWriter jsonWriter) {
-
-        for (ProgramState s : stateSpace.getStates()) {
-            int source = s.getStateSpaceId();
-            if (isEssentialStateId.contains(source)) {
-                TIntIterator iterator = computeEssentialSuccessors(source).iterator();
-                while (iterator.hasNext()) {
-                    int target = iterator.next();
-                    jsonWriter.object().key("data").object()
-                            .key("source").value(source)
-                            .key("target").value(target)
-                            .key("type").value("transitive")
-                            .key("label").value("")
-                            .endObject().endObject();
-                }
-            }
-        }
-    }
-
-    private TIntArrayList computeEssentialSuccessors(int id) {
-
-        TIntArrayList reachableEssentials = new TIntArrayList();
-        TIntIterator iterator = stateSpace.getControlFlowSuccessorsIdsOf(id).iterator();
-        while (iterator.hasNext()) {
-            int successorId = iterator.next();
-            if (isEssentialStateId.contains(successorId)) {
-                reachableEssentials.add(successorId);
-            } else {
-                reachableEssentials.addAll(computeEssentialSuccessors(successorId));
-            }
-        }
-        iterator = stateSpace.getMaterializationSuccessorsIdsOf(id).iterator();
-        while (iterator.hasNext()) {
-            int successorId = iterator.next();
-            if (isEssentialStateId.contains(successorId)) {
-                reachableEssentials.add(successorId);
-            } else {
-                reachableEssentials.addAll(computeEssentialSuccessors(successorId));
-            }
-        }
-
-        return reachableEssentials;
-    }
 }
