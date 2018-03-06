@@ -76,8 +76,6 @@ public class ReportGenerationPhase extends AbstractPhase {
                 ZipUtils.unzip(zis, targetDirectory);
 
                 exportOverview();
-
-
             }
 
             if (outputSettings.isExportCustomHcs()) {

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
@@ -29,6 +30,8 @@ public class SettingsFileReader {
      */
     private JSONObject jsonSettings;
 
+    private String filename;
+
     /**
      * Creates a SettingsFileReader to parse a JSON file.
      *
@@ -36,9 +39,10 @@ public class SettingsFileReader {
      */
     public SettingsFileReader(String file) {
 
+        this.filename = file;
+
         Scanner scan;
         try {
-
             scan = new Scanner(new FileReader(file));
             StringBuilder str = new StringBuilder();
             while (scan.hasNext())
@@ -258,6 +262,11 @@ public class SettingsFileReader {
 
         if (jsonOutput.has("enabled")) {
             output.setNoExport(!jsonOutput.getBoolean("enabled"));
+            output.setExportStateSpace(true);
+            File file = new File(filename);
+            String path = file.getName();
+            path = path.substring(0, path.length()-5); // .json
+            output.setPathForStateSpace(path);
         }
 
         if (jsonOutput.has("stateSpace")) {
