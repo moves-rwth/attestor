@@ -281,6 +281,28 @@ public class StateSpaceGenerator {
         }
     }
 
+    private void handleSuccessorState(ProgramState state, ProgramState nextState) {
+
+        SemanticsCommand semanticsCommand = semanticsOf(nextState);
+        nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
+
+        if(needsCanonicalization(semanticsCommand, nextState)) {
+            for(ProgramState canonicalizedState : canonicalizationStrategy.canonicalize(nextState)) {
+                addCanonicalizedState(state, canonicalizedState);
+            }
+        } else if(state.isContinueState()) {
+            // if the previous state is a procedure invocation, we check whether the next state already exists; even
+            // if no canonicalization is performed.
+            addCanonicalizedState(state, nextState);
+        } else {
+            addUncanonicalizedState(state, nextState);
+        }
+    }
+
+    private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
+        return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
+    }
+
     private void addCanonicalizedState(ProgramState predecessorState, ProgramState state) {
 
         labelWithAtomicPropositions(state);
@@ -298,85 +320,6 @@ public class StateSpaceGenerator {
         stateSpace.addControlFlowTransition(predecessorState, state);
     }
 
-    private void handleSuccessorState(ProgramState state, ProgramState nextState) {
-
-        SemanticsCommand semanticsCommand = semanticsOf(nextState);
-        nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
-
-        if(needsCanonicalization(semanticsCommand, nextState)) {
-            for(ProgramState canonicalizedState : canonicalizationStrategy.canonicalize(nextState)) {
-                addCanonicalizedState(state, canonicalizedState);
-            }
-        } else if(state.isContinueState()) {
-            // if the previous state is a procedure invocation, we check whether the next state already exists; even
-            // if no canonicalization is performed.
-            addCanonicalizedState(state, nextState);
-        } else {
-            addUncanonicalizedState(state, nextState);
-        }
-
-
-/*
-        // TODO
-        final boolean distanceEnabled = true;
-        if(distanceEnabled) {
-
-            // TODO
-            if(!needsCanonicalization(semanticsCommand, nextState)) {
-                if (state.isFromTopLevelStateSpace()) {
-                    stateLabelingStrategy.computeAtomicPropositions(nextState);
-                }
-                addingPhase(semanticsCommand, state, nextState);
-                return;
-            }
-
-            AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
-            Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
-
-            for(ProgramState successor : successorStates) {
-                successor = canonicalizationPhase(semanticsCommand, successor);
-                if (state.isFromTopLevelStateSpace()) {
-                    stateLabelingStrategy.computeAtomicPropositions(successor);
-                }
-                addingPhase(semanticsCommand, state, successor);
-
-            }
-        } else {
-            nextState = canonicalizationPhase(semanticsCommand, nextState);
-            if (state.isFromTopLevelStateSpace()) {
-                stateLabelingStrategy.computeAtomicPropositions(nextState);
-            }
-            addingPhase(semanticsCommand, state, nextState);
-        }
-*/
-
-    }
-/*
-
-    private ProgramState canonicalizationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
-
-        if (needsCanonicalization(semanticsCommand, state)) {
-            state = canonicalizationStrategy.canonicalize(state);
-        }
-        return state;
-    }
-
-    private void addingPhase(SemanticsCommand semanticsCommand, ProgramState previousState, ProgramState state) {
-
-        // performance optimization that prevents isomorphism checks against states in the state space.
-        if (!needsCanonicalization(semanticsCommand, state) && ! previousState.isContinueState() ) {
-            stateSpace.addState(state);
-            stateExplorationStrategy.addUnexploredState(state, false);
-        } else if (stateSpace.addStateIfAbsent(state)) {
-            stateExplorationStrategy.addUnexploredState(state, false);
-        }
-
-        stateSpace.addControlFlowTransition(previousState, state);
-    }
-*/
-    private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
-        return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
-    }
 
 
 }
