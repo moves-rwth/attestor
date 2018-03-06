@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
@@ -21,7 +20,6 @@ public class Strategies {
     private AbortStrategy abortStrategy;
     private StateLabelingStrategy stateLabelingStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
-    private LanguageInclusionStrategy languageInclusionStrategy;
     private StateCanonicalizationStrategy stateCanonicalizationStrategy;
     private StateCanonicalizationStrategy aggressiveStateCanonicalizationStrategy;
 
@@ -107,16 +105,6 @@ public class Strategies {
     public void setStateRefinementStrategy(StateRefinementStrategy stateRefinementStrategy) {
 
         this.stateRefinementStrategy = stateRefinementStrategy;
-    }
-
-    public LanguageInclusionStrategy getLanguageInclusionStrategy() {
-
-        return languageInclusionStrategy;
-    }
-
-    public void setLanguageInclusionStrategy(LanguageInclusionStrategy languageInclusionStrategy) {
-
-        this.languageInclusionStrategy = languageInclusionStrategy;
     }
 
     public StateCanonicalizationStrategy getAggressiveStateCanonicalizationStrategy() {

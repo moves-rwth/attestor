@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies;
 
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.PostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategyWrapper;
@@ -14,15 +13,12 @@ import java.util.Set;
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
     private StateCanonicalizationStrategyWrapper canonicalizationStrategy;
-    private LanguageInclusionStrategy languageInclusionStrategy;
     private int minAbstractionDistance;
 
     public FinalStateSubsumptionPostProcessingStrategy(StateCanonicalizationStrategyWrapper canonicalizationStrategy,
-                                                       LanguageInclusionStrategy languageInclusionStrategy,
                                                        int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
-        this.languageInclusionStrategy = languageInclusionStrategy;
         this.minAbstractionDistance = minAbstractionDistance;
     }
 
@@ -62,8 +58,7 @@ public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessi
     private ProgramState addIfAbsent(ProgramState absState, Set<ProgramState> abstractedStates) {
 
         for (ProgramState state : abstractedStates) {
-            if(absState.getProgramCounter() == state.getProgramCounter()
-                    && languageInclusionStrategy.includes(absState.getHeap(), state.getHeap())) {
+            if(absState.equals(state)) {
                 return state;
             }
         }

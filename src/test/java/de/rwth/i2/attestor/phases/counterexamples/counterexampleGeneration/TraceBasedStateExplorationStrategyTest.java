@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class TraceBasedStateExplorationStrategyTest {
         };
 
 
-        StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
+        StateSubsumptionStrategy equalityStrategy = new StateSubsumptionStrategy(new MockupCanonicalizationStrategy());
         TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, equalityStrategy);
 
 
@@ -67,7 +68,7 @@ public class TraceBasedStateExplorationStrategyTest {
 
         CounterexampleTrace trace = getTrace();
 
-        StateSubsumptionStrategy equalityStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
+        StateSubsumptionStrategy equalityStrategy = new StateSubsumptionStrategy(new MockupCanonicalizationStrategy());
         TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, equalityStrategy);
 
         ProgramState state = trivialState.clone();
@@ -127,35 +128,4 @@ public class TraceBasedStateExplorationStrategyTest {
             };
     }
 
-    @Test
-    public void testInclusion() {
-
-        CounterexampleTrace trace = getTrace();
-
-        StateSubsumptionStrategy subsumptionStrategy =
-                (subsumed, subsuming) ->
-                        subsumed.equals(subsuming)
-                        || (
-                        subsumed.getProgramCounter() > 0 &&
-                        subsumed.getProgramCounter() <= subsuming.getProgramCounter()
-                        );
-
-        TraceBasedStateExplorationStrategy strategy = new TraceBasedStateExplorationStrategy(trace, subsumptionStrategy);
-
-        ProgramState state = trivialState.clone();
-        state.setProgramCounter(0);
-
-        ProgramState finalState = trivialState.clone();
-        finalState.setProgramCounter(19);
-
-        strategy.addUnexploredState(state, false);
-        assertTrue(strategy.hasUnexploredStates());
-        strategy.getNextUnexploredState();
-
-        strategy.addUnexploredState(state, false);
-        assertFalse(strategy.hasUnexploredStates());
-
-        strategy.addUnexploredState(finalState, false);
-        assertTrue(strategy.hasUnexploredStates());
-    }
 }

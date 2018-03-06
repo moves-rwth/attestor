@@ -79,7 +79,6 @@ public class StateSpaceGeneratorFactory extends SceneObject{
 
         return new FinalStateSubsumptionPostProcessingStrategy(
                 strategy,
-                scene().strategies().getLanguageInclusionStrategy(),
                 scene().options().getAbstractionDistance()
         );
     }

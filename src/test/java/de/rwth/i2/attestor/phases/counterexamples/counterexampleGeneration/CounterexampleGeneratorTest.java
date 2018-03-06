@@ -3,8 +3,6 @@ package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactoryEmpty;
 import de.rwth.i2.attestor.exampleFactories.ExampleFactorySLL;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
@@ -38,13 +36,6 @@ public class CounterexampleGeneratorTest {
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
         sceneObject.scene().strategies().setLenientCanonicalizationStrategy(factorySLL.getCanonicalization());
 
-
-        LanguageInclusionStrategy languageInclusionStrategy = new LanguageInclusionStrategyBuilder()
-                .setCanonicalizationStrategy(sceneObject.scene().strategies().getLenientCanonicalizationStrategy())
-                .setSingleStepConcretizationStrategy(sceneObject.scene().strategies().getSingleStepConcretizationStrategy())
-                .build();
-
-        sceneObject.scene().strategies().setLanguageInclusionStrategy(languageInclusionStrategy);
         hcFactory = new ExampleHcImplFactory(sceneObject);
     }
 
@@ -71,7 +62,6 @@ public class CounterexampleGeneratorTest {
                 .setTrace(trace)
                 .setCanonicalizationStrategy(factoryEmpty.getCanonicalization())
                 .setAvailableMethods(Collections.emptySet())
-                .setStateSubsumptionStrategy((subsumed, subsuming) -> subsuming.equals(subsumed))
                 .setScopeExtractorFactory(method -> null)
                 .setMaterializationStrategy(factoryEmpty.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
@@ -129,12 +119,6 @@ public class CounterexampleGeneratorTest {
         trace.addState(initialState)
                 .addState(finalState);
 
-        LanguageInclusionStrategy languageInclusionStrategy = new LanguageInclusionStrategyBuilder()
-                .setCanonicalizationStrategy(sceneObject.scene().strategies().getLenientCanonicalizationStrategy())
-                .setSingleStepConcretizationStrategy(sceneObject.scene().strategies().getSingleStepConcretizationStrategy())
-                .build();
-
-
         CounterexampleGenerator generator = CounterexampleGenerator
                 .builder()
                 .setProgram(program)
@@ -143,7 +127,6 @@ public class CounterexampleGeneratorTest {
                 .setMaterializationStrategy(factorySLL.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .setAvailableMethods(Collections.emptySet())
-                .setStateSubsumptionStrategy((subsumed, subsuming) -> languageInclusionStrategy.includes(subsumed.getHeap(), subsuming.getHeap()))
                 .setScopeExtractorFactory(method -> null)
                 .build();
 

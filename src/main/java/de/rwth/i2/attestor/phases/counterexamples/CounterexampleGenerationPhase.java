@@ -7,7 +7,6 @@ import de.rwth.i2.attestor.grammar.concretization.DefaultSingleStepConcretizatio
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategy;
 import de.rwth.i2.attestor.grammar.concretization.FullConcretizationStrategyImpl;
 import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrategy;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
@@ -80,7 +79,6 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
         CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
         MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
         StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
-        LanguageInclusionStrategy languageInclusionStrategy = scene().strategies().getLanguageInclusionStrategy();
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder()
                 .setAvailableMethods(scene().getRegisteredMethods())
@@ -90,10 +88,6 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                 .setProgram(program)
                 .setTrace(trace)
                 .setScopeExtractorFactory(method -> new DefaultScopeExtractor(this, method.getName()))
-                .setStateSubsumptionStrategy((subsumed, subsuming) ->
-                        subsumed.getProgramCounter() == subsuming.getProgramCounter()
-                        && languageInclusionStrategy.includes(subsumed.getHeap(), subsuming.getHeap())
-                )
                 .build();
 
         ProgramState badInput = generator.generate();

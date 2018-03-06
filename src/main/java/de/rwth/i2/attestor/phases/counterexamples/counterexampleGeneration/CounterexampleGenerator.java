@@ -38,6 +38,8 @@ public class CounterexampleGenerator {
 
     public ProgramState generate() {
 
+        this.stateSubsumptionStrategy = new StateSubsumptionStrategy(canonicalizationStrategy);
+
         topLevelExplorationStrategy = new TraceBasedStateExplorationStrategy(trace, stateSubsumptionStrategy);
 
         requiredFinalStatesStack.push(
@@ -218,10 +220,6 @@ public class CounterexampleGenerator {
                 throw new IllegalArgumentException("No program has been provided.");
             }
 
-            if(generator.stateSubsumptionStrategy == null) {
-                throw new IllegalArgumentException("No StateSubsumptionStrategy has been provided.");
-            }
-
             if(generator.materializationStrategy == null) {
                 throw new IllegalArgumentException("No MaterializationStrategy has been provided.");
             }
@@ -258,12 +256,6 @@ public class CounterexampleGenerator {
         public Builder setProgram(Program program) {
 
             generator.topLevelProgram = program;
-            return this;
-        }
-
-        public Builder setStateSubsumptionStrategy(StateSubsumptionStrategy stateSubsumptionStrategy) {
-
-            generator.stateSubsumptionStrategy = stateSubsumptionStrategy;
             return this;
         }
 

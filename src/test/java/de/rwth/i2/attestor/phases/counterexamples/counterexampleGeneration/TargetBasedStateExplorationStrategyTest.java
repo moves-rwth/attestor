@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class TargetBasedStateExplorationStrategyTest {
         otherState.setProgramCounter(12);
         targetStates.add(otherState);
 
-        StateSubsumptionStrategy subsumptionStrategy = (subsumed, subsuming) -> subsumed.equals(subsuming);
+        StateSubsumptionStrategy subsumptionStrategy = new StateSubsumptionStrategy(new MockupCanonicalizationStrategy());
 
         TargetBasedStateExplorationStrategy strategy = new TargetBasedStateExplorationStrategy(targetStates, subsumptionStrategy);
 

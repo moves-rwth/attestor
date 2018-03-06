@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.concretization.ConcretizationStrategyBuilder;
-import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.AbstractPhase;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 public class AbstractionPreprocessingPhase extends AbstractPhase {
-
 
     private Grammar grammar;
     private MaterializationStrategy materializationStrategy;
@@ -53,7 +51,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         setupAbortTest();
         setupStateLabeling();
         setupStateRefinement();
-        setupInclusionCheck();
     }
 
     @Override
@@ -157,18 +154,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 );
 
 
-    }
-
-    private void setupInclusionCheck() {
-
-        scene().strategies().setLanguageInclusionStrategy(
-               new LanguageInclusionStrategyBuilder()
-                       .setMinAbstractionDistance(scene().options().getAbstractionDistance())
-                       .setIndexedMode(scene().options().isIndexedMode())
-                       .setCanonicalizationStrategy(scene().strategies().getLenientCanonicalizationStrategy())
-                       .setSingleStepConcretizationStrategy(scene().strategies().getSingleStepConcretizationStrategy())
-                        .build()
-        );
     }
 
     private void setupAbortTest() {
