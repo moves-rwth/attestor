@@ -34,7 +34,6 @@ public class CounterexampleGeneratorTest {
 
         sceneObject = new MockupSceneObject();
         ExampleFactorySLL factorySLL = new ExampleFactorySLL(sceneObject);
-        sceneObject.scene().strategies().setLenientCanonicalizationStrategy(factorySLL.getCanonicalization());
 
         hcFactory = new ExampleHcImplFactory(sceneObject);
     }

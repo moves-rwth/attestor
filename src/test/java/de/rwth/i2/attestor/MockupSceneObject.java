@@ -21,7 +21,6 @@ public class MockupSceneObject extends SceneObject {
         scene().strategies().setStateLabelingStrategy(new NoStateLabelingStrategy());
         scene().strategies().setStateRefinementStrategy(new NoStateRefinementStrategy());
         scene().strategies().setMaterializationStrategy((heapConfiguration, potentialViolationPoints) -> Collections.emptySet());
-        scene().strategies().setLenientCanonicalizationStrategy(new NoCanonicalizationStrategy());
         scene().strategies().setAggressiveCanonicalizationStrategy(new NoCanonicalizationStrategy());
     }
 }

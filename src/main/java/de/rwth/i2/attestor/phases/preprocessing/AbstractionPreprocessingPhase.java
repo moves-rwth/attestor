@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.phases.preprocessing;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
-import de.rwth.i2.attestor.grammar.concretization.ConcretizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.AbstractPhase;
@@ -45,7 +44,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         checkSelectors();
 
-        setupConcretization();
         setupMaterialization();
         setupCanonicalization();
         setupAbortTest();
@@ -82,15 +80,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         }
     }
 
-    private void setupConcretization() {
-
-        ConcretizationStrategyBuilder builder = new ConcretizationStrategyBuilder();
-        builder.setGrammar(grammar);
-
-        scene().strategies().setSingleStepConcretizationStrategy(builder.buildSingleStepStrategy());
-        scene().strategies().setFullConcretizationStrategy(builder.buildFullConcretizationStrategy());
-    }
-
     private void setupMaterialization() {
 
         materializationStrategy = new MaterializationStrategyBuilder()
@@ -115,9 +104,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                         .setIndexedMode(indexedMode)
                         .setGrammar(grammar)
                         .build();
-
-        scene().strategies()
-                .setLenientCanonicalizationStrategy(lenientStrategy);
 
         StateCanonicalizationStrategy stateCanonicalizationStrategy;
         if(abstractionDistance > 0) {
@@ -145,15 +131,6 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 .setAggressiveCanonicalizationStrategy(
                         aggressiveCanonicalizationStrategy
                 );
-
-        scene().strategies()
-                .setAggressiveStateCanonicalizationStrategy(
-                        new SimpleStateCanonicalizationStrategy(
-                                aggressiveCanonicalizationStrategy
-                        )
-                );
-
-
     }
 
     private void setupAbortTest() {
