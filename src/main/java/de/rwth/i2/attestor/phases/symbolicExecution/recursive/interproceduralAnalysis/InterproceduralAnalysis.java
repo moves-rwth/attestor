@@ -1,15 +1,9 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis;
 
 
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
+
+import java.util.*;
 
 public class InterproceduralAnalysis {
 
@@ -48,7 +42,7 @@ public class InterproceduralAnalysis {
 
 		while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
 			ProcedureCall call;
-			boolean contractChanged = false;
+			boolean contractChanged;
 			if(!remainingProcedureCalls.isEmpty()) {
 				call = remainingProcedureCalls.pop();
 				StateSpace stateSpace = call.execute();

@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicaliz
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateLabelingStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupStateCanonicalizationStrategy;
 
 import java.util.Collections;
 
@@ -22,5 +23,6 @@ public class MockupSceneObject extends SceneObject {
         scene().strategies().setStateRefinementStrategy(new NoStateRefinementStrategy());
         scene().strategies().setMaterializationStrategy((heapConfiguration, potentialViolationPoints) -> Collections.emptySet());
         scene().strategies().setAggressiveCanonicalizationStrategy(new NoCanonicalizationStrategy());
+        scene().strategies().setStateCanonicalizationStrategy(new MockupStateCanonicalizationStrategy());
     }
 }
