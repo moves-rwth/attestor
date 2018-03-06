@@ -38,10 +38,6 @@ public class MarkingGenerationPhase extends AbstractPhase
     private static final Pattern visitedPattern = Pattern.compile("^visited$");
     private static final Pattern identicNeighboursPattern = Pattern.compile("^identicNeighbours$");
 
-    private static final String VISITED_MARKING_NAME = "%visited";
-    private static final String NEIGHBOURHOOD_MARKING_NAME = "%neighbourhood";
-    private static final String NEIGHBOURHOOD_INITIAL_NAME = "%initialNeighbours";
-
     private static final String VISITED = "visited";
     private static final String VISITED_BY = "visitedBy";
     private static final String IDENTIC_NEIGHBOURS = "identicNeighbours";

@@ -23,7 +23,7 @@ public class FakeStateSpaceGeneratorFactory extends StateSpaceGeneratorFactory {
 	protected StateSpaceGeneratorBuilder createBuilder() {
 		
 		return StateSpaceGenerator.builder()
-                .setCanonizationStrategy(new MockupCanonicalizationStrategy())
+                .setCanonizationStrategy(new MockupStateCanonicalizationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setPostProcessingStrategy(originalStateSpace -> {

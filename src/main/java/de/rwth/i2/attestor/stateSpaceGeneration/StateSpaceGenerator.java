@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import de.rwth.i2.attestor.grammar.admissibility.AdmissibilityStrategy;
-
 import java.util.Collection;
 
 /**
@@ -45,7 +43,8 @@ public class StateSpaceGenerator {
      * This strategy is invoked after execution of abstract transfer
      * functions in order to generalize.
      */
-    StateCanonicalizationStrategyWrapper canonicalizationStrategy;
+    StateCanonicalizationStrategy canonicalizationStrategy;
+    //StateCanonicalizationStrategyWrapper canonicalizationStrategy;
     /**
      * Strategy determining when to give up on further state space
      * exploration.
@@ -96,7 +95,7 @@ public class StateSpaceGenerator {
 
         return new StateSpaceGeneratorBuilder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
-                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy().getHeapStrategy())
+                .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
@@ -126,7 +125,7 @@ public class StateSpaceGenerator {
     /**
      * @return The strategy determining how canonicalization is performed.
      */
-    public StateCanonicalizationStrategyWrapper getCanonizationStrategy() {
+    public StateCanonicalizationStrategy getCanonizationStrategy() {
 
         return canonicalizationStrategy;
     }
@@ -272,14 +271,62 @@ public class StateSpaceGenerator {
         return materialized.isEmpty();
     }
 
+    private void labelWithAtomicPropositions(ProgramState state) {
+
+        if(state.isFromTopLevelStateSpace()) {
+            stateLabelingStrategy.computeAtomicPropositions(state);
+        }
+    }
+
+    private void addCanonicalizedState(ProgramState predecessorState, ProgramState state) {
+
+        labelWithAtomicPropositions(state);
+        if (stateSpace.addStateIfAbsent(state)) {
+            stateExplorationStrategy.addUnexploredState(state, false);
+        }
+        stateSpace.addControlFlowTransition(predecessorState, state);
+    }
+
+    private void addUncanonicalizedState(ProgramState predecessorState, ProgramState state) {
+
+        labelWithAtomicPropositions(state);
+        stateSpace.addState(state);
+        stateExplorationStrategy.addUnexploredState(state, false);
+        stateSpace.addControlFlowTransition(predecessorState, state);
+    }
+
     private void handleSuccessorState(ProgramState state, ProgramState nextState) {
 
         SemanticsCommand semanticsCommand = semanticsOf(nextState);
         nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
 
+        if(needsCanonicalization(semanticsCommand, nextState)) {
+            for(ProgramState canonicalizedState : canonicalizationStrategy.canonicalize(nextState)) {
+                addCanonicalizedState(state, canonicalizedState);
+            }
+        } else if(state.isContinueState()) {
+            // if the previous state is a procedure invocation, we check whether the next state already exists; even
+            // if no canonicalization is performed.
+            addCanonicalizedState(state, nextState);
+        } else {
+            addUncanonicalizedState(state, nextState);
+        }
+
+
+/*
         // TODO
-        final boolean distanceEnabled = false;
+        final boolean distanceEnabled = true;
         if(distanceEnabled) {
+
+            // TODO
+            if(!needsCanonicalization(semanticsCommand, nextState)) {
+                if (state.isFromTopLevelStateSpace()) {
+                    stateLabelingStrategy.computeAtomicPropositions(nextState);
+                }
+                addingPhase(semanticsCommand, state, nextState);
+                return;
+            }
+
             AdmissibilityStrategy admissibilityStrategy = new AdmissibilityStrategy(materializationStrategy);
             Collection<ProgramState> successorStates = admissibilityStrategy.getAdmissibleStatesOf(nextState);
 
@@ -298,10 +345,10 @@ public class StateSpaceGenerator {
             }
             addingPhase(semanticsCommand, state, nextState);
         }
-
+*/
 
     }
-
+/*
 
     private ProgramState canonicalizationPhase(SemanticsCommand semanticsCommand, ProgramState state) {
 
@@ -311,14 +358,6 @@ public class StateSpaceGenerator {
         return state;
     }
 
-    /**
-     * Adds a state as a successor of the given previous state to the state space
-     * provided to no subsuming state already exists.
-     *
-     * @param semanticsCommand     The statement that has been executed on previousState to get to state.
-     * @param previousState The predecessor of the given state.
-     * @param state         The state that should be added.
-     */
     private void addingPhase(SemanticsCommand semanticsCommand, ProgramState previousState, ProgramState state) {
 
         // performance optimization that prevents isomorphism checks against states in the state space.
@@ -331,7 +370,7 @@ public class StateSpaceGenerator {
 
         stateSpace.addControlFlowTransition(previousState, state);
     }
-
+*/
     private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
         return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
     }

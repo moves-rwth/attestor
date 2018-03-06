@@ -6,9 +6,11 @@ import de.rwth.i2.attestor.grammar.concretization.SingleStepConcretizationStrate
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
+// TODO cleanup unused strategies...
 public class Strategies {
 
     private SingleStepConcretizationStrategy singleStepConcretizationStrategy;
@@ -20,6 +22,8 @@ public class Strategies {
     private StateLabelingStrategy stateLabelingStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private LanguageInclusionStrategy languageInclusionStrategy;
+    private StateCanonicalizationStrategy stateCanonicalizationStrategy;
+    private StateCanonicalizationStrategy aggressiveStateCanonicalizationStrategy;
 
     protected Strategies() {
 
@@ -113,5 +117,21 @@ public class Strategies {
     public void setLanguageInclusionStrategy(LanguageInclusionStrategy languageInclusionStrategy) {
 
         this.languageInclusionStrategy = languageInclusionStrategy;
+    }
+
+    public StateCanonicalizationStrategy getAggressiveStateCanonicalizationStrategy() {
+        return aggressiveStateCanonicalizationStrategy;
+    }
+
+    public void setAggressiveStateCanonicalizationStrategy(StateCanonicalizationStrategy aggressiveStateCanonicalizationStrategy) {
+        this.aggressiveStateCanonicalizationStrategy = aggressiveStateCanonicalizationStrategy;
+    }
+
+    public StateCanonicalizationStrategy getStateCanonicalizationStrategy() {
+        return stateCanonicalizationStrategy;
+    }
+
+    public void setStateCanonicalizationStrategy(StateCanonicalizationStrategy stateCanonicalizationStrategy) {
+        this.stateCanonicalizationStrategy = stateCanonicalizationStrategy;
     }
 }

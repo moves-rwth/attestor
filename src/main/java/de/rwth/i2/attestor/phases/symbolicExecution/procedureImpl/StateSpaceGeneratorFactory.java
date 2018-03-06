@@ -45,7 +45,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                         strategies.getMaterializationStrategy()
                 )
                 .setCanonizationStrategy(
-                        strategies.getLenientCanonicalizationStrategy()
+                        strategies.getStateCanonicalizationStrategy()
                 )
                 .setAbortStrategy(
                         strategies.getAbortStrategy()

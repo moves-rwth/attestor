@@ -1,19 +1,20 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
 import de.rwth.i2.attestor.grammar.Grammar;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.concretization.ConcretizationStrategyBuilder;
 import de.rwth.i2.attestor.grammar.languageInclusion.LanguageInclusionStrategyBuilder;
+import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategyBuilder;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateLabelingStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
@@ -26,6 +27,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
 
     private Grammar grammar;
+    private MaterializationStrategy materializationStrategy;
 
     public AbstractionPreprocessingPhase(Scene scene) {
 
@@ -94,12 +96,13 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        scene().strategies().setMaterializationStrategy(
-                new MaterializationStrategyBuilder()
+        materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
                 .setIndexedMode(scene().options().isIndexedMode())
-                .build()
-        );
+                .build();
+
+        scene().strategies()
+                .setMaterializationStrategy(materializationStrategy);
     }
 
     private void setupCanonicalization() {
@@ -108,23 +111,52 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final boolean indexedMode = scene().options().isIndexedMode();
 
-        scene().strategies().setLenientCanonicalizationStrategy(
+        CanonicalizationStrategy lenientStrategy =
                 new CanonicalizationStrategyBuilder()
-                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
-                .setMinAbstractionDistance(abstractionDistance)
-                .setIndexedMode(indexedMode)
-                .setGrammar(grammar)
-                .build()
-        );
+                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                        .setMinAbstractionDistance(abstractionDistance)
+                        .setIndexedMode(indexedMode)
+                        .setGrammar(grammar)
+                        .build();
 
-        scene().strategies().setAggressiveCanonicalizationStrategy(
+        scene().strategies()
+                .setLenientCanonicalizationStrategy(lenientStrategy);
+
+        StateCanonicalizationStrategy stateCanonicalizationStrategy;
+        if(abstractionDistance > 0) {
+            stateCanonicalizationStrategy = new AdmissibleStateCanonicalizationStrategy(
+                    lenientStrategy, materializationStrategy
+            );
+        } else {
+            stateCanonicalizationStrategy = new SimpleStateCanonicalizationStrategy(
+                    lenientStrategy
+            );
+        }
+
+        scene().strategies()
+                .setStateCanonicalizationStrategy(stateCanonicalizationStrategy);
+
+        CanonicalizationStrategy aggressiveCanonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                         .setMinAbstractionDistance(0)
                         .setIndexedMode(indexedMode)
                         .setGrammar(grammar)
-                        .build()
-        );
+                        .build();
+
+        scene().strategies()
+                .setAggressiveCanonicalizationStrategy(
+                        aggressiveCanonicalizationStrategy
+                );
+
+        scene().strategies()
+                .setAggressiveStateCanonicalizationStrategy(
+                        new SimpleStateCanonicalizationStrategy(
+                                aggressiveCanonicalizationStrategy
+                        )
+                );
+
+
     }
 
     private void setupInclusionCheck() {

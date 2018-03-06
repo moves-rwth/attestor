@@ -22,9 +22,12 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
                                          CanonicalizationStrategy canonicalizationStrategy,
                                          CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
 
-        super(availableSelectorLabelNames, abortStrategy, materializationStrategy,
-                canonicalizationStrategy, aggressiveCanonicalizationStrategy);
-
+        super(availableSelectorLabelNames,
+                abortStrategy,
+                materializationStrategy,
+                canonicalizationStrategy,
+                aggressiveCanonicalizationStrategy
+        );
     }
 
     @Override

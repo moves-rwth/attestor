@@ -17,7 +17,7 @@ public abstract  class AbstractMarkingGenerator {
     protected final AbortStrategy abortStrategy;
     protected final MaterializationStrategy materializationStrategy;
     protected final CanonicalizationStrategy canonicalizationStrategy;
-    protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
+    protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy; // TODO remove
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                     AbortStrategy abortStrategy,
@@ -56,7 +56,11 @@ public abstract  class AbstractMarkingGenerator {
                 .setProgram(program)
                 .addInitialStates(initialStates)
                 .setAbortStrategy(abortStrategy)
-                .setCanonizationStrategy(canonicalizationStrategy)
+                .setCanonizationStrategy(
+                        new SimpleStateCanonicalizationStrategy(
+                                canonicalizationStrategy
+                        )
+                )
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setMaterializationStrategy(materializationStrategy)
                 .setStateCounter(new NoStateCounter())

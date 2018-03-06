@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.heapConfigurationPair.HeapConfigurationPair;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.SimpleStateCanonicalizationStrategy;
 import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
@@ -119,7 +120,9 @@ public class CounterexampleGenerator {
                 .setStateSpaceSupplier(getStateSpaceSupplier())
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setAbortStrategy(stateSpace -> {})
-                .setCanonizationStrategy(new NoCanonicalizationStrategy())
+                .setCanonizationStrategy(
+                        new SimpleStateCanonicalizationStrategy(new NoCanonicalizationStrategy())
+                )
                 .setStateLabelingStrategy(state -> {})
                 .setStateCounter(states -> {})
                 .setPostProcessingStrategy(new NoPostProcessingStrategy())

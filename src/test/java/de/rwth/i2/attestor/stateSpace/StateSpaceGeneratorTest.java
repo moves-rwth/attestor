@@ -12,8 +12,8 @@ import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefine
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupCanonicalizationStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMaterializationStrategy;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupStateCanonicalizationStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupStateLabellingStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.*;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.IntConstant;
@@ -46,7 +46,7 @@ public class StateSpaceGeneratorTest {
         stateSpaceGeneratorBuilder = StateSpaceGenerator.builder()
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
-                .setCanonizationStrategy(new MockupCanonicalizationStrategy())
+                .setCanonizationStrategy(new MockupStateCanonicalizationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setStateCounter(s -> {

@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
 
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 
 import java.util.ArrayList;
@@ -165,9 +164,9 @@ public class StateSpaceGeneratorBuilder {
      * @param canonicalizationStrategy The strategy used for canonicalization.
      * @return The builder.
      */
-    public StateSpaceGeneratorBuilder setCanonizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+    public StateSpaceGeneratorBuilder setCanonizationStrategy(StateCanonicalizationStrategy canonicalizationStrategy) {
 
-        generator.canonicalizationStrategy = new StateCanonicalizationStrategyWrapper(canonicalizationStrategy);
+        generator.canonicalizationStrategy = canonicalizationStrategy;
         return this;
     }
 

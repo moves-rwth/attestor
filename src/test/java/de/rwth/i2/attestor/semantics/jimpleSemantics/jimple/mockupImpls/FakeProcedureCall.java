@@ -1,12 +1,5 @@
 package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
 import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis.ProcedureCall;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
@@ -17,6 +10,8 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerationAbortedException;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
+
+import static org.junit.Assert.fail;
 
 public class FakeProcedureCall implements ProcedureCall {
 
@@ -34,7 +29,7 @@ public class FakeProcedureCall implements ProcedureCall {
            return StateSpaceGenerator.builder()
                     .addInitialState(initialState)
                     .setProgram(method.getBody())
-                    .setCanonizationStrategy(new MockupCanonicalizationStrategy())
+                    .setCanonizationStrategy(new MockupStateCanonicalizationStrategy())
                     .setMaterializationStrategy(new MockupMaterializationStrategy())
                     .setAbortStrategy(new MockupAbortStrategy())
                     .setPostProcessingStrategy(originalStateSpace -> {
