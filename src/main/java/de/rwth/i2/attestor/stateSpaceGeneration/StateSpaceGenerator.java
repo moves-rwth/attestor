@@ -209,7 +209,10 @@ public class StateSpaceGenerator {
             }
         }
 
+        /* TODO: I conjecture that this is not necessary anymore, but this requires further evaluation.
         postProcessingStrategy.process(stateSpace);
+        return stateSpace;
+        */
         totalStatesCounter.addStates(stateSpace.size());
         return stateSpace;
     }
