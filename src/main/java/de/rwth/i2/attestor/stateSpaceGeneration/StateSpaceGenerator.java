@@ -288,14 +288,14 @@ public class StateSpaceGenerator {
 
         if(needsCanonicalization(semanticsCommand, nextState)) {
             for(ProgramState canonicalizedState : canonicalizationStrategy.canonicalize(nextState)) {
-                addCanonicalizedState(state, canonicalizedState);
+                addOrMergeState(state, canonicalizedState);
             }
         } else if(state.isContinueState()) {
-            // if the previous state is a procedure invocation, we check whether the next state already exists; even
-            // if no canonicalization is performed.
-            addCanonicalizedState(state, nextState);
+            // if the previous state is a procedure invocation continued during fixpoint iteration, 
+        	//we check whether the next state already exists; even if no canonicalization is performed.
+            addOrMergeState(state, nextState);
         } else {
-            addUncanonicalizedState(state, nextState);
+            addState(state, nextState);
         }
     }
 
@@ -303,7 +303,14 @@ public class StateSpaceGenerator {
         return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
     }
 
-    private void addCanonicalizedState(ProgramState predecessorState, ProgramState state) {
+    /**
+     * If a isomorphic state is already present, a transition to this isomorphic state is added and the
+     * state is discareded.
+     * Otherwise the state is added to the stateSpace and marked as unexplored. A transition is then added to this state.
+     * @param predecessorState the state from which a transition is drawn
+     * @param state the state to which a transition is drawn (or to a isomorphic state)
+     */
+    private void addOrMergeState(ProgramState predecessorState, ProgramState state) {
 
         labelWithAtomicPropositions(state);
         if (stateSpace.addStateIfAbsent(state)) {
@@ -312,7 +319,14 @@ public class StateSpaceGenerator {
         stateSpace.addControlFlowTransition(predecessorState, state);
     }
 
-    private void addUncanonicalizedState(ProgramState predecessorState, ProgramState state) {
+    /**
+     * The state is added to the stateSpace and marked as unexplored. Also, a transition
+     * form the predecessorState to the state is a added.
+     * In particular, there is no check whether a isomorphic state already exists
+     * @param predecessorState the state from which a transition is drawn
+     * @param state the state to which a transition is drawn
+     */
+    private void addState(ProgramState predecessorState, ProgramState state) {
 
         labelWithAtomicPropositions(state);
         stateSpace.addState(state);
