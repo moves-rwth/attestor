@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
 import de.rwth.i2.attestor.io.FileUtils;
-import de.rwth.i2.attestor.io.HttpExporter;
 import org.json.JSONStringer;
 import org.json.JSONWriter;
 
@@ -39,23 +38,6 @@ public class JsonGrammarExporter implements GrammarExporter {
         }
 
 
-    }
-
-    @Override
-    public void exportForReport(int bid, HttpExporter httpExporter, Grammar grammar) throws IOException {
-
-        httpExporter.sendGrammarSummaryRequest(bid, exportGrammar(grammar));
-
-        int ntCount = 1;
-        for (Nonterminal nt : grammar.getAllLeftHandSides()) {
-            int count = 1;
-            for (HeapConfiguration hc : grammar.getRightHandSidesFor(nt)) {
-                String hcJson = new JsonExtendedHeapConfigurationExporter().exportForReport(hc);
-                httpExporter.sendRuleHCRequest(bid, nt.getLabel() + ntCount + "Rule" + count + ".json", hcJson);
-                count++;
-            }
-            ntCount++;
-        }
     }
 
     private void exportGrammar(Writer writer, Grammar grammar) {

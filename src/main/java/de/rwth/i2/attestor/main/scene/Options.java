@@ -60,7 +60,7 @@ public class Options {
     /**
      * Determines if post-processing is applied to generated state spaces.
      */
-    private boolean postProcessingEnabled = true;
+    private boolean postProcessingEnabled = false;
     /**
      * If enabled, external nodes of rules are collapsed before applying abstraction
      */
