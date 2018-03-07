@@ -44,8 +44,11 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                 .setMaterializationStrategy(
                         strategies.getMaterializationStrategy()
                 )
+                .setStateRectificationStrategy(
+                        strategies.getStateRectificationStrategy()
+                )
                 .setCanonizationStrategy(
-                        strategies.getStateCanonicalizationStrategy()
+                        new StateCanonicalizationStrategy(strategies.getCanonicalizationStrategy())
                 )
                 .setAbortStrategy(
                         strategies.getAbortStrategy()
@@ -71,7 +74,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
             return new NoPostProcessingStrategy();
         }
 
-        StateCanonicalizationStrategyWrapper strategy = new StateCanonicalizationStrategyWrapper(aggressiveStrategy);
+        StateCanonicalizationStrategy strategy = new StateCanonicalizationStrategy(aggressiveStrategy);
 
         if (scene().options().isIndexedMode()) {
             return new AggressivePostProcessingStrategy(strategy, scene().options().getAbstractionDistance());

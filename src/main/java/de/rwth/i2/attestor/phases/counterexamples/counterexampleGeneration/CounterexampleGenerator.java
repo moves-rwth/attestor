@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.counterexamples.counterexampleGeneration.heapConfigurationPair.HeapConfigurationPair;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoCanonicalizationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.SimpleStateCanonicalizationStrategy;
 import de.rwth.i2.attestor.procedures.AbstractMethodExecutor;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.MethodExecutor;
@@ -25,6 +24,7 @@ public class CounterexampleGenerator {
     private StateSubsumptionStrategy stateSubsumptionStrategy;
     private MaterializationStrategy materializationStrategy;
     private CanonicalizationStrategy canonicalizationStrategy;
+    private StateRectificationStrategy rectificationStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
     private Function<Method, ScopeExtractor> scopeExtractorFactory;
     private TraceBasedStateExplorationStrategy topLevelExplorationStrategy;
@@ -118,12 +118,13 @@ public class CounterexampleGenerator {
                 .setProgram(program)
                 .addInitialState(initialState)
                 .setMaterializationStrategy(materializationStrategy)
+                .setStateRectificationStrategy(rectificationStrategy)
                 .setStateExplorationStrategy(stateExplorationStrategy)
                 .setStateSpaceSupplier(getStateSpaceSupplier())
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setAbortStrategy(stateSpace -> {})
                 .setCanonizationStrategy(
-                        new SimpleStateCanonicalizationStrategy(new NoCanonicalizationStrategy())
+                        new StateCanonicalizationStrategy(new NoCanonicalizationStrategy())
                 )
                 .setStateLabelingStrategy(state -> {})
                 .setStateCounter(states -> {})
@@ -228,6 +229,10 @@ public class CounterexampleGenerator {
                 throw new IllegalArgumentException("No CanonicalizationStrategy has been provided.");
             }
 
+            if(generator.rectificationStrategy == null) {
+                throw new IllegalArgumentException("No StateRectificationStrategy has been provided.");
+            }
+
             if(generator.stateRefinementStrategy == null) {
                 throw new IllegalArgumentException("No StateRefinementStrategy has been provided.");
             }
@@ -280,6 +285,12 @@ public class CounterexampleGenerator {
         public Builder setScopeExtractorFactory(Function<Method, ScopeExtractor> scopeExtractorFactory) {
 
             generator.scopeExtractorFactory = scopeExtractorFactory;
+            return this;
+        }
+
+        public Builder setRectificationStrategy(StateRectificationStrategy rectificationStrategy) {
+
+            generator.rectificationStrategy = rectificationStrategy;
             return this;
         }
     }

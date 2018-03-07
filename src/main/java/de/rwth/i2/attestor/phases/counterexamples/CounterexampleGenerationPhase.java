@@ -22,6 +22,7 @@ import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRectificationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 import java.util.LinkedHashMap;
@@ -76,13 +77,15 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
 
         Program program = getPhase(ProgramTransformer.class).getProgram();
 
-        CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
+        CanonicalizationStrategy canonicalizationStrategy = scene().strategies().getCanonicalizationStrategy();
         MaterializationStrategy materializationStrategy = scene().strategies().getMaterializationStrategy();
         StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
+        StateRectificationStrategy stateRectificationStrategy = scene().strategies().getStateRectificationStrategy();
 
         CounterexampleGenerator generator = CounterexampleGenerator.builder()
                 .setAvailableMethods(scene().getRegisteredMethods())
                 .setCanonicalizationStrategy(canonicalizationStrategy)
+                .setRectificationStrategy(stateRectificationStrategy)
                 .setMaterializationStrategy(materializationStrategy)
                 .setStateRefinementStrategy(stateRefinementStrategy)
                 .setProgram(program)

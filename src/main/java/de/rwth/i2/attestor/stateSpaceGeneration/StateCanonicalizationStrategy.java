@@ -1,8 +1,24 @@
 package de.rwth.i2.attestor.stateSpaceGeneration;
 
-import java.util.Collection;
+import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 
-public interface StateCanonicalizationStrategy {
+public class StateCanonicalizationStrategy {
 
-    Collection<ProgramState> canonicalize(ProgramState state);
+    private CanonicalizationStrategy heapStrategy;
+
+    public StateCanonicalizationStrategy(CanonicalizationStrategy strategy) {
+
+        this.heapStrategy = strategy;
+    }
+
+    public CanonicalizationStrategy getHeapStrategy() {
+        return heapStrategy;
+    }
+
+    public ProgramState canonicalize(ProgramState state) {
+
+        return state.shallowCopyWithUpdateHeap(
+                heapStrategy.canonicalize(state.getHeap())
+        );
+    }
 }

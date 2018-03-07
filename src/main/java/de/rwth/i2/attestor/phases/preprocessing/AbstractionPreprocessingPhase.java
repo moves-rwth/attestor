@@ -12,8 +12,8 @@ import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
 import de.rwth.i2.attestor.refinement.BundledStateRefinementStrategy;
 import de.rwth.i2.attestor.refinement.garbageCollection.GarbageCollector;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateMaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.Set;
 public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private Grammar grammar;
-    private MaterializationStrategy materializationStrategy;
 
     public AbstractionPreprocessingPhase(Scene scene) {
 
@@ -45,7 +44,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         checkSelectors();
 
         setupMaterialization();
-        setupCanonicalization();
+        setupAbstractDomain();
         setupAbortTest();
         setupStateLabeling();
         setupStateRefinement();
@@ -82,22 +81,33 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        materializationStrategy = new MaterializationStrategyBuilder()
+        final int abstractionDistance = scene().options().getAbstractionDistance();
+        final boolean indexedMode = scene().options().isIndexedMode();
+
+        MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
-                .setIndexedMode(scene().options().isIndexedMode())
+                .setIndexedMode(indexedMode)
                 .build();
 
-        scene().strategies()
-                .setMaterializationStrategy(materializationStrategy);
+        if(abstractionDistance == 0) {
+            scene().strategies().setMaterializationStrategy(materializationStrategy);
+            scene().strategies().setStateRectificationStrategy(new NoRectificationStrategy());
+        } else {
+            scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
+            scene().strategies().setStateRectificationStrategy(
+                    new AdmissibleStateRectificationStrategy(new StateMaterializationStrategy(materializationStrategy))
+            );
+        }
+
     }
 
-    private void setupCanonicalization() {
+    private void setupAbstractDomain() {
 
         final int abstractionDistance = scene().options().getAbstractionDistance();
         final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final boolean indexedMode = scene().options().isIndexedMode();
 
-        CanonicalizationStrategy lenientStrategy =
+        CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                         .setMinAbstractionDistance(abstractionDistance)
@@ -105,19 +115,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                         .setGrammar(grammar)
                         .build();
 
-        StateCanonicalizationStrategy stateCanonicalizationStrategy;
-        if(abstractionDistance > 0) {
-            stateCanonicalizationStrategy = new AdmissibleStateCanonicalizationStrategy(
-                    lenientStrategy, materializationStrategy
-            );
-        } else {
-            stateCanonicalizationStrategy = new SimpleStateCanonicalizationStrategy(
-                    lenientStrategy
-            );
-        }
-
         scene().strategies()
-                .setStateCanonicalizationStrategy(stateCanonicalizationStrategy);
+                .setCanonicalizationStrategy(canonicalizationStrategy);
 
         CanonicalizationStrategy aggressiveCanonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()

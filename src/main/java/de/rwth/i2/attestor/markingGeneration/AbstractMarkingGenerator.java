@@ -57,7 +57,7 @@ public abstract  class AbstractMarkingGenerator {
                 .addInitialStates(initialStates)
                 .setAbortStrategy(abortStrategy)
                 .setCanonizationStrategy(
-                        new SimpleStateCanonicalizationStrategy(
+                        new StateCanonicalizationStrategy(
                                 canonicalizationStrategy
                         )
                 )

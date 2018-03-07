@@ -99,6 +99,10 @@ public class StateSpaceGeneratorBuilder {
             throw new IllegalStateException("StateSpaceGenerator: No final state strategy.");
         }
 
+        if(generator.stateRectificationStrategy == null) {
+            throw new IllegalStateException("StateSpaceGenerator: No admissibility strategy.");
+        }
+
         if(initialStateSpace == null) {
             generator.stateSpace = generator.stateSpaceSupplier.get();
         } else {
@@ -167,6 +171,12 @@ public class StateSpaceGeneratorBuilder {
     public StateSpaceGeneratorBuilder setCanonizationStrategy(StateCanonicalizationStrategy canonicalizationStrategy) {
 
         generator.canonicalizationStrategy = canonicalizationStrategy;
+        return this;
+    }
+
+    public StateSpaceGeneratorBuilder setStateRectificationStrategy(StateRectificationStrategy stateRectificationStrategy) {
+
+        generator.stateRectificationStrategy = stateRectificationStrategy;
         return this;
     }
 

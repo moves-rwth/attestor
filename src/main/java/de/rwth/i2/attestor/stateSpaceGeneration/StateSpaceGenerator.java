@@ -44,7 +44,10 @@ public class StateSpaceGenerator {
      * functions in order to generalize.
      */
     StateCanonicalizationStrategy canonicalizationStrategy;
-    //StateCanonicalizationStrategyWrapper canonicalizationStrategy;
+    /**
+     * TODO strategy to rectify a state
+      */
+    StateRectificationStrategy stateRectificationStrategy;
     /**
      * Strategy determining when to give up on further state space
      * exploration.
@@ -96,6 +99,7 @@ public class StateSpaceGenerator {
         return new StateSpaceGeneratorBuilder()
                 .setAbortStrategy(stateSpaceGenerator.getAbortStrategy())
                 .setCanonizationStrategy(stateSpaceGenerator.getCanonizationStrategy())
+                .setStateRectificationStrategy(stateSpaceGenerator.getStateRectificationStrategy())
                 .setMaterializationStrategy(stateSpaceGenerator.getMaterializationStrategy().getHeapStrategy())
                 .setStateLabelingStrategy(stateSpaceGenerator.getStateLabelingStrategy())
                 .setStateRefinementStrategy(stateSpaceGenerator.getStateRefinementStrategy())
@@ -128,6 +132,14 @@ public class StateSpaceGenerator {
     public StateCanonicalizationStrategy getCanonizationStrategy() {
 
         return canonicalizationStrategy;
+    }
+
+    /**
+     * @return The strategy used to rectify states.
+     */
+    public StateRectificationStrategy getStateRectificationStrategy() {
+
+        return stateRectificationStrategy;
     }
 
     /**
@@ -287,15 +299,20 @@ public class StateSpaceGenerator {
         nextState = stateRefinementStrategy.refine(semanticsCommand, nextState);
 
         if(needsCanonicalization(semanticsCommand, nextState)) {
-            for(ProgramState canonicalizedState : canonicalizationStrategy.canonicalize(nextState)) {
-                addOrMergeState(state, canonicalizedState);
+            ProgramState abstractedState = canonicalizationStrategy.canonicalize(nextState);
+            for(ProgramState rectifiedState : stateRectificationStrategy.rectify(abstractedState)) {
+                addOrMergeState(state, rectifiedState);
             }
         } else if(state.isContinueState()) {
             // if the previous state is a procedure invocation continued during fixpoint iteration, 
         	//we check whether the next state already exists; even if no canonicalization is performed.
-            addOrMergeState(state, nextState);
+            for(ProgramState rectifiedState : stateRectificationStrategy.rectify(nextState)) {
+                addOrMergeState(state, rectifiedState);
+            }
         } else {
-            addState(state, nextState);
+            for(ProgramState rectifiedState : stateRectificationStrategy.rectify(nextState)) {
+                addState(state, rectifiedState);
+            }
         }
     }
 

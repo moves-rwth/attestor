@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies;
 
 import de.rwth.i2.attestor.stateSpaceGeneration.PostProcessingStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategyWrapper;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.LinkedHashMap;
@@ -12,10 +12,10 @@ import java.util.Set;
 
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
-    private StateCanonicalizationStrategyWrapper canonicalizationStrategy;
+    private StateCanonicalizationStrategy canonicalizationStrategy;
     private int minAbstractionDistance;
 
-    public FinalStateSubsumptionPostProcessingStrategy(StateCanonicalizationStrategyWrapper canonicalizationStrategy,
+    public FinalStateSubsumptionPostProcessingStrategy(StateCanonicalizationStrategy canonicalizationStrategy,
                                                        int minAbstractionDistance) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
