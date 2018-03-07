@@ -11,8 +11,6 @@ import de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAna
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.FakeProcedureCall;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMethodExecutor;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.ProcedureRegistryStub;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.InvokeHelper;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.invoke.StaticInvokeHelper;

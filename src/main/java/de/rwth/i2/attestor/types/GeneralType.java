@@ -128,11 +128,7 @@ public final class GeneralType implements Type {
 
         public Type get(String name) {
 
-            Type result = knownTypes.get(name);
-            if (result == null) {
-                result = new GeneralType(name);
-                knownTypes.put(name, result);
-            }
+            Type result = knownTypes.computeIfAbsent(name, GeneralType::new);
             return result;
         }
     }

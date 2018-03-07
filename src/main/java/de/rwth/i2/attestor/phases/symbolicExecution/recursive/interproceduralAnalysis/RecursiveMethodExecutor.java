@@ -2,8 +2,9 @@ package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAn
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.InternalContract;
-import de.rwth.i2.attestor.phases.symbolicExecution.recursive.InternalProcedureCall;
-import de.rwth.i2.attestor.procedures.*;
+import de.rwth.i2.attestor.procedures.ContractCollection;
+import de.rwth.i2.attestor.procedures.Method;
+import de.rwth.i2.attestor.procedures.ScopeExtractor;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

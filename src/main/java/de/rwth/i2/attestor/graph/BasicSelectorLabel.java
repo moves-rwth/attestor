@@ -56,11 +56,7 @@ public class BasicSelectorLabel implements SelectorLabel {
 
         public SelectorLabel get(String name) {
 
-            SelectorLabel result = knownSelectorLabels.get(name);
-            if (result == null) {
-                result = new BasicSelectorLabel(name);
-                knownSelectorLabels.put(name, result);
-            }
+            SelectorLabel result = knownSelectorLabels.computeIfAbsent(name, BasicSelectorLabel::new);
             return result;
         }
 

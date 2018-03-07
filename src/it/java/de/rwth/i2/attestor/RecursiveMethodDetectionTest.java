@@ -22,29 +22,24 @@ public class RecursiveMethodDetectionTest {
 
         SceneObject sceneObject = new MockupSceneObject();
 
-        try {
-            String classpath = "src\\test\\resources";
-            new SootInitializer().initialize(classpath);
+        String classpath = "src\\test\\resources";
+        new SootInitializer().initialize(classpath);
 
 
-            Options.v().parse(new String[]{"-p", "jb", "use-original-names:true"});
+        Options.v().parse(new String[]{"-p", "jb", "use-original-names:true"});
 
             /*
              This enables jimple annotations to find dead variables.
              Since dead variables may prevent abstraction, we need this information
              in order to delete them manually.
              */
-            Options.v().parse(new String[]{"-p", "jap.lvtagger", "enabled:true"});
+        Options.v().parse(new String[]{"-p", "jap.lvtagger", "enabled:true"});
 
-            Options.v().parse(new String[]{"-pp", "-keep-line-number", "-f", "jimple", "RecursionDetectionInput"});
-            Scene.v().loadNecessaryClasses();
+        Options.v().parse(new String[]{"-pp", "-keep-line-number", "-f", "jimple", "RecursionDetectionInput"});
+        Scene.v().loadNecessaryClasses();
 
-            PackManager.v().runPacks();
+        PackManager.v().runPacks();
 
-
-        } catch (Exception e) {
-            throw e;
-        }
 
         SootClass sootClass = Scene.v().getSootClass("RecursionDetectionInput");
         Scene.v().setMainClass(sootClass);

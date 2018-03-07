@@ -76,9 +76,7 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
         Collection<HeapConfiguration> result = new LinkedHashSet<>();
         stateSpace.getStates().forEach(
-                state -> {
-                    result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()));
-                }
+                state -> result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()))
         );
         return result;
     }

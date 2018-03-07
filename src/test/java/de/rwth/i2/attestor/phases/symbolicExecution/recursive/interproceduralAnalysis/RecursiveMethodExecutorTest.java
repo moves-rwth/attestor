@@ -1,16 +1,5 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.*;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.procedures.Contract;
@@ -18,6 +7,15 @@ import de.rwth.i2.attestor.procedures.ContractCollection;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.procedures.ScopeExtractor;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class RecursiveMethodExecutorTest {
 	
