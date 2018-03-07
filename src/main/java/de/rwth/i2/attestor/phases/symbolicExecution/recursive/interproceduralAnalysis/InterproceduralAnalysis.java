@@ -5,6 +5,17 @@ import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.*;
 
+/**
+ * This class is responsible of computing the fixpoint of the interprocedural analysis
+ * in case there are recursive functions.
+ * It keeps track of any procedure calls to recursive methods that have not yet been analysed.
+ * Furthermore it stores the dependencies between partialStateSpaces and procedureCalls so that
+ * it can continue those stateSpaces whenever it has found new contracts for a procedureCall.
+ * 
+ * see {@link ProcedureRegistry} for the interaction between the semantics and this class.
+ * @author Hannah
+ *
+ */
 public class InterproceduralAnalysis {
 
 	Deque<ProcedureCall> remainingProcedureCalls = new ArrayDeque<>();
@@ -38,6 +49,11 @@ public class InterproceduralAnalysis {
 		}
 	}
 
+	/**
+	 * the fixpoint iteration
+	 * (note that this routine may need to be stopped if it is not able to find
+	 * a fixpoint. 
+	 */
 	public void run() {
 
 		while(!remainingProcedureCalls.isEmpty() || !remainingPartialStateSpaces.isEmpty()) {
@@ -61,6 +77,11 @@ public class InterproceduralAnalysis {
 		}
 	}
 
+	/**
+	 * enqueues the partial stateSpace depending on the given call for continued analysis.
+	 * @param call the procedure call for which the contract has changed
+	 * (i.e. for which more postconditions have been discovered)
+	 */ 
 	void notifyDependencies(ProcedureCall call) {
 
 		Set<PartialStateSpace> dependencies = callingDependencies.getOrDefault(call, Collections.emptySet());
