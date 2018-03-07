@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.scene.DefaultScene;
 import de.rwth.i2.attestor.phases.transformers.CounterexampleTransformer;
+import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -85,6 +86,38 @@ public abstract class AbstractAttestor {
 
     public boolean hasAllLTLSatisfied() {
         return registry.getMostRecentPhase(ModelCheckingResultsTransformer.class).hasAllLTLSatisfied();
+    }
+
+    public Map<String, Double> getExecutionTimes() {
+
+
+        Map<String, Double> result = new HashMap<>();
+        double elapsedVerify = 0;
+        double elapsedTotal = 0;
+        for (AbstractPhase p : registry.getPhases()) {
+            double elapsed = p.getElapsedTime();
+            elapsedTotal += elapsed;
+            if (p.isVerificationPhase()) {
+                elapsedVerify += elapsed;
+            }
+            result.put(p.getName(), elapsed);
+        }
+        result.put("Verification", elapsedVerify);
+        result.put("Total", elapsedTotal);
+
+        return result;
+    }
+
+    public String getInputName() {
+
+        return registry.getMostRecentPhase(InputSettingsTransformer.class)
+                .getInputSettings().getName();
+    }
+
+    public String getSpecificationDescription() {
+
+        return registry.getMostRecentPhase(InputSettingsTransformer.class)
+                .getInputSettings().getSpecificationDescription();
     }
 
     private void printVersion() {
