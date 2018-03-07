@@ -83,20 +83,21 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         final int abstractionDistance = scene().options().getAbstractionDistance();
         final boolean indexedMode = scene().options().isIndexedMode();
+        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
                 .setIndexedMode(indexedMode)
                 .build();
 
-        if(abstractionDistance == 0) {
-            scene().strategies().setMaterializationStrategy(materializationStrategy);
-            scene().strategies().setStateRectificationStrategy(new NoRectificationStrategy());
-        } else {
+        if(verifyCounterexamples && abstractionDistance == 1){
             scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
             scene().strategies().setStateRectificationStrategy(
                     new AdmissibleStateRectificationStrategy(new StateMaterializationStrategy(materializationStrategy))
             );
+        } else {
+            scene().strategies().setMaterializationStrategy(materializationStrategy);
+            scene().strategies().setStateRectificationStrategy(new NoRectificationStrategy());
         }
 
     }

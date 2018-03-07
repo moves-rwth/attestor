@@ -240,6 +240,9 @@ public class SettingsFileReader {
                 case "collapseRules":
                     options.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
                     break;
+                case "verifyCounterexamples":
+                    options.setVerifyCounterexamples(jsonOptions.getBoolean(key));
+                    break;
                 default:
                     logger.error("Ignoring unknown option: " + key);
                     break;
