@@ -2,10 +2,7 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls;
 
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl.StateSpaceGeneratorFactory;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateCounter;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGenerator;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpaceGeneratorBuilder;
 
@@ -24,6 +21,7 @@ public class FakeStateSpaceGeneratorFactory extends StateSpaceGeneratorFactory {
 		
 		return StateSpaceGenerator.builder()
                 .setCanonizationStrategy(new MockupStateCanonicalizationStrategy())
+				.setStateRectificationStrategy(new NoRectificationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setPostProcessingStrategy(originalStateSpace -> {

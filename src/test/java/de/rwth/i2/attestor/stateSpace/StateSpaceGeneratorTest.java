@@ -6,10 +6,7 @@ import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.ProgramImpl;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.DepthFirstStateExplorationStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoPostProcessingStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoStateRefinementStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.TerminalStatementFinalStateStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupAbortStrategy;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.mockupImpls.MockupMaterializationStrategy;
@@ -47,6 +44,7 @@ public class StateSpaceGeneratorTest {
                 .setStateLabelingStrategy(new MockupStateLabellingStrategy())
                 .setAbortStrategy(new MockupAbortStrategy())
                 .setCanonizationStrategy(new MockupStateCanonicalizationStrategy())
+                .setStateRectificationStrategy(new NoRectificationStrategy())
                 .setMaterializationStrategy(new MockupMaterializationStrategy())
                 .setStateRefinementStrategy(new NoStateRefinementStrategy())
                 .setStateCounter(s -> {

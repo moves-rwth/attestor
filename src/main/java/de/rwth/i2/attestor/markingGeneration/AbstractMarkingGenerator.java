@@ -18,18 +18,21 @@ public abstract  class AbstractMarkingGenerator {
     protected final MaterializationStrategy materializationStrategy;
     protected final CanonicalizationStrategy canonicalizationStrategy;
     protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy; // TODO remove
+    protected final StateRectificationStrategy stateRectificationStrategy;
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,
                                     AbortStrategy abortStrategy,
                                     MaterializationStrategy materializationStrategy,
                                     CanonicalizationStrategy canonicalizationStrategy,
-                                    CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
+                                    CanonicalizationStrategy aggressiveCanonicalizationStrategy,
+                                    StateRectificationStrategy stateRectificationStrategy) {
 
         this.availableSelectorLabelNames = availableSelectorLabelNames;
         this.abortStrategy = abortStrategy;
         this.materializationStrategy = materializationStrategy;
         this.canonicalizationStrategy = canonicalizationStrategy;
         this.aggressiveCanonicalizationStrategy = aggressiveCanonicalizationStrategy;
+        this.stateRectificationStrategy = stateRectificationStrategy;
     }
 
     protected abstract List<ProgramState> placeInitialMarkings(ProgramState initialState);
@@ -63,6 +66,7 @@ public abstract  class AbstractMarkingGenerator {
                 )
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
                 .setMaterializationStrategy(materializationStrategy)
+                .setStateRectificationStrategy(stateRectificationStrategy)
                 .setStateCounter(new NoStateCounter())
                 .setStateSpaceSupplier(() -> new InternalStateSpace(100000))
                 .setStateLabelingStrategy(new NoStateLabelingStrategy())

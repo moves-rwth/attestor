@@ -20,13 +20,15 @@ public class NeighbourhoodMarkingGenerator extends AbstractMarkingGenerator {
                                          AbortStrategy abortStrategy,
                                          MaterializationStrategy materializationStrategy,
                                          CanonicalizationStrategy canonicalizationStrategy,
-                                         CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
+                                         CanonicalizationStrategy aggressiveCanonicalizationStrategy,
+                                         StateRectificationStrategy stateRectificationStrategy) {
 
         super(availableSelectorLabelNames,
                 abortStrategy,
                 materializationStrategy,
                 canonicalizationStrategy,
-                aggressiveCanonicalizationStrategy
+                aggressiveCanonicalizationStrategy,
+                stateRectificationStrategy
         );
     }
 

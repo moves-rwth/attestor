@@ -11,6 +11,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.ExampleHcImplFactory;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoAbortStrategy;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoRectificationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -72,7 +73,8 @@ public class VisitedMarkingGeneratorTest {
                 new NoAbortStrategy(),
                 materializationStrategy,
                 canonicalizationStrategy,
-                canonicalizationStrategy
+                canonicalizationStrategy,
+                new NoRectificationStrategy()
         );
 
     }
