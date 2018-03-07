@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements;
 
 import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.executionMessages.NondeterminismMessage;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.ConcreteValue;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.NullPointerDereferenceException;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.values.Value;
@@ -44,8 +43,6 @@ public class IfStmt extends Statement {
 
     private final Set<String> liveVariableNames;
 
-    private final NondeterminismMessage nondeterminismMessage;
-
     public IfStmt(SceneObject sceneObject, Value condition, int truePC, int falsePC, Set<String> liveVariableNames) {
 
         super(sceneObject);
@@ -53,7 +50,6 @@ public class IfStmt extends Statement {
         this.truePC = truePC;
         this.falsePC = falsePC;
         this.liveVariableNames = liveVariableNames;
-        this.nondeterminismMessage = new NondeterminismMessage(this);
     }
 
     /**
