@@ -170,8 +170,8 @@ public interface ProgramState extends Cloneable, LabelledProgramState, State {
 
 	/**
 	 * determines whether this state is just about to be continued (partial state space)
-	 * This is necessary to merge duplicate applications of previously known contracts
-	 * @return
+	 * This is a necessary information to merge duplicate applications of previously known contracts
+	 * @return true when the state is flagged set accordingly
 	 */
 	boolean isContinueState();
 	void flagAsContinueState();
