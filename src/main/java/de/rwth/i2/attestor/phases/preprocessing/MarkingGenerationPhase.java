@@ -14,8 +14,6 @@ import de.rwth.i2.attestor.markingGeneration.neighbourhood.NeighbourhoodMarkingG
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingCommand;
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.AdmissibleStateRectificationStrategy;
-import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoMaterializationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoRectificationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
@@ -29,7 +27,6 @@ import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateMaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRectificationStrategy;
 
 import java.util.*;
@@ -125,16 +122,7 @@ public class MarkingGenerationPhase extends AbstractPhase
                 .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                 .build();
 
-        StateRectificationStrategy stateRectificationStrategy;
-        if(abstractionDistance == 1) {
-            stateRectificationStrategy = new AdmissibleStateRectificationStrategy(
-                    new StateMaterializationStrategy(materializationStrategy)
-            );
-            materializationStrategy = new NoMaterializationStrategy();
-        } else {
-            stateRectificationStrategy = new NoRectificationStrategy();
-        }
-
+        StateRectificationStrategy stateRectificationStrategy = new NoRectificationStrategy();
         AbortStrategy abortStrategy = new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound);
 
         AbstractMarkingGenerator generator = null;
