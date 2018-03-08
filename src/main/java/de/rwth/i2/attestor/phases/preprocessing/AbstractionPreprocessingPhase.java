@@ -107,12 +107,16 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         final int abstractionDistance = scene().options().getAbstractionDistance();
         final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final boolean indexedMode = scene().options().isIndexedMode();
+        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
+
+        boolean aggressiveCompositeMarkingAbstraction = verifyCounterexamples && abstractionDistance == 1;
 
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                         .setMinAbstractionDistance(abstractionDistance)
                         .setIndexedMode(indexedMode)
+                        .setAggressiveCompositeMarkingAbstraction(aggressiveCompositeMarkingAbstraction)
                         .setGrammar(grammar)
                         .build();
 
@@ -124,6 +128,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                         .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                         .setMinAbstractionDistance(0)
                         .setIndexedMode(indexedMode)
+                        .setAggressiveCompositeMarkingAbstraction(true)
                         .setGrammar(grammar)
                         .build();
 

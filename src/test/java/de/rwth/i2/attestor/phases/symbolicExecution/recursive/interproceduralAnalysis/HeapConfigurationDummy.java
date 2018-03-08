@@ -1,9 +1,5 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.recursive.interproceduralAnalysis;
 
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -12,6 +8,10 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
+
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 public class HeapConfigurationDummy implements HeapConfiguration {
 
@@ -212,7 +212,7 @@ public class HeapConfigurationDummy implements HeapConfiguration {
 
 	@Override
 	public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, int minAbstractionDistance,
-			boolean aggressiveNullAbstractionEnabled) {
+			boolean aggressiveNullAbstractionEnabled, boolean aggressiveCompositeMarkingAbstraction) {
 		fail("Not expected to be called");
 		return null;
 	}

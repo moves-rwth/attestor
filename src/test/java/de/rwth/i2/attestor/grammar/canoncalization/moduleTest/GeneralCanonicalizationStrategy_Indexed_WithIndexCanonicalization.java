@@ -53,7 +53,8 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
         final int minDereferenceDepth = 1;
         final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth,
+                aggressiveNullAbstraction, true);
 
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();

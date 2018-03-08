@@ -73,7 +73,8 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
      *
      * @param depth The minimal distance of all variables to a found embedding.
      */
-    public VF2MinDistanceEmbeddingChecker(int depth, boolean aggressiveNullAbstractionEnabled) {
+    public VF2MinDistanceEmbeddingChecker(int depth, boolean aggressiveNullAbstractionEnabled,
+                                          boolean aggressiveCompositeMarkingAbstraction) {
 
         super(
                 VF2Algorithm.builder()
@@ -88,7 +89,8 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
                         .addFeasibilityCondition(embeddingEdgeLabels)
                         .addFeasibilityCondition(new MinAbstractionDistance(
                                 depth,
-                                aggressiveNullAbstractionEnabled
+                                aggressiveNullAbstractionEnabled,
+                                aggressiveCompositeMarkingAbstraction
                         ))
                         .build()
         );

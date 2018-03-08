@@ -13,6 +13,7 @@ public class EmbeddingCheckerProvider {
 
     private final int minDereferenceDepth;
     private final boolean aggressiveNullAbstractionEnabled;
+    private final boolean aggressiveCompositeMarkingAbstraction;
 
     /**
      * Constructs an EmbeddingCheckerProvider with the given communication
@@ -20,10 +21,12 @@ public class EmbeddingCheckerProvider {
      * @param minDereferenceDepth the distance which has to be ensured between an embedding and
      *                            the next node referenced by a variable
      */
-    public EmbeddingCheckerProvider(int minDereferenceDepth, boolean aggressiveNullAbstractionEnabled) {
+    public EmbeddingCheckerProvider(int minDereferenceDepth, boolean aggressiveNullAbstractionEnabled,
+                                    boolean aggressiveCompositeMarkingAbstraction) {
 
         this.minDereferenceDepth = minDereferenceDepth;
         this.aggressiveNullAbstractionEnabled = aggressiveNullAbstractionEnabled;
+        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
     }
 
     /**
@@ -36,7 +39,8 @@ public class EmbeddingCheckerProvider {
      */
     public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern) {
 
-        return graph.getEmbeddingsOf(pattern, minDereferenceDepth, aggressiveNullAbstractionEnabled);
+        return graph.getEmbeddingsOf(pattern, minDereferenceDepth,
+                aggressiveNullAbstractionEnabled, aggressiveCompositeMarkingAbstraction);
     }
 
 }

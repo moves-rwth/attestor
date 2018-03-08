@@ -64,7 +64,8 @@ public class TestEmbeddings {
 
         ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize());
         input.prepareHeap();
-        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, 0, aggressiveNullAbstraction);
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1,
+                0, aggressiveNullAbstraction, true);
         assertTrue(checker.hasMatching());
     }
 
@@ -74,7 +75,8 @@ public class TestEmbeddings {
         ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize2());
         input.prepareHeap();
 
-        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, 0, aggressiveNullAbstraction);
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
+                rhs2, 0, aggressiveNullAbstraction, true);
         assertTrue(checker.hasMatching());
     }
 
@@ -85,7 +87,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction
+                graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction,
+                true
         );
 
         assertTrue(checker.hasMatching());
@@ -98,7 +101,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
+                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction,
+                true
         );
 
         assertTrue(checker.hasMatching());
@@ -111,7 +115,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction
+                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction,
+                true
         );
 
         assertTrue(checker.hasMatching());

@@ -34,8 +34,11 @@ public class GeneralCanonicalizationTest_Default_Simple {
 
         final int minDereferenceDepth = 1;
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth,
-                sceneObject.scene().options().getAggressiveNullAbstraction());
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
+                minDereferenceDepth,
+                sceneObject.scene().options().getAggressiveNullAbstraction(),
+                true
+        );
         canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
     }
 

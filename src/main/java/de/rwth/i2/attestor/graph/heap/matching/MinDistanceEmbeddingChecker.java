@@ -24,8 +24,10 @@ public class MinDistanceEmbeddingChecker extends AbstractMatchingChecker {
      * @param aggressiveNullAbstractionEnabled True if aggressive null abstraction is enabled.
      */
     public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target,
-                                       int depth, boolean aggressiveNullAbstractionEnabled) {
+                                       int depth, boolean aggressiveNullAbstractionEnabled,
+                                       boolean aggressiveCompositeMarkingAbstraction) {
 
-        super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth, aggressiveNullAbstractionEnabled));
+        super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth,
+                aggressiveNullAbstractionEnabled, aggressiveCompositeMarkingAbstraction));
     }
 }

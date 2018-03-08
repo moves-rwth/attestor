@@ -152,7 +152,9 @@ public class EmbeddingTest {
         HeapConfiguration inputWithEnoughDistance = hcImplFactory.getInput_EnoughAbstractionDistance();
         HeapConfiguration matchingPattern = hcImplFactory.getPattern_PathAbstraction();
 
-        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(
+                1, true, true
+        );
         checker.run((Graph) matchingPattern, (Graph) inputWithEnoughDistance);
         assertTrue(checker.hasMorphism());
     }
@@ -163,7 +165,9 @@ public class EmbeddingTest {
         HeapConfiguration inputWithoutEnoughDistance = hcImplFactory.getInput_NotEnoughAbstractionDistance();
         HeapConfiguration matchingPattern = hcImplFactory.getPattern_GraphAbstraction();
 
-        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(
+                1, true, true
+        );
         checker.run((Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
         assertFalse(checker.hasMorphism());
     }
@@ -174,7 +178,9 @@ public class EmbeddingTest {
         HeapConfiguration inputWithEnoughDistance = hcImplFactory.getInput_OnlyNonterminalEdgesToAbstract();
         HeapConfiguration matchingPattern = hcImplFactory.getPattern_PathAbstraction();
 
-        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(
+                1, true, true
+        );
         checker.run((Graph) matchingPattern, (Graph) inputWithEnoughDistance);
         assertTrue(checker.hasMorphism());
     }
@@ -185,7 +191,9 @@ public class EmbeddingTest {
         HeapConfiguration inputWithoutEnoughDistance = hcImplFactory.getInput_variableContains0();
         HeapConfiguration matchingPattern = hcImplFactory.getPattern_variableContains0();
 
-        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(1, true);
+        VF2MinDistanceEmbeddingChecker checker = new VF2MinDistanceEmbeddingChecker(
+                1, true, true
+        );
         checker.run((Graph) matchingPattern, (Graph) inputWithoutEnoughDistance);
         assertFalse(checker.hasMorphism());
     }

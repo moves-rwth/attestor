@@ -40,7 +40,9 @@ public class DefaultEmbeddingCheckerProviderTest {
         Statement statement = new Skip(sceneObject, 0);
         boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
-        AbstractMatchingChecker expected = graph.getEmbeddingsOf(pattern, 1, aggressiveNullAbstraction);
+        AbstractMatchingChecker expected = graph.getEmbeddingsOf(
+                pattern, 1, aggressiveNullAbstraction, true
+        );
 
         performTest(aggressiveAbstractionThreshold, aggressiveReturnAbstraction,
                 graph, pattern, statement, expected);
@@ -61,7 +63,9 @@ public class DefaultEmbeddingCheckerProviderTest {
         Statement statement = new ReturnVoidStmt(sceneObject);
 
         boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-        AbstractMatchingChecker expected = graph.getEmbeddingsOf(pattern, 1, aggressiveNullAbstraction);
+        AbstractMatchingChecker expected = graph.getEmbeddingsOf(
+                pattern, 1, aggressiveNullAbstraction, true
+        );
 
         performTest(aggressiveAbstractionThreshold, aggressiveReturnAbstraction,
                 graph, pattern, statement, expected);
@@ -74,7 +78,7 @@ public class DefaultEmbeddingCheckerProviderTest {
         final int minDereferenceDepth = 1;
         boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
         EmbeddingCheckerProvider checkerProvider =
-                new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction);
+                new EmbeddingCheckerProvider(minDereferenceDepth, aggressiveNullAbstraction, true);
 
         AbstractMatchingChecker checker = checkerProvider.getEmbeddingChecker(graph, pattern);
 

@@ -23,6 +23,7 @@ public class CanonicalizationStrategyBuilder {
 
     private boolean aggressiveNullAbstraction = true;
     private int minAbstractionDistance = 0;
+    private boolean aggressiveCompositeMarkingAbstraction = true;
     private boolean indexedMode = false;
     private Grammar grammar = null;
 
@@ -34,7 +35,8 @@ public class CanonicalizationStrategyBuilder {
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
                 minAbstractionDistance,
-                aggressiveNullAbstraction
+                aggressiveNullAbstraction,
+                aggressiveCompositeMarkingAbstraction
         );
 
         CanonicalizationHelper canonicalizationHelper;
@@ -99,6 +101,12 @@ public class CanonicalizationStrategyBuilder {
             throw new IllegalStateException("minAbstractionDistance must be either 0 or 1.");
         }
         this.minAbstractionDistance = minAbstractionDistance;
+        return this;
+    }
+
+    public CanonicalizationStrategyBuilder setAggressiveCompositeMarkingAbstraction(boolean aggressiveCompositeMarkingAbstraction) {
+
+        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
         return this;
     }
 

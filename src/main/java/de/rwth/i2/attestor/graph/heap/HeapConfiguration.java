@@ -221,7 +221,8 @@ public interface HeapConfiguration {
      * @return An AbstractMatchingChecker to iterate through all found embeddings.
      */
     AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
-                                            int minAbstractionDistance, boolean aggressiveNullAbstractionEnabled);
+                                            int minAbstractionDistance, boolean aggressiveNullAbstractionEnabled,
+                                            boolean aggressiveCompositeMarkingAbstraction);
 
     /**
      * @param variableName The name of the requested variable.

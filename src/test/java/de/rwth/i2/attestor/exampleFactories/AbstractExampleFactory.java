@@ -52,7 +52,8 @@ public abstract class AbstractExampleFactory extends SceneObject {
 
     public CanonicalizationStrategy getCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0, scene().options().getAggressiveNullAbstraction());
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
+                scene().options().getAggressiveNullAbstraction(), true);
         CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
         return new GeneralCanonicalizationStrategy(getGrammar(), canonicalizationHelper);
     }

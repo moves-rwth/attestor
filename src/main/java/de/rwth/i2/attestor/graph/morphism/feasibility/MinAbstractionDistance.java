@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
+import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -27,16 +28,21 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 
     private final boolean aggressiveConstantAbstraction;
 
+    private final boolean aggressiveCompositeMarkingAbstraction;
+
     /**
      * @param minAbstractionDistance        The minimal distance of variables to nodes in the morphism.
      * @param aggressiveConstantAbstraction True if and only if the minimal distance should be ignored
      *                                      for variable edges representing constants.
      */
-    public MinAbstractionDistance(int minAbstractionDistance, boolean aggressiveConstantAbstraction
+    public MinAbstractionDistance(int minAbstractionDistance,
+                                  boolean aggressiveConstantAbstraction,
+                                  boolean aggressiveCompositeMarkingAbstraction
     ) {
 
         this.minAbstractionDistance = minAbstractionDistance;
         this.aggressiveConstantAbstraction = aggressiveConstantAbstraction;
+        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
     }
 
     @Override
@@ -58,7 +64,9 @@ public class MinAbstractionDistance implements FeasibilityFunction {
                     int attachedNode = graph.getSuccessorsOf(i).get(0);
 
                     if (dist.get(attachedNode) < minAbstractionDistance) {
-                        return false;
+                        if(aggressiveCompositeMarkingAbstraction || !Markings.isComposedMarking(label)) {
+                            return false;
+                        }
                     }
                 }
             } else if (graph.isExternal(i)) {

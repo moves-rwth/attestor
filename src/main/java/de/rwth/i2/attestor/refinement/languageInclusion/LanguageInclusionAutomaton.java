@@ -60,7 +60,7 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
 
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {
-                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0, aggressiveNullAbstraction);
+                AbstractMatchingChecker checker = hc.getEmbeddingsOf(rhs, 0, aggressiveNullAbstraction, true);
                 if (checker.hasMatching()) {
                     Matching embedding = checker.getMatching();
                     HeapConfiguration abstractedHc = hc.clone()
