@@ -3,18 +3,19 @@ package de.rwth.i2.attestor.main.scene;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateLabelingStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRectificationStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateRefinementStrategy;
 
 public class Strategies {
 
     private MaterializationStrategy materializationStrategy;
     private CanonicalizationStrategy aggressiveCanonicalizationStrategy;
+    private CanonicalizationStrategy canonicalizationStrategy;
     private AbortStrategy abortStrategy;
     private StateLabelingStrategy stateLabelingStrategy;
     private StateRefinementStrategy stateRefinementStrategy;
-    private StateCanonicalizationStrategy stateCanonicalizationStrategy;
+    private StateRectificationStrategy stateRectificationStrategy;
 
     protected Strategies() {
 
@@ -70,11 +71,19 @@ public class Strategies {
         this.stateRefinementStrategy = stateRefinementStrategy;
     }
 
-    public StateCanonicalizationStrategy getStateCanonicalizationStrategy() {
-        return stateCanonicalizationStrategy;
+    public CanonicalizationStrategy getCanonicalizationStrategy() {
+        return canonicalizationStrategy;
     }
 
-    public void setStateCanonicalizationStrategy(StateCanonicalizationStrategy stateCanonicalizationStrategy) {
-        this.stateCanonicalizationStrategy = stateCanonicalizationStrategy;
+    public void setCanonicalizationStrategy(CanonicalizationStrategy canonicalizationStrategy) {
+        this.canonicalizationStrategy = canonicalizationStrategy;
+    }
+
+    public StateRectificationStrategy getStateRectificationStrategy() {
+        return stateRectificationStrategy;
+    }
+
+    public void setStateRectificationStrategy(StateRectificationStrategy stateRectificationStrategy) {
+        this.stateRectificationStrategy = stateRectificationStrategy;
     }
 }

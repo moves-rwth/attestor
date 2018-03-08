@@ -8,7 +8,6 @@ import de.rwth.i2.attestor.semantics.util.Constants;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -26,7 +25,7 @@ import java.util.Set;
  */
 public class IndexCanonizationStrategyImpl implements IndexCanonizationStrategy {
 
-    private Set<String> nullPointerGuards = new LinkedHashSet<>();
+    private Set<String> nullPointerGuards;
 
     public IndexCanonizationStrategyImpl(Set<String> nullPointerGuards) {
 

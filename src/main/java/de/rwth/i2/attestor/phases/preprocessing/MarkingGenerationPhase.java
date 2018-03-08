@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.markingGeneration.neighbourhood.NeighbourhoodMarkingG
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingCommand;
 import de.rwth.i2.attestor.markingGeneration.visited.VisitedMarkingGenerator;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
+import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.NoRectificationStrategy;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.StateSpaceBoundedAbortStrategy;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputTransformer;
@@ -26,6 +27,7 @@ import de.rwth.i2.attestor.refinement.visited.StatelessVisitedAutomaton;
 import de.rwth.i2.attestor.refinement.visited.StatelessVisitedByAutomaton;
 import de.rwth.i2.attestor.stateSpaceGeneration.AbortStrategy;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRectificationStrategy;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -120,6 +122,7 @@ public class MarkingGenerationPhase extends AbstractPhase
                 .setAggressiveNullAbstraction(aggressiveNullAbstraction)
                 .build();
 
+        StateRectificationStrategy stateRectificationStrategy = new NoRectificationStrategy();
         AbortStrategy abortStrategy = new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound);
 
         AbstractMarkingGenerator generator = null;
@@ -129,11 +132,11 @@ public class MarkingGenerationPhase extends AbstractPhase
             case VISITED_BY:
                 generator = new VisitedMarkingGenerator(availableSelectorNames,
                         abortStrategy, materializationStrategy,
-                        canonicalizationStrategy, aggressiveCanonicalizationStrategy);
+                        canonicalizationStrategy, aggressiveCanonicalizationStrategy, stateRectificationStrategy);
                 break;
             case IDENTIC_NEIGHBOURS:
                 generator = new NeighbourhoodMarkingGenerator(availableSelectorNames, abortStrategy,
-                        materializationStrategy, canonicalizationStrategy, aggressiveCanonicalizationStrategy);
+                        materializationStrategy, canonicalizationStrategy, aggressiveCanonicalizationStrategy, stateRectificationStrategy);
                 break;
             default:
                 logger.error("Unknown marking.");

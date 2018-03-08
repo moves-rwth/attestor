@@ -1,54 +1,43 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies;
 
-import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
-import de.rwth.i2.attestor.grammar.materialization.strategies.MaterializationStrategy;
 import de.rwth.i2.attestor.grammar.materialization.util.ViolationPoints;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.StateCanonicalizationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateMaterializationStrategy;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateRectificationStrategy;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
 import gnu.trove.iterator.TIntIterator;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AdmissibleStateCanonicalizationStrategy implements StateCanonicalizationStrategy {
+public class AdmissibleStateRectificationStrategy implements StateRectificationStrategy {
 
-    private final CanonicalizationStrategy canonicalizationStrategy;
-    private final MaterializationStrategy materializationStrategy;
+    private final StateMaterializationStrategy materializationStrategy;
 
-    public AdmissibleStateCanonicalizationStrategy(
-        CanonicalizationStrategy canonicalizationStrategy,
-        MaterializationStrategy materializationStrategy
-    ) {
+    public AdmissibleStateRectificationStrategy(StateMaterializationStrategy materializationStrategy) {
 
-        this.canonicalizationStrategy = canonicalizationStrategy;
         this.materializationStrategy = materializationStrategy;
     }
 
     @Override
-    public Collection<ProgramState> canonicalize(ProgramState state) {
+    public Collection<ProgramState> rectify(ProgramState state) {
 
-        HeapConfiguration abstractHeap = canonicalizationStrategy.canonicalize(state.getHeap());
+        HeapConfiguration heapConfiguration = state.getHeap();
+        ViolationPoints violationPoints = computeViolationPoints(heapConfiguration);
+        Collection<ProgramState> admissibleStates = materializationStrategy.materialize(state, violationPoints);
 
-        ViolationPoints violationPoints = computeViolationPoints(abstractHeap);
-        Collection<HeapConfiguration> admissibleHeaps = materializationStrategy
-                .materialize(abstractHeap, violationPoints);
-
-        if(admissibleHeaps.isEmpty()) {
-            admissibleHeaps = Collections.singleton(abstractHeap);
+        if(admissibleStates.isEmpty()) {
+            admissibleStates = Collections.singleton(state);
         }
 
-        Collection<ProgramState> result = new ArrayList<>(admissibleHeaps.size());
-        for(HeapConfiguration heap : admissibleHeaps) {
-            result.add(state.shallowCopyWithUpdateHeap(heap));
-        }
-        return result;
+        return admissibleStates;
+
+
     }
 
     private ViolationPoints computeViolationPoints(HeapConfiguration heap) {
@@ -79,4 +68,5 @@ public class AdmissibleStateCanonicalizationStrategy implements StateCanonicaliz
 
         return result;
     }
+
 }

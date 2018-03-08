@@ -110,7 +110,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
         for (SootMethod method : methods) {
             logger.trace("Found soot method: " + method.getSignature());
 
-            String shortName = shortMethodSignature(method);
+            String shortName = method.getName();
 
             String signature = method.getSignature();
 
@@ -233,7 +233,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
         recursiveMethodDetection.addCallEdge(currentMethod, res);
         if (res.getBody() == null) {
 
-            String displayName = shortMethodSignature(Scene.v().getMethod(signature));
+            String displayName = Scene.v().getMethod(signature).getName();
             res.setName(displayName);
 
             List<SemanticsCommand> defaultControlFlow = new ArrayList<>();

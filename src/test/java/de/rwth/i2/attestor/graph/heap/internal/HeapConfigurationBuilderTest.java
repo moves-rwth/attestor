@@ -100,7 +100,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().addSelector(3, sel, 0).build();
             fail("Node 3 should not exist anymore.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         InternalHeapConfiguration ihc = (InternalHeapConfiguration) hc;
@@ -119,7 +119,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeIsolatedNode(0);
             fail("Provided node to remove does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodeBuffer = new TIntArrayList();
@@ -131,7 +131,7 @@ public class HeapConfigurationBuilderTest {
                     .removeIsolatedNode(nodeBuffer.get(0))
                     .build();
             fail("Provided node is not isolated.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
 
@@ -142,7 +142,7 @@ public class HeapConfigurationBuilderTest {
                     .removeIsolatedNode(nodeBuffer.get(1))
                     .build();
             fail("Provided node is not isolated due to selector.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
 
@@ -153,7 +153,7 @@ public class HeapConfigurationBuilderTest {
                     .removeIsolatedNode(nodeBuffer.get(2))
                     .build();
             fail("Provided node is not isolated due to variable.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
 
@@ -166,7 +166,7 @@ public class HeapConfigurationBuilderTest {
                     .removeIsolatedNode(nodeBuffer.get(2))
                     .build();
             fail("Provided node is not isolated due to nonterminal edge.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
     }
@@ -214,7 +214,7 @@ public class HeapConfigurationBuilderTest {
                     .addSelector(buffer.get(2), sel, buffer.get(0))
                     .build();
             fail("Selector already exists.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
@@ -222,7 +222,7 @@ public class HeapConfigurationBuilderTest {
                     .addSelector(buffer.get(3), sel, HeapConfiguration.INVALID_ELEMENT)
                     .build();
             fail("Selectors may not be pointed to invalid elements");
-        } catch(IllegalArgumentException ex) {
+        } catch(IllegalArgumentException ignored) {
         }
 
         try {
@@ -230,7 +230,7 @@ public class HeapConfigurationBuilderTest {
                     .addSelector(HeapConfiguration.INVALID_ELEMENT, sel, buffer.get(3))
                     .build();
             fail("Selectors may not originate from invalid elements");
-        } catch(IllegalArgumentException ex) {
+        } catch(IllegalArgumentException ignored) {
         }
 
         try {
@@ -239,7 +239,7 @@ public class HeapConfigurationBuilderTest {
                     .addSelector(buffer.get(1), sel, 4)
                     .build();
             fail("Provided target node does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
@@ -248,7 +248,7 @@ public class HeapConfigurationBuilderTest {
                     .addSelector(buffer.get(1), null, buffer.get(0))
                     .build();
             fail("Provided SelectorLabel must not be Null");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
     }
 
@@ -299,7 +299,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeSelector(0, sel);
             fail("Provided node does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
 
@@ -309,7 +309,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeSelector(nodes.get(0), null);
             fail("Provided selector must not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         hc.builder().addVariableEdge("var", nodes.get(0)).build();
@@ -317,7 +317,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeSelector(3, sel);
             fail("Provided ID is not a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
 
         }
     }
@@ -368,26 +368,26 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().replaceSelector(17, s2, s1);
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             hc.builder().replaceSelector(nodes.get(0), null, s1);
             fail("First selector label is null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         try {
             hc.builder().replaceSelector(nodes.get(0), s1, null);
             fail("Second selector label is null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         hc.builder().addVariableEdge("var", nodes.get(1));
         try {
             hc.builder().replaceSelector(3, s1, s2);
             fail("Provided ID does not correspond to a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
 
@@ -430,7 +430,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().setExternal(1);
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodes = new TIntArrayList();
@@ -442,7 +442,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().setExternal(nodes.get(1)).build();
             fail("Provided node is already external.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         hc.builder().addVariableEdge("test", nodes.get(0)).build();
@@ -450,7 +450,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().setExternal(3).build();
             fail("Provided ID does not correspond to a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -490,7 +490,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().unsetExternal(17);
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodes = new TIntArrayList();
@@ -499,7 +499,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().unsetExternal(nodes.get(0)).build();
             fail("Provided node is not external.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
@@ -508,7 +508,7 @@ public class HeapConfigurationBuilderTest {
                     .unsetExternal(4)
                     .build();
             fail("Provided ID does not correspond to a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -546,7 +546,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().addVariableEdge("v", 1).build();
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodes = new TIntArrayList();
@@ -555,7 +555,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().addVariableEdge(null, nodes.get(1));
             fail("Variable name must not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         try {
@@ -564,13 +564,13 @@ public class HeapConfigurationBuilderTest {
                     .addVariableEdge("test", nodes.get(1))
                     .build();
             fail("Variable with provided name already exists.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             hc.builder().addVariableEdge("foo", hc.variableWith("test")).build();
             fail("Provided ID does not correspond to a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -619,7 +619,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeVariableEdge(9).build();
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
@@ -627,7 +627,7 @@ public class HeapConfigurationBuilderTest {
                     .removeVariableEdge(nodes.get(0))
                     .build();
             fail("Provided ID does not correspond to a variable");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
     }
@@ -667,7 +667,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().addNonterminalEdge(null, null).build();
             fail("The provided label must not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         Nonterminal nt = new MockupNonterminal("test", 2);
@@ -675,7 +675,7 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().addNonterminalEdge(nt, new TIntArrayList()).build();
             fail("The rank of the provided label and the size of the list of attached nodes must coincide.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodes = new TIntArrayList();
@@ -688,7 +688,7 @@ public class HeapConfigurationBuilderTest {
             TIntArrayList attached = new TIntArrayList(new int[]{nodes.get(0), 2});
             hc.builder().addNonterminalEdge(nt, attached).build();
             fail("One of the provided attached nodes is not a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
 
@@ -736,13 +736,13 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().removeNonterminalEdge(23).build();
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             hc.builder().removeNonterminalEdge(nodes.get(2)).build();
             fail("Provided ID does not correspond to a nonterminal edge.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -784,25 +784,25 @@ public class HeapConfigurationBuilderTest {
         try {
             hc.builder().replaceNonterminal(23, new MockupNonterminal("newLabel", 3)).build();
             fail("The provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             hc.builder().replaceNonterminal(nodes.get(1), new MockupNonterminal("newLabel", 3)).build();
             fail("The provided ID does not correspond to a nonterminal edge.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             hc.builder().replaceNonterminal(3, null).build();
             fail("The provided new label must not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         try {
             hc.builder().replaceNonterminal(3, new MockupNonterminal("invalidLabel", 2)).build();
             fail("The rank of the provided label does not match the rank of the original label.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
     }
@@ -923,7 +923,7 @@ public class HeapConfigurationBuilderTest {
         try {
             source.builder().replaceNonterminalEdge(3, null);
             fail("Replacement HeapConfiguration must not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         HeapConfiguration repl = new InternalHeapConfiguration();
@@ -931,13 +931,13 @@ public class HeapConfigurationBuilderTest {
         try {
             source.builder().replaceNonterminalEdge(srcNodes.get(1), repl);
             fail("Provided ID does not correspond to a nonterminal edge.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             source.builder().replaceNonterminalEdge(3, repl);
             fail("The rank of the provided nonterminal does not match the number of external nodes of the replacement.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
     }
@@ -1064,20 +1064,20 @@ public class HeapConfigurationBuilderTest {
         try {
             target.builder().replaceMatching(null, nt).build();
             fail("Provided matching may not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         try {
             target.builder().replaceMatching(matching, null).build();
             fail("Provided nonterminal may not be null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
         }
 
         try {
             HeapConfiguration wrongPattern = new InternalHeapConfiguration();
             target.builder().replaceMatching(new InternalMatching(wrongPattern, morphism, target), nt).build();
             fail("The number of external nodes of the matching pattern have to coincide with the rank of the provided nonterminal.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 

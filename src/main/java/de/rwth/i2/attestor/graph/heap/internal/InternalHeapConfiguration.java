@@ -627,6 +627,9 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
             return false;
         }
 
+        // otherObject instanceof HeapConfiguration omitted to improve performance
+        // Notice that it is *not* sufficient to check classes here.
+
         HeapConfiguration hc = (HeapConfiguration) otherObject;
         IsomorphismChecker isoChecker = new IsomorphismChecker(this, hc);
         return isoChecker.hasMatching();

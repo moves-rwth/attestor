@@ -64,6 +64,7 @@ public class CounterexampleGeneratorTest {
                 .setScopeExtractorFactory(method -> null)
                 .setMaterializationStrategy(factoryEmpty.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
+                .setRectificationStrategy(factoryEmpty.getRectification())
                 .build();
 
         ProgramState counterexampleInput = generator.generate();
@@ -126,6 +127,7 @@ public class CounterexampleGeneratorTest {
                 .setMaterializationStrategy(factorySLL.getMaterialization())
                 .setStateRefinementStrategy(factoryEmpty.getStateRefinement())
                 .setAvailableMethods(Collections.emptySet())
+                .setRectificationStrategy(factoryEmpty.getRectification())
                 .setScopeExtractorFactory(method -> null)
                 .build();
 

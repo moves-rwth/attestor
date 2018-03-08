@@ -46,7 +46,7 @@ public class HeapConfigurationTest {
         try {
             new InternalHeapConfigurationBuilder(null);
             fail("HeapConfigurationBuilder cannot be initialized with null.");
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException ignored) {
 
         }
     }
@@ -102,7 +102,7 @@ public class HeapConfigurationTest {
         try {
             hc.nodeTypeOf(0);
             fail("Provided ID does not exist.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         TIntArrayList nodes = new TIntArrayList();
@@ -114,7 +114,7 @@ public class HeapConfigurationTest {
         try {
             hc.nodeTypeOf(hc.variableEdges().get(0));
             fail("Provided ID does not correspond to a node.");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -157,7 +157,7 @@ public class HeapConfigurationTest {
         try {
             hc.attachedVariablesOf(1);
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -173,7 +173,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.attachedVariablesOf(1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -214,7 +214,7 @@ public class HeapConfigurationTest {
         try {
             hc.attachedNonterminalEdgesOf(1);
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -230,7 +230,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.attachedNonterminalEdgesOf(1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -267,7 +267,7 @@ public class HeapConfigurationTest {
         try {
             hc.successorNodesOf(1);
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -283,7 +283,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.successorNodesOf(1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -320,7 +320,7 @@ public class HeapConfigurationTest {
         try {
             hc.predecessorNodesOf(1);
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -336,7 +336,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.predecessorNodesOf(1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -373,7 +373,7 @@ public class HeapConfigurationTest {
         try {
             hc.selectorLabelsOf(1);
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -389,7 +389,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.selectorLabelsOf(1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -426,7 +426,7 @@ public class HeapConfigurationTest {
         try {
             hc.selectorTargetOf(2, new MockupSelector("test"));
             fail("Provided ID does not exist");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         Type type = new MockupType();
@@ -442,7 +442,7 @@ public class HeapConfigurationTest {
 
         try {
             hc.selectorTargetOf(2, null);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 

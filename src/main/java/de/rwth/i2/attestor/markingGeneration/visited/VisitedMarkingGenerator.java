@@ -18,13 +18,15 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
                                    AbortStrategy abortStrategy,
                                    MaterializationStrategy materializationStrategy,
                                    CanonicalizationStrategy canonicalizationStrategy,
-                                   CanonicalizationStrategy aggressiveCanonicalizationStrategy) {
+                                   CanonicalizationStrategy aggressiveCanonicalizationStrategy,
+                                   StateRectificationStrategy stateRectificationStrategy) {
 
         super(availableSelectorLabelNames,
                 abortStrategy,
                 materializationStrategy,
                 canonicalizationStrategy,
-                aggressiveCanonicalizationStrategy
+                aggressiveCanonicalizationStrategy,
+                stateRectificationStrategy
         );
     }
 
@@ -74,9 +76,7 @@ public class VisitedMarkingGenerator extends AbstractMarkingGenerator {
 
         Collection<HeapConfiguration> result = new LinkedHashSet<>();
         stateSpace.getStates().forEach(
-                state -> {
-                    result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()));
-                }
+                state -> result.add(aggressiveCanonicalizationStrategy.canonicalize(state.getHeap()))
         );
         return result;
     }

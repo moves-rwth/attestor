@@ -60,11 +60,18 @@ public class Options {
     /**
      * Determines if post-processing is applied to generated state spaces.
      */
-    private boolean postProcessingEnabled = true;
+    private boolean postProcessingEnabled = false;
     /**
      * If enabled, external nodes of rules are collapsed before applying abstraction
      */
     private boolean ruleCollapsingEnabled = true;
+
+    /**
+     * If enabled, we verify that a counterexample is not spurious (otherwise an invalid LTL formula is set to unknown).
+     * This option is disabled by default, because counterexample verification requires a more elaborate state space
+     * generation even if all specifications are valid.
+     */
+    private boolean verifyCounterexamples = false;
 
     protected Options() {}
 
@@ -254,5 +261,13 @@ public class Options {
     public void setRuleCollapsingEnabled(boolean enabled) {
 
         ruleCollapsingEnabled = enabled;
+    }
+
+    public void setVerifyCounterexamples(boolean verifyCounterexamples) {
+        this.verifyCounterexamples = verifyCounterexamples;
+    }
+
+    public boolean isVerifyCounterexamples() {
+        return verifyCounterexamples;
     }
 }
