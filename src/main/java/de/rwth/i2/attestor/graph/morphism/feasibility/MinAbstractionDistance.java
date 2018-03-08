@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
-import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
@@ -58,7 +57,7 @@ public class MinAbstractionDistance implements FeasibilityFunction {
                 if (!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
                     int attachedNode = graph.getSuccessorsOf(i).get(0);
 
-                    if (dist.get(attachedNode) < minAbstractionDistance && !Markings.isComposedMarking(label)) {
+                    if (dist.get(attachedNode) < minAbstractionDistance) {
                         return false;
                     }
                 }

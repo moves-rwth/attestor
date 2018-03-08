@@ -10,10 +10,4 @@ public class Markings {
 
         return variableName.startsWith(MARKING_PREFIX);
     }
-
-    public static boolean isComposedMarking(String variableName) {
-
-        return isMarking(variableName)
-                && variableName.contains(MARKING_SEPARATOR);
-    }
 }
