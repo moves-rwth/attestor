@@ -47,6 +47,9 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                 .setStateRectificationStrategy(
                         strategies.getStateRectificationStrategy()
                 )
+                .setAlwaysCanonicalize(
+                        strategies.isAlwaysCanonicalize()
+                )
                 .setCanonizationStrategy(
                         new StateCanonicalizationStrategy(strategies.getCanonicalizationStrategy())
                 )

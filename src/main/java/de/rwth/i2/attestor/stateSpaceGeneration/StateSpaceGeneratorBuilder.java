@@ -269,4 +269,10 @@ public class StateSpaceGeneratorBuilder {
         return this;
     }
 
+    public StateSpaceGeneratorBuilder setAlwaysCanonicalize(boolean alwaysCanonicalize) {
+
+        generator.alwaysCanonicalize = alwaysCanonicalize;
+        return this;
+    }
+
 }

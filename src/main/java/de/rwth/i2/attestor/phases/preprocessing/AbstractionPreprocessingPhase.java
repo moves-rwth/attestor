@@ -90,6 +90,10 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
                 .setIndexedMode(indexedMode)
                 .build();
 
+        if(verifyCounterexamples) {
+            scene().strategies().setAlwaysCanonicalize(true);
+        }
+
         if(verifyCounterexamples && abstractionDistance == 1){
             scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
             scene().strategies().setStateRectificationStrategy(

@@ -82,6 +82,8 @@ public class StateSpaceGenerator {
      */
     FinalStateStrategy finalStateStrategy;
 
+    boolean alwaysCanonicalize = false;
+
     protected StateSpaceGenerator() {
     }
 
@@ -107,7 +109,12 @@ public class StateSpaceGenerator {
                 .setStateSpaceSupplier(stateSpaceGenerator.getStateSpaceSupplier())
                 .setStateCounter(stateSpaceGenerator.getTotalStatesCounter())
                 .setFinalStateStrategy(stateSpaceGenerator.getFinalStateStrategy())
+                .setAlwaysCanonicalize(stateSpaceGenerator.isAlwaysCanonicalize())
                 .setPostProcessingStrategy(stateSpaceGenerator.getPostProcessingStrategy());
+    }
+
+    public boolean isAlwaysCanonicalize() {
+        return alwaysCanonicalize;
     }
 
     /**
@@ -314,7 +321,8 @@ public class StateSpaceGenerator {
     }
 
     private boolean needsCanonicalization(SemanticsCommand semanticsCommand, ProgramState state) {
-        return semanticsCommand.needsCanonicalization() || program.countPredecessors(state.getProgramCounter()) > 1;
+        return alwaysCanonicalize || semanticsCommand.needsCanonicalization()
+                || program.countPredecessors(state.getProgramCounter()) > 1;
     }
 
     /**

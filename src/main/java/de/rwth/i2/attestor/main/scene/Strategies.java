@@ -17,6 +17,8 @@ public class Strategies {
     private StateRefinementStrategy stateRefinementStrategy;
     private StateRectificationStrategy stateRectificationStrategy;
 
+    private boolean alwaysCanonicalize;
+
     protected Strategies() {
 
     }
@@ -85,5 +87,13 @@ public class Strategies {
 
     public void setStateRectificationStrategy(StateRectificationStrategy stateRectificationStrategy) {
         this.stateRectificationStrategy = stateRectificationStrategy;
+    }
+
+    public boolean isAlwaysCanonicalize() {
+        return alwaysCanonicalize;
+    }
+
+    public void setAlwaysCanonicalize(boolean alwaysCanonicalize) {
+        this.alwaysCanonicalize = alwaysCanonicalize;
     }
 }
