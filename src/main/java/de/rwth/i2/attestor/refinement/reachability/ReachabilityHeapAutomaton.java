@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.refinement.reachability;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.refinement.HeapAutomaton;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
@@ -18,15 +19,20 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
 
     private final Set<SelectorLabel> trackedSelectorLabels;
 
+    
+    public ReachabilityHeapAutomaton(Scene scene) {
+ 		super(scene);
+ 		trackedSelectorLabels = Collections.emptySet();
+ 	}
+    
     public ReachabilityHeapAutomaton(SceneObject sceneObject) {
 
-        super(sceneObject);
-        trackedSelectorLabels = Collections.emptySet();
-    }
+        this( sceneObject.scene() );
+     }
 
-    public ReachabilityHeapAutomaton(SceneObject sceneObject, Set<String> allowedSelectorLabels) {
+    public ReachabilityHeapAutomaton(Scene scene, Set<String> allowedSelectorLabels) {
 
-        super(sceneObject);
+        super(scene);
 
         trackedSelectorLabels = new LinkedHashSet<>(allowedSelectorLabels.size());
         for (String label : allowedSelectorLabels) {
@@ -34,7 +40,13 @@ public class ReachabilityHeapAutomaton extends SceneObject implements HeapAutoma
         }
     }
 
-    @Override
+    public ReachabilityHeapAutomaton(SceneObject sceneObject, Set<String> allowedSelectorLabels) {
+
+        this(sceneObject.scene());
+    }
+
+ 
+	@Override
     public HeapAutomatonState transition(HeapConfiguration heapConfiguration,
                                          List<HeapAutomatonState> statesOfNonterminals) {
 

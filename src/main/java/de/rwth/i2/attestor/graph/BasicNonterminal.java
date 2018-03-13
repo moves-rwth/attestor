@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -130,4 +131,15 @@ public final class BasicNonterminal implements Nonterminal {
             return res;
         }
     }
+    
+    Map<Integer,Collection<Integer>> reachabilityMap = null;
+
+	@Override
+	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
+		if( reachabilityMap == null ) {
+			throw new IllegalStateException();
+		}else {
+			return reachabilityMap.get( tentacle );
+		}
+	}
 }

@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -102,4 +103,9 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
 
         return Objects.hash(nonterminal, state);
     }
+
+	@Override
+	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
+		return nonterminal.reachableTentaclesFrom( tentacle );
+	}
 }

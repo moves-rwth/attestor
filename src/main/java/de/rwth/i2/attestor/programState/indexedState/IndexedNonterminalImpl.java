@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 
+import java.util.Collection;
 import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
@@ -131,5 +132,10 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 
         return basicNonterminal.getLabel();
     }
+
+	@Override
+	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
+		return basicNonterminal.reachableTentaclesFrom(tentacle);
+	}
 
 }

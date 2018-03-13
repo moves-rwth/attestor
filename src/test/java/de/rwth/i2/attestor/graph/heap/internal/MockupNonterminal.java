@@ -1,5 +1,9 @@
 package de.rwth.i2.attestor.graph.heap.internal;
 
+import static org.junit.Assert.fail;
+
+import java.util.Collection;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 
 public class MockupNonterminal implements Nonterminal {
@@ -45,5 +49,11 @@ public class MockupNonterminal implements Nonterminal {
 
         return label;
     }
+
+	@Override
+	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
+		fail("call not expected");
+		return null;
+	}
 
 }
