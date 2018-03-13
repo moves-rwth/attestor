@@ -180,6 +180,15 @@ class ReachabilityAutomatonState extends HeapAutomatonState {
 
         return result;
     }
+    
+    public Collection<Integer> reachableSetFrom( int index ){
+    	Collection<Integer> res = new HashSet<>();
+    	TIntIterator iter = kernel.successorNodesOf(index).iterator();
+    	while( iter.hasNext() ) {
+    		res.add( iter.next() );
+    	}
+    	return res;
+    }
 
     public String toString() {
 
