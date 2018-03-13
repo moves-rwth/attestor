@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,6 +31,12 @@ public final class BasicNonterminal implements Nonterminal {
      * or not (value false).
      */
     private final boolean[] isReductionTentacle;
+    
+    /**
+     * stores which tentacle is reachable from a given tentacle
+     * has to be initialized when building the grammar.
+     */
+    Map<Integer,Collection<Integer>> reachabilityMap = null;
 
     /**
      * Initializes a new nonterminal symbol object.
@@ -132,7 +139,6 @@ public final class BasicNonterminal implements Nonterminal {
         }
     }
     
-    Map<Integer,Collection<Integer>> reachabilityMap = null;
 
 	@Override
 	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
@@ -141,5 +147,11 @@ public final class BasicNonterminal implements Nonterminal {
 		}else {
 			return reachabilityMap.get( tentacle );
 		}
+	}
+
+	@Override
+	public void setReachableTentacles(HashMap<Integer, Collection<Integer>> reachabilityMap) {
+		this.reachabilityMap = reachabilityMap;
+		
 	}
 }

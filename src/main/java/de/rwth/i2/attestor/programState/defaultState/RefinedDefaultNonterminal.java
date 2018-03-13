@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.refinement.RefinedNonterminal;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -107,5 +108,10 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
 	@Override
 	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
 		return nonterminal.reachableTentaclesFrom( tentacle );
+	}
+
+	@Override
+	public void setReachableTentacles(HashMap<Integer, Collection<Integer>> reachabilityMap) {
+		nonterminal.setReachableTentacles(reachabilityMap);
 	}
 }

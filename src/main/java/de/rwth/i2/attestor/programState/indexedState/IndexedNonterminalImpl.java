@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.programState.indexedState.index.Index;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class IndexedNonterminalImpl implements IndexedNonterminal {
@@ -136,6 +137,11 @@ public class IndexedNonterminalImpl implements IndexedNonterminal {
 	@Override
 	public Collection<Integer> reachableTentaclesFrom(int tentacle) {
 		return basicNonterminal.reachableTentaclesFrom(tentacle);
+	}
+
+	@Override
+	public void setReachableTentacles(HashMap<Integer, Collection<Integer>> reachabilityMap) {
+		basicNonterminal.setReachableTentacles(reachabilityMap);
 	}
 
 }

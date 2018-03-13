@@ -19,6 +19,11 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.programState.defaultState.RefinedDefaultNonterminal;
+import de.rwth.i2.attestor.refinement.HeapAutomaton;
+import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
+import de.rwth.i2.attestor.refinement.reachability.ReachabilityComputer;
+import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 
 public class ParseGrammarPhase extends AbstractPhase implements GrammarTransformer {
 
@@ -51,9 +56,15 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         if (hasPredefinedGrammars) {
             loadPredefinedGrammars();
         }
+        
+     // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
+        new ReachabilityComputer(scene()).precomputeReachability( grammar );
     }
 
-    private void loadPredefinedGrammars() {
+    
+
+	private void loadPredefinedGrammars() {
 
         InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         List<String> usedPredefinedGrammars = inputSettings.getUsedPredefinedGrammars();
@@ -123,12 +134,9 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
      */
     public void loadGrammarFromFile(String filename) {
 
-        if (grammar != null) {
-            logger.debug("Extending previously set grammar.");
-        }
-
         // The first time a grammar file is loaded
         if (grammarBuilder == null) {
+        	logger.debug("Extending previously set grammar.");
             this.grammarBuilder = Grammar.builder();
         }
 
@@ -156,9 +164,6 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         if(scene().options().isRuleCollapsingEnabled()) {
             grammarBuilder.updateCollapsedRules();
         }
-
-        // Even if all grammar files could not be parsed, an empty grammar is created.
-        this.grammar = grammarBuilder.build();
     }
 
     /**
@@ -181,12 +186,9 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
 
     public void loadGrammarFromURL(URL resource) {
 
-        if (grammar != null) {
-            logger.debug("Extending previously set grammar.");
-        }
-
         // The first time a grammar file is loaded
         if (grammarBuilder == null) {
+        	logger.debug("Extending previously set grammar.");
             this.grammarBuilder = Grammar.builder();
         }
 
@@ -215,9 +217,6 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         if(scene().options().isRuleCollapsingEnabled()) {
             grammarBuilder.updateCollapsedRules();
         }
-
-        // Even if all grammar files could not be parsed, an empty grammar is created.
-        this.grammar = grammarBuilder.build();
 
     }
 
