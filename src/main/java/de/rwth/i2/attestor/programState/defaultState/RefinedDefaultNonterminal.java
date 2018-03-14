@@ -1,12 +1,12 @@
 package de.rwth.i2.attestor.programState.defaultState;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.refinement.HeapAutomatonState;
 import de.rwth.i2.attestor.refinement.RefinedNonterminal;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * A nonterminal symbol that is additionally annotated with a state of a heap automaton.
@@ -111,7 +111,7 @@ public class RefinedDefaultNonterminal implements RefinedNonterminal {
 	}
 
 	@Override
-	public void setReachableTentacles(HashMap<Integer, Collection<Integer>> reachabilityMap) {
+	public void setReachableTentacles( Map<Integer, Collection<Integer>> reachabilityMap) {
 		nonterminal.setReachableTentacles(reachabilityMap);
 	}
 }

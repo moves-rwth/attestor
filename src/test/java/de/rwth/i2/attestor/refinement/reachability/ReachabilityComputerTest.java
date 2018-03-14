@@ -6,10 +6,9 @@ import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.rwth.i2.attestor.MockupSceneObject;
@@ -24,17 +23,19 @@ import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
 import de.rwth.i2.attestor.programState.indexedState.index.ConcreteIndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexSymbol;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexVariable;
-import de.rwth.i2.attestor.refinement.HeapAutomaton;
-import de.rwth.i2.attestor.refinement.RefinedNonterminal;
-import de.rwth.i2.attestor.refinement.grammarRefinement.GrammarRefinement;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
 
-public class ReachabilityRefinementTest {
-
-	Scene scene = new MockupSceneObject().scene();
-
+public class ReachabilityComputerTest {
+	static Scene scene;
+	static ReachabilityComputer testObject;
+	
+	@BeforeClass
+	public static void init() {
+		scene  = new MockupSceneObject().scene();
+		testObject = new ReachabilityComputer(scene);
+	}
 	/**
 	 * test using a simple SLL grammar
 	 * SLL -> .-next->., .-next->.-SLL-.
@@ -46,18 +47,10 @@ public class ReachabilityRefinementTest {
 
 		Grammar grammar = simpleInputGrammar( nt, sel );
 
-		//we do not specify selectors since this test is only interested in reachability and not in APs
-		HeapAutomaton reachabilityAutomaton = new ReachabilityHeapAutomaton(scene, new HashSet<>() );
-		GrammarRefinement refinement = new GrammarRefinement( grammar, reachabilityAutomaton  );
-
-		Grammar refinedGrammar = refinement.getRefinedGrammar();
-
-		Collection<Nonterminal> ntsInRefinedGrammar = refinedGrammar.getAllLeftHandSides();
-		assertEquals( 1,  ntsInRefinedGrammar.size() );
-		RefinedNonterminal refinedNt = (RefinedNonterminal) ntsInRefinedGrammar.iterator().next();
-		ReachabilityAutomatonState state = (ReachabilityAutomatonState) refinedNt.getState();
-		assertThat( state.reachableSetFrom(0), contains(1) );
-		assertThat( state.reachableSetFrom(1), empty() );	
+		testObject.precomputeReachability(grammar);
+		
+		assertThat( nt.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt.reachableTentaclesFrom(1), empty() );
 	}
 
 	/**
@@ -73,20 +66,13 @@ public class ReachabilityRefinementTest {
 
 		Grammar grammar = inputGrammarWithIndirection(nt1, nt2, sel);
 
-		//we do not specify selectors since this test is only interested in reachability and not in APs
-		HeapAutomaton reachabilityAutomaton = new ReachabilityHeapAutomaton(scene, new HashSet<>() );
-		GrammarRefinement refinement = new GrammarRefinement( grammar, reachabilityAutomaton  );
-
-		Grammar refinedGrammar = refinement.getRefinedGrammar();
-
-		Collection<Nonterminal> ntsInRefinedGrammar = refinedGrammar.getAllLeftHandSides();
-		assertEquals( 2,  ntsInRefinedGrammar.size() );
-		for( Nonterminal nt : ntsInRefinedGrammar ) {
-			RefinedNonterminal refinedNt1 = (RefinedNonterminal) nt;
-			ReachabilityAutomatonState state = (ReachabilityAutomatonState) refinedNt1.getState();
-			assertThat( state.reachableSetFrom(0), contains(1) );
-			assertThat( state.reachableSetFrom(1), empty() );	
-		}
+		testObject.precomputeReachability(grammar);
+		
+		assertThat( nt1.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt1.reachableTentaclesFrom(1), empty() );
+		
+		assertThat( nt2.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt2.reachableTentaclesFrom(1), empty() );
 	}
 	
 	/**
@@ -104,20 +90,11 @@ public class ReachabilityRefinementTest {
 
 		Grammar grammar = inputGrammarWithMultipleSelectors(nt1, nt2, sel1, sel2);
 
-		//we do not specify selectors since this test is only interested in reachability and not in APs
-		HeapAutomaton reachabilityAutomaton = new ReachabilityHeapAutomaton(scene, new HashSet<>() );
-		GrammarRefinement refinement = new GrammarRefinement( grammar, reachabilityAutomaton  );
-
-		Grammar refinedGrammar = refinement.getRefinedGrammar();
-
-		Collection<Nonterminal> ntsInRefinedGrammar = refinedGrammar.getAllLeftHandSides();
-		assertEquals( 2,  ntsInRefinedGrammar.size() );
-		for( Nonterminal nt : ntsInRefinedGrammar ) {
-			RefinedNonterminal refinedNt1 = (RefinedNonterminal) nt;
-			ReachabilityAutomatonState state = (ReachabilityAutomatonState) refinedNt1.getState();
-			assertThat( state.reachableSetFrom(0), contains(1) );
-			assertThat( state.reachableSetFrom(1), empty() );	
-		}
+		assertThat( nt1.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt1.reachableTentaclesFrom(1), empty() );
+		
+		assertThat( nt2.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt2.reachableTentaclesFrom(1), empty() );
 	}
 	
 	/**
@@ -128,26 +105,31 @@ public class ReachabilityRefinementTest {
 	@Test
 	public void testSLLWithIndices() {
 		BasicNonterminal nonterminal = getNonterminal("SLL");
+		IndexVariable indexVariable = new IndexVariable();
 
-		Grammar grammar = indexedInputGrammar(nonterminal);
+		Nonterminal lhs1 = getIndexedVariableLhs(nonterminal, indexVariable);
+		Nonterminal lhs2 = getIndexedBaseLhs(nonterminal);
+		Nonterminal ntOnRhs = indexedNtForRhs(nonterminal, indexVariable);
+		Grammar grammar = indexedInputGrammar( lhs1, lhs2, ntOnRhs);
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
 
-		//we do not specify selectors since this test is only interested in reachability and not in APs
-		HeapAutomaton reachabilityAutomaton = new ReachabilityHeapAutomaton(scene, new HashSet<>() );
-		GrammarRefinement refinement = new GrammarRefinement( grammar, reachabilityAutomaton  );
-
-		Grammar refinedGrammar = refinement.getRefinedGrammar();
-
-		Collection<Nonterminal> ntsInRefinedGrammar = refinedGrammar.getAllLeftHandSides();
-		assertEquals( 1,  ntsInRefinedGrammar.size() );//richtig?
-		for( Nonterminal nt : ntsInRefinedGrammar ) {
-			RefinedNonterminal refinedNt1 = (RefinedNonterminal) nt;
-			ReachabilityAutomatonState state = (ReachabilityAutomatonState) refinedNt1.getState();
-			assertThat( state.reachableSetFrom(0), contains(1) );
-			assertThat( state.reachableSetFrom(1), empty() );	
-		}
+		assertThat( lhs1.reachableTentaclesFrom(0), contains(1) );
+		assertThat( lhs1.reachableTentaclesFrom(1), empty() );
+		
+		assertThat( lhs2.reachableTentaclesFrom(0), contains(1) );
+		assertThat( lhs2.reachableTentaclesFrom(1), empty() );
+		
+		assertThat( ntOnRhs.reachableTentaclesFrom(0), contains(1) );
+		assertThat( ntOnRhs.reachableTentaclesFrom(1), empty() );
+		
+		//verify, that the reachability information also for indices not seen in the grammar is correct.
+		Nonterminal extraNt = getNonterminalWithNewIndex( nonterminal );
+		assertThat( extraNt.reachableTentaclesFrom(0), contains(1) );
+		assertThat( extraNt.reachableTentaclesFrom(1), empty() );
+		
 	}
 
+	
 	//simple SLL-like grammar
 	private Grammar simpleInputGrammar(Nonterminal nt, SelectorLabel sel) {
 
@@ -188,28 +170,40 @@ public class ReachabilityRefinementTest {
 	}
 	
 	//indexed SLL grammar
-	private Grammar indexedInputGrammar( BasicNonterminal nt ) {
+	private Grammar indexedInputGrammar( Nonterminal variableLhs, Nonterminal baseLhs, Nonterminal ntOnRhs ) {
 		SelectorLabel sel = scene.getSelectorLabel("next");
-		IndexVariable indexVariable = new IndexVariable();
-		
-		List<IndexSymbol> indexOnRhs = SingleElementUtil.createList( indexVariable );
-		Nonterminal ntOnRhs = new IndexedNonterminalImpl(nt, indexOnRhs);
 		
 		HeapConfiguration recursiveRule = singlePointerToNonterminalEdge(ntOnRhs, sel );
 		HeapConfiguration baseRule = singlePointerLeftToRight(sel);
 		
+	
+		return Grammar.builder().addRule(variableLhs, recursiveRule)
+								.addRule(baseLhs, baseRule)
+								.build();
+	}
+	private Nonterminal indexedNtForRhs(BasicNonterminal nt, IndexVariable indexVariable) {
+		List<IndexSymbol> indexOnRhs = SingleElementUtil.createList( indexVariable );
+		Nonterminal ntOnRhs = new IndexedNonterminalImpl(nt, indexOnRhs);
+		return ntOnRhs;
+	}
+	private Nonterminal getIndexedBaseLhs(BasicNonterminal nt) {
+		List<IndexSymbol> index2 = SingleElementUtil.createList( ConcreteIndexSymbol.getIndexSymbol("Z", true) );
+		Nonterminal lhs2 = new IndexedNonterminalImpl(nt, index2);
+		return lhs2;
+	}
+	private Nonterminal getIndexedVariableLhs(BasicNonterminal nt, IndexVariable indexVariable) {
 		List<IndexSymbol> index1 = new ArrayList<>();
 		index1.add( ConcreteIndexSymbol.getIndexSymbol("s", false));
 		index1.add(indexVariable);
 		Nonterminal lhs1 = new IndexedNonterminalImpl(nt, index1);
-		
-		
-		List<IndexSymbol> index2 = SingleElementUtil.createList( ConcreteIndexSymbol.getIndexSymbol("Z", true) );
-		Nonterminal lhs2 = new IndexedNonterminalImpl(nt, index2);
-		
-		return Grammar.builder().addRule(lhs1, recursiveRule)
-								.addRule(lhs2, baseRule)
-								.build();
+		return lhs1;
+	}
+	
+	private Nonterminal getNonterminalWithNewIndex( BasicNonterminal nt ) {
+		List<IndexSymbol> index = new ArrayList<>();
+		index.add( ConcreteIndexSymbol.getIndexSymbol("neu", true));
+		Nonterminal indexedNt = new IndexedNonterminalImpl(nt, index);
+		return indexedNt;
 	}
 
 	private HeapConfiguration singlePointerToNonterminalEdge(Nonterminal nt, SelectorLabel sel) {

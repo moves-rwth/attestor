@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.rwth.i2.attestor.graph.digraph.NodeLabel;
 import gnu.trove.map.TIntIntMap;
@@ -43,7 +44,7 @@ public interface Nonterminal extends NodeLabel {
      * @return the set of tentacles reachable from the given tentacle
      */
     Collection<Integer> reachableTentaclesFrom( int tentacle );
-    void setReachableTentacles( HashMap<Integer, Collection<Integer>> reachabilityMap );
+    void setReachableTentacles( Map<Integer, Collection<Integer>> reachabilityMap );
 
     /**
      * @return The label underlying this nonterminal symbol.

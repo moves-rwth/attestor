@@ -150,7 +150,7 @@ public final class BasicNonterminal implements Nonterminal {
 	}
 
 	@Override
-	public void setReachableTentacles(HashMap<Integer, Collection<Integer>> reachabilityMap) {
+	public void setReachableTentacles(Map<Integer, Collection<Integer>> reachabilityMap) {
 		this.reachabilityMap = reachabilityMap;
 		
 	}
