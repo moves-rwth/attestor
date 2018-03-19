@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.io.settings;
 
 import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
+import de.rwth.i2.attestor.main.scene.AbstractionOptions;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
@@ -205,43 +205,43 @@ public class SettingsFileReader {
     /**
      * Populates all option communication from the parsed communication file.
      *
-     * @param options The options object to populate.
+     * @param abstractionOptions The abstractionOptions object to populate.
      */
-    public void getOptionSettings(Options options) {
+    public void getOptionSettings(AbstractionOptions abstractionOptions) {
 
-        JSONObject jsonOptions = jsonSettings.getJSONObject("options");
+        JSONObject jsonOptions = jsonSettings.getJSONObject("abstractionOptions");
 
         for (String key : jsonOptions.keySet()) {
             switch (key) {
                 case "mode":
-                    options.setIndexedMode(jsonOptions.get(key).equals("indexed"));
+                    abstractionOptions.setIndexedMode(jsonOptions.get(key).equals("indexed"));
                     break;
                 case "abstractionDistance":
-                    options.setAbstractionDistance(jsonOptions.getInt(key));
+                    abstractionOptions.setAbstractionDistance(jsonOptions.getInt(key));
                     break;
                 case "maximalStateSpace":
-                    options.setMaxStateSpaceSize(jsonOptions.getInt(key));
+                    abstractionOptions.setMaxStateSpaceSize(jsonOptions.getInt(key));
                     break;
                 case "maximalHeap":
-                    options.setMaxStateSize(jsonOptions.getInt(key));
+                    abstractionOptions.setMaxStateSize(jsonOptions.getInt(key));
                     break;
                 case "removeDeadVariables":
-                    options.setRemoveDeadVariables(jsonOptions.getBoolean(key));
+                    abstractionOptions.setRemoveDeadVariables(jsonOptions.getBoolean(key));
                     break;
                 case "aggressiveNullAbstraction":
-                    options.setAggressiveNullAbstraction(jsonOptions.getBoolean(key));
+                    abstractionOptions.setAggressiveNullAbstraction(jsonOptions.getBoolean(key));
                     break;
                 case "garbageCollection":
-                    options.setGarbageCollectionEnabled(jsonOptions.getBoolean(key));
+                    abstractionOptions.setGarbageCollectionEnabled(jsonOptions.getBoolean(key));
                     break;
                 case "stateSpacePostProcessing":
-                    options.setPostProcessingEnabled(jsonOptions.getBoolean(key));
+                    abstractionOptions.setPostProcessingEnabled(jsonOptions.getBoolean(key));
                     break;
                 case "collapseRules":
-                    options.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
+                    abstractionOptions.setRuleCollapsingEnabled(jsonOptions.getBoolean(key));
                     break;
                 case "verifyCounterexamples":
-                    options.setVerifyCounterexamples(jsonOptions.getBoolean(key));
+                    abstractionOptions.setVerifyCounterexamples(jsonOptions.getBoolean(key));
                     break;
                 default:
                     logger.error("Ignoring unknown option: " + key);

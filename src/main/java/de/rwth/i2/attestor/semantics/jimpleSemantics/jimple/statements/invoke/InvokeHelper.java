@@ -106,7 +106,7 @@ public abstract class InvokeHelper extends SceneObject {
                 programState.setIntermediate(referenceName, concreteArgument);
             }
 
-            if (scene().options().isRemoveDeadVariables()) {
+            if (scene().abstractionOptions().isRemoveDeadVariables()) {
                 DeadVariableEliminator.removeDeadVariables(this, argumentValues.get(i).toString(),
                         programState, liveVariableNames);
             }

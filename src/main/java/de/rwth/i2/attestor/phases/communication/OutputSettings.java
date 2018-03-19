@@ -1,13 +1,15 @@
 package de.rwth.i2.attestor.phases.communication;
 
-import java.io.File;
-import java.util.*;
-
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.jsonImport.HcLabelPair;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * All communication related to exporting artifacts.
@@ -101,6 +103,14 @@ public class OutputSettings {
      * and as values the file names these contracts should be written to.
      */
     private Map<String, String> requiredContractsForReuse;
+
+    // -----------------------------------------------------------------
+    private String exportPath = null;
+
+    private String exportGrammarPath = null;
+
+    private String exportLargeStatesPath = null;
+    // -----------------------------------------------------------------
 
 
     /**
@@ -287,7 +297,7 @@ public class OutputSettings {
         if (customHcList != null) {
             customHcList.add(new HcLabelPair(label, hc));
         } else {
-            logger.warn("Adding an HC for custom debug export, although the corresponding export options is disabled!");
+            logger.warn("Adding an HC for custom debug export, although the corresponding export abstractionOptions is disabled!");
         }
     }
 
@@ -409,4 +419,27 @@ public class OutputSettings {
         return this.customHcList;
     }
 
+    public String getExportLargeStatesPath() {
+        return exportLargeStatesPath;
+    }
+
+    public void setExportLargeStatesPath(String exportLargeStatesPath) {
+        this.exportLargeStatesPath = exportLargeStatesPath;
+    }
+
+    public String getExportGrammarPath() {
+        return exportGrammarPath;
+    }
+
+    public void setExportGrammarPath(String exportGrammarPath) {
+        this.exportGrammarPath = exportGrammarPath;
+    }
+
+    public String getExportPath() {
+        return exportPath;
+    }
+
+    public void setExportPath(String exportPath) {
+        this.exportPath = exportPath;
+    }
 }

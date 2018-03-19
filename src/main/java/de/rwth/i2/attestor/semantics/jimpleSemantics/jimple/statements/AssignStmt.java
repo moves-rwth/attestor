@@ -86,7 +86,7 @@ public class AssignStmt extends Statement {
             logger.error(e.getErrorMessage(this));
         }
 
-        if (scene().options().isRemoveDeadVariables()) {
+        if (scene().abstractionOptions().isRemoveDeadVariables()) {
             DeadVariableEliminator.removeDeadVariables(this, rhs.toString(),
                     programState, liveVariableNames);
 

@@ -63,8 +63,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void checkSelectors() {
 
-        Set<String> usedSelectors = new LinkedHashSet<>(scene().options().getUsedSelectorLabels());
-        usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
+        Set<String> usedSelectors = new LinkedHashSet<>(scene().abstractionOptions().getUsedSelectorLabels());
+        usedSelectors.removeAll(scene().abstractionOptions().getGrammarSelectorLabels());
 
         if (!usedSelectors.isEmpty()) {
             logger.info("+------------------------------------------------------------------+");
@@ -81,9 +81,9 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
+        final int abstractionDistance = scene().abstractionOptions().getAbstractionDistance();
+        final boolean indexedMode = scene().abstractionOptions().isIndexedMode();
+        final boolean verifyCounterexamples = scene().abstractionOptions().isVerifyCounterexamples();
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
@@ -108,10 +108,10 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbstractDomain() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-        final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
+        final int abstractionDistance = scene().abstractionOptions().getAbstractionDistance();
+        final boolean aggressiveNullAbstraction = scene().abstractionOptions().getAggressiveNullAbstraction();
+        final boolean indexedMode = scene().abstractionOptions().isIndexedMode();
+        final boolean verifyCounterexamples = scene().abstractionOptions().isVerifyCounterexamples();
 
         boolean aggressiveCompositeMarkingAbstraction = verifyCounterexamples && abstractionDistance == 1;
 
@@ -144,8 +144,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbortTest() {
 
-        int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        int stateBound = scene().options().getMaxStateSize();
+        int stateSpaceBound = scene().abstractionOptions().getMaxStateSpaceSize();
+        int stateBound = scene().abstractionOptions().getMaxStateSize();
         scene().strategies().setAbortStrategy(
                 new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
         );
@@ -171,7 +171,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         StateRefinementStrategy stateRefinementStrategy = scene().strategies().getStateRefinementStrategy();
 
-        boolean isGarbageCollectionEnabled = scene().options().isGarbageCollectionEnabled();
+        boolean isGarbageCollectionEnabled = scene().abstractionOptions().isGarbageCollectionEnabled();
 
         if (stateRefinementStrategy == null) {
             if (isGarbageCollectionEnabled) {

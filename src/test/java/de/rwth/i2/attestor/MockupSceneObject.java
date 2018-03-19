@@ -17,7 +17,7 @@ public class MockupSceneObject extends SceneObject {
 
         super(new DefaultScene());
 
-        scene().options().setRemoveDeadVariables(false);
+        scene().abstractionOptions().setRemoveDeadVariables(false);
 
         scene().strategies().setAbortStrategy(new MockupAbortStrategy());
         scene().strategies().setStateLabelingStrategy(new NoStateLabelingStrategy());

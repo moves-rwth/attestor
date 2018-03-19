@@ -52,7 +52,7 @@ public class CLIPhase extends AbstractPhase
         inputSettings.setPathToSettingsFile(commandLineReader.getPathToSettingsFile());
         DefaultScene defaultScene = (DefaultScene) scene();
         defaultScene.setIdentifier(Objects.hashCode(commandLineReader.getPathToSettingsFile()));
-        settingsReader.getOptionSettings(scene().options());
+        settingsReader.getOptionSettings(scene().abstractionOptions());
         settingsReader.getOutputSettings(outputSettings);
         settingsReader.getMCSettings(modelCheckingSettings);
         commandLineReader.getOutputSettings(outputSettings);

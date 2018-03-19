@@ -11,6 +11,26 @@ import java.util.*;
  */
 public class InputSettings {
 
+    public List<String> getUserDefinedGrammarFiles() {
+        return userDefinedGrammarFiles;
+    }
+
+    public void setUserDefinedGrammarFiles(List<String> userDefinedGrammarFiles) {
+        this.userDefinedGrammarFiles = userDefinedGrammarFiles;
+    }
+
+    public static class PredefinedGrammar {
+
+        private final String name;
+        private final Map<String, String> selectorRenaming;
+
+        public PredefinedGrammar(String name, Map<String, String> selectorRenaming) {
+
+            this.name = name;
+            this.selectorRenaming = selectorRenaming;
+        }
+    }
+
 //general information about the scenario
     /**
      * Name of the analyzed scenario (optional).
@@ -24,6 +44,11 @@ public class InputSettings {
      * Short description of the analyzed specification (optional)
      */
     private String specificationDescription = "";
+
+    /**
+     * Short human-readable description of the analysis
+     */
+    private String description;
     
 //the settings file
     /**
@@ -87,6 +112,13 @@ public class InputSettings {
      * filenames containing user defined contracts to use
      */
     ArrayList<String> contractFiles = new ArrayList<>();
+
+
+    // -------------------------------------------------------------
+    private List<PredefinedGrammar> predefinedGrammars = new ArrayList<>();
+    private List<String> userDefinedGrammarFiles = new ArrayList<>();
+    private List<String> initialHeapFiles = new ArrayList<>();
+    // -------------------------------------------------------------
 
 
 //----------------getters and setters--------------------------------------------------------------------
@@ -205,7 +237,7 @@ public class InputSettings {
     /**
      * Sets the path to the file holding the initial state.
      *
-     * @param pathToInput The directory that containsSubsumingState the file holding the initial state.
+     * @param pathToInput The directory that contains the file holding the initial state.
      */
     public void setPathToInput(String pathToInput) {
 
@@ -364,9 +396,29 @@ public class InputSettings {
             entry.setValue(rootPath + File.separator + entry.getValue());
         }
     }
-    
 
 
-   
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void addPredefinedGrammar(PredefinedGrammar predefinedGrammar) {
+
+        this.predefinedGrammars.add(predefinedGrammar);
+    }
+
+    public void addUserDefinedGrammarFile(String userDefinedGrammarFile) {
+
+        this.userDefinedGrammarFiles.add(userDefinedGrammarFile);
+    }
+
+    public void addInitialHeapFile(String initialHeapFile) {
+
+        this.initialHeapFiles.add(initialHeapFile);
+    }
 
 }

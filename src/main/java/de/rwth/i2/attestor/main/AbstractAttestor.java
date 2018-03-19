@@ -31,7 +31,7 @@ public abstract class AbstractAttestor {
      * @param args The command line arguments determining communication and analysis customizations.
      * @see <a href="https://github.com/moves-rwth/attestor/wiki/Command-Line-Options">
 
-     * Explanation of all command line options
+     * Explanation of all command line abstractionOptions
      * </a>
      */
     public void run(String[] args) {

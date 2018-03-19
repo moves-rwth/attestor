@@ -49,7 +49,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
         IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
 
         final int minDereferenceDepth = 1;
-        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        final boolean aggressiveNullAbstraction = sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction();
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth,
                 aggressiveNullAbstraction, true);
 

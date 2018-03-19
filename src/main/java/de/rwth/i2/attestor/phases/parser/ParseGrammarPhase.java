@@ -1,11 +1,5 @@
 package de.rwth.i2.attestor.phases.parser;
 
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-
-import org.json.JSONArray;
-
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.GrammarBuilder;
 import de.rwth.i2.attestor.graph.Nonterminal;
@@ -19,6 +13,14 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.*;
 
 public class ParseGrammarPhase extends AbstractPhase implements GrammarTransformer {
 
@@ -153,7 +155,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
             logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
 
-        if(scene().options().isRuleCollapsingEnabled()) {
+        if(scene().abstractionOptions().isRuleCollapsingEnabled()) {
             grammarBuilder.updateCollapsedRules();
         }
 
@@ -170,7 +172,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
      */
     private Map<Nonterminal, Collection<HeapConfiguration>> parseRules(JSONArray array) {
 
-        if (scene().options().isIndexedMode()) {
+        if (scene().abstractionOptions().isIndexedMode()) {
             JsonToIndexedGrammar importer = new JsonToIndexedGrammar(this);
             return importer.parseForwardGrammar(array);
         } else {
@@ -212,7 +214,7 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
             logger.error("Could not parse grammar at location " + resource.getPath() + ". Skipping it.");
         }
 
-        if(scene().options().isRuleCollapsingEnabled()) {
+        if(scene().abstractionOptions().isRuleCollapsingEnabled()) {
             grammarBuilder.updateCollapsedRules();
         }
 

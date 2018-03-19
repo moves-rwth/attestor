@@ -43,12 +43,12 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
     @Before
     public void init() {
 
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedMode(true);
 
         IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
 
         final int minDereferenceDepth = 1;
-        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        final boolean aggressiveNullAbstraction = sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction();
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
                 minDereferenceDepth, aggressiveNullAbstraction, true
         );

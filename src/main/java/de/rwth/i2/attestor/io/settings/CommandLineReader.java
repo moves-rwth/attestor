@@ -19,7 +19,7 @@ public class CommandLineReader extends SceneObject {
     private static final Logger logger = LogManager.getLogger("CommandLineReader");
 
     /**
-     * A specification of the available command line options.
+     * A specification of the available command line abstractionOptions.
      */
     private org.apache.commons.cli.Options cliOptions;
 

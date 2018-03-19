@@ -51,7 +51,7 @@ public class GeneralMaterializationStrategyTest_Indexed_DifferentSymbols {
     public void setUp() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedMode(true);
 
         oneAbstractSymbol = DefaultIndexMaterialization.SYMBOL_X;
         otherAbstractSymbol = DefaultIndexMaterialization.SYMBOL_Y;

@@ -7,16 +7,16 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Collects all options that customize the state space generation.
+ * Collects all abstractionOptions that customize the state space generation.
  *
  * @author Hannah Arndt, Christoph
  */
-public class Options {
+public class AbstractionOptions {
 
     /**
      * The logger of this class.
      */
-    private static final Logger logger = LogManager.getLogger("Options");
+    private static final Logger logger = LogManager.getLogger("AbstractionOptions");
     /**
      * The set of variables that will never ever be eliminated.
      */
@@ -26,7 +26,7 @@ public class Options {
     /**
      * The maximal number of states before state space generation is given up.
      */
-    private int maxStateSpaceSize = 3000;
+    private int maxStateSpaceSize = 5000;
     /**
      * The maximal number of nodes in a single heap configuration before state space generation is given up.
      */
@@ -66,6 +66,32 @@ public class Options {
      */
     private boolean ruleCollapsingEnabled = true;
 
+    // -----------------------------------------------------------------------------------
+
+    private boolean admissibleAbstractionEnabled = false;
+
+    private boolean admissibleConstantsEnabled = false;
+
+    private boolean admissibleMarkingsEnabled = false;
+
+    private boolean admissibleFullEnabled = false;
+
+    private boolean noChainAbstractionEnabled = false;
+
+    private boolean noRuleCollapsingEnabled = false;
+
+    private boolean indexedModeEnabled = false;
+
+    private boolean canonicalEnabled = false;
+
+    private boolean noGarbageCollectionEnabled = false;
+
+    private int maxStateSpace = 5000;
+
+    private int maxHeap = 50;
+
+    // -----------------------------------------------------------------------------------
+
     /**
      * If enabled, we verify that a counterexample is not spurious (otherwise an invalid LTL formula is set to unknown).
      * This option is disabled by default, because counterexample verification requires a more elaborate state space
@@ -73,7 +99,7 @@ public class Options {
      */
     private boolean verifyCounterexamples = false;
 
-    protected Options() {}
+    protected AbstractionOptions() {}
 
     public void addKeptVariable(String variableName) {
 
@@ -269,5 +295,93 @@ public class Options {
 
     public boolean isVerifyCounterexamples() {
         return verifyCounterexamples;
+    }
+
+    public boolean isAdmissibleAbstractionEnabled() {
+        return admissibleAbstractionEnabled;
+    }
+
+    public void setAdmissibleAbstractionEnabled(boolean admissibleAbstractionEnabled) {
+        this.admissibleAbstractionEnabled = admissibleAbstractionEnabled;
+    }
+
+    public boolean isAdmissibleConstantsEnabled() {
+        return admissibleConstantsEnabled;
+    }
+
+    public void setAdmissibleConstantsEnabled(boolean admissibleConstantsEnabled) {
+        this.admissibleConstantsEnabled = admissibleConstantsEnabled;
+    }
+
+    public boolean isAdmissibleMarkingsEnabled() {
+        return admissibleMarkingsEnabled;
+    }
+
+    public void setAdmissibleMarkingsEnabled(boolean admissibleMarkingsEnabled) {
+        this.admissibleMarkingsEnabled = admissibleMarkingsEnabled;
+    }
+
+    public boolean isAdmissibleFullEnabled() {
+        return admissibleFullEnabled;
+    }
+
+    public void setAdmissibleFullEnabled(boolean admissibleFullEnabled) {
+        this.admissibleFullEnabled = admissibleFullEnabled;
+    }
+
+    public boolean isNoChainAbstractionEnabled() {
+        return noChainAbstractionEnabled;
+    }
+
+    public void setNoChainAbstractionEnabled(boolean noChainAbstractionEnabled) {
+        this.noChainAbstractionEnabled = noChainAbstractionEnabled;
+    }
+
+    public boolean isNoRuleCollapsingEnabled() {
+        return noRuleCollapsingEnabled;
+    }
+
+    public void setNoRuleCollapsingEnabled(boolean noRuleCollapsingEnabled) {
+        this.noRuleCollapsingEnabled = noRuleCollapsingEnabled;
+    }
+
+    public boolean isIndexedModeEnabled() {
+        return indexedModeEnabled;
+    }
+
+    public void setIndexedModeEnabled(boolean indexedModeEnabled) {
+        this.indexedModeEnabled = indexedModeEnabled;
+    }
+
+    public boolean isCanonicalEnabled() {
+        return canonicalEnabled;
+    }
+
+    public void setCanonicalEnabled(boolean canonicalEnabled) {
+        this.canonicalEnabled = canonicalEnabled;
+    }
+
+    public boolean isNoGarbageCollectionEnabled() {
+        return noGarbageCollectionEnabled;
+    }
+
+    public void setNoGarbageCollectionEnabled(boolean noGarbageCollectionEnabled) {
+        this.noGarbageCollectionEnabled = noGarbageCollectionEnabled;
+    }
+
+    public int getMaxStateSpace() {
+        return maxStateSpace;
+    }
+
+    public void setMaxStateSpace(int maxStateSpace) {
+        this.maxStateSpace = maxStateSpace;
+    }
+
+    public int getMaxHeap() {
+        return maxHeap;
+    }
+
+    public void setMaxHeap(int maxHeap) {
+        this.maxHeap = maxHeap;
     }
 }

@@ -72,7 +72,7 @@ public class ModelCheckingPhase extends AbstractPhase implements ModelCheckingRe
                 allSatisfied = false;
                 formulaResults.put(formula, ModelCheckingResult.UNSATISFIED);
 
-                if (scene().options().isIndexedMode()) {
+                if (scene().abstractionOptions().isIndexedMode()) {
                     logger.warn("Counterexample generation for indexed grammars is not supported yet.");
                 } else {
                     FailureTrace failureTrace = proofStructure.getFailureTrace();

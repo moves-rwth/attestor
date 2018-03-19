@@ -85,7 +85,7 @@ public class MarkingGenerationPhase extends AbstractPhase
                 result.add(VISITED);
             } else if(visitedByPattern.matcher(ap).matches()) {
                 String varName = ap.split("[\\(\\)]")[1];
-                scene().options().addKeptVariable(varName);
+                scene().abstractionOptions().addKeptVariable(varName);
                 result.add(VISITED_BY);
             } else if(identicNeighboursPattern.matcher(ap).matches()) {
                 result.add(IDENTIC_NEIGHBOURS);
@@ -96,14 +96,14 @@ public class MarkingGenerationPhase extends AbstractPhase
 
     private void addMarking(String marking) {
 
-        Collection<String> availableSelectorNames = scene().options().getUsedSelectorLabels();
+        Collection<String> availableSelectorNames = scene().abstractionOptions().getUsedSelectorLabels();
 
         final Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
-        final boolean indexedMode = scene().options().isIndexedMode();
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-        final int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        final int stateBound = scene().options().getMaxStateSize();
+        final boolean indexedMode = scene().abstractionOptions().isIndexedMode();
+        final int abstractionDistance = scene().abstractionOptions().getAbstractionDistance();
+        final boolean aggressiveNullAbstraction = scene().abstractionOptions().getAggressiveNullAbstraction();
+        final int stateSpaceBound = scene().abstractionOptions().getMaxStateSpaceSize();
+        final int stateBound = scene().abstractionOptions().getMaxStateSize();
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setIndexedMode(indexedMode)

@@ -1,8 +1,9 @@
 package de.rwth.i2.attestor.main.scene;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.procedures.Contract;
@@ -15,6 +16,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class DefaultScene implements Scene {
 
 
@@ -22,7 +27,7 @@ public class DefaultScene implements Scene {
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
 
-    private final Options options = new Options();
+    private final AbstractionOptions abstractionOptions = new AbstractionOptions();
     private final Strategies strategies = new Strategies();
 
     private final Map<String, Method> methods = new HashMap<>();
@@ -49,7 +54,7 @@ public class DefaultScene implements Scene {
     @Override
     public SelectorLabel getSelectorLabel(String name) {
 
-        if (options.isIndexedMode()) {
+        if (abstractionOptions.isIndexedMode()) {
             SelectorLabel sel = basicSelectorLabelFactory.get(name);
             return new AnnotatedSelectorLabel(sel, "");
         } else {
@@ -63,9 +68,9 @@ public class DefaultScene implements Scene {
         // note that we *never* return IndexedNonterminal here as these are created using a
         // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.get(name);
-        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
+        if (abstractionOptions.isIndexedMode() && abstractionOptions.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (options.isGrammarRefinementEnabled()) {
+        } else if (abstractionOptions.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(basicNonterminal, null);
         } else {
             return basicNonterminal;
@@ -78,9 +83,9 @@ public class DefaultScene implements Scene {
         // note that we *never* return IndexedNonterminal here as these are created using a
         // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.create(label, rank, isReductionTentacle);
-        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
+        if (abstractionOptions.isIndexedMode() && abstractionOptions.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (options.isGrammarRefinementEnabled()) {
+        } else if (abstractionOptions.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(
                     basicNonterminal, null
             );
@@ -99,7 +104,7 @@ public class DefaultScene implements Scene {
     public ProgramState createProgramState(HeapConfiguration heapConfiguration) {
 
         ProgramState result;
-        if (options.isIndexedMode()) {
+        if (abstractionOptions.isIndexedMode()) {
             result = new IndexedState(heapConfiguration);
         } else {
             result = new DefaultProgramState(heapConfiguration);
@@ -160,9 +165,9 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public Options options() {
+    public AbstractionOptions abstractionOptions() {
 
-        return options;
+        return abstractionOptions;
     }
 
     @Override

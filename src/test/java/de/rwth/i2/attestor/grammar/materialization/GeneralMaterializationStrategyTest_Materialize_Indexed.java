@@ -48,7 +48,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed {
     public void setUp() throws Exception {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedMode(true);
 
         treeGrammar = new BalancedTreeGrammar(sceneObject);
 

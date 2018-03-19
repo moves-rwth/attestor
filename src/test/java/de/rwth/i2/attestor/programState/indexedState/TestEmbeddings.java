@@ -26,10 +26,10 @@ public class TestEmbeddings {
     public void init() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedMode(true);
 
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
-        aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+        aggressiveNullAbstraction = sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction();
 
         AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
         AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");

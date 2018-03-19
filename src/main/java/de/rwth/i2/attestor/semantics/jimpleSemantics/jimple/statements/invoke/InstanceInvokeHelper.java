@@ -87,7 +87,7 @@ public class InstanceInvokeHelper extends InvokeHelper {
             // String type = " " + baseValue.getType().toString();
             String type = "";
             programState.setIntermediate("@this:" + type, concreteBase);
-            if (scene().options().isRemoveDeadVariables()) {
+            if (scene().abstractionOptions().isRemoveDeadVariables()) {
                 DeadVariableEliminator.removeDeadVariables(this, baseValue.toString(), programState, liveVariableNames);
             }
         }

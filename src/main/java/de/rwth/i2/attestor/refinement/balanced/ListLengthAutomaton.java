@@ -69,7 +69,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
     private void setupCanonicalization() {
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
-                scene().options().getAggressiveNullAbstraction(), true);
+                scene().abstractionOptions().getAggressiveNullAbstraction(), true);
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

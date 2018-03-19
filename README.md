@@ -55,7 +55,7 @@ Details on creating new benchmark projects are found [here][14].
 
 It is also possible to directly run attestor from the command-line using individual settings files.
 Instructions on running attestor from the command-line can be found in the [wiki][15].
-The format and possible options of Attestor's settings are also explained in the [wiki][16].
+The format and possible abstractionOptions of Attestor's settings are also explained in the [wiki][16].
 
 # Documentation and Publications
 
