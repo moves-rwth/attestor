@@ -158,7 +158,6 @@ public class CommandLinePhase extends AbstractPhase
                 throw new IllegalArgumentException("Unknown command line option: " + optionName);
         }
 
-
     }
 
     private void description(Option option) {

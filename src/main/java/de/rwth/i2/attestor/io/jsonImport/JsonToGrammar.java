@@ -39,20 +39,24 @@ public class JsonToGrammar extends SceneObject {
         Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
         List<Nonterminal> ntsWithoutReductionTentacles = new ArrayList<>();
 
+        Nonterminal[] nonterminals = new Nonterminal[input.length()];
+        JSONObject[] grammarFragments = new JSONObject[input.length()];
+
         for (int i = 0; i < input.length(); i++) {
 
-            JSONObject grammarFragment = input.getJSONObject(i);
+            JSONObject fragment = input.getJSONObject(i);
+            grammarFragments[i] = fragment;
 
-            int rank = getRank(grammarFragment);
-            String label = getLabel(grammarFragment);
+            int rank = getRank(fragment);
+            String label = getLabel(fragment);
 
             Nonterminal nt;
 
-            if (hasDefinedTentacles(grammarFragment)) {
+            if (hasDefinedTentacles(fragment)) {
 
-                final boolean[] rts = getReductionTentacles(grammarFragment);
-                if (isIndexedMode && grammarFragment.has("index")) {
-                    List<IndexSymbol> index = getIndex(grammarFragment);
+                final boolean[] rts = getReductionTentacles(fragment);
+                if (isIndexedMode && fragment.has("index")) {
+                    List<IndexSymbol> index = getIndex(fragment);
                     nt = createIndexedNonterminal(rank, label, index, rts);
                 } else {
                     nt = scene().createNonterminal(label, rank, rts);
@@ -63,8 +67,8 @@ public class JsonToGrammar extends SceneObject {
                 boolean[] rts = new boolean[rank];
                 Arrays.fill(rts, false);
 
-                if (isIndexedMode && grammarFragment.has("index")) {
-                    List<IndexSymbol> index = getIndex(grammarFragment);
+                if (isIndexedMode && fragment.has("index")) {
+                    List<IndexSymbol> index = getIndex(fragment);
                     nt = createIndexedNonterminal(rank, label, index, rts);
                 } else {
                     nt = scene().createNonterminal(label, rank, rts);
@@ -73,7 +77,12 @@ public class JsonToGrammar extends SceneObject {
                 ntsWithoutReductionTentacles.add(nt);
             }
 
-            res.put(nt, getGraphs(nt, grammarFragment));
+            nonterminals[i] = nt;
+        }
+
+        for (int i = 0; i < input.length(); i++) {
+            Nonterminal nt = nonterminals[i];
+            res.put(nt, getGraphs(nt, grammarFragments[i]));
         }
 
         updateReductionTentacles(ntsWithoutReductionTentacles, res);
@@ -107,12 +116,12 @@ public class JsonToGrammar extends SceneObject {
 
     private boolean hasDefinedTentacles(JSONObject grammarFragment) {
 
-        return grammarFragment.has("redundantTentacles");
+        return grammarFragment.has("reductionTentacles");
     }
 
     private boolean[] getReductionTentacles(JSONObject grammarFragment) {
 
-        JSONArray tentacles = grammarFragment.getJSONArray("redundantTentacles");
+        JSONArray tentacles = grammarFragment.getJSONArray("reductionTentacles");
         boolean[] res = new boolean[tentacles.length()];
         for (int i = 0; i < tentacles.length(); i++) {
 
