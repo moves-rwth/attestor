@@ -51,7 +51,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
     @Override
     public void executePhase() {
 
-        boolean isVerifyCounterexamples = scene().abstractionOptions().isVerifyCounterexamples();
+        boolean canonicalEnabled = scene().abstractionOptions().isCanonicalEnabled();
 
         modelCheckingResults = getPhase(ModelCheckingResultsTransformer.class);
         grammar = getPhase(GrammarTransformer.class).getGrammar();
@@ -63,10 +63,10 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
                     continue;
                 }
 
-                if(!isVerifyCounterexamples) {
+                if(!canonicalEnabled) {
                     counterexamples.put(formula, trace.getInitialState());
                     logger.warn("Verification of potentially spurious counterexamples is disabled.");
-                    logger.warn("It is advided to rerun Attestor with option 'verifyCounterexamples' set to 'true'.");
+                    logger.warn("It is advised to rerun with option '--canonical'.");
                     continue;
                 }
 
@@ -130,7 +130,7 @@ public class CounterexampleGenerationPhase extends AbstractPhase implements Coun
             return;
         }
 
-        if(!scene().abstractionOptions().isVerifyCounterexamples()) {
+        if(!scene().abstractionOptions().isCanonicalEnabled()) {
             logHighlight("Detected counterexamples are not verified.");
         } else if (allCounterexamplesDetected) {
             logHighlight("Detected a non-spurious counterexample for all violated LTL formulae.");

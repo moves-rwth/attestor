@@ -38,7 +38,7 @@ public class CommandLineReader {
 
         CommandLineParser parser = new DefaultParser();
         try {
-            String[] allArgs = (String[]) allArguments.toArray();
+            String[] allArgs = allArguments.toArray(new String[allArguments.size()]);
             return parser.parse(commandLineOptions, allArgs);
         } catch (ParseException | NumberFormatException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -90,7 +90,7 @@ public class CommandLineReader {
             if(rootPath.isEmpty()) {
                 path = Paths.get(settingsFile);
             } else {
-                path = Paths.get(rootPath + File.pathSeparator + settingsFile);
+                path = Paths.get(rootPath + File.separator + settingsFile);
             }
             List<String> lines = Files.readAllLines(path);
             SettingsLexer lexer = new SettingsLexer(lines);
@@ -166,6 +166,7 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder("c")
                         .longOpt("class")
+                        .required()
                         .hasArg()
                         .argName("classname")
                         .desc("Determines the class containing the top-level method should be analyzed. " +
@@ -176,6 +177,7 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder("cp")
                         .longOpt("classpath")
+                        .required()
                         .hasArg()
                         .argName("classpath")
                         .desc("Determines the path to the classes that should be analyzed. " +
@@ -242,22 +244,27 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder("pg")
                         .longOpt("predefined-grammar")
-                        .hasArgs()
-                        .numberOfArgs(Option.UNLIMITED_VALUES)
-                        .argName("...")
+                        .hasArg()
+                        .argName("name")
                         .desc("Adds a predefined graph grammar with the provided name to the grammars " +
                                 "used in the analysis. " +
-                                "The exact arguments are: <grammar name> <sel1=name1> <sel2=name2> ... " +
-                                "For each selector used within the grammar, a corresponding renaming additionally " +
-                                "has to be provided. For example, if the grammar contains a selector next that " +
-                                "should correspond to a selector n in the analyzed class, the provided option " +
-                                "should be of the form next=n. " +
+                                "The fixed node type and selector names can be renamed using --rename " +
                                 "Please confer the list of predefined data structures for further details " +
                                 "on available predefined graph grammars.")
                         .build()
         );
 
-
+        commandLineOptions.addOption(
+                Option.builder("r")
+                        .longOpt("rename")
+                        .hasArgs()
+                        .numberOfArgs(Option.UNLIMITED_VALUES)
+                        .argName("...")
+                        .desc("Renames the provided class, i.e. node type, together with the selectors " +
+                                "of the specified class. The exact arguments are of the form " +
+                                "oldClassname=newClassname oldSelector1=newSelector1 ...")
+                        .build()
+        );
     }
 
     private void setupAbstractionOptions() {
@@ -391,7 +398,6 @@ public class CommandLineReader {
                 Option.builder("ms")
                         .longOpt("max-state-space")
                         .hasArg()
-                        .type(Integer.class)
                         .argName("integer")
                         .desc("Determines the maximal number of program states to be encountered within a single" +
                                 " state space generation until the analysis is aborted. " +

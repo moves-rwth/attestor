@@ -8,6 +8,7 @@ public class SettingsLexer {
     private static final char STRING_DELIMITER = '"';
     private static final char DELIMITER = ' ';
     private static final char LINE_DELIMITER = '\n';
+    private static final char COMMENT_DELIMITER = '#';
 
 
     private List<String> lexemes = new ArrayList<>();
@@ -32,9 +33,13 @@ public class SettingsLexer {
         boolean stringMode = false;
 
         // get rid of invisible unicode characters
-        line.replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+        line.replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?").trim();
 
         StringBuilder lexemeBuilder = new StringBuilder();
+
+        if(line.length() > 0 && line.charAt(0) == COMMENT_DELIMITER) {
+            return;
+        }
 
         for(int i=0; i < line.length(); i++) {
             char next = line.charAt(i);
@@ -54,14 +59,22 @@ public class SettingsLexer {
                     if(stringMode) {
                        lexemeBuilder.append(next);
                     } else {
-                        lexemes.add(lexemeBuilder.toString());
-                        lexemeBuilder = new StringBuilder();
+                        String l = lexemeBuilder.toString();
+                        if(!l.isEmpty()) {
+                            lexemes.add(lexemeBuilder.toString());
+                            lexemeBuilder = new StringBuilder();
+                        }
                     }
                     break;
                 default:
                     lexemeBuilder.append(next);
                     break;
             }
+        }
+
+        String l = lexemeBuilder.toString();
+        if(!l.isEmpty()) {
+            lexemes.add(lexemeBuilder.toString());
         }
 
     }

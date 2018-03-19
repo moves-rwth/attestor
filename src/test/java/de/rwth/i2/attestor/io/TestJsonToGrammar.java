@@ -3,7 +3,7 @@ package de.rwth.i2.attestor.io;
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
-import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
+import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminalImpl;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TestJsonToIndexedGrammar {
+public class TestJsonToGrammar {
 
     @Test
     public void testParseForwardGrammar() {
@@ -82,7 +82,8 @@ public class TestJsonToIndexedGrammar {
         ExpectedHCs expectedHCs = new ExpectedHCs(sceneObject);
 
         Grammar grammar = Grammar.builder()
-                .addRules(new JsonToIndexedGrammar(sceneObject).parseForwardGrammar(jsonArray))
+                .addRules(new JsonToGrammar(sceneObject, new MockupHeapConfigurationRenaming())
+                        .parseForwardGrammar(jsonArray))
                 .build();
 
         assertEquals(2, grammar.getAllLeftHandSides().size());

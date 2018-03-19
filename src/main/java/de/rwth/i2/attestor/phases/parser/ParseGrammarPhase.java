@@ -6,7 +6,6 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.io.jsonImport.JsonToGrammar;
-import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedGrammar;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.Attestor;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -15,18 +14,18 @@ import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
 import org.json.JSONArray;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 public class ParseGrammarPhase extends AbstractPhase implements GrammarTransformer {
 
     private GrammarBuilder grammarBuilder = null;
     private Grammar grammar;
-    private Map<String, String> renamingMap = null;
+    private InputSettings inputSettings;
 
     public ParseGrammarPhase(Scene scene) {
 
@@ -42,79 +41,21 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
     @Override
     public void executePhase() {
 
-        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
         
-        if ( inputSettings.hasUserDefinedGrammar() ) {
-        	for( String grammarLocation : inputSettings.getGrammarLocations() )
-        		loadGrammarFromFile(grammarLocation);
+        for( String grammarLocation : inputSettings.getUserDefinedGrammarFiles() ) {
+            loadGrammarFromFile(grammarLocation);
         }
 
-        boolean hasPredefinedGrammars = inputSettings.getUsedPredefinedGrammars() != null;
-        if (hasPredefinedGrammars) {
-            loadPredefinedGrammars();
-        }
+        loadPredefinedGrammars();
     }
 
     private void loadPredefinedGrammars() {
 
-        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
-        List<String> usedPredefinedGrammars = inputSettings.getUsedPredefinedGrammars();
-
-        if (usedPredefinedGrammars == null) {
-            logger.error("No suitable predefined grammar could be found");
-            return;
+        for(String predefinedGrammar : inputSettings.getPredefinedGrammarNames()) {
+            loadGrammarFromURL(Attestor.class.getClassLoader()
+                    .getResource("predefinedGrammars/" + predefinedGrammar + ".json"));
         }
-
-        for (String predefinedGrammar : inputSettings.getUsedPredefinedGrammars()) {
-            logger.debug("Loading predefined grammar " + predefinedGrammar);
-            String locationOfRenamingMap = inputSettings.getRenamingLocation(predefinedGrammar);
-            try {
-                renamingMap = parseRenamingMap(locationOfRenamingMap);
-                loadGrammarFromURL(Attestor.class.getClassLoader()
-                        .getResource("predefinedGrammars/" + predefinedGrammar + ".json"));
-            } catch (FileNotFoundException e) {
-                logger.error("Skipping predefined grammar "
-                        + predefinedGrammar + ".");
-            }
-        }
-    }
-
-    private HashMap<String, String> parseRenamingMap(String locationOfRenamingMap) throws FileNotFoundException {
-
-        HashMap<String, String> rename = new LinkedHashMap<>();
-        // Read in the type and field name mapping
-        try {
-            BufferedReader br = new BufferedReader(new java.io.FileReader(locationOfRenamingMap));
-            String definitionsLine = null;
-            try {
-                definitionsLine = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            while (definitionsLine != null) {
-                if (definitionsLine.startsWith("@Rename")) {
-                    String[] map = definitionsLine.replace("@Rename", "").split("->");
-                    assert map.length == 2;
-
-                    rename.put(map[0].trim(), map[1].trim());
-                }
-
-                try {
-                    definitionsLine = br.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            br.close();
-        } catch (FileNotFoundException e) {
-            logger.error("File " + locationOfRenamingMap + " not found. ");
-            throw e;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return rename;
     }
 
     /**
@@ -136,21 +77,8 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
 
         try {
             String str = FileReader.read(filename);
-            // Modify grammar (replace all keys in rename by its values)
-            if (renamingMap != null) {
-                for (HashMap.Entry<String, String> renaming : renamingMap.entrySet()) {
-                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
-                    str = str.replaceAll("\"" + renaming.getKey() + "\"", "\"" + renaming.getValue() + "\"");
-                }
-            }
-
-            logger.debug("Renamed grammar string: " + str);
-
             JSONArray array = new JSONArray(str);
-
             this.grammarBuilder.addRules(parseRules(array));
-
-
         } catch (FileNotFoundException e) {
             logger.error("Could not parse grammar at location " + filename + ". Skipping it.");
         }
@@ -172,13 +100,8 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
      */
     private Map<Nonterminal, Collection<HeapConfiguration>> parseRules(JSONArray array) {
 
-        if (scene().abstractionOptions().isIndexedMode()) {
-            JsonToIndexedGrammar importer = new JsonToIndexedGrammar(this);
-            return importer.parseForwardGrammar(array);
-        } else {
-            JsonToGrammar importer = new JsonToGrammar(this);
-            return importer.parseForwardGrammar(array);
-        }
+        JsonToGrammar importer = new JsonToGrammar(this, inputSettings);
+        return importer.parseForwardGrammar(array);
     }
 
     public void loadGrammarFromURL(URL resource) {
@@ -195,16 +118,6 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         try {
             InputStream is = resource.openStream();
             String str = FileReader.read(is);
-
-            // Modify grammar (replace all keys in rename by its values)
-            if (getRenamingMap() != null) {
-                for (HashMap.Entry<String, String> renaming : getRenamingMap().entrySet()) {
-                    logger.debug("Renaming " + renaming.getKey() + " into " + renaming.getValue());
-                    str = str.replaceAll("\"" + renaming.getKey() + "\"", "\"" + renaming.getValue() + "\"");
-                }
-            }
-
-            logger.debug("Renamed grammar string: " + str);
 
             JSONArray array = new JSONArray(str);
 
@@ -240,9 +153,4 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         return grammar;
     }
 
-    @Override
-    public Map<String, String> getRenamingMap() {
-
-        return renamingMap;
-    }
 }

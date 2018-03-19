@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.phases.parser;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
-import de.rwth.i2.attestor.io.jsonImport.JsonImporter;
+import de.rwth.i2.attestor.io.jsonImport.JsonToHeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
@@ -11,13 +11,14 @@ import de.rwth.i2.attestor.procedures.Method;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ParseContractsPhase extends AbstractPhase {
+
+    private InputSettings inputSettings;
 
     public ParseContractsPhase(Scene scene) {
 
@@ -33,21 +34,16 @@ public class ParseContractsPhase extends AbstractPhase {
     @Override
     public void executePhase() {
 
-        InputSettings inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
-        ArrayList<String> fileNames = inputSettings.getContractFileNames();
-        if (!fileNames.isEmpty()) {
-            String path = inputSettings.getPathToContracts();
-            for (String fileName : fileNames) {
-                loadContract(path, fileName);
-            }
+        inputSettings = getPhase(InputSettingsTransformer.class).getInputSettings();
+        for(String contractFile : inputSettings.getContractFileNames()) {
+            loadContract(contractFile);
         }
-
     }
 
-    private void loadContract(String path, String filename) {
+    private void loadContract(String filename) {
 
         try {
-            String str = FileReader.read(path + File.separator + filename);
+            String str = FileReader.read(filename);
 
             JSONObject obj = new JSONObject(str);
             String signature = obj.getString("method");
@@ -56,18 +52,18 @@ public class ParseContractsPhase extends AbstractPhase {
             Consumer<String> addUsedSelectorLabel = scene().abstractionOptions()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
 
-            JsonImporter importer = new JsonImporter(this);
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(this, inputSettings);
 
             for (int i = 0; i < array.length(); i++) {
                 JSONObject contract = array.getJSONObject(i);
                 final JSONObject jsonPrecondition = contract.getJSONObject("precondition");
-                HeapConfiguration precondition = importer.parseHC(jsonPrecondition, addUsedSelectorLabel);
+                HeapConfiguration precondition = importer.parse(jsonPrecondition, addUsedSelectorLabel);
 
                 List<HeapConfiguration> postconditions = new ArrayList<>();
                 JSONArray jsonPostConditions = contract.getJSONArray("postconditions");
                 for (int p = 0; p < jsonPostConditions.length(); p++) {
                     final JSONObject jsonPostcondition = jsonPostConditions.getJSONObject(p);
-                    postconditions.add(importer.parseHC(jsonPostcondition, addUsedSelectorLabel));
+                    postconditions.add(importer.parse(jsonPostcondition, addUsedSelectorLabel));
                 }
                 abstractMethod.addContract(
                         scene().createContract(precondition, postconditions)
@@ -76,7 +72,7 @@ public class ParseContractsPhase extends AbstractPhase {
 
 
         } catch (FileNotFoundException e) {
-            logger.error("Could not parse contract at location " + path + File.separator + filename + ". Skipping it.");
+            logger.error("Could not parse contract at location " + filename + ". Skipping it.");
         }
     }
 

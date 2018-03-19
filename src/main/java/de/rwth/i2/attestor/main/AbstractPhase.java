@@ -72,7 +72,6 @@ public abstract class AbstractPhase extends SceneObject {
     private void logFail(Exception e) throws Exception {
 
         logger.fatal(getName() + " failed.");
-        logger.fatal("Reason for failure:");
         logger.fatal(e.getMessage());
         throw e;
     }

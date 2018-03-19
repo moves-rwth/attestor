@@ -22,7 +22,10 @@ import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomaton;
 import de.rwth.i2.attestor.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class GrammarRefinementPhase extends AbstractPhase
@@ -249,9 +252,4 @@ public class GrammarRefinementPhase extends AbstractPhase
         return grammar;
     }
 
-    @Override
-    public Map<String, String> getRenamingMap() {
-
-        return getPhase(GrammarTransformer.class).getRenamingMap();
-    }
 }

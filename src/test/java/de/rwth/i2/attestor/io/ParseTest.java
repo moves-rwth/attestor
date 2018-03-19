@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.jsonImport.JsonToDefaultHC;
+import de.rwth.i2.attestor.io.jsonImport.JsonToHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,9 +43,9 @@ public class ParseTest {
              */
             sceneObject.scene().createNonterminal("Hyperedge", 3, new boolean[]{true, true, true});
 
-            JsonToDefaultHC importer = new JsonToDefaultHC(sceneObject);
-            HeapConfiguration res = importer.jsonToHC(obj, s -> {
-            });
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                    new MockupHeapConfigurationRenaming());
+            HeapConfiguration res = importer.parse(obj, s -> { });
 
             logger.trace("res:" + res);
 

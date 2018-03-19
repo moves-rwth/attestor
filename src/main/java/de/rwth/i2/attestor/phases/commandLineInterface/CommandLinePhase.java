@@ -6,14 +6,19 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
+import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.MCSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.OutputSettingsTransformer;
+import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTransformer;
+import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
-public class CommandLinePhase extends AbstractPhase {
+public class CommandLinePhase extends AbstractPhase
+        implements InputSettingsTransformer, OutputSettingsTransformer,
+        MCSettingsTransformer, StateLabelingStrategyBuilderTransformer {
 
     private final String[] originalCommandLineArguments;
 
@@ -70,7 +75,7 @@ public class CommandLinePhase extends AbstractPhase {
                 description(option);
                 break;
             case "help":
-                help(option);
+                help();
                 break;
             case "load":
                 // was already processed before
@@ -99,38 +104,40 @@ public class CommandLinePhase extends AbstractPhase {
             case "predefined-grammar":
                 predefinedGrammar(option);
                 break;
-            case "admissibleAbstraction":
-                admissibleAbstraction(option);
+            case "rename":
+                rename(option);
+            case "admissible-abstraction":
+                admissibleAbstraction();
                 break;
-            case "admissibleConstants":
-                admissibleConstants(option);
+            case "admissible-constants":
+                admissibleConstants();
                 break;
-            case "admissibleMarkings":
-                admissibleMarkings(option);
+            case "admissible-markings":
+                admissibleMarkings();
                 break;
-            case "admissibleFull":
-                admissibleFull(option);
+            case "admissible-full":
+                admissibleFull();
                 break;
             case "no-chain-abstraction":
-                noChainAbstraction(option);
+                noChainAbstraction();
                 break;
             case "no-rule-collapsing":
-                noRuleCollapsing(option);
+                noRuleCollapsing();
                 break;
             case "indexed":
-                indexed(option);
+                indexed();
                 break;
             case "post-processing":
-                postProcessing(option);
+                postProcessing();
                 break;
             case "canonical":
-                canonical(option);
+                canonical();
                 break;
             case "model-checking":
                 modelChecking(option);
                 break;
             case "no-garbage-collector":
-                noGarbageCollector(option);
+                noGarbageCollector();
                 break;
             case "max-state-space":
                 maxStateSpace(option);
@@ -159,7 +166,7 @@ public class CommandLinePhase extends AbstractPhase {
         inputSettings.setDescription(option.getValue());
     }
 
-    private void help(Option option) {
+    private void help() {
 
         commandLineReader.printHelp();
     }
@@ -186,7 +193,7 @@ public class CommandLinePhase extends AbstractPhase {
 
     private void initial(Option option) {
 
-        inputSettings.setPathToInput(option.getValue());
+        inputSettings.addInitialHeapFile(option.getValue());
     }
 
     private void method(Option option) {
@@ -196,68 +203,79 @@ public class CommandLinePhase extends AbstractPhase {
 
     private void predefinedGrammar(Option option) {
 
-        String[] values = option.getValues();
-
-        if(values.length == 0) {
-            throw new IllegalArgumentException("No predefined grammar name has been provided.");
+        String grammarName = option.getValue();
+        if(grammarName == null) {
+            throw new IllegalArgumentException("Unspecified grammar name");
         }
-
-        String name = values[0];
-        Map<String, String> renaming = new HashMap<>();
-
-        for(int i=1; i < values.length; i++) {
-            String v = values[i].trim();
-            String[] r = v.split("=");
-            if(r.length != 2) {
-                throw new IllegalArgumentException("Invalid selector renaming of predefined grammar.");
-            }
-            renaming.put(r[0], r[1]);
-        }
-
-        inputSettings.addPredefinedGrammar(new InputSettings.PredefinedGrammar(name, renaming));
+        inputSettings.addPredefinedGrammarName(grammarName);
     }
 
-    private void admissibleAbstraction(Option option) {
+    private void rename(Option option) {
+
+        String[] values = option.getValues();
+        if(values.length == 0) {
+            throw new IllegalArgumentException("No class to rename has been provided.");
+        }
+
+        String type = values[0];
+        String[] t = type.split("=");
+        if(t.length != 2) {
+            throw new IllegalArgumentException("The syntax for type renaming is 'oldType=newType'.");
+        }
+        inputSettings.addTypeRenaming(t[0], t[1]);
+
+        for(int i=1; i < values.length; i++) {
+            String selector = values[i].trim();
+            String[] s = selector.split("=");
+            if(s.length != 2) {
+                throw new IllegalArgumentException("The syntax for selector renaming is 'oldSelector=newSelector'.");
+            }
+            inputSettings.addSelectorRenaming(t[1], s[0], s[1]);
+        }
+    }
+
+
+    private void admissibleAbstraction() {
 
         scene().abstractionOptions().setAdmissibleAbstractionEnabled(true);
     }
 
-    private void admissibleConstants(Option option) {
+    private void admissibleConstants() {
 
         scene().abstractionOptions().setAdmissibleConstantsEnabled(true);
     }
 
-    private void admissibleMarkings(Option option) {
+    private void admissibleMarkings() {
 
         scene().abstractionOptions().setAdmissibleMarkingsEnabled(true);
     }
 
-    private void admissibleFull(Option option) {
+    private void admissibleFull() {
 
         scene().abstractionOptions().setAdmissibleFullEnabled(true);
     }
 
-    private void noChainAbstraction(Option option) {
+    private void noChainAbstraction() {
 
         scene().abstractionOptions().setNoChainAbstractionEnabled(true);
     }
 
-    private void noRuleCollapsing(Option option) {
+    private void noRuleCollapsing() {
 
         scene().abstractionOptions().setNoRuleCollapsingEnabled(true);
     }
 
-    private void indexed(Option option) {
+    private void indexed() {
 
         scene().abstractionOptions().setIndexedModeEnabled(true);
     }
 
-    private void postProcessing(Option option) {
+    private void postProcessing() {
 
         scene().abstractionOptions().setPostProcessingEnabled(true);
     }
 
-    private void canonical(Option option) {
+    private void canonical() {
 
         if(commandLine.hasOption("post-processing")) {
             throw new IllegalArgumentException("Option --canonical is incompatible with option --post-processing.");
@@ -277,7 +295,7 @@ public class CommandLinePhase extends AbstractPhase {
         }
     }
 
-    private void noGarbageCollector(Option option) {
+    private void noGarbageCollector() {
 
         scene().abstractionOptions().setNoGarbageCollectionEnabled(true);
     }
@@ -317,5 +335,25 @@ public class CommandLinePhase extends AbstractPhase {
     @Override
     public boolean isVerificationPhase() {
         return false;
+    }
+
+    @Override
+    public InputSettings getInputSettings() {
+        return inputSettings;
+    }
+
+    @Override
+    public ModelCheckingSettings getMcSettings() {
+        return modelCheckingSettings;
+    }
+
+    @Override
+    public OutputSettings getOutputSettings() {
+        return outputSettings;
+    }
+
+    @Override
+    public AutomatonStateLabelingStrategyBuilder getStrategy() {
+        return null;
     }
 }

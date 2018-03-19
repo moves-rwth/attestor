@@ -11,12 +11,12 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class AbstractionOptions {
+public class Options {
 
     /**
      * The logger of this class.
      */
-    private static final Logger logger = LogManager.getLogger("AbstractionOptions");
+    private static final Logger logger = LogManager.getLogger("Options");
     /**
      * The set of variables that will never ever be eliminated.
      */
@@ -99,7 +99,7 @@ public class AbstractionOptions {
      */
     private boolean verifyCounterexamples = false;
 
-    protected AbstractionOptions() {}
+    protected Options() {}
 
     public void addKeptVariable(String variableName) {
 
@@ -296,6 +296,10 @@ public class AbstractionOptions {
     public boolean isVerifyCounterexamples() {
         return verifyCounterexamples;
     }
+
+
+    // ----------------------------------------------------------------------------------------------------------------
+
 
     public boolean isAdmissibleAbstractionEnabled() {
         return admissibleAbstractionEnabled;

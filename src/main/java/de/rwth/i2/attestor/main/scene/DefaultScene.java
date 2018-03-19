@@ -27,7 +27,7 @@ public class DefaultScene implements Scene {
     private final BasicSelectorLabel.Factory basicSelectorLabelFactory = new BasicSelectorLabel.Factory();
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
 
-    private final AbstractionOptions abstractionOptions = new AbstractionOptions();
+    private final Options options = new Options();
     private final Strategies strategies = new Strategies();
 
     private final Map<String, Method> methods = new HashMap<>();
@@ -54,7 +54,7 @@ public class DefaultScene implements Scene {
     @Override
     public SelectorLabel getSelectorLabel(String name) {
 
-        if (abstractionOptions.isIndexedMode()) {
+        if (options.isIndexedMode()) {
             SelectorLabel sel = basicSelectorLabelFactory.get(name);
             return new AnnotatedSelectorLabel(sel, "");
         } else {
@@ -68,9 +68,9 @@ public class DefaultScene implements Scene {
         // note that we *never* return IndexedNonterminal here as these are created using a
         // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.get(name);
-        if (abstractionOptions.isIndexedMode() && abstractionOptions.isGrammarRefinementEnabled()) {
+        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (abstractionOptions.isGrammarRefinementEnabled()) {
+        } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(basicNonterminal, null);
         } else {
             return basicNonterminal;
@@ -83,9 +83,9 @@ public class DefaultScene implements Scene {
         // note that we *never* return IndexedNonterminal here as these are created using a
         // BasicNonterminal which is obtained using this method.
         Nonterminal basicNonterminal = basicNonterminalFactory.create(label, rank, isReductionTentacle);
-        if (abstractionOptions.isIndexedMode() && abstractionOptions.isGrammarRefinementEnabled()) {
+        if (options.isIndexedMode() && options.isGrammarRefinementEnabled()) {
             throw new IllegalArgumentException("Refinement of indexed grammars is not supported yet.");
-        } else if (abstractionOptions.isGrammarRefinementEnabled()) {
+        } else if (options.isGrammarRefinementEnabled()) {
             return new RefinedDefaultNonterminal(
                     basicNonterminal, null
             );
@@ -104,7 +104,7 @@ public class DefaultScene implements Scene {
     public ProgramState createProgramState(HeapConfiguration heapConfiguration) {
 
         ProgramState result;
-        if (abstractionOptions.isIndexedMode()) {
+        if (options.isIndexedMode()) {
             result = new IndexedState(heapConfiguration);
         } else {
             result = new DefaultProgramState(heapConfiguration);
@@ -165,9 +165,9 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public AbstractionOptions abstractionOptions() {
+    public Options abstractionOptions() {
 
-        return abstractionOptions;
+        return options;
     }
 
     @Override

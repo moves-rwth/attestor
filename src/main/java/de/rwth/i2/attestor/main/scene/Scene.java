@@ -37,7 +37,7 @@ public interface Scene {
 
     long getNumberOfGeneratedStates();
 
-    AbstractionOptions abstractionOptions();
+    Options abstractionOptions();
 
     Strategies strategies();
 
