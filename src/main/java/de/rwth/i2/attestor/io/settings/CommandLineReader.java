@@ -1,13 +1,8 @@
 package de.rwth.i2.attestor.io.settings;
 
-import de.rwth.i2.attestor.LTLFormula;
-import de.rwth.i2.attestor.main.scene.Options;
 import de.rwth.i2.attestor.main.scene.SceneObject;
-import de.rwth.i2.attestor.phases.communication.InputSettings;
-import de.rwth.i2.attestor.phases.communication.ModelCheckingSettings;
 import de.rwth.i2.attestor.phases.communication.OutputSettings;
 import org.apache.commons.cli.*;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,6 +46,7 @@ public class CommandLineReader extends SceneObject {
         cliOptions.addOption(
                 Option.builder("ne")
                         .longOpt("no-export")
+                        .desc("This option overrides all exports defined in a settings file such that nothing is exported.")
                         .build()
         );
 
@@ -66,82 +62,10 @@ public class CommandLineReader extends SceneObject {
 
         cliOptions.addOption(
                 Option.builder("sf")
-                        .longOpt("communication-file")
+                        .longOpt("settings-file")
                         .hasArg()
-                        .argName("path")
-                        .desc("file that containsSubsumingState the communication to be executed."
-                                + "Can be overwritten by additional command line communication")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("m")
-                        .longOpt("method")
-                        .hasArg()
-                        .argName("method name")
-                        .desc("name of entry method - e.g. 'main'")
-                        .build()
-        );
-
-
-        cliOptions.addOption(
-                Option.builder("v")
-                        .longOpt("verbose")
-                        .desc("(optional) enable more verbose output")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("ad")
-                        .longOpt("depth")
-                        .desc("(optional) sets the abstraction distance (default is "
-                                + scene().options().getAbstractionDistance() + ")")
-                        .hasArg()
-                        .argName("int")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("msp")
-                        .longOpt("maxStateSpace")
-                        .desc("(optional) stops the analysis if the generated state space is larger than specified (default is "
-                                + scene().options().getMaxStateSpaceSize() + ")")
-                        .hasArg()
-                        .argName("int")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("mh")
-                        .longOpt("maxHeap")
-                        .desc("(optional) stops the analysis if a graph larger than specified is encountered (default is "
-                                + scene().options().getMaxStateSize() + ")")
-                        .hasArg()
-                        .argName("int")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("html")
-                        .longOpt("export-to-html")
-                        .desc("(optional) exports generated state space to explorable HTML files (default is false)")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("ghtml")
-                        .longOpt("grammar-to-html")
-                        .desc("(optional) exports parsed grammar to explorable HTML files (default is false)")
-                        .build()
-        );
-
-        cliOptions.addOption(
-                Option.builder("mc")
-                        .longOpt("model-checking")
-                        .hasArg()
-                        .argName("formulae")
-                        .desc("(optional) if enabled, model checking will be performed for the provided formulae +"
-                                + "(separated by ,)")
+                        .argName("file")
+                        .desc("Loads a settings file that specifies the analysis to be executed.")
                         .build()
         );
     }
@@ -165,6 +89,7 @@ public class CommandLineReader extends SceneObject {
             }
 
         } catch (ParseException | NumberFormatException e) {
+            parsingError = e.getMessage();
             return false;
         }
 
@@ -180,14 +105,6 @@ public class CommandLineReader extends SceneObject {
 
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("java Attestor", cliOptions);
-    }
-
-    /**
-     * @return true if and only if a communication file has been provided in the command line arguments.
-     */
-    public boolean hasSettingsFile() {
-
-        return cmd.hasOption("sf");
     }
 
     /**
@@ -227,63 +144,6 @@ public class CommandLineReader extends SceneObject {
 
         if (cmd.hasOption("ne") || System.getProperty("attestor.ne") != null) {
             outputSettings.setNoExport(true);
-        }
-    }
-
-    /**
-     * Populates all communication that customize how the analysis is performed
-     * with data extracted from the command line arguments.
-     *
-     * @param options All options.
-     */
-    public void updateOptions(Options options) {
-
-        if (cmd.hasOption("ad")) {
-            options.setAbstractionDistance(Integer.valueOf(cmd.getOptionValue("ad")));
-        }
-
-        if (cmd.hasOption("msp")) {
-            options.setMaxStateSpaceSize(Integer.valueOf(cmd.getOptionValue("msp")));
-        }
-
-        if (cmd.hasOption("mh")) {
-            options.setMaxStateSize(Integer.valueOf(cmd.getOptionValue("mh")));
-        }
-    }
-
-    /**
-     * Populates all communication that customize which input files are loaded
-     * with data extracted from the command line arguments.
-     *
-     * @param settings All input communication.
-     * @return The populated input communication.
-     */
-    public void getInputSettings(InputSettings settings) {
-
-        if (cmd.hasOption("m")) {
-            settings.setMethodName(cmd.getOptionValue("m"));
-        }
-    }
-
-    /**
-     * Populates all communication that customize if and how model checking is performed.
-     *
-     * @param mcSettings All communication.
-     */
-    public void getMCSettings(ModelCheckingSettings mcSettings) {
-
-        if (cmd.hasOption("mc")) {
-            mcSettings.setModelCheckingEnabled(true);
-            String formulaString = cmd.getOptionValue("mc");
-            for (String formula : formulaString.split(",")) {
-                LTLFormula ltlFormula;
-                try {
-                    ltlFormula = new LTLFormula(formula);
-                    mcSettings.addFormula(ltlFormula);
-                } catch (Exception e) {
-                    logger.log(Level.WARN, "The input " + formula + " is not a valid LTL formula. Skipping it.");
-                }
-            }
         }
     }
 

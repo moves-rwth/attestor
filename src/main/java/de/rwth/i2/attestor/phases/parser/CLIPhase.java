@@ -47,21 +47,15 @@ public class CLIPhase extends AbstractPhase
             commandLineReader.printHelp();
             throw new IllegalArgumentException(commandLineReader.getParsingError());
         }
-        if (commandLineReader.hasSettingsFile()) {
-            SettingsFileReader settingsReader =
-                    new SettingsFileReader(commandLineReader.getPathToSettingsFile());
-            settingsReader.getInputSettings(inputSettings);
-            inputSettings.setPathToSettingsFile(commandLineReader.getPathToSettingsFile());
-            DefaultScene defaultScene = (DefaultScene) scene();
-            defaultScene.setIdentifier(Objects.hashCode(commandLineReader.getPathToSettingsFile()));
-            settingsReader.getOptionSettings(scene().options());
-            settingsReader.getOutputSettings(outputSettings);
-            settingsReader.getMCSettings(modelCheckingSettings);
-        }
-        commandLineReader.getInputSettings(inputSettings);
-        commandLineReader.updateOptions(scene().options());
+        SettingsFileReader settingsReader = new SettingsFileReader(commandLineReader.getPathToSettingsFile());
+        settingsReader.getInputSettings(inputSettings);
+        inputSettings.setPathToSettingsFile(commandLineReader.getPathToSettingsFile());
+        DefaultScene defaultScene = (DefaultScene) scene();
+        defaultScene.setIdentifier(Objects.hashCode(commandLineReader.getPathToSettingsFile()));
+        settingsReader.getOptionSettings(scene().options());
+        settingsReader.getOutputSettings(outputSettings);
+        settingsReader.getMCSettings(modelCheckingSettings);
         commandLineReader.getOutputSettings(outputSettings);
-        commandLineReader.getMCSettings(modelCheckingSettings);
 
         if (commandLineReader.hasRootPath()) {
             String rootPath = commandLineReader.getRootPath();
