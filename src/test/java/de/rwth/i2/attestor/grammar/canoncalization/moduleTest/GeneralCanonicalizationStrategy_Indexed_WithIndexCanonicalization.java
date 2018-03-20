@@ -44,7 +44,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
     @Before
     public void init() {
 
-        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
 
         Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
@@ -55,7 +55,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
@@ -86,7 +86,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
 
-        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(false);
+        sceneObject.scene().options().setIndexedModeEnabled(false);
         ProgramState inputState = sceneObject.scene().createProgramState(getInputGraph());
         ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 

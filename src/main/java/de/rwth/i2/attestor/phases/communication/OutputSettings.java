@@ -297,7 +297,7 @@ public class OutputSettings {
         if (customHcList != null) {
             customHcList.add(new HcLabelPair(label, hc));
         } else {
-            logger.warn("Adding an HC for custom debug export, although the corresponding export abstractionOptions is disabled!");
+            logger.warn("Adding an HC for custom debug export, although the corresponding export options is disabled!");
         }
     }
 

@@ -32,7 +32,7 @@ public class GeneralMaterializationStrategyTest_Materialize_Indexed_OldExamples 
     public void setUp() throws Exception {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
 
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 

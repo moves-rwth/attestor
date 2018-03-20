@@ -25,7 +25,7 @@ import de.rwth.i2.attestor.phases.symbolicExecution.recursive.RecursiveStateSpac
  * by the method starting the phase) aborts further execution.
  * The main phases are executed in the following order:
  * <ol>
- * <li>Setup phase: Validates the provided command line abstractionOptions and populates the global Settings.</li>
+ * <li>Setup phase: Validates the provided command line options and populates the global Settings.</li>
  * <li>Parsing phase: Parses all supplied input files, such as the program to be analyzed,
  * the grammar, input state, etc.</li>
  * <li>Preprocessing phase: Applies all pre-computation steps that should be applied to programs, grammars, etc.

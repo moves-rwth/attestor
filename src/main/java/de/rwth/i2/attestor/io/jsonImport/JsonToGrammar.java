@@ -34,7 +34,7 @@ public class JsonToGrammar extends SceneObject {
 
     public Map<Nonterminal, Collection<HeapConfiguration>> parseForwardGrammar(JSONArray input) {
 
-        final boolean isIndexedMode = scene().abstractionOptions().isIndexedMode();
+        final boolean isIndexedMode = scene().options().isIndexedMode();
 
         Map<Nonterminal, Collection<HeapConfiguration>> res = new LinkedHashMap<>();
         List<Nonterminal> ntsWithoutReductionTentacles = new ArrayList<>();
@@ -134,7 +134,7 @@ public class JsonToGrammar extends SceneObject {
 
         Set<HeapConfiguration> res = new LinkedHashSet<>();
         JSONArray graphs = grammarFragment.getJSONArray("rules");
-        Consumer<String> addGrammarSelectorLabel = scene().abstractionOptions()::addGrammarSelectorLabel;
+        Consumer<String> addGrammarSelectorLabel = scene().options()::addGrammarSelectorLabel;
 
         JsonToHeapConfiguration importer = new JsonToHeapConfiguration(this, renaming);
         for (int g = 0; g < graphs.length(); g++) {

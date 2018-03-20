@@ -29,10 +29,10 @@ public class TestEmbeddings {
     public void init() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
 
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
-        aggressiveNullAbstraction = sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction();
+        aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
         abstractionOptions = new AbstractionOptions()
                 .setAdmissibleConstants(!aggressiveNullAbstraction);

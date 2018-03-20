@@ -236,42 +236,42 @@ public class CommandLinePhase extends AbstractPhase
 
     private void admissibleAbstraction() {
 
-        scene().abstractionOptions().setAdmissibleAbstractionEnabled(true);
+        scene().options().setAdmissibleAbstractionEnabled(true);
     }
 
     private void admissibleConstants() {
 
-        scene().abstractionOptions().setAdmissibleConstantsEnabled(true);
+        scene().options().setAdmissibleConstantsEnabled(true);
     }
 
     private void admissibleMarkings() {
 
-        scene().abstractionOptions().setAdmissibleMarkingsEnabled(true);
+        scene().options().setAdmissibleMarkingsEnabled(true);
     }
 
     private void admissibleFull() {
 
-        scene().abstractionOptions().setAdmissibleFullEnabled(true);
+        scene().options().setAdmissibleFullEnabled(true);
     }
 
     private void noChainAbstraction() {
 
-        scene().abstractionOptions().setNoChainAbstractionEnabled(true);
+        scene().options().setNoChainAbstractionEnabled(true);
     }
 
     private void noRuleCollapsing() {
 
-        scene().abstractionOptions().setNoRuleCollapsingEnabled(true);
+        scene().options().setNoRuleCollapsingEnabled(true);
     }
 
     private void indexed() {
 
-        scene().abstractionOptions().setIndexedModeEnabled(true);
+        scene().options().setIndexedModeEnabled(true);
     }
 
     private void postProcessing() {
 
-        scene().abstractionOptions().setPostProcessingEnabled(true);
+        scene().options().setPostProcessingEnabled(true);
     }
 
     private void canonical() {
@@ -279,7 +279,7 @@ public class CommandLinePhase extends AbstractPhase
         if(commandLine.hasOption("post-processing")) {
             throw new IllegalArgumentException("Option --canonical is incompatible with option --post-processing.");
         }
-        scene().abstractionOptions().setCanonicalEnabled(true);
+        scene().options().setCanonicalEnabled(true);
     }
 
     private void modelChecking(Option option) {
@@ -296,19 +296,19 @@ public class CommandLinePhase extends AbstractPhase
 
     private void noGarbageCollector() {
 
-        scene().abstractionOptions().setGarbageCollectionEnabled(false);
+        scene().options().setGarbageCollectionEnabled(false);
     }
 
     private void maxStateSpace(Option option) {
 
         int size = Integer.valueOf(option.getValue());
-        scene().abstractionOptions().setMaxStateSpace(size);
+        scene().options().setMaxStateSpace(size);
     }
 
     private void maxHeap(Option option) {
 
         int size = Integer.valueOf(option.getValue());
-        scene().abstractionOptions().setMaxHeap(size);
+        scene().options().setMaxHeap(size);
     }
 
     private void export(Option option) {

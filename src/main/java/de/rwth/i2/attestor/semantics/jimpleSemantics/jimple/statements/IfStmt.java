@@ -88,7 +88,7 @@ public class IfStmt extends Statement {
             logger.debug("concreteCondition is not of type int, but " + concreteCondition.type());
         }
 
-        if (scene().abstractionOptions().isRemoveDeadVariables()) {
+        if (scene().options().isRemoveDeadVariables()) {
             DeadVariableEliminator.removeDeadVariables(this, conditionValue.toString(),
                     programState, liveVariableNames);
         }

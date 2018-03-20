@@ -58,7 +58,7 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
         }
 
         JSONObject jsonObj = new JSONObject(initialHeap);
-        Consumer<String> addUsedSelectorLabel = scene().abstractionOptions()::addUsedSelectorLabel;
+        Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
         JsonToHeapConfiguration importer = new JsonToHeapConfiguration(this, inputSettings);
         HeapConfiguration originalInput = importer.parse(jsonObj, addUsedSelectorLabel);
         inputs.add(originalInput);

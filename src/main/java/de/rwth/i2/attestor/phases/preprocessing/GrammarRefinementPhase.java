@@ -70,7 +70,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         updateHeapAutomata();
 
-        if (scene().abstractionOptions().isIndexedMode()) {
+        if (scene().options().isIndexedMode()) {
 
             try {
                 if (scene().getNonterminal("BT") != null) {
@@ -85,8 +85,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
         HeapAutomaton automaton = stateLabelingStrategyBuilder.getProductAutomaton();
 
-        if (automaton != null && grammar != null && !scene().abstractionOptions().isIndexedMode()) {
-            scene().abstractionOptions().setGrammarRefinementEnabled(true);
+        if (automaton != null && grammar != null && !scene().options().isIndexedMode()) {
+            scene().options().setGrammarRefinementEnabled(true);
             grammar = refineGrammar(automaton, grammar);
             refineInputs(automaton, grammar);
         }
@@ -94,7 +94,7 @@ public class GrammarRefinementPhase extends AbstractPhase
 
     private void updateHeapAutomata() {
 
-        boolean isIndexedMode = scene().abstractionOptions().isIndexedMode();
+        boolean isIndexedMode = scene().options().isIndexedMode();
         boolean hasReachabilityAutomaton = false;
         boolean hasLanguageInclusionAutomaton = false;
         boolean hasBtreeAutomaton = false;
@@ -130,8 +130,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
-                scene().abstractionOptions().addKeptVariable(variables[0].trim());
-                scene().abstractionOptions().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 String[] selectors = parameters[1].split("\\]")[0].split(",");
                 Set<String> allowedSelectors = new LinkedHashSet<>(selectors.length);
                 for (String sel : selectors) {
@@ -154,8 +154,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this));
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
-                scene().abstractionOptions().addKeptVariable(variables[0].trim());
-                scene().abstractionOptions().addKeptVariable(variables[1].trim());
+                scene().options().addKeptVariable(variables[0].trim());
+                scene().options().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
                 logger.debug("Enable heap automaton to track reachable variables");
             } else if (equalityPattern.matcher(ap).matches()) {
@@ -175,8 +175,8 @@ public class GrammarRefinementPhase extends AbstractPhase
         Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
         if (trackedVariableRelations.add(trackedPair)) {
             stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-            scene().abstractionOptions().addKeptVariable(lhs);
-            scene().abstractionOptions().addKeptVariable(rhs);
+            scene().options().addKeptVariable(lhs);
+            scene().options().addKeptVariable(rhs);
             logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }
@@ -192,7 +192,7 @@ public class GrammarRefinementPhase extends AbstractPhase
         );
         Grammar refinedGrammar = grammarRefinement.getRefinedGrammar();
 
-        if(scene().abstractionOptions().isRuleCollapsingEnabled()) {
+        if(scene().options().isRuleCollapsingEnabled()) {
             refinedGrammar = Grammar.builder().addRules(refinedGrammar).updateCollapsedRules().build();
         }
 

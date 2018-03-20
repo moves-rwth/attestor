@@ -63,7 +63,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                         scene()::addNumberOfGeneratedStates
                 )
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
-                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().abstractionOptions().getMaxStateSpaceSize()))
+                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                 ;
@@ -73,19 +73,19 @@ public class StateSpaceGeneratorFactory extends SceneObject{
 
         CanonicalizationStrategy aggressiveStrategy = scene().strategies().getAggressiveCanonicalizationStrategy();
 
-        if (!scene().abstractionOptions().isPostprocessingEnabled() || scene().abstractionOptions().getAbstractionDistance() == 0) {
+        if (!scene().options().isPostprocessingEnabled() || scene().options().getAbstractionDistance() == 0) {
             return new NoPostProcessingStrategy();
         }
 
         StateCanonicalizationStrategy strategy = new StateCanonicalizationStrategy(aggressiveStrategy);
 
-        if (scene().abstractionOptions().isIndexedMode()) {
-            return new AggressivePostProcessingStrategy(strategy, scene().abstractionOptions().getAbstractionDistance());
+        if (scene().options().isIndexedMode()) {
+            return new AggressivePostProcessingStrategy(strategy, scene().options().getAbstractionDistance());
         }
 
         return new FinalStateSubsumptionPostProcessingStrategy(
                 strategy,
-                scene().abstractionOptions().getAbstractionDistance()
+                scene().options().getAbstractionDistance()
         );
     }
 

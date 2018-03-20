@@ -53,7 +53,7 @@ public class CommandLineReader {
         List<String> argumentList = new ArrayList<>();
 
         // We only search for --root-path and --read.
-        // Since both abstractionOptions require an argument, we only
+        // Since both options require an argument, we only
         // move up to args.length-1.
         for(int i=0; i < args.length-1; i++) {
 
@@ -123,7 +123,7 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder("h")
                         .longOpt("help")
-                        .desc("Displays this list of all command line abstractionOptions")
+                        .desc("Displays this list of all command line options")
                         .build()
         );
 
@@ -132,10 +132,10 @@ public class CommandLineReader {
                         .longOpt("read")
                         .hasArg()
                         .argName("file")
-                        .desc("Additionally loads all command line abstractionOptions that are contained in the " +
-                                "supplied settings file. A settings file may contain all command line abstractionOptions " +
-                                "presented on this page except for --read. In case of conflicting abstractionOptions, " +
-                                "explicitly provided command line abstractionOptions have precedence over abstractionOptions " +
+                        .desc("Additionally loads all command line options that are contained in the " +
+                                "supplied settings file. A settings file may contain all command line options " +
+                                "presented on this page except for --read. In case of conflicting options, " +
+                                "explicitly provided command line options have precedence over options " +
                                 "in the settings file. If --root-path is set then the common root path" +
                                 " is added as a prefix to the classpath. " +
                                 "Notice that loaded files may not contain the --read option again.")
@@ -148,7 +148,7 @@ public class CommandLineReader {
                         .hasArg()
                         .argName("path")
                         .desc("Determines the provided path as a common prefix for all other paths provided " +
-                                "in command line abstractionOptions. More precisely, affected abstractionOptions whose arguments are " +
+                                "in command line options. More precisely, affected options whose arguments are " +
                                 "concatenated with prefix <path> are: \n" +
                                 "* --read\n" +
                                 "* --classpath\n" +
@@ -276,7 +276,7 @@ public class CommandLineReader {
                                 "If a node, say u, has an attached variable then u may not belong to the nodes of " +
                                 "an embedding used for abstraction. The same holds for base markings, which are " +
                                 "treated like variables. Constants and composed markings are not considered unless " +
-                                "the abstractionOptions --admissible-constants and --admissible-markings are set, respectively.")
+                                "the options --admissible-constants and --admissible-markings are set, respectively.")
                         .build()
         );
 

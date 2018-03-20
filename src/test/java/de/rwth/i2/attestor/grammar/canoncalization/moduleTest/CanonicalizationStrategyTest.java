@@ -49,7 +49,7 @@ public class CanonicalizationStrategyTest {
 
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
 

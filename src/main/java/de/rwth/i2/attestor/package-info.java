@@ -7,8 +7,8 @@
  * {@link de.rwth.i2.attestor.main} containsSubsumingState the main Attestor class that is used to customize and execute
  * an analysis. It also containsSubsumingState the general interface for all analysis programState.
  * The actual execution of the full tool as well as integration test should always create an
- * {@link de.rwth.i2.attestor.main.Attestor} object that is fed with command line abstractionOptions and/or setting files.
- * All global abstractionOptions are handled in the subpackage {@link de.rwth.i2.attestor.phases.communication}.
+ * {@link de.rwth.i2.attestor.main.Attestor} object that is fed with command line options and/or setting files.
+ * All global options are handled in the subpackage {@link de.rwth.i2.attestor.phases.communication}.
  * </li>
  * <li>
  * {@link de.rwth.i2.attestor.stateSpaceGeneration} containsSubsumingState the data structures and algorithms to generate

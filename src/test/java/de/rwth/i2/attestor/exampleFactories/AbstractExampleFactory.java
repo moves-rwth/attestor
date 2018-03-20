@@ -55,7 +55,7 @@ public abstract class AbstractExampleFactory extends SceneObject {
 
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleConstants(
-                        !scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

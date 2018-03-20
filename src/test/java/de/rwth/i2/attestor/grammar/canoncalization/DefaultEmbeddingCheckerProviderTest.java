@@ -44,7 +44,7 @@ public class DefaultEmbeddingCheckerProviderTest {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         AbstractMatchingChecker expected = graph.getEmbeddingsOf(
@@ -72,7 +72,7 @@ public class DefaultEmbeddingCheckerProviderTest {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         AbstractMatchingChecker expected = graph.getEmbeddingsOf(pattern, options);
@@ -88,7 +88,7 @@ public class DefaultEmbeddingCheckerProviderTest {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

@@ -49,7 +49,7 @@ public class ParseContractsPhase extends AbstractPhase {
             String signature = obj.getString("method");
             Method abstractMethod = scene().getOrCreateMethod(signature);
 
-            Consumer<String> addUsedSelectorLabel = scene().abstractionOptions()::addUsedSelectorLabel;
+            Consumer<String> addUsedSelectorLabel = scene().options()::addUsedSelectorLabel;
             JSONArray array = obj.getJSONArray("contracts");
 
             JsonToHeapConfiguration importer = new JsonToHeapConfiguration(this, inputSettings);

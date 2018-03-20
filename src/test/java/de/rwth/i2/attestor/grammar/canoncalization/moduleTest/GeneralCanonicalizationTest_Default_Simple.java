@@ -36,7 +36,7 @@ public class GeneralCanonicalizationTest_Default_Simple {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

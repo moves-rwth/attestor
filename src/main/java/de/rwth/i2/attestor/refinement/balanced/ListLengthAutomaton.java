@@ -71,7 +71,7 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
         AbstractionOptions options = new AbstractionOptions()
             .setAdmissibleConstants(
-                    !scene().abstractionOptions().getAggressiveNullAbstraction()
+                    !scene().options().getAggressiveNullAbstraction()
             );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

@@ -24,7 +24,7 @@ public class TestJsonToHeapConfiguration {
     public void initClass() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
         expectedHCs = new ExpectedHCs(sceneObject);
         sceneObject.scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
     }

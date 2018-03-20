@@ -355,7 +355,7 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 
         baseType.addSelectorLabel(fieldLabel, TypeNames.getDefaultValue(fieldType));
 
-        scene().abstractionOptions().addUsedSelectorLabel(name);
+        scene().options().addUsedSelectorLabel(name);
 
         return new Field(type, base, fieldLabel);
     }

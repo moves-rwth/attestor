@@ -12,8 +12,6 @@ import java.util.Collection;
 
 public interface Scene {
 
-    int getIdentifier();
-
     Type getType(String name);
 
     SelectorLabel getSelectorLabel(String name);
@@ -37,7 +35,7 @@ public interface Scene {
 
     long getNumberOfGeneratedStates();
 
-    Options abstractionOptions();
+    Options options();
 
     Strategies strategies();
 

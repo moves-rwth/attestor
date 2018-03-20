@@ -33,18 +33,6 @@ public class DefaultScene implements Scene {
     private final Map<String, Method> methods = new HashMap<>();
     private long totalNumberOfStates = 0;
 
-    private int identifier = 0;
-
-    @Override
-    public int getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(int identifier) {
-
-        this.identifier = identifier;
-    }
-
     @Override
     public Type getType(String name) {
 
@@ -165,7 +153,7 @@ public class DefaultScene implements Scene {
     }
 
     @Override
-    public Options abstractionOptions() {
+    public Options options() {
 
         return options;
     }

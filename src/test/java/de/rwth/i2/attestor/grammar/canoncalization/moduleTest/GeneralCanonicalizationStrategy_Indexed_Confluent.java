@@ -52,7 +52,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Confluent {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

@@ -29,7 +29,7 @@ public class AssignStmtTest {
     public void setUp() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().abstractionOptions().setRemoveDeadVariables(false);
+        sceneObject.scene().options().setRemoveDeadVariables(false);
         hcFactory = new ExampleHcImplFactory(sceneObject);
     }
 

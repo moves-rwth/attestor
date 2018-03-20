@@ -72,7 +72,7 @@ public class JsonToHeapConfiguration extends SceneObject {
             String label = hyperedge.getString("label");
 
             Nonterminal nt;
-            if (scene().abstractionOptions().isIndexedMode() && hyperedge.has("index")) {
+            if (scene().options().isIndexedMode() && hyperedge.has("index")) {
                 List<IndexSymbol> index = parseIndex(hyperedge.getJSONArray("index"));
 
                 Nonterminal bnt = scene().getNonterminal(label);
@@ -121,7 +121,7 @@ public class JsonToHeapConfiguration extends SceneObject {
                                 JSONArray selectors,
                                 Consumer<String> addSelectorLabelFunction) {
 
-        final boolean isIndexedMode = scene().abstractionOptions().isIndexedMode();
+        final boolean isIndexedMode = scene().options().isIndexedMode();
 
         for (int i = 0; i < selectors.length(); i++) {
             final JSONObject selectorInJson = selectors.getJSONObject(i);

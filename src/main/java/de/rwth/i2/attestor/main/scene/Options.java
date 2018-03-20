@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Collects all abstractionOptions that customize the state space generation.
+ * Collects all options that customize the state space generation.
  *
  * @author Hannah Arndt, Christoph
  */

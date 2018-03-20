@@ -48,7 +48,7 @@ public class CanonicalizationStrategyCollapsedTest {
 
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleConstants(
-                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                        !sceneObject.scene().options().getAggressiveNullAbstraction()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
