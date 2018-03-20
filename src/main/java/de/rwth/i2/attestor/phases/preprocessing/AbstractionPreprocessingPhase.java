@@ -115,6 +115,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         boolean aggressiveCompositeMarkingAbstraction = verifyCounterexamples && abstractionDistance == 1;
 
+
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setAggressiveNullAbstraction(aggressiveNullAbstraction)
@@ -144,8 +145,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbortTest() {
 
-        int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        int stateBound = scene().options().getMaxStateSize();
+        int stateSpaceBound = scene().options().getMaxStateSpace();
+        int stateBound = scene().options().getMaxHeap();
         scene().strategies().setAbortStrategy(
                 new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
         );

@@ -63,7 +63,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                         scene()::addNumberOfGeneratedStates
                 )
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
-                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpaceSize()))
+                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpace()))
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                 ;

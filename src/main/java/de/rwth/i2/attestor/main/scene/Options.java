@@ -7,14 +7,8 @@ package de.rwth.i2.attestor.main.scene;
  */
 public class Options {
 
-    /**
-     * The maximal number of states before state space generation is given up.
-     */
-    private int maxStateSpaceSize = 5000;
-    /**
-     * The maximal number of nodes in a single heap configuration before state space generation is given up.
-     */
-    private int maxStateSize = 50;
+    protected Options() {}
+
     /**
      * The minimal distance between variables in a heap configuration and embeddings used for abstraction.
      * Increasing this number allows to use a less aggressive abstraction.
@@ -80,7 +74,6 @@ public class Options {
      */
     private boolean verifyCounterexamples = false;
 
-    protected Options() {}
 
 
 
@@ -101,38 +94,6 @@ public class Options {
     }
 
     /**
-     * @return The maximal size of state spaces before state space generation is given up.
-     */
-    public int getMaxStateSpaceSize() {
-
-        return maxStateSpaceSize;
-    }
-
-    /**
-     * @param maxStateSpaceSize The maximal size of state spaces before state space generation is given up.
-     */
-    public void setMaxStateSpaceSize(int maxStateSpaceSize) {
-
-        this.maxStateSpaceSize = maxStateSpaceSize;
-    }
-
-    /**
-     * @return The maximal size of heap configurations before state space generation is given up.
-     */
-    public int getMaxStateSize() {
-
-        return maxStateSize;
-    }
-
-    /**
-     * @param maxStateSize The maximal size of heap configurations before state space generation is given up.
-     */
-    public void setMaxStateSize(int maxStateSize) {
-
-        this.maxStateSize = maxStateSize;
-    }
-
-    /**
      * @return The minimal distance between variables and nodes in an embedding before abstraction is performed.
      */
     public int getAbstractionDistance() {
@@ -146,21 +107,6 @@ public class Options {
     public boolean getAggressiveNullAbstraction() {
 
         return aggressiveNullAbstraction;
-    }
-
-    /**
-     * @param aggressiveNullAbstraction True if and only if the abstraction distance
-     *                                  should be ignored for the null node.
-     */
-    public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
-
-        /*
-        if (abstractionDistance == 0 && aggressiveNullAbstraction) {
-            logger.info("The option 'aggressiveNullAbstraction' will have no effect " +
-                    "since the dereference depth is already set to 0");
-        }
-        */
-        this.aggressiveNullAbstraction = aggressiveNullAbstraction;
     }
 
     /**

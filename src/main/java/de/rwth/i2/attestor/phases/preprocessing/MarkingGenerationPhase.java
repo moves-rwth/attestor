@@ -102,8 +102,8 @@ public class MarkingGenerationPhase extends AbstractPhase
         final boolean indexedMode = scene().options().isIndexedMode();
         final int abstractionDistance = scene().options().getAbstractionDistance();
         final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-        final int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        final int stateBound = scene().options().getMaxStateSize();
+        final int stateSpaceBound = scene().options().getMaxStateSpace();
+        final int stateBound = scene().options().getMaxHeap();
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setIndexedMode(indexedMode)
