@@ -134,7 +134,7 @@ public class JsonToGrammar extends SceneObject {
 
         Set<HeapConfiguration> res = new LinkedHashSet<>();
         JSONArray graphs = grammarFragment.getJSONArray("rules");
-        Consumer<String> addGrammarSelectorLabel = scene().options()::addGrammarSelectorLabel;
+        Consumer<String> addGrammarSelectorLabel = scene().labels()::addGrammarSelectorLabel;
 
         JsonToHeapConfiguration importer = new JsonToHeapConfiguration(this, renaming);
         for (int g = 0; g < graphs.length(); g++) {

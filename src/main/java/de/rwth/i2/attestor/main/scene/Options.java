@@ -1,32 +1,11 @@
 package de.rwth.i2.attestor.main.scene;
 
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
  * Collects all options that customize the state space generation.
  *
  * @author Hannah Arndt, Christoph
  */
 public class Options {
-
-    /**
-     * The set of variables that will never ever be eliminated.
-     */
-    // TODO these three sets could be externalized
-    private final Set<String> keptVariables = new LinkedHashSet<>();
-    private final Set<String> usedSelectorLabels = new LinkedHashSet<>();
-    private final Set<String> grammarSelectorLabels = new LinkedHashSet<>();
-
-    public Set<String> getGrammarSelectorLabels() {
-
-        return grammarSelectorLabels;
-    }
-
-
-
-
 
     /**
      * The maximal number of states before state space generation is given up.
@@ -103,15 +82,7 @@ public class Options {
 
     protected Options() {}
 
-    public void addKeptVariable(String variableName) {
 
-        keptVariables.add(variableName);
-    }
-
-    public boolean isKeptVariableName(String variableName) {
-
-        return keptVariables.contains(variableName);
-    }
 
     /**
      * @return True if post-processing is applied to generated state spaces.
@@ -235,21 +206,8 @@ public class Options {
         this.garbageCollectionEnabled = enabled;
     }
 
-    public void addGrammarSelectorLabel(String selector) {
-
-        grammarSelectorLabels.add(selector);
-    }
-
-    public void addUsedSelectorLabel(String selector) {
-
-        usedSelectorLabels.add(selector);
-    }
 
 
-    public Set<String> getUsedSelectorLabels() {
-
-        return usedSelectorLabels;
-    }
 
     public boolean isRuleCollapsingEnabled() {
 

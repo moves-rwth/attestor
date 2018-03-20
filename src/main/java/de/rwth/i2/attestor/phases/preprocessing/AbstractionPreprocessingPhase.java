@@ -63,8 +63,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void checkSelectors() {
 
-        Set<String> usedSelectors = new LinkedHashSet<>(scene().options().getUsedSelectorLabels());
-        usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
+        Set<String> usedSelectors = new LinkedHashSet<>(scene().labels().getUsedSelectorLabels());
+        usedSelectors.removeAll(scene().labels().getGrammarSelectorLabels());
 
         if (!usedSelectors.isEmpty()) {
             logger.info("+------------------------------------------------------------------+");

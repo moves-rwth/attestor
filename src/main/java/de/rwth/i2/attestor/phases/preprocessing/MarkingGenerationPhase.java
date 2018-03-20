@@ -85,7 +85,7 @@ public class MarkingGenerationPhase extends AbstractPhase
                 result.add(VISITED);
             } else if(visitedByPattern.matcher(ap).matches()) {
                 String varName = ap.split("[\\(\\)]")[1];
-                scene().options().addKeptVariable(varName);
+                scene().labels().addKeptVariable(varName);
                 result.add(VISITED_BY);
             } else if(identicNeighboursPattern.matcher(ap).matches()) {
                 result.add(IDENTIC_NEIGHBOURS);
@@ -96,7 +96,7 @@ public class MarkingGenerationPhase extends AbstractPhase
 
     private void addMarking(String marking) {
 
-        Collection<String> availableSelectorNames = scene().options().getUsedSelectorLabels();
+        Collection<String> availableSelectorNames = scene().labels().getUsedSelectorLabels();
 
         final Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
         final boolean indexedMode = scene().options().isIndexedMode();

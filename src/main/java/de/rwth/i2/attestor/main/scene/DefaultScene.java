@@ -28,6 +28,7 @@ public class DefaultScene implements Scene {
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
 
     private final Options options = new Options();
+    private final Labels labels = new Labels();
     private final Strategies strategies = new Strategies();
 
     private final Map<String, Method> methods = new HashMap<>();
@@ -156,6 +157,12 @@ public class DefaultScene implements Scene {
     public Options options() {
 
         return options;
+    }
+
+    @Override
+    public Labels labels() {
+
+        return labels;
     }
 
     @Override

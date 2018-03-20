@@ -37,6 +37,8 @@ public interface Scene {
 
     Options options();
 
+    Labels labels();
+
     Strategies strategies();
 
 	Method getMethodIfPresent(String signature) throws ElementNotPresentException;
