@@ -122,13 +122,6 @@ public class CommandLineReader {
         );
 
         commandLineOptions.addOption(
-                Option.builder("h")
-                        .longOpt("help")
-                        .desc("Displays this list of all command line options")
-                        .build()
-        );
-
-        commandLineOptions.addOption(
                 Option.builder("l")
                         .longOpt("read")
                         .hasArg()

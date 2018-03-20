@@ -45,8 +45,13 @@ public class CommandLinePhase extends AbstractPhase
     @Override
     public void executePhase() {
 
-        commandLineReader = new CommandLineReader();
-        commandLine = commandLineReader.read(originalCommandLineArguments);
+        try {
+            commandLineReader = new CommandLineReader();
+            commandLine = commandLineReader.read(originalCommandLineArguments);
+        } catch(Exception e) {
+            commandLineReader.printHelp();
+            throw new IllegalArgumentException(e.getMessage());
+        }
 
 
         determineRootPath();
@@ -77,9 +82,6 @@ public class CommandLinePhase extends AbstractPhase
 
             case "description":
                 description(option);
-                break;
-            case "help":
-                help();
                 break;
             case "load":
                 // was already processed before
@@ -170,11 +172,6 @@ public class CommandLinePhase extends AbstractPhase
         String description = option.getValue();
         logger.debug("description: " + description);
         inputSettings.setDescription(description);
-    }
-
-    private void help() {
-
-        commandLineReader.printHelp();
     }
 
     private void setClass(Option option) {
@@ -368,7 +365,11 @@ public class CommandLinePhase extends AbstractPhase
 
     @Override
     public void logSummary() {
-        // nothing to report
+        logSum("Analyzed method: " + inputSettings.getClassName() + "." + inputSettings.getMethodName());
+        String description = inputSettings.getDescription();
+        if(description != null) {
+            logSum("Scenario: " + description);
+        }
     }
 
     @Override
