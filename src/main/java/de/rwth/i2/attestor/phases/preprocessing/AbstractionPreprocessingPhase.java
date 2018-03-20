@@ -91,7 +91,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
             scene().strategies().setAlwaysCanonicalize(true);
         }
 
-        if(scene().options().isAdmissibleFullEnabled()&& scene().options().isAdmissibleAbstractionEnabled()){
+        if(scene().options().isAdmissibleFullEnabled() && scene().options().isAdmissibleAbstractionEnabled()){
             scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
             scene().strategies().setStateRectificationStrategy(
                     new AdmissibleStateRectificationStrategy(new StateMaterializationStrategy(materializationStrategy))

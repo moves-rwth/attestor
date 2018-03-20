@@ -16,7 +16,7 @@ import gnu.trove.list.array.TIntArrayList;
 /**
  * Restricts the considered morphisms to ones in which the distance from variables to nodes with outgoing selector
  * edges belonging to a morphism is at least the given minAbstractionDistance.
- * If aggressiveConstantAbstraction is set to true, variables that model constants, such as null, are ignored.
+ * If ignoreConstants is set to true, variables that model constants, such as null, are ignored.
  *
  * @author Christoph
  */
@@ -24,9 +24,9 @@ public class MinAbstractionDistance implements FeasibilityFunction {
 
     private final int minAbstractionDistance;
 
-    private final boolean aggressiveConstantAbstraction;
+    private final boolean ignoreConstants;
 
-    private final boolean aggressiveCompositeMarkingAbstraction;
+    private final boolean admissibleMarkings;
 
     /**
      * @param options A collection of options guiding how morphisms are computed.
@@ -40,8 +40,8 @@ public class MinAbstractionDistance implements FeasibilityFunction {
             minAbstractionDistance = 0;
         }
 
-        aggressiveConstantAbstraction = !options.isAdmissibleConstants();
-        aggressiveCompositeMarkingAbstraction = !options.isAdmissibleMarkings();
+        ignoreConstants = !options.isAdmissibleConstants();
+        admissibleMarkings = options.isAdmissibleMarkings();
     }
 
     @Override
@@ -58,19 +58,19 @@ public class MinAbstractionDistance implements FeasibilityFunction {
             Object nodeLabel = graph.getNodeLabel(i);
             if (nodeLabel.getClass() == Variable.class) {
                 String label = ((Variable) nodeLabel).getName();
-                //if the option aggressiveConstantAbstraction is enabled, constants are ignored.
-                if (!(aggressiveConstantAbstraction && Constants.isConstant(label))) {
+                //if the option ignoreConstants is enabled, constants are ignored.
+                if (!(ignoreConstants && Constants.isConstant(label))) {
                     int attachedNode = graph.getSuccessorsOf(i).get(0);
 
                     if (dist.get(attachedNode) < minAbstractionDistance) {
-                        if(aggressiveCompositeMarkingAbstraction || !Markings.isComposedMarking(label)) {
+                        if(admissibleMarkings || !Markings.isComposedMarking(label)) {
                             return false;
                         }
                     }
                 }
             } else if (graph.isExternal(i)) {
                 Type type = (Type) nodeLabel;
-                if (!(aggressiveConstantAbstraction && Types.isConstantType(type))) {
+                if (!(ignoreConstants && Types.isConstantType(type))) {
                     if (dist.get(i) < minAbstractionDistance) {
                         return false;
                     }

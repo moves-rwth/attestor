@@ -41,7 +41,7 @@ public class Options {
 
     private boolean admissibleFullEnabled = false;
 
-    private boolean chainAbstractionEnabled = false;
+    private boolean chainAbstractionEnabled = true;
 
     /**
      * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
@@ -181,5 +181,4 @@ public class Options {
     public boolean isAdmissibleAbstractionEnabled() {
         return admissibleAbstractionEnabled;
     }
-
 }

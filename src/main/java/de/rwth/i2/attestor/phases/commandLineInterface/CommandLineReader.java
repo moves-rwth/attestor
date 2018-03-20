@@ -92,6 +92,7 @@ public class CommandLineReader {
             } else {
                 path = Paths.get(rootPath + File.separator + settingsFile);
             }
+            logger.info("loading settings file: " + path);
             List<String> lines = Files.readAllLines(path);
             SettingsLexer lexer = new SettingsLexer(lines);
             List<String> result = lexer.getLexemes();

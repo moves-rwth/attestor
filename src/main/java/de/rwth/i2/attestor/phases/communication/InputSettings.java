@@ -3,7 +3,6 @@ package de.rwth.i2.attestor.phases.communication;
 import de.rwth.i2.attestor.io.jsonImport.HeapConfigurationRenaming;
 
 import java.io.File;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -13,13 +12,6 @@ import java.util.*;
  */
 public class InputSettings implements HeapConfigurationRenaming {
 
-    public String getRootPath() {
-
-        if(rootPath == "") {
-            return rootPath;
-        }
-        return rootPath + File.separator;
-    }
 
     /**
      * A common path that is the prefix of all other paths to input/output files.
@@ -52,6 +44,20 @@ public class InputSettings implements HeapConfigurationRenaming {
 
     private Map<String, Map<String, String>> selectorRenaming = new LinkedHashMap<>();
 
+    /**
+     * filenames containing user defined contracts to use
+     */
+    ArrayList<String> contractFiles = new ArrayList<>();
+    private List<String> userDefinedGrammarFiles = new ArrayList<>();
+    private List<String> initialHeapFiles = new ArrayList<>();
+
+    public String getRootPath() {
+
+        if(rootPath == "") {
+            return rootPath;
+        }
+        return rootPath + File.separator;
+    }
 
     public void addPredefinedGrammarName(String name) {
 
@@ -70,10 +76,10 @@ public class InputSettings implements HeapConfigurationRenaming {
 
     public void addSelectorRenaming(String typeName, String from, String to) {
 
-        Map<String, String> map = selectorRenaming.get(typeName);
-        if(map == null) {
-            map = new LinkedHashMap<>();
+        if(!selectorRenaming.containsKey(typeName)) {
+            selectorRenaming.put(typeName, new LinkedHashMap<>());
         }
+        Map<String, String> map = selectorRenaming.get(typeName);
         map.put(from, to);
     }
 
@@ -90,43 +96,6 @@ public class InputSettings implements HeapConfigurationRenaming {
                 .getOrDefault(selector, selector);
     }
 
-
-
-
-    /**
-     * The url to the default empty initial state.
-     */
-    public URL initialStatesURL;
-    /**
-     * The path to the file specifying the initial state.
-     */
-    private String pathToInput;
-    /**
-     * The name of the file specifying the initial state.
-     */
-    private String inputName;
-    
-//user defined contracts
-    /**
-     * path to the files storing user defined contracts
-     */
-    private String pathToContracts;
-    /**
-     * filenames containing user defined contracts to use
-     */
-    ArrayList<String> contractFiles = new ArrayList<>();
-
-
-    // -------------------------------------------------------------
-    private List<String> userDefinedGrammarFiles = new ArrayList<>();
-    private List<String> initialHeapFiles = new ArrayList<>();
-    // -------------------------------------------------------------
-
-
-//----------------getters and setters--------------------------------------------------------------------
-
-
-//the code
     /**
      * @return The path to the classes that are analyzed.
      */
@@ -204,8 +173,6 @@ public class InputSettings implements HeapConfigurationRenaming {
     }
     
    
-// ---------------------------------- path handling -----------------------------------------------------------------
-
     /**
      * @param rootPath a path prefix which should be applied to all user defined paths
      */
