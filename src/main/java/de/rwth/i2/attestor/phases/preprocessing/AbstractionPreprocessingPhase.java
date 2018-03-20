@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -108,32 +109,30 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbstractDomain() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
 
-        boolean aggressiveCompositeMarkingAbstraction = verifyCounterexamples && abstractionDistance == 1;
-
+        AbstractionOptions abstractionOptions = new AbstractionOptions()
+                .setAdmissibleAbstraction(scene().options().isAdmissibleAbstractionEnabled())
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled())
+                .setAdmissibleMarkings(scene().options().isAdmissibleConstantsEnabled());
 
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
-                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
-                        .setMinAbstractionDistance(abstractionDistance)
+                        .setOptions(abstractionOptions)
                         .setIndexedMode(indexedMode)
-                        .setAggressiveCompositeMarkingAbstraction(aggressiveCompositeMarkingAbstraction)
                         .setGrammar(grammar)
                         .build();
 
         scene().strategies()
                 .setCanonicalizationStrategy(canonicalizationStrategy);
 
+        AbstractionOptions aggressiveOptions = new AbstractionOptions()
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled());
+
         CanonicalizationStrategy aggressiveCanonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
-                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
-                        .setMinAbstractionDistance(0)
+                        .setOptions(aggressiveOptions)
                         .setIndexedMode(indexedMode)
-                        .setAggressiveCompositeMarkingAbstraction(true)
                         .setGrammar(grammar)
                         .build();
 

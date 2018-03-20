@@ -20,6 +20,7 @@ import gnu.trove.iterator.TIntIterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// TODO
 public class CanonicalizationStrategyBuilder {
 
     private boolean indexedMode = false;

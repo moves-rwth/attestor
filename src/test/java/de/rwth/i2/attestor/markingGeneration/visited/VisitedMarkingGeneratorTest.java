@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.markingGeneration.visited;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -63,8 +64,7 @@ public class VisitedMarkingGeneratorTest {
                 .build();
 
         CanonicalizationStrategy canonicalizationStrategy = new CanonicalizationStrategyBuilder()
-                .setAggressiveNullAbstraction(true)
-                .setMinAbstractionDistance(0)
+                .setOptions(new AbstractionOptions())
                 .setGrammar(grammar)
                 .build();
 

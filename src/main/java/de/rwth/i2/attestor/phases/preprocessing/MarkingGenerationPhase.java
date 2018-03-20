@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -100,10 +101,12 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         final Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
         final boolean indexedMode = scene().options().isIndexedMode();
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final int stateSpaceBound = scene().options().getMaxStateSpace();
         final int stateBound = scene().options().getMaxHeap();
+
+        AbstractionOptions abstractionOptions = new AbstractionOptions()
+                .setAdmissibleAbstraction(scene().options().isAdmissibleAbstractionEnabled())
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled());
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setIndexedMode(indexedMode)
@@ -112,14 +115,13 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         CanonicalizationStrategy canonicalizationStrategy = new CanonicalizationStrategyBuilder()
                 .setGrammar(grammar)
-                .setMinAbstractionDistance(abstractionDistance)
-                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .setOptions(abstractionOptions)
                 .build();
+
 
         CanonicalizationStrategy aggressiveCanonicalizationStrategy = new CanonicalizationStrategyBuilder()
                 .setGrammar(grammar)
-                .setMinAbstractionDistance(0)
-                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .setOptions(new AbstractionOptions())
                 .build();
 
         StateRectificationStrategy stateRectificationStrategy = new NoRectificationStrategy();
