@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ReachableFragmentTest {
 
@@ -180,7 +181,7 @@ public class ReachableFragmentTest {
         performTest(input, expectedFragment, expectedReplace);
     }
 
-    //a cutpoint which is not directy accessed by a variable
+    //a cutpoint which is not directly accessed by a variable
     @Test
     public void testIndirectCutpoint() {
 
@@ -188,12 +189,44 @@ public class ReachableFragmentTest {
         String variableName = "x";
         HeapConfiguration input = nodeReachableFromTwoSides(parameterName, variableName);
         HeapConfiguration expectedFragment = parameterSide(parameterName);
-        HeapConfiguration expectedReplace = ntAttachedTovariableSide(variableName);
+        HeapConfiguration expectedReplace = ntAttachedToVariableSide(variableName);
 
         performTest(input, expectedFragment, expectedReplace);
 
     }
+    
+    /* 
+     * a nonterminal where the other tentacles cannot be reached from
+     * the reachable fragment
+    */
+    @Test
+    public void testUnpassableNonterminalEdge() {
+    	String parameterName = "@parameter0:";
+        String variableName = "x";
+    	HeapConfiguration input = unpassableNonterminal(parameterName, variableName);
+    	HeapConfiguration expectedFragment = parameterSide( parameterName );
+    	HeapConfiguration expectedReplace = unpassableNtAttachedTovariableSide( variableName );
+    	fail("not yet implemented");
+    }
 
+    /*
+     * a nonterminal where some of the other tentacles can
+     * and some cannot be reached from the reachable fragment
+     */
+    @Test
+    public void testPartiallyPassableNonterminalEdge() {
+    	fail("Not yet implemented");
+    }
+    
+    /*
+     * a nonterminal where not every tentacle can be reached from
+     * every other. Embedded such, that its tentacles have to be
+     * added to the reachable fragment one by one.
+     */
+    @Test
+    public void testPartiallyPassableNonterminalEdge_ReachedFromDifferentPoints() {
+    	fail("Not yet implemented");
+    }
 
     private void performTest(HeapConfiguration input, HeapConfiguration expectedFragment,
                              HeapConfiguration expectedReplace) {
@@ -548,7 +581,7 @@ public class ReachableFragmentTest {
         return hc;
     }
 
-    private HeapConfiguration ntAttachedTovariableSide(String variableName) {
+    private HeapConfiguration ntAttachedToVariableSide(String variableName) {
 
         TIntArrayList nodes = new TIntArrayList();
         HeapConfiguration hc = singleNodeAttachedHelper(nodes);

@@ -66,7 +66,7 @@ class ReachableFragmentComputer extends SceneObject {
 
     /**
      * finds the nodes in the heap accessible by the callee.
-     * This includes all nodes referenced by parameters or this
+     * This includes all nodes referenced by parameters or "this"
      * and all constants.
      * These nodes are included in the reachable Fragment
      * and enqueued as starting points for the computation of the reachable fragment.
@@ -183,7 +183,7 @@ class ReachableFragmentComputer extends SceneObject {
     // methodExecution to construct the reachable fragment
 
     /**
-     * * adds the target of the variable edge and its target to the reachable fragment,
+     * adds the variable edge and its target to the reachable fragment,
      * removes it from the remaining fragment and enques it for further reachability search
      *
      * @param variableEdge the variable edge in the input
@@ -201,21 +201,22 @@ class ReachableFragmentComputer extends SceneObject {
     }
 
     /**
-     * adds the target of the variable edge and its target to the reachable fragment
+     * adds the target of the variable edge (here: refering to a constant)
+     *  and its target to the reachable fragment
      * and removes it from the remaining fragment
      * (but does not consider it for further reachability search, since
      * constants cannot have outgoing selectors)
      *
-     * @param variableEdge the id of variable edge in the input
-     * @param variableName the name of the variable edge
+     * @param variableEdge the id of variable edge (labelled with a constant) in the input
+     * @param constantName the name of the variable edge
      */
-    private void handleConstant(final int variableEdge, String variableName) {
+    private void handleConstant(final int variableEdge, String constantName) {
 
         int targetedNode = input.targetOf(variableEdge);
         if (!idMapping.containsKey(targetedNode)) {
             addNodeToReachableFragment(targetedNode);
         }
-        handleVariableEdge(variableEdge, variableName, targetedNode);
+        handleVariableEdge(variableEdge, constantName, targetedNode);
     }
 
     /**
