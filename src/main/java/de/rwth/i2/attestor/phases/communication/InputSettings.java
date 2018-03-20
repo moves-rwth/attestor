@@ -14,7 +14,11 @@ import java.util.*;
 public class InputSettings implements HeapConfigurationRenaming {
 
     public String getRootPath() {
-        return rootPath;
+
+        if(rootPath == "") {
+            return rootPath;
+        }
+        return rootPath + File.separator;
     }
 
     /**
@@ -128,7 +132,7 @@ public class InputSettings implements HeapConfigurationRenaming {
      */
     public String getClasspath() {
 
-        return classpath;
+        return getRootPath() + classpath;
     }
     /**
      * Sets the path to the classes that are analyzed.
@@ -194,7 +198,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
         List<String> result = new ArrayList<>();
         for(String s : contractFiles) {
-            result.add(getRootPath() + File.separator + s);
+            result.add(getRootPath() + s);
         }
         return result;
     }

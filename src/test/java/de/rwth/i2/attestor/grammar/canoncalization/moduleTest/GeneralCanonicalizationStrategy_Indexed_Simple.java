@@ -43,7 +43,7 @@ public class GeneralCanonicalizationStrategy_Indexed_Simple {
     @Before
     public void init() {
 
-        sceneObject.scene().abstractionOptions().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
 
         IndexCanonizationStrategy fakeIndexStrategy = new FakeIndexCanonicalizationStrategy();
 

@@ -78,7 +78,7 @@ public class TestJsonToGrammar {
         JSONArray jsonArray = new JSONArray(grammarEncoding);
 
         SceneObject sceneObject = new MockupSceneObject();
-        sceneObject.scene().abstractionOptions().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
         ExpectedHCs expectedHCs = new ExpectedHCs(sceneObject);
 
         Grammar grammar = Grammar.builder()

@@ -296,7 +296,7 @@ public class CommandLinePhase extends AbstractPhase
 
     private void noGarbageCollector() {
 
-        scene().abstractionOptions().setNoGarbageCollectionEnabled(true);
+        scene().abstractionOptions().setGarbageCollectionEnabled(false);
     }
 
     private void maxStateSpace(Option option) {

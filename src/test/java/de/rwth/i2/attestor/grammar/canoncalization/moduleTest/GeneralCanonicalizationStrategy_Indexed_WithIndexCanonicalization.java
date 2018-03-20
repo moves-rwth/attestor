@@ -43,7 +43,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
     @Before
     public void init() {
 
-        sceneObject.scene().abstractionOptions().setIndexedMode(true);
+        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(true);
 
         Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
@@ -82,7 +82,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
 
-        sceneObject.scene().abstractionOptions().setIndexedMode(false);
+        sceneObject.scene().abstractionOptions().setIndexedModeEnabled(false);
         ProgramState inputState = sceneObject.scene().createProgramState(getInputGraph());
         ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 

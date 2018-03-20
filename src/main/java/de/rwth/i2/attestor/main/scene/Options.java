@@ -1,7 +1,6 @@
 package de.rwth.i2.attestor.main.scene;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.rwth.i2.attestor.grammar.GrammarOptions;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -11,18 +10,25 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class Options {
+public class Options implements GrammarOptions {
 
-    /**
-     * The logger of this class.
-     */
-    private static final Logger logger = LogManager.getLogger("Options");
     /**
      * The set of variables that will never ever be eliminated.
      */
+    // TODO these three sets could be externalized
     private final Set<String> keptVariables = new LinkedHashSet<>();
     private final Set<String> usedSelectorLabels = new LinkedHashSet<>();
     private final Set<String> grammarSelectorLabels = new LinkedHashSet<>();
+
+    public Set<String> getGrammarSelectorLabels() {
+
+        return grammarSelectorLabels;
+    }
+
+
+
+
+
     /**
      * The maximal number of states before state space generation is given up.
      */
@@ -45,10 +51,6 @@ public class Options {
      * following) being deleted in order to enable more possible abstractions.
      */
     private boolean removeDeadVariables = true;
-    /**
-     * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
-     */
-    private boolean indexedMode = false;
     /**
      * Enabled this option leads to using RefinedNonterminals in graph grammars.
      */
@@ -80,11 +82,12 @@ public class Options {
 
     private boolean noRuleCollapsingEnabled = false;
 
+    /**
+     * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
+     */
     private boolean indexedModeEnabled = false;
 
     private boolean canonicalEnabled = false;
-
-    private boolean noGarbageCollectionEnabled = false;
 
     private int maxStateSpace = 5000;
 
@@ -168,18 +171,6 @@ public class Options {
     }
 
     /**
-     * @param abstractionDistance The minimal distance between variables and nodes in an
-     *                            embedding before abstraction is performed.
-     */
-    public void setAbstractionDistance(int abstractionDistance) {
-
-        if (abstractionDistance != 0 && abstractionDistance != 1) {
-            throw new IllegalArgumentException("Abstraction distance must be either '0' or '1'.");
-        }
-        this.abstractionDistance = abstractionDistance;
-    }
-
-    /**
      * @return True if and only if the set abstraction distance should be ignored for the null node (and instead set to 0).
      */
     public boolean getAggressiveNullAbstraction() {
@@ -193,10 +184,12 @@ public class Options {
      */
     public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
 
+        /*
         if (abstractionDistance == 0 && aggressiveNullAbstraction) {
             logger.info("The option 'aggressiveNullAbstraction' will have no effect " +
                     "since the dereference depth is already set to 0");
         }
+        */
         this.aggressiveNullAbstraction = aggressiveNullAbstraction;
     }
 
@@ -222,15 +215,7 @@ public class Options {
      */
     public boolean isIndexedMode() {
 
-        return indexedMode;
-    }
-
-    /**
-     * @param indexedMode True if and only if an indexed program analysis is performed.
-     */
-    public void setIndexedMode(boolean indexedMode) {
-
-        this.indexedMode = indexedMode;
+        return indexedModeEnabled;
     }
 
     public boolean isGrammarRefinementEnabled() {
@@ -241,14 +226,6 @@ public class Options {
     public void setGrammarRefinementEnabled(boolean enabled) {
 
         grammarRefinementEnabled = enabled;
-    }
-
-    /**
-     * @return True if and only if the symbolic execution has to use garbage collection
-     */
-    public boolean isGarbageCollectionEnabled() {
-
-        return garbageCollectionEnabled;
     }
 
     /**
@@ -269,10 +246,6 @@ public class Options {
         usedSelectorLabels.add(selector);
     }
 
-    public Set<String> getGrammarSelectorLabels() {
-
-        return grammarSelectorLabels;
-    }
 
     public Set<String> getUsedSelectorLabels() {
 
@@ -301,56 +274,34 @@ public class Options {
     // ----------------------------------------------------------------------------------------------------------------
 
 
-    public boolean isAdmissibleAbstractionEnabled() {
-        return admissibleAbstractionEnabled;
-    }
 
     public void setAdmissibleAbstractionEnabled(boolean admissibleAbstractionEnabled) {
         this.admissibleAbstractionEnabled = admissibleAbstractionEnabled;
     }
 
-    public boolean isAdmissibleConstantsEnabled() {
-        return admissibleConstantsEnabled;
-    }
 
     public void setAdmissibleConstantsEnabled(boolean admissibleConstantsEnabled) {
         this.admissibleConstantsEnabled = admissibleConstantsEnabled;
     }
 
-    public boolean isAdmissibleMarkingsEnabled() {
-        return admissibleMarkingsEnabled;
-    }
 
     public void setAdmissibleMarkingsEnabled(boolean admissibleMarkingsEnabled) {
         this.admissibleMarkingsEnabled = admissibleMarkingsEnabled;
     }
 
-    public boolean isAdmissibleFullEnabled() {
-        return admissibleFullEnabled;
-    }
 
     public void setAdmissibleFullEnabled(boolean admissibleFullEnabled) {
         this.admissibleFullEnabled = admissibleFullEnabled;
     }
 
-    public boolean isNoChainAbstractionEnabled() {
-        return noChainAbstractionEnabled;
-    }
 
     public void setNoChainAbstractionEnabled(boolean noChainAbstractionEnabled) {
         this.noChainAbstractionEnabled = noChainAbstractionEnabled;
     }
 
-    public boolean isNoRuleCollapsingEnabled() {
-        return noRuleCollapsingEnabled;
-    }
 
     public void setNoRuleCollapsingEnabled(boolean noRuleCollapsingEnabled) {
         this.noRuleCollapsingEnabled = noRuleCollapsingEnabled;
-    }
-
-    public boolean isIndexedModeEnabled() {
-        return indexedModeEnabled;
     }
 
     public void setIndexedModeEnabled(boolean indexedModeEnabled) {
@@ -365,27 +316,63 @@ public class Options {
         this.canonicalEnabled = canonicalEnabled;
     }
 
-    public boolean isNoGarbageCollectionEnabled() {
-        return noGarbageCollectionEnabled;
-    }
-
-    public void setNoGarbageCollectionEnabled(boolean noGarbageCollectionEnabled) {
-        this.noGarbageCollectionEnabled = noGarbageCollectionEnabled;
-    }
-
-    public int getMaxStateSpace() {
-        return maxStateSpace;
-    }
 
     public void setMaxStateSpace(int maxStateSpace) {
         this.maxStateSpace = maxStateSpace;
+    }
+
+
+    public void setMaxHeap(int maxHeap) {
+        this.maxHeap = maxHeap;
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------- //
+
+
+    public int getMaxStateSpace() {
+        return maxStateSpace;
     }
 
     public int getMaxHeap() {
         return maxHeap;
     }
 
-    public void setMaxHeap(int maxHeap) {
-        this.maxHeap = maxHeap;
+    // ------------------------------------------------------------------------------------------------------------- //
+
+    @Override
+    public boolean isNoRuleCollapsingEnabled() {
+        return noRuleCollapsingEnabled;
     }
+
+    @Override
+    public boolean isGarbageCollectionEnabled() {
+        return garbageCollectionEnabled;
+    }
+
+    @Override
+    public boolean isNoChainAbstractionEnabled() {
+        return noChainAbstractionEnabled;
+    }
+
+    @Override
+    public boolean isAdmissibleMarkingsEnabled() {
+        return admissibleMarkingsEnabled;
+    }
+
+    @Override
+    public boolean isAdmissibleConstantsEnabled() {
+        return admissibleConstantsEnabled;
+    }
+
+    @Override
+    public boolean isAdmissibleFullEnabled() {
+        return admissibleFullEnabled;
+    }
+
+    @Override
+    public boolean isAdmissibleAbstractionEnabled() {
+        return admissibleAbstractionEnabled;
+    }
+
 }

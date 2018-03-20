@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.main.scene.DefaultScene;
 import de.rwth.i2.attestor.phases.transformers.CounterexampleTransformer;
+import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
 import de.rwth.i2.attestor.phases.transformers.ModelCheckingResultsTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -64,6 +65,13 @@ public abstract class AbstractAttestor {
                 .getStateSpace()
                 .getStates()
                 .size();
+    }
+
+    public String getDescription() {
+
+        return registry.getMostRecentPhase(InputSettingsTransformer.class)
+                .getInputSettings()
+                .getDescription();
     }
 
     public int getNumberOfFinalStates() {
