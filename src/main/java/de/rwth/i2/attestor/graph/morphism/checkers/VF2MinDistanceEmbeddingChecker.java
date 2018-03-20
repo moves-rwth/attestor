@@ -83,7 +83,7 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
                         .addFeasibilityCondition(twoStepLookahead)
                         .addFeasibilityCondition(embeddingExternalNodes)
                         .addFeasibilityCondition(embeddingEdgeLabels)
-                        .addFeasibilityCondition(new MinAbstractionDistance(options))
+                        .addFeasibilityCondition(new AdmissibleAbstraction(options))
                         .build()
         );
     }

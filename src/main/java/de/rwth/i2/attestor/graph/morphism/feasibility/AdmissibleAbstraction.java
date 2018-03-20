@@ -14,15 +14,12 @@ import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
- * Restricts the considered morphisms to ones in which the distance from variables to nodes with outgoing selector
- * edges belonging to a morphism is at least the given minAbstractionDistance.
+ * Restricts the considered morphisms to ones in which the distance from variables does not prevent admissibility.
  * If ignoreConstants is set to true, variables that model constants, such as null, are ignored.
  *
  * @author Christoph
  */
-public class MinAbstractionDistance implements FeasibilityFunction {
-
-    private final int minAbstractionDistance;
+public class AdmissibleAbstraction implements FeasibilityFunction {
 
     private final boolean ignoreConstants;
 
@@ -31,14 +28,7 @@ public class MinAbstractionDistance implements FeasibilityFunction {
     /**
      * @param options A collection of options guiding how morphisms are computed.
      */
-    public MinAbstractionDistance(MorphismOptions options) {
-
-        // TODO
-        if(options.isAdmissibleAbstraction()) {
-            minAbstractionDistance = 1;
-        } else {
-            minAbstractionDistance = 0;
-        }
+    public AdmissibleAbstraction(MorphismOptions options) {
 
         ignoreConstants = !options.isAdmissibleConstants();
         admissibleMarkings = options.isAdmissibleMarkings();
@@ -52,26 +42,24 @@ public class MinAbstractionDistance implements FeasibilityFunction {
         }
 
         Graph graph = state.getTarget().getGraph();
-        TIntArrayList dist = SelectorDistanceHelper.getSelectorDistances(graph, t);
 
-        for (int i = 0; i < graph.size(); i++) {
-            Object nodeLabel = graph.getNodeLabel(i);
+        if(graph.isExternal(t)) {
+            Object nodeLabel = graph.getNodeLabel(t);
+            Type type = (Type) nodeLabel;
+            if (!(ignoreConstants && Types.isConstantType(type))) {
+                return false;
+            }
+        }
+
+        TIntArrayList predecessors = graph.getPredecessorsOf(t);
+        for(int i=0; i < predecessors.size(); i++) {
+            int pred = predecessors.get(i);
+            Object nodeLabel = graph.getNodeLabel(pred);
             if (nodeLabel.getClass() == Variable.class) {
                 String label = ((Variable) nodeLabel).getName();
-                //if the option ignoreConstants is enabled, constants are ignored.
-                if (!(ignoreConstants && Constants.isConstant(label))) {
-                    int attachedNode = graph.getSuccessorsOf(i).get(0);
 
-                    if (dist.get(attachedNode) < minAbstractionDistance) {
-                        if(admissibleMarkings || !Markings.isComposedMarking(label)) {
-                            return false;
-                        }
-                    }
-                }
-            } else if (graph.isExternal(i)) {
-                Type type = (Type) nodeLabel;
-                if (!(ignoreConstants && Types.isConstantType(type))) {
-                    if (dist.get(i) < minAbstractionDistance) {
+                if (!(ignoreConstants && Constants.isConstant(label))) {
+                    if (admissibleMarkings || !Markings.isComposedMarking(label)) {
                         return false;
                     }
                 }

@@ -27,20 +27,14 @@ public class ProcedureRegistryStub implements ProcedureRegistry {
 
 	@Override
 	public void registerProcedure(ProcedureCall call) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void registerDependency(ProgramState callingState, ProcedureCall call) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void registerStateSpace(ProcedureCall call, StateSpace generatedStateSpace) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
