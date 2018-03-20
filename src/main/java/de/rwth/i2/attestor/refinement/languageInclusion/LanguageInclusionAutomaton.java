@@ -58,11 +58,9 @@ public class LanguageInclusionAutomaton extends SceneObject implements Stateless
 
     private HeapConfiguration canonicalizeCurrent(HeapConfiguration hc) {
 
-        boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-
-        MorphismOptions options = new AbstractionOptions()
-                .setAdmissibleConstants(!aggressiveNullAbstraction);
-
+        MorphismOptions options = new AbstractionOptions().setAdmissibleConstants(
+                scene().options().isAdmissibleConstantsEnabled()
+        );
 
         for (Nonterminal lhs : grammar.getAllLeftHandSides()) {
             for (HeapConfiguration rhs : grammar.getRightHandSidesFor(lhs)) {

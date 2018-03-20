@@ -82,20 +82,16 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
-
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
-                .setIndexedMode(indexedMode)
+                .setIndexedMode(scene().options().isIndexedMode())
                 .build();
 
-        if(verifyCounterexamples) {
+        if(!scene().options().isChainAbstractionEnabled()) {
             scene().strategies().setAlwaysCanonicalize(true);
         }
 
-        if(verifyCounterexamples && abstractionDistance == 1){
+        if(scene().options().isAdmissibleFullEnabled()&& scene().options().isAdmissibleAbstractionEnabled()){
             scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
             scene().strategies().setStateRectificationStrategy(
                     new AdmissibleStateRectificationStrategy(new StateMaterializationStrategy(materializationStrategy))
@@ -114,7 +110,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         AbstractionOptions abstractionOptions = new AbstractionOptions()
                 .setAdmissibleAbstraction(scene().options().isAdmissibleAbstractionEnabled())
                 .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled())
-                .setAdmissibleMarkings(scene().options().isAdmissibleConstantsEnabled());
+                .setAdmissibleMarkings(scene().options().isAdmissibleMarkingsEnabled());
 
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()

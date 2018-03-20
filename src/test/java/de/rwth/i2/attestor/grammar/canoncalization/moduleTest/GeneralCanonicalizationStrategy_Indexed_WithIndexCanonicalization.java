@@ -55,7 +55,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().options().getAggressiveNullAbstraction()
+                        sceneObject.scene().options().isAdmissibleConstantsEnabled()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

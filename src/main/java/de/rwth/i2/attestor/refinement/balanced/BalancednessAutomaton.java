@@ -83,7 +83,7 @@ public class BalancednessAutomaton extends SceneObject implements StatelessHeapA
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
                 new AbstractionOptions().setAdmissibleConstants(
-                        !scene().options().getAggressiveNullAbstraction()
+                        scene().options().isAdmissibleConstantsEnabled()
                 )
         );
 

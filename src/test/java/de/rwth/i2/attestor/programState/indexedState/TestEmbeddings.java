@@ -21,7 +21,6 @@ public class TestEmbeddings {
 
     private SceneObject sceneObject;
     private ExampleIndexedGraphFactory graphFactory;
-    private boolean aggressiveNullAbstraction;
 
     private AbstractionOptions abstractionOptions;
 
@@ -32,10 +31,10 @@ public class TestEmbeddings {
         sceneObject.scene().options().setIndexedModeEnabled(true);
 
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
-        aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
 
-        abstractionOptions = new AbstractionOptions()
-                .setAdmissibleConstants(!aggressiveNullAbstraction);
+        abstractionOptions = new AbstractionOptions().setAdmissibleConstants(
+                sceneObject.scene().options().isAdmissibleConstantsEnabled()
+        );
 
         AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
         AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");

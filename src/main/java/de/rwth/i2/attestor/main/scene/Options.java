@@ -10,15 +10,6 @@ public class Options {
     protected Options() {}
 
     /**
-     * The minimal distance between variables in a heap configuration and embeddings used for abstraction.
-     * Increasing this number allows to use a less aggressive abstraction.
-     */
-    private int abstractionDistance = 0;
-    /**
-     * Indicates whether the abstraction distance for the null node is set to 0 (otherwise or the specified distance is chosen).
-     */
-    private boolean aggressiveNullAbstraction = true;
-    /**
      * Enabling this option results in dead variables (variables that are not accessed before being rewritten in the
      * following) being deleted in order to enable more possible abstractions.
      */
@@ -50,9 +41,7 @@ public class Options {
 
     private boolean admissibleFullEnabled = false;
 
-    private boolean noChainAbstractionEnabled = false;
-
-    private boolean noRuleCollapsingEnabled = false;
+    private boolean chainAbstractionEnabled = false;
 
     /**
      * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
@@ -67,76 +56,14 @@ public class Options {
 
     // -----------------------------------------------------------------------------------
 
-    /**
-     * If enabled, we verify that a counterexample is not spurious (otherwise an invalid LTL formula is set to unknown).
-     * This option is disabled by default, because counterexample verification requires a more elaborate state space
-     * generation even if all specifications are valid.
-     */
-    private boolean verifyCounterexamples = false;
-
-
-
-
-    /**
-     * @return True if post-processing is applied to generated state spaces.
-     */
-    public boolean isPostprocessingEnabled() {
-
-        return postProcessingEnabled;
-    }
-
-    /**
-     * @param
-     */
     public void setPostProcessingEnabled(boolean enabled) {
 
         this.postProcessingEnabled = enabled;
     }
 
-    /**
-     * @return The minimal distance between variables and nodes in an embedding before abstraction is performed.
-     */
-    public int getAbstractionDistance() {
-
-        return abstractionDistance;
-    }
-
-    /**
-     * @return True if and only if the set abstraction distance should be ignored for the null node (and instead set to 0).
-     */
-    public boolean getAggressiveNullAbstraction() {
-
-        return aggressiveNullAbstraction;
-    }
-
-    /**
-     * @return True if and only if dead variables are deleted from heap configurations whenever possible.
-     */
-    public boolean isRemoveDeadVariables() {
-
-        return removeDeadVariables;
-    }
-
-    /**
-     * @param removeDeadVariables True if and only if dead variables are deleted from
-     *                            heap configurations whenever possible.
-     */
     public void setRemoveDeadVariables(boolean removeDeadVariables) {
 
         this.removeDeadVariables = removeDeadVariables;
-    }
-
-    /**
-     * @return True if and only if an indexed program analysis is performed.
-     */
-    public boolean isIndexedMode() {
-
-        return indexedModeEnabled;
-    }
-
-    public boolean isGrammarRefinementEnabled() {
-
-        return grammarRefinementEnabled;
     }
 
     public void setGrammarRefinementEnabled(boolean enabled) {
@@ -144,49 +71,18 @@ public class Options {
         grammarRefinementEnabled = enabled;
     }
 
-    /**
-     * @param enabled True if and only if the symbolic execution should perform garbage collection
-     */
     public void setGarbageCollectionEnabled(boolean enabled) {
 
         this.garbageCollectionEnabled = enabled;
     }
 
-
-
-
-    public boolean isRuleCollapsingEnabled() {
-
-        return ruleCollapsingEnabled;
-    }
-
-    public void setRuleCollapsingEnabled(boolean enabled) {
-
-        ruleCollapsingEnabled = enabled;
-    }
-
-    public void setVerifyCounterexamples(boolean verifyCounterexamples) {
-        this.verifyCounterexamples = verifyCounterexamples;
-    }
-
-    public boolean isVerifyCounterexamples() {
-        return verifyCounterexamples;
-    }
-
-
-    // ----------------------------------------------------------------------------------------------------------------
-
-
-
     public void setAdmissibleAbstractionEnabled(boolean admissibleAbstractionEnabled) {
         this.admissibleAbstractionEnabled = admissibleAbstractionEnabled;
     }
 
-
     public void setAdmissibleConstantsEnabled(boolean admissibleConstantsEnabled) {
         this.admissibleConstantsEnabled = admissibleConstantsEnabled;
     }
-
 
     public void setAdmissibleMarkingsEnabled(boolean admissibleMarkingsEnabled) {
         this.admissibleMarkingsEnabled = admissibleMarkingsEnabled;
@@ -197,23 +93,18 @@ public class Options {
         this.admissibleFullEnabled = admissibleFullEnabled;
     }
 
-
-    public void setNoChainAbstractionEnabled(boolean noChainAbstractionEnabled) {
-        this.noChainAbstractionEnabled = noChainAbstractionEnabled;
+    public void setChainAbstractionEnabled(boolean chainAbstractionEnabled) {
+        this.chainAbstractionEnabled = chainAbstractionEnabled;
     }
 
-
-    public void setNoRuleCollapsingEnabled(boolean noRuleCollapsingEnabled) {
-        this.noRuleCollapsingEnabled = noRuleCollapsingEnabled;
+    public void setRuleCollapsingEnabled(boolean ruleCollapsingEnabled) {
+        this.ruleCollapsingEnabled = ruleCollapsingEnabled;
     }
 
     public void setIndexedModeEnabled(boolean indexedModeEnabled) {
         this.indexedModeEnabled = indexedModeEnabled;
     }
 
-    public boolean isCanonicalEnabled() {
-        return canonicalEnabled;
-    }
 
     public void setCanonicalEnabled(boolean canonicalEnabled) {
         this.canonicalEnabled = canonicalEnabled;
@@ -230,9 +121,6 @@ public class Options {
     }
 
 
-    // ------------------------------------------------------------------------------------------------------------- //
-
-
     public int getMaxStateSpace() {
         return maxStateSpace;
     }
@@ -241,30 +129,53 @@ public class Options {
         return maxHeap;
     }
 
-    // ------------------------------------------------------------------------------------------------------------- //
+    public boolean isRemoveDeadVariables() {
 
-    public boolean isNoRuleCollapsingEnabled() {
-        return noRuleCollapsingEnabled;
+        return removeDeadVariables;
+    }
+
+    public boolean isPostprocessingEnabled() {
+
+        return postProcessingEnabled && !canonicalEnabled;
+    }
+
+    public boolean isIndexedMode() {
+
+        return indexedModeEnabled;
+    }
+
+    public boolean isGrammarRefinementEnabled() {
+
+        return grammarRefinementEnabled;
+    }
+
+    public boolean isCanonicalEnabled() {
+        return canonicalEnabled;
+    }
+
+    public boolean isRuleCollapsingEnabled() {
+
+        return ruleCollapsingEnabled;
     }
 
     public boolean isGarbageCollectionEnabled() {
         return garbageCollectionEnabled;
     }
 
-    public boolean isNoChainAbstractionEnabled() {
-        return noChainAbstractionEnabled;
+    public boolean isChainAbstractionEnabled() {
+        return chainAbstractionEnabled && !canonicalEnabled;
     }
 
     public boolean isAdmissibleMarkingsEnabled() {
-        return admissibleMarkingsEnabled;
+        return admissibleMarkingsEnabled || canonicalEnabled;
     }
 
     public boolean isAdmissibleConstantsEnabled() {
-        return admissibleConstantsEnabled;
+        return admissibleConstantsEnabled || canonicalEnabled;
     }
 
     public boolean isAdmissibleFullEnabled() {
-        return admissibleFullEnabled;
+        return admissibleFullEnabled || canonicalEnabled;
     }
 
     public boolean isAdmissibleAbstractionEnabled() {

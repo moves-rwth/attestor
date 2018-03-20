@@ -37,7 +37,7 @@ public class GeneralCanonicalizationTest_Default_ConfluentTest {
         AbstractionOptions options = new AbstractionOptions()
                 .setAdmissibleAbstraction(true)
                 .setAdmissibleConstants(
-                        !sceneObject.scene().options().getAggressiveNullAbstraction()
+                        sceneObject.scene().options().isAdmissibleConstantsEnabled()
                 );
 
         EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);

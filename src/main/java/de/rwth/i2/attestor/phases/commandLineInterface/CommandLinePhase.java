@@ -256,12 +256,12 @@ public class CommandLinePhase extends AbstractPhase
 
     private void noChainAbstraction() {
 
-        scene().options().setNoChainAbstractionEnabled(true);
+        scene().options().setChainAbstractionEnabled(false);
     }
 
     private void noRuleCollapsing() {
 
-        scene().options().setNoRuleCollapsingEnabled(true);
+        scene().options().setRuleCollapsingEnabled(false);
     }
 
     private void indexed() {
