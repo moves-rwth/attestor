@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -32,13 +33,13 @@ public class GeneralCanonicalizationTest_Default_Simple {
     @Before
     public void setUp() throws Exception {
 
-        final int minDereferenceDepth = 1;
+        AbstractionOptions options = new AbstractionOptions()
+                .setAdmissibleAbstraction(true)
+                .setAdmissibleConstants(
+                        !sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction()
+                );
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
-                minDereferenceDepth,
-                sceneObject.scene().abstractionOptions().getAggressiveNullAbstraction(),
-                true
-        );
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
         canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
     }
 

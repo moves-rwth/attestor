@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.graph.morphism.feasibility;
 import de.rwth.i2.attestor.graph.heap.Variable;
 import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
 import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 import de.rwth.i2.attestor.graph.morphism.VF2State;
 import de.rwth.i2.attestor.markingGeneration.Markings;
 import de.rwth.i2.attestor.semantics.util.Constants;
@@ -21,9 +22,6 @@ import gnu.trove.list.array.TIntArrayList;
  */
 public class MinAbstractionDistance implements FeasibilityFunction {
 
-    /**
-     * The minimal distance of variables to nodes belonging to the morphism we are searching for.
-     */
     private final int minAbstractionDistance;
 
     private final boolean aggressiveConstantAbstraction;
@@ -31,18 +29,19 @@ public class MinAbstractionDistance implements FeasibilityFunction {
     private final boolean aggressiveCompositeMarkingAbstraction;
 
     /**
-     * @param minAbstractionDistance        The minimal distance of variables to nodes in the morphism.
-     * @param aggressiveConstantAbstraction True if and only if the minimal distance should be ignored
-     *                                      for variable edges representing constants.
+     * @param options A collection of options guiding how morphisms are computed.
      */
-    public MinAbstractionDistance(int minAbstractionDistance,
-                                  boolean aggressiveConstantAbstraction,
-                                  boolean aggressiveCompositeMarkingAbstraction
-    ) {
+    public MinAbstractionDistance(MorphismOptions options) {
 
-        this.minAbstractionDistance = minAbstractionDistance;
-        this.aggressiveConstantAbstraction = aggressiveConstantAbstraction;
-        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
+        // TODO
+        if(options.isAdmissibleAbstraction()) {
+            minAbstractionDistance = 1;
+        } else {
+            minAbstractionDistance = 0;
+        }
+
+        aggressiveConstantAbstraction = !options.isAdmissibleConstants();
+        aggressiveCompositeMarkingAbstraction = !options.isAdmissibleMarkings();
     }
 
     @Override

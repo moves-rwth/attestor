@@ -1,6 +1,5 @@
 package de.rwth.i2.attestor.main.scene;
 
-import de.rwth.i2.attestor.grammar.GrammarOptions;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -10,7 +9,7 @@ import java.util.Set;
  *
  * @author Hannah Arndt, Christoph
  */
-public class Options implements GrammarOptions {
+public class Options {
 
     /**
      * The set of variables that will never ever be eliminated.
@@ -340,37 +339,30 @@ public class Options implements GrammarOptions {
 
     // ------------------------------------------------------------------------------------------------------------- //
 
-    @Override
     public boolean isNoRuleCollapsingEnabled() {
         return noRuleCollapsingEnabled;
     }
 
-    @Override
     public boolean isGarbageCollectionEnabled() {
         return garbageCollectionEnabled;
     }
 
-    @Override
     public boolean isNoChainAbstractionEnabled() {
         return noChainAbstractionEnabled;
     }
 
-    @Override
     public boolean isAdmissibleMarkingsEnabled() {
         return admissibleMarkingsEnabled;
     }
 
-    @Override
     public boolean isAdmissibleConstantsEnabled() {
         return admissibleConstantsEnabled;
     }
 
-    @Override
     public boolean isAdmissibleFullEnabled() {
         return admissibleFullEnabled;
     }
 
-    @Override
     public boolean isAdmissibleAbstractionEnabled() {
         return admissibleAbstractionEnabled;
     }

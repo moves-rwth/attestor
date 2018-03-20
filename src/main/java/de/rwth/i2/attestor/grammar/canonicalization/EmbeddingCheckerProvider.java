@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.grammar.canonicalization;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 
 /**
  * This class is responsible to select the correct embeddingChecker
@@ -11,22 +12,16 @@ import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
  */
 public class EmbeddingCheckerProvider {
 
-    private final int minDereferenceDepth;
-    private final boolean aggressiveNullAbstractionEnabled;
-    private final boolean aggressiveCompositeMarkingAbstraction;
+    private final MorphismOptions morphismOptions;
 
     /**
      * Constructs an EmbeddingCheckerProvider with the given communication
      *
-     * @param minDereferenceDepth the distance which has to be ensured between an embedding and
-     *                            the next node referenced by a variable
+     * @param morphismOptions Options guiding how embeddings are computed.
      */
-    public EmbeddingCheckerProvider(int minDereferenceDepth, boolean aggressiveNullAbstractionEnabled,
-                                    boolean aggressiveCompositeMarkingAbstraction) {
+    public EmbeddingCheckerProvider(MorphismOptions morphismOptions) {
 
-        this.minDereferenceDepth = minDereferenceDepth;
-        this.aggressiveNullAbstractionEnabled = aggressiveNullAbstractionEnabled;
-        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
+        this.morphismOptions = morphismOptions;
     }
 
     /**
@@ -39,8 +34,7 @@ public class EmbeddingCheckerProvider {
      */
     public AbstractMatchingChecker getEmbeddingChecker(HeapConfiguration graph, HeapConfiguration pattern) {
 
-        return graph.getEmbeddingsOf(pattern, minDereferenceDepth,
-                aggressiveNullAbstractionEnabled, aggressiveCompositeMarkingAbstraction);
+        return graph.getEmbeddingsOf(pattern, morphismOptions);
     }
 
 }

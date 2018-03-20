@@ -8,6 +8,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
 import de.rwth.i2.attestor.graph.morphism.Graph;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
@@ -225,13 +226,9 @@ public final class HeapConfigurationPair implements HeapConfiguration, Graph {
     }
 
     @Override
-    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
-                                                   int minAbstractionDistance,
-                                                   boolean aggressiveNullAbstractionEnabled,
-                                                   boolean aggressiveCompositeMarkingAbstraction) {
+    public AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, MorphismOptions options) {
 
-        return actual.getEmbeddingsOf(pattern, minAbstractionDistance, aggressiveNullAbstractionEnabled,
-                aggressiveCompositeMarkingAbstraction);
+        return actual.getEmbeddingsOf(pattern, options);
     }
 
     @Override

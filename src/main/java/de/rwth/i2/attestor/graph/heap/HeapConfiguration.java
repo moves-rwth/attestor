@@ -3,6 +3,7 @@ package de.rwth.i2.attestor.graph.heap;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
@@ -215,14 +216,11 @@ public interface HeapConfiguration {
      * Returns an AbstractMatchingChecker to search for all occurrences of the given pattern HeapConfiguration
      * in this HeapConfiguration (the target).
      *
-     * @param pattern                          The HeapConfiguration to search for.
-     * @param minAbstractionDistance           The minimal distance between a variable and an embedding.
-     * @param aggressiveNullAbstractionEnabled True if aggressive null abstraction is enabled.
+     * @param pattern The HeapConfiguration to search for.
+     * @param options Options guiding how embeddings are computed.
      * @return An AbstractMatchingChecker to iterate through all found embeddings.
      */
-    AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern,
-                                            int minAbstractionDistance, boolean aggressiveNullAbstractionEnabled,
-                                            boolean aggressiveCompositeMarkingAbstraction);
+    AbstractMatchingChecker getEmbeddingsOf(HeapConfiguration pattern, MorphismOptions options);
 
     /**
      * @param variableName The name of the requested variable.

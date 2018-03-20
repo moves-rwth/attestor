@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.grammar.canonicalization;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.defaultGrammar.DefaultCanonicalizationHelper;
@@ -33,11 +34,12 @@ public class CanonicalizationStrategyBuilder {
             throw new IllegalStateException("No grammar.");
         }
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
-                minAbstractionDistance,
-                aggressiveNullAbstraction,
-                aggressiveCompositeMarkingAbstraction
-        );
+        AbstractionOptions options = new AbstractionOptions()
+                .setAdmissibleAbstraction(minAbstractionDistance > 0)
+                .setAdmissibleConstants(!aggressiveNullAbstraction)
+                .setAdmissibleMarkings(!aggressiveCompositeMarkingAbstraction);
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
 
         CanonicalizationHelper canonicalizationHelper;
         if(indexedMode) {
