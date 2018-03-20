@@ -14,6 +14,7 @@ import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class CommandLinePhase extends AbstractPhase
@@ -27,7 +28,7 @@ public class CommandLinePhase extends AbstractPhase
     private final ModelCheckingSettings modelCheckingSettings = new ModelCheckingSettings();
 
     private CommandLineReader commandLineReader;
-    CommandLine commandLine;
+    private CommandLine commandLine;
 
     public CommandLinePhase(Scene scene, String[] args) {
 
@@ -241,7 +242,7 @@ public class CommandLinePhase extends AbstractPhase
             throw new IllegalArgumentException("The syntax for type renaming is 'oldType=newType'.");
         }
         inputSettings.addTypeRenaming(t[0], t[1]);
-        logger.debug("using type renaming " + t[0] + " --> " + t[1]);
+        logger.debug("using renaming " + Arrays.toString(values));
 
         for(int i=1; i < values.length; i++) {
             String selector = values[i].trim();
@@ -250,7 +251,6 @@ public class CommandLinePhase extends AbstractPhase
                 throw new IllegalArgumentException("The syntax for selector renaming is 'oldSelector=newSelector'.");
             }
             inputSettings.addSelectorRenaming(t[1], s[0], s[1]);
-            logger.debug("using selector renaming " + t[1] + "." + s[0] + " --> " + t[1] + "." + s[1]);
         }
     }
 
@@ -327,34 +327,43 @@ public class CommandLinePhase extends AbstractPhase
 
     private void noGarbageCollector() {
 
+        logger.debug("disabled garbage collector");
         scene().options().setGarbageCollectionEnabled(false);
     }
 
     private void maxStateSpace(Option option) {
 
         int size = Integer.valueOf(option.getValue());
+        logger.debug("maximal state space size: " + size);
         scene().options().setMaxStateSpace(size);
     }
 
     private void maxHeap(Option option) {
 
         int size = Integer.valueOf(option.getValue());
+        logger.debug("maximal heap size: " + size);
         scene().options().setMaxHeap(size);
     }
 
     private void export(Option option) {
 
-        outputSettings.setExportPath(option.getValue());
+        String exportPath = option.getValue();
+        logger.debug("state space will be exported to " + exportPath);
+        outputSettings.setExportPath(exportPath);
     }
 
     private void exportGrammar(Option option) {
 
-        outputSettings.setExportGrammarPath(option.getValue());
+        String exportPath = option.getValue();
+        logger.debug("grammar will be exported to " + exportPath);
+        outputSettings.setExportGrammarPath(exportPath);
     }
 
     private void exportLargeStates(Option option) {
 
-        outputSettings.setExportLargeStatesPath(option.getValue());
+        String exportPath = option.getValue();
+        logger.debug("large states will be exported to " + exportPath);
+        outputSettings.setExportLargeStatesPath(exportPath);
     }
 
     @Override
