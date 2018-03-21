@@ -70,7 +70,7 @@ public class CommandLinePhase extends AbstractPhase
         String rootPath = "";
         if(commandLine.hasOption("root-path")) {
             rootPath = commandLine.getOptionValue("root-path");
-            logger.debug("root path: " + rootPath);
+            logger.info("root path: " + rootPath);
         }
         inputSettings.setRootPath(rootPath);
         outputSettings.setRootPath(rootPath);
@@ -191,49 +191,49 @@ public class CommandLinePhase extends AbstractPhase
     private void description(Option option) {
 
         String description = option.getValue();
-        logger.debug("description: " + description);
+        logger.info("description: " + description);
         inputSettings.setDescription(description);
     }
 
     private void setClass(Option option) {
 
         String classname = option.getValue();
-        logger.debug("classname: " + classname);
+        logger.info("classname: " + classname);
         inputSettings.setClassName(classname);
     }
 
     private void setClasspath(Option option) {
 
         String classpath = option.getValue();
-        logger.debug("classpath: " + classpath);
+        logger.info("classpath: " + classpath);
         inputSettings.setClasspath(classpath);
     }
 
     private void contract(Option option) {
 
         String contract = option.getValue();
-        logger.debug("contract: " + contract);
+        logger.info("contract: " + contract);
         inputSettings.addContractFile(contract);
     }
 
     private void grammar(Option option) {
 
         String grammar = option.getValue();
-        logger.debug("grammar: " + grammar);
+        logger.info("grammar: " + grammar);
         inputSettings.addUserDefinedGrammarFile(grammar);
     }
 
     private void initial(Option option) {
 
         String initial = option.getValue();
-        logger.debug("initial heap: " + initial);
+        logger.info("initial heap: " + initial);
         inputSettings.addInitialHeapFile(initial);
     }
 
     private void method(Option option) {
 
         String method = option.getValue();
-        logger.debug("method: " + method);
+        logger.info("method: " + method);
         inputSettings.setMethodName(method);
     }
 
@@ -243,7 +243,7 @@ public class CommandLinePhase extends AbstractPhase
         if(grammarName == null) {
             throw new IllegalArgumentException("Unspecified grammar name");
         }
-        logger.debug("predefined grammar: " + grammarName);
+        logger.info("predefined grammar: " + grammarName);
         inputSettings.addPredefinedGrammarName(grammarName);
     }
 
@@ -260,7 +260,7 @@ public class CommandLinePhase extends AbstractPhase
             throw new IllegalArgumentException("The syntax for type renaming is 'oldType=newType'.");
         }
         inputSettings.addTypeRenaming(t[0], t[1]);
-        logger.debug("using renaming " + Arrays.toString(values));
+        logger.info("using renaming " + Arrays.toString(values));
 
         for(int i=1; i < values.length; i++) {
             String selector = values[i].trim();
@@ -275,49 +275,49 @@ public class CommandLinePhase extends AbstractPhase
 
     private void admissibleAbstraction() {
 
-        logger.debug("enabled admissibility check during abstraction");
+        logger.info("enabled admissibility check during abstraction");
         scene().options().setAdmissibleAbstractionEnabled(true);
     }
 
     private void admissibleConstants() {
 
-        logger.debug("enabled admissibility check for constants");
+        logger.info("enabled admissibility check for constants");
         scene().options().setAdmissibleConstantsEnabled(true);
     }
 
     private void admissibleMarkings() {
 
-        logger.debug("enabled admissibility check for markings");
+        logger.info("enabled admissibility check for markings");
         scene().options().setAdmissibleMarkingsEnabled(true);
     }
 
     private void admissibleFull() {
 
-        logger.debug("enabled full admissibility using materialization");
+        logger.info("enabled full admissibility using materialization");
         scene().options().setAdmissibleFullEnabled(true);
     }
 
     private void noChainAbstraction() {
 
-        logger.debug("disabled chain abstraction");
+        logger.info("disabled chain abstraction");
         scene().options().setChainAbstractionEnabled(false);
     }
 
     private void noRuleCollapsing() {
 
-        logger.debug("disabled rule collapsing");
+        logger.info("disabled rule collapsing");
         scene().options().setRuleCollapsingEnabled(false);
     }
 
     private void indexed() {
 
-        logger.debug("enabled use of indexed grammars");
+        logger.info("enabled use of indexed grammars");
         scene().options().setIndexedModeEnabled(true);
     }
 
     private void postProcessing() {
 
-        logger.debug("enabled state space post processing");
+        logger.info("enabled state space post processing");
         scene().options().setPostProcessingEnabled(true);
     }
 
@@ -326,7 +326,7 @@ public class CommandLinePhase extends AbstractPhase
         if(commandLine.hasOption("post-processing")) {
             throw new IllegalArgumentException("Option --canonical is incompatible with option --post-processing.");
         }
-        logger.debug("enabled computation of canonical states");
+        logger.info("enabled computation of canonical states");
         scene().options().setCanonicalEnabled(true);
     }
 
@@ -337,7 +337,7 @@ public class CommandLinePhase extends AbstractPhase
             LTLFormula ltlFormula = new LTLFormula(formula);
             ltlFormula.toPNF();
             modelCheckingSettings.addFormula(ltlFormula);
-            logger.debug("model-checking: " + formula);
+            logger.info("model-checking: " + formula);
         } catch (Exception e) {
             logger.error("The input " + formula + " is not a valid LTL formula. Skipping it.");
         }
@@ -345,49 +345,49 @@ public class CommandLinePhase extends AbstractPhase
 
     private void noGarbageCollector() {
 
-        logger.debug("disabled garbage collector");
+        logger.info("disabled garbage collector");
         scene().options().setGarbageCollectionEnabled(false);
     }
 
     private void maxStateSpace(Option option) {
 
         int size = Integer.valueOf(option.getValue());
-        logger.debug("maximal state space size: " + size);
+        logger.info("maximal state space size: " + size);
         scene().options().setMaxStateSpace(size);
     }
 
     private void maxHeap(Option option) {
 
         int size = Integer.valueOf(option.getValue());
-        logger.debug("maximal heap size: " + size);
+        logger.info("maximal heap size: " + size);
         scene().options().setMaxHeap(size);
     }
 
     private void export(Option option) {
 
         String exportPath = option.getValue();
-        logger.debug("state space will be exported to " + exportPath);
+        logger.info("state space will be exported to " + exportPath);
         outputSettings.setExportPath(exportPath);
     }
 
     private void exportGrammar(Option option) {
 
         String exportPath = option.getValue();
-        logger.debug("grammar will be exported to " + exportPath);
+        logger.info("grammar will be exported to " + exportPath);
         outputSettings.setExportGrammarPath(exportPath);
     }
 
     private void exportLargeStates(Option option) {
 
         String exportPath = option.getValue();
-        logger.debug("large states will be exported to " + exportPath);
+        logger.info("large states will be exported to " + exportPath);
         outputSettings.setExportLargeStatesPath(exportPath);
     }
 
     private void saveContracts(Option option) {
         String method = option.getValue(0);
         String path = option.getValue(1);
-        logger.debug("contracts of method " + method + " will be stored in " + path);
+        logger.info("contracts of method " + method + " will be stored in " + path);
         outputSettings.addSaveContracts(method, path);
     }
 
@@ -395,7 +395,7 @@ public class CommandLinePhase extends AbstractPhase
 
         String method = option.getValue(0);
         String path = option.getValue(1);
-        logger.debug("contracts of method " + method + " will be exported to " + path);
+        logger.info("contracts of method " + method + " will be exported to " + path);
         outputSettings.addExportContracts(method, path);
     }
 

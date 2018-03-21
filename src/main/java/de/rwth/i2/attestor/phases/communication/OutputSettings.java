@@ -92,30 +92,6 @@ public class OutputSettings {
     }
 
     /**
-     * @param exportContracts True if and only if used contracts should be exported for inspection.
-     */
-    public void setExportContractsForInspection(boolean exportContracts) {
-
-        this.exportContractsForInspection = exportContracts;
-    }
-
-    /**
-     * @param pathForContracts The path where exported contracts for inspection are stored.
-     */
-    public void setPathForContractsForInspection( String pathForContracts ) {
-
-        this.pathForContractsForInspection = pathForContracts;
-    }
-
-    /**
-     * @param folderForContracts The directory containing exported contracts for inspection.
-     */
-    public void setFolderForContractsForInspection(String folderForContracts) {
-
-        this.folderForContractsForInspection = folderForContracts;
-    }
-
-    /**
      * @return The fully qualified path to the directory containing exported contracts for inspection.
      */
     public String getLocationForContractsForInspection() {
