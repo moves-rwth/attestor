@@ -385,18 +385,16 @@ public class CommandLinePhase extends AbstractPhase
     }
 
     private void saveContracts(Option option) {
-        String method = option.getValue(0);
-        String path = option.getValue(1);
-        logger.info("contracts of method " + method + " will be stored in " + path);
-        outputSettings.addSaveContracts(method, path);
+        String path = option.getValue();
+        logger.info("contracts will be saved in " + path);
+        outputSettings.setSaveContractsPath(path);
     }
 
     private void exportContracts(Option option) {
 
-        String method = option.getValue(0);
-        String path = option.getValue(1);
-        logger.info("contracts of method " + method + " will be exported to " + path);
-        outputSettings.addExportContracts(method, path);
+        String path = option.getValue();
+        logger.info("contracts will be exported to " + path);
+        outputSettings.setExportContractsPath(path);
     }
 
     private void quiet() {

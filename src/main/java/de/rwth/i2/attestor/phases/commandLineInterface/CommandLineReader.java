@@ -453,9 +453,8 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder()
                         .longOpt("export-contracts")
-                        .hasArgs()
-                        .numberOfArgs(2)
-                        .argName("method path")
+                        .hasArg()
+                        .argName("path")
                         .desc("Exports the contracts generated for the provided method for graphical inspection. " +
                                 "The exported contracts are written to a directory ROOT_PATH/<path>, where ROOT_PATH is " +
                                 "the path determined by --root-path. " +
@@ -468,14 +467,14 @@ public class CommandLineReader {
         commandLineOptions.addOption(
                 Option.builder()
                         .longOpt("save-contracts")
-                        .hasArgs()
-                        .numberOfArgs(2)
-                        .argName("method path")
-                        .desc("Stores the contracts generated for the provided method in a format that can be " +
-                                "imported again using option --contract. " +
-                                "The contracts are stored in a directory ROOT_PATH/<path>, where ROOT_PATH is the " +
-                                "path determined by --root-path. " +
-                                "To visualize generate contracts, use option --export-contracts instead.")
+                        .hasArg()
+                        .argName("path")
+                        .desc("Exports all generated contracts for graphical inspection. " +
+                                "The exported contracts are written to a directory ROOT_PATH/<path>, " +
+                                "where ROOT_PATH is the path determined by --root-path. " +
+                                "If the generated contracts should be reused for another analysis, " +
+                                "i.e. they should be supplied using --contract (link), use the option " +
+                                "--save-contracts instead.")
                         .build()
         );
     }
