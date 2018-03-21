@@ -45,7 +45,7 @@ In summary, Attestor's main features can be characterized as follows:
 * Except for expecting a graph grammar that specifies the data structures handled by a program, the analysis is fully automated. In particular, no program annotations are required.
 * Modular reasoning is supported in the form of contracts that summarise the effect of executing a (recursive) procedure.
 These contracts can be automatically derived or manually specified.
-* Feedback is provided through a comprehensive report including (minimal) non-spurious counterexamples in case of property violations./
+* Feedback is provided through a comprehensive report including (minimal) non-spurious counterexamples in case of property violations.
 * Its functionality is made accessible through the command line as well as a graphical user and an application programming interface.
 
 # System Requirements
