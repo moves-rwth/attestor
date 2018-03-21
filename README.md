@@ -67,7 +67,7 @@ The following software has to be installed prior to the installation of Attestor
      $ git clone https://github.com/moves-rwth/attestor-examples.git
      $ mvn clean install exec:exec@run
 
-Given the [system requirements](#system-requirements, no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
+Given the [system requirements](#system-requirements), no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
 Please confer the documentation in the [benchmark repository](https://github.com/moves-rwth/attestor-examples) for further details.
 
 Current status of the benchmark repository: 
