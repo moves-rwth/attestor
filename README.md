@@ -1,6 +1,6 @@
 ![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
 
-Attestor is a verification tool to analyze Java pointer programs
+Attestor is a program analysis tool for model-checking Java pointer programs.
 
 # Contents
 
