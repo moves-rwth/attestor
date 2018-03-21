@@ -25,6 +25,7 @@ public class CommandLineReader {
         setupAbstractionOptions();
         setupAnalysisOptions();
         setupExportOptions();
+        setupLoggerOptions();
     }
 
     public CommandLine read(String[] args) {
@@ -55,7 +56,7 @@ public class CommandLineReader {
         // We only search for --root-path and --read.
         // Since both options require an argument, we only
         // move up to args.length-1.
-        for(int i=0; i < args.length-1; i++) {
+        for(int i=0; i < args.length; i++) {
 
             String argument = args[i];
             switch(argument) {
@@ -449,8 +450,64 @@ public class CommandLineReader {
                         .build()
         );
 
+        commandLineOptions.addOption(
+                Option.builder()
+                        .longOpt("export-contracts")
+                        .hasArgs()
+                        .numberOfArgs(2)
+                        .argName("method path")
+                        .desc("Exports the contracts generated for the provided method for graphical inspection. " +
+                                "The exported contracts are written to a directory ROOT_PATH/<path>, where ROOT_PATH is " +
+                                "the path determined by --root-path. " +
+                                "If the generated contracts should be reused for another analysis, " +
+                                "i.e. they should be supplied using --contract (link), use the option " +
+                                "--save-contracts instead.")
+                        .build()
+        );
+
+        commandLineOptions.addOption(
+                Option.builder()
+                        .longOpt("save-contracts")
+                        .hasArgs()
+                        .numberOfArgs(2)
+                        .argName("method path")
+                        .desc("Stores the contracts generated for the provided method in a format that can be " +
+                                "imported again using option --contract. " +
+                                "The contracts are stored in a directory ROOT_PATH/<path>, where ROOT_PATH is the " +
+                                "path determined by --root-path. " +
+                                "To visualize generate contracts, use option --export-contracts instead.")
+                        .build()
+        );
     }
 
+    private void setupLoggerOptions() {
 
+        OptionGroup debugOptions = new OptionGroup();
 
+        debugOptions.addOption(
+                Option.builder("q")
+                        .longOpt("quiet")
+                        .build()
+        );
+
+        debugOptions.addOption(
+                Option.builder("v")
+                        .longOpt("verbose")
+                        .build()
+        );
+
+        debugOptions.addOption(
+                Option.builder()
+                        .longOpt("debug")
+                        .build()
+        );
+
+        debugOptions.addOption(
+                Option.builder()
+                        .longOpt("christoph")
+                        .build()
+        );
+
+        commandLineOptions.addOptionGroup(debugOptions);
+    }
 }

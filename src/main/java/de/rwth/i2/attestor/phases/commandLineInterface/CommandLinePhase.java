@@ -13,6 +13,8 @@ import de.rwth.i2.attestor.phases.transformers.StateLabelingStrategyBuilderTrans
 import de.rwth.i2.attestor.refinement.AutomatonStateLabelingStrategyBuilder;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -161,11 +163,30 @@ public class CommandLinePhase extends AbstractPhase
             case "export-large-states":
                 exportLargeStates(option);
                 break;
+            case "save-contracts":
+                saveContracts(option);
+                break;
+            case "export-contracts":
+                exportContracts(option);
+                break;
+            case "quiet":
+                quiet();
+                break;
+            case "verbose":
+                verbose();
+                break;
+            case "debug":
+                debug();
+                break;
+            case "christoph":
+                christoph();
+                break;
             default:
                 throw new IllegalArgumentException("Unknown command line option: " + optionName);
         }
 
     }
+
 
     private void description(Option option) {
 
@@ -361,6 +382,38 @@ public class CommandLinePhase extends AbstractPhase
         String exportPath = option.getValue();
         logger.debug("large states will be exported to " + exportPath);
         outputSettings.setExportLargeStatesPath(exportPath);
+    }
+
+    private void saveContracts(Option option) {
+        String method = option.getValue(0);
+        String path = option.getValue(1);
+        logger.debug("contracts of method " + method + " will be stored in " + path);
+        outputSettings.addSaveContracts(method, path);
+    }
+
+    private void exportContracts(Option option) {
+
+        String method = option.getValue(0);
+        String path = option.getValue(1);
+        logger.debug("contracts of method " + method + " will be exported to " + path);
+        outputSettings.addExportContracts(method, path);
+    }
+
+    private void quiet() {
+        Configurator.setRootLevel(Level.OFF);
+    }
+
+    private void verbose() {
+        Configurator.setRootLevel(Level.INFO);
+    }
+
+    private void debug() {
+        Configurator.setRootLevel(Level.DEBUG);
+    }
+
+    private void christoph() {
+        logHighlight("Welcome Christoph :-)");
+        Configurator.setRootLevel(Level.TRACE);
     }
 
     @Override

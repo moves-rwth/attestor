@@ -4,7 +4,6 @@ import de.rwth.i2.attestor.LTLFormula;
 import de.rwth.i2.attestor.grammar.GrammarExporter;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationExporter;
-import de.rwth.i2.attestor.io.CustomHcListExporter;
 import de.rwth.i2.attestor.io.FileUtils;
 import de.rwth.i2.attestor.io.jsonExport.cytoscapeFormat.*;
 import de.rwth.i2.attestor.io.jsonExport.inputFormat.ContractToInputFormatExporter;
@@ -52,10 +51,6 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         outputSettings = getPhase(OutputSettingsTransformer.class).getOutputSettings();
 
-        if (outputSettings.isNoExport()) {
-            return;
-        }
-
         program = getPhase(ProgramTransformer.class).getProgram();
 
 
@@ -70,16 +65,12 @@ public class ReportGenerationPhase extends AbstractPhase {
                 exportStateSpace(stateSpace, "data");
                 exportCounterexamples();
 
-                String location = outputSettings.getLocationForStateSpace();
+                String location = outputSettings.getExportPath();
                 InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
                 File targetDirectory = new File(location + File.separator);
                 ZipUtils.unzip(zis, targetDirectory);
 
                 exportOverview();
-            }
-
-            if (outputSettings.isExportCustomHcs()) {
-                exportCustomHcs();
             }
 
             if (outputSettings.isExportContractsForReuse()) {
@@ -110,20 +101,22 @@ public class ReportGenerationPhase extends AbstractPhase {
         }
     }
 
+    // TODO
     private void exportContractsForReuse() throws IOException {
 
-        String directory = outputSettings.getDirectoryForReuseContracts();
-        FileUtils.createDirectories(directory);
-        for (String signature : outputSettings.getContractForReuseRequests().keySet()) {
+        //        FileUtils.createDirectories(directory);
+        Map<String, String> requiredContracts = outputSettings.getRequiredSavedContracts();
+        for (String signature : requiredContracts.keySet()) {
 
-            String filename = outputSettings.getContractForReuseRequests().get(signature);
-            FileWriter writer = new FileWriter(directory + File.separator + filename);
+            String filename = requiredContracts.get(signature);
+            FileWriter writer = new FileWriter(filename);
 
             Collection<Contract> contracts;
 			try {
 				contracts = scene().getMethodIfPresent(signature).getContractsForExport();
 				ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
 	            exporter.export(signature, contracts);
+	            logger.info("Saved contracts of method " + signature + " in " + filename);
 	            
 			} catch (ElementNotPresentException e) {
 				logger.info("The contract for " + signature + " is not present.");
@@ -132,10 +125,6 @@ public class ReportGenerationPhase extends AbstractPhase {
             
             writer.close();
         }
-        logger.info("Exported contracts for reuse to '"
-                + directory
-                + "'"
-        );
     }
 	
     private void exportContractsForInspection() throws IOException {
@@ -164,30 +153,10 @@ public class ReportGenerationPhase extends AbstractPhase {
     }
 
 
-    private void exportCustomHcs() throws IOException {
-
-        String location = outputSettings.getLocationForCustomHcs();
-
-        // Copy necessary libraries
-        InputStream zis = getClass().getClassLoader().getResourceAsStream("customHcViewer" +
-                ".zip");
-
-        File targetDirectory = new File(location + File.separator);
-        ZipUtils.unzip(zis, targetDirectory);
-
-        // Generate JSON files for prebooked HCs and their summary
-        CustomHcListExporter exporter = new JsonCustomHcListExporter();
-        exporter.export(location + File.separator + "customHcsData", outputSettings.getCustomHcSet());
-
-        logger.info("Custom HCs exported to '"
-                + location
-        );
-    }
-
     private void exportStateSpace(StateSpace stateSpace, String directory) throws IOException {
 
         logger.info("Exporting state space...");
-        String location = outputSettings.getLocationForStateSpace();
+        String location = outputSettings.getExportPath();
 
         exportStateSpace(
                 location + File.separator + directory,
@@ -215,7 +184,7 @@ public class ReportGenerationPhase extends AbstractPhase {
     private void exportOverview() throws IOException {
 
         logger.info("Exporting overview...");
-        String location = outputSettings.getLocationForStateSpace();
+        String location = outputSettings.getExportPath();
         exportOverview(
                 location + File.separator + "data"
         );
@@ -228,7 +197,7 @@ public class ReportGenerationPhase extends AbstractPhase {
 
         logger.info("Exporting grammar...");
 
-        String location = outputSettings.getLocationForGrammar();
+        String location = outputSettings.getExportGrammarPath();
 
         // Copy necessary libraries
         InputStream zis = getClass().getClassLoader().getResourceAsStream("grammarViewer" +
@@ -281,8 +250,8 @@ public class ReportGenerationPhase extends AbstractPhase {
     @Override
     public void logSummary() {
 
-        if (!outputSettings.isNoExport() && outputSettings.isExportStateSpace()) {
-            String location = outputSettings.getLocationForStateSpace();
+        if (outputSettings.isExportStateSpace()) {
+            String location = outputSettings.getExportPath();
             logHighlight("State space has been exported to:");
             logSum(location);
         }
