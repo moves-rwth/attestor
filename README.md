@@ -6,11 +6,11 @@ Attestor is a verification tool to analyze Java pointer programs
 
 ### Quickstart
 
-* [What is Attestor?](https://github.com/moves-rwth/attestor/wiki/Home#what-is-attestor)
-* [System Requirements](https://github.com/moves-rwth/attestor/wiki/Home#system-requirements)
-* [Reproducing Benchmarks](https://github.com/moves-rwth/attestor/wiki/Home#reproducing-benchmarks) (without installation)
-* [Installation](https://github.com/moves-rwth/attestor/wiki/Home#installation)
-* [Getting Started](https://github.com/moves-rwth/attestor/wiki/Home#getting-started)
+* [What is Attestor?](#what-is-attestor)
+* [System Requirements](#system-requirements)
+* [Reproducing Benchmarks](#reproducing-benchmarks) (without installation)
+* [Installation](#installation)
+* [Getting Started](#getting-started)
 * [Troubleshooting](https://github.com/moves-rwth/attestor/wiki/Troubleshooting)
 
 ### Documentation
@@ -24,8 +24,8 @@ Attestor is a verification tool to analyze Java pointer programs
 
 ### People and Publications
 
-* [People](https://github.com/moves-rwth/attestor/wiki/Home#people)
-* [Publications](https://github.com/moves-rwth/attestor/wiki/Home#publications)
+* [People](#people)
+* [Publications](#publications)
 
 # What is Attestor?
 
@@ -67,7 +67,7 @@ The following software has to be installed prior to the installation of Attestor
      $ git clone https://github.com/moves-rwth/attestor-examples.git
      $ mvn clean install exec:exec@run
 
-Given the [system requirements](https://github.com/moves-rwth/attestor/wiki/Home#system-requirements, no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
+Given the [system requirements](#system-requirements, no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
 Please confer the documentation in the [benchmark repository](https://github.com/moves-rwth/attestor-examples) for further details.
 
 Current status of the benchmark repository: 
