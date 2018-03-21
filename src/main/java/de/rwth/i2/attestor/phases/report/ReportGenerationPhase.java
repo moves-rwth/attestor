@@ -73,24 +73,23 @@ public class ReportGenerationPhase extends AbstractPhase {
         logger.info("Exporting report...");
 
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
-        exportStateSpace(stateSpace, "data");
-        exportCounterexamples();
+        exportStateSpace(stateSpace, location, "data");
+        exportCounterexamples(location);
 
         InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
         File targetDirectory = new File(location + File.separator);
         ZipUtils.unzip(zis, targetDirectory);
 
-        exportOverview();
+        exportOverview(location);
 
         String summary = "Report exported to " + location;
         logger.info(summary);
         summaryMessages.add(summary);
     }
 
-    private void exportStateSpace(StateSpace stateSpace, String directory) throws IOException {
+    private void exportStateSpace(StateSpace stateSpace, String location, String directory) throws IOException {
 
         logger.info("Exporting state space...");
-        String location = outputSettings.getExportPath();
 
         exportStateSpace(
                 location + File.separator + directory,
@@ -131,7 +130,7 @@ public class ReportGenerationPhase extends AbstractPhase {
         writer.close();
     }
 
-    private void exportCounterexamples() throws IOException {
+    private void exportCounterexamples(String location) throws IOException {
 
         ModelCheckingResultsTransformer transformer = getPhase(ModelCheckingResultsTransformer.class);
         int counter = 0;
@@ -139,22 +138,16 @@ public class ReportGenerationPhase extends AbstractPhase {
             if(entry.getValue() == ModelCheckingResult.UNSATISFIED) {
                 LTLFormula formula = entry.getKey();
                 StateSpace stateSpace = transformer.getTraceOf(formula).getStateSpace();
-                exportStateSpace(stateSpace, "cex_" + String.valueOf(counter));
+                exportStateSpace(stateSpace, location, "cex_" + String.valueOf(counter));
                 ++counter;
             }
         }
     }
 
-    private void exportOverview() throws IOException {
+    private void exportOverview(String location) throws IOException {
 
         logger.info("Exporting overview...");
-        String location = outputSettings.getExportPath();
-        exportOverview(
-                location + File.separator + "data"
-        );
-    }
-
-    private void exportOverview(String directory) throws IOException {
+        String directory = location + File.separator + "data";
 
         FileUtils.createDirectories(directory);
         Writer writer = new BufferedWriter(
@@ -209,13 +202,13 @@ public class ReportGenerationPhase extends AbstractPhase {
             }
         }
 
-        exportStateSpace(largeStatesSpace, "data");
+        exportStateSpace(largeStatesSpace, location, "data");
 
         InputStream zis = getClass().getClassLoader().getResourceAsStream("viewer.zip");
         File targetDirectory = new File(location + File.separator);
         ZipUtils.unzip(zis, targetDirectory);
 
-        exportOverview();
+        exportOverview(location);
 
         logger.info("Exporting large states...");
         String summary = "Large states exported to " + location;
@@ -261,9 +254,11 @@ public class ReportGenerationPhase extends AbstractPhase {
             return;
         }
 
+        FileUtils.createDirectories(location);
+
         for( Method method : scene().getRegisteredMethods() ){
             String name = method.getName();
-            String filename = location + File.separator + name;
+            String filename = location + File.separator + name + ".json";
             FileWriter writer = new FileWriter(filename);
             ContractToInputFormatExporter exporter = new ContractToInputFormatExporter(writer);
             exporter.export(name, method.getContractsForExport());
