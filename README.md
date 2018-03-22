@@ -1,4 +1,5 @@
 ![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor)
 
 Attestor is a program analysis tool for model-checking Java pointer programs.
 
@@ -73,6 +74,7 @@ Please confer the documentation in the [benchmark repository](https://github.com
 Current status of the benchmark repository: 
 
 ![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
 
 # Installation
 
