@@ -1,7 +1,11 @@
 ![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor) 
 
-Attestor is a program analysis tool for model-checking Java pointer programs.
+Attestor is a graph-based tool for analysing Java programs operating on dynamic data structures. It involves the generation of an abstract state space emplyoing user-supplied graph grammars. LTL model checking is then applied to the generated state space, supporting both structural and functional correctness properties. The analysis is fully automated, procedure-modular, and provides visual feedback including counterexamples in case of property violations.
+
+#### Current status of the benchmark repository:
+![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
 
 # Contents
 
@@ -73,11 +77,6 @@ We distribute executable bundles consisting of the latest stable Attestor versio
 
 Given the [system requirements](#system-requirements), no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
 Please confer the documentation in the [benchmark repository](https://github.com/moves-rwth/attestor-examples) for further details.
-
-Current status of the benchmark repository: 
-
-![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
 
 # Installation
 
