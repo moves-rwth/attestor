@@ -1,6 +1,7 @@
 ![Build Status Attestor](https://img.shields.io/travis/moves-rwth/attestor.svg)
 ![Benchmarks Status](https://img.shields.io/travis/moves-rwth/attestor-examples.svg?label=benchmarks)
 [![Attestor on Maven Central](https://img.shields.io/maven-central/v/de.rwth.i2/attestor.svg)](https://mvnrepository.com/artifact/de.rwth.i2/attestor)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Languages](https://img.shields.io/github/languages/top/moves-rwth/attestor.svg)
 ![Last update](https://img.shields.io/github/last-commit/moves-rwth/attestor.svg)
 
