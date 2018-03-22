@@ -34,7 +34,6 @@ public class JsonGrammarExporter implements GrammarExporter {
                         hc);
                 count++;
             }
-
         }
 
 
@@ -45,14 +44,13 @@ public class JsonGrammarExporter implements GrammarExporter {
         JSONWriter jsonWriter = new JSONWriter(writer);
 
         jsonWriter.array();
-        int ntCount = 1;
         for (Nonterminal nonterminal : grammar.getAllLeftHandSides()) {
 
-            String nonterminalName = nonterminal.getLabel();
+            String nonterminalName = nonterminal.toString();
             int ruleNumber = grammar.getRightHandSidesFor(nonterminal).size();
 
             jsonWriter.object()
-                    .key("nonterminal").value(nonterminalName + ntCount)
+                    .key("nonterminal").value(nonterminalName)
                     .key("numberRules").value(ruleNumber)
                     .key("rules").array();
             for (int count = 1; count <= ruleNumber; count++) {
@@ -62,8 +60,6 @@ public class JsonGrammarExporter implements GrammarExporter {
             }
             jsonWriter.endArray();
             jsonWriter.endObject();
-
-            ntCount++;
         }
         jsonWriter.endArray();
 
