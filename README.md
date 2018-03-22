@@ -59,6 +59,9 @@ The following software has to be installed prior to the installation of Attestor
 
 # Reproducing Benchmarks
 
+We distribute executable bundles consisting of the latest stable Attestor version together will all benchmarks on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor-examples). To run benchmarks on the latest version of Attestor, pease proceed as follows:
+
+
      (Unix-based operating systems)
      $ git clone https://github.com/moves-rwth/attestor-examples.git
      $ chmod +x run.sh
@@ -77,6 +80,9 @@ Current status of the benchmark repository:
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
 
 # Installation
+
+We distribute executable `.jar` files of stable Attestor releases on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor). To install the latest version of Attestor, please proceed as follows: 
+
 
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
