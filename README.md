@@ -1,7 +1,11 @@
-![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor)
+![Build Status Attestor](https://img.shields.io/travis/moves-rwth/attestor.svg)
+![Benchmarks Status](https://img.shields.io/travis/moves-rwth/attestor-examples.svg?label=benchmarks)
+[![Attestor on Maven Central](https://img.shields.io/maven-central/v/de.rwth.i2/attestor.svg)](https://mvnrepository.com/artifact/de.rwth.i2/attestor)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Languages](https://img.shields.io/github/languages/top/moves-rwth/attestor.svg)
+![Last update](https://img.shields.io/github/last-commit/moves-rwth/attestor.svg)
 
-Attestor is a program analysis tool for model-checking Java pointer programs.
+Attestor is a graph-based tool for analysing Java programs operating on dynamic data structures. It involves the generation of an abstract state space emplyoing user-supplied graph grammars. LTL model checking is then applied to the generated state space, supporting both structural and functional correctness properties. The analysis is fully automated, procedure-modular, and provides visual feedback including counterexamples in case of property violations.
 
 # Contents
 
@@ -59,6 +63,9 @@ The following software has to be installed prior to the installation of Attestor
 
 # Reproducing Benchmarks
 
+We distribute executable bundles consisting of the latest stable Attestor version together will all benchmarks on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor-examples). To run benchmarks on the latest version of Attestor, pease proceed as follows:
+
+
      (Unix-based operating systems)
      $ git clone https://github.com/moves-rwth/attestor-examples.git
      $ chmod +x run.sh
@@ -71,12 +78,10 @@ The following software has to be installed prior to the installation of Attestor
 Given the [system requirements](#system-requirements), no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
 Please confer the documentation in the [benchmark repository](https://github.com/moves-rwth/attestor-examples) for further details.
 
-Current status of the benchmark repository: 
-
-![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
-
 # Installation
+
+We distribute executable `.jar` files of stable Attestor releases on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor). To install the latest version of Attestor, please proceed as follows: 
+
 
     $ git clone https://github.com/moves-rwth/attestor.git
     $ mvn install
