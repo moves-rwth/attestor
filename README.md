@@ -1,11 +1,8 @@
-![Build Status Attestor](https://travis-ci.org/moves-rwth/attestor.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor) 
+![Build Status Attestor](https://img.shields.io/travis/moves-rwth/attestor.svg)
+![Benchmarks Status](https://img.shields.io/travis/moves-rwth/attestor-examples.svg?label=benchmarks)
+[![Attestor on Maven Central](https://img.shields.io/maven-central/v/de.rwth.i2/attestor.svg)](https://mvnrepository.com/artifact/de.rwth.i2/attestor)
 
 Attestor is a graph-based tool for analysing Java programs operating on dynamic data structures. It involves the generation of an abstract state space emplyoing user-supplied graph grammars. LTL model checking is then applied to the generated state space, supporting both structural and functional correctness properties. The analysis is fully automated, procedure-modular, and provides visual feedback including counterexamples in case of property violations.
-
-#### Current status of the benchmark repository:
-![Build Status Benchmarks](https://travis-ci.org/moves-rwth/attestor-examples.svg?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.rwth.i2/attestor-examples)
 
 # Contents
 
