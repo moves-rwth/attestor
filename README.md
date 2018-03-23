@@ -100,7 +100,7 @@ To execute Attestor, it suffices to run
      $ java -jar attestor-<VERSION>-jar-with-dependencies.jar 
 
 from within the `target` directory. 
-This should display a help page explaining all available [command line options](https://github.com/moves-rwth/attestor/wiki/Glossary#Command-Line-Options).
+This should display a help page explaining all available [command line options](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options).
 Since the above jar file contains all dependencies, it is safe to rename it and move the file to a more convenient directory.
 
 Detailed step-by-step instructions on using Attestor to analyze Java programs are found on the [detailed walkthrough page](https://github.com/moves-rwth/attestor/wiki/Walkthrough).
