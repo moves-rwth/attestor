@@ -143,7 +143,7 @@ Attestor is organised in modular phases, for example `marking generation`, `stat
 
 ## Glossary
 
-A [glossary](https://github.com/moves-rwth/attestor/wiki/Glossary]) providing brief explanations of most technical terms is found in our Wiki. 
+A [glossary](https://github.com/moves-rwth/attestor/wiki/Glossary) providing brief explanations of most technical terms is found in our Wiki. 
 
 # People & Publications
 
