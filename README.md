@@ -139,7 +139,7 @@ The corresponding export options are found [here](https://github.com/moves-rwth/
 
 ## Architecture
 
-Attestor is organized in modular phases, for example `marking generation`, `state space generation`, and `model-checking`. Please confer our [Wiki page on Attestor's architecture](https://github.com/moves-rwth/attestor/wiki/Architecture) for further details.
+Attestor is organised in modular phases, for example `marking generation`, `state space generation`, and `model-checking`. Please confer our [Wiki page on Attestor's architecture](https://github.com/moves-rwth/attestor/wiki/Architecture) for further details.
 
 ## Glossary
 
@@ -149,7 +149,7 @@ A [glossary](https://github.com/moves-rwth/attestor/wiki/Glossary]) providing br
 
 ## People
 
-Attestor is developed at the [Chair for Software Modeling and Verification](https://moves.rwth-aachen.de/) at [RWTH Aachen University](http://www.rwth-aachen.de/) by
+Attestor is developed by the [Chair for Software Modeling and Verification](https://moves.rwth-aachen.de/) at [RWTH Aachen University](http://www.rwth-aachen.de/) by
 
 * [Christoph Matheja](http://moves.rwth-aachen.de/people/cmatheja/),
 * Hannah Arndt,
