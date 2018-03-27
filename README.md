@@ -19,18 +19,20 @@ Attestor is a graph-based tool for analysing Java programs operating on dynamic 
 
 ### Documentation
 
-* [Detailed Walkthrough](https://github.com/moves-rwth/attestor/wiki/Walkthrough)
-* [Options & Settings](#options-settings)
-* [Graphical User Interface](https://github.com/moves-rwth/attestor/wiki/Graphical-User-Interface)
-* [Architecture](https://github.com/moves-rwth/attestor/wiki/Architecture)
-* [Glossary](https://github.com/moves-rwth/attestor/wiki/Glossary)
+* [Detailed Example Analysis](#detailed-example-analysis)
+* [Options & Settings](#options--settings)
+* [Graphical User Interface](#graphical-user-interface)
+* [Architecture](#architecture)
+* [Glossary](#glossary)
 
-### People and Publications
+### People & Publications
 
 * [People](#people)
 * [Publications](#publications)
 
-# What is Attestor?
+# Quickstart
+
+## What is Attestor?
 
 Pointers constitute an essential concept in modern programming languages, and are used for implementing dynamic data structures like lists, trees etc. 
 However, many software bugs can be traced back to the erroneous use of pointers by e.g. dereferencing null pointers or accidentally pointing to wrong parts of the heap.
@@ -51,7 +53,7 @@ These contracts can be automatically derived or manually specified.
 * Feedback is provided through a comprehensive report including (minimal) non-spurious counterexamples in case of property violations.
 * Its functionality is made accessible through the command line as well as a graphical user and an application programming interface.
 
-# System Requirements
+## System Requirements
 
 The following software has to be installed prior to the installation of Attestor:
 
@@ -59,7 +61,7 @@ The following software has to be installed prior to the installation of Attestor
 - [Apache Maven][4]
 - (Windows) Since Attestor uses [soot][13], please make sure that rt.jar is in your CLASSPATH.
 
-# Reproducing Benchmarks
+## Reproducing Benchmarks
 
 We distribute executable bundles consisting of the latest stable Attestor version together will all benchmarks on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor-examples). To run benchmarks on the latest version of Attestor, pease proceed as follows:
 
@@ -76,7 +78,7 @@ We distribute executable bundles consisting of the latest stable Attestor versio
 Given the [system requirements](#system-requirements), no installation of Attestor is required to reproduce and comprehend previously reported benchmark results. We collect all benchmarks in a [separate repository](https://github.com/moves-rwth/attestor-examples) including auxiliary scripts to install, run and evaluate all benchmarks.
 Please confer the documentation in the [benchmark repository](https://github.com/moves-rwth/attestor-examples) for further details.
 
-# Installation
+## Installation
 
 We distribute executable `.jar` files of stable Attestor releases on [maven central](https://mvnrepository.com/artifact/de.rwth.i2/attestor). To install the latest version of Attestor, please proceed as follows: 
 
@@ -86,7 +88,7 @@ We distribute executable `.jar` files of stable Attestor releases on [maven cent
 
 Please note that the installation requires an internet connection as maven will install additional dependencies.
 
-# Getting Started
+## Getting Started
 
 After installation, an executable jar file is created in the directory `target` within the cloned repository. The name of executable jar is of the form 
 
@@ -105,7 +107,13 @@ Detailed step-by-step instructions on using Attestor to analyze Java programs ar
 
 Furthermore, we maintain a collection of running examples (including source code, user-defined graph grammars, and configuration files) in a [separate repository](https://github.com/moves-rwth/attestor-examples). All of these examples can be directly executed using provided auxiliary scripts. Please confer the documentation in the examples repository for further details.
 
-# Options & Settings
+# Documentation
+
+## Detailed Example Analysis
+
+An instructive example on using Attestor for program analyisis is found in our  [Wiki](https://github.com/moves-rwth/attestor/wiki/Walkthrough).
+
+## Options & Settings
 
 Attestor can be configured using various [command line options](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options). Alternatively, it is possible to store such a configuration in a dedicated [settings file](https://github.com/moves-rwth/attestor/wiki/Settings-file).
 In particular, the options allow to pass [linear temporal logic specifications](https://github.com/moves-rwth/attestor/wiki/LTL-Specifications) to be verified for the provided Java program.
@@ -114,11 +122,22 @@ It is possible to manually supply [graph grammars](https://github.com/moves-rwth
 
 Please confer the respective pages for further details.
 
-# Glossary
+## Graphical User Interface
+
+[State spaces](https://github.com/moves-rwth/attestor/wiki/Glossary#state-space), [counterexamples](https://github.com/moves-rwth/attestor/wiki/Glossary#counterexample), [contracts](https://github.com/moves-rwth/attestor/wiki/Glossary#contract), and [graph grammars](https://github.com/moves-rwth/attestor/wiki/Glossary#hyperedge-replacement-grammar) can be exported by Attestor to a webpage for graphical exploration.
+The corresponding export options are found [here](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options#export-options)
+
+## Architecture
+
+Attestor is organized in modular phases, for example `marking generation`, `state space generation`, and `model-checking`. Please confer our [Wiki page on Attestor's architecture](https://github.com/moves-rwth/attestor/wiki/Architecture) for further details.
+
+## Glossary
 
 A [glossary](https://github.com/moves-rwth/attestor/wiki/Glossary]) providing brief explanations of most technical terms is found in our Wiki. 
 
-# People
+# People & Publications
+
+## People
 
 Attestor is developed at the [Chair for Software Modeling and Verification](https://moves.rwth-aachen.de/) at [RWTH Aachen University](http://www.rwth-aachen.de/) by
 
@@ -127,7 +146,7 @@ Attestor is developed at the [Chair for Software Modeling and Verification](http
 * [Christina Jansen](http://moves.rwth-aachen.de/people/cjansen/), and
 * [Thomas Noll](https://moves.rwth-aachen.de/people/noll/).
 
-# Publications 
+## Publications 
 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203 (2015)
