@@ -16,13 +16,11 @@ Attestor is a graph-based tool for analysing Java programs operating on dynamic 
 * [Reproducing Benchmarks](#reproducing-benchmarks) (without installation)
 * [Installation](#installation)
 * [Getting Started](#getting-started)
-* [Troubleshooting](https://github.com/moves-rwth/attestor/wiki/Troubleshooting)
 
 ### Documentation
 
 * [Detailed Walkthrough](https://github.com/moves-rwth/attestor/wiki/Walkthrough)
-* [Command Line Options](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options)
-* [LTL Specification Syntax](https://github.com/moves-rwth/attestor/wiki/LTL-Specifications)
+* [Options & Settings](#options-settings)
 * [Graphical User Interface](https://github.com/moves-rwth/attestor/wiki/Graphical-User-Interface)
 * [Architecture](https://github.com/moves-rwth/attestor/wiki/Architecture)
 * [Glossary](https://github.com/moves-rwth/attestor/wiki/Glossary)
@@ -106,6 +104,19 @@ Since the above jar file contains all dependencies, it is safe to rename it and 
 Detailed step-by-step instructions on using Attestor to analyze Java programs are found on the [detailed walkthrough page](https://github.com/moves-rwth/attestor/wiki/Walkthrough).
 
 Furthermore, we maintain a collection of running examples (including source code, user-defined graph grammars, and configuration files) in a [separate repository](https://github.com/moves-rwth/attestor-examples). All of these examples can be directly executed using provided auxiliary scripts. Please confer the documentation in the examples repository for further details.
+
+# Options & Settings
+
+Attestor can be configured using various [command line options](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options). Alternatively, it is possible to store such a configuration in a dedicated [settings file](https://github.com/moves-rwth/attestor/wiki/Settings-file).
+In particular, the options allow to pass [linear temporal logic specifications](https://github.com/moves-rwth/attestor/wiki/LTL-Specifications) to be verified for the provided Java program.
+
+It is possible to manually supply [graph grammars](https://github.com/moves-rwth/attestor/wiki/Graph-Grammar-Syntax), [initial heaps](https://github.com/moves-rwth/attestor/wiki/Heap-Configuration-Syntax), and [contracts](https://github.com/moves-rwth/attestor/wiki/Contract-File-Syntax) to Attestor.
+
+Please confer the respective pages for further details.
+
+# Glossary
+
+A [glossary](https://github.com/moves-rwth/attestor/wiki/Glossary]) providing brief explanations of most technical terms is found in our Wiki. 
 
 # People
 
