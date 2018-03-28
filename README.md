@@ -184,4 +184,4 @@ and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017.
 [14]: https://github.com/moves-rwth/attestor-examples/tree/archetype
 [15]: https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line
 [16]: https://github.com/moves-rwth/attestor/wiki/Settings-file
-[17]: https://publications.rwth-aachen.de/record/708116
+[17]: http://dx.doi.org/10.18154/RWTH-2017-09657
