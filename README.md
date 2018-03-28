@@ -158,6 +158,8 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
+- Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
+and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203 (2015)
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Verifying pointer programs using graph grammars][8]. Sci. Comput. Program. 97: 157-162 (2015)
@@ -182,3 +184,4 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 [14]: https://github.com/moves-rwth/attestor-examples/tree/archetype
 [15]: https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line
 [16]: https://github.com/moves-rwth/attestor/wiki/Settings-file
+[17]: https://publications.rwth-aachen.de/record/708116
