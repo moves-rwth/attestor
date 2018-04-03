@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.main.scene;
 
-import java.util.Collection;
-
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -10,9 +8,9 @@ import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.Type;
 
-public interface Scene {
+import java.util.Collection;
 
-    int getIdentifier();
+public interface Scene {
 
     Type getType(String name);
 
@@ -38,6 +36,8 @@ public interface Scene {
     long getNumberOfGeneratedStates();
 
     Options options();
+
+    Labels labels();
 
     Strategies strategies();
 

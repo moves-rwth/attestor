@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.io;
 
 import de.rwth.i2.attestor.MockupSceneObject;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.io.jsonImport.JsonToIndexedHC;
+import de.rwth.i2.attestor.io.jsonImport.JsonToHeapConfiguration;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class TestJsonToIndexedHC {
+public class TestJsonToHeapConfiguration {
 
     private Consumer<String> sink = s -> {
     };
@@ -24,7 +24,7 @@ public class TestJsonToIndexedHC {
     public void initClass() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
         expectedHCs = new ExpectedHCs(sceneObject);
         sceneObject.scene().createNonterminal("TestJson", 2, new boolean[]{false, false});
     }
@@ -52,9 +52,10 @@ public class TestJsonToIndexedHC {
                 + "	\"hyperedges\":[]\n"
                 + "}";
 
-        JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
+        JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                new MockupHeapConfigurationRenaming());
         HeapConfiguration parsed
-                = importer.jsonToHC(new JSONObject(graphEncoding), sink);
+                = importer.parse(new JSONObject(graphEncoding), sink);
 
         assertEquals(expectedHCs.getExpected_Annotated(), parsed);
     }
@@ -81,9 +82,9 @@ public class TestJsonToIndexedHC {
                 + "}\n";
 
 
-        JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-        HeapConfiguration parsed
-                = importer.jsonToHC(new JSONObject(graphEncoding), sink);
+        JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                new MockupHeapConfigurationRenaming());
+        HeapConfiguration parsed = importer.parse(new JSONObject(graphEncoding), sink);
 
         assertEquals(expectedHCs.getExpected_Bottom(), parsed);
     }
@@ -109,9 +110,9 @@ public class TestJsonToIndexedHC {
                 + "		}]\n"
                 + "}\n";
 
-        JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-        HeapConfiguration parsed
-                = importer.jsonToHC(new JSONObject(graphEncoding), sink);
+        JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                new MockupHeapConfigurationRenaming());
+        HeapConfiguration parsed = importer.parse(new JSONObject(graphEncoding), sink);
 
         assertEquals(expectedHCs.getExpected_TwoElementIndex(), parsed);
     }
@@ -137,8 +138,9 @@ public class TestJsonToIndexedHC {
                 + "		}]\n"
                 + "}\n";
 
-        JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-        HeapConfiguration parsed = importer.jsonToHC(new JSONObject(graphEncoding), sink);
+        JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                new MockupHeapConfigurationRenaming());
+        HeapConfiguration parsed = importer.parse(new JSONObject(graphEncoding), sink);
 
         assertEquals(expectedHCs.getExpected_IndexWithVar(), parsed);
     }
@@ -164,8 +166,9 @@ public class TestJsonToIndexedHC {
                 + "		}]\n"
                 + "}\n";
 
-        JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-        HeapConfiguration parsed = importer.jsonToHC(new JSONObject(graphEncoding), sink);
+        JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                new MockupHeapConfigurationRenaming());
+        HeapConfiguration parsed = importer.parse(new JSONObject(graphEncoding), sink);
 
         assertEquals(expectedHCs.getExpected_IndexWithAbs(), parsed);
     }
@@ -192,8 +195,9 @@ public class TestJsonToIndexedHC {
                     + "		}]\n"
                     + "}\n";
 
-            JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-            importer.jsonToHC(new JSONObject(graphEncoding), sink);
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                    new MockupHeapConfigurationRenaming());
+            importer.parse(new JSONObject(graphEncoding), sink);
             fail("abstract index symbols may only occur at the end of index");
         } catch (AssertionError e) {
             //expected
@@ -222,8 +226,9 @@ public class TestJsonToIndexedHC {
                     + "		}]\n"
                     + "}\n";
 
-            JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-            importer.jsonToHC(new JSONObject(graphEncoding), sink);
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                    new MockupHeapConfigurationRenaming());
+            importer.parse(new JSONObject(graphEncoding), sink);
             fail("bottom index symbols may only occur at the end of index");
         } catch (AssertionError e) {
             //expected
@@ -252,8 +257,9 @@ public class TestJsonToIndexedHC {
                     + "		}]\n"
                     + "}\n";
 
-            JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-            importer.jsonToHC(new JSONObject(graphEncoding), sink);
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                    new MockupHeapConfigurationRenaming());
+            importer.parse(new JSONObject(graphEncoding), sink);
             fail("variable index symbols may only occur at the end of index");
         } catch (AssertionError e) {
             //expected
@@ -282,8 +288,9 @@ public class TestJsonToIndexedHC {
                     + "		}]\n"
                     + "}\n";
 
-            JsonToIndexedHC importer = new JsonToIndexedHC(sceneObject);
-            importer.jsonToHC(new JSONObject(graphEncoding), sink);
+            JsonToHeapConfiguration importer = new JsonToHeapConfiguration(sceneObject,
+                    new MockupHeapConfigurationRenaming());
+            importer.parse(new JSONObject(graphEncoding), sink);
             fail("abstract index symbols may only occur at the end of index");
         } catch (AssertionError e) {
             //expected

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.graph.heap.matching;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 import de.rwth.i2.attestor.graph.morphism.checkers.VF2MinDistanceEmbeddingChecker;
 
 /**
@@ -17,17 +18,12 @@ public class MinDistanceEmbeddingChecker extends AbstractMatchingChecker {
     /**
      * Initializes an EmbeddingChecker with a minimal distance between variables and found embeddings.
      *
-     * @param pattern                          The HeapConfiguration that should be embedded in the pattern HeapConfiguration.
-     * @param target                           The HeapConfiguration in which embeddings should be searched for.
-     * @param depth                            The minimal distance between an element of a found embedding and a variable in the pattern
-     *                                         HeapConfiguration.
-     * @param aggressiveNullAbstractionEnabled True if aggressive null abstraction is enabled.
+     * @param pattern The HeapConfiguration that should be embedded in the pattern HeapConfiguration.
+     * @param target  The HeapConfiguration in which embeddings should be searched for.
+     * @param options Options guiding how embeddings are computed.
      */
-    public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target,
-                                       int depth, boolean aggressiveNullAbstractionEnabled,
-                                       boolean aggressiveCompositeMarkingAbstraction) {
+    public MinDistanceEmbeddingChecker(HeapConfiguration pattern, HeapConfiguration target, MorphismOptions options) {
 
-        super(pattern, target, new VF2MinDistanceEmbeddingChecker(depth,
-                aggressiveNullAbstractionEnabled, aggressiveCompositeMarkingAbstraction));
+        super(pattern, target, new VF2MinDistanceEmbeddingChecker(options));
     }
 }

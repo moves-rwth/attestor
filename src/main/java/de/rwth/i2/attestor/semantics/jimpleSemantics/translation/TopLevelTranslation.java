@@ -180,7 +180,7 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             curr = units.getSuccOf(curr);
         }
 
-        logger.trace("method Name: " + method.getSignature());
+        logger.debug("registered method: " + method.getSignature());
 
         currentMethod.setBody(new ProgramImpl(programStatements));
 
@@ -239,9 +239,6 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
             List<SemanticsCommand> defaultControlFlow = new ArrayList<>();
             defaultControlFlow.add(new Skip(this, -1));
             res.setBody(new ProgramImpl(defaultControlFlow));
-
-            logger.info("Method " + signature + " replaced by empty default method.");
-
         }
 
         return res;

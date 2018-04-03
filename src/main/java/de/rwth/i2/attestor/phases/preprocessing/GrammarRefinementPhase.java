@@ -22,7 +22,10 @@ import de.rwth.i2.attestor.refinement.reachability.ReachabilityHeapAutomaton;
 import de.rwth.i2.attestor.refinement.variableRelation.VariableRelationsAutomaton;
 import de.rwth.i2.attestor.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class GrammarRefinementPhase extends AbstractPhase
@@ -127,8 +130,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 String[] parameters = ap.split("[\\(\\)]")[1].split("\\[");
                 String[] variables = parameters[0].split(",");
-                scene().options().addKeptVariable(variables[0].trim());
-                scene().options().addKeptVariable(variables[1].trim());
+                scene().labels().addKeptVariable(variables[0].trim());
+                scene().labels().addKeptVariable(variables[1].trim());
                 String[] selectors = parameters[1].split("\\]")[0].split(",");
                 Set<String> allowedSelectors = new LinkedHashSet<>(selectors.length);
                 for (String sel : selectors) {
@@ -151,8 +154,8 @@ public class GrammarRefinementPhase extends AbstractPhase
 
                 stateLabelingStrategyBuilder.add(new ReachabilityHeapAutomaton(this));
                 String[] variables = ap.split("[\\(\\)]")[1].split(",");
-                scene().options().addKeptVariable(variables[0].trim());
-                scene().options().addKeptVariable(variables[1].trim());
+                scene().labels().addKeptVariable(variables[0].trim());
+                scene().labels().addKeptVariable(variables[1].trim());
                 hasReachabilityAutomaton = true;
                 logger.debug("Enable heap automaton to track reachable variables");
             } else if (equalityPattern.matcher(ap).matches()) {
@@ -172,8 +175,8 @@ public class GrammarRefinementPhase extends AbstractPhase
         Pair<String, String> trackedPair = new Pair<>(lhs, rhs);
         if (trackedVariableRelations.add(trackedPair)) {
             stateLabelingStrategyBuilder.add(new VariableRelationsAutomaton(lhs, rhs));
-            scene().options().addKeptVariable(lhs);
-            scene().options().addKeptVariable(rhs);
+            scene().labels().addKeptVariable(lhs);
+            scene().labels().addKeptVariable(rhs);
             logger.info("Enable heap automaton to track relationships between '"
                     + lhs + "' and '" + rhs + "'");
         }
@@ -249,9 +252,4 @@ public class GrammarRefinementPhase extends AbstractPhase
         return grammar;
     }
 
-    @Override
-    public Map<String, String> getRenamingMap() {
-
-        return getPhase(GrammarTransformer.class).getRenamingMap();
-    }
 }

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -43,7 +44,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
     @Before
     public void init() {
 
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
 
         Set<String> nullPointerGuards = new LinkedHashSet<>();
         nullPointerGuards.add("left");
@@ -51,10 +52,13 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
 
         IndexCanonizationStrategy indexStrategy = new IndexCanonizationStrategyImpl(nullPointerGuards);
 
-        final int minDereferenceDepth = 1;
-        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(minDereferenceDepth,
-                aggressiveNullAbstraction, true);
+        AbstractionOptions options = new AbstractionOptions()
+                .setAdmissibleAbstraction(true)
+                .setAdmissibleConstants(
+                        sceneObject.scene().options().isAdmissibleConstantsEnabled()
+                );
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
 
         IndexMaterializationStrategy materializer = new IndexMaterializationStrategy();
         DefaultIndexMaterialization indexGrammar = new DefaultIndexMaterialization();
@@ -82,7 +86,7 @@ public class GeneralCanonicalizationStrategy_Indexed_WithIndexCanonicalization {
                 = new GeneralCanonicalizationStrategy(grammar, matchingHandler);
 
 
-        sceneObject.scene().options().setIndexedMode(false);
+        sceneObject.scene().options().setIndexedModeEnabled(false);
         ProgramState inputState = sceneObject.scene().createProgramState(getInputGraph());
         ProgramState res = inputState.shallowCopyWithUpdateHeap(canonizer.canonicalize(inputState.getHeap()));
 

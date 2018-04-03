@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -63,8 +64,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void checkSelectors() {
 
-        Set<String> usedSelectors = new LinkedHashSet<>(scene().options().getUsedSelectorLabels());
-        usedSelectors.removeAll(scene().options().getGrammarSelectorLabels());
+        Set<String> usedSelectors = new LinkedHashSet<>(scene().labels().getUsedSelectorLabels());
+        usedSelectors.removeAll(scene().labels().getGrammarSelectorLabels());
 
         if (!usedSelectors.isEmpty()) {
             logger.info("+------------------------------------------------------------------+");
@@ -81,20 +82,16 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupMaterialization() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
-
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
-                .setIndexedMode(indexedMode)
+                .setIndexedMode(scene().options().isIndexedMode())
                 .build();
 
-        if(verifyCounterexamples) {
+        if(!scene().options().isChainAbstractionEnabled()) {
             scene().strategies().setAlwaysCanonicalize(true);
         }
 
-        if(verifyCounterexamples && abstractionDistance == 1){
+        if(scene().options().isAdmissibleFullEnabled() && scene().options().isAdmissibleAbstractionEnabled()){
             scene().strategies().setMaterializationStrategy(new NoMaterializationStrategy());
             scene().strategies().setStateRectificationStrategy(
                     new AdmissibleStateRectificationStrategy(new StateMaterializationStrategy(materializationStrategy))
@@ -108,31 +105,30 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbstractDomain() {
 
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
         final boolean indexedMode = scene().options().isIndexedMode();
-        final boolean verifyCounterexamples = scene().options().isVerifyCounterexamples();
 
-        boolean aggressiveCompositeMarkingAbstraction = verifyCounterexamples && abstractionDistance == 1;
+        AbstractionOptions abstractionOptions = new AbstractionOptions()
+                .setAdmissibleAbstraction(scene().options().isAdmissibleAbstractionEnabled())
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled())
+                .setAdmissibleMarkings(scene().options().isAdmissibleMarkingsEnabled());
 
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
-                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
-                        .setMinAbstractionDistance(abstractionDistance)
+                        .setOptions(abstractionOptions)
                         .setIndexedMode(indexedMode)
-                        .setAggressiveCompositeMarkingAbstraction(aggressiveCompositeMarkingAbstraction)
                         .setGrammar(grammar)
                         .build();
 
         scene().strategies()
                 .setCanonicalizationStrategy(canonicalizationStrategy);
 
+        AbstractionOptions aggressiveOptions = new AbstractionOptions()
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled());
+
         CanonicalizationStrategy aggressiveCanonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
-                        .setAggressiveNullAbstraction(aggressiveNullAbstraction)
-                        .setMinAbstractionDistance(0)
+                        .setOptions(aggressiveOptions)
                         .setIndexedMode(indexedMode)
-                        .setAggressiveCompositeMarkingAbstraction(true)
                         .setGrammar(grammar)
                         .build();
 
@@ -144,8 +140,8 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbortTest() {
 
-        int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        int stateBound = scene().options().getMaxStateSize();
+        int stateSpaceBound = scene().options().getMaxStateSpace();
+        int stateBound = scene().options().getMaxHeap();
         scene().strategies().setAbortStrategy(
                 new StateSpaceBoundedAbortStrategy(stateSpaceBound, stateBound)
         );

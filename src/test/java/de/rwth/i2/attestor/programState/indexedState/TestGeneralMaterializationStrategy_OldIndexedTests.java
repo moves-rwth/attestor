@@ -34,7 +34,7 @@ public class TestGeneralMaterializationStrategy_OldIndexedTests {
     public void setup() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
 
         BalancedTreeGrammar balancedTreeGrammar = new BalancedTreeGrammar(sceneObject);

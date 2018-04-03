@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.grammar.canoncalization.moduleTest;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.EmbeddingCheckerProvider;
@@ -46,11 +47,13 @@ public class CanonicalizationStrategyTest {
                 .updateCollapsedRules()
                 .build();
 
-        final int minDereferenceDepth = 0;
-        final boolean aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
-                minDereferenceDepth, aggressiveNullAbstraction, true
-        );
+        AbstractionOptions options = new AbstractionOptions()
+                .setAdmissibleConstants(
+                        sceneObject.scene().options().isAdmissibleConstantsEnabled()
+                );
+
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
         CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
 
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

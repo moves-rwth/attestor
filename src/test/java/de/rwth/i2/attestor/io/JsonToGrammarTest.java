@@ -34,7 +34,7 @@ public class JsonToGrammarTest {
             JSONArray array = new JSONArray(str.toString());
 
             MockupSceneObject sceneObject = new MockupSceneObject();
-            JsonToGrammar importer = new JsonToGrammar(sceneObject);
+            JsonToGrammar importer = new JsonToGrammar(sceneObject, new MockupHeapConfigurationRenaming());
             importer.parseForwardGrammar(array);
 
             Nonterminal nt = sceneObject.scene().getNonterminal("DLList");
@@ -63,7 +63,7 @@ public class JsonToGrammarTest {
             JSONArray array = new JSONArray(str.toString());
 
             MockupSceneObject sceneObject = new MockupSceneObject();
-            JsonToGrammar importer = new JsonToGrammar(sceneObject);
+            JsonToGrammar importer = new JsonToGrammar(sceneObject, new MockupHeapConfigurationRenaming());
             importer.parseForwardGrammar(array);
 
             Nonterminal nt = sceneObject.scene().getNonterminal("SLList");
@@ -93,7 +93,7 @@ public class JsonToGrammarTest {
             JSONArray array = new JSONArray(str.toString());
 
             MockupSceneObject sceneObject = new MockupSceneObject();
-            JsonToGrammar importer = new JsonToGrammar(sceneObject);
+            JsonToGrammar importer = new JsonToGrammar(sceneObject, new MockupHeapConfigurationRenaming());
             importer.parseForwardGrammar(array);
 
             Nonterminal nt = sceneObject.scene().getNonterminal("SinglyLinkedList");

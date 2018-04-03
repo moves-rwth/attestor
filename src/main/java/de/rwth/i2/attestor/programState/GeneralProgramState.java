@@ -245,7 +245,7 @@ public abstract class GeneralProgramState implements ProgramState {
 
             int node = v.getNode();
             if (node == GeneralConcreteValue.UNDEFINED) {
-                logger.debug("Aborting setVariable as the new target '"
+                logger.trace("Aborting setVariable as the new target '"
                         + v.toString()
                         + "' for the following variable could be found: '"
                         + variableName

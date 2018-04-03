@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.exampleFactories;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
@@ -52,8 +53,12 @@ public abstract class AbstractExampleFactory extends SceneObject {
 
     public CanonicalizationStrategy getCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
-                scene().options().getAggressiveNullAbstraction(), true);
+        AbstractionOptions options = new AbstractionOptions()
+                .setAdmissibleConstants(
+                        scene().options().isAdmissibleConstantsEnabled()
+                );
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
         CanonicalizationHelper canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
         return new GeneralCanonicalizationStrategy(getGrammar(), canonicalizationHelper);
     }

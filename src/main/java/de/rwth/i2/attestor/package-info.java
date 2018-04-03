@@ -31,7 +31,7 @@
  * grammar transformations.
  * </li>
  * <li>
- * {@link de.rwth.i2.attestor.io} containsSubsumingState all classes to load and export heap configurations, grammars, and
+ * {@link de.rwth.i2.attestor.io} containsSubsumingState all classes to read and export heap configurations, grammars, and
  * state spaces.
  * </li>
  * <li>

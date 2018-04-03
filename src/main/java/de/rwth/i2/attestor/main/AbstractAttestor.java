@@ -67,6 +67,13 @@ public abstract class AbstractAttestor {
                 .size();
     }
 
+    public String getDescription() {
+
+        return registry.getMostRecentPhase(InputSettingsTransformer.class)
+                .getInputSettings()
+                .getDescription();
+    }
+
     public int getNumberOfFinalStates() {
 
         return registry.getMostRecentPhase(StateSpaceTransformer.class)
@@ -106,18 +113,6 @@ public abstract class AbstractAttestor {
         result.put("Total", elapsedTotal);
 
         return result;
-    }
-
-    public String getInputName() {
-
-        return registry.getMostRecentPhase(InputSettingsTransformer.class)
-                .getInputSettings().getName();
-    }
-
-    public String getSpecificationDescription() {
-
-        return registry.getMostRecentPhase(InputSettingsTransformer.class)
-                .getInputSettings().getSpecificationDescription();
     }
 
     private void printVersion() {

@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.refinement.balanced;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.IndexMatcher;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationHelper;
@@ -68,8 +69,12 @@ public class ListLengthAutomaton extends SceneObject implements StatelessHeapAut
 
     private void setupCanonicalization() {
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(0,
-                scene().options().getAggressiveNullAbstraction(), true);
+        AbstractionOptions options = new AbstractionOptions()
+            .setAdmissibleConstants(
+                    scene().options().isAdmissibleConstantsEnabled()
+            );
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
 
         CanonicalizationHelper canonicalizationHelper = getIndexedCanonicalizationHelper(checkerProvider);
         canonicalizationStrategy = new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);

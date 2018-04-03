@@ -88,7 +88,7 @@ public class DefaultAbstractSemantics extends SceneObject implements JimpleToAbs
     @Override
     public Value translateValue(soot.Value input) {
 
-        logger.info("Expression " + input + " is not supported. Replaced by undefined.");
+        logger.debug("Expression " + input + " is not supported. Replaced by undefined.");
         return new UndefinedValue();
     }
 

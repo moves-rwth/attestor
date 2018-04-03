@@ -1,5 +1,6 @@
 package de.rwth.i2.attestor.phases.preprocessing;
 
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategy;
 import de.rwth.i2.attestor.grammar.canonicalization.CanonicalizationStrategyBuilder;
@@ -85,7 +86,7 @@ public class MarkingGenerationPhase extends AbstractPhase
                 result.add(VISITED);
             } else if(visitedByPattern.matcher(ap).matches()) {
                 String varName = ap.split("[\\(\\)]")[1];
-                scene().options().addKeptVariable(varName);
+                scene().labels().addKeptVariable(varName);
                 result.add(VISITED_BY);
             } else if(identicNeighboursPattern.matcher(ap).matches()) {
                 result.add(IDENTIC_NEIGHBOURS);
@@ -96,14 +97,16 @@ public class MarkingGenerationPhase extends AbstractPhase
 
     private void addMarking(String marking) {
 
-        Collection<String> availableSelectorNames = scene().options().getUsedSelectorLabels();
+        Collection<String> availableSelectorNames = scene().labels().getUsedSelectorLabels();
 
         final Grammar grammar = getPhase(GrammarTransformer.class).getGrammar();
         final boolean indexedMode = scene().options().isIndexedMode();
-        final int abstractionDistance = scene().options().getAbstractionDistance();
-        final boolean aggressiveNullAbstraction = scene().options().getAggressiveNullAbstraction();
-        final int stateSpaceBound = scene().options().getMaxStateSpaceSize();
-        final int stateBound = scene().options().getMaxStateSize();
+        final int stateSpaceBound = scene().options().getMaxStateSpace();
+        final int stateBound = scene().options().getMaxHeap();
+
+        AbstractionOptions abstractionOptions = new AbstractionOptions()
+                .setAdmissibleAbstraction(scene().options().isAdmissibleAbstractionEnabled())
+                .setAdmissibleConstants(scene().options().isAdmissibleConstantsEnabled());
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setIndexedMode(indexedMode)
@@ -112,14 +115,13 @@ public class MarkingGenerationPhase extends AbstractPhase
 
         CanonicalizationStrategy canonicalizationStrategy = new CanonicalizationStrategyBuilder()
                 .setGrammar(grammar)
-                .setMinAbstractionDistance(abstractionDistance)
-                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .setOptions(abstractionOptions)
                 .build();
+
 
         CanonicalizationStrategy aggressiveCanonicalizationStrategy = new CanonicalizationStrategyBuilder()
                 .setGrammar(grammar)
-                .setMinAbstractionDistance(0)
-                .setAggressiveNullAbstraction(aggressiveNullAbstraction)
+                .setOptions(new AbstractionOptions())
                 .build();
 
         StateRectificationStrategy stateRectificationStrategy = new NoRectificationStrategy();

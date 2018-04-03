@@ -1,8 +1,9 @@
 package de.rwth.i2.attestor.main.scene;
 
-import java.util.*;
-
-import de.rwth.i2.attestor.graph.*;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
+import de.rwth.i2.attestor.graph.BasicSelectorLabel;
+import de.rwth.i2.attestor.graph.Nonterminal;
+import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.procedures.Contract;
@@ -15,6 +16,10 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.types.GeneralType;
 import de.rwth.i2.attestor.types.Type;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class DefaultScene implements Scene {
 
 
@@ -23,22 +28,11 @@ public class DefaultScene implements Scene {
     private final BasicNonterminal.Factory basicNonterminalFactory = new BasicNonterminal.Factory();
 
     private final Options options = new Options();
+    private final Labels labels = new Labels();
     private final Strategies strategies = new Strategies();
 
     private final Map<String, Method> methods = new HashMap<>();
     private long totalNumberOfStates = 0;
-
-    private int identifier = 0;
-
-    @Override
-    public int getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(int identifier) {
-
-        this.identifier = identifier;
-    }
 
     @Override
     public Type getType(String name) {
@@ -163,6 +157,12 @@ public class DefaultScene implements Scene {
     public Options options() {
 
         return options;
+    }
+
+    @Override
+    public Labels labels() {
+
+        return labels;
     }
 
     @Override

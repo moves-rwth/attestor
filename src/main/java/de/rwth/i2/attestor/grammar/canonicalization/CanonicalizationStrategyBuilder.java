@@ -9,6 +9,7 @@ import de.rwth.i2.attestor.grammar.materialization.indexedGrammar.IndexMateriali
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.morphism.MorphismOptions;
 import de.rwth.i2.attestor.programState.indexedState.IndexedNonterminal;
 import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMaterialization;
 import de.rwth.i2.attestor.programState.indexedState.index.IndexCanonizationStrategy;
@@ -19,25 +20,24 @@ import gnu.trove.iterator.TIntIterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// TODO
 public class CanonicalizationStrategyBuilder {
 
-    private boolean aggressiveNullAbstraction = true;
-    private int minAbstractionDistance = 0;
-    private boolean aggressiveCompositeMarkingAbstraction = true;
     private boolean indexedMode = false;
     private Grammar grammar = null;
+    private MorphismOptions options;
 
     public CanonicalizationStrategy build() {
 
         if(grammar == null) {
-            throw new IllegalStateException("No grammar.");
+            throw new IllegalStateException("No grammar provided to canonicalization strategy.");
         }
 
-        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(
-                minAbstractionDistance,
-                aggressiveNullAbstraction,
-                aggressiveCompositeMarkingAbstraction
-        );
+        if(options == null) {
+            throw new IllegalStateException("No options provided to canonicalization strategy..");
+        }
+
+        EmbeddingCheckerProvider checkerProvider = new EmbeddingCheckerProvider(options);
 
         CanonicalizationHelper canonicalizationHelper;
         if(indexedMode) {
@@ -89,24 +89,9 @@ public class CanonicalizationStrategyBuilder {
         return nullPointerGuards;
     }
 
-    public CanonicalizationStrategyBuilder setAggressiveNullAbstraction(boolean enabled) {
+    public CanonicalizationStrategyBuilder setOptions(MorphismOptions options) {
 
-        this.aggressiveNullAbstraction = enabled;
-        return this;
-    }
-
-    public CanonicalizationStrategyBuilder setMinAbstractionDistance(int minAbstractionDistance) {
-
-        if(minAbstractionDistance < 0 && minAbstractionDistance > 1) {
-            throw new IllegalStateException("minAbstractionDistance must be either 0 or 1.");
-        }
-        this.minAbstractionDistance = minAbstractionDistance;
-        return this;
-    }
-
-    public CanonicalizationStrategyBuilder setAggressiveCompositeMarkingAbstraction(boolean aggressiveCompositeMarkingAbstraction) {
-
-        this.aggressiveCompositeMarkingAbstraction = aggressiveCompositeMarkingAbstraction;
+        this.options = options;
         return this;
     }
 

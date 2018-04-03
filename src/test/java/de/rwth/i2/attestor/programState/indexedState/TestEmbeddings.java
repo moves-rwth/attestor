@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.programState.indexedState;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.grammar.AbstractionOptions;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.AbstractMatchingChecker;
@@ -20,16 +21,20 @@ public class TestEmbeddings {
 
     private SceneObject sceneObject;
     private ExampleIndexedGraphFactory graphFactory;
-    private boolean aggressiveNullAbstraction;
+
+    private AbstractionOptions abstractionOptions;
 
     @Before
     public void init() {
 
         sceneObject = new MockupSceneObject();
-        sceneObject.scene().options().setIndexedMode(true);
+        sceneObject.scene().options().setIndexedModeEnabled(true);
 
         graphFactory = new ExampleIndexedGraphFactory(sceneObject);
-        aggressiveNullAbstraction = sceneObject.scene().options().getAggressiveNullAbstraction();
+
+        abstractionOptions = new AbstractionOptions().setAdmissibleConstants(
+                sceneObject.scene().options().isAdmissibleConstantsEnabled()
+        );
 
         AnnotatedSelectorLabel leftLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("left"), "0");
         AnnotatedSelectorLabel rightLabel = new AnnotatedSelectorLabel(sceneObject.scene().getSelectorLabel("right"), "0");
@@ -64,8 +69,7 @@ public class TestEmbeddings {
 
         ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize());
         input.prepareHeap();
-        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1,
-                0, aggressiveNullAbstraction, true);
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs1, abstractionOptions);
         assertTrue(checker.hasMatching());
     }
 
@@ -75,8 +79,7 @@ public class TestEmbeddings {
         ProgramState input = sceneObject.scene().createProgramState(graphFactory.getInput_practicalCanonize2());
         input.prepareHeap();
 
-        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                rhs2, 0, aggressiveNullAbstraction, true);
+        AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(rhs2, abstractionOptions);
         assertTrue(checker.hasMatching());
     }
 
@@ -87,8 +90,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getEmbedding_practicalCanonize3(), 0, aggressiveNullAbstraction,
-                true
+                graphFactory.getEmbedding_practicalCanonize3(),
+                abstractionOptions
         );
 
         assertTrue(checker.hasMatching());
@@ -101,8 +104,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction,
-                true
+                graphFactory.getRule_Cononize_withInstNecessary(),
+                abstractionOptions
         );
 
         assertTrue(checker.hasMatching());
@@ -115,8 +118,8 @@ public class TestEmbeddings {
         input.prepareHeap();
 
         AbstractMatchingChecker checker = input.getHeap().getEmbeddingsOf(
-                graphFactory.getRule_Cononize_withInstNecessary(), 0, aggressiveNullAbstraction,
-                true
+                graphFactory.getRule_Cononize_withInstNecessary(),
+                abstractionOptions
         );
 
         assertTrue(checker.hasMatching());

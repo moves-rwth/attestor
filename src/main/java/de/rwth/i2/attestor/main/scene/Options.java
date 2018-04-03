@@ -1,11 +1,5 @@
 package de.rwth.i2.attestor.main.scene;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
  * Collects all options that customize the state space generation.
  *
@@ -13,42 +7,13 @@ import java.util.Set;
  */
 public class Options {
 
-    /**
-     * The logger of this class.
-     */
-    private static final Logger logger = LogManager.getLogger("Options");
-    /**
-     * The set of variables that will never ever be eliminated.
-     */
-    private final Set<String> keptVariables = new LinkedHashSet<>();
-    private final Set<String> usedSelectorLabels = new LinkedHashSet<>();
-    private final Set<String> grammarSelectorLabels = new LinkedHashSet<>();
-    /**
-     * The maximal number of states before state space generation is given up.
-     */
-    private int maxStateSpaceSize = 3000;
-    /**
-     * The maximal number of nodes in a single heap configuration before state space generation is given up.
-     */
-    private int maxStateSize = 50;
-    /**
-     * The minimal distance between variables in a heap configuration and embeddings used for abstraction.
-     * Increasing this number allows to use a less aggressive abstraction.
-     */
-    private int abstractionDistance = 0;
-    /**
-     * Indicates whether the abstraction distance for the null node is set to 0 (otherwise or the specified distance is chosen).
-     */
-    private boolean aggressiveNullAbstraction = true;
+    protected Options() {}
+
     /**
      * Enabling this option results in dead variables (variables that are not accessed before being rewritten in the
      * following) being deleted in order to enable more possible abstractions.
      */
     private boolean removeDeadVariables = true;
-    /**
-     * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
-     */
-    private boolean indexedMode = false;
     /**
      * Enabled this option leads to using RefinedNonterminals in graph grammars.
      */
@@ -66,150 +31,39 @@ public class Options {
      */
     private boolean ruleCollapsingEnabled = true;
 
-    /**
-     * If enabled, we verify that a counterexample is not spurious (otherwise an invalid LTL formula is set to unknown).
-     * This option is disabled by default, because counterexample verification requires a more elaborate state space
-     * generation even if all specifications are valid.
-     */
-    private boolean verifyCounterexamples = false;
+    // -----------------------------------------------------------------------------------
 
-    protected Options() {}
+    private boolean admissibleAbstractionEnabled = false;
 
-    public void addKeptVariable(String variableName) {
+    private boolean admissibleConstantsEnabled = false;
 
-        keptVariables.add(variableName);
-    }
+    private boolean admissibleMarkingsEnabled = false;
 
-    public boolean isKeptVariableName(String variableName) {
+    private boolean admissibleFullEnabled = false;
 
-        return keptVariables.contains(variableName);
-    }
+    private boolean chainAbstractionEnabled = true;
 
     /**
-     * @return True if post-processing is applied to generated state spaces.
+     * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
      */
-    public boolean isPostprocessingEnabled() {
+    private boolean indexedModeEnabled = false;
 
-        return postProcessingEnabled;
-    }
+    private boolean canonicalEnabled = false;
 
-    /**
-     * @param
-     */
+    private int maxStateSpace = 5000;
+
+    private int maxHeap = 50;
+
+    // -----------------------------------------------------------------------------------
+
     public void setPostProcessingEnabled(boolean enabled) {
 
         this.postProcessingEnabled = enabled;
     }
 
-    /**
-     * @return The maximal size of state spaces before state space generation is given up.
-     */
-    public int getMaxStateSpaceSize() {
-
-        return maxStateSpaceSize;
-    }
-
-    /**
-     * @param maxStateSpaceSize The maximal size of state spaces before state space generation is given up.
-     */
-    public void setMaxStateSpaceSize(int maxStateSpaceSize) {
-
-        this.maxStateSpaceSize = maxStateSpaceSize;
-    }
-
-    /**
-     * @return The maximal size of heap configurations before state space generation is given up.
-     */
-    public int getMaxStateSize() {
-
-        return maxStateSize;
-    }
-
-    /**
-     * @param maxStateSize The maximal size of heap configurations before state space generation is given up.
-     */
-    public void setMaxStateSize(int maxStateSize) {
-
-        this.maxStateSize = maxStateSize;
-    }
-
-    /**
-     * @return The minimal distance between variables and nodes in an embedding before abstraction is performed.
-     */
-    public int getAbstractionDistance() {
-
-        return abstractionDistance;
-    }
-
-    /**
-     * @param abstractionDistance The minimal distance between variables and nodes in an
-     *                            embedding before abstraction is performed.
-     */
-    public void setAbstractionDistance(int abstractionDistance) {
-
-        if (abstractionDistance != 0 && abstractionDistance != 1) {
-            throw new IllegalArgumentException("Abstraction distance must be either '0' or '1'.");
-        }
-        this.abstractionDistance = abstractionDistance;
-    }
-
-    /**
-     * @return True if and only if the set abstraction distance should be ignored for the null node (and instead set to 0).
-     */
-    public boolean getAggressiveNullAbstraction() {
-
-        return aggressiveNullAbstraction;
-    }
-
-    /**
-     * @param aggressiveNullAbstraction True if and only if the abstraction distance
-     *                                  should be ignored for the null node.
-     */
-    public void setAggressiveNullAbstraction(boolean aggressiveNullAbstraction) {
-
-        if (abstractionDistance == 0 && aggressiveNullAbstraction) {
-            logger.info("The option 'aggressiveNullAbstraction' will have no effect " +
-                    "since the dereference depth is already set to 0");
-        }
-        this.aggressiveNullAbstraction = aggressiveNullAbstraction;
-    }
-
-    /**
-     * @return True if and only if dead variables are deleted from heap configurations whenever possible.
-     */
-    public boolean isRemoveDeadVariables() {
-
-        return removeDeadVariables;
-    }
-
-    /**
-     * @param removeDeadVariables True if and only if dead variables are deleted from
-     *                            heap configurations whenever possible.
-     */
     public void setRemoveDeadVariables(boolean removeDeadVariables) {
 
         this.removeDeadVariables = removeDeadVariables;
-    }
-
-    /**
-     * @return True if and only if an indexed program analysis is performed.
-     */
-    public boolean isIndexedMode() {
-
-        return indexedMode;
-    }
-
-    /**
-     * @param indexedMode True if and only if an indexed program analysis is performed.
-     */
-    public void setIndexedMode(boolean indexedMode) {
-
-        this.indexedMode = indexedMode;
-    }
-
-    public boolean isGrammarRefinementEnabled() {
-
-        return grammarRefinementEnabled;
     }
 
     public void setGrammarRefinementEnabled(boolean enabled) {
@@ -217,40 +71,86 @@ public class Options {
         grammarRefinementEnabled = enabled;
     }
 
-    /**
-     * @return True if and only if the symbolic execution has to use garbage collection
-     */
-    public boolean isGarbageCollectionEnabled() {
-
-        return garbageCollectionEnabled;
-    }
-
-    /**
-     * @param enabled True if and only if the symbolic execution should perform garbage collection
-     */
     public void setGarbageCollectionEnabled(boolean enabled) {
 
         this.garbageCollectionEnabled = enabled;
     }
 
-    public void addGrammarSelectorLabel(String selector) {
-
-        grammarSelectorLabels.add(selector);
+    public void setAdmissibleAbstractionEnabled(boolean admissibleAbstractionEnabled) {
+        this.admissibleAbstractionEnabled = admissibleAbstractionEnabled;
     }
 
-    public void addUsedSelectorLabel(String selector) {
-
-        usedSelectorLabels.add(selector);
+    public void setAdmissibleConstantsEnabled(boolean admissibleConstantsEnabled) {
+        this.admissibleConstantsEnabled = admissibleConstantsEnabled;
     }
 
-    public Set<String> getGrammarSelectorLabels() {
-
-        return grammarSelectorLabels;
+    public void setAdmissibleMarkingsEnabled(boolean admissibleMarkingsEnabled) {
+        this.admissibleMarkingsEnabled = admissibleMarkingsEnabled;
     }
 
-    public Set<String> getUsedSelectorLabels() {
 
-        return usedSelectorLabels;
+    public void setAdmissibleFullEnabled(boolean admissibleFullEnabled) {
+        this.admissibleFullEnabled = admissibleFullEnabled;
+    }
+
+    public void setChainAbstractionEnabled(boolean chainAbstractionEnabled) {
+        this.chainAbstractionEnabled = chainAbstractionEnabled;
+    }
+
+    public void setRuleCollapsingEnabled(boolean ruleCollapsingEnabled) {
+        this.ruleCollapsingEnabled = ruleCollapsingEnabled;
+    }
+
+    public void setIndexedModeEnabled(boolean indexedModeEnabled) {
+        this.indexedModeEnabled = indexedModeEnabled;
+    }
+
+
+    public void setCanonicalEnabled(boolean canonicalEnabled) {
+        this.canonicalEnabled = canonicalEnabled;
+    }
+
+
+    public void setMaxStateSpace(int maxStateSpace) {
+        this.maxStateSpace = maxStateSpace;
+    }
+
+
+    public void setMaxHeap(int maxHeap) {
+        this.maxHeap = maxHeap;
+    }
+
+
+    public int getMaxStateSpace() {
+        return maxStateSpace;
+    }
+
+    public int getMaxHeap() {
+        return maxHeap;
+    }
+
+    public boolean isRemoveDeadVariables() {
+
+        return removeDeadVariables;
+    }
+
+    public boolean isPostprocessingEnabled() {
+
+        return postProcessingEnabled && !canonicalEnabled;
+    }
+
+    public boolean isIndexedMode() {
+
+        return indexedModeEnabled;
+    }
+
+    public boolean isGrammarRefinementEnabled() {
+
+        return grammarRefinementEnabled;
+    }
+
+    public boolean isCanonicalEnabled() {
+        return canonicalEnabled;
     }
 
     public boolean isRuleCollapsingEnabled() {
@@ -258,16 +158,27 @@ public class Options {
         return ruleCollapsingEnabled;
     }
 
-    public void setRuleCollapsingEnabled(boolean enabled) {
-
-        ruleCollapsingEnabled = enabled;
+    public boolean isGarbageCollectionEnabled() {
+        return garbageCollectionEnabled;
     }
 
-    public void setVerifyCounterexamples(boolean verifyCounterexamples) {
-        this.verifyCounterexamples = verifyCounterexamples;
+    public boolean isChainAbstractionEnabled() {
+        return chainAbstractionEnabled && !canonicalEnabled;
     }
 
-    public boolean isVerifyCounterexamples() {
-        return verifyCounterexamples;
+    public boolean isAdmissibleMarkingsEnabled() {
+        return admissibleMarkingsEnabled || canonicalEnabled;
+    }
+
+    public boolean isAdmissibleConstantsEnabled() {
+        return admissibleConstantsEnabled || canonicalEnabled;
+    }
+
+    public boolean isAdmissibleFullEnabled() {
+        return admissibleFullEnabled || canonicalEnabled;
+    }
+
+    public boolean isAdmissibleAbstractionEnabled() {
+        return admissibleAbstractionEnabled;
     }
 }

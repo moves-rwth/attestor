@@ -1,7 +1,8 @@
 package de.rwth.i2.attestor.phases.communication;
 
+import de.rwth.i2.attestor.io.jsonImport.HeapConfigurationRenaming;
+
 import java.io.File;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -9,131 +10,98 @@ import java.util.*;
  *
  * @author Christoph, Christina
  */
-public class InputSettings {
+public class InputSettings implements HeapConfigurationRenaming {
 
-//general information about the scenario
+
     /**
-     * Name of the analyzed scenario (optional).
+     * A common path that is the prefix of all other paths to input/output files.
      */
-    private String name = "";
+    private String rootPath = "";
+
     /**
-     * Description of the analyzed scenario (optional).
+     * Short human-readable description of the analysis
      */
-    private String scenario = "";
-    /**
-     * Short description of the analyzed specification (optional)
-     */
-    private String specificationDescription = "";
+    private String description;
     
-//the settings file
-    /**
-     * The path to the settings file
-     */
-    private String pathToSettingsFile = "";
-    
-//the code
     /**
      * The classpath of source code files that are analyzed.
      */
     private String classpath;
+    
     /**
      * The class that is analyzed.
      */
     private String className;
+    
     /**
      * The initial method that is analyzed.
      */
-    private String methodName;
-    
-//the initial state
-    /**
-     * The url to the default empty initial state.
-     */
-    public URL initialStatesURL;
-    /**
-     * The path to the file specifying the initial state.
-     */
-    private String pathToInput;
-    /**
-     * The name of the file specifying the initial state.
-     */
-    private String inputName;
-    
-//the grammar
-    /**
-     * The path to the file specifying the graph grammar underlying the analysis.
-     */
-    private String pathToUserDefinedGrammar;
-    /**
-     * The name of the file of the graph grammar underlying the analysis.
-     */
-    private List<String> userDefinedGrammarNames;
-    /**
-     * The list of predefined grammars used by the current analysis
-     */
-    private ArrayList<String> usedPredefinedGrammars;
-    /**
-     * The paths to the file specifying the renaming used for the
-     * predefined grammars
-     */
-    private final HashMap<String, String> pathsToGrammar2RenameDefinition = new LinkedHashMap<>();
-    
-//user defined contracts
-    /**
-     * path to the files storing user defined contracts
-     */
-    private String pathToContracts;
+    private String methodName = "main";
+
+    private Set<String> predefinedGrammarNames = new LinkedHashSet<>();
+
+    private Map<String, String> typeRenaming = new LinkedHashMap<>();
+
+    private Map<String, Map<String, String>> selectorRenaming = new LinkedHashMap<>();
+
     /**
      * filenames containing user defined contracts to use
      */
     ArrayList<String> contractFiles = new ArrayList<>();
+    private List<String> userDefinedGrammarFiles = new ArrayList<>();
+    private List<String> initialHeapFiles = new ArrayList<>();
 
+    public String getRootPath() {
 
-//----------------getters and setters--------------------------------------------------------------------
-//general information about the scenario
-    public String getName() {
-
-        return name;
-    }
-    public void setName(String name) {
-
-        this.name = name;
+        if(rootPath == "") {
+            return rootPath;
+        }
+        return rootPath + File.separator;
     }
 
-    public String getScenario() {
+    public void addPredefinedGrammarName(String name) {
 
-        return scenario;
-    }
-    public void setScenario(String scenario) {
-
-        this.scenario = scenario;
+        predefinedGrammarNames.add(name);
     }
 
-    public void setSpecificationDescription(String specificationDescription) {
+    public Collection<String> getPredefinedGrammarNames() {
 
-        this.specificationDescription = specificationDescription;
-    }
-    public String getSpecificationDescription() {
-
-        return specificationDescription;
+        return predefinedGrammarNames;
     }
 
-//the settings file
-    public String getPathToSettingsFile() {
-        return pathToSettingsFile;
-    }
-    public void setPathToSettingsFile(String pathToSettingsFile) {
-        this.pathToSettingsFile = pathToSettingsFile;
+    public void addTypeRenaming(String from, String to) {
+
+        typeRenaming.put(from, to);
     }
 
-    
-//the code
+    public void addSelectorRenaming(String typeName, String from, String to) {
+
+        if(!selectorRenaming.containsKey(typeName)) {
+            selectorRenaming.put(typeName, new LinkedHashMap<>());
+        }
+        Map<String, String> map = selectorRenaming.get(typeName);
+        map.put(from, to);
+    }
+
+    @Override
+    public String getTypeRenaming(String typeName) {
+
+        return typeRenaming.getOrDefault(typeName, typeName);
+    }
+
+    @Override
+    public String getSelectorRenaming(String typeName, String selector) {
+
+        return selectorRenaming.getOrDefault(typeName, Collections.singletonMap(selector, selector))
+                .getOrDefault(selector, selector);
+    }
+
     /**
      * @return The path to the classes that are analyzed.
      */
     public String getClasspath() {
 
-        return classpath;
+        return getRootPath() + classpath;
     }
     /**
      * Sets the path to the classes that are analyzed.
@@ -179,137 +147,7 @@ public class InputSettings {
         this.methodName = methodName;
     }
 
-//the initial state
-    public URL getInitialStatesURL() {
 
-        return initialStatesURL;
-    }
-    public void setInitialStatesURL(URL resource) {
-
-        this.initialStatesURL = resource;
-    }
-
-    public String getInputName() {
-
-        return inputName;
-    }
-    /**
-     * Sets the name of the file holding the initial state.
-     *
-     * @param inputName The name of the file holding the initial state.
-     */
-    public void setInputName(String inputName) {
-
-        this.inputName = inputName;
-    }
-    /**
-     * Sets the path to the file holding the initial state.
-     *
-     * @param pathToInput The directory that containsSubsumingState the file holding the initial state.
-     */
-    public void setPathToInput(String pathToInput) {
-
-        this.pathToInput = pathToInput;
-    }
-
-    /**
-     * @return The fully qualified path to the file holding the initial state.
-     */
-    public String getInputLocation() {
-
-        return pathToInput + File.separator + inputName;
-    }
-
-//the grammar
-    //user defined
-    /**
-     * Sets the path to the file containing the graph grammar underlying the analysis.
-     *
-     * @param pathToGrammar The path to the file containing the graph grammar.
-     */
-    public void setPathToGrammar(String pathToGrammar) {
-
-        this.pathToUserDefinedGrammar = pathToGrammar;
-    }
-    /**
-     * Sets the name of the file containing the user-defined graph grammar underlying the analysis.
-     *
-     * @param userDefinedGrammarName The name of the file containing the graph grammar.
-     */
-    public void addUserDefinedGrammarName(String userDefinedGrammarName) {
-    	
-    	if( this.userDefinedGrammarNames == null ){
-    		this.userDefinedGrammarNames = new ArrayList<>();
-    	}
-        this.userDefinedGrammarNames.add( userDefinedGrammarName );
-    }
-    
-    /**
-     * Returns the name of the file containing the user-defined graph grammar underlying the analysis.
-     *
-     * @return the location of the userDefinedGrammar
-     */
-    public boolean hasUserDefinedGrammar() {
-    	
-        return this.userDefinedGrammarNames != null;
-    }
-    /**
-     * @return The fully qualified paths to the files holding the graph grammar underlying the analysis.
-     */
-    public List<String> getGrammarLocations() {
-
-    	List<String> grammarLocations = new ArrayList<>();
-    	for( String filename : userDefinedGrammarNames ){
-    		grammarLocations.add( pathToUserDefinedGrammar + File.separator + filename );
-    	}
-        return grammarLocations;
-    }
-
-    //predefined
-    /**
-     * Adds a new predefined grammar (including its field maps) to the list of utilised grammars.
-     * If no predefined grammar is set so far, the necessary list and map is created.
-     *
-     * @param name,               the name of the predefined grammar
-     * @param renameFileLocation, the location of the file defining the map from fields of the predefined
-     *                            grammar to those of the analysed data structure.
-     */
-    public void addPredefinedGrammar(String name, String renameFileLocation) {
-
-        if (this.usedPredefinedGrammars == null) {
-            this.usedPredefinedGrammars = new ArrayList<>();
-        }
-
-        this.usedPredefinedGrammars.add(name);
-        this.pathsToGrammar2RenameDefinition.put(name, renameFileLocation);
-    }
-
-    public ArrayList<String> getUsedPredefinedGrammars() {
-
-        return usedPredefinedGrammars;
-    }
-    public String getRenamingLocation(String predefinedGrammar) {
-
-        return this.pathsToGrammar2RenameDefinition.get(predefinedGrammar);
-    }
-
-//user defined contracts
-    /**
-     * Returns the path to the files containing user defined contracts
-     *
-     * @return the location of the user defined contracts
-     */
-    public String getPathToContracts() {
-
-        return this.pathToContracts;
-    }
-    /**
-     * Sets the path to the files containing user defined contracts
-     */
-    public void setPathToContracts(String pathToContracts) {
-
-        this.pathToContracts = pathToContracts;
-    }
 
     /**
      * Adds the provided name to the list of contract files to consider for this run
@@ -325,48 +163,59 @@ public class InputSettings {
      *
      * @return a list containing the filenames
      */
-    public ArrayList<String> getContractFileNames() {
+    public Collection<String> getContractFileNames() {
 
-        return this.contractFiles;
+        List<String> result = new ArrayList<>();
+        for(String s : contractFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
     }
     
    
-// ---------------------------------- path handling -----------------------------------------------------------------
     /**
-     * Sets the default path to search for all possible user defined input files.
-     * Should be called first, so that all paths can be overwritten
-     *
-     * @param path The default path.
-     */
-    public void setDefaultPath(String path) {
-
-        classpath = path;
-        pathToUserDefinedGrammar = path;
-        pathToInput = path;
-        pathToContracts = path;
-        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
-            entry.setValue(path);
-        }   
-    }
-
-    /**
-     * prepends the rootPath to all user-defined paths. Has to be called <bf>after</bf> these paths
-     * have been set
      * @param rootPath a path prefix which should be applied to all user defined paths
      */
     public void setRootPath(String rootPath) {
 
-        this.classpath = rootPath + File.separator + this.classpath;
-        this.pathToUserDefinedGrammar = rootPath + File.separator + this.pathToUserDefinedGrammar;
-        this.pathToInput = rootPath + File.separator + this.pathToInput;
-        this.pathToContracts = rootPath + File.separator + this.pathToContracts;
-        for (java.util.Map.Entry<String, String> entry : pathsToGrammar2RenameDefinition.entrySet()) {
-            entry.setValue(rootPath + File.separator + entry.getValue());
-        }
+        this.rootPath = rootPath;
     }
-    
 
 
-   
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void addUserDefinedGrammarFile(String userDefinedGrammarFile) {
+
+        this.userDefinedGrammarFiles.add(userDefinedGrammarFile);
+    }
+
+    public Collection<String> getUserDefinedGrammarFiles() {
+
+        List<String> result = new ArrayList<>();
+        for(String s : userDefinedGrammarFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
+    }
+
+    public void addInitialHeapFile(String initialHeapFile) {
+
+        this.initialHeapFiles.add(initialHeapFile);
+    }
+
+    public List<String> getInitialHeapFiles() {
+
+        List<String> result = new ArrayList<>();
+        for(String s : initialHeapFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
+    }
 
 }

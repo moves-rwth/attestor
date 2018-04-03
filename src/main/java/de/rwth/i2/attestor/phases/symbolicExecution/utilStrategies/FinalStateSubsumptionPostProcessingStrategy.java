@@ -13,19 +13,19 @@ import java.util.Set;
 public class FinalStateSubsumptionPostProcessingStrategy implements PostProcessingStrategy {
 
     private StateCanonicalizationStrategy canonicalizationStrategy;
-    private int minAbstractionDistance;
+    private boolean admissibleAbstractionEnabled;
 
     public FinalStateSubsumptionPostProcessingStrategy(StateCanonicalizationStrategy canonicalizationStrategy,
-                                                       int minAbstractionDistance) {
+                                                       boolean admissibleAbstractionEnabled) {
 
         this.canonicalizationStrategy = canonicalizationStrategy;
-        this.minAbstractionDistance = minAbstractionDistance;
+        this.admissibleAbstractionEnabled = admissibleAbstractionEnabled;
     }
 
     @Override
     public void process(StateSpace stateSpace) {
 
-        if (minAbstractionDistance == 0) {
+        if (!admissibleAbstractionEnabled) {
             return;
         }
 

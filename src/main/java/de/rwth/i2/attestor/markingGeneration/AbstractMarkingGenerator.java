@@ -17,7 +17,7 @@ public abstract  class AbstractMarkingGenerator {
     protected final AbortStrategy abortStrategy;
     protected final MaterializationStrategy materializationStrategy;
     protected final CanonicalizationStrategy canonicalizationStrategy;
-    protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy; // TODO remove
+    protected final CanonicalizationStrategy aggressiveCanonicalizationStrategy;
     protected final StateRectificationStrategy stateRectificationStrategy;
 
     public AbstractMarkingGenerator(Collection<String> availableSelectorLabelNames,

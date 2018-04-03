@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.graph.morphism.checkers;
 
 
-import de.rwth.i2.attestor.graph.morphism.FeasibilityFunction;
-import de.rwth.i2.attestor.graph.morphism.MorphismChecker;
-import de.rwth.i2.attestor.graph.morphism.TerminationFunction;
-import de.rwth.i2.attestor.graph.morphism.VF2Algorithm;
+import de.rwth.i2.attestor.graph.morphism.*;
 import de.rwth.i2.attestor.graph.morphism.feasibility.*;
 import de.rwth.i2.attestor.graph.morphism.terminationFunctions.MorphismFound;
 
@@ -71,10 +68,9 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
     /**
      * Initializes this checker for a given minimal distance.
      *
-     * @param depth The minimal distance of all variables to a found embedding.
+     * @param options Options guiding how embeddings are computed
      */
-    public VF2MinDistanceEmbeddingChecker(int depth, boolean aggressiveNullAbstractionEnabled,
-                                          boolean aggressiveCompositeMarkingAbstraction) {
+    public VF2MinDistanceEmbeddingChecker(MorphismOptions options) {
 
         super(
                 VF2Algorithm.builder()
@@ -87,11 +83,7 @@ public class VF2MinDistanceEmbeddingChecker extends AbstractVF2MorphismChecker {
                         .addFeasibilityCondition(twoStepLookahead)
                         .addFeasibilityCondition(embeddingExternalNodes)
                         .addFeasibilityCondition(embeddingEdgeLabels)
-                        .addFeasibilityCondition(new MinAbstractionDistance(
-                                depth,
-                                aggressiveNullAbstractionEnabled,
-                                aggressiveCompositeMarkingAbstraction
-                        ))
+                        .addFeasibilityCondition(new AdmissibleAbstraction(options))
                         .build()
         );
     }

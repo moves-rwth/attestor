@@ -30,16 +30,20 @@ import java.util.function.Consumer;
  *
  * @author Hannah
  */
-public class JsonToIndexedHC extends SceneObject {
+public class JsonToHeapConfiguration extends SceneObject {
 
-    public JsonToIndexedHC(SceneObject sceneObject) {
+    private final HeapConfigurationRenaming renaming;
+
+    public JsonToHeapConfiguration(SceneObject sceneObject, HeapConfigurationRenaming renaming) {
 
         super(sceneObject);
+        this.renaming = renaming;
     }
 
-    public HeapConfiguration jsonToHC(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
+    public HeapConfiguration parse(JSONObject obj, Consumer<String> addSelectorLabelFunction) {
 
-        HeapConfigurationBuilder builder = scene().createHeapConfiguration().builder();
+        HeapConfiguration heapConfiguration = scene().createHeapConfiguration();
+        HeapConfigurationBuilder builder = heapConfiguration.builder();
 
         JSONArray jsonNodes = obj.getJSONArray("nodes");
         TIntArrayList nodes = parseNodes(builder, jsonNodes);
@@ -52,7 +56,7 @@ public class JsonToIndexedHC extends SceneObject {
 
         JSONArray selectors = obj.getJSONArray("selectors");
 
-        parseSelectors(builder, nodes, selectors, addSelectorLabelFunction);
+        parseSelectors(heapConfiguration, builder, nodes, selectors, addSelectorLabelFunction);
 
         JSONArray hyperedges = obj.getJSONArray("hyperedges");
         parseHyperedges(builder, nodes, hyperedges);
@@ -68,7 +72,7 @@ public class JsonToIndexedHC extends SceneObject {
             String label = hyperedge.getString("label");
 
             Nonterminal nt;
-            if (hyperedge.has("index")) {
+            if (scene().options().isIndexedMode() && hyperedge.has("index")) {
                 List<IndexSymbol> index = parseIndex(hyperedge.getJSONArray("index"));
 
                 Nonterminal bnt = scene().getNonterminal(label);
@@ -111,29 +115,41 @@ public class JsonToIndexedHC extends SceneObject {
         return res;
     }
 
-    private void parseSelectors(HeapConfigurationBuilder builder,
+    private void parseSelectors(HeapConfiguration heapConfiguration,
+                                HeapConfigurationBuilder builder,
                                 TIntArrayList nodes,
                                 JSONArray selectors,
                                 Consumer<String> addSelectorLabelFunction) {
 
+        final boolean isIndexedMode = scene().options().isIndexedMode();
 
         for (int i = 0; i < selectors.length(); i++) {
             final JSONObject selectorInJson = selectors.getJSONObject(i);
             String name = selectorInJson.getString("label");
 
-            String annotation = "";
-            if (selectorInJson.has("annotation")) {
-                annotation = selectorInJson.getString("annotation");
-            }
-
             int originID = selectorInJson.getInt("origin");
             int targetID = selectorInJson.getInt("target");
 
+            int sourceNode = nodes.get(originID);
+            String typeName = heapConfiguration.nodeTypeOf(sourceNode).toString();
+
+            name = renaming.getSelectorRenaming(typeName, name);
             addSelectorLabelFunction.accept(name);
             SelectorLabel sel = scene().getSelectorLabel(name);
-            builder.addSelector(nodes.get(originID),
-                    new AnnotatedSelectorLabel(sel, annotation),
-                    nodes.get(targetID));
+
+            if(isIndexedMode) {
+                String annotation = "";
+                if (selectorInJson.has("annotation")) {
+                    annotation = selectorInJson.getString("annotation");
+                }
+                builder.addSelector(nodes.get(originID),
+                        new AnnotatedSelectorLabel(sel, annotation),
+                        nodes.get(targetID));
+            } else {
+                builder.addSelector(nodes.get(originID),
+                        scene().getSelectorLabel(name),
+                        nodes.get(targetID));
+            }
         }
     }
 
@@ -161,6 +177,7 @@ public class JsonToIndexedHC extends SceneObject {
         TIntArrayList nodes = new TIntArrayList();
         for (int i = 0; i < jsonNodes.length(); i++) {
             String typeName = jsonNodes.getJSONObject(i).getString("type");
+            typeName = renaming.getTypeRenaming(typeName);
             Type type = scene().getType(typeName);
             int number = jsonNodes.getJSONObject(i).getInt("number");
             builder.addNodes(type, number, nodes);
