@@ -39,13 +39,15 @@ $(function(){
   var styleP = $.ajax({
     url: './lib/style.cycss',
     type: 'GET',
-    dataType: 'text'
+    dataType: 'text',
+    contentType: 'text/css;  charset=utf-8'
   });
 
   var styleHc = $.ajax({
     url: './lib/styleHc.cycss',
     type: 'GET',
-    dataType: 'text'
+    dataType: 'text',
+    contentType: 'text/css;  charset=utf-8'
   });
 
   var infoTemplate = Handlebars.compile([
