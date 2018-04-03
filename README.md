@@ -158,6 +158,7 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
+- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. CAV 2018, to appear.
 - Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
 and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
