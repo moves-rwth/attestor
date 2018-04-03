@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+<meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+<title>Attestor Statespace Viewer</title>
+  <link href="lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+  <link href="lib/style.css" rel="stylesheet">
+  <link rel="shortcut icon" type="image/png" href="lib/icon.png">
+</head>
+<body>
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html" title="Show overview">Attestor Report</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li><a href="statespace.html" title="Show abstract state space">State Space</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="https://github.com/moves-rwth/attestor/wiki">Help</a>
+          <li><a href="http://github.com/moves-rwth/attestor">GitHub</a>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div id="main">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Verification Results</h3>
+      </div>
+      <div class="panel-body">
+        <div class="list-group" id="verificationResults">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Analysis Runtime</h3>
+      </div>
+      <div class="panel-body">
+        <ul class="list-group" id="runtimes">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/fastclick.min.js"></script>
+  <script src="lib/jquery.min.js"></script>
+
+  <script src="lib/cytoscape.min.js"></script>
+
+  <script src="lib/dagre.min.js"></script>
+  <script src="lib/cytoscape-dagre.js"></script>
+
+  <script src="lib/jquery.qtip.min.js"></script>
+  <link href="lib/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+  <script src="lib/cytoscape-qtip.js"></script>
+
+  <script src="lib/bluebird.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script src="lib/typeahead.bundle.js"></script>
+  <script src="lib/handlebars.min.js"></script>
+  <script src="lib/lodash.min.js"></script>
+  <script src="lib/cytoscape-cxtmenu.js"></script>
+
+  <script src="lib/attestor-overview.js"></script>
+
+</body>
+</html>
