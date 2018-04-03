@@ -135,7 +135,9 @@ Please confer the respective pages for further details.
 ## Graphical User Interface
 
 [State spaces](https://github.com/moves-rwth/attestor/wiki/Glossary#state-space), [counterexamples](https://github.com/moves-rwth/attestor/wiki/Glossary#counterexample), [contracts](https://github.com/moves-rwth/attestor/wiki/Glossary#contract), and [graph grammars](https://github.com/moves-rwth/attestor/wiki/Glossary#hyperedge-replacement-grammar) can be exported by Attestor to a webpage for graphical exploration.
-The corresponding export options are found [here](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options#export-options)
+The corresponding export options are found [here](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options#export-options).
+
+Moreover, a brief explanation of our graphical notation for [heap configurations](https://github.com/moves-rwth/attestor/wiki/Glossary#heap-configuration) is found [here](https://github.com/moves-rwth/attestor/wiki/Graphical-Notation).
 
 ## Architecture
 
