@@ -151,7 +151,16 @@ public final class BasicNonterminal implements Nonterminal {
 
 	@Override
 	public void setReachableTentacles(Map<Integer, Collection<Integer>> reachabilityMap) {
-		this.reachabilityMap = reachabilityMap;
+		if( this.reachabilityMap == null ) {
+			this.reachabilityMap = reachabilityMap;
+		}else {
+			for( int tentacle : reachabilityMap.keySet() ) {
+				Collection<Integer> oldReachableTentacles = this.reachabilityMap.get(tentacle);
+				Collection<Integer> newReachableTentacles = reachabilityMap.get(tentacle);
+				newReachableTentacles.removeAll(oldReachableTentacles);
+				oldReachableTentacles.addAll(newReachableTentacles);
+			}
+		}
 		
 	}
 }

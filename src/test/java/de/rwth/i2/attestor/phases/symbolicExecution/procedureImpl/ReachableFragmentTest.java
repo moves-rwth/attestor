@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.phases.symbolicExecution.procedureImpl;
 
 import de.rwth.i2.attestor.MockupSceneObject;
+import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -15,10 +16,15 @@ import de.rwth.i2.attestor.procedures.ContractMatch;
 import de.rwth.i2.attestor.procedures.ScopeExtractor;
 import de.rwth.i2.attestor.types.Type;
 import de.rwth.i2.attestor.types.Types;
+import de.rwth.i2.attestor.util.SingleElementUtil;
 import gnu.trove.list.array.TIntArrayList;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -206,10 +212,13 @@ public class ReachableFragmentTest {
     	HeapConfiguration input = unpassableNonterminal(parameterName, variableName);
     	HeapConfiguration expectedFragment = parameterSide( parameterName );
     	HeapConfiguration expectedReplace = unpassableNtAttachedTovariableSide( variableName );
-    	fail("not yet implemented");
+    	
+    	performTest( input, expectedFragment, expectedReplace );
     }
 
-    /*
+
+
+	/*
      * a nonterminal where some of the other tentacles can
      * and some cannot be reached from the reachable fragment
      */
@@ -241,7 +250,7 @@ public class ReachableFragmentTest {
 
         ContractMatch match = dummyCollection.matchContract(reachableFragment);
 
-        assertTrue(match.hasMatch());
+        assertTrue("reachableFragment", match.hasMatch());
         int[] reordering = match.getExternalReordering();
 
         HeapConfiguration remainingFragmentWithReorderedTentacles = scopedHeap.reorder(reordering);
@@ -279,8 +288,49 @@ public class ReachableFragmentTest {
                 .build()
                 .build();
     }
+    
+    private HeapConfiguration unpassableNonterminal(String parameterName, String variableName) {
+		TIntArrayList nodes = new TIntArrayList();
+		 HeapConfiguration hc = new InternalHeapConfiguration();
+		 
+		 hc.builder().addNodes(type, 2, nodes).build();
+		 addParameterSide(hc, nodes.get(0), parameterName);
+		 addVariableSide( hc, nodes.get(1), variableName );
+		 addDirectedNonterminal( hc, nodes.get(1), nodes.get(0) );
+		 
+		 return hc;
+	}
+    
 
-    private HeapConfiguration partlyReachableList(int reachableListSize, int unreachableListSize, String variableName) {
+	private HeapConfiguration unpassableNtAttachedTovariableSide(String variableName) {
+		TIntArrayList nodes = new TIntArrayList();
+		 
+		 HeapConfiguration hc = singleNodeAttachedHelper(nodes);
+		 hc.builder().addNodes(type, 1, nodes).build();
+		 addVariableSide(hc, nodes.get(1), variableName);
+		 addDirectedNonterminal(hc, nodes.get(1), nodes.get(0));
+		 hc.builder().setExternal(nodes.get(0)).build();
+		 
+		 return hc;
+	}
+
+
+
+	private void addDirectedNonterminal(HeapConfiguration hc, int from, int to) {
+		Nonterminal nt = sceneObject.scene().createNonterminal("sll", 2, new boolean[] {false,false});
+		Map<Integer,Collection<Integer>> reachabilityMap = new HashMap<>();
+		reachabilityMap.put(0, SingleElementUtil.createSet(1));
+		reachabilityMap.put(1, new HashSet<Integer>() );
+		nt.setReachableTentacles(reachabilityMap);
+		
+		hc.builder().addNonterminalEdge(nt)
+					.addTentacle(from)
+					.addTentacle(to)
+					.build();
+		
+	}
+
+	private HeapConfiguration partlyReachableList(int reachableListSize, int unreachableListSize, String variableName) {
 
         TIntArrayList nodes = new TIntArrayList();
         HeapConfiguration config = reachableListHelper(reachableListSize, nodes);

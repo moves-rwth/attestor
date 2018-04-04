@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,8 +32,8 @@ public class ReachabilityComputerTest {
 	static Scene scene;
 	static ReachabilityComputer testObject;
 	
-	@BeforeClass
-	public static void init() {
+	@Before
+	public void init() {
 		scene  = new MockupSceneObject().scene();
 		testObject = new ReachabilityComputer(scene);
 	}
@@ -76,6 +77,21 @@ public class ReachabilityComputerTest {
 	}
 	
 	/**
+	 * Test using a grammar where one rule implies reachability from 1 to 2
+	 * and the other from 2 to 1.
+	 */
+	@Test
+	public void testWithRulesNotConsistent() {
+		Nonterminal nt1 = getNonterminal("IC");
+		Grammar grammar = inputGrammarWithInconsistentRules( nt1 );
+		testObject.precomputeReachability(grammar);
+		
+		assertThat( nt1.reachableTentaclesFrom(0), contains(1) );
+		assertThat( nt1.reachableTentaclesFrom(1), contains(0) );
+	}
+	
+
+	/**
 	 * test using a SLL grammar, where one nonterminal depends on the other
 	 * and they use different selectors
 	 * SLL1 -> .-next1->.-SLL2-.
@@ -89,6 +105,7 @@ public class ReachabilityComputerTest {
 		Nonterminal nt2 = getNonterminal("SLL2");
 
 		Grammar grammar = inputGrammarWithMultipleSelectors(nt1, nt2, sel1, sel2);
+		testObject.precomputeReachability(grammar);
 
 		assertThat( nt1.reachableTentaclesFrom(0), contains(1) );
 		assertThat( nt1.reachableTentaclesFrom(1), empty() );
@@ -111,6 +128,8 @@ public class ReachabilityComputerTest {
 		Nonterminal lhs2 = getIndexedBaseLhs(nonterminal);
 		Nonterminal ntOnRhs = indexedNtForRhs(nonterminal, indexVariable);
 		Grammar grammar = indexedInputGrammar( lhs1, lhs2, ntOnRhs);
+		testObject.precomputeReachability(grammar);
+		
 		assertEquals( 2, grammar.getAllLeftHandSides().size() );
 
 		assertThat( lhs1.reachableTentaclesFrom(0), contains(1) );
@@ -154,6 +173,20 @@ public class ReachabilityComputerTest {
 				.addRule(nt2, recursiveRule1)
 				.build();
 	}
+	
+	private Grammar inputGrammarWithInconsistentRules(Nonterminal nt1) {
+		
+		SelectorLabel right = scene.getSelectorLabel("right");
+		SelectorLabel left = scene.getSelectorLabel("left");
+		
+		HeapConfiguration leftToRight = singlePointerLeftToRight(right);
+		HeapConfiguration rightToLeft = singlePointerRightToLeft(left);
+		
+		return Grammar.builder().addRule(nt1, rightToLeft)
+				.addRule(nt1, leftToRight)
+				.build();
+	}
+	
 	
 	private Grammar inputGrammarWithMultipleSelectors( Nonterminal nt1, Nonterminal nt2, 
 													   SelectorLabel sel1, SelectorLabel sel2 ) {
@@ -233,6 +266,18 @@ public class ReachabilityComputerTest {
 				.setExternal( nodes.get(1) )
 				.build();
 
+	}
+	
+	private HeapConfiguration singlePointerRightToLeft(SelectorLabel sel) {
+		HeapConfigurationBuilder builder = scene.createHeapConfiguration().builder();
+
+		TIntArrayList nodes = new TIntArrayList();
+		Type type = scene.getType("node");
+		return builder.addNodes(type, 2, nodes)
+				.addSelector(nodes.get(1), sel, nodes.get(0) )
+				.setExternal( nodes.get(0) )
+				.setExternal( nodes.get(1) )
+				.build();
 	}
 
 	private BasicNonterminal getNonterminal(String label) {
