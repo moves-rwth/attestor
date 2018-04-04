@@ -130,7 +130,7 @@ In particular, the options allow to pass [linear temporal logic specifications](
 
 It is possible to manually supply [graph grammars](https://github.com/moves-rwth/attestor/wiki/Graph-Grammar-Syntax), [initial heaps](https://github.com/moves-rwth/attestor/wiki/Heap-Configuration-Syntax), and [contracts](https://github.com/moves-rwth/attestor/wiki/Contract-File-Syntax) to Attestor.
 
-Please confer the respective pages for further details.
+Please confer the [respective page](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options) for further details.
 
 ## Graphical User Interface
 
