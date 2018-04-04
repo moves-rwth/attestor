@@ -137,7 +137,12 @@ Please confer the respective pages for further details.
 [State spaces](https://github.com/moves-rwth/attestor/wiki/Glossary#state-space), [counterexamples](https://github.com/moves-rwth/attestor/wiki/Glossary#counterexample), [contracts](https://github.com/moves-rwth/attestor/wiki/Glossary#contract), and [graph grammars](https://github.com/moves-rwth/attestor/wiki/Glossary#hyperedge-replacement-grammar) can be exported by Attestor to a webpage for graphical exploration.
 The corresponding export options are found [here](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options#export-options).
 
-Moreover, a brief explanation of our graphical notation for [heap configurations](https://github.com/moves-rwth/attestor/wiki/Glossary#heap-configuration) is found [here](https://github.com/moves-rwth/attestor/wiki/Graphical-Notation).
+A brief explanation of our graphical notation for [heap configurations](https://github.com/moves-rwth/attestor/wiki/Glossary#heap-configuration) is found [here](https://github.com/moves-rwth/attestor/wiki/Graphical-Notation).
+Please confer the [manual](https://github.com/moves-rwth/attestor/wiki/Graphical-User-Interface) for further information on the features of the graphical user interface.
+
+We provide a small online demo of the graphical user interface for state space exploration.
+Details about the underlying case study are found in the [walkthrough](https://github.com/moves-rwth/attestor/wiki/Walkthrough). The demo state space is found [here](http://www-i2.informatik.rwth-aachen.de/~matheja/exampleStateSpace/statespace.html).  
+
 
 ## Architecture
 
@@ -160,7 +165,7 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
-- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. CAV 2018, to appear.
+- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. CAV, to appear.
 - Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
 and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
