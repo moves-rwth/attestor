@@ -139,7 +139,7 @@ A brief explanation of our graphical notation for [heap configurations](https://
 Please confer the [manual](https://github.com/moves-rwth/attestor/wiki/Graphical-User-Interface) for further information on the features of the graphical user interface.
 
 We provide a small online demo of the graphical user interface for state space exploration.
-Details about the underlying case study are found in the [walkthrough](https://github.com/moves-rwth/attestor/wiki/Walkthrough). The demo state space is found [here](http://www-i2.informatik.rwth-aachen.de/~matheja/exampleStateSpace/statespace.html).  
+Details about the underlying case study are found in the [guided tour](https://github.com/moves-rwth/attestor/wiki/Tour). The demo state space is found [here](http://www-i2.informatik.rwth-aachen.de/~matheja/exampleStateSpace/statespace.html).  
 
 
 ## Architecture
