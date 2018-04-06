@@ -16,10 +16,10 @@ Attestor is a graph-based tool for analysing Java programs operating on dynamic 
 * [Reproducing Benchmarks](#reproducing-benchmarks) (without installation)
 * [Installation](#installation)
 * [Getting Started](#getting-started)
+* [A Guided Tour](#a-guided-tour)
 
 ### Documentation
 
-* [Detailed Example Analysis](#detailed-example-analysis)
 * [Options & Settings](#options--settings)
 * [Graphical User Interface](#graphical-user-interface)
 * [Architecture](#architecture)
@@ -113,15 +113,13 @@ from within the `target` directory.
 This should display a help page explaining all available [command line options](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options).
 Since the above jar file contains all dependencies, it is safe to rename it and move the file to a more convenient directory.
 
-Detailed step-by-step instructions on using Attestor to analyze Java programs are found on the [detailed walkthrough page](https://github.com/moves-rwth/attestor/wiki/Walkthrough).
+## A Guided Tour
+
+An instructive example with step-by-step instructions on using Attestor to analyze Java programs is found in our [Wiki](https://github.com/moves-rwth/attestor/wiki/Tour).
 
 Furthermore, we maintain a collection of running examples (including source code, user-defined graph grammars, and configuration files) in a [separate repository](https://github.com/moves-rwth/attestor-examples). All of these examples can be directly executed using provided auxiliary scripts. Please confer the documentation in the examples repository for further details.
 
 # Documentation
-
-## Detailed Example Analysis
-
-An instructive example on using Attestor for program analyisis is found in our  [Wiki](https://github.com/moves-rwth/attestor/wiki/Walkthrough).
 
 ## Options & Settings
 
