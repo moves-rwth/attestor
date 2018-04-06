@@ -1,0 +1,88 @@
+[
+  {
+    "nonterminal": "SLL",
+    "rank": 2,
+    "rules": [
+      {
+        "nodes": [
+          {
+            "type": "SLList",
+            "number": 2
+          }
+        ],
+        "externals": [
+          0,
+          1
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "next",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "SLList",
+            "number": 3
+          }
+        ],
+        "externals": [
+          0,
+          2
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "next",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "SLL",
+            "tentacles": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "SLList",
+            "number": 3
+          }
+        ],
+        "externals": [
+          0,
+          2
+        ],
+        "variables": [],
+        "selectors": [],
+        "hyperedges": [
+          {
+            "label": "SLL",
+            "tentacles": [
+              0,
+              1
+            ]
+          },
+          {
+            "label": "SLL",
+            "tentacles": [
+              1,
+              2
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+--description "tour example 'prepend SLL' MC02"
+--export "model_checking_02"
+--classpath "code"
+--class "SLList"
+--method "prependSLList"
+--grammar "grammar/SLList.json"
+--initial "initial/list.json" 
+-mc "G { L(SLL) }"

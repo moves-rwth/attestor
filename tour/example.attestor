@@ -1,0 +1,7 @@
+--description "tour example 'prepend SLL'"
+--export "example"
+--classpath "code"
+--class "SLList"
+--method "prependSLList"
+--grammar "grammar/SLList.json"
+--initial "initial/list.json" 

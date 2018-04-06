@@ -1,0 +1,29 @@
+{
+    "nodes":[
+        {
+            "type":"NULL",
+            "number":1
+        },{
+            "type":"SLList",
+            "number":1
+        }
+    ],
+    "externals":[],
+    "variables":[
+        {
+            "name":"null",
+            "target":0
+        },{
+            "name":"@parameter0:",
+            "target":1
+        }
+    ],
+    "selectors":[],
+    "hyperedges":[
+        {
+            "label":"SLL",
+            "tentacles":[1,0]
+        }
+    ]
+
+} 
