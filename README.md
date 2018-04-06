@@ -68,7 +68,7 @@ The following software has to be installed prior to the installation of Attestor
 
 - [Java JDK 1.8][3]
 - [Apache Maven][4]
-- (Windows) Since Attestor uses [soot][13], please make sure that rt.jar is in your CLASSPATH.
+- Since Attestor uses [soot][13], please make sure that rt.jar is in your `CLASSPATH` and that `JAVA_HOME` is set correctly.
 
 ## Reproducing Benchmarks
 
