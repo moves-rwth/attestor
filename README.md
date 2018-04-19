@@ -163,14 +163,15 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
-- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. CAV, to appear.
+- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. Proc. of CAV, 2018 (to appear).
+- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll. Graph-Based Shape Analysis Beyond Context-Freeness. Proc. of SEFM, 2018 (to appear).
 - Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
 and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
-- Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. ESOP: 611-638 (2017)
-- Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203 (2015)
-- Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Verifying pointer programs using graph grammars][8]. Sci. Comput. Program. 97: 157-162 (2015)
-- Christoph Matheja, Christina Jansen, Thomas Noll: [Tree-Like Grammars and Separation Logic][9]. APLAS: 90-108 (2015)
-- Christina Jansen, Thomas Noll: [Generating Abstract Graph-Based Procedure Summaries for Pointer Programs][10]. ICGT 2014: 49-64
+- Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. Proc. of ESOP: 611-638, 2017.
+- Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203, 2015.
+- Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Verifying pointer programs using graph grammars][8]. Sci. Comput. Program. 97: 157-162, 2015.
+- Christoph Matheja, Christina Jansen, Thomas Noll: [Tree-Like Grammars and Separation Logic][9]. Proc. of APLAS: 90-108, 2015.
+- Christina Jansen, Thomas Noll: [Generating Abstract Graph-Based Procedure Summaries for Pointer Programs][10]. Proc. of ICGT: 49-64, 2014.
 
 
 
