@@ -64,17 +64,6 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
     private Method currentMethod;
 
     /**
-     * Default initialization for TopLevelTranslation.
-     * Sets the firstLevel of the translation hierarchy to
-     * {@link StandardAbstractSemantics}
-     */
-    public TopLevelTranslation(SceneObject sceneObject) {
-
-        super(sceneObject);
-        firstLevel = new StandardAbstractSemantics(this);
-    }
-
-    /**
      * Initializes the TopLevelTranslation with a custom first level.
      *
      * @param firstLevel The custom first level of the translation process.
@@ -124,31 +113,6 @@ public class TopLevelTranslation extends SceneObject implements JimpleToAbstract
 
         recursiveMethodDetection.markRecursiveMethods();
     }
-
-    /**
-     * Computes a shortened version of a method name that does not include all packages as a prefix.
-     *
-     * @param method The method whose shortened signature should be determined.
-     * @return A shortened method signature without package information.
-     */
-    private String shortMethodSignature(SootMethod method) {
-
-        /*
-        StringBuilder params = new StringBuilder("(");
-        boolean isFirst = true;
-        for (soot.Type type : method.getParameterTypes()) {
-            if (!isFirst) {
-                params.append(", ");
-            }
-            isFirst = false;
-            params.append(getShortName(type));
-        }
-        params.append(")");
-        return getShortName(method.getReturnType()) + " " + method.getName() + params;
-        */
-        return method.getName();
-    }
-
 
     /**
      * Sets {@link #currentUnitToPC} to a mapping with the units in this method.
