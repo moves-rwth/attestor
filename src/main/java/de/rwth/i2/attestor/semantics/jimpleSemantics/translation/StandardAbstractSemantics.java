@@ -147,8 +147,6 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
     @Override
     public Type translateType(soot.Type input) {
 
-        // getEscapedName was recently removed in soot.Type
-        //String name = input.getEscapedName();
         String name = input.toString();
         return scene().getType(name);
     }
@@ -188,7 +186,6 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
 
         soot.jimple.InvokeStmt stmt = (soot.jimple.InvokeStmt) input;
         soot.jimple.InvokeExpr expr = stmt.getInvokeExpr();
-        // SootMethod method = expr.getMethod();
 
         String name = expr.getMethod().getSignature();
         Method translatedMethod = topLevel.getMethod(name);
