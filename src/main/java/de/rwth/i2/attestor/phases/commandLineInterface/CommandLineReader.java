@@ -486,18 +486,21 @@ public class CommandLineReader {
         debugOptions.addOption(
                 Option.builder("q")
                         .longOpt("quiet")
+                        .desc("Suppresses most output passed to the logger.")
                         .build()
         );
 
         debugOptions.addOption(
                 Option.builder("v")
                         .longOpt("verbose")
+                        .desc("Logs additional information about the execution of phases.")
                         .build()
         );
 
         debugOptions.addOption(
                 Option.builder()
                         .longOpt("debug")
+                        .desc("Logs additional debug data about the execution of phases.")
                         .build()
         );
 
