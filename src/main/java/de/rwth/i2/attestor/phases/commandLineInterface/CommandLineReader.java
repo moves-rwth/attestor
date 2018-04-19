@@ -124,7 +124,7 @@ public class CommandLineReader {
 
         commandLineOptions.addOption(
                 Option.builder("l")
-                        .longOpt("read")
+                        .longOpt("load")
                         .hasArg()
                         .argName("file")
                         .desc("Additionally loads all command line options that are contained in the " +
@@ -498,12 +498,6 @@ public class CommandLineReader {
         debugOptions.addOption(
                 Option.builder()
                         .longOpt("debug")
-                        .build()
-        );
-
-        debugOptions.addOption(
-                Option.builder()
-                        .longOpt("christoph")
                         .build()
         );
 
