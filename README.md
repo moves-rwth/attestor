@@ -163,8 +163,8 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
-- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs. Proc. of CAV, 2018 (to appear).
-- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll. Graph-Based Shape Analysis Beyond Context-Freeness. Proc. of SEFM, 2018 (to appear).
+- Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: [Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs][18]. Proc. of CAV, 2018.
+- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll. [Graph-Based Shape Analysis Beyond Context-Freeness][19]. Proc. of SEFM, 2018.
 - Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
 and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. Proc. of ESOP: 611-638, 2017.
@@ -192,3 +192,5 @@ and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017.
 [15]: https://github.com/moves-rwth/attestor/wiki/Running-Attestor-from-the-command-line
 [16]: https://github.com/moves-rwth/attestor/wiki/Settings-file
 [17]: http://dx.doi.org/10.18154/RWTH-2017-09657
+[18]: https://link.springer.com/chapter/10.1007/978-3-319-96142-2_1
+[19]: https://link.springer.com/chapter/10.1007/978-3-319-92970-5_17
