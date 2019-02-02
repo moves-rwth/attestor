@@ -41,6 +41,14 @@ public interface HeapConfigurationBuilder {
     HeapConfigurationBuilder addNodes(Type type, int count, TIntArrayList buffer);
 
     /**
+     * Adds a single node of Type type to the underlying graph.
+     *
+     * @param type   Type of the node to be created.
+     * @return The id of the created node
+     */
+    int addSingleNode(Type type);
+
+    /**
      * Removes an isolated node from the underlying HeapConfiguration
      *
      * @param node ID of the node to remove

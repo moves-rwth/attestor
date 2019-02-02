@@ -42,6 +42,12 @@ public final class HeapConfigurationPairBuilder implements HeapConfigurationBuil
     }
 
     @Override
+    public int addSingleNode(Type type) {
+
+        return this.actualBuilder.addSingleNode(type);
+    }
+
+    @Override
     public HeapConfigurationBuilder removeIsolatedNode(int node) {
 
         this.actualBuilder.removeIsolatedNode(node);

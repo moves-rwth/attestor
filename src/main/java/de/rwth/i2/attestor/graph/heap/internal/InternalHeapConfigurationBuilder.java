@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.graph.heap.*;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
+import org.jboss.util.Null;
 
 /**
  * All the messy details of a {@link HeapConfigurationBuilder} for {@link InternalHeapConfiguration}s.
@@ -95,6 +96,19 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         }
 
         return this;
+    }
+
+    @Override
+    public int addSingleNode(Type type) {
+
+        if(type == null) {
+            throw new NullPointerException();
+        }
+
+        int publicId = addPrivatePublicIdPair();
+        heapConf.graph.addNode(type, 10, 10);
+        ++heapConf.countNodes;
+        return publicId;
     }
 
     /**
