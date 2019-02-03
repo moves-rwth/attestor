@@ -140,22 +140,23 @@ public class VariableExtractor extends SeparationLogicBaseListener implements Va
     }
 
     @Override
+    public void enterSelector(SeparationLogicParser.SelectorContext ctx) {
+
+        lastVariableName = null; // reset variable name to consider selector target
+    }
+
+    @Override public void exitPointer(SeparationLogicParser.PointerContext ctx) {
+
+        if(lastVariableName == null) { // null is target of some selector
+            registerConstant("null");
+        }
+    }
+
+    @Override
     public void enterConstant(SeparationLogicParser.ConstantContext ctx) {
 
         String constant = ctx.getText();
-
-        boolean exists = false;
-        for(VariableEquivalenceClass eqClass : equivalenceClasses)  {
-            if(eqClass.contains(constant)) {
-               exists = true;
-               break;
-            }
-        }
-        if(!exists) {
-            equivalenceClasses.add(
-                    new VariableEquivalenceClass(constant)
-            );
-        }
+        registerConstant(constant);
 
         if(isPureFormulaMode) {
             if(equalityLhs == null) {
@@ -163,6 +164,23 @@ public class VariableExtractor extends SeparationLogicBaseListener implements Va
             } else {
                 equalityRhs = constant;
             }
+        }
+    }
+
+    private void registerConstant(String constant) {
+
+        boolean exists = false;
+        for(VariableEquivalenceClass eqClass : equivalenceClasses)  {
+            if(eqClass.contains(constant)) {
+                exists = true;
+                break;
+            }
+        }
+        if(!exists) {
+            programVariableNames.add(constant);
+            equivalenceClasses.add(
+                    new VariableEquivalenceClass(constant)
+            );
         }
     }
 

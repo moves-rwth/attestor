@@ -73,7 +73,7 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      * Prepares construction of a new HeapConfiguration corresponding to the
      * given parse tree.
      */
-    @Override public void enterHeap(SeparationLogicParser.HeapContext ctx) {
+    @Override public void enterHeapBody(SeparationLogicParser.HeapBodyContext ctx) {
 
         builder = scene.createHeapConfiguration().builder();
         variableToNodeId = new HashMap<>();
@@ -83,10 +83,12 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
             Type type = scene.getType(variableUnification.getType(variable));
             int nodeId = builder.addSingleNode(type);
             variableToNodeId.put(variable, nodeId);
+        }
 
-            if(variableUnification.getProgramVariableNames().contains(variable)) {
-                builder.addVariableEdge(variable, nodeId);
-            }
+        for(String variable : variableUnification.getProgramVariableNames()) {
+
+            int nodeId = getNode(variable);
+            builder.addVariableEdge(variable, nodeId);
         }
     }
 
@@ -107,6 +109,10 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      */
     @Override
     public void enterVariable(SeparationLogicParser.VariableContext ctx) {
+
+        if(builder == null) {
+            return;
+        }
 
         lastVariable = ctx.getText();
     }
@@ -177,6 +183,10 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
 
     @Override
     public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
+
+        if(builder == null) {
+            return;
+        }
 
         lastNonterminal = scene.getNonterminal(ctx.getText());
     }

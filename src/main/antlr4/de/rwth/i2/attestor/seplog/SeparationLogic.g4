@@ -26,7 +26,7 @@ sidRuleBody : (variableDeclaration '|')? spatial (SEP spatial)*;
 // declaration of typed variables
 freeVariableDeclaration : REDUCTION? variableDeclaration;
 variableDeclaration : variable '{' type '}';
-variable : VARPREFIX? ID (ID|NUM|US)*;
+variable : VARPREFIX? ID (ID|NUM|US)* VARSUFFIX?;
 type : (ID|NUM)+;
 
 // formulas allowed in predicate definitions
@@ -62,6 +62,7 @@ RULEDELIM : '<=';
 US : '_';
 REDUCTION : '!';
 VARPREFIX : '$' | '%' | '@';
+VARSUFFIX : ':';
 ID : [a-zA-Z]+;
 NUM : [0-9]+;
 WS : [ \t\r\n]+ -> skip;

@@ -16,6 +16,7 @@ public class VariableEquivalenceClass {
     public VariableEquivalenceClass(String constantName) {
 
         representative = constantName;
+        variableNames.add(representative);
         hasConstantType = true;
 
         switch (constantName) {
@@ -39,6 +40,7 @@ public class VariableEquivalenceClass {
     public VariableEquivalenceClass(String variableName, String type) {
 
         representative = variableName;
+        variableNames.add(representative);
         this.type = type;
         hasConstantType = false;
     }
