@@ -103,6 +103,8 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
      */
     public void loadGrammarFromSidFile(String filename) {
 
+        logger.info("Parsing inductive predicate rules in " + filename);
+
         InductivePredicatesParser parser = new InductivePredicatesParser(this);
         Grammar newGrammar;
         try {

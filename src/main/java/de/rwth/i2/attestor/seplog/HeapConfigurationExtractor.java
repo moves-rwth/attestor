@@ -132,6 +132,7 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         int target = getNode(lastVariable);
 
         builder.addSelector(source, lastSelectorLabel, target);
+        scene.labels().addUsedSelectorLabel(lastSelectorLabel.getLabel());
 
         lastVariable = null;
         lastSelectorLabel = null;

@@ -268,6 +268,7 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
 
         int from = variableToNodeId.get(lastPointsToLhs);
         SelectorLabel selectorLabel = scene.getSelectorLabel(lastSelector);
+        scene.labels().addGrammarSelectorLabel(lastSelector);
         int to = variableToNodeId.get(lastVariableName);
         heapBuilder.addSelector(from, selectorLabel, to);
 
