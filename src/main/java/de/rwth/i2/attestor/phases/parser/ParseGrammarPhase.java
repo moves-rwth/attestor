@@ -12,6 +12,7 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.communication.InputSettings;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.InputSettingsTransformer;
+import de.rwth.i2.attestor.seplog.InductivePredicatesParser;
 import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
@@ -45,6 +46,10 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         
         for( String grammarLocation : inputSettings.getUserDefinedGrammarFiles() ) {
             loadGrammarFromFile(grammarLocation);
+        }
+
+        for( String sidLocation : inputSettings.getUserDefinedInductivePredicatesFiles() ) {
+            loadGrammarFromSidFile(sidLocation);
         }
 
         loadPredefinedGrammars();
@@ -90,6 +95,39 @@ public class ParseGrammarPhase extends AbstractPhase implements GrammarTransform
         // Even if all grammar files could not be parsed, an empty grammar is created.
         this.grammar = grammarBuilder.build();
     }
+
+    /**
+     * Loads a graph grammar from a file containing a system of inductive predicate definitions in
+     * a fragment of symbolic heap separation logic.
+     * If a previously graph grammar exists, it is extended by the newly created rules.
+     */
+    public void loadGrammarFromSidFile(String filename) {
+
+        InductivePredicatesParser parser = new InductivePredicatesParser(this);
+        Grammar newGrammar;
+        try {
+            newGrammar = parser.parseFromFile(filename);
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+
+        if (grammar != null) {
+            logger.debug("Extending previously set grammar.");
+        }
+
+        if (grammarBuilder == null) {
+            this.grammarBuilder = Grammar.builder();
+        }
+        grammarBuilder.addRules(newGrammar);
+
+        if(scene().options().isRuleCollapsingEnabled()) {
+            grammarBuilder.updateCollapsedRules();
+        }
+
+        // Even if all grammar files could not be parsed, an empty grammar is created.
+        this.grammar = grammarBuilder.build();
+    }
+
 
     /**
      * Creates the rules of a graph grammar from a given JSONArray.

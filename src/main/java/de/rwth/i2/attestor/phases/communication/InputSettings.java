@@ -49,7 +49,9 @@ public class InputSettings implements HeapConfigurationRenaming {
      */
     ArrayList<String> contractFiles = new ArrayList<>();
     private List<String> userDefinedGrammarFiles = new ArrayList<>();
+    private List<String> userDefinedInductivePredicatesFiles = new ArrayList<>();
     private List<String> initialHeapFiles = new ArrayList<>();
+    private List<String> initialSymbolicHeapFiles = new ArrayList<>();
 
     public String getRootPath() {
 
@@ -190,6 +192,20 @@ public class InputSettings implements HeapConfigurationRenaming {
         this.description = description;
     }
 
+    public void addUserDefinedInductivePredicatesFile(String userDefinedInductivePredicatesFile) {
+
+        this.userDefinedInductivePredicatesFiles.add(userDefinedInductivePredicatesFile);
+    }
+
+    public Collection<String> getUserDefinedInductivePredicatesFiles() {
+
+        List<String> result = new ArrayList<>();
+        for(String s : userDefinedInductivePredicatesFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
+    }
+
     public void addUserDefinedGrammarFile(String userDefinedGrammarFile) {
 
         this.userDefinedGrammarFiles.add(userDefinedGrammarFile);
@@ -217,5 +233,20 @@ public class InputSettings implements HeapConfigurationRenaming {
         }
         return result;
     }
+
+    public void addInitialSymbolicHeapFile(String initialSymbolicHeapFile) {
+
+        this.initialSymbolicHeapFiles.add(initialSymbolicHeapFile);
+    }
+
+    public List<String> getInitialSymbolicHeapFiles() {
+
+        List<String> result = new ArrayList<>();
+        for(String s : initialSymbolicHeapFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
+    }
+
 
 }

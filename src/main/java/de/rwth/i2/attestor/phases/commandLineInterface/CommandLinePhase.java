@@ -103,8 +103,14 @@ public class CommandLinePhase extends AbstractPhase
             case "grammar":
                 grammar(option);
                 break;
+            case "inductive-predicates":
+                inductivePredicates(option);
+                break;
             case "initial":
                 initial(option);
+                break;
+            case "initial-heap":
+                initialHeap(option);
                 break;
             case "method":
                 method(option);
@@ -223,11 +229,25 @@ public class CommandLinePhase extends AbstractPhase
         inputSettings.addUserDefinedGrammarFile(grammar);
     }
 
+    private void inductivePredicates(Option option) {
+
+        String sid = option.getValue();
+        logger.info("system of inductive predicates: " + sid);
+        inputSettings.addUserDefinedInductivePredicatesFile(sid);
+    }
+
     private void initial(Option option) {
 
         String initial = option.getValue();
-        logger.info("initial heap: " + initial);
+        logger.info("initial heap configuration: " + initial);
         inputSettings.addInitialHeapFile(initial);
+    }
+
+    private void initialHeap(Option option) {
+
+        String initial = option.getValue();
+        logger.info("initial symbolic heap: " + initial);
+        inputSettings.addInitialSymbolicHeapFile(initial);
     }
 
     private void method(Option option) {

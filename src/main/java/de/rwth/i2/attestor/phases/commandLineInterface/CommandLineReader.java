@@ -201,12 +201,27 @@ public class CommandLineReader {
                         .hasArg()
                         .argName("file")
                         .desc("Loads a user-supplied graph grammar from the provided <file>." +
-                                "Please confer syntax for graph grammars for further details on " +
+                                "Please confer the syntax for graph grammars for further details on " +
                                 "writing custom graph grammars. " +
                                 "If --root-path is set then the common root path is added " +
                                 "as a prefix to the grammar file.")
                         .build()
         );
+
+        commandLineOptions.addOption(
+                Option.builder("sid")
+                        .longOpt("inductive-predicates")
+                        .hasArg()
+                        .argName("file")
+                        .desc("Loads a user-supplied System of Inductive predicate Definitions (SID)" +
+                                "written in a fragment of symbolic heap separation logic. " +
+                                "Please confer the syntax for inductive predicate definitions for further" +
+                                "details on writing custom predicate definitions." +
+                                "If --root-path is set then the common root path is added " +
+                                "as a prefix to the file. ")
+                        .build()
+        );
+
 
         commandLineOptions.addOption(
                 Option.builder("i")
@@ -217,6 +232,20 @@ public class CommandLineReader {
                                 " If no initial heap is provided, the analysis assumes an initially empty heap. " +
                                 "Please confer syntax for heap configurations for further details on manually " +
                                 "specifying heap configurations. " +
+                                "If --root-path is set then the common root path is added" +
+                                " as a prefix to the initial heap file.")
+                        .build()
+        );
+
+        commandLineOptions.addOption(
+                Option.builder("ih")
+                        .longOpt("initial-heap")
+                        .hasArg()
+                        .argName("file")
+                        .desc("Determines the heap of the initial state as the symbolic heap provided in <file>." +
+                                " If no initial heap is provided, the analysis assumes an initially empty heap. " +
+                                "Please confer syntax for symbolic heaps for further details on manually " +
+                                "specifying initial states. " +
                                 "If --root-path is set then the common root path is added" +
                                 " as a prefix to the initial heap file.")
                         .build()
