@@ -75,11 +75,12 @@ public class ParseInputPhase extends AbstractPhase implements InputTransformer {
         SymbolicHeapParser parser = new SymbolicHeapParser(this);
         HeapConfiguration originalInput;
         try {
-            originalInput = parser.parseFromFile(initialSymbolicHeapFile);
+            originalInput = parser.parseFromFile(initialSymbolicHeapFile, inputSettings);
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
         inputs.add(originalInput);
+
     }
 
     @Override

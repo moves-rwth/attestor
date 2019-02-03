@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
+import de.rwth.i2.attestor.io.jsonImport.HeapConfigurationRenaming;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.types.Type;
 import gnu.trove.list.array.TIntArrayList;
@@ -29,6 +30,8 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
 
     private final VariableUnification variableUnification;
 
+    private final HeapConfigurationRenaming renaming;
+
     /**
      * The last HeapConfiguration, which was successfully constructed.
      */
@@ -50,7 +53,7 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      */
     private String lastVariable;
 
-    private SelectorLabel lastSelectorLabel;
+    private String lastSelectorLabel;
 
     private String lastSelectorSource;
 
@@ -58,10 +61,13 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
 
     private List<String> parameters;
 
-    public HeapConfigurationExtractor(@Nonnull Scene scene, @Nonnull VariableUnification variableUnification) {
+    public HeapConfigurationExtractor(@Nonnull Scene scene,
+                                      @Nonnull VariableUnification variableUnification,
+                                      @Nonnull HeapConfigurationRenaming renaming) {
 
         this.scene = scene;
         this.variableUnification = variableUnification;
+        this.renaming = renaming;
     }
 
     public HeapConfiguration getHeapConfiguration() {
@@ -75,12 +81,17 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      */
     @Override public void enterHeapBody(SeparationLogicParser.HeapBodyContext ctx) {
 
-        builder = scene.createHeapConfiguration().builder();
+        heapConfiguration = scene.createHeapConfiguration();
+        builder = heapConfiguration.builder();
         variableToNodeId = new HashMap<>();
 
         for(String variable : variableUnification.getUniqueVariableNames()) {
 
-            Type type = scene.getType(variableUnification.getType(variable));
+            Type type = scene.getType(
+                    renaming.getTypeRenaming(
+                        variableUnification.getType(variable)
+                    )
+            );
             int nodeId = builder.addSingleNode(type);
             variableToNodeId.put(variable, nodeId);
         }
@@ -121,7 +132,7 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
 
         lastSelectorSource = lastVariable;
         lastVariable = null;
-        lastSelectorLabel = scene.getSelectorLabel(ctx.getText());
+        lastSelectorLabel = ctx.getText();
     }
 
     /**
@@ -137,8 +148,11 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         int source = getNode(lastSelectorSource);
         int target = getNode(lastVariable);
 
-        builder.addSelector(source, lastSelectorLabel, target);
-        scene.labels().addUsedSelectorLabel(lastSelectorLabel.getLabel());
+        String typeName = heapConfiguration.nodeTypeOf(source).toString();
+
+        lastSelectorLabel = renaming.getSelectorRenaming(typeName, lastSelectorLabel);
+        scene.labels().addUsedSelectorLabel(lastSelectorLabel);
+        builder.addSelector(source, scene.getSelectorLabel(lastSelectorLabel), target);
 
         lastVariable = null;
         lastSelectorLabel = null;
