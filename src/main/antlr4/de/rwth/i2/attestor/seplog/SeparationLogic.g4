@@ -40,7 +40,8 @@ pointer : variable FIELDACCESS selector PTO (variable|NULL);
 selector : (ID|NUM|US)+;
 
 // pure formulas
-pure : variable EQ (variable|NULL|NUM);
+pure : (variable|constant) EQ (variable|constant);
+constant : NULL | NUM;
 
 // predicate calls
 predicateCall : predicateSymbol '(' parameter (',' parameter)* ')';

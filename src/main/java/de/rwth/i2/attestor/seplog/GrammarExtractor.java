@@ -30,7 +30,7 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * The scene used to create nonterminals.
      */
-    private Scene scene;
+    private final Scene scene;
 
     /**
      * The builder for the current grammar under construction.
