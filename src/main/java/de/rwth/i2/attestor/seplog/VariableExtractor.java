@@ -2,6 +2,12 @@ package de.rwth.i2.attestor.seplog;
 
 import java.util.*;
 
+/**
+ * Determines the equivalence classes of all variables and constants
+ * in a given symbolic heap.
+ *
+ * @author Christoph
+ */
 public class VariableExtractor extends SeparationLogicBaseListener implements VariableUnification {
 
     /**
@@ -15,6 +21,10 @@ public class VariableExtractor extends SeparationLogicBaseListener implements Va
      */
     private Set<String> programVariableNames = new HashSet<>();
 
+    /**
+     * List of all known equivalence classes of variables and constants
+     * referring to the same heap location.
+     */
     private List<VariableEquivalenceClass> equivalenceClasses = new ArrayList<>();
 
     /**
@@ -27,6 +37,9 @@ public class VariableExtractor extends SeparationLogicBaseListener implements Va
      */
     private String lastVariableName;
 
+    /**
+     * The name of the last encountered variable type.
+     */
     private String lastVariableType;
 
     /**

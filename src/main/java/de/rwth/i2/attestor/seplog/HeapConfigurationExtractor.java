@@ -28,8 +28,14 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      */
     private final Scene scene;
 
+    /**
+     * Auxiliary to identify variables that refer to the same heap location.
+     */
     private final VariableUnification variableUnification;
 
+    /**
+     * Renaming for types and selectors.
+     */
     private final HeapConfigurationRenaming renaming;
 
     /**
@@ -53,14 +59,31 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      */
     private String lastVariable;
 
+    /**
+     * The name of the last encountered selector.
+     */
     private String lastSelectorLabel;
 
+    /**
+     * The name of the last encountered source of a selector.
+     */
     private String lastSelectorSource;
 
+    /**
+     * The last encountered nonterminal symbol.
+     */
     private Nonterminal lastNonterminal;
 
+    /**
+     * List of the encountered parameters of a nonterminal.
+     */
     private List<String> parameters;
 
+    /**
+     * @param scene The scene containing all global settings.
+     * @param variableUnification Auxiliary to map variables to heap locations.
+     * @param renaming Renaming of types and selectors.
+     */
     public HeapConfigurationExtractor(@Nonnull Scene scene,
                                       @Nonnull VariableUnification variableUnification,
                                       @Nonnull HeapConfigurationRenaming renaming) {
@@ -70,6 +93,9 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         this.renaming = renaming;
     }
 
+    /**
+     * @return The constructed HeapConfiguration.
+     */
     public HeapConfiguration getHeapConfiguration() {
 
         return heapConfiguration;
@@ -79,7 +105,8 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
      * Prepares construction of a new HeapConfiguration corresponding to the
      * given parse tree.
      */
-    @Override public void enterHeapBody(SeparationLogicParser.HeapBodyContext ctx) {
+    @Override
+    public void enterHeapBody(SeparationLogicParser.HeapBodyContext ctx) {
 
         heapConfiguration = scene.createHeapConfiguration();
         builder = heapConfiguration.builder();
@@ -128,7 +155,11 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         lastVariable = ctx.getText();
     }
 
-    @Override public void enterSelector(SeparationLogicParser.SelectorContext ctx) {
+    /**
+     * Prepares construction of a new pointer.
+     */
+    @Override
+    public void enterSelector(SeparationLogicParser.SelectorContext ctx) {
 
         lastSelectorSource = lastVariable;
         lastVariable = null;
@@ -164,12 +195,18 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         return variableToNodeId.get(variableUnification.getUniqueName(variableName));
     }
 
+    /**
+     * Prepares construction of a new nonterminal hyperedge.
+     */
     @Override
     public void enterPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
 
         parameters = new ArrayList<>();
     }
 
+    /**
+     * Finishes construction of a nonterminal hyperedge.
+     */
     @Override
     public void exitPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
 
@@ -184,6 +221,9 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         parameters = null;
     }
 
+    /**
+     * Finishes collection of nodes attached to the next nonterminal hyperedge.
+     */
     @Override
     public void exitParameter(SeparationLogicParser.ParameterContext ctx) {
 
@@ -195,6 +235,9 @@ public class HeapConfigurationExtractor extends SeparationLogicBaseListener {
         lastVariable = null;
     }
 
+    /**
+     * Collects the nonterminal label of the next hyperedge.
+     */
     @Override
     public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
 

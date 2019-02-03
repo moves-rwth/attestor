@@ -1,8 +1,6 @@
 package de.rwth.i2.attestor.seplog;
 
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.main.scene.DefaultScene;
-import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -25,18 +23,14 @@ public class InductivePredicatesParser extends SceneObject {
         super(sceneObject);
     }
 
-
+    /**
+     * @param filename Path to the file containing a system of inductive predicate definitions.
+     * @return The constructed grammar.
+     */
     public Grammar parseFromFile(String filename) throws IOException {
 
         return parse(
                 CharStreams.fromFileName(filename)
-        );
-    }
-
-    public Grammar parseFromString(String input) {
-
-        return parse(
-                CharStreams.fromString(input)
         );
     }
 

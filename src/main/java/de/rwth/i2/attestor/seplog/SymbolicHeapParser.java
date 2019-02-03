@@ -19,6 +19,8 @@ import java.io.IOException;
  * This parser requires for every predicate symbol that the
  * scene already contains a corresponding nonterminal symbol
  * whose label matches the predicate symbol.
+ *
+ * @author Christoph
  */
 public class SymbolicHeapParser extends SceneObject {
 
@@ -26,6 +28,11 @@ public class SymbolicHeapParser extends SceneObject {
         super(otherObject);
     }
 
+    /**
+     * @param filename Path to the file containing a symbolic heap.
+     * @param renaming Renaming of types and selectors.
+     * @return The constructed heap configuration.
+     */
     public HeapConfiguration parseFromFile(String filename, HeapConfigurationRenaming renaming) throws IOException {
 
         return parse(

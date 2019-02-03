@@ -100,10 +100,16 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
      */
     private List<String> lastCallParameters;
 
+    /**
+     * @param scene The scene containing all global settings.
+     */
     GrammarExtractor(@Nonnull Scene scene) {
         this.scene = scene;
     }
 
+    /**
+     * @return The constructed grammar.
+     */
     public Grammar getGrammar() {
 
         return grammar;
@@ -112,7 +118,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Sets up creation of a new grammar.
      */
-    @Override public void enterSid(SeparationLogicParser.SidContext ctx) {
+    @Override
+    public void enterSid(SeparationLogicParser.SidContext ctx) {
 
         grammarBuilder = Grammar.builder();
     }
@@ -120,7 +127,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Finishes created of a grammar from the given SID parse tree.
      */
-    @Override public void exitSid(SeparationLogicParser.SidContext ctx) {
+    @Override
+    public void exitSid(SeparationLogicParser.SidContext ctx) {
 
         grammar = grammarBuilder.build();
         grammarBuilder = null;
@@ -129,17 +137,20 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Prepares creation of rules with a new left-hand side.
      */
-    @Override public void enterSidRule(SeparationLogicParser.SidRuleContext ctx) {
+    @Override
+    public void enterSidRule(SeparationLogicParser.SidRuleContext ctx) {
 
         // we reset the current nonterminal here to make sure that the listener
         // picks up the next nonterminal visited, which is the next nonterminal
         // on the left-hand side of rules.
         lhs = null;
     }
+
     /**
      * Finishes creation of rules with the current left-hand side.
      */
-    @Override public void exitSidRule(SeparationLogicParser.SidRuleContext ctx) {
+    @Override
+    public void exitSidRule(SeparationLogicParser.SidRuleContext ctx) {
 
         // cleanup
         lhs = null;
@@ -150,7 +161,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Prepares collection of the names and types of variables corresponding to external nodes.
      */
-    @Override public void enterSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
+    @Override
+    public void enterSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
 
         externalNames = new ArrayList<>();
         externalTypes = new ArrayList<>();
@@ -159,7 +171,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Prepares creation of a new heap configuration as a right-hand side of a grammar rule.
      */
-    @Override public void enterSidRuleBody(SeparationLogicParser.SidRuleBodyContext ctx) {
+    @Override
+    public void enterSidRuleBody(SeparationLogicParser.SidRuleBodyContext ctx) {
 
         heapBuilder = scene.createHeapConfiguration().builder();
         variableToNodeId = new HashMap<>();
@@ -185,7 +198,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Finishes creation of heap configuration serving as the right-hand side of a grammar rule.
      */
-    @Override public void exitSidRuleBody(SeparationLogicParser.SidRuleBodyContext ctx) {
+    @Override
+    public void exitSidRuleBody(SeparationLogicParser.SidRuleBodyContext ctx) {
 
         HeapConfiguration rhs = heapBuilder.build();
 
@@ -198,7 +212,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Finishes variable declaration.
      */
-    @Override public void exitVariableDeclaration(SeparationLogicParser.VariableDeclarationContext ctx) {
+    @Override
+    public void exitVariableDeclaration(SeparationLogicParser.VariableDeclarationContext ctx) {
 
         if(isRightHandSideMode()) {
 
@@ -231,7 +246,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Retrieves the name of a variable.
      */
-    @Override public void enterVariable(SeparationLogicParser.VariableContext ctx) {
+    @Override
+    public void enterVariable(SeparationLogicParser.VariableContext ctx) {
 
         lastVariableName = ctx.getText();
     }
@@ -240,7 +256,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
      * Retrieves the type of a variable declaration.
      *
      */
-    @Override public void enterType(SeparationLogicParser.TypeContext ctx) {
+    @Override
+    public void enterType(SeparationLogicParser.TypeContext ctx) {
 
         lastVariableType = ctx.getText();
     }
@@ -249,7 +266,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
      * Saves the previously encountered variable as the left-hand side of a
      * points-to assertion and stores the encountered selector.
      */
-    @Override public void enterSelector(SeparationLogicParser.SelectorContext ctx) {
+    @Override
+    public void enterSelector(SeparationLogicParser.SelectorContext ctx) {
 
         lastPointsToLhs = lastVariableName;
         lastVariableName = null;
@@ -259,7 +277,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Adds a new pointer.
      */
-    @Override public void exitPointer(SeparationLogicParser.PointerContext ctx) {
+    @Override
+    public void exitPointer(SeparationLogicParser.PointerContext ctx) {
 
         if(lastVariableName == null) {
             throw new UnsupportedOperationException("At the moment, " +
@@ -277,7 +296,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
         lastSelector = null;
     }
 
-    @Override public void enterPure(SeparationLogicParser.PureContext ctx) {
+    @Override
+    public void enterPure(SeparationLogicParser.PureContext ctx) {
 
         throw new UnsupportedOperationException("Pure formulas in SIDs are not supported.");
     }
@@ -285,14 +305,17 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Prepares the creation of a new nonterminal edge corresponding to a predicate call.
      */
-    @Override public void enterPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
+    @Override
+    public void enterPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
 
         lastCallParameters = new ArrayList<>();
     }
+
     /**
      * Finishes the creation of a new nonterminal edge corresponding to a predicate call.
      */
-    @Override public void exitPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
+    @Override
+    public void exitPredicateCall(SeparationLogicParser.PredicateCallContext ctx) {
 
         if(lastCallLabel.getRank() != lastCallParameters.size()) {
             throw new IllegalArgumentException("Predicate '" + lastCallLabel.getLabel()
@@ -315,7 +338,8 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
     /**
      * Adds a parameter to the list of parameters of the currently considered predicate call.
      */
-    @Override public void exitParameter(SeparationLogicParser.ParameterContext ctx) {
+    @Override
+    public void exitParameter(SeparationLogicParser.ParameterContext ctx) {
 
         if(lastVariableName == null) {
             throw new UnsupportedOperationException("At the moment, " +
@@ -323,14 +347,14 @@ public class GrammarExtractor extends SeparationLogicBaseListener {
         }
 
         lastCallParameters.add(lastVariableName);
-
     }
+
     /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
+     * Treats predicate symbols both on the left-hand side of rules
+     * and in the form of predicate calls.
      */
-    @Override public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
+    @Override
+    public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
 
         String label = ctx.getText();
         lastCallLabel = scene.getNonterminal(label);

@@ -38,24 +38,28 @@ class NonterminalCollector extends SeparationLogicBaseListener {
     }
 
 
-    @Override public void enterSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
+    @Override
+    public void enterSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
 
         reductionTentacles = new ArrayList<>();
     }
 
-    @Override public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
+    @Override
+    public void enterPredicateSymbol(SeparationLogicParser.PredicateSymbolContext ctx) {
 
         label = ctx.getText();
     }
 
-    @Override public void enterFreeVariableDeclaration(SeparationLogicParser.FreeVariableDeclarationContext ctx) {
+    @Override
+    public void enterFreeVariableDeclaration(SeparationLogicParser.FreeVariableDeclarationContext ctx) {
 
         // if a free variable is marked as a "reduction tentacle" then there will be an additional
         // context child to indicate this.
         reductionTentacles.add(ctx.getChildCount() > 1);
     }
 
-    @Override public void exitSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
+    @Override
+    public void exitSidRuleHead(SeparationLogicParser.SidRuleHeadContext ctx) {
 
         int rank = reductionTentacles.size();
         boolean[] isReductionTentacle = new boolean[rank];
