@@ -5,7 +5,8 @@
 ![Languages](https://img.shields.io/github/languages/top/moves-rwth/attestor.svg)
 ![Last update](https://img.shields.io/github/last-commit/moves-rwth/attestor.svg)
 
-Attestor is a graph-based tool for analysing Java programs operating on dynamic data structures. It involves the generation of an abstract state space employing user-supplied graph grammars. LTL model checking is then applied to the generated state space, supporting both structural and functional correctness properties. The analysis is fully automated, procedure-modular, and provides visual feedback including counterexamples in case of property violations.
+Attestor is a graph-based tool for analysing Java programs operating on dynamic data structures. It involves the generation of an abstract state space employing user-supplied graph grammars or, alternatively, formulas in a fragment of symbolic heap separation logic. LTL model checking is then applied to the generated state space, supporting both structural and functional correctness properties. The analysis is fully automated, procedure-modular, and provides visual feedback including counterexamples in case of property violations.
+As an alternative to graphs, Attestor also supports a fragment of symbolic heap separation logic with user-supplied inductive predicate definitions as an input.
 
 # Contents
 
@@ -52,6 +53,7 @@ In summary, Attestor's main features can be characterised as follows:
 
 * It employs context-free graph grammars as a formal underpinning for defining heap abstractions. 
 These grammars enable local heap concretisation and thus naturally provide implicit abstract semantics.
+* Alternatively to graph grammars, a fragment of symbolic heap separation logic with inductive predicate definitions is supported as an input language.
 * The full instruction set of Java bytecode is handled. 
 Program actions that are outside the scope of our analysis, such as arithmetic operations or Boolean tests on payload data, are handled by (safe) over-approximation.
 * Specifications are given by linear-time temporal logic (LTL) formulae, which support a rich set of program properties ranging from memory safety over shape, reachability or balancedness to properties such as full traversal or exact preservation of the heap structure.
@@ -69,6 +71,8 @@ The following software has to be installed prior to the installation of Attestor
 - [Java JDK 1.8][3]
 - [Apache Maven][4]
 - Since Attestor uses [soot][13], please make sure that rt.jar is in your `CLASSPATH` and that `JAVA_HOME` is set correctly.
+
+Both the README and the Wiki cover _Attestor version 0.4.0_. Please confer previous revisions for documentation of older versions.
 
 ## Reproducing Benchmarks
 
@@ -128,7 +132,9 @@ In particular, the options allow to pass [linear temporal logic specifications](
 
 It is possible to manually supply [graph grammars](https://github.com/moves-rwth/attestor/wiki/Graph-Grammar-Syntax), [initial heaps](https://github.com/moves-rwth/attestor/wiki/Heap-Configuration-Syntax), and [contracts](https://github.com/moves-rwth/attestor/wiki/Contract-File-Syntax) to Attestor.
 
-Please confer the [respective page](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options) for further details.
+Since version 0.4.0, it is also possible to provide specifications in a restricted fragment of symbolic heap separation logic with inductive predicate definitions. This means that a [symbolic heap](https://github.com/moves-rwth/attestor/wiki/Symbolic-Heap-Syntax) can be supplied as an initial heap. Moreover, a [system of inductive predicate definitions](https://github.com/moves-rwth/attestor/wiki/SID-Syntax) may be supplied instead of a graph grammar. 
+
+Please confer the [respective page](https://github.com/moves-rwth/attestor/wiki/Command-Line-Options) for further details on all options.
 
 ## Graphical User Interface
 
