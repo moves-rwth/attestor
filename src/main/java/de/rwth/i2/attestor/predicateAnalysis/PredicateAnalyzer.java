@@ -2,7 +2,7 @@ package de.rwth.i2.attestor.predicateAnalysis;
 
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.TransformationLog;
+import de.rwth.i2.attestor.graph.heap.internal.TransformationStep;
 import de.rwth.i2.attestor.predicateAnalysis.relativeIndex.RelativeIndex;
 import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.GotoStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -90,38 +90,11 @@ public class PredicateAnalyzer {
     }
 
     private int materializationTransferStep(int parentKey, TAHeapConfiguration heapConf) {
-        TransformationLog transformationLog = heapConf.getTransformationLog();
-        RelativeIndex replacedIndex = assigned.get(parentKey, transformationLog.ntEdge);
-        TIntObjectMap<RelativeIndex> updateFragment = new TIntObjectHashMap<>();
-
-        updateFragment.put(transformationLog.ntEdge, null);
-        TIntObjectMap<RelativeIndex> result = forwardAbstractionRule.apply(replacedIndex, transformationLog.rule);
-        result.forEachEntry((id, index) -> {
-            updateFragment.put(transformationLog.match(id), index);
-            return false;
-        });
-
-        return assigned.update(parentKey, updateFragment);
+        throw new UnsupportedOperationException();
     }
 
 
     private int abstractionTransferStep(int parentKey, TAHeapConfiguration heapConf) {
-        TransformationLog transformationLog = heapConf.getTransformationLog();
-        TIntObjectMap<RelativeIndex> updateFragment = new TIntObjectHashMap<>();
-
-        if (transformationLog != null) {  // no canonicalization
-
-            TIntObjectMap<RelativeIndex> assign = new TIntObjectHashMap<>();
-            transformationLog.rule.nonterminalEdges().forEach(edge -> {
-                int match = transformationLog.match(edge);
-                assign.put(match, assigned.get(parentKey, edge));
-                updateFragment.put(match, null);
-                return true;
-            });
-            RelativeIndex result = backwardAbstractionRule.apply(assign, transformationLog.rule);
-            updateFragment.put(transformationLog.ntEdge, result);
-        }
-
-        return assigned.update(parentKey, updateFragment);
+        throw new UnsupportedOperationException();
     }
 }

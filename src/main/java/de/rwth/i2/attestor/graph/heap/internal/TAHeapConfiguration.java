@@ -3,9 +3,12 @@ package de.rwth.i2.attestor.graph.heap.internal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 // Transformation Aware Heap Configuration
 public class TAHeapConfiguration extends InternalHeapConfiguration {
-    private TransformationLog transformationLog;
+    public final Queue<TransformationStep> transformationHistory = new LinkedList<>();
 
     public TAHeapConfiguration() {
         super();
@@ -13,22 +16,17 @@ public class TAHeapConfiguration extends InternalHeapConfiguration {
 
     public TAHeapConfiguration(TAHeapConfiguration heapConfiguration) {
         super(heapConfiguration);
-        this.transformationLog = heapConfiguration.transformationLog;
+        this.transformationHistory.addAll(heapConfiguration.transformationHistory);
     }
 
     public TAHeapConfiguration getBlankCopy() {
         TAHeapConfiguration copy = new TAHeapConfiguration(this);
-        copy.transformationLog = null;
+        copy.transformationHistory.clear();
         return copy;
     }
 
-    public TransformationLog getTransformationLog() {
-        return transformationLog;
-    }
-
-
-    void setTransformationLog(TransformationLog transformationLog) {
-        this.transformationLog = transformationLog;
+    void addTransformationStep(TransformationStep step) {
+        this.transformationHistory.add(step);
     }
 
 
