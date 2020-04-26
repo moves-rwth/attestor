@@ -84,6 +84,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
         MaterializationStrategy materializationStrategy = new MaterializationStrategyBuilder()
                 .setGrammar(grammar)
+                .setPredicateMode(scene().options().isPredicateMode())
                 .setIndexedMode(scene().options().isIndexedMode())
                 .build();
 
@@ -105,6 +106,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
 
     private void setupAbstractDomain() {
 
+        final boolean predicateMode = scene().options().isPredicateMode();
         final boolean indexedMode = scene().options().isIndexedMode();
 
         AbstractionOptions abstractionOptions = new AbstractionOptions()
@@ -115,6 +117,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         CanonicalizationStrategy canonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setOptions(abstractionOptions)
+                        .setPredicateMode(predicateMode)
                         .setIndexedMode(indexedMode)
                         .setGrammar(grammar)
                         .build();
@@ -128,6 +131,7 @@ public class AbstractionPreprocessingPhase extends AbstractPhase {
         CanonicalizationStrategy aggressiveCanonicalizationStrategy =
                 new CanonicalizationStrategyBuilder()
                         .setOptions(aggressiveOptions)
+                        .setPredicateMode(predicateMode)
                         .setIndexedMode(indexedMode)
                         .setGrammar(grammar)
                         .build();

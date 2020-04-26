@@ -12,20 +12,33 @@ import de.rwth.i2.attestor.programState.indexedState.index.DefaultIndexMateriali
 
 public class MaterializationStrategyBuilder {
 
+    private boolean predicateMode = false;
     private boolean indexedMode = false;
     private Grammar grammar = null;
 
     public MaterializationStrategy build() {
 
-        if(grammar == null) {
+        if (grammar == null) {
             throw new IllegalStateException("No grammar.");
         }
 
-        if(indexedMode) {
+        if (indexedMode) {
             return createIndexedStrategy();
+        } else if (predicateMode) {
+            return createTAStrategy();
         } else {
             return createStrategy();
         }
+    }
+
+    private MaterializationStrategy createTAStrategy() {
+        ViolationPointResolver vioResolver = new ViolationPointResolver(grammar);
+        MaterializationRuleManager grammarManager =
+                new DefaultMaterializationRuleManager(vioResolver);
+        GrammarResponseApplier ruleApplier =
+                new DefaultGrammarResponseApplier(new GraphMaterializer());
+
+        return new TAMaterializationStrategy(grammarManager, ruleApplier);
     }
 
     private MaterializationStrategy createIndexedStrategy() {
@@ -52,6 +65,10 @@ public class MaterializationStrategyBuilder {
                 new DefaultGrammarResponseApplier(new GraphMaterializer());
 
         return new GeneralMaterializationStrategy(grammarManager, ruleApplier);
+    }
+    public MaterializationStrategyBuilder setPredicateMode(boolean enabled) {
+        this.predicateMode = enabled;
+        return this;
     }
 
     public MaterializationStrategyBuilder setIndexedMode(boolean enabled) {

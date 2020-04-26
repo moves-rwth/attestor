@@ -23,6 +23,7 @@ import java.util.Set;
 // TODO
 public class CanonicalizationStrategyBuilder {
 
+    private boolean predicateMode = false;
     private boolean indexedMode = false;
     private Grammar grammar = null;
     private MorphismOptions options;
@@ -45,7 +46,12 @@ public class CanonicalizationStrategyBuilder {
         } else {
             canonicalizationHelper = new DefaultCanonicalizationHelper(checkerProvider);
         }
-        return new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
+        if (predicateMode) {
+            return new TACanonicalizationStrategy(grammar, canonicalizationHelper);
+        }
+        else {
+            return new GeneralCanonicalizationStrategy(grammar, canonicalizationHelper);
+        }
     }
 
     private CanonicalizationHelper getIndexedCanonicalizationHelper(EmbeddingCheckerProvider checkerProvider) {
@@ -92,6 +98,10 @@ public class CanonicalizationStrategyBuilder {
     public CanonicalizationStrategyBuilder setOptions(MorphismOptions options) {
 
         this.options = options;
+        return this;
+    }
+    public CanonicalizationStrategyBuilder setPredicateMode(boolean enabled) {
+        this.predicateMode = enabled;
         return this;
     }
 

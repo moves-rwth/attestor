@@ -139,6 +139,9 @@ public class CommandLinePhase extends AbstractPhase
             case "no-rule-collapsing":
                 noRuleCollapsing();
                 break;
+            case "predicate":
+                predicate();
+                break;
             case "indexed":
                 indexed();
                 break;
@@ -327,6 +330,12 @@ public class CommandLinePhase extends AbstractPhase
 
         logger.info("disabled rule collapsing");
         scene().options().setRuleCollapsingEnabled(false);
+    }
+
+    private void predicate() {
+
+        logger.info("enabled predicate analysis");
+        scene().options().setPredicateModeEnabled(true);
     }
 
     private void indexed() {
