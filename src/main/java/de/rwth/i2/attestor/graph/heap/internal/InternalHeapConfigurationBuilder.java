@@ -20,7 +20,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
     /**
      * The HeapConfiguration that is manipulated by this InternalHeapConfigurationBuilder.
      */
-    private InternalHeapConfiguration heapConf;
+    // access level modified
+    InternalHeapConfiguration heapConf;
 
     /**
      * Creates a new InternalHeapConfigurationBuilder for the provided InternalHeapConfiguration.
@@ -500,7 +501,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
 
         removeNonterminalEdge(ntEdge);
 
-        addReplacementGraph(replacementHc, tentacles);
+        TIntArrayList newElements = computeNewElements(replacementHc, tentacles);
+        addReplacementGraph(replacementHc, newElements);
 
         return this;
     }
@@ -511,13 +513,11 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      *
      * @param replacement The InternalHeapConfiguration that should be added to the underlying
      *                    InternalHeapConfiguration.
-     * @param tentacles   A list of nodes that determines how replacement and the underlying HeapConfiguration are
-     *                    glued together. Thus, we require that replacement.countExternalNodes() equals tentacles.size().
      */
-    private void addReplacementGraph(InternalHeapConfiguration replacement, TIntArrayList tentacles) {
+    // access level modified
+    protected void addReplacementGraph(InternalHeapConfiguration replacement, TIntArrayList newElements) {
 
         int replSize = replacement.graph.size();
-        TIntArrayList newElements = computeNewElements(replacement, tentacles);
 
         // In the second pass we add all selectors for nodes as well as nonterminal hyperedges
         // and their tentacles.
@@ -539,10 +539,10 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
     }
 
     /**
-     * Creates a map that containsSubsumingState the new private IDs assigned to elements of a provided InternalHeapConfiguration
+     * Creates a map that contains the new private IDs assigned to elements of a provided InternalHeapConfiguration
      * that is added to the underlying InternalHeapConfiguration.
      * For all elements except external nodes new private IDs are created.
-     * For each external node, the map containsSubsumingState the private ID of a node in the underlying InternalHeapConfiguration
+     * For each external node, the map contains the private ID of a node in the underlying InternalHeapConfiguration
      * that is merged with it.
      *
      * @param replacement The InternalHeapConfiguration that should be added to the underlying HeapConfiguration.
@@ -550,7 +550,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      *                    merged with the external nodes of replacement.
      * @return A list that maps each element of replacement to its private ID in the underlying HeapConfiguration.
      */
-    private TIntArrayList computeNewElements(InternalHeapConfiguration replacement, TIntArrayList tentacles) {
+    // access level modified
+    protected TIntArrayList computeNewElements(InternalHeapConfiguration replacement, TIntArrayList tentacles) {
 
         int replSize = replacement.graph.size();
         TIntArrayList newElements = new TIntArrayList(replSize);
@@ -829,7 +830,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      * @param matching A mapping from the provided HeapConfiguration to elements of the underlying HeapConfiguration.
      * @param pattern  A HeapConfiguration that is embedded in the underlying HeapConfiguration.
      */
-    private void removeSelectorAndTentacleEdges(InternalMatching matching, InternalHeapConfiguration pattern) {
+    // access level modified
+    void removeSelectorAndTentacleEdges(InternalMatching matching, InternalHeapConfiguration pattern) {
 
         for (int i = 0; i < pattern.graph.size(); i++) {
 
@@ -853,7 +855,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      * @param matching A mapping from the provided HeapConfiguration to elements of the underlying HeapConfiguration.
      * @param pattern  A HeapConfiguration that is embedded in the underlying HeapConfiguration.
      */
-    private void removeNonExternalNodes(InternalMatching matching, InternalHeapConfiguration pattern) {
+    // access level modified
+    void removeNonExternalNodes(InternalMatching matching, InternalHeapConfiguration pattern) {
 
         for (int i = 0; i < pattern.graph.size(); i++) {
 
@@ -883,8 +886,9 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      * @param pattern     A HeapConfiguration that is embedded in the underlying HeapConfiguration.
      * @param nonterminal The label of the added hyperedge.
      */
-    private void addMatchingNonterminalEdge(InternalMatching matching,
-                                            InternalHeapConfiguration pattern, Nonterminal nonterminal) {
+    // return type modified
+    protected int addMatchingNonterminalEdge(InternalMatching matching,
+                                             InternalHeapConfiguration pattern, Nonterminal nonterminal) {
 
         int privateId = getNextPrivateId();
         addPrivatePublicIdPair();
@@ -900,12 +904,16 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
             heapConf.graph.addEdge(privateId, i, t);
         }
         ++heapConf.countNonterminalEdges;
+
+        return privateId;
     }
 
-    private void addMatchingNonterminalEdgeWithCollapsedExternals(InternalMatching matching,
-                                                                  InternalHeapConfiguration pattern,
-                                                                  Nonterminal nonterminal,
-                                                                  TIntArrayList externalIndicesMap) {
+    // access level modified
+    // return type modified
+    protected int addMatchingNonterminalEdgeWithCollapsedExternals(InternalMatching matching,
+                                                                   InternalHeapConfiguration pattern,
+                                                                   Nonterminal nonterminal,
+                                                                   TIntArrayList externalIndicesMap) {
 
         int privateId = getNextPrivateId();
         addPrivatePublicIdPair();
@@ -922,6 +930,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
             heapConf.graph.addEdge(privateId, i, t);
         }
         ++heapConf.countNonterminalEdges;
+
+        return privateId;
     }
 
 
