@@ -147,7 +147,8 @@ public class InternalHeapConfiguration implements HeapConfiguration, Graph {
      *
      * @param hc The InternalHeapConfiguration that should be copied.
      */
-    private InternalHeapConfiguration(InternalHeapConfiguration hc) {
+    // access level modified
+    InternalHeapConfiguration(InternalHeapConfiguration hc) {
 
         countNodes = hc.countNodes;
         countNonterminalEdges = hc.countNonterminalEdges;
