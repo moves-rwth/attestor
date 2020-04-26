@@ -43,6 +43,8 @@ public class Options {
 
     private boolean chainAbstractionEnabled = true;
 
+    private boolean predicateModeEnabled = false;
+
     /**
      * Enabling this option leads to using a program analysis based on indexed hyperedge replacement grammars.
      */
@@ -101,6 +103,8 @@ public class Options {
         this.ruleCollapsingEnabled = ruleCollapsingEnabled;
     }
 
+    public void setPredicateModeEnabled(boolean predicateModeEnabled) {this.predicateModeEnabled = predicateModeEnabled;}
+
     public void setIndexedModeEnabled(boolean indexedModeEnabled) {
         this.indexedModeEnabled = indexedModeEnabled;
     }
@@ -137,6 +141,11 @@ public class Options {
     public boolean isPostprocessingEnabled() {
 
         return postProcessingEnabled && !canonicalEnabled;
+    }
+
+    public boolean isPredicateMode() {
+
+        return predicateModeEnabled;
     }
 
     public boolean isIndexedMode() {
