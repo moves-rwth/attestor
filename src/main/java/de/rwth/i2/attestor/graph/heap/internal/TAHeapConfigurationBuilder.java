@@ -110,10 +110,10 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
     private void saveMaterializationLog(int ntEdge, TIntArrayList newElements, HeapConfiguration replacement) {
         TIntArrayList publicIdMapping = new TIntArrayList(newElements);
         publicIdMapping.transformValues(i -> i == -1 ? -1 : heapConf.getPublicId(i));
-        ((TAHeapConfiguration) heapConf).setTransformationLog(new MaterializationLog(ntEdge, replacement, publicIdMapping));
+        ((TAHeapConfiguration) heapConf).addTransformationStep(new MaterializationStep(ntEdge, replacement, publicIdMapping));
     }
 
     private void saveCanonicalizationLog(int ntEdge, Matching matching) {
-        ((TAHeapConfiguration) heapConf).setTransformationLog(new CanonicalizationLog(ntEdge, matching.pattern(), matching));
+        ((TAHeapConfiguration) heapConf).addTransformationStep(new CanonicalizationStep(ntEdge, matching.pattern(), matching));
     }
 }
