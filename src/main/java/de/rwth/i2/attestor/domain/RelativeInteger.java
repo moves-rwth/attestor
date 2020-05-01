@@ -7,7 +7,7 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Set;
 
-abstract class RelativeInteger {
+public abstract class RelativeInteger {
     abstract Concrete solve();
 
     // ensures that the inner classes are the only subclasses
@@ -134,17 +134,17 @@ abstract class RelativeInteger {
 
     public static class RelativeIntegerSet implements Lattice<RelativeInteger>, RelativeIndexSet<RelativeInteger> {
 
-        public RelativeInteger add(RelativeInteger e1, RelativeInteger e2) {
+        public RelativeInteger add(RelativeInteger i1, RelativeInteger i2) {
             RelativeInteger.Sum s = new RelativeInteger.Sum();
-            s.addTerm(e1, true);
-            s.addTerm(e2, true);
+            s.addTerm(i1, true);
+            s.addTerm(i2, true);
             return s;
         }
 
-        public RelativeInteger subtract(RelativeInteger e1, RelativeInteger e2) {
+        public RelativeInteger subtract(RelativeInteger i1, RelativeInteger i2) {
             RelativeInteger.Sum s = new RelativeInteger.Sum();
-            s.addTerm(e1, true);
-            s.addTerm(e2, false);
+            s.addTerm(i1, true);
+            s.addTerm(i2, false);
             return s;
         }
 
@@ -160,9 +160,9 @@ abstract class RelativeInteger {
         }
 
         @Override
-        public boolean isLessOrEqual(RelativeInteger e1, RelativeInteger e2) {
-            RelativeInteger.Concrete c1 = e1.solve();
-            RelativeInteger.Concrete c2 = e2.solve();
+        public boolean isLessOrEqual(RelativeInteger i1, RelativeInteger i2) {
+            RelativeInteger.Concrete c1 = i1.solve();
+            RelativeInteger.Concrete c2 = i2.solve();
             return c1.constant < c2.constant && c2.vars.containsAll(c1.vars);
         }
 

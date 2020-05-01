@@ -1,11 +1,13 @@
 package de.rwth.i2.attestor.domain;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Map;
 
 public class LinkedAssignMapping<S, I> extends AssignMapping<S, I> {
     private final AssignMapping<S, I> parent;
     private final Map<S, I> fragment;
+    private final Iterator<S> iterator = new LinkedAssignMappingIterator();
 
     public LinkedAssignMapping(AssignMapping<S, I> parent, Map<S, I> fragment) {
         this.parent = parent;
@@ -26,29 +28,34 @@ public class LinkedAssignMapping<S, I> extends AssignMapping<S, I> {
         }
     }
 
+    // Iterable operations
     @Override
-    public Iterator<I> iterator() {
-        Iterator<I> parentIterator = parent != null ? parent.iterator() : null;
+    @Nonnull
+    public Iterator<S> iterator() {
+        return iterator;
+    }
+
+    // Iterator
+    class LinkedAssignMappingIterator implements Iterator<S> {
+        Iterator<S> parentIterator = parent != null ? parent.iterator() : null;
         Iterator<S> fragmentIterator = fragment.keySet().iterator();
 
-        return new Iterator<I>() {
-            @Override
-            public boolean hasNext() {
-                return fragmentIterator.hasNext() || (parentIterator != null && parentIterator.hasNext());
-            }
+        @Override
+        public boolean hasNext() {
+            return fragmentIterator.hasNext() || (parentIterator != null && parentIterator.hasNext());
+        }
 
-            @Override
-            public I next() {
-                if (fragmentIterator.hasNext()) {
-                    return fragment.get(fragmentIterator.next());
-                } else {
-                    if (parentIterator != null && parentIterator.hasNext()) {
-                        return parentIterator.next();
-                    }
+        @Override
+        public S next() {
+            if (fragmentIterator.hasNext()) {
+                return fragmentIterator.next();
+            } else {
+                if (parentIterator != null && parentIterator.hasNext()) {
+                    return parentIterator.next();
                 }
-
-                throw new IllegalStateException("AssignMapping.iterator has no next");
             }
-        };
+
+            throw new IllegalStateException("AssignMapping.iterator has no next");
+        }
     }
 }
