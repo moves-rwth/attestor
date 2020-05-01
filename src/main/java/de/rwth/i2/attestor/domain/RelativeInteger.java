@@ -7,49 +7,16 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.Set;
 
-
-public abstract class RelativeInteger implements Lattice<RelativeInteger>, RelativeIndex<RelativeInteger> {
+abstract class RelativeInteger {
     abstract Concrete solve();
 
-    public RelativeInteger add(RelativeInteger e1, RelativeInteger e2) {
-        Sum s = new Sum();
-        s.addTerm(e1, true);
-        s.addTerm(e2, true);
-        return s;
+    // ensures that the inner classes are the only subclasses
+    private RelativeInteger() {
     }
 
-    public RelativeInteger subtract(RelativeInteger e1, RelativeInteger e2) {
-        Sum s = new Sum();
-        s.addTerm(e1, true);
-        s.addTerm(e2, false);
-        return s;
-    }
+    // TODO(mkh): maybe add public getters (is it needed?)
 
-    // Lattice operations
-    @Override
-    public RelativeInteger leastElement() {
-        return Concrete.ZERO;
-    }
-
-    @Override
-    public RelativeInteger getLeastUpperBound(Set<RelativeInteger> elements) {
-        return new Sum();
-    }
-
-    @Override
-    public boolean isLessOrEqual(RelativeInteger e1, RelativeInteger e2) {
-        Concrete c1 = e1.solve();
-        Concrete c2 = e2.solve();
-        return c1.constant < c2.constant && c2.vars.containsAll(c1.vars);
-    }
-
-    // RelativeIndex operations
-    @Override
-    public RelativeInteger getVariable() {
-        return Variable.generate();
-    }
-
-    public static class Concrete extends RelativeInteger {
+    private static class Concrete extends RelativeInteger {
         private int constant;
         private final TIntSet vars;
 
@@ -66,7 +33,7 @@ public abstract class RelativeInteger implements Lattice<RelativeInteger>, Relat
         // Factory
         public static final Concrete ZERO = get(0, new TIntHashSet());
 
-        public static Concrete get(int constant) {
+        public Concrete get(int constant) {
             return get(constant, new TIntHashSet());
         }
 
@@ -79,7 +46,7 @@ public abstract class RelativeInteger implements Lattice<RelativeInteger>, Relat
         }
     }
 
-    public static class Variable extends RelativeInteger {
+    private static class Variable extends RelativeInteger {
         private final int id;
 
         private Variable(int id) {
@@ -109,15 +76,15 @@ public abstract class RelativeInteger implements Lattice<RelativeInteger>, Relat
         }
     }
 
-    public static class Sum extends RelativeInteger {
+    private static class Sum extends RelativeInteger {
         private final Concrete concrete = Concrete.ZERO;
         private final TIntSet positiveVariables = new TIntHashSet();
         private final TIntSet negativeVariables = new TIntHashSet();
 
-        private Sum() {
+        Sum() {
         }
 
-        private void addTerm(RelativeInteger term, boolean positive) {
+        void addTerm(RelativeInteger term, boolean positive) {
             if (term instanceof Sum) {
                 Sum t = (Sum) term;
 
@@ -164,6 +131,47 @@ public abstract class RelativeInteger implements Lattice<RelativeInteger>, Relat
             } else {
                 throw new IllegalStateException("cannot solve sum due to unresolved variables");
             }
+        }
+    }
+
+    public static class RelativeIntegerSet implements Lattice<RelativeInteger>, RelativeIndexSet<RelativeInteger> {
+
+        public RelativeInteger add(RelativeInteger e1, RelativeInteger e2) {
+            RelativeInteger.Sum s = new RelativeInteger.Sum();
+            s.addTerm(e1, true);
+            s.addTerm(e2, true);
+            return s;
+        }
+
+        public RelativeInteger subtract(RelativeInteger e1, RelativeInteger e2) {
+            RelativeInteger.Sum s = new RelativeInteger.Sum();
+            s.addTerm(e1, true);
+            s.addTerm(e2, false);
+            return s;
+        }
+
+        // Lattice operations
+        @Override
+        public RelativeInteger getLeastElement() {
+            return RelativeInteger.Concrete.ZERO;
+        }
+
+        @Override
+        public RelativeInteger getLeastUpperBound(Set<RelativeInteger> elements) {
+            return new RelativeInteger.Sum();
+        }
+
+        @Override
+        public boolean isLessOrEqual(RelativeInteger e1, RelativeInteger e2) {
+            RelativeInteger.Concrete c1 = e1.solve();
+            RelativeInteger.Concrete c2 = e2.solve();
+            return c1.constant < c2.constant && c2.vars.containsAll(c1.vars);
+        }
+
+        // RelativeIndexSet operations
+        @Override
+        public RelativeInteger getVariable() {
+            return RelativeInteger.Variable.generate();
         }
     }
 }
