@@ -14,8 +14,6 @@ abstract class RelativeInteger {
     private RelativeInteger() {
     }
 
-    // TODO(mkh): maybe add public getters (is it needed?)
-
     private static class Concrete extends RelativeInteger {
         private int constant;
         private final TIntSet vars;
