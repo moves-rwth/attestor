@@ -6,8 +6,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-public class DataFlowGraphImpl<T> implements DataFlowGraph<T> {
-    private final TIntObjectMap<T> values = new TIntObjectHashMap<>();
+public class FlowImpl<T> implements Flow {
     private final TIntSet initials = new TIntHashSet();
     private final TIntSet finals = new TIntHashSet();
     private final TIntObjectMap<TIntSet> flow = new TIntObjectHashMap<>();
@@ -47,20 +46,9 @@ public class DataFlowGraphImpl<T> implements DataFlowGraph<T> {
         addOrRemove(finals, label, isFinal);
     }
 
-    public int addLabel(T value) {
-        int label = values.size();
-        values.put(label, value);
-        return label;
-    }
-
     public void addFlow(int from, int to) {
         add(flow, from, to);
         add(reverseFlow, from, to);
-    }
-
-    @Override
-    public T getNode(int label) {
-        return values.get(label);
     }
 
     @Override
