@@ -6,13 +6,31 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-public class FlowImpl<T> implements Flow {
+public class FlowImpl implements Flow {
     private final TIntSet initials = new TIntHashSet();
     private final TIntSet finals = new TIntHashSet();
     private final TIntObjectMap<TIntSet> flow = new TIntObjectHashMap<>();
     private final TIntObjectMap<TIntSet> reverseFlow = new TIntObjectHashMap<>();
 
-    private void add(TIntObjectMap<TIntSet> map, int from, int to) {
+    public FlowImpl() {
+    }
+
+    public FlowImpl(Flow flow) {
+        this.initials.addAll(flow.getInitial());
+        this.finals.addAll(flow.getFinal());
+
+        flow.getLabels().forEach(from -> {
+            flow.getSuccessors(from).forEach(to -> {
+                add(from, to);
+
+                return true;
+            });
+
+            return true;
+        });
+    }
+
+    private void addToMap(TIntObjectMap<TIntSet> map, int from, int to) {
         if (!map.containsKey(from)) {
             map.put(from, new TIntHashSet());
         }
@@ -20,7 +38,15 @@ public class FlowImpl<T> implements Flow {
         map.get(from).add(to);
     }
 
-    private TIntSet get(TIntObjectMap<TIntSet> map, int label) {
+    private void removeFromMap(TIntObjectMap<TIntSet> map, int from, int to) {
+        if (!map.containsKey(from)) {
+            return;
+        }
+
+        map.get(from).remove(to);
+    }
+
+    private TIntSet getFromMap(TIntObjectMap<TIntSet> map, int label) {
         TIntSet result = map.get(label);
 
         if (result == null) {
@@ -46,9 +72,14 @@ public class FlowImpl<T> implements Flow {
         addOrRemove(finals, label, isFinal);
     }
 
-    public void addFlow(int from, int to) {
-        add(flow, from, to);
-        add(reverseFlow, from, to);
+    public void add(int from, int to) {
+        addToMap(flow, from, to);
+        addToMap(reverseFlow, from, to);
+    }
+
+    public void remove(int from, int to) {
+        removeFromMap(flow, from, to);
+        removeFromMap(reverseFlow, from, to);
     }
 
     @Override
@@ -71,11 +102,11 @@ public class FlowImpl<T> implements Flow {
 
     @Override
     public TIntSet getSuccessors(int label) {
-        return get(flow, label);
+        return getFromMap(flow, label);
     }
 
     @Override
     public TIntSet getPredecessors(int label) {
-        return get(reverseFlow, label);
+        return getFromMap(reverseFlow, label);
     }
 }
