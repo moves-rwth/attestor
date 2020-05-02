@@ -3,16 +3,16 @@ package de.rwth.i2.attestor.dataFlowAnalysis;
 import de.rwth.i2.attestor.domain.Lattice;
 import gnu.trove.set.TIntSet;
 
+import java.util.function.Function;
 
-public interface DataFlowAnalysis<T, D> {
+public interface DataFlowAnalysis<D> {
+    Flow getFlow();
 
-    Lattice<D> getDomain();
+    Lattice<D> getLattice();
 
-    DataFlowGraph<T> getFlowGraph();
+    D getExtremalValue();
 
     TIntSet getExtremalLabels();
 
-    D getExtremalValue(int label);
-
-    D applyTransferFunction(int label);
+    Function<D, D> getTransferFunction(int from, int to);
 }

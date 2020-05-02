@@ -1,10 +1,9 @@
 package de.rwth.i2.attestor.domain;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class RelativeInteger {
@@ -12,6 +11,22 @@ public abstract class RelativeInteger {
 
     // ensures that the inner classes are the only subclasses
     private RelativeInteger() {
+    }
+
+    private static class Variable extends RelativeInteger {
+
+        private Variable() {
+
+        }
+
+        @Override
+        Concrete solve() {
+            throw new IllegalStateException("variable relative-integers cannot be solved");
+        }
+
+        public static Variable generate() {
+            return new Variable();
+        }
     }
 
     private static class Concrete extends RelativeInteger {
@@ -44,45 +59,15 @@ public abstract class RelativeInteger {
         }
     }
 
-    private static class Variable extends RelativeInteger {
-        private final int id;
-
-        private Variable(int id) {
-            this.id = id;
-        }
-
-        @Override
-        Concrete solve() {
-            throw new IllegalStateException("variable relative-integers cannot be solved");
-        }
-
-        // Factory
-        private static final TIntObjectMap<Variable> reserved = new TIntObjectHashMap<>();
-
-        public static Variable generate() {
-            return get(reserved.size());
-        }
-
-        public static Variable get(int id) {
-            if (reserved.containsKey(id)) {
-                return reserved.get(id);
-            } else {
-                Variable variable = new Variable(id);
-                reserved.put(id, variable);
-                return variable;
-            }
-        }
-    }
-
     private static class Sum extends RelativeInteger {
         private final Concrete concrete = Concrete.ZERO;
-        private final TIntSet positiveVariables = new TIntHashSet();
-        private final TIntSet negativeVariables = new TIntHashSet();
+        private final Set<Variable> positiveVariables = new HashSet<>();
+        private final Set<Variable> negativeVariables = new HashSet<>();
 
-        Sum() {
+        private Sum() {
         }
 
-        void addTerm(RelativeInteger term, boolean positive) {
+        private void addTerm(RelativeInteger term, boolean positive) {
             if (term instanceof Sum) {
                 Sum t = (Sum) term;
 
@@ -110,9 +95,9 @@ public abstract class RelativeInteger {
                 Variable t = (Variable) term;
 
                 if (positive) {
-                    positiveVariables.add(t.id);
+                    positiveVariables.add(t);
                 } else {
-                    negativeVariables.add(t.id);
+                    negativeVariables.add(t);
                 }
             } else {
                 throw new IllegalArgumentException("unsupported relative-integer subtype");
@@ -121,7 +106,7 @@ public abstract class RelativeInteger {
 
         @Override
         Concrete solve() {
-            TIntSet variables = new TIntHashSet(positiveVariables);
+            Set<Variable> variables = new HashSet<>(positiveVariables);
             variables.removeAll(negativeVariables);
 
             if (variables.isEmpty()) {
@@ -148,6 +133,14 @@ public abstract class RelativeInteger {
             return s;
         }
 
+        // Partial Order operations
+        @Override
+        public boolean isLessOrEqual(RelativeInteger i1, RelativeInteger i2) {
+            RelativeInteger.Concrete c1 = i1.solve();
+            RelativeInteger.Concrete c2 = i2.solve();
+            return c1.constant < c2.constant && c2.vars.containsAll(c1.vars);
+        }
+
         // Lattice operations
         @Override
         public RelativeInteger getLeastElement() {
@@ -159,16 +152,9 @@ public abstract class RelativeInteger {
             return new RelativeInteger.Sum();
         }
 
-        @Override
-        public boolean isLessOrEqual(RelativeInteger i1, RelativeInteger i2) {
-            RelativeInteger.Concrete c1 = i1.solve();
-            RelativeInteger.Concrete c2 = i2.solve();
-            return c1.constant < c2.constant && c2.vars.containsAll(c1.vars);
-        }
-
         // RelativeIndexSet operations
         @Override
-        public RelativeInteger getVariable() {
+        public RelativeInteger generateVariable() {
             return RelativeInteger.Variable.generate();
         }
     }
