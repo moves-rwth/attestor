@@ -1,23 +1,18 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-
-import gnu.trove.TCollections;
+import de.rwth.i2.attestor.domain.Lattice;
 import gnu.trove.set.TIntSet;
 
-import java.util.function.Function;
 
-public abstract class DataFlowAnalysis<T, D> {
-    private final DataFlowGraph<T> graph;
+public interface DataFlowAnalysis<T, D> {
 
-    public abstract D getExtremalValue(int label);
+    Lattice<D> getDomain();
 
-    public abstract Function<D, D> getTransferFunction(int label);
+    DataFlowGraph<T> getFlowGraph();
 
-    public DataFlowAnalysis(DataFlowGraph<T> graph, TIntSet extremalLabels) {
-        this.graph = graph;
-    }
+    TIntSet getExtremalLabels();
 
-    public DataFlowGraph<T> getGraph() {
-        return graph;
-    }
+    D getExtremalValue(int label);
+
+    D applyTransferFunction(int label);
 }
