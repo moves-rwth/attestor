@@ -6,15 +6,12 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DataFlowGraphImpl<T> implements DataFlowGraph<T> {
-    final List<T> values = new ArrayList<>();
-    final TIntSet initials = new TIntHashSet();
-    final TIntSet finals = new TIntHashSet();
-    final TIntObjectMap<TIntSet> flow = new TIntObjectHashMap<>();
-    final TIntObjectMap<TIntSet> reverseFlow = new TIntObjectHashMap<>();
+    private final TIntObjectMap<T> values = new TIntObjectHashMap<>();
+    private final TIntSet initials = new TIntHashSet();
+    private final TIntSet finals = new TIntHashSet();
+    private final TIntObjectMap<TIntSet> flow = new TIntObjectHashMap<>();
+    private final TIntObjectMap<TIntSet> reverseFlow = new TIntObjectHashMap<>();
 
     private void add(TIntObjectMap<TIntSet> map, int from, int to) {
         if (!map.containsKey(from)) {
@@ -51,8 +48,9 @@ public class DataFlowGraphImpl<T> implements DataFlowGraph<T> {
     }
 
     public int addLabel(T value) {
-        values.add(value);
-        return values.size() - 1;
+        int label = values.size();
+        values.put(label, value);
+        return label;
     }
 
     public void addFlow(int from, int to) {
@@ -66,12 +64,20 @@ public class DataFlowGraphImpl<T> implements DataFlowGraph<T> {
     }
 
     @Override
-    public TIntSet getInitialLabels() {
+    public TIntSet getLabels() {
+        TIntSet result = new TIntHashSet();
+        result.addAll(flow.keySet());
+        result.addAll(reverseFlow.keySet());
+        return TCollections.unmodifiableSet(result);
+    }
+
+    @Override
+    public TIntSet getInitial() {
         return TCollections.unmodifiableSet(initials);
     }
 
     @Override
-    public TIntSet getFinalLabels() {
+    public TIntSet getFinal() {
         return TCollections.unmodifiableSet(finals);
     }
 

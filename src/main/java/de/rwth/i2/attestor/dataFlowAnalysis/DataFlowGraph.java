@@ -5,9 +5,11 @@ import gnu.trove.set.TIntSet;
 public interface DataFlowGraph<T> {
     T getNode(int label);
 
-    TIntSet getInitialLabels();
+    TIntSet getLabels();
 
-    TIntSet getFinalLabels();
+    TIntSet getInitial();
+
+    TIntSet getFinal();
 
     TIntSet getSuccessors(int label);
 
