@@ -1,10 +1,11 @@
-package de.rwth.i2.attestor.dataFlowAnalysis;
+package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
 
+import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowGraphImpl;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 
 public class UntangledDataFlowGraph<T> extends DataFlowGraphImpl<T> {
-    final TIntIntMap untangled = new TIntIntHashMap();
+    private final TIntIntMap untangled = new TIntIntHashMap();
 
     @Override
     public void setInitial(int label, boolean isInitial) {
@@ -20,7 +21,7 @@ public class UntangledDataFlowGraph<T> extends DataFlowGraphImpl<T> {
 
     @Override
     public void addFlow(int from, int to) {
-        if (initials.contains(to)) {
+        if (getInitial().contains(to)) {
             super.addFlow(from, untangled.get(to));
         } else {
             super.addFlow(from, to);
