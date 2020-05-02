@@ -66,14 +66,6 @@ public abstract class AssignMapping<S, I> implements Function<S, I>, Iterable<S>
                 }
             }
 
-            while (m2.iterator().hasNext()) {
-                S s2 = m1.iterator().next();
-
-                if (!targetSet.isLessOrEqual(m1.apply(s2), m2.apply(s2))) {
-                    return false;
-                }
-            }
-
             return true;
         }
     }
