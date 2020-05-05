@@ -8,8 +8,11 @@ import gnu.trove.list.array.TIntArrayList;
 
 // TODO(mkh): refactor duplicates properly
 public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder {
+    TAHeapConfiguration heapConf;
+
     TAHeapConfigurationBuilder(TAHeapConfiguration heapConf) {
         super(heapConf);
+        this.heapConf = heapConf;
     }
 
     @Override
@@ -110,10 +113,10 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
     private void saveMaterializationLog(int ntEdge, TIntArrayList newElements, HeapConfiguration replacement) {
         TIntArrayList publicIdMapping = new TIntArrayList(newElements);
         publicIdMapping.transformValues(i -> i == -1 ? -1 : heapConf.getPublicId(i));
-        ((TAHeapConfiguration) heapConf).addTransformationStep(new MaterializationStep(ntEdge, replacement, publicIdMapping));
+        heapConf.addTransformationStep(new TransformationStep.MaterializationStep(ntEdge, replacement, publicIdMapping));
     }
 
     private void saveCanonicalizationLog(int ntEdge, Matching matching) {
-        ((TAHeapConfiguration) heapConf).addTransformationStep(new CanonicalizationStep(ntEdge, matching.pattern(), matching));
+        heapConf.addTransformationStep(new TransformationStep.CanonicalizationStep(ntEdge, matching.pattern(), matching));
     }
 }

@@ -1,5 +1,7 @@
 package de.rwth.i2.attestor.domain;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Set;
