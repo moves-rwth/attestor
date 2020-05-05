@@ -1,7 +1,5 @@
 package de.rwth.i2.attestor.domain;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Set;
@@ -58,6 +56,7 @@ public abstract class AssignMapping<S, I> implements Function<S, I>, Iterable<S>
             };
         }
 
+        // Partial Order operations
         @Override
         public boolean isLessOrEqual(AssignMapping<S, I> m1, AssignMapping<S, I> m2) {
             while (m1.iterator().hasNext()) {
