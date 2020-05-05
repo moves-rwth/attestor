@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowAnalysis;
+import de.rwth.i2.attestor.dataFlowAnalysis.EquationSolver;
 import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.domain.AssignMapping;
@@ -27,15 +28,18 @@ public class PredicateAnalysis<I, L extends Lattice<I> & RelativeIndexSet<I>>
     private final L indexLattice;
     private final Lattice<AssignMapping<Integer, I>> domainLattice;
     private final IndexAbstractionRule<I> indexAbstractionRule;
+    private final EquationSolver<AssignMapping<Integer, I>> solver;
 
     public PredicateAnalysis(
             int extremalLabel,
             L indexLattice,
             StateSpaceAdapter adapter,
-            IndexAbstractionRule<I> indexAbstractionRule) {
+            IndexAbstractionRule<I> indexAbstractionRule,
+            EquationSolver<AssignMapping<Integer, I>> solver) {
 
         this.extremalLabel = extremalLabel;
         this.indexAbstractionRule = indexAbstractionRule;
+        this.solver = solver;
         this.flow = new UntangledFlow(adapter.flow, extremalLabel);
         this.labelToState = adapter.labelToStateMap;
         this.indexLattice = indexLattice;
@@ -84,6 +88,11 @@ public class PredicateAnalysis<I, L extends Lattice<I> & RelativeIndexSet<I>>
         }
     }
 
+    @Override
+    public TIntObjectMap<AssignMapping<Integer, I>> solve() {
+        return solver.solve(this);
+    }
+
     private Function<AssignMapping<Integer, I>, AssignMapping<Integer, I>>
     generateMaterializationTransferFunction(TAHeapConfiguration heap) {
         final Queue<TransformationStep> history = heap.transformationHistory;
@@ -128,7 +137,13 @@ public class PredicateAnalysis<I, L extends Lattice<I> & RelativeIndexSet<I>>
                 // map current value from actual heap to rule
                 TIntObjectHashMap<I> fragment = new TIntObjectHashMap<I>();
                 for (Integer key : result) {
-                    fragment.put(step.match(key), result.apply(key));
+                    step.getRule().nonterminalEdges().forEach(nt -> {
+                        if (step.match(nt) == key) {
+                            fragment.put(nt, result.apply(key));
+                            return false;
+                        }
+                        return true;
+                    });
                 }
 
                 I newIndex = indexAbstractionRule.abstractBackward(fragment, step.getRule());
