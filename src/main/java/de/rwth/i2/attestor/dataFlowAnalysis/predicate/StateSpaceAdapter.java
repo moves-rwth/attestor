@@ -11,9 +11,16 @@ public class StateSpaceAdapter {
     private final StateSpace stateSpace;
     private final Program program;
     private final Set<Class<? extends SemanticsCommand>> criticalCommands;
+    private final TIntObjectMap<TAProgramState> labelToStateMap = new TIntObjectHashMap<>();
+    private final FlowImpl flow = new FlowImpl();
 
-    final FlowImpl flow = new FlowImpl();
-    final TIntObjectMap<TAProgramState> labelToStateMap = new TIntObjectHashMap<>();
+    public FlowImpl getFlow() {
+        return flow;
+    }
+
+    public TAProgramState getState(int label) {
+        return labelToStateMap.get(label);
+    }
 
     public StateSpaceAdapter(StateSpace stateSpace, Program program,
                              Set<Class<? extends SemanticsCommand>> criticalCommands) {

@@ -8,6 +8,9 @@ import java.util.Map;
 public class AssignMapping<S, I> extends Mapping<S, I> {
     private final Map<S, I> backend = new HashMap<>();
 
+    public AssignMapping() {
+    }
+
     public AssignMapping(Mapping<S, I> assignMapping) {
         for (S key : assignMapping) {
             backend.put(key, assignMapping.apply(key));
