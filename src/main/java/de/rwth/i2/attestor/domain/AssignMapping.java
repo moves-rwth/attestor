@@ -1,73 +1,31 @@
 package de.rwth.i2.attestor.domain;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-public abstract class AssignMapping<S, I> implements Function<S, I>, Iterable<S> {
+public class AssignMapping<S, I> extends Mapping<S, I> {
+    private final Map<S, I> backend = new HashMap<>();
 
-    @Override
-    @Nonnull
-    public Iterator<S> iterator() {
-        return new Iterator<S>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public S next() {
-                return null;
-            }
-        };
+    public AssignMapping(Mapping<S, I> assignMapping) {
+        for (S key : assignMapping) {
+            backend.put(key, assignMapping.apply(key));
+        }
     }
 
-    public static class AssignMappingSet<S, I> implements Lattice<AssignMapping<S, I>> {
-        private final Lattice<I> targetSet;
+    public void assign(S key, I value) {
+        backend.put(key, value);
+    }
 
-        public AssignMappingSet(Lattice<I> targetSet) {
-            this.targetSet = targetSet;
-        }
+    @Override
+    public I apply(S s) {
+        return backend.get(s);
+    }
 
-        // Lattice operations
-        @Override
-        public AssignMapping<S, I> getLeastElement() {
-            return new AssignMapping<S, I>() {
-                @Override
-                public I apply(S s) {
-                    return targetSet.getLeastElement();
-                }
-            };
-        }
-
-        @Override
-        public AssignMapping<S, I> getLeastUpperBound(Set<AssignMapping<S, I>> elements) {
-            return new AssignMapping<S, I>() {
-                @Override
-                public I apply(S s) {
-                    return targetSet.getLeastUpperBound(
-                            elements.stream()
-                                    .map(mapping -> apply(s))
-                                    .collect(Collectors.toSet())
-                    );
-                }
-            };
-        }
-
-        // Partial Order operations
-        @Override
-        public boolean isLessOrEqual(AssignMapping<S, I> m1, AssignMapping<S, I> m2) {
-            while (m1.iterator().hasNext()) {
-                S s1 = m1.iterator().next();
-
-                if (!targetSet.isLessOrEqual(m1.apply(s1), m2.apply(s1))) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+    @Nonnull
+    @Override
+    public Iterator<S> iterator() {
+        return backend.keySet().iterator();
     }
 }
