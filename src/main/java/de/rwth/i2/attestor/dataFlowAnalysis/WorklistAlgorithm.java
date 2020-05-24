@@ -36,7 +36,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
             if (extremalLabels.contains(label)) {
                 analysis.put(label, extremalValue);
             } else {
-                analysis.put(label, lattice.getLeastElement());
+                analysis.put(label, lattice.leastElement());
             }
 
             return true;

@@ -2,18 +2,21 @@ package de.rwth.i2.attestor.domain;
 
 import java.util.Set;
 
-public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
-    public RelativeInteger() {
-        super();
+final public class RelativeInteger {
+    private RelativeInteger() {
+
     }
 
-    public RelativeInteger(int value) {
-        super(new AugmentedInteger(value));
+    public static RelativeIndex<AugmentedInteger> getVariable() {
+        return new RelativeIndex<>();
     }
 
-    public static class RelativeIntegerSet extends RelativeIndexSet<AugmentedInteger> {
+    public static RelativeIndex<AugmentedInteger> get(int value) {
+        return new RelativeIndex<>(new AugmentedInteger(value));
+    }
+
+    public static class RelativeIntegerSet extends RelativeIndex.RelativeIndexSet<AugmentedInteger> {
         private static final Lattice<AugmentedInteger> latticeOp = new Lattice<AugmentedInteger>() {
-
             @Override
             public boolean isLessOrEqual(AugmentedInteger e1, AugmentedInteger e2) {
                 return e1.compareTo(e2) <= 0;
