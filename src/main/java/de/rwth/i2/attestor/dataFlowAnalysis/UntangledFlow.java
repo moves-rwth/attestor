@@ -3,8 +3,8 @@ package de.rwth.i2.attestor.dataFlowAnalysis;
 import gnu.trove.list.array.TIntArrayList;
 
 public class UntangledFlow extends FlowImpl {
-    final int copy;
-    final int untangled;
+    public final int copy;
+    public final int untangled;
 
     public UntangledFlow(FlowImpl flow, int untangle) {
         super(flow);
