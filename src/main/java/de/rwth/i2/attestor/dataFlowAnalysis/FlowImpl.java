@@ -74,12 +74,12 @@ public class FlowImpl implements Flow {
 
     public void add(int from, int to) {
         addToMap(flow, from, to);
-        addToMap(reverseFlow, from, to);
+        addToMap(reverseFlow, to, from);
     }
 
     public void remove(int from, int to) {
         removeFromMap(flow, from, to);
-        removeFromMap(reverseFlow, from, to);
+        removeFromMap(reverseFlow, to, from);
     }
 
     @Override
