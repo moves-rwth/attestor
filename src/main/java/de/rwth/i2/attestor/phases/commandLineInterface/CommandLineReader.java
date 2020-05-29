@@ -355,6 +355,13 @@ public class CommandLineReader {
 
         commandLineOptions.addOption(
                 Option.builder()
+                        .longOpt("predicate")
+                        .desc("Enable Predicate Abstraction Analysis")
+                        .build()
+        );
+
+        commandLineOptions.addOption(
+                Option.builder()
                         .longOpt("indexed")
                         .desc("If one or more of the supplied graph grammars is indexed then this option enables " +
                                 "the use of this index for abstraction and materialization.")

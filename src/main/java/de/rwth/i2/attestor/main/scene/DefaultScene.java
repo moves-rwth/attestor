@@ -6,6 +6,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.SelectorLabel;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.InternalHeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
 import de.rwth.i2.attestor.procedures.Contract;
 import de.rwth.i2.attestor.procedures.Method;
 import de.rwth.i2.attestor.programState.defaultState.DefaultProgramState;
@@ -86,7 +87,11 @@ public class DefaultScene implements Scene {
     @Override
     public HeapConfiguration createHeapConfiguration() {
 
-        return new InternalHeapConfiguration();
+        if (options.isPredicateMode()) {
+            return new TAHeapConfiguration();
+        } else {
+            return new InternalHeapConfiguration();
+        }
     }
 
     @Override
@@ -117,7 +122,7 @@ public class DefaultScene implements Scene {
     @Override
     public Method getOrCreateMethod(String signature) {
 
-        if(methods.containsKey(signature)) {
+        if (methods.containsKey(signature)) {
             return methods.get(signature);
         } else {
             Method result = new ConcreteMethod(signature);
@@ -125,11 +130,11 @@ public class DefaultScene implements Scene {
             return result;
         }
     }
-    
+
     @Override
     public Method getMethodIfPresent(String signature) throws ElementNotPresentException {
 
-        if(methods.containsKey(signature)) {
+        if (methods.containsKey(signature)) {
             return methods.get(signature);
         } else {
             throw new ElementNotPresentException("there is no method with this signature");
