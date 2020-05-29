@@ -41,11 +41,12 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
                     "does not match the rank of the replacement.");
         }
 
+        Nonterminal label = heapConf.labelOf(ntEdge);
         removeNonterminalEdge(ntEdge);
 
         TIntArrayList newElements = computeNewElements(replacementHc, tentacles);
 
-        saveMaterializationLog(ntEdge, newElements, replacementHc);
+        saveMaterializationLog(ntEdge, label, newElements, replacementHc);
         addReplacementGraph(replacementHc, newElements);
 
         return this;
@@ -73,8 +74,8 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
 
         removeNonExternalNodes(internalMatching, pattern);
 
-        int ntEdge = addMatchingNonterminalEdge(internalMatching, pattern, nonterminal);
-        saveCanonicalizationLog(ntEdge, internalMatching);
+        int ntEdge = heapConf.getPublicId(addMatchingNonterminalEdge(internalMatching, pattern, nonterminal));
+        saveCanonicalizationLog(ntEdge, nonterminal, internalMatching);
 
         return this;
     }
@@ -104,19 +105,19 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
         removeNonExternalNodes(internalMatching, pattern);
 
         int ntEdge = addMatchingNonterminalEdgeWithCollapsedExternals(internalMatching, pattern, nonterminal, externalIndicesMap);
-        saveCanonicalizationLog(ntEdge, internalMatching);
+        saveCanonicalizationLog(ntEdge, nonterminal, internalMatching);
 
         return this;
     }
 
 
-    private void saveMaterializationLog(int ntEdge, TIntArrayList newElements, HeapConfiguration replacement) {
+    private void saveMaterializationLog(int ntEdge, Nonterminal label, TIntArrayList newElements, HeapConfiguration replacement) {
         TIntArrayList publicIdMapping = new TIntArrayList(newElements);
         publicIdMapping.transformValues(i -> i == -1 ? -1 : heapConf.getPublicId(i));
-        heapConf.addTransformationStep(new TransformationStep.MaterializationStep(ntEdge, replacement, publicIdMapping));
+        heapConf.addTransformationStep(new TransformationStep.MaterializationStep(ntEdge, label, replacement, publicIdMapping));
     }
 
-    private void saveCanonicalizationLog(int ntEdge, Matching matching) {
-        heapConf.addTransformationStep(new TransformationStep.CanonicalizationStep(ntEdge, matching.pattern(), matching));
+    private void saveCanonicalizationLog(int ntEdge, Nonterminal label, Matching matching) {
+        heapConf.addTransformationStep(new TransformationStep.CanonicalizationStep(ntEdge, label, matching.pattern(), matching));
     }
 }

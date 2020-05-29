@@ -3,14 +3,6 @@ package de.rwth.i2.attestor.domain;
 import java.util.Set;
 
 final public class RelativeInteger {
-    private RelativeInteger() {
-
-    }
-
-    public static RelativeIndex<AugmentedInteger> getVariable() {
-        return new RelativeIndex<>();
-    }
-
     public static RelativeIndex<AugmentedInteger> get(int value) {
         return new RelativeIndex<>(new AugmentedInteger(value));
     }

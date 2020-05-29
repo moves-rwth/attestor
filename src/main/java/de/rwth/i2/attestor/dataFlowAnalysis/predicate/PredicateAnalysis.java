@@ -20,7 +20,6 @@ import java.util.function.Function;
 
 
 public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, RelativeIndex<I>>> {
-
     private final UntangledFlow flow;
     private final int extremalLabel;
     private final Mapping.MappingSet<Integer, RelativeIndex<I>> domainOp;
@@ -38,7 +37,6 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
 
         this.stateSpaceAdapter = adapter;
         this.flow = new UntangledFlow(adapter.getFlow(), extremalLabel);
-
         this.domainOp = new Mapping.MappingSet<>(indexOp);
     }
 
@@ -58,7 +56,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
             @Override
             public RelativeIndex<I> apply(Integer i) {
                 if (super.apply(i) == null) {
-                    assign(i, new RelativeIndex<>());
+                    assign(i, RelativeIndex.getVariable());
                 }
 
                 return super.apply(i);
@@ -72,12 +70,9 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
     }
 
     @Override
-    public Function<
-            Mapping<Integer, RelativeIndex<I>>,
-            Mapping<Integer, RelativeIndex<I>>>
+    public Function<Mapping<Integer, RelativeIndex<I>>, Mapping<Integer, RelativeIndex<I>>>
     getTransferFunction(int from, int to) {
-
-        TAProgramState state = stateSpaceAdapter.getState(to);
+        TAProgramState state = stateSpaceAdapter.getState(to == flow.copy ? flow.untangled : to);
 
         if (state.isMaterialized) {
             return generateMaterializationTransferFunction(state.heap);
@@ -86,9 +81,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
         }
     }
 
-    private Function<
-            Mapping<Integer, RelativeIndex<I>>,
-            Mapping<Integer, RelativeIndex<I>>>
+    private Function<Mapping<Integer, RelativeIndex<I>>, Mapping<Integer, RelativeIndex<I>>>
     generateMaterializationTransferFunction(TAHeapConfiguration heap) {
 
         final Queue<TransformationStep> history = heap.transformationHistory;
@@ -97,11 +90,10 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
             AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
 
             while (!history.isEmpty()) {
-                TransformationStep step = history.element();
+                TransformationStep step = history.remove();
 
                 TIntObjectMap<RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
-                        result.apply(step.getNtEdge()),
-                        step.getRule());
+                        result.apply(step.getNtEdge()), step.getLabel(), step.getRule());
 
                 // map result from rule to actual heap
                 TIntObjectHashMap<RelativeIndex<I>> matchedFragment = new TIntObjectHashMap<>();
@@ -121,9 +113,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
         };
     }
 
-    private Function<
-            Mapping<Integer, RelativeIndex<I>>,
-            Mapping<Integer, RelativeIndex<I>>>
+    private Function<Mapping<Integer, RelativeIndex<I>>, Mapping<Integer, RelativeIndex<I>>>
     generateAbstractionTransferFunction(TAHeapConfiguration heap) {
 
         final Queue<TransformationStep> history = heap.transformationHistory;
@@ -132,7 +122,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
             AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
 
             while (!history.isEmpty()) {
-                TransformationStep step = history.element();
+                TransformationStep step = history.remove();
 
                 // map current value from actual heap to rule
                 TIntObjectHashMap<RelativeIndex<I>> fragment = new TIntObjectHashMap<>();
@@ -142,11 +132,13 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<Mapping<Integer, R
                             fragment.put(nt, result.apply(key));
                             return false;
                         }
+
                         return true;
                     });
                 }
 
-                RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(fragment, step.getRule());
+                RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(
+                        fragment, step.getLabel(), step.getRule());
 
                 // update assign mapping
                 result.assign(step.getNtEdge(), newIndex);

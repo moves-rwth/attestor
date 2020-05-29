@@ -15,11 +15,15 @@ public class RelativeIndex<T> {
     final T concrete;
     final TIntSet variables = new TIntHashSet();
 
+    public static <T> RelativeIndex<T> getVariable() {
+        return new RelativeIndex<>();
+    }
+
     public RelativeIndex(T concrete) {
         this.concrete = concrete;
     }
 
-    public RelativeIndex() {
+    private RelativeIndex() {
         this.concrete = null;
         int id = reservedVariables.max() + 1;
         reservedVariables.add(id);
