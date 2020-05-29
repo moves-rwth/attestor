@@ -16,8 +16,8 @@ import java.util.*;
  */
 public class GrammarBuilder {
 
-    final Map<Nonterminal, Set<HeapConfiguration>> rules = new LinkedHashMap<>();
-    final Map<Nonterminal, Set<CollapsedHeapConfiguration>> collapsedRules = new LinkedHashMap<>();
+    final Map<Nonterminal, List<HeapConfiguration>> rules = new LinkedHashMap<>();
+    final Map<Nonterminal, List<CollapsedHeapConfiguration>> collapsedRules = new LinkedHashMap<>();
 
     public Grammar build() {
 
@@ -26,7 +26,7 @@ public class GrammarBuilder {
 
     private void computeCollapsedRules() {
 
-        for(Map.Entry<Nonterminal, Set<HeapConfiguration>> entry : rules.entrySet()) {
+        for(Map.Entry<Nonterminal, List<HeapConfiguration>> entry : rules.entrySet()) {
 
             Nonterminal nonterminal = entry.getKey();
             boolean[] reductionTentacles = new boolean[nonterminal.getRank()];
@@ -34,11 +34,11 @@ public class GrammarBuilder {
                 reductionTentacles[i] = nonterminal.isReductionTentacle(i);
             }
 
-            Set<CollapsedHeapConfiguration> rhs;
+            List<CollapsedHeapConfiguration> rhs;
             if(collapsedRules.containsKey(nonterminal)) {
                 rhs = collapsedRules.get(nonterminal);
             } else {
-                rhs = new LinkedHashSet<>();
+                rhs = new LinkedList<>();
                 collapsedRules.put(nonterminal, rhs);
             }
 
@@ -56,7 +56,7 @@ public class GrammarBuilder {
     public GrammarBuilder addRule(Nonterminal lhs, HeapConfiguration rhs) {
 
         if (!rules.containsKey(lhs)) {
-            rules.put(lhs, new LinkedHashSet<>());
+            rules.put(lhs, new LinkedList<>());
         }
 
         rules.get(lhs).add(rhs);
@@ -67,7 +67,7 @@ public class GrammarBuilder {
     public GrammarBuilder addRules(Nonterminal lhs, Collection<HeapConfiguration> rightHandSides) {
 
         if (!rules.containsKey(lhs)) {
-            rules.put(lhs, new LinkedHashSet<>());
+            rules.put(lhs, new LinkedList<>());
         }
         rules.get(lhs).addAll(rightHandSides);
         return this;
@@ -90,7 +90,7 @@ public class GrammarBuilder {
     public GrammarBuilder addCollapsedRule(Nonterminal lhs, CollapsedHeapConfiguration rhs) {
 
         if (!collapsedRules.containsKey(lhs)) {
-            collapsedRules.put(lhs, new LinkedHashSet<>());
+            collapsedRules.put(lhs, new LinkedList<>());
         }
         collapsedRules.get(lhs).add(rhs);
         return this;
