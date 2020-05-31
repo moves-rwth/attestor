@@ -26,14 +26,15 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
             case 0:
                 break;
             case 1:
-                result.put(0, indexOp.add(index, RelativeInteger.get(-1)));
+                result.put(3, indexOp.add(index, RelativeInteger.get(-1)));
                 break;
             case 2:
-                result.put(0, indexOp.add(index, RelativeInteger.get(-1)));
-                result.put(1, indexOp.add(index, RelativeInteger.get(-1)));
+                result.put(3, indexOp.add(index, RelativeInteger.get(-1)));
+                result.put(4, indexOp.add(index, RelativeInteger.get(-1)));
                 break;
             default:
-                throw new IllegalArgumentException("Unknown grammar rule");
+//                throw new IllegalArgumentException("Unknown grammar rule");
+                return null;
         }
 
         return result;
@@ -46,12 +47,12 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
             case 0:
                 return RelativeInteger.get(1);
             case 1:
-                return indexOp.add(assign.get(0), RelativeInteger.get(1));
+                return indexOp.add(assign.get(3), RelativeInteger.get(1));
             case 2:
-                return indexOp.add(assign.get(0), assign.get(1));
+                return indexOp.add(assign.get(4), assign.get(3));
             default:
                 // throw new IllegalArgumentException("Unknown grammar rule");
-                return indexOp.identity();
+                return null;
         }
     }
 }

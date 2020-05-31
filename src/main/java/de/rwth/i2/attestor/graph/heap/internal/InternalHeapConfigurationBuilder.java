@@ -589,7 +589,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      *                    InternalHeapConfiguration.
      * @param nodeIdToAdd The private ID of the node that should be added.
      */
-    private void addNodeFromReplacement(InternalHeapConfiguration replacement,
+    // access level and return type modified
+    protected int addNodeFromReplacement(InternalHeapConfiguration replacement,
                                         TIntArrayList newElements, int nodeIdToAdd) {
 
         int privateId = newElements.get(nodeIdToAdd);
@@ -599,6 +600,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
             int to = newElements.get(successors.get(j));
             heapConf.graph.addEdge(privateId, label, to);
         }
+
+        return privateId;
     }
 
     /**
@@ -610,7 +613,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      *                    InternalHeapConfiguration.
      * @param ntIdToAdd   The private ID of the nonterminal edge that should be added.
      */
-    private void addNtEdgeFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int ntIdToAdd) {
+    // access level and return type modified
+    protected int addNtEdgeFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int ntIdToAdd) {
 
         int freshPrivateId = getNextPrivateId();
         addPrivatePublicIdPair();
@@ -621,6 +625,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
             int to = newElements.get(successors.get(j));
             heapConf.graph.addEdge(freshPrivateId, j, to);
         }
+
+        return freshPrivateId;
     }
 
     /**
@@ -632,7 +638,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      *                    underlying Internal HeapConfiguration.
      * @param varIDtoAdd  The private ID of the variable edge in replacement that should be added.
      */
-    private void addVariableFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int varIDtoAdd) {
+    // access level and return type modified
+    protected int addVariableFromReplacement(InternalHeapConfiguration replacement, TIntArrayList newElements, int varIDtoAdd) {
 
         int freshPrivateId = getNextPrivateId();
         addPrivatePublicIdPair();
@@ -640,6 +647,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         heapConf.graph.addNode(replacement.graph.nodeLabelOf(varIDtoAdd), 1, 0);
         ++heapConf.countVariableEdges;
         heapConf.graph.addEdge(freshPrivateId, 1, newElements.get(target));
+
+        return freshPrivateId;
     }
 
     @Override

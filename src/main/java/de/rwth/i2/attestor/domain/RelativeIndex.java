@@ -25,7 +25,7 @@ public class RelativeIndex<T> {
 
     private RelativeIndex() {
         this.concrete = null;
-        int id = reservedVariables.max() + 1;
+        int id = reservedVariables.isEmpty() ? 0 : reservedVariables.max() + 1;
         reservedVariables.add(id);
         variables.add(id);
     }
@@ -80,11 +80,11 @@ public class RelativeIndex<T> {
                 return greatestElement();
             }
 
-            return elements.stream().reduce(identity(), (i1, i2) -> {
+            return elements.stream().reduce(leastElement(), (i1, i2) -> {
 
                 T concrete = latticeOp.getLeastUpperBound(Stream.of(
-                        i1.concrete != null ? i1.concrete : monoidOp.identity(),
-                        i2.concrete != null ? i2.concrete : monoidOp.identity()
+                        i1.concrete != null ? i1.concrete : latticeOp.leastElement(),
+                        i2.concrete != null ? i2.concrete : latticeOp.leastElement()
                 ).collect(Collectors.toSet()));
 
                 TIntSet variables = new TIntHashSet(i1.variables);
@@ -96,6 +96,22 @@ public class RelativeIndex<T> {
 
         @Override
         public boolean isLessOrEqual(RelativeIndex<T> e1, RelativeIndex<T> e2) {
+            if (e1.equals(leastElement())) {
+                return true;
+            }
+
+            if (e2.equals(leastElement())) {
+                return e1.equals(leastElement());
+            }
+
+            if (e1.equals(greatestElement())) {
+                return e2.equals(greatestElement());
+            }
+
+            if (e2.equals(greatestElement())) {
+                return true;
+            }
+
             if (e2.variables.containsAll(e1.variables)) {
                 if (e1.isConcrete() && e2.isConcrete()) {
                     return latticeOp.isLessOrEqual(e1.concrete, e2.concrete);
@@ -131,5 +147,10 @@ public class RelativeIndex<T> {
 
             return new RelativeIndex<>(concrete, variables);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "{" + "concrete=" + concrete + ", variables=" + variables + '}';
     }
 }
