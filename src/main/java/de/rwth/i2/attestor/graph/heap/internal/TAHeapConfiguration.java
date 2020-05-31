@@ -16,7 +16,7 @@ public class TAHeapConfiguration extends InternalHeapConfiguration {
 
     public TAHeapConfiguration(TAHeapConfiguration heapConfiguration) {
         super(heapConfiguration);
-        this.transformationHistory.addAll(heapConfiguration.transformationHistory);
+        // this.transformationHistory.addAll(heapConfiguration.transformationHistory);
     }
 
     public TAHeapConfiguration getBlankCopy() {

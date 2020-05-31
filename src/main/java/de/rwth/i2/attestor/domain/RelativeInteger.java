@@ -26,7 +26,7 @@ final public class RelativeInteger {
 
             @Override
             public AugmentedInteger getLeastUpperBound(Set<AugmentedInteger> elements) {
-                return null;
+                return elements.stream().max(AugmentedInteger::compareTo).orElseGet(this::greatestElement);
             }
         };
 

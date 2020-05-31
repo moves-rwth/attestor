@@ -56,8 +56,10 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
                 analysis.put(to, lattice.getLeastUpperBound(s));
 
                 flow.getSuccessors(to).forEach(successor -> {
-                    worklist.push(new Pair<>(to, successor));
-
+                    Pair<Integer, Integer> n = new Pair<>(to, successor);
+                    if (!worklist.contains(n)) {
+                        worklist.push(n);
+                    }
                     return true;
                 });
             }

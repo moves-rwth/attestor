@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import gnu.trove.list.array.TIntArrayList;
 
-// TODO(mkh): refactor duplicates properly
+// TODO(mkh): refactor duplicates properly (?)
 public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder {
     TAHeapConfiguration heapConf;
 
@@ -46,11 +46,29 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
 
         TIntArrayList newElements = computeNewElements(replacementHc, tentacles);
 
-        saveMaterializationLog(ntEdge, label, newElements, replacementHc);
         addReplacementGraph(replacementHc, newElements);
+        saveMaterializationLog(ntEdge, label, newElements, replacementHc);
 
         return this;
 
+    }
+
+    @Override
+    protected void addReplacementGraph(InternalHeapConfiguration replacement, TIntArrayList newElements) {
+        int replSize = replacement.graph.size();
+
+        // In the second pass we add all selectors for nodes as well as nonterminal hyperedges and their tentacles.
+        for (int i = 0; i < replSize; i++) {
+            if (replacement.isNode(i)) {
+                newElements.set(i, addNodeFromReplacement(replacement, newElements, i));
+
+            } else if (replacement.isNonterminalEdge(i)) {
+                newElements.set(i, addNtEdgeFromReplacement(replacement, newElements, i));
+
+            } else if (replacement.isVariable(i)) {
+                newElements.set(i, addVariableFromReplacement(replacement, newElements, i));
+            }
+        }
     }
 
     @Override

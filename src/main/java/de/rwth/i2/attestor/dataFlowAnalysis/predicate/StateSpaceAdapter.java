@@ -3,12 +3,15 @@ package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
 import de.rwth.i2.attestor.dataFlowAnalysis.FlowImpl;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 import gnu.trove.TCollections;
+import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
