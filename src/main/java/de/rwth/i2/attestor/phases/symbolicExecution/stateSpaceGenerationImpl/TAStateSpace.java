@@ -6,50 +6,42 @@ import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.util.Pair;
+import gnu.trove.list.array.TIntArrayList;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
 
 public class TAStateSpace extends InternalStateSpace {
     private final Map<Pair<ProgramState, ProgramState>, Queue<HeapTransformation>> transformations = new HashMap<>();
+    private final Map<Pair<ProgramState, ProgramState>, Matching> mergers = new HashMap<>();
 
     public TAStateSpace(int capacity) {
         super(capacity);
     }
 
     @Override
-    public boolean addStateIfAbsent(ProgramState state) {
-        if (!super.addStateIfAbsent(state)) {
-            if (!(state.getHeap() instanceof TAHeapConfiguration)) {
-                throw new IllegalArgumentException("TAStateSpace only supports TAHeapConfigurations");
-            }
-
-            TAHeapConfiguration heap = (TAHeapConfiguration) state.getHeap();
-            ProgramState old = getState(state.getStateSpaceId());
-            Matching matching = new IsomorphismChecker(heap, old.getHeap()).getMatching();
-
-            heap.transformationBuffer.get(heap.transformationBuffer.size() - 1).merge(matching);
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
     public void addMaterializationTransition(ProgramState from, ProgramState to) {
         super.addMaterializationTransition(from, to);
-
         saveTransformationBuffer(from, to);
+        saveMerger(from, to);
     }
 
     @Override
     public void addControlFlowTransition(ProgramState from, ProgramState to) {
         super.addControlFlowTransition(from, to);
-
         saveTransformationBuffer(from, to);
+        saveMerger(from, to);
     }
 
     public Queue<HeapTransformation> getTransformationBuffer(ProgramState from, ProgramState to) {
         return new LinkedList<>(transformations.get(new Pair<>(from, to)));
+    }
+
+    public Matching getMerger(ProgramState from, ProgramState to) {
+        return mergers.get(new Pair<>(from, to));
     }
 
     private void saveTransformationBuffer(ProgramState from, ProgramState to) {
@@ -62,5 +54,13 @@ public class TAStateSpace extends InternalStateSpace {
         Queue<HeapTransformation> copy = new LinkedList<>(heap.transformationBuffer);
         heap.transformationBuffer.clear();
         transformations.put(new Pair<>(from, to), copy);
+    }
+
+    private void saveMerger(ProgramState from, ProgramState to) {
+        if (getState(to.getStateSpaceId()) != to) {
+            ProgramState old = getState(to.getStateSpaceId());
+            Matching matching = new IsomorphismChecker(to.getHeap(), old.getHeap()).getMatching();
+            mergers.put(new Pair<>(from, to), matching);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.FlowImpl;
+import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.TAStateSpace;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
@@ -79,6 +80,10 @@ public class StateSpaceAdapter {
 
     public Queue<HeapTransformation> getTransformationBuffer(int from, int to) {
         return stateSpace.getTransformationBuffer(stateSpace.getState(from), stateSpace.getState(to));
+    }
+
+    public Matching getMerger(int from, int to) {
+        return stateSpace.getMerger(stateSpace.getState(from), stateSpace.getState(to));
     }
 
     private void checkCritical(int id) {
