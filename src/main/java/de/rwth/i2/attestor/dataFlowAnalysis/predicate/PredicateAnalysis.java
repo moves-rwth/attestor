@@ -8,17 +8,16 @@ import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.domain.RelativeIndex;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
-import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Queue;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Queue;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     private final UntangledFlow flow;
     private final int extremalLabel;
     private final AssignMapping.MappingSet<Integer, RelativeIndex<I>> domainOp;
-    private RelativeIndex.RelativeIndexSet<I> indexOp;
+    private final RelativeIndex.RelativeIndexSet<I> indexOp;
     private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
     private final StateSpaceAdapter stateSpaceAdapter;
     private final Set<Integer> keySet;
@@ -80,8 +79,8 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     }
 
     @Override
-    public TIntSet getExtremalLabels() {
-        return new TIntHashSet(Collections.singleton(extremalLabel));
+    public Set<Integer> getExtremalLabels() {
+        return Collections.singleton(extremalLabel);
     }
 
     @Override
@@ -108,25 +107,20 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
 
-                TIntObjectMap<RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
+                Map<Integer, RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
                         result.get(step.getNtEdge()), step.getLabel(), step.getRule());
 
-                if (fragment == null) {
-                    continue;
+                // map result from rule to actual heap
+                Map<Integer, RelativeIndex<I>> matchedFragment = new HashMap<>();
+
+                for (Map.Entry<Integer, RelativeIndex<I>> entry : fragment.entrySet()) {
+                    matchedFragment.put(step.ruleToHeap(entry.getKey()), entry.getValue());
                 }
 
-                // map result from rule to actual heap
-                TIntObjectHashMap<RelativeIndex<I>> matchedFragment = new TIntObjectHashMap<>();
-                fragment.forEachEntry((key, value) -> {
-                    matchedFragment.put(step.ruleToHeap(key), value);
-                    return true;
-                });
-
                 // update assign AssignMapping
-                matchedFragment.forEachEntry((key, value) -> {
-                    result.assign(key, value);
-                    return true;
-                });
+                for (Map.Entry<Integer, RelativeIndex<I>> entry : matchedFragment.entrySet()) {
+                    result.assign(entry.getKey(), entry.getValue());
+                }
             }
 
             for (Integer key : result.keySet()) {
@@ -149,7 +143,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
                 // map current value from actual heap to rule
-                TIntObjectHashMap<RelativeIndex<I>> fragment = new TIntObjectHashMap<>();
+                Map<Integer, RelativeIndex<I>> fragment = new HashMap<>();
                 nonterminals.forEach(nt -> {
                     int htr = step.heapToRule(nt);
 

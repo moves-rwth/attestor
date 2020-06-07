@@ -6,8 +6,9 @@ import de.rwth.i2.attestor.domain.RelativeInteger;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex<AugmentedInteger>> {
     private final Grammar grammar;
@@ -19,9 +20,9 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
     }
 
     @Override
-    public TIntObjectMap<RelativeIndex<AugmentedInteger>>
+    public Map<Integer, RelativeIndex<AugmentedInteger>>
     abstractForward(RelativeIndex<AugmentedInteger> index, Nonterminal nt, HeapConfiguration rule) {
-        TIntObjectHashMap<RelativeIndex<AugmentedInteger>> result = new TIntObjectHashMap<>();
+        HashMap<Integer, RelativeIndex<AugmentedInteger>> result = new HashMap<>();
         switch (grammar.getRulePosition(nt, rule)) {
             case 0:
                 break;
@@ -33,8 +34,7 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
                 result.put(4, indexOp.add(index, RelativeInteger.get(-1)));
                 break;
             default:
-//                throw new IllegalArgumentException("Unknown grammar rule");
-                return null;
+                throw new IllegalArgumentException("Unknown grammar rule");
         }
 
         return result;
@@ -42,7 +42,7 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
 
     @Override
     public RelativeIndex<AugmentedInteger>
-    abstractBackward(TIntObjectMap<RelativeIndex<AugmentedInteger>> assign, Nonterminal nt, HeapConfiguration rule) {
+    abstractBackward(Map<Integer, RelativeIndex<AugmentedInteger>> assign, Nonterminal nt, HeapConfiguration rule) {
         switch (grammar.getRulePosition(nt, rule)) {
             case 0:
                 return RelativeInteger.get(1);
@@ -51,8 +51,7 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
             case 2:
                 return indexOp.add(assign.get(4), assign.get(3));
             default:
-                // throw new IllegalArgumentException("Unknown grammar rule");
-                return null;
+                throw new IllegalArgumentException("Unknown grammar rule");
         }
     }
 }

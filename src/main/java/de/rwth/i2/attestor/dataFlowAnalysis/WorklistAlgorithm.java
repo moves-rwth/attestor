@@ -6,41 +6,31 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public final class WorklistAlgorithm<D> implements EquationSolver<D> {
     @Override
-    public TIntObjectMap<D> solve(DataFlowAnalysis<D> framework) {
+    public Map<Integer, D> solve(DataFlowAnalysis<D> framework) {
         Flow flow = framework.getFlow();
         Lattice<D> lattice = framework.getLattice();
         D extremalValue = framework.getExtremalValue();
-        TIntSet extremalLabels = framework.getExtremalLabels();
+        Set<Integer> extremalLabels = framework.getExtremalLabels();
 
-        TIntObjectMap<D> analysis = new TIntObjectHashMap<>();
+        Map<Integer, D> analysis = new HashMap<>();
         Stack<Pair<Integer, Integer>> worklist = new Stack<>();
 
         // initialization
-        flow.getLabels().forEach(from -> {
-            flow.getSuccessors(from).forEach(to -> {
-                worklist.add(new Pair<>(from, to));
+        for (Integer label : flow.getLabels()) {
+            for (Integer successor : flow.getSuccessors(label)) {
+                worklist.add(new Pair<>(label, successor));
+            }
 
-                return true;
-            });
-
-            return true;
-        });
-
-        flow.getLabels().forEach(label -> {
             if (extremalLabels.contains(label)) {
                 analysis.put(label, extremalValue);
             } else {
                 analysis.put(label, lattice.leastElement());
             }
-
-            return true;
-        });
+        }
 
         // iteration
         while (!worklist.isEmpty()) {
@@ -55,13 +45,12 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
                 s.add(outState);
                 analysis.put(to, lattice.getLeastUpperBound(s));
 
-                flow.getSuccessors(to).forEach(successor -> {
+                for (Integer successor : flow.getSuccessors(to)) {
                     Pair<Integer, Integer> n = new Pair<>(to, successor);
                     if (!worklist.contains(n)) {
                         worklist.push(n);
                     }
-                    return true;
-                });
+                }
             }
         }
 

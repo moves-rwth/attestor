@@ -1,7 +1,7 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import gnu.trove.map.TIntObjectMap;
+import java.util.Map;
 
 public interface EquationSolver<D> {
-    TIntObjectMap<D> solve(DataFlowAnalysis<D> framework);
+    Map<Integer, D> solve(DataFlowAnalysis<D> framework);
 }
