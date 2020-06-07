@@ -51,6 +51,12 @@ public class RelativeIndex<T> {
 
         RelativeIndex<?> other = (RelativeIndex<?>) obj;
 
+        if (this.concrete == null || other.concrete == null) {
+            if (this.concrete != other.concrete) {
+                return false;
+            }
+        }
+
         return this.concrete.equals(other.concrete) && this.variables.equals(other.variables);
     }
 

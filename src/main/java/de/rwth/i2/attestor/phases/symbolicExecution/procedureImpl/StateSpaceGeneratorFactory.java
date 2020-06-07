@@ -5,12 +5,13 @@ import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.main.scene.SceneObject;
 import de.rwth.i2.attestor.main.scene.Strategies;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.InternalStateSpace;
+import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.TAStateSpace;
 import de.rwth.i2.attestor.phases.symbolicExecution.utilStrategies.*;
 import de.rwth.i2.attestor.stateSpaceGeneration.*;
 
 import java.util.List;
 
-public class StateSpaceGeneratorFactory extends SceneObject{
+public class StateSpaceGeneratorFactory extends SceneObject {
 
     public StateSpaceGeneratorFactory(Scene scene) {
         super(scene);
@@ -63,7 +64,13 @@ public class StateSpaceGeneratorFactory extends SceneObject{
                         scene()::addNumberOfGeneratedStates
                 )
                 .setStateExplorationStrategy(new DepthFirstStateExplorationStrategy())
-                .setStateSpaceSupplier(() -> new InternalStateSpace(scene().options().getMaxStateSpace()))
+                .setStateSpaceSupplier(() -> {
+                    if (scene().options().isPredicateMode()) {
+                        return new TAStateSpace(scene().options().getMaxStateSpace());
+                    } else {
+                        return new InternalStateSpace(scene().options().getMaxStateSpace());
+                    }
+                })
                 .setPostProcessingStrategy(getPostProcessingStrategy())
                 .setFinalStateStrategy(new TerminalStatementFinalStateStrategy())
                 ;
@@ -92,7 +99,7 @@ public class StateSpaceGeneratorFactory extends SceneObject{
 
     public StateSpaceGenerator create(Program program, ProgramState initialState, StateSpace stateSpace) {
 
-        if(stateSpace == null) {
+        if (stateSpace == null) {
             throw new IllegalArgumentException("Attempt to continue state space generation with empty state space.");
         }
 
