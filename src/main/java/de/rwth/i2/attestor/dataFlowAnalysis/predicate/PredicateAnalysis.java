@@ -6,8 +6,10 @@ import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.domain.RelativeIndex;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
-import de.rwth.i2.attestor.graph.heap.internal.TransformationStep;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
@@ -25,6 +27,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     private final UntangledFlow flow;
     private final int extremalLabel;
     private final AssignMapping.MappingSet<Integer, RelativeIndex<I>> domainOp;
+    private RelativeIndex.RelativeIndexSet<I> indexOp;
     private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
     private final StateSpaceAdapter stateSpaceAdapter;
     private final Set<Integer> keySet;
@@ -42,11 +45,12 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         this.flow = new UntangledFlow(adapter.getFlow(), extremalLabel);
 
         TIntSet keySet = new TIntHashSet();
-        for (TAProgramState state : adapter) {
-            keySet.addAll(state.heap.nonterminalEdges());
+        for (ProgramState state : adapter.getStates()) {
+            keySet.addAll(state.getHeap().nonterminalEdges());
         }
 
         this.keySet = Arrays.stream(keySet.toArray()).boxed().collect(Collectors.toSet());
+        this.indexOp = indexOp;
         this.domainOp = new AssignMapping.MappingSet<>(this.keySet, indexOp);
     }
 
@@ -65,7 +69,11 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(keySet);
 
         for (Integer key : keySet) {
-            result.put(key, RelativeIndex.getVariable());
+            if (stateSpaceAdapter.getState(extremalLabel).getHeap().nonterminalEdges().contains(key)) {
+                result.put(key, RelativeIndex.getVariable());
+            } else {
+                result.put(key, indexOp.leastElement());
+            }
         }
 
         return result;
@@ -79,26 +87,26 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     @Override
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
     getTransferFunction(int from, int to) {
-        TAProgramState state = stateSpaceAdapter.getState(to == flow.copy ? flow.untangled : to);
+        int untangledTo = (to == flow.copy ? flow.untangled : to);
+        Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
+        HeapConfiguration heapFrom = stateSpaceAdapter.getState(from).getHeap();
+        HeapConfiguration heapTo = stateSpaceAdapter.getState(untangledTo).getHeap();
 
-        if (state.isMaterialized) {
-            return generateMaterializationTransferFunction(state.heap);
+        if (stateSpaceAdapter.isMaterialized(untangledTo)) {
+            return generateMaterializationTransferFunction(heapFrom, heapTo, buffer);
         } else {
-            return generateAbstractionTransferFunction(state.heap);
+            return generateAbstractionTransferFunction(heapFrom, heapTo, buffer);
         }
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateMaterializationTransferFunction(TAHeapConfiguration heap) {
-
-        final Queue<TransformationStep> history = heap.transformationHistory;
+    generateMaterializationTransferFunction(HeapConfiguration heapFrom, HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer) {
 
         return assign -> {
             AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
 
-            while (!history.isEmpty()) {
-                TAHeapConfiguration h = heap;
-                TransformationStep step = history.remove();
+            while (!transformationBuffer.isEmpty()) {
+                HeapTransformation step = transformationBuffer.remove();
 
                 TIntObjectMap<RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
                         result.get(step.getNtEdge()), step.getLabel(), step.getRule());
@@ -110,10 +118,9 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
                 // map result from rule to actual heap
                 TIntObjectHashMap<RelativeIndex<I>> matchedFragment = new TIntObjectHashMap<>();
                 fragment.forEachEntry((key, value) -> {
-                    matchedFragment.put(step.match(key), value);
+                    matchedFragment.put(step.ruleToHeap(key), value);
                     return true;
                 });
-
 
                 // update assign AssignMapping
                 matchedFragment.forEachEntry((key, value) -> {
@@ -122,33 +129,36 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
                 });
             }
 
+            for (Integer key : result.keySet()) {
+                if (!heapTo.nonterminalEdges().contains(key)) {
+                    result.put(key, indexOp.leastElement());
+                }
+            }
+
             return result;
         };
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateAbstractionTransferFunction(TAHeapConfiguration heap) {
-
-        final Queue<TransformationStep> history = heap.transformationHistory;
+    generateAbstractionTransferFunction(HeapConfiguration heapFrom, HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer) {
 
         return assign -> {
             AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
+            TIntSet nonterminals = new TIntHashSet(heapFrom.nonterminalEdges());
 
-            while (!history.isEmpty()) {
-                TransformationStep step = history.remove();
-
+            while (!transformationBuffer.isEmpty()) {
+                HeapTransformation step = transformationBuffer.remove();
                 // map current value from actual heap to rule
                 TIntObjectHashMap<RelativeIndex<I>> fragment = new TIntObjectHashMap<>();
-                for (Integer key : result.keySet()) {
-                    step.getRule().nonterminalEdges().forEach(nt -> {
-                        if (step.match(nt) == key) {
-                            fragment.put(nt, result.get(key));
-                            return false;
-                        }
+                nonterminals.forEach(nt -> {
+                    int htr = step.heapToRule(nt);
 
-                        return true;
-                    });
-                }
+                    if (htr != -1) {
+                        fragment.put(step.heapToRule(nt), result.get(nt));
+                    }
+
+                    return true;
+                });
 
                 RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(
                         fragment, step.getLabel(), step.getRule());
@@ -159,6 +169,13 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
 
                 // update assign AssignMapping
                 result.assign(step.getNtEdge(), newIndex);
+                nonterminals.add(step.getNtEdge());
+            }
+
+            for (Integer key : result.keySet()) {
+                if (!heapTo.nonterminalEdges().contains(key)) {
+                    result.put(key, indexOp.leastElement());
+                }
             }
 
             return result;
