@@ -1,16 +1,16 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import gnu.trove.TCollections;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class FlowImpl implements Flow {
-    private final TIntSet initials = new TIntHashSet();
-    private final TIntSet finals = new TIntHashSet();
-    private final TIntObjectMap<TIntSet> flow = new TIntObjectHashMap<>();
-    private final TIntObjectMap<TIntSet> reverseFlow = new TIntObjectHashMap<>();
+    private final Set<Integer> initials = new HashSet<>();
+    private final Set<Integer> finals = new HashSet<>();
+    private final Map<Integer, Set<Integer>> flow = new HashMap<>();
+    private final Map<Integer, Set<Integer>> reverseFlow = new HashMap<>();
 
     public FlowImpl() {
     }
@@ -19,26 +19,22 @@ public class FlowImpl implements Flow {
         this.initials.addAll(flow.getInitial());
         this.finals.addAll(flow.getFinal());
 
-        flow.getLabels().forEach(from -> {
-            flow.getSuccessors(from).forEach(to -> {
+        for (Integer from : flow.getLabels()) {
+            for (Integer to : flow.getSuccessors(from)) {
                 add(from, to);
-
-                return true;
-            });
-
-            return true;
-        });
+            }
+        }
     }
 
-    private void addToMap(TIntObjectMap<TIntSet> map, int from, int to) {
+    private void addToMap(Map<Integer, Set<Integer>> map, int from, int to) {
         if (!map.containsKey(from)) {
-            map.put(from, new TIntHashSet());
+            map.put(from, new HashSet<>());
         }
 
         map.get(from).add(to);
     }
 
-    private void removeFromMap(TIntObjectMap<TIntSet> map, int from, int to) {
+    private void removeFromMap(Map<Integer, Set<Integer>> map, int from, int to) {
         if (!map.containsKey(from)) {
             return;
         }
@@ -46,17 +42,17 @@ public class FlowImpl implements Flow {
         map.get(from).remove(to);
     }
 
-    private TIntSet getFromMap(TIntObjectMap<TIntSet> map, int label) {
-        TIntSet result = map.get(label);
+    private Set<Integer> getFromMap(Map<Integer, Set<Integer>> map, int label) {
+        Set<Integer> result = map.get(label);
 
         if (result == null) {
-            result = new TIntHashSet();
+            result = new HashSet<>();
         }
 
-        return TCollections.unmodifiableSet(result);
+        return Collections.unmodifiableSet(result);
     }
 
-    private void addOrRemove(TIntSet set, int label, boolean add) {
+    private void addOrRemove(Set<Integer> set, int label, boolean add) {
         if (add) {
             set.add(label);
         } else {
@@ -83,30 +79,30 @@ public class FlowImpl implements Flow {
     }
 
     @Override
-    public TIntSet getLabels() {
-        TIntSet result = new TIntHashSet();
+    public Set<Integer> getLabels() {
+        Set<Integer> result = new HashSet<>();
         result.addAll(flow.keySet());
         result.addAll(reverseFlow.keySet());
-        return TCollections.unmodifiableSet(result);
+        return Collections.unmodifiableSet(result);
     }
 
     @Override
-    public TIntSet getInitial() {
-        return TCollections.unmodifiableSet(initials);
+    public Set<Integer> getInitial() {
+        return Collections.unmodifiableSet(initials);
     }
 
     @Override
-    public TIntSet getFinal() {
-        return TCollections.unmodifiableSet(finals);
+    public Set<Integer> getFinal() {
+        return Collections.unmodifiableSet(finals);
     }
 
     @Override
-    public TIntSet getSuccessors(int label) {
+    public Set<Integer> getSuccessors(int label) {
         return getFromMap(flow, label);
     }
 
     @Override
-    public TIntSet getPredecessors(int label) {
+    public Set<Integer> getPredecessors(int label) {
         return getFromMap(reverseFlow, label);
     }
 }

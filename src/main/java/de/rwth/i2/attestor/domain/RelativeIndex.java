@@ -1,19 +1,16 @@
 package de.rwth.i2.attestor.domain;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.linked.TIntLinkedList;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RelativeIndex<T> {
-    private static final TIntList reservedVariables = new TIntLinkedList();
+    private static final Set<Integer> reservedVariables = new HashSet<>();
 
     final T concrete;
-    final TIntSet variables = new TIntHashSet();
+    final Set<Integer> variables = new HashSet<>();
 
     public static <T> RelativeIndex<T> getVariable() {
         return new RelativeIndex<>();
@@ -25,15 +22,15 @@ public class RelativeIndex<T> {
 
     private RelativeIndex() {
         this.concrete = null;
-        int id = reservedVariables.isEmpty() ? 0 : reservedVariables.max() + 1;
+        int id = reservedVariables.isEmpty() ? 0 : Collections.max(reservedVariables) + 1;
         reservedVariables.add(id);
         variables.add(id);
     }
 
-    RelativeIndex(T concrete, TIntSet variables) {
+    RelativeIndex(T concrete, Set<Integer> variables) {
         this.concrete = concrete;
         if (reservedVariables.containsAll(variables)) {
-            variables.addAll(variables);
+            this.variables.addAll(variables);
         } else {
             throw new IllegalArgumentException("Constructing a relative index using unreserved variables is not allowed");
         }
@@ -93,7 +90,7 @@ public class RelativeIndex<T> {
                         i2.concrete != null ? i2.concrete : latticeOp.leastElement()
                 ).collect(Collectors.toSet()));
 
-                TIntSet variables = new TIntHashSet(i1.variables);
+                Set<Integer> variables = new HashSet<>(i1.variables);
                 variables.addAll(i2.variables);
 
                 return new RelativeIndex<>(concrete, variables);
@@ -148,7 +145,7 @@ public class RelativeIndex<T> {
                     e1.concrete != null ? e1.concrete : monoidOp.identity()
             );
 
-            TIntSet variables = new TIntHashSet(e1.variables);
+            Set<Integer> variables = new HashSet<>(e1.variables);
             variables.addAll(e2.variables);
 
             return new RelativeIndex<>(concrete, variables);

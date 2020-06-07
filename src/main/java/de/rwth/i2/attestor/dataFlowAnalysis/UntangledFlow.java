@@ -1,6 +1,6 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import gnu.trove.list.array.TIntArrayList;
+import java.util.Collections;
 
 public class UntangledFlow extends FlowImpl {
     public final int copy;
@@ -9,14 +9,12 @@ public class UntangledFlow extends FlowImpl {
     public UntangledFlow(FlowImpl flow, int untangle) {
         super(flow);
         this.untangled = untangle;
-        this.copy = new TIntArrayList(getLabels().toArray()).max() + 1;
+        this.copy = Collections.max(getLabels()) + 1;
 
-        getPredecessors(untangle).forEach(l -> {
-            remove(l, untangle);
-            add(l, copy);
-
-            return true;
-        });
+        for (Integer predecessor : getPredecessors(untangle)) {
+            remove(predecessor, untangle);
+            add(predecessor, copy);
+        }
     }
 
     public void add(int from, int to) {

@@ -1,15 +1,15 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import gnu.trove.set.TIntSet;
+import java.util.Set;
 
 public interface Flow {
-    TIntSet getLabels();
+    Set<Integer> getLabels();
 
-    TIntSet getInitial();
+    Set<Integer> getInitial();
 
-    TIntSet getFinal();
+    Set<Integer> getFinal();
 
-    TIntSet getSuccessors(int label);
+    Set<Integer> getSuccessors(int label);
 
-    TIntSet getPredecessors(int label);
+    Set<Integer> getPredecessors(int label);
 }

@@ -3,11 +3,13 @@ package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
 import de.rwth.i2.attestor.dataFlowAnalysis.FlowImpl;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.TAStateSpace;
-import de.rwth.i2.attestor.stateSpaceGeneration.*;
-import gnu.trove.TCollections;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
+import de.rwth.i2.attestor.stateSpaceGeneration.Program;
+import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
+import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
+import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
@@ -16,8 +18,8 @@ public class StateSpaceAdapter {
     private final Program program;
     private final Set<Class<? extends SemanticsCommand>> criticalCommands;
 
-    private final TIntSet materialized = new TIntHashSet();
-    private final TIntSet criticalLabels = new TIntHashSet();
+    private final Set<Integer> materialized = new HashSet<>();
+    private final Set<Integer> criticalLabels = new HashSet<>();
     private final FlowImpl flow = new FlowImpl();
 
     public StateSpaceAdapter(StateSpace stateSpace, Program program,
@@ -71,8 +73,8 @@ public class StateSpaceAdapter {
         return materialized.contains(stateSpace.getState(label).getStateSpaceId());
     }
 
-    public TIntSet getCriticalLabels() {
-        return TCollections.unmodifiableSet(criticalLabels);
+    public Set<Integer> getCriticalLabels() {
+        return Collections.unmodifiableSet(criticalLabels);
     }
 
     public Queue<HeapTransformation> getTransformationBuffer(int from, int to) {
