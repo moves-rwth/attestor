@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.domain.RelativeIndex;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.set.TIntSet;
@@ -65,13 +66,13 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
 
     @Override
     public AssignMapping<Integer, RelativeIndex<I>> getExtremalValue() {
-        AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(keySet);
+        AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>();
 
         for (Integer key : keySet) {
             if (stateSpaceAdapter.getState(extremalLabel).getHeap().nonterminalEdges().contains(key)) {
-                result.put(key, RelativeIndex.getVariable());
+                result.assign(key, RelativeIndex.getVariable());
             } else {
-                result.put(key, indexOp.leastElement());
+                result.assign(key, indexOp.leastElement());
             }
         }
 
@@ -87,92 +88,98 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
     getTransferFunction(int from, int to) {
         int untangledTo = (to == flow.copy ? flow.untangled : to);
+        Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
         Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
-        HeapConfiguration heapFrom = stateSpaceAdapter.getState(from).getHeap();
         HeapConfiguration heapTo = stateSpaceAdapter.getState(untangledTo).getHeap();
 
         if (stateSpaceAdapter.isMaterialized(untangledTo)) {
-            return generateMaterializationTransferFunction(heapFrom, heapTo, buffer);
+            return generateMaterializationTransferFunction(heapTo, buffer, merger);
         } else {
-            return generateAbstractionTransferFunction(heapFrom, heapTo, buffer);
+            return generateAbstractionTransferFunction(heapTo, buffer, merger);
         }
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateMaterializationTransferFunction(HeapConfiguration heapFrom, HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer) {
+    generateMaterializationTransferFunction(HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
-            AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
+            final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
 
+                // apply rule
                 Map<Integer, RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
                         result.get(step.getNtEdge()), step.getLabel(), step.getRule());
 
                 // map result from rule to actual heap
                 Map<Integer, RelativeIndex<I>> matchedFragment = new HashMap<>();
-
                 for (Map.Entry<Integer, RelativeIndex<I>> entry : fragment.entrySet()) {
                     matchedFragment.put(step.ruleToHeap(entry.getKey()), entry.getValue());
                 }
 
                 // update assign AssignMapping
+                result.assign(step.getNtEdge(), null);
                 for (Map.Entry<Integer, RelativeIndex<I>> entry : matchedFragment.entrySet()) {
                     result.assign(entry.getKey(), entry.getValue());
                 }
             }
 
-            for (Integer key : result.keySet()) {
-                if (!heapTo.nonterminalEdges().contains(key)) {
-                    result.put(key, indexOp.leastElement());
-                }
-            }
+            finalizeResult(merger, result);
 
             return result;
         };
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateAbstractionTransferFunction(HeapConfiguration heapFrom, HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer) {
+    generateAbstractionTransferFunction(HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
-            AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
-            TIntSet nonterminals = new TIntHashSet(heapFrom.nonterminalEdges());
+            final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
+
                 // map current value from actual heap to rule
                 Map<Integer, RelativeIndex<I>> fragment = new HashMap<>();
-                nonterminals.forEach(nt -> {
-                    int htr = step.heapToRule(nt);
-
-                    if (htr != -1) {
-                        fragment.put(step.heapToRule(nt), result.get(nt));
-                    }
-
+                step.getRule().nonterminalEdges().forEach(nt -> {
+                    fragment.put(nt, result.get(step.ruleToHeap(nt)));
                     return true;
                 });
 
+
+                // apply rule
                 RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(
                         fragment, step.getLabel(), step.getRule());
 
-                if (newIndex == null) {
-                    continue;
-                }
-
                 // update assign AssignMapping
+                for (Integer nt : fragment.keySet()) {
+                    result.assign(step.ruleToHeap(nt), null);
+                }
+
                 result.assign(step.getNtEdge(), newIndex);
-                nonterminals.add(step.getNtEdge());
             }
 
-            for (Integer key : result.keySet()) {
-                if (!heapTo.nonterminalEdges().contains(key)) {
-                    result.put(key, indexOp.leastElement());
-                }
-            }
+            finalizeResult(merger, result);
 
             return result;
         };
+    }
+
+    private void finalizeResult(Matching merger, AssignMapping<Integer, RelativeIndex<I>> result) {
+        if (merger != null) {
+            merger.pattern().nonterminalEdges().forEach(nt -> {
+                RelativeIndex<I> value = result.get(nt);
+                result.assign(nt, null);
+                result.assign(merger.match(nt), value);
+                return true;
+            });
+        }
+
+        for (Integer key : keySet) {
+            if (!result.contains(key)) {
+                result.assign(key, indexOp.leastElement());
+            }
+        }
     }
 }

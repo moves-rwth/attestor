@@ -142,7 +142,7 @@ public class RelativeIndex<T> {
 
             T concrete = monoidOp.add(
                     e1.concrete != null ? e1.concrete : monoidOp.identity(),
-                    e1.concrete != null ? e1.concrete : monoidOp.identity()
+                    e2.concrete != null ? e2.concrete : monoidOp.identity()
             );
 
             Set<Integer> variables = new HashSet<>(e1.variables);

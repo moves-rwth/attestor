@@ -1,26 +1,46 @@
 package de.rwth.i2.attestor.domain;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AssignMapping<S, I> extends HashMap<S, I> {
-    private final Set<S> keySet = new HashSet<>();
+public class AssignMapping<S, I> {
+    private final Map<S, I> backend = new HashMap<>();
 
-    public AssignMapping(Set<S> keySet) {
-        this.keySet.addAll(keySet);
+    public AssignMapping() {
     }
 
     public AssignMapping(AssignMapping<S, I> mapping) {
-        keySet.addAll(mapping.keySet);
-        putAll(mapping);
+        backend.putAll(mapping.backend);
     }
 
-    public void assign(S key, I value) {
-        keySet.add(key);
-        put(key, value);
+    public I get(S key) {
+        if (!backend.containsKey(key)) {
+            throw new IllegalArgumentException("Unknown mapping key");
+        }
+
+        return backend.get(key);
     }
+
+    public boolean contains(S key) {
+        return backend.containsKey(key);
+    }
+
+
+    public void assign(S key, I value) {
+        if (value == null) {
+            backend.remove(key);
+            return;
+        }
+
+        if (contains(key)) {
+            backend.replace(key, value);
+        } else {
+            backend.put(key, value);
+        }
+    }
+
 
     public static class MappingSet<S, I> implements Lattice<AssignMapping<S, I>> {
         private final Set<S> keySet;
@@ -34,10 +54,10 @@ public class AssignMapping<S, I> extends HashMap<S, I> {
         // Lattice operations
         @Override
         public AssignMapping<S, I> leastElement() {
-            AssignMapping<S, I> result = new AssignMapping<>(keySet);
+            AssignMapping<S, I> result = new AssignMapping<>();
 
             for (S key : keySet) {
-                result.put(key, latticeOp.leastElement());
+                result.assign(key, latticeOp.leastElement());
             }
 
             return result;
@@ -45,10 +65,10 @@ public class AssignMapping<S, I> extends HashMap<S, I> {
 
         @Override
         public AssignMapping<S, I> greatestElement() {
-            AssignMapping<S, I> result = new AssignMapping<>(keySet);
+            AssignMapping<S, I> result = new AssignMapping<>();
 
             for (S key : keySet) {
-                result.put(key, latticeOp.greatestElement());
+                result.assign(key, latticeOp.greatestElement());
             }
 
             return result;
@@ -60,10 +80,10 @@ public class AssignMapping<S, I> extends HashMap<S, I> {
                 return greatestElement();
             }
 
-            AssignMapping<S, I> result = new AssignMapping<>(keySet);
+            AssignMapping<S, I> result = new AssignMapping<>();
 
             for (S key : keySet) {
-                result.put(key, latticeOp.getLeastUpperBound(
+                result.assign(key, latticeOp.getLeastUpperBound(
                         elements.stream()
                                 .map(mapping -> mapping.get(key))
                                 .collect(Collectors.toSet())
@@ -75,13 +95,13 @@ public class AssignMapping<S, I> extends HashMap<S, I> {
 
         @Override
         public boolean isLessOrEqual(AssignMapping<S, I> m1, AssignMapping<S, I> m2) {
-            for (S key : m1.keySet) {
+            for (S key : m1.backend.keySet()) {
                 if (!latticeOp.isLessOrEqual(m1.get(key), m2.get(key))) {
                     return false;
                 }
             }
 
-            for (S key : m2.keySet) {
+            for (S key : m2.backend.keySet()) {
                 if (!latticeOp.isLessOrEqual(m1.get(key), m2.get(key))) {
                     return false;
                 }
@@ -96,7 +116,7 @@ public class AssignMapping<S, I> extends HashMap<S, I> {
         final StringBuilder sb = new StringBuilder();
 
         sb.append("Mapping{");
-        for (S key : this.keySet) {
+        for (S key : backend.keySet()) {
             sb.append(" ");
             sb.append(key);
             sb.append("->");
