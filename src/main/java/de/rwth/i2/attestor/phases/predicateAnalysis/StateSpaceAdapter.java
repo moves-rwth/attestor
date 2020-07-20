@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
+package de.rwth.i2.attestor.phases.predicateAnalysis;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.FlowImpl;
 import de.rwth.i2.attestor.graph.heap.Matching;

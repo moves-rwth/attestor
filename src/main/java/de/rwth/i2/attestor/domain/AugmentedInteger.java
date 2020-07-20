@@ -4,10 +4,9 @@ import javax.annotation.Nonnull;
 
 public class AugmentedInteger implements Comparable<AugmentedInteger> {
 
-    final boolean positive;
-    final boolean infinite;
-    final int value;
-
+    public final boolean positive;
+    public final boolean infinite;
+    public final int value;
 
     public AugmentedInteger(boolean positiveInfinity) {
         this.value = 0;

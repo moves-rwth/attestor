@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
+package de.rwth.i2.attestor.phases.predicateAnalysis;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowAnalysis;
 import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Integer, RelativeIndex<I>>> {
     private final UntangledFlow flow;

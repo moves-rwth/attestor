@@ -7,6 +7,7 @@ import de.rwth.i2.attestor.phases.parser.ParseContractsPhase;
 import de.rwth.i2.attestor.phases.parser.ParseGrammarPhase;
 import de.rwth.i2.attestor.phases.parser.ParseInputPhase;
 import de.rwth.i2.attestor.phases.parser.ParseProgramPhase;
+import de.rwth.i2.attestor.phases.predicateAnalysis.PredicateAnalysisPhase;
 import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
 import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
@@ -55,6 +56,7 @@ public class Attestor extends AbstractAttestor {
                 .addPhase(new GrammarRefinementPhase(scene))
                 .addPhase(new AbstractionPreprocessingPhase(scene))
                 .addPhase(new RecursiveStateSpaceGenerationPhase(scene))
+                .addPhase(new PredicateAnalysisPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
                 .addPhase( new ReportGenerationPhase(registry, scene) )
