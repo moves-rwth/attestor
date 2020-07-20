@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.dataFlowAnalysis.predicate;
+package de.rwth.i2.attestor.phases.predicateAnalysis;
 
 import de.rwth.i2.attestor.domain.AugmentedInteger;
 import de.rwth.i2.attestor.domain.RelativeIndex;
@@ -10,6 +10,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO(mkh): example file; to be removed
 public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex<AugmentedInteger>> {
     private final Grammar grammar;
     private final RelativeInteger.RelativeIntegerSet indexOp;
