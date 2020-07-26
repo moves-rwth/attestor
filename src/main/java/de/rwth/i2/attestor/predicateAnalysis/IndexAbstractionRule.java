@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.phases.predicateAnalysis;
+package de.rwth.i2.attestor.predicateAnalysis;
 
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
