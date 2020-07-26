@@ -18,14 +18,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Integer, RelativeIndex<I>>> {
-    private final UntangledFlow flow;
     private final int extremalLabel;
+    private final UntangledFlow flow;
     private final AssignMapping.MappingSet<Integer, RelativeIndex<I>> domainOp;
     private final RelativeIndex.RelativeIndexSet<I> indexOp;
     private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
     private final StateSpaceAdapter stateSpaceAdapter;
     private final Set<Integer> keySet;
-    private final WideningOperator<AssignMapping<Integer, RelativeIndex<I>>> wideningOperator;
+    private final RelativeIndex<I> wideningThreshold;
+    private final ThresholdWidening<RelativeIndex<I>> wideningOperator;
 
     public PredicateAnalysis(
             Integer extremalLabel,
@@ -38,6 +39,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
         this.indexAbstractionRule = indexAbstractionRule;
+        this.wideningThreshold = wideningThreshold;
 
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
@@ -46,14 +48,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
         domainOp = new AssignMapping.MappingSet<>(keySet, indexOp);
         flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
-
-        AssignMapping<Integer, RelativeIndex<I>> mappingThreshold = new AssignMapping<>();
-        
-        for (Integer key : keySet) {
-            mappingThreshold.assign(key, wideningThreshold);
-        }
-
-        wideningOperator = new ThresholdWidening<>(mappingThreshold, domainOp);
+        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
     }
 
     @Override
@@ -102,7 +97,16 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
 
     @Override
     public WideningOperator<AssignMapping<Integer, RelativeIndex<I>>> getWideningOperator() {
-        return wideningOperator;
+        return elements -> {
+            AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>();
+
+            for (Integer key : keySet) {
+                result.assign(key,
+                        wideningOperator.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
+            }
+
+            return result;
+        };
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
