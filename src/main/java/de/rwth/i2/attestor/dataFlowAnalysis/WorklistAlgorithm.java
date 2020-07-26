@@ -15,6 +15,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
         Lattice<D> lattice = framework.getLattice();
         D extremalValue = framework.getExtremalValue();
         Set<Integer> extremalLabels = framework.getExtremalLabels();
+        WideningOperator<D> wideningOperator = framework.getWideningOperator();
 
         Map<Integer, D> analysis = new HashMap<>();
         Stack<Pair<Integer, Integer>> worklist = new Stack<>();
@@ -43,7 +44,12 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
                 Set<D> s = new HashSet<>();
                 s.add(analysis.get(to));
                 s.add(outState);
-                analysis.put(to, lattice.getLeastUpperBound(s));
+
+                if (wideningOperator != null) {
+                    analysis.put(to, wideningOperator.widen(s));
+                } else {
+                    analysis.put(to, lattice.getLeastUpperBound(s));
+                }
 
                 for (Integer successor : flow.getSuccessors(to)) {
                     Pair<Integer, Integer> n = new Pair<>(to, successor);

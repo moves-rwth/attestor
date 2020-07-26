@@ -15,4 +15,6 @@ public interface DataFlowAnalysis<D> {
     Set<Integer> getExtremalLabels();
 
     Function<D, D> getTransferFunction(int from, int to);
+
+    WideningOperator<D> getWideningOperator();
 }

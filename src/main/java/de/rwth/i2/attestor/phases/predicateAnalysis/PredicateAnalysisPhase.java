@@ -8,6 +8,8 @@ import de.rwth.i2.attestor.domain.RelativeIndex;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
+import de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA.RelativeIntegerPredicateAnalysis;
+import de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA.SLListAbstractionRule;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
@@ -50,7 +52,9 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         EquationSolver<AssignMapping<Integer, RelativeIndex<AugmentedInteger>>> solver = new WorklistAlgorithm<>();
 
         for (int critical : adapter.getCriticalLabels()) {
-            RelativeIntegerPredicateAnalysis analysis = new RelativeIntegerPredicateAnalysis(critical, adapter, abstractionRule);
+            RelativeIntegerPredicateAnalysis analysis =
+                    new RelativeIntegerPredicateAnalysis(critical, adapter, abstractionRule);
+
             results.put(critical, solver.solve(analysis));
         }
     }
