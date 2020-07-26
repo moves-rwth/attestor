@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.phases.predicateAnalysis;
+package de.rwth.i2.attestor.phases.predicate;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.EquationSolver;
 import de.rwth.i2.attestor.dataFlowAnalysis.WorklistAlgorithm;
@@ -8,8 +8,9 @@ import de.rwth.i2.attestor.domain.RelativeIndex;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
-import de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA.RelativeIntegerPredicateAnalysis;
-import de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA.SLListAbstractionRule;
+import de.rwth.i2.attestor.predicateAnalysis.StateSpaceAdapter;
+import de.rwth.i2.attestor.predicateAnalysis.relativeIntegerPA.RelativeIntegerPA;
+import de.rwth.i2.attestor.predicateAnalysis.relativeIntegerPA.SLListAbstractionRule;
 import de.rwth.i2.attestor.phases.transformers.GrammarTransformer;
 import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
@@ -52,8 +53,8 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         EquationSolver<AssignMapping<Integer, RelativeIndex<AugmentedInteger>>> solver = new WorklistAlgorithm<>();
 
         for (int critical : adapter.getCriticalLabels()) {
-            RelativeIntegerPredicateAnalysis analysis =
-                    new RelativeIntegerPredicateAnalysis(critical, adapter, abstractionRule);
+            RelativeIntegerPA analysis =
+                    new RelativeIntegerPA(critical, adapter, abstractionRule);
 
             results.put(critical, solver.solve(analysis));
         }

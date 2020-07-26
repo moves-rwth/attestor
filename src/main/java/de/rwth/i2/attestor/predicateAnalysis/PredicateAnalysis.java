@@ -1,12 +1,10 @@
-package de.rwth.i2.attestor.phases.predicateAnalysis;
+package de.rwth.i2.attestor.predicateAnalysis;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowAnalysis;
 import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
-import de.rwth.i2.attestor.domain.AssignMapping;
-import de.rwth.i2.attestor.domain.Lattice;
-import de.rwth.i2.attestor.domain.RelativeIndex;
+import de.rwth.i2.attestor.domain.*;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -20,33 +18,34 @@ import java.util.stream.Collectors;
 public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Integer, RelativeIndex<I>>> {
     private final int extremalLabel;
     private final UntangledFlow flow;
-    private final AssignMapping.MappingSet<Integer, RelativeIndex<I>> domainOp;
-    private final RelativeIndex.RelativeIndexSet<I> indexOp;
-    private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
     private final StateSpaceAdapter stateSpaceAdapter;
-    private final Set<Integer> keySet;
-    private final RelativeIndex<I> wideningThreshold;
+
+    private final Lattice<RelativeIndex<I>> indexOp;
     private final ThresholdWidening<RelativeIndex<I>> wideningOperator;
+    private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
+
+    private final Set<Integer> keySet;
+    private final Lattice<AssignMapping<Integer, RelativeIndex<I>>> domainOp;
 
     public PredicateAnalysis(
             Integer extremalLabel,
             StateSpaceAdapter stateSpaceAdapter,
-            RelativeIndex.RelativeIndexSet<I> indexOp,
-            IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule,
-            RelativeIndex<I> wideningThreshold) {
-
-        this.extremalLabel = extremalLabel;
-        this.stateSpaceAdapter = stateSpaceAdapter;
-        this.indexOp = indexOp;
-        this.indexAbstractionRule = indexAbstractionRule;
-        this.wideningThreshold = wideningThreshold;
+            RelativeIndexOp<I> indexOp,
+            RelativeIndex<I> wideningThreshold,
+            IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule) {
 
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
             TIntkeySet.addAll(state.getHeap().nonterminalEdges());
         }
+
+        this.extremalLabel = extremalLabel;
+        this.stateSpaceAdapter = stateSpaceAdapter;
+        this.indexOp = indexOp;
+        this.indexAbstractionRule = indexAbstractionRule;
+
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
-        domainOp = new AssignMapping.MappingSet<>(keySet, indexOp);
+        domainOp = new AssignMappingOp<>(keySet, indexOp);
         flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
         wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
     }
@@ -156,7 +155,6 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
                     fragment.put(nt, result.get(step.ruleToHeap(nt)));
                     return true;
                 });
-
 
                 // apply rule
                 RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(
