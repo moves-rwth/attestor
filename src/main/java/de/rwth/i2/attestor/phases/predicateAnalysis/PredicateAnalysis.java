@@ -3,22 +3,17 @@ package de.rwth.i2.attestor.phases.predicateAnalysis;
 import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowAnalysis;
 import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
+import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
 import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.domain.RelativeIndex;
-import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Queue;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,27 +25,35 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
     private final StateSpaceAdapter stateSpaceAdapter;
     private final Set<Integer> keySet;
+    private final WideningOperator<AssignMapping<Integer, RelativeIndex<I>>> wideningOperator;
 
     public PredicateAnalysis(
             Integer extremalLabel,
-            StateSpaceAdapter adapter,
+            StateSpaceAdapter stateSpaceAdapter,
             RelativeIndex.RelativeIndexSet<I> indexOp,
-            IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule) {
+            IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule,
+            RelativeIndex<I> wideningThreshold) {
 
         this.extremalLabel = extremalLabel;
+        this.stateSpaceAdapter = stateSpaceAdapter;
+        this.indexOp = indexOp;
         this.indexAbstractionRule = indexAbstractionRule;
 
-        this.stateSpaceAdapter = adapter;
-        this.flow = new UntangledFlow(adapter.getFlow(), extremalLabel);
+        TIntSet TIntkeySet = new TIntHashSet();
+        for (ProgramState state : stateSpaceAdapter.getStates()) {
+            TIntkeySet.addAll(state.getHeap().nonterminalEdges());
+        }
+        keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
+        domainOp = new AssignMapping.MappingSet<>(keySet, indexOp);
+        flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
 
-        TIntSet keySet = new TIntHashSet();
-        for (ProgramState state : adapter.getStates()) {
-            keySet.addAll(state.getHeap().nonterminalEdges());
+        AssignMapping<Integer, RelativeIndex<I>> mappingThreshold = new AssignMapping<>();
+        
+        for (Integer key : keySet) {
+            mappingThreshold.assign(key, wideningThreshold);
         }
 
-        this.keySet = Arrays.stream(keySet.toArray()).boxed().collect(Collectors.toSet());
-        this.indexOp = indexOp;
-        this.domainOp = new AssignMapping.MappingSet<>(this.keySet, indexOp);
+        wideningOperator = new ThresholdWidening<>(mappingThreshold, domainOp);
     }
 
     @Override
@@ -89,17 +92,21 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         int untangledTo = (to == flow.copy ? flow.untangled : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
         Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
-        HeapConfiguration heapTo = stateSpaceAdapter.getState(untangledTo).getHeap();
 
         if (stateSpaceAdapter.isMaterialized(untangledTo)) {
-            return generateMaterializationTransferFunction(heapTo, buffer, merger);
+            return generateMaterializationTransferFunction(buffer, merger);
         } else {
-            return generateAbstractionTransferFunction(heapTo, buffer, merger);
+            return generateAbstractionTransferFunction(buffer, merger);
         }
     }
 
+    @Override
+    public WideningOperator<AssignMapping<Integer, RelativeIndex<I>>> getWideningOperator() {
+        return wideningOperator;
+    }
+
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateMaterializationTransferFunction(HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer, Matching merger) {
+    generateMaterializationTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
             final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
@@ -131,7 +138,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     }
 
     public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
-    generateAbstractionTransferFunction(HeapConfiguration heapTo, Queue<HeapTransformation> transformationBuffer, Matching merger) {
+    generateAbstractionTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
             final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);

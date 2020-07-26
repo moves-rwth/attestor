@@ -1,13 +1,20 @@
-package de.rwth.i2.attestor.domain;
+package de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA;
+
+import de.rwth.i2.attestor.domain.AddMonoid;
+import de.rwth.i2.attestor.domain.AugmentedInteger;
+import de.rwth.i2.attestor.domain.Lattice;
+import de.rwth.i2.attestor.domain.RelativeIndex;
 
 import java.util.Set;
 
 final public class RelativeInteger {
-    public static RelativeIndex<AugmentedInteger> get(int value) {
+    static RelativeIndex.RelativeIndexSet<AugmentedInteger> opSet = new RelativeIntegerSet();
+
+    static RelativeIndex<AugmentedInteger> get(int value) {
         return new RelativeIndex<>(new AugmentedInteger(value));
     }
 
-    public static class RelativeIntegerSet extends RelativeIndex.RelativeIndexSet<AugmentedInteger> {
+    private static class RelativeIntegerSet extends RelativeIndex.RelativeIndexSet<AugmentedInteger> {
         private static final Lattice<AugmentedInteger> latticeOp = new Lattice<AugmentedInteger>() {
             @Override
             public boolean isLessOrEqual(AugmentedInteger e1, AugmentedInteger e2) {

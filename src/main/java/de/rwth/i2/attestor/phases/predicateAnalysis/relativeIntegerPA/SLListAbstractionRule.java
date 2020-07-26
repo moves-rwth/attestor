@@ -1,11 +1,12 @@
-package de.rwth.i2.attestor.phases.predicateAnalysis;
+package de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA;
 
 import de.rwth.i2.attestor.domain.AugmentedInteger;
 import de.rwth.i2.attestor.domain.RelativeIndex;
-import de.rwth.i2.attestor.domain.RelativeInteger;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.phases.predicateAnalysis.IndexAbstractionRule;
+import de.rwth.i2.attestor.phases.predicateAnalysis.relativeIntegerPA.RelativeInteger;
 
 import java.util.HashMap;
 import java.util.Map;
