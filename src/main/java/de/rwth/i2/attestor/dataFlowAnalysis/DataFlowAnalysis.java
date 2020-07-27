@@ -16,5 +16,7 @@ public interface DataFlowAnalysis<D> {
 
     Function<D, D> getTransferFunction(int from, int to);
 
-    WideningOperator<D> getWideningOperator();
+    default WideningOperator<D> getWideningOperator() {
+        return elements -> getLattice().getLeastUpperBound(elements);
+    }
 }

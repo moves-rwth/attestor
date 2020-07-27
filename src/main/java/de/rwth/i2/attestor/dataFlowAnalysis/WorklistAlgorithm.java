@@ -2,9 +2,6 @@ package de.rwth.i2.attestor.dataFlowAnalysis;
 
 import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.util.Pair;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.set.TIntSet;
 
 import java.util.*;
 
@@ -44,12 +41,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
                 Set<D> s = new HashSet<>();
                 s.add(analysis.get(to));
                 s.add(outState);
-
-                if (wideningOperator != null) {
-                    analysis.put(to, wideningOperator.widen(s));
-                } else {
-                    analysis.put(to, lattice.getLeastUpperBound(s));
-                }
+                analysis.put(to, wideningOperator.widen(s));
 
                 for (Integer successor : flow.getSuccessors(to)) {
                     Pair<Integer, Integer> n = new Pair<>(to, successor);
