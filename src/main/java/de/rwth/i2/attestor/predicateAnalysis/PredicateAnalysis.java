@@ -5,6 +5,7 @@ import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
 import de.rwth.i2.attestor.domain.*;
+import de.rwth.i2.attestor.domain.assignMapping.AssignMapping;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -15,24 +16,23 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Integer, RelativeIndex<I>>> {
+public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAnalysis<AssignMapping<I>> {
     private final int extremalLabel;
     private final UntangledFlow flow;
     private final StateSpaceAdapter stateSpaceAdapter;
 
-    private final Lattice<RelativeIndex<I>> indexOp;
-    private final ThresholdWidening<RelativeIndex<I>> wideningOperator;
-    private final IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule;
+    private final RelativeIndexOp<?, I> indexOp;
+    private final ThresholdWidening<I> wideningOperator;
+    private final IndexAbstractionRule<I> indexAbstractionRule;
 
     private final Set<Integer> keySet;
-    private final Lattice<AssignMapping<Integer, RelativeIndex<I>>> domainOp;
+    private final Lattice<AssignMapping<I>> domainOp;
 
     public PredicateAnalysis(
             Integer extremalLabel,
             StateSpaceAdapter stateSpaceAdapter,
-            RelativeIndexOp<I> indexOp,
-            RelativeIndex<I> wideningThreshold,
-            IndexAbstractionRule<RelativeIndex<I>> indexAbstractionRule) {
+            RelativeIndexOp<?, I> indexOp,
+            IndexAbstractionRule<I> indexAbstractionRule) {
 
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
@@ -45,9 +45,9 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         this.indexAbstractionRule = indexAbstractionRule;
 
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
-        domainOp = new AssignMappingOp<>(keySet, indexOp);
+        domainOp = new MappingOp<>(AssignMapping::new, keySet, indexOp);
         flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
-        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
+        wideningOperator = new ThresholdWidening<>(indexOp.greatestElement(), indexOp);
     }
 
     @Override
@@ -56,19 +56,19 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     }
 
     @Override
-    public Lattice<AssignMapping<Integer, RelativeIndex<I>>> getLattice() {
+    public Lattice<AssignMapping<I>> getLattice() {
         return domainOp;
     }
 
     @Override
-    public AssignMapping<Integer, RelativeIndex<I>> getExtremalValue() {
-        AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>();
+    public AssignMapping<I> getExtremalValue() {
+        AssignMapping<I> result = new AssignMapping<>();
 
         for (Integer key : keySet) {
             if (stateSpaceAdapter.getState(extremalLabel).getHeap().nonterminalEdges().contains(key)) {
-                result.assign(key, RelativeIndex.getVariable());
+                MappingOp.assign(result, key, indexOp.getVariable());
             } else {
-                result.assign(key, indexOp.leastElement());
+                MappingOp.assign(result, key, indexOp.leastElement());
             }
         }
 
@@ -81,7 +81,7 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     }
 
     @Override
-    public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
+    public Function<AssignMapping<I>, AssignMapping<I>>
     getTransferFunction(int from, int to) {
         int untangledTo = (to == flow.copy ? flow.untangled : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
@@ -95,12 +95,12 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
     }
 
     @Override
-    public WideningOperator<AssignMapping<Integer, RelativeIndex<I>>> getWideningOperator() {
+    public WideningOperator<AssignMapping<I>> getWideningOperator() {
         return elements -> {
-            AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>();
+            AssignMapping<I> result = new AssignMapping<>();
 
             for (Integer key : keySet) {
-                result.assign(key,
+                MappingOp.assign(result, key,
                         wideningOperator.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
             }
 
@@ -108,29 +108,29 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         };
     }
 
-    public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
+    public Function<AssignMapping<I>, AssignMapping<I>>
     generateMaterializationTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
-            final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
+            final AssignMapping<I> result = new AssignMapping<>(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
 
                 // apply rule
-                Map<Integer, RelativeIndex<I>> fragment = indexAbstractionRule.abstractForward(
+                Map<Integer, I> fragment = indexAbstractionRule.abstractForward(
                         result.get(step.getNtEdge()), step.getLabel(), step.getRule());
 
                 // map result from rule to actual heap
-                Map<Integer, RelativeIndex<I>> matchedFragment = new HashMap<>();
-                for (Map.Entry<Integer, RelativeIndex<I>> entry : fragment.entrySet()) {
+                Map<Integer, I> matchedFragment = new HashMap<>();
+                for (Map.Entry<Integer, I> entry : fragment.entrySet()) {
                     matchedFragment.put(step.ruleToHeap(entry.getKey()), entry.getValue());
                 }
 
                 // update assign AssignMapping
-                result.assign(step.getNtEdge(), null);
-                for (Map.Entry<Integer, RelativeIndex<I>> entry : matchedFragment.entrySet()) {
-                    result.assign(entry.getKey(), entry.getValue());
+                MappingOp.assign(result, step.getNtEdge(), null);
+                for (Map.Entry<Integer, I> entry : matchedFragment.entrySet()) {
+                    MappingOp.assign(result, entry.getKey(), entry.getValue());
                 }
             }
 
@@ -140,32 +140,32 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         };
     }
 
-    public Function<AssignMapping<Integer, RelativeIndex<I>>, AssignMapping<Integer, RelativeIndex<I>>>
+    public Function<AssignMapping<I>, AssignMapping<I>>
     generateAbstractionTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
 
         return assign -> {
-            final AssignMapping<Integer, RelativeIndex<I>> result = new AssignMapping<>(assign);
+            final AssignMapping<I> result = new AssignMapping<>(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
 
                 // map current value from actual heap to rule
-                Map<Integer, RelativeIndex<I>> fragment = new HashMap<>();
+                Map<Integer, I> fragment = new HashMap<>();
                 step.getRule().nonterminalEdges().forEach(nt -> {
                     fragment.put(nt, result.get(step.ruleToHeap(nt)));
                     return true;
                 });
 
                 // apply rule
-                RelativeIndex<I> newIndex = indexAbstractionRule.abstractBackward(
+                I newIndex = indexAbstractionRule.abstractBackward(
                         fragment, step.getLabel(), step.getRule());
 
                 // update assign AssignMapping
                 for (Integer nt : fragment.keySet()) {
-                    result.assign(step.ruleToHeap(nt), null);
+                    MappingOp.assign(result, step.ruleToHeap(nt), null);
                 }
 
-                result.assign(step.getNtEdge(), newIndex);
+                MappingOp.assign(result, step.getNtEdge(), newIndex);
             }
 
             finalizeResult(merger, result);
@@ -174,19 +174,19 @@ public class PredicateAnalysis<I> implements DataFlowAnalysis<AssignMapping<Inte
         };
     }
 
-    private void finalizeResult(Matching merger, AssignMapping<Integer, RelativeIndex<I>> result) {
+    private void finalizeResult(Matching merger, AssignMapping<I> result) {
         if (merger != null) {
             merger.pattern().nonterminalEdges().forEach(nt -> {
-                RelativeIndex<I> value = result.get(nt);
-                result.assign(nt, null);
-                result.assign(merger.match(nt), value);
+                I value = result.get(nt);
+                MappingOp.assign(result, nt, null);
+                MappingOp.assign(result, merger.match(nt), value);
                 return true;
             });
         }
 
         for (Integer key : keySet) {
-            if (!result.contains(key)) {
-                result.assign(key, indexOp.leastElement());
+            if (!MappingOp.contains(result, key)) {
+                MappingOp.assign(result, key, indexOp.leastElement());
             }
         }
     }

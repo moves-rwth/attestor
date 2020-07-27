@@ -3,31 +3,25 @@ package de.rwth.i2.attestor.domain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RelativeIndex<T> {
     private static final Set<Integer> reservedVariables = new HashSet<>();
 
-    final T concrete;
-    final Set<Integer> variables = new HashSet<>();
+    private final T concrete;
+    private final Set<Integer> variables = new HashSet<>();
 
-    public static <T> RelativeIndex<T> getVariable() {
-        return new RelativeIndex<>();
-    }
-
-    public RelativeIndex(T concrete) {
+    protected RelativeIndex(T concrete) {
         this.concrete = concrete;
     }
 
-    private RelativeIndex() {
+    protected RelativeIndex() {
         this.concrete = null;
         int id = reservedVariables.isEmpty() ? 0 : Collections.max(reservedVariables) + 1;
         reservedVariables.add(id);
         variables.add(id);
     }
 
-    RelativeIndex(T concrete, Set<Integer> variables) {
+    protected RelativeIndex(T concrete, Set<Integer> variables) {
         this.concrete = concrete;
         if (reservedVariables.containsAll(variables)) {
             this.variables.addAll(variables);
@@ -38,6 +32,14 @@ public class RelativeIndex<T> {
 
     public boolean isConcrete() {
         return variables.isEmpty();
+    }
+
+    public T getConcrete() {
+        return concrete;
+    }
+
+    public Set<Integer> getVariables() {
+        return Collections.unmodifiableSet(variables);
     }
 
     @Override

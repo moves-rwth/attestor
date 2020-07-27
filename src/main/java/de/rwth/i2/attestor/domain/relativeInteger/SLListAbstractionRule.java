@@ -1,7 +1,5 @@
-package de.rwth.i2.attestor.predicateAnalysis.relativeIntegerPA;
+package de.rwth.i2.attestor.domain.relativeInteger;
 
-import de.rwth.i2.attestor.domain.AugmentedInteger;
-import de.rwth.i2.attestor.domain.RelativeIndex;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
@@ -11,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO(mkh): example file; to be removed
-public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex<AugmentedInteger>> {
+public class SLListAbstractionRule implements IndexAbstractionRule<RelativeInteger> {
     private final Grammar grammar;
 
     public SLListAbstractionRule(Grammar grammar) {
@@ -19,9 +17,9 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
     }
 
     @Override
-    public Map<Integer, RelativeIndex<AugmentedInteger>>
-    abstractForward(RelativeIndex<AugmentedInteger> index, Nonterminal nt, HeapConfiguration rule) {
-        HashMap<Integer, RelativeIndex<AugmentedInteger>> result = new HashMap<>();
+    public Map<Integer, RelativeInteger>
+    abstractForward(RelativeInteger index, Nonterminal nt, HeapConfiguration rule) {
+        HashMap<Integer, RelativeInteger> result = new HashMap<>();
         switch (grammar.getRulePosition(nt, rule)) {
             case 0:
                 break;
@@ -40,8 +38,8 @@ public class SLListAbstractionRule implements IndexAbstractionRule<RelativeIndex
     }
 
     @Override
-    public RelativeIndex<AugmentedInteger>
-    abstractBackward(Map<Integer, RelativeIndex<AugmentedInteger>> assign, Nonterminal nt, HeapConfiguration rule) {
+    public RelativeInteger
+    abstractBackward(Map<Integer, RelativeInteger> assign, Nonterminal nt, HeapConfiguration rule) {
         switch (grammar.getRulePosition(nt, rule)) {
             case 0:
                 return RelativeInteger.get(1);
