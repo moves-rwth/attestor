@@ -1,6 +1,4 @@
-package de.rwth.i2.attestor.domain.relativeInteger;
-
-import de.rwth.i2.attestor.domain.*;
+package de.rwth.i2.attestor.domain;
 
 import java.util.Set;
 

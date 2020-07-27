@@ -1,9 +1,9 @@
-package de.rwth.i2.attestor.domain.relativeInteger;
+package de.rwth.i2.attestor.predicateAnalysis;
 
+import de.rwth.i2.attestor.domain.RelativeInteger;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
-import de.rwth.i2.attestor.predicateAnalysis.IndexAbstractionRule;
 
 import java.util.HashMap;
 import java.util.Map;
