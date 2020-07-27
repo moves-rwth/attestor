@@ -5,28 +5,38 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RelativeIndexOp<T> implements Lattice<RelativeIndex<T>>, AddMonoid<RelativeIndex<T>> {
+public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I>, AddMonoid<I> {
     private final Lattice<T> latticeOp;
     private final AddMonoid<T> monoidOp;
+    private final RelativeIndexSupplier<T, I> supplier;
 
-    public RelativeIndexOp(Lattice<T> latticeOp, AddMonoid<T> monoidOp) {
+    public RelativeIndexOp(RelativeIndexSupplier<T, I> supplier, Lattice<T> latticeOp, AddMonoid<T> monoidOp) {
+        this.supplier = supplier;
         this.latticeOp = latticeOp;
         this.monoidOp = monoidOp;
     }
 
+    public I getConcrete(T concrete) {
+        return supplier.get(concrete);
+    }
+
+    public I getVariable() {
+        return supplier.get();
+    }
+
     // Lattice operations
     @Override
-    public RelativeIndex<T> leastElement() {
-        return new RelativeIndex<>(latticeOp.leastElement());
+    public I leastElement() {
+        return supplier.get(latticeOp.leastElement());
     }
 
     @Override
-    public RelativeIndex<T> greatestElement() {
-        return new RelativeIndex<>(latticeOp.greatestElement());
+    public I greatestElement() {
+        return supplier.get(latticeOp.greatestElement());
     }
 
     @Override
-    public RelativeIndex<T> getLeastUpperBound(Set<RelativeIndex<T>> elements) {
+    public I getLeastUpperBound(Set<I> elements) {
         if (elements.isEmpty()) {
             return greatestElement();
         }
@@ -34,19 +44,19 @@ public class RelativeIndexOp<T> implements Lattice<RelativeIndex<T>>, AddMonoid<
         return elements.stream().reduce(leastElement(), (i1, i2) -> {
 
             T concrete = latticeOp.getLeastUpperBound(Stream.of(
-                    i1.concrete != null ? i1.concrete : latticeOp.leastElement(),
-                    i2.concrete != null ? i2.concrete : latticeOp.leastElement()
+                    i1.getConcrete() != null ? i1.getConcrete() : latticeOp.leastElement(),
+                    i2.getConcrete() != null ? i2.getConcrete() : latticeOp.leastElement()
             ).collect(Collectors.toSet()));
 
-            Set<Integer> variables = new HashSet<>(i1.variables);
-            variables.addAll(i2.variables);
+            Set<Integer> variables = new HashSet<>(i1.getVariables());
+            variables.addAll(i2.getVariables());
 
-            return new RelativeIndex<>(concrete, variables);
+            return supplier.get(concrete, variables);
         });
     }
 
     @Override
-    public boolean isLessOrEqual(RelativeIndex<T> e1, RelativeIndex<T> e2) {
+    public boolean isLessOrEqual(I e1, I e2) {
         if (e1.equals(leastElement())) {
             return true;
         }
@@ -63,9 +73,9 @@ public class RelativeIndexOp<T> implements Lattice<RelativeIndex<T>>, AddMonoid<
             return true;
         }
 
-        if (e2.variables.containsAll(e1.variables)) {
+        if (e2.getVariables().containsAll(e1.getVariables())) {
             if (e1.isConcrete() && e2.isConcrete()) {
-                return latticeOp.isLessOrEqual(e1.concrete, e2.concrete);
+                return latticeOp.isLessOrEqual(e1.getConcrete(), e2.getConcrete());
             }
 
             return !e1.isConcrete() && !e2.isConcrete();
@@ -76,12 +86,12 @@ public class RelativeIndexOp<T> implements Lattice<RelativeIndex<T>>, AddMonoid<
 
     // Monoid operations
     @Override
-    public RelativeIndex<T> identity() {
-        return new RelativeIndex<>(monoidOp.identity());
+    public I identity() {
+        return supplier.get(monoidOp.identity());
     }
 
     @Override
-    public RelativeIndex<T> operate(RelativeIndex<T> e1, RelativeIndex<T> e2) {
+    public I operate(I e1, I e2) {
         if (e1.equals(latticeOp.greatestElement()) || e2.equals(latticeOp.greatestElement())) {
             return greatestElement();
         } else if (e1.equals(latticeOp.leastElement()) || e2.equals(latticeOp.leastElement())) {
@@ -89,13 +99,13 @@ public class RelativeIndexOp<T> implements Lattice<RelativeIndex<T>>, AddMonoid<
         }
 
         T concrete = monoidOp.add(
-                e1.concrete != null ? e1.concrete : monoidOp.identity(),
-                e2.concrete != null ? e2.concrete : monoidOp.identity()
+                e1.getConcrete() != null ? e1.getConcrete() : monoidOp.identity(),
+                e2.getConcrete() != null ? e2.getConcrete() : monoidOp.identity()
         );
 
-        Set<Integer> variables = new HashSet<>(e1.variables);
-        variables.addAll(e2.variables);
+        Set<Integer> variables = new HashSet<>(e1.getVariables());
+        variables.addAll(e2.getVariables());
 
-        return new RelativeIndex<>(concrete, variables);
+        return supplier.get(concrete, variables);
     }
 }
