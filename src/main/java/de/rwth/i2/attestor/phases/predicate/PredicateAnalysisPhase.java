@@ -2,9 +2,9 @@ package de.rwth.i2.attestor.phases.predicate;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.EquationSolver;
 import de.rwth.i2.attestor.dataFlowAnalysis.WorklistAlgorithm;
-import de.rwth.i2.attestor.domain.assignMapping.AssignMapping;
-import de.rwth.i2.attestor.domain.relativeInteger.RelativeInteger;
-import de.rwth.i2.attestor.domain.relativeInteger.SLListAbstractionRule;
+import de.rwth.i2.attestor.domain.AssignMapping;
+import de.rwth.i2.attestor.domain.RelativeInteger;
+import de.rwth.i2.attestor.predicateAnalysis.SLListAbstractionRule;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -62,9 +62,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
     @Override
     public void logSummary() {
         if (enabled) {
-
-        } else {
-
+            // TODO(mkh)
         }
     }
 

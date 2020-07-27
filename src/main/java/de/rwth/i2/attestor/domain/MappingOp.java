@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class MappingOp<S, L, A extends Map<S, L>> implements Lattice<A> {
-    private Supplier<A> supplier;
+    private final Supplier<A> supplier;
     private final Set<S> keySet;
     private final Lattice<L> latticeOp;
 

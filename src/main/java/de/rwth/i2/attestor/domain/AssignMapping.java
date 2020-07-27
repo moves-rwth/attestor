@@ -1,4 +1,4 @@
-package de.rwth.i2.attestor.domain.assignMapping;
+package de.rwth.i2.attestor.domain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class AssignMapping<I> extends HashMap<Integer, I> {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
 
-        sb.append("Mapping{");
+        sb.append("Assign{");
         for (Integer key : keySet()) {
             sb.append(" ");
             sb.append(key);

@@ -5,7 +5,7 @@ import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
 import de.rwth.i2.attestor.domain.*;
-import de.rwth.i2.attestor.domain.assignMapping.AssignMapping;
+import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
