@@ -16,7 +16,7 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
         this.monoidOp = monoidOp;
     }
 
-    public I getConcrete(T concrete) {
+    public I getFromConcrete(T concrete) {
         return supplier.get(concrete);
     }
 
@@ -74,11 +74,11 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
         }
 
         if (e2.getVariables().containsAll(e1.getVariables())) {
-            if (e1.isConcrete() && e2.isConcrete()) {
+            if (!e1.isRelative() && !e2.isRelative()) {
                 return latticeOp.isLessOrEqual(e1.getConcrete(), e2.getConcrete());
             }
 
-            return !e1.isConcrete() && !e2.isConcrete();
+            return e1.isRelative() && e2.isRelative();
         }
 
         return false;
