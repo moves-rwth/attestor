@@ -30,8 +30,8 @@ public class RelativeIndex<T> {
         }
     }
 
-    public boolean isConcrete() {
-        return variables.isEmpty();
+    public boolean isRelative() {
+        return !variables.isEmpty();
     }
 
     public T getConcrete() {
@@ -61,6 +61,7 @@ public class RelativeIndex<T> {
 
     @Override
     public String toString() {
-        return "{" + "concrete=" + concrete + ", variables=" + variables + '}';
+        return "[" + "concrete value = " + concrete +
+                ", variables = " + variables + ']';
     }
 }

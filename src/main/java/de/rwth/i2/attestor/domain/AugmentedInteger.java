@@ -3,10 +3,9 @@ package de.rwth.i2.attestor.domain;
 import javax.annotation.Nonnull;
 
 public class AugmentedInteger implements Comparable<AugmentedInteger> {
-
-    public final boolean positive;
-    public final boolean infinite;
-    public final int value;
+    private final boolean positive;
+    private final boolean infinite;
+    private final int value;
 
     public AugmentedInteger(boolean positiveInfinity) {
         this.value = 0;
@@ -20,6 +19,14 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
         this.positive = value > 0;
     }
 
+    public boolean isPositive() {
+        return positive;
+    }
+
+    public boolean isInfinite() {
+        return infinite;
+    }
+
     public int getValue() {
         if (infinite) {
             throw new UnsupportedOperationException("Infinity is not a number");
@@ -27,6 +34,7 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
 
         return value;
     }
+
 
     @Override
     public int compareTo(@Nonnull AugmentedInteger other) {
