@@ -22,17 +22,17 @@ public class InputSettings implements HeapConfigurationRenaming {
      * Short human-readable description of the analysis
      */
     private String description;
-    
+
     /**
      * The classpath of source code files that are analyzed.
      */
     private String classpath;
-    
+
     /**
      * The class that is analyzed.
      */
     private String className;
-    
+
     /**
      * The initial method that is analyzed.
      */
@@ -49,13 +49,14 @@ public class InputSettings implements HeapConfigurationRenaming {
      */
     ArrayList<String> contractFiles = new ArrayList<>();
     private List<String> userDefinedGrammarFiles = new ArrayList<>();
+    private List<String> userDefinedAbstractionRuleFiles = new ArrayList<>();
     private List<String> userDefinedInductivePredicatesFiles = new ArrayList<>();
     private List<String> initialHeapFiles = new ArrayList<>();
     private List<String> initialSymbolicHeapFiles = new ArrayList<>();
 
     public String getRootPath() {
 
-        if(rootPath == "") {
+        if (rootPath == "") {
             return rootPath;
         }
         return rootPath + File.separator;
@@ -78,7 +79,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
     public void addSelectorRenaming(String typeName, String from, String to) {
 
-        if(!selectorRenaming.containsKey(typeName)) {
+        if (!selectorRenaming.containsKey(typeName)) {
             selectorRenaming.put(typeName, new LinkedHashMap<>());
         }
         Map<String, String> map = selectorRenaming.get(typeName);
@@ -105,6 +106,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
         return getRootPath() + classpath;
     }
+
     /**
      * Sets the path to the classes that are analyzed.
      *
@@ -122,6 +124,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
         return className;
     }
+
     /**
      * Sets the name of the class that should be analyzed.
      *
@@ -139,6 +142,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
         return methodName;
     }
+
     /**
      * Sets the name of the method that should be analyzed.
      *
@@ -150,7 +154,6 @@ public class InputSettings implements HeapConfigurationRenaming {
     }
 
 
-
     /**
      * Adds the provided name to the list of contract files to consider for this run
      *
@@ -160,6 +163,7 @@ public class InputSettings implements HeapConfigurationRenaming {
 
         this.contractFiles.add(name);
     }
+
     /**
      * Returns the filenames of the user defined contracts to use
      *
@@ -168,13 +172,13 @@ public class InputSettings implements HeapConfigurationRenaming {
     public Collection<String> getContractFileNames() {
 
         List<String> result = new ArrayList<>();
-        for(String s : contractFiles) {
+        for (String s : contractFiles) {
             result.add(getRootPath() + s);
         }
         return result;
     }
-    
-   
+
+
     /**
      * @param rootPath a path prefix which should be applied to all user defined paths
      */
@@ -200,7 +204,7 @@ public class InputSettings implements HeapConfigurationRenaming {
     public Collection<String> getUserDefinedInductivePredicatesFiles() {
 
         List<String> result = new ArrayList<>();
-        for(String s : userDefinedInductivePredicatesFiles) {
+        for (String s : userDefinedInductivePredicatesFiles) {
             result.add(getRootPath() + s);
         }
         return result;
@@ -214,7 +218,19 @@ public class InputSettings implements HeapConfigurationRenaming {
     public Collection<String> getUserDefinedGrammarFiles() {
 
         List<String> result = new ArrayList<>();
-        for(String s : userDefinedGrammarFiles) {
+        for (String s : userDefinedGrammarFiles) {
+            result.add(getRootPath() + s);
+        }
+        return result;
+    }
+
+    public void addUserDefinedAbstractionRuleFile(String ruleFile) {
+        this.userDefinedAbstractionRuleFiles.add(ruleFile);
+    }
+
+    public Collection<String> getUserDefinedAbstractionRuleFiles() {
+        List<String> result = new ArrayList<>();
+        for (String s : userDefinedAbstractionRuleFiles) {
             result.add(getRootPath() + s);
         }
         return result;
@@ -228,7 +244,7 @@ public class InputSettings implements HeapConfigurationRenaming {
     public List<String> getInitialHeapFiles() {
 
         List<String> result = new ArrayList<>();
-        for(String s : initialHeapFiles) {
+        for (String s : initialHeapFiles) {
             result.add(getRootPath() + s);
         }
         return result;
@@ -242,7 +258,7 @@ public class InputSettings implements HeapConfigurationRenaming {
     public List<String> getInitialSymbolicHeapFiles() {
 
         List<String> result = new ArrayList<>();
-        for(String s : initialSymbolicHeapFiles) {
+        for (String s : initialSymbolicHeapFiles) {
             result.add(getRootPath() + s);
         }
         return result;
