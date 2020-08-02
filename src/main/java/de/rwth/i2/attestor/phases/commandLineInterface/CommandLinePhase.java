@@ -50,7 +50,7 @@ public class CommandLinePhase extends AbstractPhase
         try {
             commandLineReader = new CommandLineReader();
             commandLine = commandLineReader.read(originalCommandLineArguments);
-        } catch(Exception e) {
+        } catch (Exception e) {
             commandLineReader.printHelp();
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -68,7 +68,7 @@ public class CommandLinePhase extends AbstractPhase
     private void determineRootPath() {
 
         String rootPath = "";
-        if(commandLine.hasOption("root-path")) {
+        if (commandLine.hasOption("root-path")) {
             rootPath = commandLine.getOptionValue("root-path");
             logger.info("root path: " + rootPath);
         }
@@ -80,7 +80,7 @@ public class CommandLinePhase extends AbstractPhase
 
         String optionName = option.getLongOpt();
 
-        switch(optionName) {
+        switch (optionName) {
 
             case "description":
                 description(option);
@@ -102,6 +102,9 @@ public class CommandLinePhase extends AbstractPhase
                 break;
             case "grammar":
                 grammar(option);
+                break;
+            case "abstraction-rule":
+                abstractionRule(option);
                 break;
             case "inductive-predicates":
                 inductivePredicates(option);
@@ -232,6 +235,12 @@ public class CommandLinePhase extends AbstractPhase
         inputSettings.addUserDefinedGrammarFile(grammar);
     }
 
+    private void abstractionRule(Option option) {
+        String rule = option.getValue();
+        logger.info("abstraction rule:" + rule);
+        inputSettings.addUserDefinedAbstractionRuleFile(rule);
+    }
+
     private void inductivePredicates(Option option) {
 
         String sid = option.getValue();
@@ -263,7 +272,7 @@ public class CommandLinePhase extends AbstractPhase
     private void predefinedGrammar(Option option) {
 
         String grammarName = option.getValue();
-        if(grammarName == null) {
+        if (grammarName == null) {
             throw new IllegalArgumentException("Unspecified grammar name");
         }
         logger.info("predefined grammar: " + grammarName);
@@ -273,22 +282,22 @@ public class CommandLinePhase extends AbstractPhase
     private void rename(Option option) {
 
         String[] values = option.getValues();
-        if(values.length == 0) {
+        if (values.length == 0) {
             throw new IllegalArgumentException("No class to rename has been provided.");
         }
 
         String type = values[0];
         String[] t = type.split("=");
-        if(t.length != 2) {
+        if (t.length != 2) {
             throw new IllegalArgumentException("The syntax for type renaming is 'oldType=newType'.");
         }
         inputSettings.addTypeRenaming(t[0], t[1]);
         logger.info("using renaming " + Arrays.toString(values));
 
-        for(int i=1; i < values.length; i++) {
+        for (int i = 1; i < values.length; i++) {
             String selector = values[i].trim();
             String[] s = selector.split("=");
-            if(s.length != 2) {
+            if (s.length != 2) {
                 throw new IllegalArgumentException("The syntax for selector renaming is 'oldSelector=newSelector'.");
             }
             inputSettings.addSelectorRenaming(t[1], s[0], s[1]);
@@ -352,7 +361,7 @@ public class CommandLinePhase extends AbstractPhase
 
     private void canonical() {
 
-        if(commandLine.hasOption("post-processing")) {
+        if (commandLine.hasOption("post-processing")) {
             throw new IllegalArgumentException("Option --canonical is incompatible with option --post-processing.");
         }
         logger.info("enabled computation of canonical states");
@@ -447,7 +456,7 @@ public class CommandLinePhase extends AbstractPhase
     public void logSummary() {
         logSum("Analyzed method: " + inputSettings.getClassName() + "." + inputSettings.getMethodName());
         String description = inputSettings.getDescription();
-        if(description != null) {
+        if (description != null) {
             logSum("Scenario: " + description);
         }
     }

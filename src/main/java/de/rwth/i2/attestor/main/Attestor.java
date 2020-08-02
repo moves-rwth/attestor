@@ -3,11 +3,8 @@ package de.rwth.i2.attestor.main;
 import de.rwth.i2.attestor.phases.commandLineInterface.CommandLinePhase;
 import de.rwth.i2.attestor.phases.counterexamples.CounterexampleGenerationPhase;
 import de.rwth.i2.attestor.phases.modelChecking.ModelCheckingPhase;
-import de.rwth.i2.attestor.phases.parser.ParseContractsPhase;
-import de.rwth.i2.attestor.phases.parser.ParseGrammarPhase;
-import de.rwth.i2.attestor.phases.parser.ParseInputPhase;
-import de.rwth.i2.attestor.phases.parser.ParseProgramPhase;
-import de.rwth.i2.attestor.phases.predicateAnalysis.PredicateAnalysisPhase;
+import de.rwth.i2.attestor.phases.parser.*;
+import de.rwth.i2.attestor.phases.predicate.PredicateAnalysisPhase;
 import de.rwth.i2.attestor.phases.preprocessing.AbstractionPreprocessingPhase;
 import de.rwth.i2.attestor.phases.preprocessing.GrammarRefinementPhase;
 import de.rwth.i2.attestor.phases.preprocessing.MarkingGenerationPhase;
@@ -51,6 +48,7 @@ public class Attestor extends AbstractAttestor {
                 .addPhase(new ParseProgramPhase(scene))
                 .addPhase(new ParseGrammarPhase(scene))
                 .addPhase(new ParseInputPhase(scene))
+                .addPhase(new ParseAbstractionRulesPhase(scene))
                 .addPhase(new ParseContractsPhase(scene))
                 .addPhase(new MarkingGenerationPhase(scene))
                 .addPhase(new GrammarRefinementPhase(scene))
@@ -59,7 +57,7 @@ public class Attestor extends AbstractAttestor {
                 .addPhase(new PredicateAnalysisPhase(scene))
                 .addPhase(new ModelCheckingPhase(scene))
                 .addPhase(new CounterexampleGenerationPhase(scene))
-                .addPhase( new ReportGenerationPhase(registry, scene) )
+                .addPhase(new ReportGenerationPhase(registry, scene))
                 .execute();
     }
 }

@@ -1,19 +1,19 @@
 grammar RelativeInteger;
 
 expr
-    : '(' Exp = expr ')'
-    | INTEGER
-    | INDEX
-    | ASSIGN
+    : '(' Expr = expr ')'
+    | Op = MINUS Expr = expr
     | Left = expr Op = PLUS Right = expr
     | Left = expr Op = MINUS Right = expr
-    | expr MINUS Exp = expr
+    | INTEGER
+    | VAR
+    | INDEX
+    | ASSIGN '[' Idx = INTEGER ']'
     ;
 
 PLUS    : '+' ;
 MINUS   : '-' ;
-DIGIT   : [0-9] ;
-INTEGER : DIGIT+ ;
+INTEGER : [0-9]+ ;
+VAR     : '$VAR' ;
 INDEX   : '$INDEX' ;
-ASSIGN  : '$ASSIGN' '[' INTEGER ']' ;
-WS      : [ \t\r\n]+ -> skip ;
+ASSIGN  : '$ASSIGN' ;

@@ -23,7 +23,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
 
     private final RelativeIndexOp<?, I> indexOp;
     private final ThresholdWidening<I> wideningOperator;
-    private final IndexAbstractionRule<I> indexAbstractionRule;
+    private final AbstractionRule<I> abstractionRule;
 
     private final Set<Integer> keySet;
     private final Lattice<AssignMapping<I>> domainOp;
@@ -32,7 +32,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             Integer extremalLabel,
             StateSpaceAdapter stateSpaceAdapter,
             RelativeIndexOp<?, I> indexOp,
-            IndexAbstractionRule<I> indexAbstractionRule) {
+            AbstractionRule<I> abstractionRule) {
 
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
@@ -42,7 +42,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         this.extremalLabel = extremalLabel;
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
-        this.indexAbstractionRule = indexAbstractionRule;
+        this.abstractionRule = abstractionRule;
 
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
         domainOp = new MappingOp<>(AssignMapping::new, keySet, indexOp);
@@ -118,7 +118,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                 HeapTransformation step = transformationBuffer.remove();
 
                 // apply rule
-                Map<Integer, I> fragment = indexAbstractionRule.abstractForward(
+                Map<Integer, I> fragment = abstractionRule.abstractForward(
                         result.get(step.getNtEdge()), step.getLabel(), step.getRule());
 
                 // map result from rule to actual heap
@@ -157,8 +157,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                 });
 
                 // apply rule
-                I newIndex = indexAbstractionRule.abstractBackward(
-                        fragment, step.getLabel(), step.getRule());
+                I newIndex = abstractionRule.abstractBackward(fragment, step.getLabel(), step.getRule());
 
                 // update assign AssignMapping
                 for (Integer nt : fragment.keySet()) {
