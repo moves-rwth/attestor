@@ -89,11 +89,10 @@ public class StateSpaceAdapter {
                 .anyMatch(clazz -> clazz.isInstance(program.getStatement(state.getProgramCounter())));
 
         if (criticalStatement) {
-            boolean hasNonTerminal = state.getHeap().countNonterminalEdges() > 0;
-            boolean onCycle = reachableStates(id).contains(id);
-
-            if (hasNonTerminal && onCycle) {
-                criticalLabels.add(id);
+            if (state.getHeap().countNonterminalEdges() > 0) {
+                if (reachableStates(id).contains(id)) {
+                    criticalLabels.add(id);
+                }
             }
         }
     }
