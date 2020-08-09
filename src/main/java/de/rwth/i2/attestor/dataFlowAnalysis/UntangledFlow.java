@@ -1,6 +1,8 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UntangledFlow extends FlowImpl {
     public final int copy;
@@ -11,7 +13,8 @@ public class UntangledFlow extends FlowImpl {
         this.untangled = untangle;
         this.copy = Collections.max(getLabels()) + 1;
 
-        for (Integer predecessor : getPredecessors(untangle)) {
+        // TODO(mkh): fix ConcurrentModificationException
+        for (Integer predecessor : new HashSet<>(getPredecessors(untangle))) {
             remove(predecessor, untangle);
             add(predecessor, copy);
         }
