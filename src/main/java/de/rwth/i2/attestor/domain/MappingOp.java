@@ -1,71 +1,48 @@
 package de.rwth.i2.attestor.domain;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class MappingOp<S, L, A extends Map<S, L>> implements Lattice<A> {
-    private final Supplier<A> supplier;
-    private final Set<S> keySet;
-    private final Lattice<L> latticeOp;
+public class MappingOp<I, M extends AssignMapping<I>> implements Lattice<M> {
+    private final Supplier<M> supplier;
+    private final Lattice<I> latticeOp;
 
-    public MappingOp(Supplier<A> supplier, Set<S> keySet, Lattice<L> latticeOp) {
+    public MappingOp(Supplier<M> supplier, Lattice<I> latticeOp) {
         this.supplier = supplier;
-        this.keySet = keySet;
         this.latticeOp = latticeOp;
-    }
-
-    public static <S, L> void assign(Map<S, L> map, S key, L value) {
-        if (value == null) {
-            map.remove(key);
-            return;
-        }
-
-        if (map.containsKey(key)) {
-            map.replace(key, value);
-        } else {
-            map.put(key, value);
-        }
-    }
-
-    public static <S, L> boolean contains(Map<S, L> map, S key) {
-        return map.containsKey(key);
     }
 
     // Lattice operations
     @Override
-    public A leastElement() {
-        A result = supplier.get();
-
-        for (S key : keySet) {
-            assign(result, key, latticeOp.leastElement());
+    public M leastElement() {
+        M result = supplier.get();
+        for (Integer key : result.keySet()) {
+            result.assign(key, latticeOp.leastElement());
         }
 
         return result;
     }
 
     @Override
-    public A greatestElement() {
-        A result = supplier.get();
-
-        for (S key : keySet) {
-            assign(result, key, latticeOp.greatestElement());
+    public M greatestElement() {
+        M result = supplier.get();
+        for (Integer key : result.keySet()) {
+            result.assign(key, latticeOp.greatestElement());
         }
 
         return result;
     }
 
     @Override
-    public A getLeastUpperBound(Set<A> elements) {
+    public M getLeastUpperBound(Set<M> elements) {
         if (elements.isEmpty()) {
             return greatestElement();
         }
 
-        A result = supplier.get();
-
-        for (S key : keySet) {
-            assign(result, key, latticeOp.getLeastUpperBound(
+        M result = supplier.get();
+        for (Integer key : result.keySet()) {
+            result.assign(key, latticeOp.getLeastUpperBound(
                     elements.stream()
                             .map(mapping -> mapping.get(key))
                             .collect(Collectors.toSet())
@@ -76,14 +53,12 @@ public class MappingOp<S, L, A extends Map<S, L>> implements Lattice<A> {
     }
 
     @Override
-    public boolean isLessOrEqual(A m1, A m2) {
-        for (S key : m1.keySet()) {
-            if (!latticeOp.isLessOrEqual(m1.get(key), m2.get(key))) {
-                return false;
-            }
+    public boolean isLessOrEqual(M m1, M m2) {
+        if (!m1.keySet().equals(m2.keySet())) {
+            throw new IllegalArgumentException("Key sets of assign mapping must be compatible.");
         }
 
-        for (S key : m2.keySet()) {
+        for (Integer key : m1.keySet()) {
             if (!latticeOp.isLessOrEqual(m1.get(key), m2.get(key))) {
                 return false;
             }
