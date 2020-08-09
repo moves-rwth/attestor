@@ -1,10 +1,5 @@
 public class SLList {
-
     private SLList next;
-
-    public SLList(SLList next) {
-        this.next = next;
-    }
 
     public void reverse(SLList head) {
         SLList reversedPart = null;
