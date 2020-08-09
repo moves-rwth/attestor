@@ -1,0 +1,4 @@
+SLSLList(x{SLList}, !y{SLList})
+<= x.next -> y
+<= z{SLList} | x.next -> z * SLSLList(z,y)
+<= z{SLList} | SLSLList(x,z) * SLSLList(z,y);
