@@ -15,7 +15,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
         WideningOperator<D> wideningOperator = framework.getWideningOperator();
 
         Map<Integer, D> analysis = new HashMap<>();
-        Stack<Pair<Integer, Integer>> worklist = new Stack<>();
+        Deque<Pair<Integer, Integer>> worklist = new ArrayDeque<>();
 
         // initialization
         for (Integer label : flow.getLabels()) {
