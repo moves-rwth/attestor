@@ -21,8 +21,8 @@ import java.util.Map;
 
 public class PredicateAnalysisPhase extends AbstractPhase {
 
-    private Map<Integer, Boolean> terminationResults = new HashMap<>();
-    private Map<
+    private final Map<Integer, Boolean> terminationResults = new HashMap<>();
+    private final Map<
             Pair<Integer, Integer>,
             Map<Integer, AssignMapping<RelativeInteger>>> dataFlowResults = new HashMap<>();
 
@@ -45,18 +45,14 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         Program program = getPhase(ProgramTransformer.class).getProgram();
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
         StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace, program, Collections.singleton(GotoStmt.class));
+
+        //noinspection unchecked
         AbstractionRule<RelativeInteger> abstractionRule = getPhase(AbstractionRuleTransformer.class).getAbstractionRule();
         EquationSolver<AssignMapping<RelativeInteger>> solver = new WorklistAlgorithm<>();
 
         for (int critical : adapter.getCriticalLabels()) {
             PredicateAnalysis<RelativeInteger> analysis =
-                    new PredicateAnalysis<>(
-                            critical,
-                            adapter,
-                            RelativeInteger.opSet,
-                            abstractionRule,
-                            RelativeInteger.opSet.greatestElement()
-                    );
+                    new PredicateAnalysis<>(critical, adapter, RelativeInteger.opSet, abstractionRule, RelativeInteger.get(50));
 
             dataFlowResults.put(new Pair<>(critical, analysis.getUntangled()), solver.solve(analysis));
         }
@@ -89,17 +85,19 @@ public class PredicateAnalysisPhase extends AbstractPhase {
             }
 
             StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
-            String positive = "Yes  ";
-            String negative = stateSpace.getFinalStates().size() > 0 ? "Maybe" : "No   ";
+            String positive = "Yes";
+            String negative = stateSpace.getFinalStates().size() > 0 ? "Maybe" : "No";
 
             logSum("+-------------------------+------------------+");
-            logHighlight("| critical state          | Termination      |");
+            logHighlight("| Critical state          | Termination      |");
             logSum("+-------------------------+------------------+");
             terminationResults.forEach((critical, result) ->
-                    logSum("| " +
-                            critical +
-                            "                      |            " +
-                            (result ? positive : negative) + " |"));
+                    logSum("| " + critical +
+                            new String(new char[23 - critical.toString().length()]).replace("\0", " ") +
+                            " | " +
+                            new String(new char[16 - (result ? positive : negative).length()]).replace("\0", " ") +
+                            (result ? positive : negative) +
+                            " |"));
             logSum("+-------------------------+------------------+");
         }
     }
