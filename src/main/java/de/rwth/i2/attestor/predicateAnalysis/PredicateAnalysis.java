@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
 import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
 import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
 import de.rwth.i2.attestor.domain.*;
-import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -14,6 +13,7 @@ import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAnalysis<AssignMapping<I>> {
@@ -26,13 +26,15 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     private final AbstractionRule<I> abstractionRule;
 
     private final Set<Integer> keySet;
-    private final Lattice<AssignMapping<I>> domainOp;
+    private final MappingOp<I, AssignMapping<I>> domainOp;
+    private final Supplier<AssignMapping<I>> assignSupplier;
 
     public PredicateAnalysis(
             Integer extremalLabel,
             StateSpaceAdapter stateSpaceAdapter,
             RelativeIndexOp<?, I> indexOp,
-            AbstractionRule<I> abstractionRule) {
+            AbstractionRule<I> abstractionRule,
+            I wideningThreshold) {
 
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
@@ -44,10 +46,19 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         this.indexOp = indexOp;
         this.abstractionRule = abstractionRule;
 
+
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
-        domainOp = new MappingOp<>(AssignMapping::new, keySet, indexOp);
+        assignSupplier = () -> {
+            AssignMapping<I> assign = new AssignMapping<>();
+            for (Integer key : keySet) {
+                assign.put(key, indexOp.leastElement());
+            }
+
+            return assign;
+        };
+        domainOp = new MappingOp<>(assignSupplier, indexOp);
         flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
-        wideningOperator = new ThresholdWidening<>(indexOp.greatestElement(), indexOp);
+        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
     }
 
     @Override
@@ -62,15 +73,11 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
 
     @Override
     public AssignMapping<I> getExtremalValue() {
-        AssignMapping<I> result = new AssignMapping<>();
-
-        for (Integer key : keySet) {
-            if (stateSpaceAdapter.getState(extremalLabel).getHeap().nonterminalEdges().contains(key)) {
-                MappingOp.assign(result, key, indexOp.getVariable());
-            } else {
-                MappingOp.assign(result, key, indexOp.leastElement());
-            }
-        }
+        AssignMapping<I> result = assignSupplier.get();
+        stateSpaceAdapter.getState(extremalLabel).getHeap().nonterminalEdges().forEach(i -> {
+            result.assign(i, indexOp.getVariable());
+            return true;
+        });
 
         return result;
     }
@@ -81,27 +88,56 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     }
 
     @Override
+    public WideningOperator<AssignMapping<I>> getWideningOperator() {
+        return elements -> {
+            AssignMapping<I> result = assignSupplier.get();
+
+            for (Integer key : keySet) {
+                result.assign(key, wideningOperator.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
+            }
+
+            return result;
+        };
+    }
+
+    @Override
     public Function<AssignMapping<I>, AssignMapping<I>>
     getTransferFunction(int from, int to) {
         int untangledTo = (to == flow.copy ? flow.untangled : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
         Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
 
+        Function<AssignMapping<I>, AssignMapping<I>> transferFunction;
         if (stateSpaceAdapter.isMaterialized(untangledTo)) {
-            return generateMaterializationTransferFunction(buffer, merger);
+            transferFunction = generateMaterializationTransferFunction(buffer);
         } else {
-            return generateAbstractionTransferFunction(buffer, merger);
+            transferFunction = generateAbstractionTransferFunction(buffer);
         }
-    }
 
-    @Override
-    public WideningOperator<AssignMapping<I>> getWideningOperator() {
-        return elements -> {
-            AssignMapping<I> result = new AssignMapping<>();
+        return assign -> {
+            AssignMapping<I> result = transferFunction.apply(assign);
 
+            // merge
+            if (merger != null) {
+                merger.pattern().nonterminalEdges().forEach(nt -> {
+                    I value = result.get(nt);
+                    result.unassign(nt);
+                    result.assign(merger.match(nt), value);
+                    return true;
+                });
+            }
+
+            // clean up
             for (Integer key : keySet) {
-                MappingOp.assign(result, key,
-                        wideningOperator.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
+                if (!result.containsKey(key)) {
+                    result.assign(key, indexOp.leastElement());
+                }
+            }
+
+            for (Integer key : result.keySet()) {
+                if (!keySet.contains(key)) {
+                    result.unassign(key);
+                }
             }
 
             return result;
@@ -109,10 +145,10 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     }
 
     public Function<AssignMapping<I>, AssignMapping<I>>
-    generateMaterializationTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
-
+    generateMaterializationTransferFunction(Queue<HeapTransformation> transformationBuffer) {
         return assign -> {
-            final AssignMapping<I> result = new AssignMapping<>(assign);
+            final AssignMapping<I> result = assignSupplier.get();
+            result.assignAll(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
@@ -128,23 +164,21 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                 }
 
                 // update assign AssignMapping
-                MappingOp.assign(result, step.getNtEdge(), null);
+                result.unassign(step.getNtEdge());
                 for (Map.Entry<Integer, I> entry : matchedFragment.entrySet()) {
-                    MappingOp.assign(result, entry.getKey(), entry.getValue());
+                    result.assign(entry.getKey(), entry.getValue());
                 }
             }
-
-            finalizeResult(merger, result);
 
             return result;
         };
     }
 
     public Function<AssignMapping<I>, AssignMapping<I>>
-    generateAbstractionTransferFunction(Queue<HeapTransformation> transformationBuffer, Matching merger) {
-
+    generateAbstractionTransferFunction(Queue<HeapTransformation> transformationBuffer) {
         return assign -> {
-            final AssignMapping<I> result = new AssignMapping<>(assign);
+            final AssignMapping<I> result = assignSupplier.get();
+            result.assignAll(assign);
 
             while (!transformationBuffer.isEmpty()) {
                 HeapTransformation step = transformationBuffer.remove();
@@ -161,32 +195,13 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
 
                 // update assign AssignMapping
                 for (Integer nt : fragment.keySet()) {
-                    MappingOp.assign(result, step.ruleToHeap(nt), null);
+                    result.unassign(step.ruleToHeap(nt));
                 }
 
-                MappingOp.assign(result, step.getNtEdge(), newIndex);
+                result.assign(step.getNtEdge(), newIndex);
             }
-
-            finalizeResult(merger, result);
 
             return result;
         };
-    }
-
-    private void finalizeResult(Matching merger, AssignMapping<I> result) {
-        if (merger != null) {
-            merger.pattern().nonterminalEdges().forEach(nt -> {
-                I value = result.get(nt);
-                MappingOp.assign(result, nt, null);
-                MappingOp.assign(result, merger.match(nt), value);
-                return true;
-            });
-        }
-
-        for (Integer key : keySet) {
-            if (!MappingOp.contains(result, key)) {
-                MappingOp.assign(result, key, indexOp.leastElement());
-            }
-        }
     }
 }

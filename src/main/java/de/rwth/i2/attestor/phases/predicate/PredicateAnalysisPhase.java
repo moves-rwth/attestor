@@ -22,12 +22,10 @@ import java.util.Map;
 
 public class PredicateAnalysisPhase extends AbstractPhase {
 
-    private final boolean enabled;
     private Map<Integer, Map<Integer, AssignMapping<RelativeInteger>>> results = new HashMap<>();
 
     public PredicateAnalysisPhase(Scene scene) {
         super(scene);
-        enabled = scene.options().isPredicateMode();
     }
 
     @Override
@@ -37,7 +35,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
     @Override
     public void executePhase() {
-        if (!enabled) {
+        if (!scene().options().isPredicateMode()) {
             return;
         }
 
@@ -49,7 +47,13 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
         for (int critical : adapter.getCriticalLabels()) {
             PredicateAnalysis<RelativeInteger> analysis =
-                    new PredicateAnalysis<>(critical, adapter, RelativeInteger.opSet, abstractionRule);
+                    new PredicateAnalysis<>(
+                            critical,
+                            adapter,
+                            RelativeInteger.opSet,
+                            abstractionRule,
+                            RelativeInteger.opSet.greatestElement()
+                    );
 
             results.put(critical, solver.solve(analysis));
         }
@@ -57,7 +61,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
     @Override
     public void logSummary() {
-        if (enabled) {
+        if (scene().options().isPredicateMode()) {
             // TODO(mkh): generate certificate
         }
     }
