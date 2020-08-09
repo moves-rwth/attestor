@@ -209,6 +209,15 @@ public class CommandLineReader {
         );
 
         commandLineOptions.addOption(
+                Option.builder()
+                        .longOpt("abstraction-rule")
+                        .hasArg()
+                        .argName("file")
+                        .desc("Supply abstraction rule file.")
+                        .build()
+        );
+
+        commandLineOptions.addOption(
                 Option.builder("sid")
                         .longOpt("inductive-predicates")
                         .hasArg()
