@@ -1,0 +1,560 @@
+[
+  {
+    "nonterminal": "RefBT",
+    "rank": 2,
+    "reductionTentacles": [
+      false,
+      true
+    ],
+    "rules": [
+      {
+        "nodes": [
+          {
+            "type": "NULL",
+            "number": 1
+          },
+          {
+            "type": "BTNode",
+            "number": 1
+          }
+        ],
+        "externals": [
+          1,
+          0
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 1,
+            "target": 0
+          },
+          {
+            "label": "right",
+            "origin": 1,
+            "target": 0
+          }
+        ],
+        "hyperedges": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "NULL",
+            "number": 1
+          },
+          {
+            "type": "BTNode",
+            "number": 2
+          }
+        ],
+        "externals": [
+          1,
+          0
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 1,
+            "target": 2
+          },
+          {
+            "label": "right",
+            "origin": 1,
+            "target": 0
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "NULL",
+            "number": 1
+          },
+          {
+            "type": "BTNode",
+            "number": 2
+          }
+        ],
+        "externals": [
+          1,
+          0
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 1,
+            "target": 0
+          },
+          {
+            "label": "right",
+            "origin": 1,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "NULL",
+            "number": 1
+          },
+          {
+            "type": "BTNode",
+            "number": 3
+          }
+        ],
+        "externals": [
+          1,
+          0
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 1,
+            "target": 2
+          },
+          {
+            "label": "right",
+            "origin": 1,
+            "target": 3
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              0
+            ]
+          },
+          {
+            "label": "RefBT",
+            "tentacles": [
+              3,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "NULL",
+            "number": 1
+          },
+          {
+            "type": "BTNode",
+            "number": 2
+          }
+        ],
+        "externals": [
+          1,
+          0
+        ],
+        "variables": [],
+        "selectors": [],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              1,
+              2,
+              0
+            ]
+          },
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nonterminal": "RefTP",
+    "rank": 3,
+    "reductionTentacles": [
+      false,
+      true,
+      true
+    ],
+    "rules": [
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 2
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          1,
+          2
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 2
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          1,
+          2
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 2
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 3
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          1,
+          3
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 3
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          2,
+          3
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefBT",
+            "tentacles": [
+              1,
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 3
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          2,
+          3
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 3
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 3
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          2,
+          3
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 3
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              1,
+              2,
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 4
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          3,
+          4
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "label": "RefBT",
+            "tentacles": [
+              2,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 4
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          3,
+          4
+        ],
+        "variables": [],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "label": "RefBT",
+            "tentacles": [
+              1,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTNode",
+            "number": 3
+          },
+          {
+            "type": "NULL",
+            "number": 1
+          }
+        ],
+        "externals": [
+          0,
+          1,
+          3
+        ],
+        "variables": [],
+        "selectors": [],
+        "hyperedges": [
+          {
+            "label": "RefTP",
+            "tentacles": [
+              0,
+              2,
+              3
+            ]
+          },
+          {
+            "label": "RefTP",
+            "tentacles": [
+              2,
+              1,
+              3
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
