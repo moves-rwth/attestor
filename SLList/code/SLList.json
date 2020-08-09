@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "type": "int_0",
+      "number": 1
+    },
+    {
+      "type": "int_1",
+      "number": 1
+    },
+    {
+      "type": "NULL",
+      "number": 1
+    },
+    {
+      "type": "SLList",
+      "number": 3
+    }
+  ],
+  "variables": [
+    {
+      "name": "0",
+      "target": 0
+    },
+    {
+      "name": "false",
+      "target": 0
+    },
+    {
+      "name": "1",
+      "target": 1
+    },
+    {
+      "name": "true",
+      "target": 1
+    },
+    {
+      "name": "null",
+      "target": 2
+    },
+    {
+      "name": "@parameter0:",
+      "target": 5
+    }
+  ],
+  "selectors": [
+    {
+      "label": "next",
+      "origin": 5,
+      "target": 4
+    },
+    {
+      "label": "next",
+      "origin": 4,
+      "target": 3
+    },
+    {
+      "label": "next",
+      "origin": 3,
+      "target": 2
+    }
+  ],
+  "hyperedges": [],
+  "externals": []
+}
