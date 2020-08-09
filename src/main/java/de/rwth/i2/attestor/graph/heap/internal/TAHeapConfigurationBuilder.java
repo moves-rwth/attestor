@@ -6,6 +6,9 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import gnu.trove.list.array.TIntArrayList;
 
+import java.util.HashMap;
+import java.util.Map;
+
 // TODO(mkh): refactor duplicates properly (?)
 public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder {
     TAHeapConfiguration heapConf;
@@ -129,13 +132,34 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
     }
 
 
-    private void saveNonterminalReplacement(int ntEdge, Nonterminal label, TIntArrayList newElements, HeapConfiguration replacement) {
-        TIntArrayList publicIdMapping = new TIntArrayList(newElements);
-        publicIdMapping.transformValues(i -> i == -1 ? -1 : heapConf.getPublicId(i));
-        heapConf.addTransformationStep(new HeapTransformation.NonterminalReplacement(ntEdge, label, replacement, publicIdMapping));
+    private void saveNonterminalReplacement(int ntEdge, Nonterminal label, TIntArrayList newElements, InternalHeapConfiguration replacement) {
+        Map<Integer, Integer> ruleToHeap = new HashMap<>();
+        for (int i = 0; i < newElements.size(); i++) {
+            ruleToHeap.put(replacement.getPublicId(i), heapConf.getPublicId(newElements.get(i)));
+        }
+
+        heapConf.addTransformationStep(new HeapTransformation.NonterminalReplacement(ntEdge, label, replacement, ruleToHeap));
     }
 
     private void saveNonterminalInsertion(int ntEdge, Nonterminal label, Matching matching) {
-        heapConf.addTransformationStep(new HeapTransformation.NonterminalInsertion(ntEdge, label, matching.pattern(), matching));
+        HeapConfiguration rule = matching.pattern();
+        Map<Integer, Integer> ruleToHeap = new HashMap<>();
+
+        rule.nodes().forEach(node -> {
+            ruleToHeap.put(node, matching.match(node));
+            return true;
+        });
+
+        rule.variableEdges().forEach(v -> {
+            ruleToHeap.put(v, matching.match(v));
+            return true;
+        });
+
+        rule.nonterminalEdges().forEach(nt -> {
+            ruleToHeap.put(nt, matching.match(nt));
+            return true;
+        });
+
+        heapConf.addTransformationStep(new HeapTransformation.NonterminalInsertion(ntEdge, label, matching.pattern(), ruleToHeap));
     }
 }

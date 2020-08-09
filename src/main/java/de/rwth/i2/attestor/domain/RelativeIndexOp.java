@@ -63,7 +63,7 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
             return latticeOp.isLessOrEqual(e1.getConcrete(), e2.getConcrete());
         }
 
-        return false;
+        return e2.equals(greatestElement());
     }
 
     // Monoid operations
