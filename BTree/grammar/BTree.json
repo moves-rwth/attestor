@@ -1,0 +1,143 @@
+[
+  {
+    "nonterminal": "SLBTree",
+    "rank": 2,
+    "rules": [
+      {
+        "nodes": [
+          {
+            "type": "BTree",
+            "number": 2
+          }
+        ],
+        "externals": [
+          0,
+          1
+        ],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": [],
+        "variables": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTree",
+            "number": 3
+          }
+        ],
+        "externals": [
+          0,
+          1
+        ],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 2
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 1
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "SLBTree",
+            "tentacles": [
+              2,
+              1
+            ]
+          }
+        ],
+        "variables": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTree",
+            "number": 3
+          }
+        ],
+        "externals": [
+          0,
+          1
+        ],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 1
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 2
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "SLBTree",
+            "tentacles": [
+              2,
+              1
+            ]
+          }
+        ],
+        "variables": []
+      },
+      {
+        "nodes": [
+          {
+            "type": "BTree",
+            "number": 4
+          }
+        ],
+        "externals": [
+          0,
+          1
+        ],
+        "selectors": [
+          {
+            "label": "left",
+            "origin": 0,
+            "target": 2
+          },
+          {
+            "label": "right",
+            "origin": 0,
+            "target": 3
+          }
+        ],
+        "hyperedges": [
+          {
+            "label": "SLBTree",
+            "tentacles": [
+              2,
+              1
+            ]
+          },
+          {
+            "label": "SLBTree",
+            "tentacles": [
+              3,
+              1
+            ]
+          }
+        ],
+        "variables": []
+      }
+    ]
+  }
+]
