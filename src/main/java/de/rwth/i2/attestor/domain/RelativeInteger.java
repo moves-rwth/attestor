@@ -1,15 +1,12 @@
 package de.rwth.i2.attestor.domain;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
-    private RelativeInteger() {
-    }
-
-    private RelativeInteger(AugmentedInteger concrete) {
-        super(concrete);
-    }
 
     private RelativeInteger(AugmentedInteger concrete, Set<Integer> variables) {
         super(concrete, variables);
@@ -18,9 +15,12 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
     public static class RelativeIntegerOp extends RelativeIndexOp<AugmentedInteger, RelativeInteger> {
         private static final Map<Integer, RelativeInteger> invertedVariables = new HashMap<>();
 
+        private RelativeIntegerOp() {
+            super(supplier, latticeOp, monoidOp);
+        }
+
         private static Set<Integer> filterVariables(Set<Integer> variables) {
             Set<Integer> toBeRemoved = new HashSet<>();
-
             variables.forEach(id -> {
                 RelativeInteger inverse = invertedVariables.get(id);
                 if (inverse != null) {
@@ -33,23 +33,7 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
         }
 
         private static final RelativeIndexSupplier<AugmentedInteger, RelativeInteger>
-                supplier = new RelativeIndexSupplier<AugmentedInteger, RelativeInteger>() {
-
-            @Override
-            public RelativeInteger get() {
-                return new RelativeInteger();
-            }
-
-            @Override
-            public RelativeInteger get(AugmentedInteger value) {
-                return new RelativeInteger(value);
-            }
-
-            @Override
-            public RelativeInteger get(AugmentedInteger value, Set<Integer> variables) {
-                return new RelativeInteger(value, filterVariables(variables));
-            }
-        };
+                supplier = (value, variables) -> new RelativeInteger(value, filterVariables(variables));
 
         private static final Lattice<AugmentedInteger> latticeOp = new Lattice<AugmentedInteger>() {
             @Override
@@ -89,10 +73,6 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
             }
         };
 
-        public RelativeIntegerOp() {
-            super(supplier, latticeOp, monoidOp);
-        }
-
         public RelativeInteger invert(RelativeInteger toInvert) {
             AugmentedInteger newConcrete;
             if (toInvert.getConcrete() != null) {
@@ -107,7 +87,7 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
                 newConcrete = null;
             }
 
-            RelativeInteger result = supplier.get(newConcrete);
+            RelativeInteger result = getFromConcrete(newConcrete);
             for (Integer id : toInvert.getVariables()) {
                 invertedVariables.putIfAbsent(id, getVariable());
                 result = add(result, invertedVariables.get(id));

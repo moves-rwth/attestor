@@ -5,29 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RelativeIndex<T> {
-    private static final Set<Integer> reservedVariables = new HashSet<>();
-
     private final T concrete;
     private final Set<Integer> variables = new HashSet<>();
 
-    protected RelativeIndex(T concrete) {
-        this.concrete = concrete;
-    }
-
-    protected RelativeIndex() {
-        this.concrete = null;
-        int id = reservedVariables.isEmpty() ? 0 : Collections.max(reservedVariables) + 1;
-        reservedVariables.add(id);
-        variables.add(id);
-    }
-
     protected RelativeIndex(T concrete, Set<Integer> variables) {
         this.concrete = concrete;
-        if (reservedVariables.containsAll(variables)) {
-            this.variables.addAll(variables);
-        } else {
-            throw new IllegalArgumentException("Constructing a relative index using unreserved variables is not allowed");
-        }
+        this.variables.addAll(variables);
     }
 
     public boolean isRelative() {

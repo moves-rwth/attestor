@@ -27,6 +27,10 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
         return infinite;
     }
 
+    public boolean isZero() {
+        return value == 0 && !infinite;
+    }
+
     public int getValue() {
         if (infinite) {
             throw new UnsupportedOperationException("Infinity is not a number");
@@ -34,7 +38,6 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
 
         return value;
     }
-
 
     @Override
     public int compareTo(@Nonnull AugmentedInteger other) {
