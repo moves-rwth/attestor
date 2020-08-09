@@ -24,30 +24,49 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
 
         switch (getCase(ctx)) {
             case INTEGER:
-                stack.push((index, assign) -> RelativeInteger.get(Integer.getInteger(ctx.INTEGER().getText())));
+                final int integer = Integer.parseInt(ctx.INTEGER().getText());
+
+                stack.push((index, assign) -> RelativeInteger.get(integer));
                 break;
+
             case MINUS:
-                stack.push((index, assign) -> RelativeInteger.opSet.invert(stack.pop().evaluate(index, assign)));
+                final AbstractionRuleExpression toInvert = stack.pop();
+
+                stack.push((index, assign) -> RelativeInteger.opSet.invert(toInvert.evaluate(index, assign)));
                 break;
+
             case ADD:
+                final AbstractionRuleExpression addRight = stack.pop();
+                final AbstractionRuleExpression addLeft = stack.pop();
+
                 stack.push((index, assign) -> RelativeInteger.opSet.add(
-                        stack.pop().evaluate(index, assign),
-                        stack.pop().evaluate(index, assign)));
+                        addLeft.evaluate(index, assign),
+                        addRight.evaluate(index, assign)));
                 break;
+
             case SUBTRACT:
+                final AbstractionRuleExpression subRight = stack.pop();
+                final AbstractionRuleExpression subLeft = stack.pop();
+
                 stack.push((index, assign) -> RelativeInteger.opSet.subtract(
-                        stack.pop().evaluate(index, assign),
-                        stack.pop().evaluate(index, assign)));
+                        subLeft.evaluate(index, assign),
+                        subRight.evaluate(index, assign)));
                 break;
+
             case VAR:
                 stack.push((index, assign) -> RelativeInteger.opSet.getVariable());
                 break;
+
             case INDEX:
                 stack.push((index, assign) -> index);
                 break;
+
             case ASSIGN:
-                stack.push((index, assign) -> assign.get(Integer.getInteger(ctx.INTEGER().getText())));
+                final int idx = Integer.parseInt(ctx.INTEGER().getText());
+
+                stack.push((index, assign) -> assign.get(idx));
                 break;
+
             case PAREN:
                 break;
             default:
@@ -56,7 +75,7 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
     }
 
     private Case getCase(RelativeIntegerParser.ExprContext ctx) {
-        if (ctx.INTEGER() != null) {
+        if (ctx.INTEGER() != null && ctx.Idx == null) {
             return Case.INTEGER;
         }
 
