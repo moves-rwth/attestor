@@ -6,6 +6,8 @@ import de.rwth.i2.attestor.predicateAnalysis.RelativeIntegerParser;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
     Deque<AbstractionRuleExpression> stack = new ArrayDeque<>();
@@ -35,6 +37,19 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
                 stack.push((index, assign) -> RelativeInteger.opSet.invert(toInvert.evaluate(index, assign)));
                 break;
 
+            case LUB:
+                final AbstractionRuleExpression lubRight = stack.pop();
+                final AbstractionRuleExpression lubLeft = stack.pop();
+
+                stack.push((index, assign) -> {
+                    final Set<RelativeInteger> s = new HashSet<>();
+                    s.add(lubLeft.evaluate(index, assign));
+                    s.add(lubRight.evaluate(index, assign));
+
+                    return RelativeInteger.opSet.getLeastUpperBound(s);
+                });
+                break;
+
             case ADD:
                 final AbstractionRuleExpression addRight = stack.pop();
                 final AbstractionRuleExpression addLeft = stack.pop();
@@ -51,6 +66,14 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
                 stack.push((index, assign) -> RelativeInteger.opSet.subtract(
                         subLeft.evaluate(index, assign),
                         subRight.evaluate(index, assign)));
+                break;
+
+            case TOP:
+                stack.push((index, assign) -> RelativeInteger.opSet.greatestElement());
+                break;
+
+            case BOTTOM:
+                stack.push((index, assign) -> RelativeInteger.opSet.leastElement());
                 break;
 
             case VAR:
@@ -79,6 +102,14 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
             return Case.INTEGER;
         }
 
+        if (ctx.TOP() != null) {
+            return Case.TOP;
+        }
+
+        if (ctx.BOTTOM() != null) {
+            return Case.BOTTOM;
+        }
+
         if (ctx.VAR() != null) {
             return Case.VAR;
         }
@@ -94,6 +125,11 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
         if (ctx.MINUS() != null && ctx.Expr != null) {
             return Case.MINUS;
         }
+
+        if (ctx.LUB() != null && ctx.Left != null && ctx.Right != null) {
+            return Case.LUB;
+        }
+
         if (ctx.PLUS() != null && ctx.Left != null && ctx.Right != null) {
             return Case.ADD;
         }
@@ -106,6 +142,6 @@ public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
     }
 
     private enum Case {
-        INTEGER, MINUS, ADD, SUBTRACT, VAR, INDEX, ASSIGN, PAREN
+        INTEGER, MINUS, ADD, SUBTRACT, LUB, TOP, BOTTOM, VAR, INDEX, ASSIGN, PAREN
     }
 }
