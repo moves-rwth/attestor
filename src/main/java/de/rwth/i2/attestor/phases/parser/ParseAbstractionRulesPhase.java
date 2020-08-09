@@ -2,7 +2,6 @@ package de.rwth.i2.attestor.phases.parser;
 
 import de.rwth.i2.attestor.domain.RelativeInteger;
 import de.rwth.i2.attestor.grammar.Grammar;
-import de.rwth.i2.attestor.graph.BasicNonterminal;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
@@ -33,7 +32,6 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
     private Grammar grammar;
     private final Map<Nonterminal, Map<Integer, AbstractionRuleExpression>> backward = new HashMap<>();
     private final Map<Nonterminal, Map<Integer, Map<Integer, AbstractionRuleExpression>>> forward = new HashMap<>();
-    private final BasicNonterminal.Factory nonterminalFactory = new BasicNonterminal.Factory();
 
     public ParseAbstractionRulesPhase(Scene scene) {
         super(scene);
@@ -44,14 +42,29 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
         return new AbstractionRule<RelativeInteger>() {
             @Override
             public Map<Integer, RelativeInteger> abstractForward(RelativeInteger index, Nonterminal nt, HeapConfiguration rule) {
+                if (!forward.get(nt).containsKey(grammar.getRulePosition(nt, rule))) {
+                    return new HashMap<>();
+                }
+
                 return forward.get(nt).get(grammar.getRulePosition(nt, rule)).entrySet()
                         .stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().evaluate(index, null)));
+                        .collect(Collectors.toMap(
+                                e -> e.getKey() + rule.countNodes() + rule.countVariableEdges(),
+                                e -> e.getValue().evaluate(index, null)));
             }
 
             @Override
             public RelativeInteger abstractBackward(Map<Integer, RelativeInteger> assign, Nonterminal nt, HeapConfiguration rule) {
-                return backward.get(nt).get(grammar.getRulePosition(nt, rule)).evaluate(null, assign);
+                return backward
+                        .get(nt)
+                        .get(grammar.getRulePosition(nt, rule))
+                        .evaluate(
+                                null,
+                                assign.entrySet()
+                                        .stream()
+                                        .collect(Collectors.toMap(
+                                                e -> e.getKey() - rule.countNodes() - rule.countVariableEdges(),
+                                                Map.Entry::getValue)));
             }
         };
     }
@@ -90,7 +103,7 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
         JSONArray array = new JSONArray(str);
         for (int i = 0; i < array.length(); i++) {
             JSONObject fragment = array.getJSONObject(i);
-            Nonterminal nt = nonterminalFactory.get(fragment.getString("nonterminal"));
+            Nonterminal nt = scene().getNonterminal(fragment.getString("nonterminal"));
 
             // forward
             JSONArray mappings = fragment.getJSONArray("forward");
@@ -99,9 +112,9 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
                 JSONArray mapping = mappings.getJSONArray(j);
                 for (int k = 0; k < mapping.length(); k++) {
                     forward.get(nt).computeIfAbsent(j, key -> new HashMap<>());
-                    String idx = mapping.getJSONArray(k).getString(0);
+                    Integer idx = mapping.getJSONArray(k).getInt(0);
                     String expression = mapping.getJSONArray(k).getString(1);
-                    forward.get(nt).get(j).put(Integer.getInteger(idx), parseExpression(expression));
+                    forward.get(nt).get(j).put(idx, parseExpression(expression));
                 }
             }
 

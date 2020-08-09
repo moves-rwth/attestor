@@ -17,3 +17,4 @@ INTEGER : [0-9]+ ;
 VAR     : '$VAR' ;
 INDEX   : '$INDEX' ;
 ASSIGN  : '$ASSIGN' ;
+WS : [ \t\r\n]+ -> skip ;
