@@ -61,6 +61,10 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
     }
 
+    public Integer getUntangled() {
+        return flow.untangled;
+    }
+
     @Override
     public Flow getFlow() {
         return flow;
@@ -103,7 +107,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     @Override
     public Function<AssignMapping<I>, AssignMapping<I>>
     getTransferFunction(int from, int to) {
-        int untangledTo = (to == flow.copy ? flow.untangled : to);
+        int untangledTo = (to == flow.untangled ? flow.original : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
         Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
 
