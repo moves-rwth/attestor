@@ -9,10 +9,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class StateSpaceAdapter {
     private final TAStateSpace stateSpace;
@@ -88,11 +85,41 @@ public class StateSpaceAdapter {
 
     private void checkCritical(int id) {
         ProgramState state = stateSpace.getState(id);
-        boolean critical = criticalCommands.stream()
+        boolean criticalStatement = criticalCommands.stream()
                 .anyMatch(clazz -> clazz.isInstance(program.getStatement(state.getProgramCounter())));
 
-        if (critical) {
-            criticalLabels.add(state.getStateSpaceId());
+        if (criticalStatement) {
+            boolean onCycle = reachableStates(id).contains(id);
+            if (onCycle) {
+                criticalLabels.add(id);
+            }
         }
+    }
+
+    private Set<Integer> reachableStates(int id) {
+        Set<Integer> reachable = new HashSet<>();
+        reachableRec(id, reachable);
+        return reachable;
+    }
+
+    private void reachableRec(int id, Set<Integer> accumulator) {
+
+        stateSpace.getMaterializationSuccessorsIdsOf(id).forEach(successor -> {
+            if (!accumulator.contains(successor)) {
+                accumulator.add(successor);
+                reachableRec(successor, accumulator);
+            }
+
+            return true;
+        });
+
+        stateSpace.getControlFlowSuccessorsIdsOf(id).forEach(successor -> {
+            if (!accumulator.contains(successor)) {
+                accumulator.add(successor);
+                reachableRec(successor, accumulator);
+            }
+
+            return true;
+        });
     }
 }
