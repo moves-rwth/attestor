@@ -1,0 +1,58 @@
+{
+  "nodes": [
+    {
+      "type": "int_0",
+      "number": 1
+    },
+    {
+      "type": "int_1",
+      "number": 1
+    },
+    {
+      "type": "NULL",
+      "number": 1
+    },
+    {
+      "type": "BTree",
+      "number": 1
+    }
+  ],
+  "externals": [],
+  "variables": [
+    {
+      "name": "0",
+      "target": 0
+    },
+    {
+      "name": "false",
+      "target": 0
+    },
+    {
+      "name": "1",
+      "target": 1
+    },
+    {
+      "name": "true",
+      "target": 1
+    },
+    {
+      "name": "null",
+      "target": 2
+    },
+    {
+      "name": "@parameter0:",
+      "target": 3
+    }
+  ],
+  "selectors": [
+  ],
+  "hyperedges": [
+    {
+      "label": "SLBTree",
+      "tentacles": [
+        3,
+        2
+      ]
+    }
+  ]
+}
