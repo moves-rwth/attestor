@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    {
+      "type": "NULL",
+      "number": 1
+    },
+    {
+      "type": "BTNode",
+      "number": 2
+    }
+  ],
+  "externals": [],
+  "variables": [
+    {
+      "name": "null",
+      "target": 0
+    },
+    {
+      "name": "@parameter0:",
+      "target": 1
+    },
+    {
+      "name": "@parameter1:",
+      "target": 2
+    }
+  ],
+  "selectors": [
+  ],
+  "hyperedges": [
+    {
+      "label": "RefBT",
+      "tentacles": [
+        1,
+        0
+      ]
+    }
+  ]
+}
