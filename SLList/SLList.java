@@ -1,7 +1,7 @@
 public class SLList {
     private SLList next;
 
-    public void reverse(SLList head) {
+    static SLList reverse(SLList head) {
         SLList reversedPart = null;
         SLList current = head;
 
@@ -11,6 +11,8 @@ public class SLList {
             reversedPart = current;
             current = next;
         }
+
+        return reversedPart;
     }
 
     public static void main(String[] args) {
