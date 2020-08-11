@@ -6,13 +6,11 @@ import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.matching.IsomorphismChecker;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.util.Pair;
-import gnu.trove.list.array.TIntArrayList;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-
 
 public class TAStateSpace extends InternalStateSpace {
     private final Map<Pair<ProgramState, ProgramState>, Queue<HeapTransformation>> transformations = new HashMap<>();

@@ -76,7 +76,8 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
     public I operate(I e1, I e2) {
         if (e1.equals(latticeOp.greatestElement()) || e2.equals(latticeOp.greatestElement())) {
             return greatestElement();
-        } else if (e1.equals(latticeOp.leastElement()) || e2.equals(latticeOp.leastElement())) {
+        }
+        if (e1.equals(latticeOp.leastElement()) || e2.equals(latticeOp.leastElement())) {
             return leastElement();
         }
 

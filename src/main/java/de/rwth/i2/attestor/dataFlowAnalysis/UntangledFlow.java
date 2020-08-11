@@ -14,8 +14,8 @@ public class UntangledFlow extends FlowImpl {
 
         // TODO(mkh): fix ConcurrentModificationException
         for (Integer predecessor : new HashSet<>(getPredecessors(original))) {
-            remove(predecessor, original);
-            add(predecessor, untangled);
+            super.remove(predecessor, original);
+            super.add(predecessor, untangled);
         }
     }
 
