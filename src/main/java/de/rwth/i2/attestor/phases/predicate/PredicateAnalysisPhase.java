@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PredicateAnalysisPhase extends AbstractPhase {
-
     private final Map<Integer, Boolean> terminationResults = new HashMap<>();
     private final Map<
             Pair<Integer, Integer>,

@@ -6,31 +6,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
+public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
+    public static final RelativeIntegerOp opSet = new RelativeIntegerOp();
 
     private RelativeInteger(AugmentedInteger concrete, Set<Integer> variables) {
         super(concrete, variables);
     }
 
-    public static class RelativeIntegerOp extends RelativeIndexOp<AugmentedInteger, RelativeInteger> {
+    public static RelativeInteger get(int value) {
+        return opSet.getFromConcrete(new AugmentedInteger(value));
+    }
+
+    public static final class RelativeIntegerOp extends RelativeIndexOp<AugmentedInteger, RelativeInteger> {
         private static final Map<Integer, RelativeInteger> invertedVariables = new HashMap<>();
-
-        private RelativeIntegerOp() {
-            super(supplier, latticeOp, monoidOp);
-        }
-
-        private static Set<Integer> filterVariables(Set<Integer> variables) {
-            Set<Integer> toBeRemoved = new HashSet<>();
-            variables.forEach(id -> {
-                RelativeInteger inverse = invertedVariables.get(id);
-                if (inverse != null) {
-                    toBeRemoved.add(id);
-                    toBeRemoved.add(inverse.getVariables().iterator().next());
-                }
-            });
-
-            return variables.stream().filter(v -> !toBeRemoved.contains(v)).collect(Collectors.toSet());
-        }
 
         private static final RelativeIndexSupplier<AugmentedInteger, RelativeInteger>
                 supplier = (value, variables) -> new RelativeInteger(value, filterVariables(variables));
@@ -73,6 +61,23 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
             }
         };
 
+        private RelativeIntegerOp() {
+            super(supplier, latticeOp, monoidOp);
+        }
+
+        private static Set<Integer> filterVariables(Set<Integer> variables) {
+            Set<Integer> toBeRemoved = new HashSet<>();
+            variables.forEach(id -> {
+                RelativeInteger inverse = invertedVariables.get(id);
+                if (inverse != null) {
+                    toBeRemoved.add(id);
+                    toBeRemoved.add(inverse.getVariables().iterator().next());
+                }
+            });
+
+            return variables.stream().filter(v -> !toBeRemoved.contains(v)).collect(Collectors.toSet());
+        }
+
         public RelativeInteger invert(RelativeInteger toInvert) {
             AugmentedInteger newConcrete;
             if (toInvert.getConcrete() != null) {
@@ -99,11 +104,5 @@ final public class RelativeInteger extends RelativeIndex<AugmentedInteger> {
         public RelativeInteger subtract(RelativeInteger i1, RelativeInteger i2) {
             return add(i1, invert(i2));
         }
-    }
-
-    public static final RelativeIntegerOp opSet = new RelativeIntegerOp();
-
-    public static RelativeInteger get(int value) {
-        return opSet.getFromConcrete(new AugmentedInteger(value));
     }
 }

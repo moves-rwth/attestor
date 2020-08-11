@@ -36,16 +36,15 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             AbstractionRule<I> abstractionRule,
             I wideningThreshold) {
 
-        TIntSet TIntkeySet = new TIntHashSet();
-        for (ProgramState state : stateSpaceAdapter.getStates()) {
-            TIntkeySet.addAll(state.getHeap().nonterminalEdges());
-        }
-
         this.extremalLabel = extremalLabel;
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
         this.abstractionRule = abstractionRule;
 
+        TIntSet TIntkeySet = new TIntHashSet();
+        for (ProgramState state : stateSpaceAdapter.getStates()) {
+            TIntkeySet.addAll(state.getHeap().nonterminalEdges());
+        }
 
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
         assignSupplier = () -> {

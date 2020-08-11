@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RelativeIntegerExtractor extends RelativeIntegerBaseListener {
-    Deque<AbstractionRuleExpression> stack = new ArrayDeque<>();
+    private final Deque<AbstractionRuleExpression> stack = new ArrayDeque<>();
 
     public AbstractionRuleExpression getResult() {
         if (stack.size() != 1) {

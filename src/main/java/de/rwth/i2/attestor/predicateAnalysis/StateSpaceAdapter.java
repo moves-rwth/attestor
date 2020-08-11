@@ -29,7 +29,7 @@ public class StateSpaceAdapter {
 
         this.stateSpace = (TAStateSpace) stateSpace;
         this.program = program;
-        this.criticalCommands = criticalCommands;
+        this.criticalCommands = Collections.unmodifiableSet(criticalCommands);
 
         stateSpace.getStates().forEach(state -> {
             int current = state.getStateSpaceId();
@@ -87,13 +87,11 @@ public class StateSpaceAdapter {
         ProgramState state = stateSpace.getState(id);
         boolean criticalStatement = criticalCommands.stream()
                 .anyMatch(clazz -> clazz.isInstance(program.getStatement(state.getProgramCounter())));
+        boolean hasNonterminal = state.getHeap().countNonterminalEdges() > 0;
+        boolean onCycle = reachableStates(id).contains(id);
 
-        if (criticalStatement) {
-            if (state.getHeap().countNonterminalEdges() > 0) {
-                if (reachableStates(id).contains(id)) {
-                    criticalLabels.add(id);
-                }
-            }
+        if (criticalStatement && hasNonterminal && onCycle) {
+            criticalLabels.add(id);
         }
     }
 

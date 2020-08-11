@@ -29,7 +29,6 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
             throw new IllegalArgumentException("Provided replacement is not an InternalHeapConfiguration.");
         }
 
-        InternalHeapConfiguration replacementHc = (InternalHeapConfiguration) replacement;
         int ntPrivateId = heapConf.getPrivateId(ntEdge);
 
         if (!heapConf.isNonterminalEdge(ntPrivateId)) {
@@ -47,6 +46,7 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
         Nonterminal label = heapConf.labelOf(ntEdge);
         removeNonterminalEdge(ntEdge);
 
+        InternalHeapConfiguration replacementHc = (InternalHeapConfiguration) replacement;
         TIntArrayList newElements = computeNewElements(replacementHc, tentacles);
 
         addReplacementGraph(replacementHc, newElements);

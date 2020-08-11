@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class ThresholdWidening<T> implements WideningOperator<T> {
     private final T threshold;
-    private Lattice<T> latticeOp;
+    private final Lattice<T> latticeOp;
 
     public ThresholdWidening(T threshold, Lattice<T> latticeOp) {
         this.threshold = threshold;
@@ -18,8 +18,7 @@ public class ThresholdWidening<T> implements WideningOperator<T> {
     public T widen(Set<T> elements) {
         if (elements.stream().anyMatch(e -> latticeOp.isLessOrEqual(e, threshold))) {
             return latticeOp.getLeastUpperBound(elements);
-        }
-        else {
+        } else {
             return latticeOp.greatestElement();
         }
     }

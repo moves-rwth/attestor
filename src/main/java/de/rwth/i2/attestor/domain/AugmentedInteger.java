@@ -56,17 +56,17 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
 
     @Override
     public boolean equals(Object otherObject) {
-        if (!(otherObject instanceof AugmentedInteger)) {
+        if (!otherObject.getClass().equals(AugmentedInteger.class)) {
+            return false;
+        }
+
+        AugmentedInteger other = (AugmentedInteger) otherObject;
+        if (this.infinite && other.infinite) {
+            return this.positive == other.positive;
+        } else if (this.infinite || other.infinite) {
             return false;
         } else {
-            AugmentedInteger other = (AugmentedInteger) otherObject;
-            if (this.infinite && other.infinite) {
-                return this.positive == other.positive;
-            } else if (this.infinite || other.infinite) {
-                return false;
-            } else {
-                return this.value == other.value;
-            }
+            return this.value == other.value;
         }
     }
 

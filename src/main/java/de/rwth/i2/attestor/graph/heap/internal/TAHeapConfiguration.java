@@ -5,7 +5,6 @@ import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 // Transformation Aware Heap Configuration
 public class TAHeapConfiguration extends InternalHeapConfiguration {
@@ -30,6 +29,10 @@ public class TAHeapConfiguration extends InternalHeapConfiguration {
         this.transformationBuffer.add(step);
     }
 
+    @Override
+    public boolean equals(Object otherObject) {
+        return super.equals(otherObject);
+    }
 
     @Override
     public HeapConfiguration clone() {
@@ -40,7 +43,6 @@ public class TAHeapConfiguration extends InternalHeapConfiguration {
     public HeapConfiguration getEmpty() {
         return new TAHeapConfiguration();
     }
-
 
     @Override
     public HeapConfigurationBuilder builder() {

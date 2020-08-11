@@ -26,7 +26,7 @@ public class FlowImpl implements Flow {
         }
     }
 
-    private void addToMap(Map<Integer, Set<Integer>> map, int from, int to) {
+    private static void addToMap(Map<Integer, Set<Integer>> map, int from, int to) {
         if (!map.containsKey(from)) {
             map.put(from, new HashSet<>());
         }
@@ -34,7 +34,7 @@ public class FlowImpl implements Flow {
         map.get(from).add(to);
     }
 
-    private void removeFromMap(Map<Integer, Set<Integer>> map, int from, int to) {
+    private static void removeFromMap(Map<Integer, Set<Integer>> map, int from, int to) {
         if (!map.containsKey(from)) {
             return;
         }
@@ -42,7 +42,7 @@ public class FlowImpl implements Flow {
         map.get(from).remove(to);
     }
 
-    private Set<Integer> getFromMap(Map<Integer, Set<Integer>> map, int label) {
+    private static Set<Integer> getFromMap(Map<Integer, Set<Integer>> map, int label) {
         Set<Integer> result = map.get(label);
 
         if (result == null) {
@@ -52,7 +52,7 @@ public class FlowImpl implements Flow {
         return Collections.unmodifiableSet(result);
     }
 
-    private void addOrRemove(Set<Integer> set, int label, boolean add) {
+    private static void addOrRemove(Set<Integer> set, int label, boolean add) {
         if (add) {
             set.add(label);
         } else {
