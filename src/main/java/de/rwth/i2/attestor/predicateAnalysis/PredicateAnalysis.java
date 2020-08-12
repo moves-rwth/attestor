@@ -1,9 +1,6 @@
 package de.rwth.i2.attestor.predicateAnalysis;
 
-import de.rwth.i2.attestor.dataFlowAnalysis.DataFlowAnalysis;
-import de.rwth.i2.attestor.dataFlowAnalysis.Flow;
-import de.rwth.i2.attestor.dataFlowAnalysis.UntangledFlow;
-import de.rwth.i2.attestor.dataFlowAnalysis.WideningOperator;
+import de.rwth.i2.attestor.dataFlowAnalysis.*;
 import de.rwth.i2.attestor.domain.*;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
@@ -40,7 +37,9 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
         this.abstractionRule = abstractionRule;
+        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
 
+        // domainOp
         TIntSet TIntkeySet = new TIntHashSet();
         for (ProgramState state : stateSpaceAdapter.getStates()) {
             TIntkeySet.addAll(state.getHeap().nonterminalEdges());
@@ -56,8 +55,25 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             return assign;
         };
         domainOp = new MappingOp<>(assignSupplier, indexOp);
-        flow = new UntangledFlow(stateSpaceAdapter.getFlow(), extremalLabel);
-        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
+
+        // flow
+        Set<Integer> notReachable = new HashSet<>(stateSpaceAdapter.getFlow().getLabels());
+        notReachable.removeAll(stateSpaceAdapter.reachableStates(extremalLabel));
+        FlowImpl reachableFlow = new FlowImpl(stateSpaceAdapter.getFlow());
+
+        for (Integer state : notReachable) {
+            Set<Integer> predecessors = new HashSet<>(reachableFlow.getPredecessors(state));
+            for (Integer predecessor : predecessors) {
+                reachableFlow.remove(predecessor, state);
+            }
+
+            Set<Integer> successors = new HashSet<>(reachableFlow.getPredecessors(state));
+            for (Integer successor : successors) {
+                reachableFlow.remove(state, successor);
+            }
+        }
+
+        flow = new UntangledFlow(reachableFlow, extremalLabel);
     }
 
     public Integer getUntangled() {

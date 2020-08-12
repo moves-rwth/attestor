@@ -19,6 +19,7 @@ public class StateSpaceAdapter {
     private final Set<Integer> materialized = new HashSet<>();
     private final Set<Integer> criticalLabels = new HashSet<>();
     private final FlowImpl flow = new FlowImpl();
+    private final Map<Integer, Set<Integer>> reachableFragment = new HashMap<>();
 
     public StateSpaceAdapter(StateSpace stateSpace, Program program,
                              Set<Class<? extends SemanticsCommand>> criticalCommands) {
@@ -83,6 +84,16 @@ public class StateSpaceAdapter {
         return stateSpace.getMerger(stateSpace.getState(from), stateSpace.getState(to));
     }
 
+    public Set<Integer> reachableStates(int id) {
+        reachableFragment.computeIfAbsent(id, k -> {
+            Set<Integer> reachable = new HashSet<>();
+            reachableRec(id, reachable);
+            return reachable;
+        });
+
+        return Collections.unmodifiableSet(reachableFragment.get(id));
+    }
+
     private void checkCritical(int id) {
         ProgramState state = stateSpace.getState(id);
         boolean criticalStatement = criticalCommands.stream()
@@ -95,14 +106,7 @@ public class StateSpaceAdapter {
         }
     }
 
-    private Set<Integer> reachableStates(int id) {
-        Set<Integer> reachable = new HashSet<>();
-        reachableRec(id, reachable);
-        return reachable;
-    }
-
     private void reachableRec(int id, Set<Integer> accumulator) {
-
         stateSpace.getMaterializationSuccessorsIdsOf(id).forEach(successor -> {
             if (!accumulator.contains(successor)) {
                 accumulator.add(successor);
