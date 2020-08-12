@@ -14,7 +14,7 @@
     },
     {
       "type": "SLList",
-      "number": 3
+      "number": 1
     }
   ],
   "variables": [
@@ -40,26 +40,19 @@
     },
     {
       "name": "@parameter0:",
-      "target": 5
+      "target": 3
+    }
+  ],
+  "hyperedges": [
+    {
+      "label": "SLSLList",
+      "tentacles": [
+        3,
+        2
+      ]
     }
   ],
   "selectors": [
-    {
-      "label": "next",
-      "origin": 5,
-      "target": 4
-    },
-    {
-      "label": "next",
-      "origin": 4,
-      "target": 3
-    },
-    {
-      "label": "next",
-      "origin": 3,
-      "target": 2
-    }
   ],
-  "hyperedges": [],
   "externals": []
 }

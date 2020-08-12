@@ -20,7 +20,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
         // initialization
         for (Integer label : flow.getLabels()) {
             for (Integer successor : flow.getSuccessors(label)) {
-                worklist.add(new Pair<>(label, successor));
+                worklist.push(new Pair<>(label, successor));
             }
 
             if (extremalLabels.contains(label)) {
