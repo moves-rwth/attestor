@@ -1,16 +1,19 @@
 package de.rwth.i2.attestor.predicateAnalysis;
 
+import de.rwth.i2.attestor.domain.AddMonoid;
 import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.domain.Lattice;
 
 import java.util.Collections;
 import java.util.Set;
 
-public class SingleEdgeChecker<I> implements TerminationChecker<I> {
+public class TotalSumChecker<I> implements TerminationChecker<I> {
     private final Lattice<I> latticeOp;
+    private final AddMonoid<I> monoidOp;
 
-    public SingleEdgeChecker(Lattice<I> latticeOp) {
+    public TotalSumChecker(Lattice<I> latticeOp, AddMonoid<I> monoidOp) {
         this.latticeOp = latticeOp;
+        this.monoidOp = monoidOp;
     }
 
     @Override
@@ -19,13 +22,11 @@ public class SingleEdgeChecker<I> implements TerminationChecker<I> {
             throw new IllegalArgumentException("Key sets of assign mapping must be compatible.");
         }
 
-        for (Integer key : solutionCritical.keySet()) {
-            I extremal = solutionCritical.get(key);
-            I transferred = solutionUntangled.get(key);
+        I extremal = solutionCritical.values().stream().reduce(monoidOp.identity(), monoidOp::add);
+        I transferred = solutionUntangled.values().stream().reduce(monoidOp.identity(), monoidOp::add);
 
-            if (!transferred.equals(extremal) && latticeOp.isLessOrEqual(transferred, extremal)) {
-                return Collections.singleton(key);
-            }
+        if (!transferred.equals(extremal) && latticeOp.isLessOrEqual(transferred, extremal)) {
+            return Collections.unmodifiableSet(solutionCritical.keySet());
         }
 
         return Collections.emptySet();
