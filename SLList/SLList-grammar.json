@@ -1,6 +1,6 @@
 [
   {
-    "nonterminal": "SLSLList",
+    "nonterminal": "RefSLList",
     "rank": 2,
     "rules": [
       {
@@ -45,7 +45,7 @@
         ],
         "hyperedges": [
           {
-            "label": "SLSLList",
+            "label": "RefSLList",
             "tentacles": [
               2,
               1
@@ -68,14 +68,14 @@
         "selectors": [],
         "hyperedges": [
           {
-            "label": "SLSLList",
+            "label": "RefSLList",
             "tentacles": [
               0,
               2
             ]
           },
           {
-            "label": "SLSLList",
+            "label": "RefSLList",
             "tentacles": [
               2,
               1

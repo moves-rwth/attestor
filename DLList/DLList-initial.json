@@ -13,8 +13,8 @@
       "number": 1
     },
     {
-      "type": "SLList",
-      "number": 1
+      "type": "DLList",
+      "number": 2
     }
   ],
   "variables": [
@@ -41,18 +41,24 @@
     {
       "name": "@parameter0:",
       "target": 3
+    },
+    {
+      "name": "@parameter1:",
+      "target": 4
     }
   ],
   "hyperedges": [
     {
-      "label": "SLSLList",
+      "label": "RefDLList",
       "tentacles": [
+        2,
         3,
+        4,
         2
       ]
     }
   ],
-  "selectors": [
-  ],
+  "selectors": [],
   "externals": []
 }
+
