@@ -1,6 +1,6 @@
 [
   {
-    "nonterminal": "SLBTree",
+    "nonterminal": "RefBTree",
     "rank": 2,
     "rules": [
       {
@@ -54,7 +54,7 @@
         ],
         "hyperedges": [
           {
-            "label": "SLBTree",
+            "label": "RefBTree",
             "tentacles": [
               2,
               1
@@ -88,7 +88,7 @@
         ],
         "hyperedges": [
           {
-            "label": "SLBTree",
+            "label": "RefBTree",
             "tentacles": [
               2,
               1
@@ -122,14 +122,14 @@
         ],
         "hyperedges": [
           {
-            "label": "SLBTree",
+            "label": "RefBTree",
             "tentacles": [
               2,
               1
             ]
           },
           {
-            "label": "SLBTree",
+            "label": "RefBTree",
             "tentacles": [
               3,
               1
