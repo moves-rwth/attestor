@@ -91,8 +91,8 @@ public class SLList {
     }
 
     static void traverse(SLList head) {
-
         SLList cur = head;
+
         while (cur.next != null) {
             cur = cur.next;
         }
