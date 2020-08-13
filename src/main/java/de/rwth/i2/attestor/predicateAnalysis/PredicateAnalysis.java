@@ -2,6 +2,7 @@ package de.rwth.i2.attestor.predicateAnalysis;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.*;
 import de.rwth.i2.attestor.domain.*;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
@@ -122,7 +123,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     @Override
     public Function<AssignMapping<I>, AssignMapping<I>>
     getTransferFunction(int from, int to) {
-        int untangledTo = (to == flow.untangled ? flow.original : to);
+        final int untangledTo = (to == flow.untangled ? flow.original : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
         Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
 
@@ -147,15 +148,18 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             }
 
             // clean up
-            for (Integer key : keySet) {
-                if (!result.containsKey(key)) {
-                    result.assign(key, indexOp.leastElement());
+            HashSet<Integer> nonterminals = new HashSet<>(result.keySet());
+            HeapConfiguration heapTo = stateSpaceAdapter.getState(untangledTo).getHeap();
+
+            for (Integer key : nonterminals) {
+                if (!keySet.contains(key) || !heapTo.nonterminalEdges().contains(key)) {
+                    result.unassign(key);
                 }
             }
 
-            for (Integer key : result.keySet()) {
-                if (!keySet.contains(key)) {
-                    result.unassign(key);
+            for (Integer key : keySet) {
+                if (!result.containsKey(key)) {
+                    result.assign(key, indexOp.leastElement());
                 }
             }
 

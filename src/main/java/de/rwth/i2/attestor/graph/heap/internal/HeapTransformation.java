@@ -6,7 +6,7 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class HeapTransformation {
+public class HeapTransformation {
     private final int ntEdge;
     private final Nonterminal label;
     private final HeapConfiguration rule;

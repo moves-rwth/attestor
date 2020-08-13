@@ -60,6 +60,23 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         dataFlowResults.forEach((key, result) -> {
             AssignMapping<RelativeInteger> critical = result.get(key.first());
             AssignMapping<RelativeInteger> untangled = result.get(key.second());
+
+            // remove nonexistent edges
+            Set<Integer> keySet = new HashSet<>(critical.keySet());
+            HeapConfiguration heap = stateSpace.getState(key.first()).getHeap();
+
+            for (Integer nt : keySet) {
+                if (!heap.nonterminalEdges().contains(nt)) {
+                    critical.unassign(nt);
+                }
+            }
+
+            for (Integer nt : keySet) {
+                if (!heap.nonterminalEdges().contains(nt)) {
+                    untangled.unassign(nt);
+                }
+            }
+
             terminationResults.put(key.first(), powerSetSumChecker.check(critical, untangled));
         });
     }
@@ -86,7 +103,10 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                 } else {
                     HeapConfiguration heap = stateSpace.getState(critical).getHeap();
                     summary = new StringBuilder("Yes ");
-                    summary.append(result.stream().map(nt -> heap.attachedNodesOf(nt).toString()).collect(Collectors.joining(" + ")));
+                    summary.append(result
+                            .stream()
+                            .map(nt -> heap.attachedNodesOf(nt).toString())
+                            .collect(Collectors.joining(" + ")));
                 }
 
                 if (critical.toString().length() <= 23 && summary.length() <= 16) {
@@ -96,7 +116,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                             new String(new char[16 - summary.length()]).replace("\0", " ") + summary +
                             " |");
                 } else {
-                    logSum("| " + critical + " " + summary + " |");
+                    logSum("| " + critical + " | " + summary + " |");
                 }
             });
 
