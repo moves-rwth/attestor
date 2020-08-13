@@ -5,9 +5,7 @@ import de.rwth.i2.attestor.domain.AssignMapping;
 import de.rwth.i2.attestor.domain.Lattice;
 import de.rwth.i2.attestor.util.Sets;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PowerSetSumChecker<I> implements TerminationChecker<I> {
     private final Lattice<I> latticeOp;
@@ -24,7 +22,10 @@ public class PowerSetSumChecker<I> implements TerminationChecker<I> {
             throw new IllegalArgumentException("Key sets of assign mapping must be compatible.");
         }
 
-        for (Set<Integer> set : Sets.powerSet(solutionCritical.keySet())) {
+        List<Set<Integer>> powerSet = new ArrayList<>(Sets.powerSet(solutionCritical.keySet()));
+        powerSet.sort(Comparator.comparingInt(Set::size));
+
+        for (Set<Integer> set : powerSet) {
             I extremal = solutionCritical
                     .entrySet()
                     .stream()
