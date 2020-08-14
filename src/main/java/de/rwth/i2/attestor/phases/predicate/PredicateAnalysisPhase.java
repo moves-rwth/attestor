@@ -116,7 +116,10 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                             new String(new char[16 - summary.length()]).replace("\0", " ") + summary +
                             " |");
                 } else {
-                    logSum("| " + critical + " | " + summary + " |");
+                    logSum("| " + critical +
+                            new String(new char[23 - critical.toString().length()]).replace("\0", " ") +
+                            " | " +
+                            summary);
                 }
             });
 
