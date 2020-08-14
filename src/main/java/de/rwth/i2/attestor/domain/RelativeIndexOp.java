@@ -41,7 +41,7 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
     @Override
     public I getLeastUpperBound(Set<I> elements) {
         if (elements.isEmpty()) {
-            return greatestElement();
+            return leastElement();
         }
 
         return elements.stream().reduce(leastElement(), (i1, i2) -> {
@@ -67,17 +67,17 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
     }
 
     // Monoid operations
-    @Override
-    public I identity() {
-        return getFromConcrete(monoidOp.identity());
-    }
+        @Override
+        public I identity() {
+            return getFromConcrete(monoidOp.identity());
+        }
 
     @Override
     public I operate(I e1, I e2) {
-        if (e1.equals(latticeOp.greatestElement()) || e2.equals(latticeOp.greatestElement())) {
+        if (e1.equals(greatestElement()) || e2.equals(greatestElement())) {
             return greatestElement();
         }
-        if (e1.equals(latticeOp.leastElement()) || e2.equals(latticeOp.leastElement())) {
+        if (e1.equals(leastElement()) || e2.equals(leastElement())) {
             return leastElement();
         }
 

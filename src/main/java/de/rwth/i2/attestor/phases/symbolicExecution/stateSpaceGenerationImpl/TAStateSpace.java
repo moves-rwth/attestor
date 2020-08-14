@@ -10,10 +10,10 @@ import de.rwth.i2.attestor.util.Pair;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Deque;
 
 public class TAStateSpace extends InternalStateSpace {
-    private final Map<Pair<ProgramState, ProgramState>, Queue<HeapTransformation>> transformations = new HashMap<>();
+    private final Map<Pair<ProgramState, ProgramState>, Deque<HeapTransformation>> transformations = new HashMap<>();
     private final Map<Pair<ProgramState, ProgramState>, Matching> mergers = new HashMap<>();
 
     public TAStateSpace(int capacity) {
@@ -23,18 +23,18 @@ public class TAStateSpace extends InternalStateSpace {
     @Override
     public void addMaterializationTransition(ProgramState from, ProgramState to) {
         super.addMaterializationTransition(from, to);
-        saveTransformationBuffer(from, to);
+        saveTransformationQueue(from, to);
         saveMerger(from, to);
     }
 
     @Override
     public void addControlFlowTransition(ProgramState from, ProgramState to) {
         super.addControlFlowTransition(from, to);
-        saveTransformationBuffer(from, to);
+        saveTransformationQueue(from, to);
         saveMerger(from, to);
     }
 
-    public Queue<HeapTransformation> getTransformationBuffer(ProgramState from, ProgramState to) {
+    public Deque<HeapTransformation> getTransformationQueue(ProgramState from, ProgramState to) {
         return new LinkedList<>(transformations.get(new Pair<>(from, to)));
     }
 
@@ -42,15 +42,15 @@ public class TAStateSpace extends InternalStateSpace {
         return mergers.get(new Pair<>(from, to));
     }
 
-    private void saveTransformationBuffer(ProgramState from, ProgramState to) {
+    private void saveTransformationQueue(ProgramState from, ProgramState to) {
 
         if (!(to.getHeap() instanceof TAHeapConfiguration)) {
             throw new IllegalArgumentException("TAStateSpace only supports TAHeapConfigurations");
         }
 
         TAHeapConfiguration heap = (TAHeapConfiguration) to.getHeap();
-        Queue<HeapTransformation> copy = new LinkedList<>(heap.transformationBuffer);
-        heap.transformationBuffer.clear();
+        Deque<HeapTransformation> copy = new LinkedList<>(heap.transformationQueue);
+        heap.transformationQueue.clear();
         transformations.put(new Pair<>(from, to), copy);
     }
 
