@@ -37,7 +37,7 @@ public class MappingOp<I, M extends AssignMapping<I>> implements Lattice<M> {
     @Override
     public M getLeastUpperBound(Set<M> elements) {
         if (elements.isEmpty()) {
-            return greatestElement();
+            return leastElement();
         }
 
         M result = supplier.get();

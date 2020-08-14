@@ -125,13 +125,13 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     getTransferFunction(int from, int to) {
         final int untangledTo = (to == flow.untangled ? flow.original : to);
         Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
-        Queue<HeapTransformation> buffer = stateSpaceAdapter.getTransformationBuffer(from, untangledTo);
+        Deque<HeapTransformation> transformationQueue = stateSpaceAdapter.getTransformationQueue(from, untangledTo);
 
         Function<AssignMapping<I>, AssignMapping<I>> transferFunction;
         if (stateSpaceAdapter.isMaterialized(untangledTo)) {
-            transferFunction = generateMaterializationTransferFunction(buffer);
+            transferFunction = generateMaterializationTransferFunction(transformationQueue);
         } else {
-            transferFunction = generateAbstractionTransferFunction(buffer);
+            transferFunction = generateAbstractionTransferFunction(transformationQueue);
         }
 
         return assign -> {
@@ -168,13 +168,13 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     }
 
     public Function<AssignMapping<I>, AssignMapping<I>>
-    generateMaterializationTransferFunction(Queue<HeapTransformation> transformationBuffer) {
+    generateMaterializationTransferFunction(Deque<HeapTransformation> transformationQueue) {
         return assign -> {
             final AssignMapping<I> result = assignSupplier.get();
             result.assignAll(assign);
 
-            while (!transformationBuffer.isEmpty()) {
-                HeapTransformation step = transformationBuffer.remove();
+            while (!transformationQueue.isEmpty()) {
+                HeapTransformation step = transformationQueue.remove();
 
                 // apply rule
                 Map<Integer, I> fragment = abstractionRule.abstractForward(
@@ -198,13 +198,13 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     }
 
     public Function<AssignMapping<I>, AssignMapping<I>>
-    generateAbstractionTransferFunction(Queue<HeapTransformation> transformationBuffer) {
+    generateAbstractionTransferFunction(Deque<HeapTransformation> transformationQueue) {
         return assign -> {
             final AssignMapping<I> result = assignSupplier.get();
             result.assignAll(assign);
 
-            while (!transformationBuffer.isEmpty()) {
-                HeapTransformation step = transformationBuffer.remove();
+            while (!transformationQueue.isEmpty()) {
+                HeapTransformation step = transformationQueue.remove();
 
                 // map current value from actual heap to rule
                 Map<Integer, I> fragment = new HashMap<>();

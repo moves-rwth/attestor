@@ -41,7 +41,7 @@ public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
 
             @Override
             public AugmentedInteger getLeastUpperBound(Set<AugmentedInteger> elements) {
-                return elements.stream().max(AugmentedInteger::compareTo).orElseGet(this::greatestElement);
+                return elements.stream().max(AugmentedInteger::compareTo).orElseGet(this::leastElement);
             }
         };
 

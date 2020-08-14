@@ -64,7 +64,6 @@ public class InternalMatching implements Matching {
 
     @Override
     public int match(int element) {
-        // TODO(mkh) getPrivateId(element) ??
         int match = morphism.match(pattern.getPrivateId(element));
         return target.getPublicId(match);
     }

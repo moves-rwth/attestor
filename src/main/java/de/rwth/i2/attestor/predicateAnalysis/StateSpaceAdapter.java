@@ -76,8 +76,8 @@ public class StateSpaceAdapter {
         return Collections.unmodifiableSet(criticalLabels);
     }
 
-    public Queue<HeapTransformation> getTransformationBuffer(int from, int to) {
-        return stateSpace.getTransformationBuffer(stateSpace.getState(from), stateSpace.getState(to));
+    public Deque<HeapTransformation> getTransformationQueue(int from, int to) {
+        return stateSpace.getTransformationQueue(stateSpace.getState(from), stateSpace.getState(to));
     }
 
     public Matching getMerger(int from, int to) {
