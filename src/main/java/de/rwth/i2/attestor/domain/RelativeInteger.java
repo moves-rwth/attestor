@@ -31,12 +31,12 @@ public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
 
             @Override
             public AugmentedInteger leastElement() {
-                return new AugmentedInteger(false);
+                return AugmentedInteger.NEGATIVE_INFINITY;
             }
 
             @Override
             public AugmentedInteger greatestElement() {
-                return new AugmentedInteger(true);
+                return AugmentedInteger.POSITIVE_INFINITY;
             }
 
             @Override
@@ -53,11 +53,15 @@ public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
 
             @Override
             public AugmentedInteger operate(AugmentedInteger e1, AugmentedInteger e2) {
-                if (e1.isInfinite() || e2.isInfinite()) {
-                    return new AugmentedInteger((e1.isInfinite() && e1.isPositive()) || (e2.isInfinite() && e2.isPositive()));
-                } else {
-                    return new AugmentedInteger(e1.getValue() + e2.getValue());
+                if (e1.equals(AugmentedInteger.POSITIVE_INFINITY) || e2.equals(AugmentedInteger.POSITIVE_INFINITY)) {
+                    return AugmentedInteger.POSITIVE_INFINITY;
                 }
+
+                if (e1.equals(AugmentedInteger.NEGATIVE_INFINITY) || e2.equals(AugmentedInteger.NEGATIVE_INFINITY)) {
+                    return AugmentedInteger.NEGATIVE_INFINITY;
+                }
+
+                return new AugmentedInteger(e1.getValue() + e2.getValue());
             }
         };
 
@@ -79,17 +83,17 @@ public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
         }
 
         public RelativeInteger invert(RelativeInteger toInvert) {
-            AugmentedInteger newConcrete;
+            AugmentedInteger newConcrete = null;
             if (toInvert.getConcrete() != null) {
                 AugmentedInteger concrete = toInvert.getConcrete();
 
-                if (concrete.isInfinite()) {
-                    newConcrete = new AugmentedInteger(!concrete.isPositive());
+                if (concrete.equals(AugmentedInteger.POSITIVE_INFINITY)) {
+                    newConcrete = AugmentedInteger.NEGATIVE_INFINITY;
+                } else if (concrete.equals(AugmentedInteger.NEGATIVE_INFINITY)) {
+                    newConcrete = AugmentedInteger.POSITIVE_INFINITY;
                 } else {
                     newConcrete = new AugmentedInteger(-1 * concrete.getValue());
                 }
-            } else {
-                newConcrete = null;
             }
 
             RelativeInteger result = getFromConcrete(newConcrete);
