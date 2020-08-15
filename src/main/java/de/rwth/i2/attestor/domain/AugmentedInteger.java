@@ -26,12 +26,12 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
             return 0;
         }
 
-        if (this.equals(POSITIVE_INFINITY)) {
+        if (this.equals(POSITIVE_INFINITY) || other.equals(NEGATIVE_INFINITY)) {
             return 1;
         }
 
-        if (this.equals(NEGATIVE_INFINITY)) {
-            return other.equals(POSITIVE_INFINITY) ? 1 : -1;
+        if (this.equals(NEGATIVE_INFINITY) || other.equals(POSITIVE_INFINITY)) {
+            return -1;
         }
 
         return Integer.compare(this.value, other.value);
