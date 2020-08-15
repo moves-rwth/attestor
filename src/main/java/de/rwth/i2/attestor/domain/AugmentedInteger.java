@@ -3,8 +3,8 @@ package de.rwth.i2.attestor.domain;
 import javax.annotation.Nonnull;
 
 public class AugmentedInteger implements Comparable<AugmentedInteger> {
-    public static AugmentedInteger POSITIVE_INFINITY = new AugmentedInteger(1);
-    public static AugmentedInteger NEGATIVE_INFINITY = new AugmentedInteger(-1);
+    public static final AugmentedInteger POSITIVE_INFINITY = new AugmentedInteger(1);
+    public static final AugmentedInteger NEGATIVE_INFINITY = new AugmentedInteger(-1);
 
     private final int value;
 
