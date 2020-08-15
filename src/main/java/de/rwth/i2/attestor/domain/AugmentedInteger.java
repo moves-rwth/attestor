@@ -3,36 +3,17 @@ package de.rwth.i2.attestor.domain;
 import javax.annotation.Nonnull;
 
 public class AugmentedInteger implements Comparable<AugmentedInteger> {
-    private final boolean positive;
-    private final boolean infinite;
-    private final int value;
+    public static AugmentedInteger POSITIVE_INFINITY = new AugmentedInteger(1);
+    public static AugmentedInteger NEGATIVE_INFINITY = new AugmentedInteger(-1);
 
-    public AugmentedInteger(boolean positiveInfinity) {
-        this.value = 0;
-        this.infinite = true;
-        this.positive = positiveInfinity;
-    }
+    private final int value;
 
     public AugmentedInteger(int value) {
         this.value = value;
-        this.infinite = false;
-        this.positive = value > 0;
-    }
-
-    public boolean isPositive() {
-        return positive;
-    }
-
-    public boolean isInfinite() {
-        return infinite;
-    }
-
-    public boolean isZero() {
-        return value == 0 && !infinite;
     }
 
     public int getValue() {
-        if (infinite) {
+        if (this.equals(POSITIVE_INFINITY) || this.equals(NEGATIVE_INFINITY)) {
             throw new UnsupportedOperationException("Infinity is not a number");
         }
 
@@ -41,39 +22,43 @@ public class AugmentedInteger implements Comparable<AugmentedInteger> {
 
     @Override
     public int compareTo(@Nonnull AugmentedInteger other) {
-        if (equals(other)) {
+        if (this.equals(other)) {
             return 0;
         }
 
-        if (this.infinite) {
-            return this.positive ? 1 : -1;
-        } else if (other.infinite) {
-            return other.positive ? -1 : 1;
-        } else {
-            return Integer.compare(this.value, other.value);
+        if (this.equals(POSITIVE_INFINITY)) {
+            return 1;
         }
+
+        if (this.equals(NEGATIVE_INFINITY)) {
+            return other.equals(POSITIVE_INFINITY) ? 1 : -1;
+        }
+
+        return Integer.compare(this.value, other.value);
     }
 
     @Override
-    public boolean equals(Object otherObject) {
-        if (!otherObject.getClass().equals(AugmentedInteger.class)) {
+    public boolean equals(Object other) {
+        if (!other.getClass().equals(AugmentedInteger.class)) {
             return false;
         }
 
-        AugmentedInteger other = (AugmentedInteger) otherObject;
-        if (this.infinite && other.infinite) {
-            return this.positive == other.positive;
-        } else if (this.infinite || other.infinite) {
-            return false;
-        } else {
-            return this.value == other.value;
+        if (this == POSITIVE_INFINITY || other == POSITIVE_INFINITY ||
+                this == NEGATIVE_INFINITY || other == NEGATIVE_INFINITY) {
+            return this == other;
         }
+
+        return this.value == ((AugmentedInteger) other).value;
     }
 
     @Override
     public String toString() {
-        if (infinite) {
-            return (positive ? "+" : "-") + "inf";
+        if (this.equals(POSITIVE_INFINITY)) {
+            return "+inf";
+        }
+
+        if (this.equals(NEGATIVE_INFINITY)) {
+            return "-inf";
         }
 
         return Integer.toString(value);

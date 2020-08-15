@@ -67,16 +67,17 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
     }
 
     // Monoid operations
-        @Override
-        public I identity() {
-            return getFromConcrete(monoidOp.identity());
-        }
+    @Override
+    public I identity() {
+        return getFromConcrete(monoidOp.identity());
+    }
 
     @Override
     public I operate(I e1, I e2) {
         if (e1.equals(greatestElement()) || e2.equals(greatestElement())) {
             return greatestElement();
         }
+
         if (e1.equals(leastElement()) || e2.equals(leastElement())) {
             return leastElement();
         }
