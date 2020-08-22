@@ -1,10 +1,7 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 public class FlowImpl implements Flow {
     private final Set<Integer> initials = new HashSet<>();
@@ -24,6 +21,52 @@ public class FlowImpl implements Flow {
                 add(from, to);
             }
         }
+    }
+
+    @Override
+    public Set<Integer> getLabels() {
+        Set<Integer> result = new HashSet<>();
+        result.addAll(flow.keySet());
+        result.addAll(reverseFlow.keySet());
+        return Collections.unmodifiableSet(result);
+    }
+
+    @Override
+    public Set<Integer> getInitial() {
+        return Collections.unmodifiableSet(initials);
+    }
+
+    @Override
+    public Set<Integer> getFinal() {
+        return Collections.unmodifiableSet(finals);
+    }
+
+    @Override
+    public Set<Integer> getSuccessors(int label) {
+        return getFromMap(flow, label);
+    }
+
+    @Override
+    public Set<Integer> getPredecessors(int label) {
+        return getFromMap(reverseFlow, label);
+    }
+
+    public void setInitial(int label, boolean isInitial) {
+        addOrRemove(initials, label, isInitial);
+    }
+
+    public void setFinal(int label, boolean isFinal) {
+        addOrRemove(finals, label, isFinal);
+    }
+
+    public void add(int from, int to) {
+        addToMap(flow, from, to);
+        addToMap(reverseFlow, to, from);
+    }
+
+    public void remove(int from, int to) {
+        removeFromMap(flow, from, to);
+        removeFromMap(reverseFlow, to, from);
     }
 
     private static void addToMap(Map<Integer, Set<Integer>> map, int from, int to) {
@@ -58,51 +101,5 @@ public class FlowImpl implements Flow {
         } else {
             set.remove(label);
         }
-    }
-
-    public void setInitial(int label, boolean isInitial) {
-        addOrRemove(initials, label, isInitial);
-    }
-
-    public void setFinal(int label, boolean isFinal) {
-        addOrRemove(finals, label, isFinal);
-    }
-
-    public void add(int from, int to) {
-        addToMap(flow, from, to);
-        addToMap(reverseFlow, to, from);
-    }
-
-    public void remove(int from, int to) {
-        removeFromMap(flow, from, to);
-        removeFromMap(reverseFlow, to, from);
-    }
-
-    @Override
-    public Set<Integer> getLabels() {
-        Set<Integer> result = new HashSet<>();
-        result.addAll(flow.keySet());
-        result.addAll(reverseFlow.keySet());
-        return Collections.unmodifiableSet(result);
-    }
-
-    @Override
-    public Set<Integer> getInitial() {
-        return Collections.unmodifiableSet(initials);
-    }
-
-    @Override
-    public Set<Integer> getFinal() {
-        return Collections.unmodifiableSet(finals);
-    }
-
-    @Override
-    public Set<Integer> getSuccessors(int label) {
-        return getFromMap(flow, label);
-    }
-
-    @Override
-    public Set<Integer> getPredecessors(int label) {
-        return getFromMap(reverseFlow, label);
     }
 }

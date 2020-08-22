@@ -42,9 +42,8 @@ public class PredicateAnalysisPhase extends AbstractPhase {
             return;
         }
 
-        Program program = getPhase(ProgramTransformer.class).getProgram();
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
-        StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace, program);
+        StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace);
 
         //noinspection unchecked
         AbstractionRule<RelativeInteger> abstractionRule = getPhase(AbstractionRuleTransformer.class).getAbstractionRule();
