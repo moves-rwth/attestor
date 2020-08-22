@@ -1,6 +1,28 @@
 public class BTNode {
+    static int nondeterminism;
     private BTNode left;
     private BTNode right;
+
+    static void morris(BTNode root) {
+        BTNode current = root;
+
+        while (current != null) {
+            if (current.left == null) {
+                // print
+                current = current.right;
+            } else {
+                BTNode child = current.left
+                while (child.right != null && child.right != current) {
+                    child = child.right;
+                }
+
+                if (child.right == null) {
+                    child.right = current;
+                    current = current.left;
+                }
+            }
+        }
+    }
 
     static void traverse(BTNode tree) {
         if (tree != null) {
