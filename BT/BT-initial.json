@@ -25,6 +25,16 @@
     }
   ],
   "selectors": [
+    {
+      "label": "left",
+      "origin": 2,
+      "target": 0
+    },
+    {
+      "label": "right",
+      "origin": 2,
+      "target": 0
+    }
   ],
   "hyperedges": [
     {

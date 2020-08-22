@@ -56,6 +56,75 @@ public class SLList {
         return false;
     }
 
+    static void selection(SLList head) {
+        SLList a;
+        SLList b;
+        SLList c;
+        SLList d;
+        SLList r;
+        a = head;
+        b = head;
+
+        while (b.next != null) {
+            c = d = b.next;
+            while (d != null) {
+                if (nondeterminism > 42) {
+                    if (b.next == d) {
+                        if (b == head) {
+                            b.next = d.next;
+                            d.next = b;
+                            r = b;
+                            b = d;
+                            d = r;
+                            c = d;
+                            head = b;
+                            d = d.next;
+                        } else {
+                            b.next = d.next;
+                            d.next = b;
+                            a.next = d;
+                            r = b;
+                            b = d;
+                            d = r;
+                            c = d;
+                            d = d.next;
+                        }
+                    } else {
+                        if (b == head) {
+                            r = b.next;
+                            b.next = d.next;
+                            d.next = r;
+                            c.next = b;
+                            r = b;
+                            b = d;
+                            d = r;
+                            c = d;
+                            d = d.next;
+                            head = b;
+                        } else {
+                            r = b.next;
+                            b.next = d.next;
+                            d.next = r;
+                            c.next = b;
+                            a.next = d;
+                            r = b;
+                            b = d;
+                            d = r;
+                            c = d;
+                            d = d.next;
+                        }
+                    }
+                } else {
+                    c = d;
+                    d = d.next;
+                }
+            }
+
+            a = b;
+            b = b.next;
+        }
+    }
+
     static void insertion(SLList head) {
         SLList x = head;
         SLList y = x;
@@ -124,6 +193,20 @@ public class SLList {
         }
     }
 
+    static void delalt(SLList head) {
+        SLList prev = head;
+        SLList now = head.next;
+
+        while (prev != null && now != null) {
+            prev.next = now.next;
+            now = null;
+            prev = prev.next;
+            if (prev != null) {
+                now = prev.next;
+            }
+        }
+    }
+
     static void delete(SLList head) {
         SLList x = head;
         SLList y = x;
@@ -144,12 +227,48 @@ public class SLList {
         }
     }
 
-    static void traverse(SLList head) {
-        SLList cur = head;
+    static void rearrange(SLList node, SLList dummy) {
+        SLList slow = node;
+        SLList fast = slow.next;
 
-        while (cur.next != null) {
-            cur = cur.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
+
+        SLList node1 = node;
+        SLList node2 = slow.next;
+        slow.next = null;
+
+        SLList prev = null;
+        SLList curr = node2
+        SLList next;
+
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        node2 = prev;
+
+        node = dummy;
+        curr = node;
+        while (node1 != null || node2 != null) {
+            if (node1 != null) {
+                curr.next = node1;
+                curr = curr.next;
+                node1 = node1.next;
+            }
+
+            if (node2 != null) {
+                curr.next = node2;
+                curr = curr.next;
+                node2 = node2.next;
+            }
+        }
+
+        node = node.next;
     }
 
     static SLList reverse(SLList head) {
@@ -164,6 +283,14 @@ public class SLList {
         }
 
         return reversedPart;
+    }
+
+    static void traverse(SLList head) {
+        SLList cur = head;
+
+        while (cur.next != null) {
+            cur = cur.next;
+        }
     }
 
     public static void main(String[] args) {
