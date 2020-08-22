@@ -14,7 +14,7 @@
     },
     {
       "type": "SLList",
-      "number": 1
+      "number": 2
     }
   ],
   "variables": [
@@ -41,6 +41,10 @@
     {
       "name": "@parameter0:",
       "target": 3
+    },
+    {
+      "name": "@parameter1:",
+      "target": 4
     }
   ],
   "hyperedges": [
@@ -52,6 +56,10 @@
       ]
     }
   ],
-  "selectors": [],
+  "selectors": [{
+    "label": "next",
+    "origin": 4,
+    "target": 2
+  }],
   "externals": []
 }
