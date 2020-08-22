@@ -2,7 +2,46 @@ public class SLList {
     static int nondeterminism;
     private SLList next;
 
-    static boolean floydCycle(SLList head) {
+    static SLList brent(SLList head) {
+        if (head == null) {
+            return null;
+        }
+
+        int power = 1;
+        int length = 1;
+        SLList first = head;
+        SLList second = head.next;
+
+        while (second != null && second != first) {
+            if (length == power) {
+                power *= 2;
+                length = 0;
+                first = second;
+            }
+
+            second = second.next;
+            ++length;
+        }
+
+        if (second == null) {
+            return null;
+        }
+
+        first = second = head;
+        while (length > 0) {
+            second = second.next;
+            --length;
+        }
+
+        while (second != first) {
+            second = second.next;
+            first = first.next;
+        }
+
+        return first;
+    }
+
+    static boolean floyd(SLList head) {
         SLList slow = head;
         SLList fast = head;
 
@@ -129,5 +168,5 @@ public class SLList {
 
     public static void main(String[] args) {
 
-    }  
+    }
 }
