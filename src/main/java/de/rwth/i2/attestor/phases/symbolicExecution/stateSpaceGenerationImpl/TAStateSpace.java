@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Deque;
 
 public class TAStateSpace extends InternalStateSpace {
-    private final Map<Pair<ProgramState, ProgramState>, Deque<HeapTransformation>> transformations = new HashMap<>();
-    private final Map<Pair<ProgramState, ProgramState>, Matching> mergers = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Deque<HeapTransformation>> transformations = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Matching> mergers = new HashMap<>();
 
     public TAStateSpace(int capacity) {
         super(capacity);
@@ -34,11 +34,11 @@ public class TAStateSpace extends InternalStateSpace {
         saveMerger(from, to);
     }
 
-    public Deque<HeapTransformation> getTransformationQueue(ProgramState from, ProgramState to) {
+    public Deque<HeapTransformation> getTransformationQueue(int from, int to) {
         return new LinkedList<>(transformations.get(new Pair<>(from, to)));
     }
 
-    public Matching getMerger(ProgramState from, ProgramState to) {
+    public Matching getMerger(int from, int to) {
         return mergers.get(new Pair<>(from, to));
     }
 
@@ -51,14 +51,14 @@ public class TAStateSpace extends InternalStateSpace {
         TAHeapConfiguration heap = (TAHeapConfiguration) to.getHeap();
         Deque<HeapTransformation> copy = new LinkedList<>(heap.transformationQueue);
         heap.transformationQueue.clear();
-        transformations.put(new Pair<>(from, to), copy);
+        transformations.put(new Pair<>(from.getStateSpaceId(), to.getStateSpaceId()), copy);
     }
 
     private void saveMerger(ProgramState from, ProgramState to) {
         if (getState(to.getStateSpaceId()) != to) {
             ProgramState old = getState(to.getStateSpaceId());
             Matching matching = new IsomorphismChecker(to.getHeap(), old.getHeap()).getMatching();
-            mergers.put(new Pair<>(from, to), matching);
+            mergers.put(new Pair<>(from.getStateSpaceId(), to.getStateSpaceId()), matching);
         }
     }
 }

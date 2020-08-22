@@ -11,12 +11,14 @@ import de.rwth.i2.attestor.phases.transformers.AbstractionRuleTransformer;
 import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.predicateAnalysis.*;
-import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.GotoStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PredicateAnalysisPhase extends AbstractPhase {
@@ -42,17 +44,16 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
         Program program = getPhase(ProgramTransformer.class).getProgram();
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
-        StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace, program, Collections.singleton(GotoStmt.class));
+        StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace, program);
 
         //noinspection unchecked
         AbstractionRule<RelativeInteger> abstractionRule = getPhase(AbstractionRuleTransformer.class).getAbstractionRule();
-        EquationSolver<AssignMapping<RelativeInteger>> solver = new WorklistAlgorithm<>();
 
         for (int critical : adapter.getCriticalLabels()) {
             PredicateAnalysis<RelativeInteger> analysis =
                     new PredicateAnalysis<>(critical, adapter, RelativeInteger.opSet, abstractionRule, RelativeInteger.get(30));
-
-            dataFlowResults.put(new Pair<>(critical, analysis.getUntangled()), solver.solve(analysis));
+            EquationSolver<AssignMapping<RelativeInteger>> solver = new WorklistAlgorithm<>(analysis);
+            dataFlowResults.put(new Pair<>(critical, analysis.getUntangled()), solver.solve());
         }
 
         TerminationChecker<RelativeInteger> powerSetSumChecker = new PowerSetSumChecker<>(RelativeInteger.opSet, RelativeInteger.opSet);
