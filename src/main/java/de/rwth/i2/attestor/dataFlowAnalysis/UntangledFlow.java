@@ -8,7 +8,7 @@ public class UntangledFlow extends FlowImpl {
     public final int original;
     public final int untangled;
 
-    public UntangledFlow(FlowImpl flow, int untangle) {
+    public UntangledFlow(Flow flow, int untangle) {
         super(flow);
         original = untangle;
         untangled = Collections.max(getLabels()) + 1;
@@ -20,6 +20,7 @@ public class UntangledFlow extends FlowImpl {
         }
     }
 
+    @Override
     public void add(int from, int to) {
         if (from == untangled) {
             super.add(original, to);
@@ -27,6 +28,17 @@ public class UntangledFlow extends FlowImpl {
             super.add(from, untangled);
         } else {
             super.add(from, to);
+        }
+    }
+
+    @Override
+    public void remove(int from, int to) {
+        if (from == untangled) {
+            super.remove(original, to);
+        } else if (to == original) {
+            super.remove(from, untangled);
+        } else {
+            super.remove(from, to);
         }
     }
 }

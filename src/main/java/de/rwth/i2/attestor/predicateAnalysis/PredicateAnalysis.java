@@ -20,7 +20,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     private final StateSpaceAdapter stateSpaceAdapter;
 
     private final RelativeIndexOp<?, I> indexOp;
-    private final ThresholdWidening<I> wideningOperator;
+    private final ThresholdWidening<I> thresholdWidening;
     private final AbstractionRule<I> abstractionRule;
 
     private final Set<Integer> keySet;
@@ -38,7 +38,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
         this.abstractionRule = abstractionRule;
-        wideningOperator = new ThresholdWidening<>(wideningThreshold, indexOp);
+        thresholdWidening = new ThresholdWidening<>(wideningThreshold, indexOp);
 
         // domainOp
         TIntSet TIntkeySet = new TIntHashSet();
@@ -113,7 +113,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             AssignMapping<I> result = assignSupplier.get();
 
             for (Integer key : keySet) {
-                result.assign(key, wideningOperator.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
+                result.assign(key, thresholdWidening.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
             }
 
             return result;
@@ -123,12 +123,12 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     @Override
     public Function<AssignMapping<I>, AssignMapping<I>>
     getTransferFunction(int from, int to) {
-        final int untangledTo = (to == flow.untangled ? flow.original : to);
-        Matching merger = stateSpaceAdapter.getMerger(from, untangledTo);
-        Deque<HeapTransformation> transformationQueue = stateSpaceAdapter.getTransformationQueue(from, untangledTo);
+        final int actualTo = (to == flow.untangled ? flow.original : to);
+        Matching merger = stateSpaceAdapter.getMerger(from, actualTo);
+        Deque<HeapTransformation> transformationQueue = stateSpaceAdapter.getTransformationQueue(from, actualTo);
 
         Function<AssignMapping<I>, AssignMapping<I>> transferFunction;
-        if (stateSpaceAdapter.isMaterialized(untangledTo)) {
+        if (stateSpaceAdapter.isMaterialized(actualTo)) {
             transferFunction = generateMaterializationTransferFunction(transformationQueue);
         } else {
             transferFunction = generateAbstractionTransferFunction(transformationQueue);
@@ -149,7 +149,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
 
             // clean up
             HashSet<Integer> nonterminals = new HashSet<>(result.keySet());
-            HeapConfiguration heapTo = stateSpaceAdapter.getState(untangledTo).getHeap();
+            HeapConfiguration heapTo = stateSpaceAdapter.getState(actualTo).getHeap();
 
             for (Integer key : nonterminals) {
                 if (!keySet.contains(key) || !heapTo.nonterminalEdges().contains(key)) {
