@@ -4,25 +4,25 @@ import de.rwth.i2.attestor.dataFlowAnalysis.FlowImpl;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.TAStateSpace;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.GotoStmt;
+import de.rwth.i2.attestor.semantics.jimpleSemantics.jimple.statements.IfStmt;
 import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
-import de.rwth.i2.attestor.stateSpaceGeneration.SemanticsCommand;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class StateSpaceAdapter {
     private final TAStateSpace stateSpace;
     private final Program program;
-    private final Set<Class<? extends SemanticsCommand>> criticalCommands;
-
     private final Set<Integer> materialized = new HashSet<>();
     private final Set<Integer> criticalLabels = new HashSet<>();
     private final FlowImpl flow = new FlowImpl();
     private final Map<Integer, Set<Integer>> reachableFragment = new HashMap<>();
 
-    public StateSpaceAdapter(StateSpace stateSpace, Program program,
-                             Set<Class<? extends SemanticsCommand>> criticalCommands) {
+    public StateSpaceAdapter(StateSpace stateSpace, Program program) {
 
         if (!(stateSpace instanceof TAStateSpace)) {
             throw new IllegalArgumentException("StateSpaceAdapter only supports TAProgramStates");
@@ -30,7 +30,6 @@ public class StateSpaceAdapter {
 
         this.stateSpace = (TAStateSpace) stateSpace;
         this.program = program;
-        this.criticalCommands = Collections.unmodifiableSet(criticalCommands);
 
         stateSpace.getStates().forEach(state -> {
             int current = state.getStateSpaceId();
@@ -54,6 +53,34 @@ public class StateSpaceAdapter {
                 return true;
             });
         });
+
+        Map<Integer, Set<Integer>> common = flow
+                .getLabels()
+                .stream()
+                .collect(Collectors.toMap(Function.identity(), l -> criticalLabels
+                        .stream()
+                        .filter(c -> reachableStates(c).contains(l))
+                        .collect(Collectors.toSet())))
+                .entrySet()
+                .stream()
+                .filter(e -> reachableStates(e.getKey()).containsAll(e.getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        HashSet<Integer> oldCriticalLabels = new HashSet<>(criticalLabels);
+        criticalLabels.clear();
+        criticalLabels.addAll(oldCriticalLabels
+                .stream()
+                .map(l -> {
+                    for (Map.Entry<Integer, Set<Integer>> e : common.entrySet()) {
+                        if (e.getValue().contains(l)) {
+                            return e.getKey();
+                        }
+                    }
+                    return l;
+                })
+                .collect(Collectors.toSet()));
+
+        criticalLabels.removeIf(s -> stateSpace.getState(s).getHeap().countNonterminalEdges() <= 0);
     }
 
     public FlowImpl getFlow() {
@@ -77,11 +104,11 @@ public class StateSpaceAdapter {
     }
 
     public Deque<HeapTransformation> getTransformationQueue(int from, int to) {
-        return stateSpace.getTransformationQueue(stateSpace.getState(from), stateSpace.getState(to));
+        return stateSpace.getTransformationQueue(from, to);
     }
 
     public Matching getMerger(int from, int to) {
-        return stateSpace.getMerger(stateSpace.getState(from), stateSpace.getState(to));
+        return stateSpace.getMerger(from, to);
     }
 
     public Set<Integer> reachableStates(int id) {
@@ -96,12 +123,13 @@ public class StateSpaceAdapter {
 
     private void checkCritical(int id) {
         ProgramState state = stateSpace.getState(id);
-        boolean criticalStatement = criticalCommands.stream()
-                .anyMatch(clazz -> clazz.isInstance(program.getStatement(state.getProgramCounter())));
-        boolean hasNonterminal = state.getHeap().countNonterminalEdges() > 0;
+        boolean criticalStatement =
+                (program.getStatement(state.getProgramCounter()) instanceof GotoStmt
+                        || program.getStatement(state.getProgramCounter()) instanceof IfStmt)
+                        && !stateSpace.getFinalStateIds().contains(id);
         boolean onCycle = reachableStates(id).contains(id);
 
-        if (criticalStatement && hasNonterminal && onCycle) {
+        if (criticalStatement && onCycle) {
             criticalLabels.add(id);
         }
     }
