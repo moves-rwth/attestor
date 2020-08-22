@@ -58,9 +58,9 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         domainOp = new MappingOp<>(assignSupplier, indexOp);
 
         // flow
-        Set<Integer> notReachable = new HashSet<>(stateSpaceAdapter.getFlow().getLabels());
-        notReachable.removeAll(stateSpaceAdapter.reachableStates(extremalLabel));
-        FlowImpl reachableFlow = new FlowImpl(stateSpaceAdapter.getFlow());
+        GraphFlow reachableFlow = new GraphFlow(stateSpaceAdapter.getFlow());
+        Set<Integer> notReachable = new HashSet<>(reachableFlow.getLabels());
+        notReachable.removeAll(reachableFlow.reachableLabels(extremalLabel));
 
         for (Integer state : notReachable) {
             Set<Integer> predecessors = new HashSet<>(reachableFlow.getPredecessors(state));
@@ -82,7 +82,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     }
 
     @Override
-    public Flow getFlow() {
+    public UntangledFlow getFlow() {
         return flow;
     }
 
