@@ -807,7 +807,8 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
         }
     }
 
-    private void mergeNonterminalTentaclesInto(int oldNode, int mergedNode) {
+    // access level modified
+    protected void mergeNonterminalTentaclesInto(int oldNode, int mergedNode) {
 
         TIntIterator edgeIterator = heapConf.attachedNonterminalEdgesOf(oldNode).iterator();
         while (edgeIterator.hasNext()) {
@@ -840,7 +841,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      * @param pattern  A HeapConfiguration that is embedded in the underlying HeapConfiguration.
      */
     // access level modified
-    void removeSelectorAndTentacleEdges(InternalMatching matching, InternalHeapConfiguration pattern) {
+    protected void removeSelectorAndTentacleEdges(InternalMatching matching, InternalHeapConfiguration pattern) {
 
         for (int i = 0; i < pattern.graph.size(); i++) {
 
@@ -865,7 +866,7 @@ public class InternalHeapConfigurationBuilder implements HeapConfigurationBuilde
      * @param pattern  A HeapConfiguration that is embedded in the underlying HeapConfiguration.
      */
     // access level modified
-    void removeNonExternalNodes(InternalMatching matching, InternalHeapConfiguration pattern) {
+    protected void removeNonExternalNodes(InternalMatching matching, InternalHeapConfiguration pattern) {
 
         for (int i = 0; i < pattern.graph.size(); i++) {
 
