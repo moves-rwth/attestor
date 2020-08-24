@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.domain.RelativeInteger;
 import de.rwth.i2.attestor.grammar.Grammar;
 import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
+import de.rwth.i2.attestor.graph.heap.internal.TAHeapConfiguration;
 import de.rwth.i2.attestor.io.FileReader;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
@@ -42,28 +43,41 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
         return new AbstractionRule<RelativeInteger>() {
             @Override
             public Map<Integer, RelativeInteger> abstractForward(RelativeInteger index, Nonterminal nt, HeapConfiguration rule) {
-                if (!forward.get(nt).containsKey(grammar.getRulePosition(nt, rule))) {
+                if (!(rule instanceof TAHeapConfiguration)) {
+                    throw new IllegalArgumentException("only TAHeapConfigurations are supported");
+                }
+
+                if (!forward.get(nt).containsKey(getRulePosition(nt, rule))) {
                     return new HashMap<>();
                 }
 
-                return forward.get(nt).get(grammar.getRulePosition(nt, rule)).entrySet()
+                TAHeapConfiguration hc = (TAHeapConfiguration) rule;
+
+                return forward.get(nt)
+                        .get(getRulePosition(nt, hc))
+                        .entrySet()
                         .stream()
                         .collect(Collectors.toMap(
-                                e -> e.getKey() + rule.countNodes() + rule.countVariableEdges(),
+                                e -> hc.getNonterminalIdByPosition(e.getKey()),
                                 e -> e.getValue().evaluate(index, null)));
             }
 
             @Override
             public RelativeInteger abstractBackward(Map<Integer, RelativeInteger> assign, Nonterminal nt, HeapConfiguration rule) {
+                if (!(rule instanceof TAHeapConfiguration)) {
+                    throw new IllegalArgumentException("only TAHeapConfigurations are supported");
+                }
+
+                TAHeapConfiguration hc = (TAHeapConfiguration) rule;
+
                 return backward
                         .get(nt)
-                        .get(grammar.getRulePosition(nt, rule))
-                        .evaluate(
-                                null,
+                        .get(getRulePosition(nt, hc))
+                        .evaluate(null,
                                 assign.entrySet()
                                         .stream()
                                         .collect(Collectors.toMap(
-                                                e -> e.getKey() - rule.countNodes() - rule.countVariableEdges(),
+                                                e -> hc.getNonterminalPositionById(e.getKey()),
                                                 Map.Entry::getValue)));
             }
         };
@@ -124,6 +138,15 @@ public class ParseAbstractionRulesPhase extends AbstractPhase implements Abstrac
                 backward.computeIfAbsent(nt, key -> new HashMap<>());
                 backward.get(nt).put(j, parseExpression(expressions.getString(j)));
             }
+        }
+    }
+
+    private int getRulePosition(Nonterminal nt, HeapConfiguration hc) {
+        int position = grammar.getRulePosition(nt, hc);
+        if (position != -1) {
+            return position;
+        } else {
+            return grammar.getCollapsedRulePosition(nt, hc);
         }
     }
 

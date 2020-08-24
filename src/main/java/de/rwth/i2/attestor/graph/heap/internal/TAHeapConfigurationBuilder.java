@@ -4,18 +4,25 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.HeapConfigurationBuilder;
 import de.rwth.i2.attestor.graph.heap.Matching;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.array.TIntArrayList;
 
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO(mkh): refactor duplicates properly (?)
 public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder {
-    TAHeapConfiguration heapConf;
+    private final TAHeapConfiguration heapConf;
 
     TAHeapConfigurationBuilder(TAHeapConfiguration heapConf) {
         super(heapConf);
         this.heapConf = heapConf;
+    }
+
+    @Override
+    public HeapConfigurationBuilder addNonterminalEdge(Nonterminal label, TIntArrayList attachedNodes) {
+        int id = addNonterminalEdgeAndReturnId(label, attachedNodes);
+        heapConf.registerNonterminalId(id);
+        return this;
     }
 
     @Override
@@ -125,10 +132,36 @@ public class TAHeapConfigurationBuilder extends InternalHeapConfigurationBuilder
 
         removeNonExternalNodes(internalMatching, pattern);
 
-        int ntEdge = addMatchingNonterminalEdgeWithCollapsedExternals(internalMatching, pattern, nonterminal, externalIndicesMap);
+        int ntEdge = heapConf.getPublicId(addMatchingNonterminalEdgeWithCollapsedExternals(internalMatching, pattern, nonterminal, externalIndicesMap));
         saveNonterminalInsertion(ntEdge, nonterminal, internalMatching);
 
         return this;
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    protected void mergeNonterminalTentaclesInto(int oldNode, int mergedNode) {
+        TIntIterator edgeIterator = heapConf.attachedNonterminalEdgesOf(oldNode).iterator();
+        while (edgeIterator.hasNext()) {
+            int edge = edgeIterator.next();
+            TIntArrayList tentacles = heapConf.attachedNodesOf(edge);
+            TIntArrayList newTentacles = new TIntArrayList(tentacles);
+            boolean changed = false;
+            for (int i = 0; i < tentacles.size(); i++) {
+                int target = tentacles.get(i);
+                if (target == oldNode) {
+                    newTentacles.set(i, mergedNode);
+                    changed = true;
+                }
+            }
+            if (changed) {
+                Nonterminal nt = heapConf.labelOf(edge);
+                int id = addNonterminalEdgeAndReturnId(nt, newTentacles);
+                super.removeNonterminalEdge(edge);
+                heapConf.replaceNonterminalAtPosition(heapConf.getNonterminalPositionById(edge), id);
+            }
+
+        }
     }
 
 

@@ -4,6 +4,7 @@ import de.rwth.i2.attestor.graph.Nonterminal;
 import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Immutable data-object storing all the rules (lhs &#8594; rhs).
@@ -73,16 +74,16 @@ public class Grammar {
         return found != null ? rules.get(nt).indexOf(found) : -1;
     }
 
-    public int getCollapsedRulePosition(Nonterminal nt, CollapsedHeapConfiguration rule) {
+    public int getCollapsedRulePosition(Nonterminal nt, HeapConfiguration rule) {
         if (!collapsedRules.containsKey(nt)) {
             return -1;
         }
 
-        CollapsedHeapConfiguration found = collapsedRules.get(nt).stream()
-                .filter(hc -> hc.equals(rule))
+        HeapConfiguration found = collapsedRules.get(nt).stream()
+                .filter(hc -> hc.getCollapsed().equals(rule))
+                .map(CollapsedHeapConfiguration::getOriginal)
                 .findFirst().orElse(null);
 
-        return found != null ? collapsedRules.get(nt).indexOf(found) : -1;
-
+        return found != null ? rules.get(nt).indexOf(found) : -1;
     }
 }
