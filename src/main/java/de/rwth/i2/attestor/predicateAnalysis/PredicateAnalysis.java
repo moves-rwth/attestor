@@ -68,7 +68,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                 reachableFlow.remove(predecessor, state);
             }
 
-            Set<Integer> successors = new HashSet<>(reachableFlow.getPredecessors(state));
+            Set<Integer> successors = new HashSet<>(reachableFlow.getSuccessors(state));
             for (Integer successor : successors) {
                 reachableFlow.remove(state, successor);
             }
@@ -139,12 +139,17 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
 
             // merge
             if (merger != null) {
+                AssignMapping<I> oldResult = result;
+                AssignMapping<I> newResult = new AssignMapping<>();
+                newResult.assignAll(oldResult);
                 merger.pattern().nonterminalEdges().forEach(nt -> {
-                    I value = result.get(nt);
-                    result.unassign(nt);
-                    result.assign(merger.match(nt), value);
+                    I value = oldResult.get(nt);
+                    newResult.unassign(nt);
+                    newResult.assign(merger.match(nt), value);
                     return true;
                 });
+
+                result = newResult;
             }
 
             // clean up
