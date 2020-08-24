@@ -8,10 +8,8 @@ import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.main.AbstractPhase;
 import de.rwth.i2.attestor.main.scene.Scene;
 import de.rwth.i2.attestor.phases.transformers.AbstractionRuleTransformer;
-import de.rwth.i2.attestor.phases.transformers.ProgramTransformer;
 import de.rwth.i2.attestor.phases.transformers.StateSpaceTransformer;
 import de.rwth.i2.attestor.predicateAnalysis.*;
-import de.rwth.i2.attestor.stateSpaceGeneration.Program;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 import de.rwth.i2.attestor.util.Pair;
 
@@ -49,7 +47,6 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         AbstractionRule<RelativeInteger> abstractionRule = getPhase(AbstractionRuleTransformer.class).getAbstractionRule();
 
         for (int critical : adapter.getCriticalLabels()) {
-        // for (int critical : new int[]{10, 11, 12, 13 ,32}) {
             PredicateAnalysis<RelativeInteger> analysis =
                     new PredicateAnalysis<>(critical, adapter, RelativeInteger.opSet, abstractionRule, RelativeInteger.get(30));
             EquationSolver<AssignMapping<RelativeInteger>> solver = new WorklistAlgorithm<>(analysis);
