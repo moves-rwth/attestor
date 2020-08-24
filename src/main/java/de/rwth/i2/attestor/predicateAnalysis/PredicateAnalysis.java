@@ -20,8 +20,8 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
     private final StateSpaceAdapter stateSpaceAdapter;
 
     private final RelativeIndexOp<?, I> indexOp;
-    private final ThresholdWidening<I> thresholdWidening;
     private final AbstractionRule<I> abstractionRule;
+    private final Supplier<I> thresholdSupplier;
 
     private final Set<Integer> keySet;
     private final MappingOp<I, AssignMapping<I>> domainOp;
@@ -32,13 +32,13 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             StateSpaceAdapter stateSpaceAdapter,
             RelativeIndexOp<?, I> indexOp,
             AbstractionRule<I> abstractionRule,
-            I wideningThreshold) {
+            Supplier<I> thresholdSupplier) {
 
         this.extremalLabel = extremalLabel;
         this.stateSpaceAdapter = stateSpaceAdapter;
         this.indexOp = indexOp;
         this.abstractionRule = abstractionRule;
-        thresholdWidening = new ThresholdWidening<>(wideningThreshold, indexOp);
+        this.thresholdSupplier = thresholdSupplier;
 
         // domainOp
         TIntSet TIntkeySet = new TIntHashSet();
@@ -113,7 +113,8 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
             AssignMapping<I> result = assignSupplier.get();
 
             for (Integer key : keySet) {
-                result.assign(key, thresholdWidening.widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
+                result.assign(key, new ThresholdWidening<>(thresholdSupplier.get(), indexOp)
+                        .widen(elements.stream().map(a -> a.get(key)).collect(Collectors.toSet())));
             }
 
             return result;

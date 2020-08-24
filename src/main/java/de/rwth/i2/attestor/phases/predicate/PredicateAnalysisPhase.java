@@ -47,8 +47,12 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         AbstractionRule<RelativeInteger> abstractionRule = getPhase(AbstractionRuleTransformer.class).getAbstractionRule();
 
         for (int critical : adapter.getCriticalLabels()) {
-            PredicateAnalysis<RelativeInteger> analysis =
-                    new PredicateAnalysis<>(critical, adapter, RelativeInteger.opSet, abstractionRule, RelativeInteger.get(30));
+            PredicateAnalysis<RelativeInteger> analysis = new PredicateAnalysis<>(
+                    critical,
+                    adapter, RelativeInteger.opSet,
+                    abstractionRule,
+                    () -> RelativeInteger.getWithAllVariables(20) // RelativeInteger.opSet::greatestElement
+            );
             EquationSolver<AssignMapping<RelativeInteger>> solver = new WorklistAlgorithm<>(analysis);
             dataFlowResults.put(new Pair<>(critical, analysis.getUntangled()), solver.solve());
         }

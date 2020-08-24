@@ -3,6 +3,8 @@ package de.rwth.i2.attestor.domain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I>, AddMonoid<I> {
     private static int variableCounter = 0;
@@ -19,6 +21,12 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
 
     public I getFromConcrete(T concrete) {
         return supplier.get(concrete, Collections.emptySet());
+    }
+
+    public I geFromConcreteWithAllVariables(T concrete) {
+        return supplier.get(concrete, IntStream.range(0, variableCounter)
+                .boxed()
+                .collect(Collectors.toSet()));
     }
 
     public I getVariable() {

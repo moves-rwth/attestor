@@ -12,4 +12,8 @@ public final class RelativeInteger extends RelativeIndex<AugmentedInteger> {
     public static RelativeInteger get(int value) {
         return opSet.getFromConcrete(new AugmentedInteger(value));
     }
+
+    public static RelativeInteger getWithAllVariables(int value) {
+        return opSet.geFromConcreteWithAllVariables(new AugmentedInteger(value));
+    }
 }
