@@ -282,6 +282,7 @@ public class StateSpaceGenerator {
         );
 
         for (ProgramState m : materialized) {
+             // if (m.getHeap().countNonterminalEdges() < state.getHeap().countNonterminalEdges()) continue;
             // performance optimization that prevents isomorphism checks against states in the state space.
             stateSpace.addState(m);
             stateExplorationStrategy.addUnexploredState(m, true);
