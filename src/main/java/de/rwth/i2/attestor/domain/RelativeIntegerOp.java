@@ -54,7 +54,7 @@ public class RelativeIntegerOp extends RelativeIndexOp<AugmentedInteger, Relativ
         }
     };
 
-    RelativeIntegerOp() {
+    protected RelativeIntegerOp() {
         super(supplier, latticeOp, monoidOp);
     }
 

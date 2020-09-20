@@ -9,7 +9,6 @@ import java.util.*;
 
 public class GraphFlow extends FlowImpl {
     private Set<Stack<Integer>> circuits = null;
-    private final Map<Integer, Set<Integer>> reachableFragment = new HashMap<>();
 
     public GraphFlow() {
     }
@@ -19,13 +18,9 @@ public class GraphFlow extends FlowImpl {
     }
 
     public Set<Integer> reachableLabels(int label) {
-        reachableFragment.computeIfAbsent(label, k -> {
-            Set<Integer> reachable = new HashSet<>();
-            reachableHelper(label, reachable);
-            return reachable;
-        });
-
-        return Collections.unmodifiableSet(reachableFragment.get(label));
+        Set<Integer> reachable = new HashSet<>();
+        reachableHelper(label, reachable);
+        return Collections.unmodifiableSet(reachable);
     }
 
     private void reachableHelper(int label, Set<Integer> accumulator) {

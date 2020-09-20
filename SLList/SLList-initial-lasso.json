@@ -41,21 +41,21 @@
     {
       "name": "@parameter0:",
       "target": 3
-    },
-    {
-      "name": "@parameter1:",
-      "target": 4
     }
   ],
   "hyperedges": [
     {
       "label": "RefSLList",
       "tentacles": [
-        3,
-        2
+        4,
+        4
       ]
     }
   ],
-  "selectors": [],
+  "selectors": [{
+    "label": "next",
+    "origin": 3,
+    "target": 4
+  }],
   "externals": []
 }

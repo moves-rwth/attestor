@@ -194,15 +194,15 @@ public class SLList {
     }
 
     static void delalt(SLList head) {
-        SLList prev = head;
-        SLList now = head.next;
+        SLList current = head;
+        SLList next = head.next;
 
-        while (prev != null && now != null) {
-            prev.next = now.next;
-            now = null;
-            prev = prev.next;
-            if (prev != null) {
-                now = prev.next;
+        while (current != null && next != null) {
+            current.next = next.next;
+            next = null;
+            current = current.next;
+            if (current != null) {
+                next = current.next;
             }
         }
     }

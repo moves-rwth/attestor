@@ -12,7 +12,7 @@ public final class WorklistAlgorithm<D> implements EquationSolver<D> {
     private final D extremalValue;
     private final Set<Integer> extremalLabels;
     private final WideningOperator<D> wideningOperator;
-    Deque<Pair<Integer, Integer>> worklist = new ArrayDeque<>();
+    private final Deque<Pair<Integer, Integer>> worklist = new ArrayDeque<>();
 
 
     public WorklistAlgorithm(DataFlowAnalysis<D> framework) {

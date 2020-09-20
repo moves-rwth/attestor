@@ -45,12 +45,12 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         for (ProgramState state : stateSpaceAdapter.getStates()) {
             TIntkeySet.addAll(state.getHeap().nonterminalEdges());
         }
-
         keySet = Arrays.stream(TIntkeySet.toArray()).boxed().collect(Collectors.toSet());
+
         assignSupplier = () -> {
             AssignMapping<I> assign = new AssignMapping<>();
             for (Integer key : keySet) {
-                assign.put(key, indexOp.leastElement());
+                assign.assign(key, indexOp.leastElement());
             }
 
             return assign;
@@ -173,7 +173,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         };
     }
 
-    public Function<AssignMapping<I>, AssignMapping<I>>
+    private Function<AssignMapping<I>, AssignMapping<I>>
     generateMaterializationTransferFunction(Deque<HeapTransformation> transformationQueue) {
         return assign -> {
             final AssignMapping<I> result = assignSupplier.get();
@@ -192,7 +192,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                     matchedFragment.put(step.ruleToHeap(entry.getKey()), entry.getValue());
                 }
 
-                // update assign AssignMapping
+                // update assign mapping
                 result.unassign(step.getNtEdge());
                 for (Map.Entry<Integer, I> entry : matchedFragment.entrySet()) {
                     result.assign(entry.getKey(), entry.getValue());
@@ -203,7 +203,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
         };
     }
 
-    public Function<AssignMapping<I>, AssignMapping<I>>
+    private Function<AssignMapping<I>, AssignMapping<I>>
     generateAbstractionTransferFunction(Deque<HeapTransformation> transformationQueue) {
         return assign -> {
             final AssignMapping<I> result = assignSupplier.get();
@@ -222,7 +222,7 @@ public class PredicateAnalysis<I extends RelativeIndex<?>> implements DataFlowAn
                 // apply rule
                 I newIndex = abstractionRule.abstractBackward(fragment, step.getLabel(), step.getRule());
 
-                // update assign AssignMapping
+                // update assign mapping
                 for (Integer nt : fragment.keySet()) {
                     result.unassign(step.ruleToHeap(nt));
                 }

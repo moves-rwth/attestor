@@ -13,7 +13,7 @@ public class RelativeIndexOp<T, I extends RelativeIndex<T>> implements Lattice<I
     private final AddMonoid<T> monoidOp;
     private final RelativeIndexSupplier<T, I> supplier;
 
-    public RelativeIndexOp(RelativeIndexSupplier<T, I> supplier, Lattice<T> latticeOp, AddMonoid<T> monoidOp) {
+    protected RelativeIndexOp(RelativeIndexSupplier<T, I> supplier, Lattice<T> latticeOp, AddMonoid<T> monoidOp) {
         this.supplier = supplier;
         this.latticeOp = latticeOp;
         this.monoidOp = monoidOp;
