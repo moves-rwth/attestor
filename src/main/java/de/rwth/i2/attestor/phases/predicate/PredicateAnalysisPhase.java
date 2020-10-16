@@ -17,10 +17,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PredicateAnalysisPhase extends AbstractPhase {
-    private final Map<Integer, Set<Integer>> terminationResults = new HashMap<>();
+    private final Map<
+            Pair<Integer, Integer>,
+            Set<Integer>> terminationResults = new HashMap<>();
     private final Map<
             Pair<Integer, Integer>,
             Map<Integer, AssignMapping<RelativeInteger>>> dataFlowResults = new HashMap<>();
@@ -79,7 +83,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                 }
             }
 
-            terminationResults.put(key.first(), powerSetSumChecker.check(critical, untangled));
+            terminationResults.put(key, powerSetSumChecker.check(critical, untangled));
         });
     }
 
@@ -94,37 +98,65 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
             StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
             boolean hasFinalState = stateSpace.getFinalStates().size() > 0;
-            logSum("+-------------------------+------------------+");
-            logHighlight("| Critical state          | Termination      |");
-            logSum("+-------------------------+------------------+");
+            terminationResults.forEach((key, result) -> {
+                logSum("+-------------------------+------------------+");
+                logHighlight("| Critical state          | Termination      |");
+                logSum("+-------------------------+------------------+");
 
-            terminationResults.forEach((critical, result) -> {
-                StringBuilder summary;
+                String yesNo;
                 if (result.isEmpty()) {
-                    summary = new StringBuilder(hasFinalState ? "Maybe" : "No");
+                    yesNo = hasFinalState ? "Maybe" : "No";
                 } else {
-                    HeapConfiguration heap = stateSpace.getState(critical).getHeap();
-                    summary = new StringBuilder("Yes ");
-                    summary.append(result
-                            .stream()
-                            .map(nt -> heap.attachedNodesOf(nt).toString())
-                            .collect(Collectors.joining(" + ")));
+                    yesNo = "Yes";
                 }
 
-                if (critical.toString().length() <= 23 && summary.length() <= 16) {
-                    logSum("| " + critical +
-                            new String(new char[23 - critical.toString().length()]).replace("\0", " ") +
-                            " | " +
-                            new String(new char[16 - summary.length()]).replace("\0", " ") + summary +
-                            " |");
-                } else {
-                    logSum("| " + critical +
-                            new String(new char[23 - critical.toString().length()]).replace("\0", " ") +
-                            " | " +
-                            summary);
+                logSum("| " + key.first() +
+                        new String(new char[23 - key.first().toString().length()]).replace("\0", " ") +
+                        " | " +
+                        new String(new char[16 - yesNo.length()]).replace("\0", " ") + yesNo +
+                        " |");
+
+                if (!result.isEmpty()) {
+                    HeapConfiguration heap = stateSpace.getState(key.first()).getHeap();
+                    Map<Integer, String> variables = result
+                            .stream()
+                            .collect(Collectors.toMap(
+                                    Function.identity(),
+                                    nt -> dataFlowResults.get(key).get(key.first()).get(nt).getVariables().stream()
+                                            .findFirst().get().toString()
+                            ));
+
+                    String varSummary = "| " + variables.entrySet()
+                            .stream()
+                            .map(entry -> heap.attachedNodesOf(entry.getKey()).toString() + " = V" + entry.getValue())
+                            .collect(Collectors.joining(", "));
+
+                    logSum("|____________ Edges -> Variables ____________|");
+                    if (varSummary.length() < 44) {
+                        logSum(varSummary + new String(new char[44 - varSummary.length()]).replace("\0", " ") + " |");
+                    } else {
+                        logSum(varSummary + " |");
+                    }
+
+                    logSum("|_____________ Decreasing Index _____________|");
+
+                    String summary = "| " + result.stream()
+                            .map(nt -> "V" + variables.get(nt))
+                            .collect(Collectors.joining(" + ")) + " -> " + result.stream().map(nt -> {
+                        RelativeInteger index = dataFlowResults.get(key).get(key.second()).get(nt);
+                        return index.getVariables().stream()
+                                .map(var -> "V" + var).collect(Collectors.joining(" + ")) +
+                                (index.getConcrete().getValue() >= 0 ? " + " + index.getConcrete() : " - " + index.getConcrete().getValue() * -1);
+                    }).collect(Collectors.joining(" + "));
+
+                    if (summary.length() < 44) {
+                        logSum(summary + new String(new char[44 - summary.length()]).replace("\0", " ") + " |");
+                    }
+                    else {
+                        logSum(summary + " |");
+                    }
                 }
             });
-
             logSum("+-------------------------+------------------+");
         }
     }
