@@ -1,6 +1,7 @@
 package de.rwth.i2.attestor.predicateAnalysis;
 
 import de.rwth.i2.attestor.dataFlowAnalysis.GraphFlow;
+import de.rwth.i2.attestor.graph.heap.HeapConfiguration;
 import de.rwth.i2.attestor.graph.heap.Matching;
 import de.rwth.i2.attestor.graph.heap.internal.HeapTransformation;
 import de.rwth.i2.attestor.phases.symbolicExecution.stateSpaceGenerationImpl.TAStateSpace;
@@ -8,6 +9,7 @@ import de.rwth.i2.attestor.stateSpaceGeneration.ProgramState;
 import de.rwth.i2.attestor.stateSpaceGeneration.StateSpace;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class StateSpaceAdapter {
@@ -59,7 +61,15 @@ public class StateSpaceAdapter {
                     .orElse(Collections.emptySet());
 
             if (Collections.disjoint(criticalLabels, candidates)) {
-                candidates.stream().findAny().ifPresent(criticalLabels::add);
+                candidates.stream().min(Comparator.comparingInt(s -> {
+                    AtomicInteger selectors = new AtomicInteger();
+                    HeapConfiguration heap = stateSpace.getState(s).getHeap();
+                    heap.nodes().forEach(n -> {
+                        selectors.addAndGet(heap.selectorLabelsOf(n).size());
+                        return true;
+                    });
+                    return selectors.get();
+                })).ifPresent(criticalLabels::add);
             }
         }
 
