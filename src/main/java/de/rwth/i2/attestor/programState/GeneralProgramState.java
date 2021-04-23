@@ -244,6 +244,13 @@ public abstract class GeneralProgramState implements ProgramState {
             GeneralConcreteValue v = (GeneralConcreteValue) value;
 
             int node = v.getNode();
+
+            int variable = heap.variableWith(variableName);
+
+            if (variable != HeapConfiguration.INVALID_ELEMENT) {
+                heap.builder().removeVariableEdge(variable);
+            }
+
             if (node == GeneralConcreteValue.UNDEFINED) {
                 logger.trace("Aborting setVariable as the new target '"
                         + v.toString()
@@ -251,18 +258,12 @@ public abstract class GeneralProgramState implements ProgramState {
                         + variableName
                         + "'"
                 );
-                return;
+                heap.builder().build();
+            } else {
+                heap.builder()
+                        .addVariableEdge(variableName, node)
+                        .build();
             }
-
-            int variable = heap.variableWith(variableName);
-
-            if (variable != HeapConfiguration.INVALID_ELEMENT) {
-                heap.builder().removeVariableEdge(variable);
-            }
-            heap.builder()
-                    .addVariableEdge(variableName, node)
-                    .build();
-
         } else {
 
             logger.error("Received value of illegal type.");

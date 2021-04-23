@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import soot.Unit;
 import soot.jimple.InstanceFieldRef;
+import soot.jimple.StaticFieldRef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +124,10 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
         if (input instanceof InstanceFieldRef) {
             return translateField(input);
         }
+        if (input instanceof StaticFieldRef) {
+
+        }
+
         if (input instanceof soot.jimple.NewExpr) {
             return translateNewExpr(input);
         }
@@ -162,7 +167,13 @@ public class StandardAbstractSemantics extends SceneObject implements JimpleToAb
     private Statement translateAssignStmt(soot.jimple.Stmt input, int pc) {
 
         soot.jimple.AssignStmt stmt = (soot.jimple.AssignStmt) input;
-        SettableValue lhs = (SettableValue) topLevel.translateValue(stmt.getLeftOp());
+        Value lhsValue = topLevel.translateValue(stmt.getLeftOp());
+        SettableValue lhs;
+        if(lhsValue instanceof SettableValue){
+            lhs = (SettableValue) lhsValue;
+        }else{
+            return new Skip(this, pc+1);
+        }
         if (stmt.containsInvokeExpr()) {
             soot.jimple.InvokeExpr invokeExpr = stmt.getInvokeExpr();
             InvokeHelper invokePrepare = createInvokeHelper(invokeExpr);
