@@ -45,6 +45,7 @@ public class PredicateAnalysisPhase extends AbstractPhase {
         }
 
         StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
+        long starttime = System.nanoTime();
         StateSpaceAdapter adapter = new StateSpaceAdapter(stateSpace);
 
         //noinspection unchecked
@@ -82,7 +83,6 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                     untangled.unassign(nt);
                 }
             }
-
             terminationResults.put(key, powerSetSumChecker.check(critical, untangled));
         });
     }
@@ -93,11 +93,19 @@ public class PredicateAnalysisPhase extends AbstractPhase {
             if (terminationResults.isEmpty()) {
                 logHighlight("Predicate analysis:");
                 logSum("No critical states found");
+                logSum("+-------------------------+------------------+");
+                logSum("Yes States:   []");
+                logSum("Maybe States: []");
+                logSum("No States:    []");
+                logSum("+-------------------------+------------------+");
                 return;
             }
 
             StateSpace stateSpace = getPhase(StateSpaceTransformer.class).getStateSpace();
             boolean hasFinalState = stateSpace.getFinalStates().size() > 0;
+            Set<Integer> yesStates = new HashSet<>();
+            Set<Integer> maybeStates = new HashSet<>();
+            Set<Integer> noStates = new HashSet<>();
             terminationResults.forEach((key, result) -> {
                 logSum("+-------------------------+------------------+");
                 logHighlight("| Critical state          | Termination      |");
@@ -105,9 +113,16 @@ public class PredicateAnalysisPhase extends AbstractPhase {
 
                 String yesNo;
                 if (result.isEmpty()) {
-                    yesNo = hasFinalState ? "Maybe" : "No";
+                    if(hasFinalState){
+                        yesNo = "Maybe";
+                        maybeStates.add(key.first());
+                    }else{
+                        yesNo = "No";
+                        noStates.add(key.first());
+                    }
                 } else {
                     yesNo = "Yes";
+                    yesStates.add(key.first());
                 }
 
                 logSum("| " + key.first() +
@@ -158,7 +173,12 @@ public class PredicateAnalysisPhase extends AbstractPhase {
                 }
             });
             logSum("+-------------------------+------------------+");
+            logSum("Yes States:   "+yesStates);
+            logSum("Maybe States: "+maybeStates);
+            logSum("No States:    "+noStates);
+            logSum("+-------------------------+------------------+");
         }
+
     }
 
     @Override

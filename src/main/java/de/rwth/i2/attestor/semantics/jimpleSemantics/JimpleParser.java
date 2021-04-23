@@ -13,6 +13,8 @@ import soot.Scene;
 import soot.SootClass;
 import soot.options.Options;
 
+import static soot.SootClass.SIGNATURES;
+
 /**
  * A parser that takes a source code file and transforms it first into the Jimple intermediate language
  * and then into our own semantics; that is it constructs a {@link Program}.
@@ -60,6 +62,11 @@ public class JimpleParser extends SceneObject implements ProgramParser {
             Options.v().parse(new String[]{"-p", "jap.lvtagger", "enabled:true"});
 
             Options.v().parse(new String[]{"-pp", "-keep-line-number", "-f", "jimple", classname});
+
+            /* TODO: Scene.v().addBasicClass("javaUtilEx.AbstractList",SIGNATURES);
+            Scene.v().addBasicClass("javaUtilEx.AbstractCollection",SIGNATURES);
+            Scene.v().addBasicClass("javaUtilEx.Queue",SIGNATURES); */
+
             Scene.v().loadNecessaryClasses();
 
             logger.info("Invoking Soot...");
