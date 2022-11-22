@@ -1,14 +1,13 @@
 package de.rwth.i2.attestor.dataFlowAnalysis;
 
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import jgraphalgos.WeightedEdge;
-import jgraphalgos.johnson.Johnson;
+import org.jgrapht.alg.cycle.JohnsonSimpleCycles;
+import org.jgrapht.graph.*;
 
 import java.util.*;
 
 
 public class GraphFlow extends FlowImpl {
-    private Set<Stack<Integer>> circuits = null;
+    private Set<Set<Integer>> circuits = null;
 
     public GraphFlow() {
     }
@@ -32,24 +31,24 @@ public class GraphFlow extends FlowImpl {
         }
     }
 
-    public Set<Stack<Integer>> getCircuits() {
+    public Set<Set<Integer>> getCircuits() {
         if (circuits == null) {
+            circuits = new HashSet<>();
 
-            DirectedSparseGraph<Integer, WeightedEdge> dsg = new DirectedSparseGraph<>();
+            DefaultDirectedGraph<Integer, DefaultEdge> dg = new DefaultDirectedGraph<>(DefaultEdge.class);
             for (Integer label : getLabels()) {
+                dg.addVertex(label);
                 for (Integer successor : getSuccessors(label)) {
-                    dsg.addEdge(new WeightedEdge(1), label, successor);
+                    dg.addVertex(successor);
+                    dg.addEdge(label, successor);
                 }
             }
 
-            Johnson johnson = new Johnson(dsg);
-            try {
-                johnson.findCircuits();
-            } catch (Johnson.JohnsonIllegalStateException e) {
-                throw new IllegalStateException();
+            JohnsonSimpleCycles<Integer, DefaultEdge> johnson = new JohnsonSimpleCycles<>(dg);
+            List<List<Integer>> circuitList = johnson.findSimpleCycles();
+            for ( List<Integer> circuit: circuitList) {
+                circuits.add(new HashSet<Integer>(circuit));
             }
-
-            circuits = johnson.getCircuits();
         }
 
         return circuits;

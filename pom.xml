@@ -206,9 +206,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.sf.graphalgorithms</groupId>
-            <artifactId>johnson</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.soot-oss</groupId>
