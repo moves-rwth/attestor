@@ -24,6 +24,7 @@ public class StateSpaceAdapter {
             throw new IllegalArgumentException("StateSpaceAdapter only supports TAProgramStates");
         }
 
+
         this.stateSpace = (TAStateSpace) stateSpace;
 
         // populate flow
@@ -43,8 +44,7 @@ public class StateSpaceAdapter {
         });
 
         // compute critical states
-        Set<Set<Integer>> circuits = flow.getCircuits().stream().map(HashSet::new).collect(Collectors.toSet());
-
+        Set<Set<Integer>> circuits = flow.getCircuits();
         for (Set<Integer> circuit : circuits) {
             Map<Long, Set<Integer>> ranking = new HashMap<>();
             for (Integer candidate : circuit) {
