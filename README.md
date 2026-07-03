@@ -169,10 +169,12 @@ Attestor is developed by the [Chair for Software Modeling and Verification](http
 
 ## Publications 
 
+- Alexander Ferber, Ira Fesefeldt, Thomas Noll, Emmett Rayes: [Approximately Compatible Graph Predicates: Verifying Program Termination using Graph Grammars][21]. Proc. of ICGT: 129-148, 2026.
+- Christoph Matheja: [Automated Reasoning and Randomization in Separation Logic][20]. PhD Thesis, RWTH Aachen University, 2020.
 - Hannah Arndt, Christina Jansen, Joost-Pieter Katoen, Christoph Matheja, Thomas Noll: [Let this Graph be your Witness! An Attestor for Verifying Java Pointer Programs][18]. Proc. of CAV, 2018.
-- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll. [Graph-Based Shape Analysis Beyond Context-Freeness][19]. Proc. of SEFM, 2018.
+- Hannah Arndt, Christina Jansen, Christoph Matheja, Thomas Noll: [Graph-Based Shape Analysis Beyond Context-Freeness][19]. Proc. of SEFM, 2018.
 - Christina Jansen: [Static Analysis of Pointer Programs - Linking Graph Grammars
-and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017. 
+and Separation Logic][17]. PhD Thesis, RWTH Aachen University, 2017. 
 - Christina Jansen, Jens Katelaan, Christoph Matheja, Thomas Noll, Florian Zuleger: [Unified Reasoning About Robustness Properties of Symbolic-Heap Separation Logic][6]. Proc. of ESOP: 611-638, 2017.
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Juggrnaut: using graph grammars for abstracting unbounded heap structures][7]. Formal Methods in System Design 47(2): 159-203, 2015.
 - Jonathan Heinen, Christina Jansen, Joost-Pieter Katoen, Thomas Noll: [Verifying pointer programs using graph grammars][8]. Sci. Comput. Program. 97: 157-162, 2015.
@@ -200,3 +202,5 @@ and Separation Logic][17]. PhD Thesis. RWTH Aachen University, 2017.
 [17]: http://dx.doi.org/10.18154/RWTH-2017-09657
 [18]: https://link.springer.com/chapter/10.1007/978-3-319-96142-2_1
 [19]: https://link.springer.com/chapter/10.1007/978-3-319-92970-5_17
+[20]: http://doi.org/10.18154/RWTH-2020-00940
+[21]: https://doi.org/10.1007/978-3-032-29730-3_7
